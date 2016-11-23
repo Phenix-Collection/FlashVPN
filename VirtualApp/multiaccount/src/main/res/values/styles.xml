@@ -1,11 +1,83 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listViewStyle">@style/CustomListViewStyle</item>
+        <item name="android:gridViewStyle">@style/CustomListViewStyle</item>
+        <item name="android:screenOrientation">portrait</item>
+        <item name="android:windowAnimationStyle">@style/activityAnimationStyle</item>
+
     </style>
+
+    <style name="CustomListViewStyle" parent="Widget.AppCompat.ListView">
+        <item name="android:listSelector">@drawable/app_pressed_selector</item>
+    </style>
+
+    <style name="AppTheme.FullScreenAndTranslucent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="AppTheme.FullScreen">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="AppTheme.Launcher">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@style/animation_translucent_translate</item>
+        <!--<item name="android:windowBackground">@android:color/holo_green_light</item>-->
+    </style>
+
+    <style name="animation_translucent_translate" parent="@android:style/Animation.Translucent">
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+
+    <style name="TextStyle_Toast">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextStyle_Dialog_Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextStyle_Activity_Title">
+        <item name="android:textSize">@dimen/title_bar_title_size</item>
+        <item name="android:textColor">@color/title_bar_text_color</item>
+    </style>
+
+    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 背景阴影 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 设置全屏 -->
+        <item name="android:windowFullscreen">true</item>
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="activityAnimationStyle">
+
+        <item name="@android:activityOpenEnterAnimation">@anim/slide_right_in</item>
+
+        <item name="@android:activityOpenExitAnimation">@anim/slide_left_out</item>
+
+        <item name="@android:activityCloseEnterAnimation">@anim/slide_left_in</item>
+
+        <item name="@android:activityCloseExitAnimation">@anim/slide_right_out</item>
+
+    </style>
+
+    <!--<declare-styleable name="BlueSwitch">-->
+        <!--<attr name="switchOn" format="reference"/>-->
+        <!--<attr name="switchOff" format="reference"/>-->
+    <!--</declare-styleable>-->
 
 </resources>

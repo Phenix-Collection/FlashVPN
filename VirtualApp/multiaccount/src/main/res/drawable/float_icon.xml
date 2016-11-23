@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="oval">
+            <stroke android:width="2dp" android:color="#3490FB"/>
+            <solid
+                android:color="#FF3485"/>
+        </shape>
+    </item>
+    <item android:drawable="@mipmap/icon_white_plus" android:bottom="15dp"
+        android:top="15dp"
+        android:right="15dp"
+        android:left="15dp"/>
+
+</layer-list>

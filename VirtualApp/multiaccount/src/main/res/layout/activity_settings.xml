@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f6f6f6"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginBottom="15dp"
+        android:background="@android:color/white"
+        android:paddingLeft="22dp">
+
+        <com.polestar.multiaccount.widgets.BlueSwitch
+            android:id="@+id/shortcut_swichbtn"
+            android:layout_width="82.5dp"
+            android:layout_height="70dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="28dp"
+            android:gravity="center_horizontal"
+            android:layout_alignParentRight="true"/>
+
+        <TextView
+            android:id="@+id/shortcut_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:layout_marginTop="18dp"
+            android:layout_toLeftOf="@id/shortcut_swichbtn"
+            android:text="@string/settings_shortcut_title"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shortcut_title"
+            android:layout_toLeftOf="@id/shortcut_swichbtn"
+            android:text="@string/settings_shortcut_content"
+            android:textColor="@color/text_gray_light"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:onClick="onPrivacyPolicyClick"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:text="@string/settings_privacy_policy"
+        android:textColor="@color/text_gray_dark"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="22dp"
+        android:background="#cccccc" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:onClick="onTermsClick"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:text="@string/settings_terms_of_service"
+        android:textColor="@color/text_gray_dark"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="22dp"
+        android:background="#cccccc" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:onClick="onFollowUsClick"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:text="@string/settings_follow_us"
+        android:textColor="@color/text_gray_dark"
+        android:textSize="15sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:id="@+id/copy_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/settings_right"
+            android:textColor="@color/text_gray_light"
+            android:textSize="13sp" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_above="@id/copy_right"
+            android:layout_alignLeft="@id/copy_right"
+            android:layout_alignRight="@id/copy_right"
+            android:background="#56000000" />
+    </RelativeLayout>
+</LinearLayout>

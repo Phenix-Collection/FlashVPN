@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.polestar.multiaccount.widgets.AnimationLayout
+        android:id="@+id/float_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/addApp_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/float_icon" />
+    </com.polestar.multiaccount.widgets.AnimationLayout>
+
+    <com.polestar.multiaccount.widgets.AnimationLayout
+        android:id="@+id/action_layout"
+        android:layout_width="308dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/icon_blue_circle_normal"
+        android:padding="8dp">
+
+        <FrameLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/add"
+                android:layout_width="94.5dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:padding="15.5dp"
+                android:src="@mipmap/icon_add" />
+
+
+            <ImageView
+                android:id="@+id/remove"
+                android:layout_width="94.5dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|center_vertical"
+                android:padding="15.5dp"
+                android:src="@mipmap/icon_delete" />
+        </FrameLayout>
+    </com.polestar.multiaccount.widgets.AnimationLayout>
+
+    <com.polestar.multiaccount.widgets.PageIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="75dp"
+        android:background="#00000000" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dragable_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

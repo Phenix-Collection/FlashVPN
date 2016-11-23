@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/ad_icon"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:id="@+id/ad_icon_image"
+        android:layout_width="20dp"
+        android:layout_height="12dp"
+        android:layout_toLeftOf="@id/ad_icon"
+        android:layout_alignTop="@id/ad_icon"
+        android:src="@mipmap/ad_icon_gray_bg" />
+
+    <ImageView
+        android:id="@+id/ad_other_icon"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignTop="@id/ad_icon"
+        android:layout_marginLeft="1dp"
+        android:layout_toRightOf="@id/ad_icon" />
+
+    <TextView
+        android:id="@+id/ad_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:layout_marginTop="1dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:layout_below="@+id/ad_icon" />
+
+</RelativeLayout>

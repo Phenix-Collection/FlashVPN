@@ -1,0 +1,10 @@
+[{"name":"facebook", "package_name":"com.facebook.katana", "type":"social", "monthly_active_users":"Over 1.5 billion users over the world"},
+{"name":"line", "package_name":"jp.naver.line.android", "type":"social", "monthly_active_users":"Over 200 million users over the world"},
+{"name":"twitter", "package_name":"com.twitter.android", "type":"social", "monthly_active_users":"Over 300 million users over the world"},
+{"name":"facebook messenger", "package_name":"com.facebook.orca", "type":"social", "monthly_active_users":"Over 900 million users over the world"},
+{"name":"instagram", "package_name":"com.instagram.android", "type":"social", "monthly_active_users":"Over 500 million users over the world"},
+{"name":"whatsapp", "package_name":"com.whatsapp", "type":"social", "monthly_active_users":"Over 1 billion users over the world"},
+{"name":"clash of clans", "package_name":"com.supercell.clashofclans", "type":"game", "monthly_active_users":"Over 500 million users over the world"},
+{"name":"snapchat", "package_name":"com.snapchat.android", "type":"social", "monthly_active_users":"Over 300 million users over the world"},
+{"name":"hike", "package_name":"com.bsb.hike", "type":"social", "monthly_active_users":"Over 100 million users over the world"},
+{"name":"clash royale", "package_name":"com.supercell.clashroyale", "type":"game", "monthly_active_users":"Over 300 million users over the world"}]

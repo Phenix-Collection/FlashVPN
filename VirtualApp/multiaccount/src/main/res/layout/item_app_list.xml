@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:descendantFocusability="blocksDescendants">
+
+    <Button
+        android:id="@+id/btn_clone"
+        android:layout_width="75dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/clone_button"
+        android:focusable="false"
+        android:textAllCaps="false"
+        android:textColor="@color/white"/>
+
+    <ImageView
+        android:id="@+id/item_app_icon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"/>
+
+    <TextView
+        android:id="@+id/item_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20.5dp"
+        android:layout_toLeftOf="@id/btn_clone"
+        android:layout_toRightOf="@id/item_app_icon"
+        android:textColor="@color/white"
+        android:textSize="@dimen/title_bar_title_size"/>
+
+    <TextView
+        android:id="@+id/item_app_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/item_app_name"
+        android:layout_below="@id/item_app_name"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@id/btn_clone"
+        android:textColor="@color/gray"
+        android:textSize="10sp"/>
+
+</RelativeLayout>

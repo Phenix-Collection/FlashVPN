@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@mipmap/app_list_bg"
+            android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_popular"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@mipmap/text_background"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/most_popular_apps"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
+
+        <FrameLayout
+            android:id="@+id/ad_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.polestar.multiaccount.widgets.FixedListView
+            android:id="@+id/app_list_popular"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:layoutAnimation="@anim/app_list_anim_layout"
+            android:paddingBottom="11dp">
+        </com.polestar.multiaccount.widgets.FixedListView>
+
+        <TextView
+            android:id="@+id/text_more"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@mipmap/text_background"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/more_apps"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
+
+        <com.polestar.multiaccount.widgets.FixedGridView
+            android:id="@+id/app_list_more"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layoutAnimation="@anim/grid_list_anim_layout"
+            android:numColumns="4"
+            android:stretchMode="columnWidth">
+        </com.polestar.multiaccount.widgets.FixedGridView>
+
+    </LinearLayout>
+
+</ScrollView>
+

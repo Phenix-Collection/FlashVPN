@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#141725</color>
+    <color name="colorPrimaryDark">#141725</color>
+    <color name="colorPrimaryTranslucent">#00000000</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#A9A5A3</color>
+    <color name="divider_gray">#D0CCC7</color>
+    <color name="light_gray">#F6F6F6</color>
+    <color name="title_bar_bg">#141725</color>
+    <color name="title_bar_text_color">#3490FB</color>
+    <color name="main_blue">#3490FB</color>
+    <color name="diglog_btn_red">#FD0268</color>
+    <color name="diglog_btn_gray">#BBBBBB</color>
+    <color name="diglog_text_gray">#BEBFC5</color>
+    <color name="text_gray_dark">#585858</color>
+    <color name="text_gray_light">#B8B8B8</color>
+    <color name="tenPercentTranslucentWhite">#26ffffff</color>
+    <color name="tenPercentTranslucentBlack">#26000000</color>
+    <color name="halfTranslucentBlack">#26000000</color>
+
+
 </resources>
