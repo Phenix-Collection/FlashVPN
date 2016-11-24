@@ -2,9 +2,11 @@ package com.polestar.multiaccount.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.helper.proto.InstallResult;
 import com.lody.virtual.os.VUserHandle;
 import com.polestar.multiaccount.constant.Constants;
@@ -50,8 +52,8 @@ public class AppManager {
     public static void launchApp(String packageName) {
         try {
             Logs.d(TAG, "packageName = " + packageName);
-            VirtualCore.get().getContext().startActivity(
-                    VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId()));
+            Intent intent = VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId());
+            VActivityManager.get().startActivity(intent, VUserHandle.myUserId());
         } catch (Exception e) {
 
         } catch (Throwable throwable) {

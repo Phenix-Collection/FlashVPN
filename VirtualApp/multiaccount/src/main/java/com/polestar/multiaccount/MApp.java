@@ -5,7 +5,13 @@ import android.app.ActivityThread;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
+import com.lody.virtual.client.core.InstallStrategy;
+import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.helper.proto.InstallResult;
+import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.constant.Constants;
 import com.polestar.multiaccount.utils.EventReportManager;
@@ -41,6 +47,7 @@ public class MApp extends Application {
 
         if (AppManager.isMainProcess()) {
             initAd();
+            preInstallPkg();
             ImageLoaderUtil.init(this);
             initRawData();
             registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this,true));
@@ -55,6 +62,28 @@ public class MApp extends Application {
 //                    }
 //                }
 //            });
+        }
+    }
+
+    private void preInstallPkg() {
+        VirtualCore virtualCore = VirtualCore.get();
+        PackageManager pm = virtualCore.getUnHookPackageManager();
+        final String[] list = AppManager.getPreInstalledPkgs();
+        for (String pkg : list) {
+            if (virtualCore.isAppInstalled(pkg)) {
+                continue;
+            }
+            try {
+                ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
+                String apkPath = appInfo.sourceDir;
+                InstallResult res = VirtualCore.get().installApp(apkPath,
+                        InstallStrategy.DEPEND_SYSTEM_IF_EXIST | InstallStrategy.TERMINATE_IF_EXIST);
+                if (!res.isSuccess) {
+                    VLog.e(getClass().getSimpleName(), "Warning: Unable to install app %s: %s.", appInfo.packageName, res.error);
+                }
+            } catch (Throwable e) {
+                // Ignore
+            }
         }
     }
 
