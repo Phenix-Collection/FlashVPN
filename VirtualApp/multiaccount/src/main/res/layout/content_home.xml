@@ -5,94 +5,56 @@
     android:layout_height="match_parent">
     <FrameLayout
         android:layout_width="match_parent"
-        android:background="@mipmap/main_bg_min"
         android:layout_height="match_parent">
-        <com.polestar.multiaccount.widgets.HomeBgView
-            android:id="@+id/home_bg"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
-        <ImageView
-            android:id="@+id/img_supportAPI_18"
-            android:scaleType="fitXY"
-            android:visibility="gone"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
-        <ImageView
-            android:scaleType="fitXY"
-            android:src="@mipmap/main_bg_05_min"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
 
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
             android:id="@+id/content_home"
             android:layout_height="match_parent">
-            <com.polestar.multiaccount.widgets.AnimationLayout
-                android:id="@+id/image_top"
-                android:layout_width="0dp"
-                android:layout_height="6dp"
-                app:layout_widthPercent="50%"
-                android:layout_centerHorizontal="true">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/home_red_line"
-                    app:layout_widthPercent="50%" />
-            </com.polestar.multiaccount.widgets.AnimationLayout>
+            <RelativeLayout
+                android:id="@+id/layout_setting"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_alignParentTop="true"
+                android:background="@color/theme_color2">
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:onClick="onNavigationClick"
+                    android:background="@drawable/selector_setting_theme2">
 
-            <com.polestar.multiaccount.widgets.AnimationLayout
-                android:id="@+id/image_bottom"
-                android:layout_width="0dp"
-                android:layout_height="6dp"
-                app:layout_widthPercent="50%"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/home_blue_line"
-                    app:layout_widthPercent="50%" />
-            </com.polestar.multiaccount.widgets.AnimationLayout>
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:id="@+id/image_navigation"
 
-            <ImageView
-                android:id="@+id/image_navigation"
-                android:layout_width="50dp"
-                android:layout_height="68dp"
-                android:onClick="onNavigationClick"
-                android:paddingBottom="24dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="24dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/home_navigation_selector" />
-
-            <ImageView
-                android:id="@+id/image_title"
-                android:layout_width="98dp"
-                android:layout_height="68dp"
-                android:layout_centerHorizontal="true"
-                android:paddingBottom="28dp"
-                android:paddingTop="28dp"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/home_title" />
-
-            <com.polestar.multiaccount.widgets.AnimationImageView
-                android:id="@+id/gifView"
-                android:layout_width="50dp"
-                android:layout_marginTop="9dp"
-                android:layout_marginRight="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_height="50dp" />
-
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/menu_icon" />
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/app_alias_name"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                <com.polestar.multiaccount.widgets.AnimationImageView
+                    android:id="@+id/gifView"
+                    android:layout_width="50dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="50dp" />
+            </RelativeLayout>
             <FrameLayout
                 android:id="@+id/frag_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/image_bottom"
-                android:layout_below="@id/image_navigation" />
-
+                android:layout_below="@id/layout_setting" />
+            <!--android:layout_above="@id/image_bottom"-->
         </android.support.percent.PercentRelativeLayout>
     </FrameLayout>
 

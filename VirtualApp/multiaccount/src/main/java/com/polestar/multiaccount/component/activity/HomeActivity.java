@@ -69,12 +69,6 @@ public class HomeActivity extends BaseActivity {
 
     private void initView() {
         contentLayout = (ViewGroup) findViewById(R.id.content_home);
-        homeBgView = (HomeBgView) findViewById(R.id.home_bg);
-        homeBgCoverImg = (ImageView) findViewById(R.id.img_supportAPI_18);
-        imageTop = (AnimationLayout) findViewById(R.id.image_top);
-        imageTop.setMode(AnimationLayout.MODE_TOP);
-        imageBottom = (AnimationLayout) findViewById(R.id.image_bottom);
-//        contentLayout.setBackgroundResource(R.mipmap.home_bg);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         navigationList = (ListView) findViewById(R.id.navigation_list);
@@ -139,11 +133,11 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        if(Build.VERSION.SDK_INT == 18){
-            homeBgCoverImg.setVisibility(View.VISIBLE);
-            homeBgCoverImg.setImageResource(R.mipmap.main_bg_min);
-            homeBgView.setCoverImg(homeBgCoverImg);
-        }
+//        if(Build.VERSION.SDK_INT == 18){
+//            homeBgCoverImg.setVisibility(View.VISIBLE);
+//            homeBgCoverImg.setImageResource(R.mipmap.main_bg_min);
+//            homeBgView.setCoverImg(homeBgCoverImg);
+//        }
     }
 
     private void loadAd() {
@@ -214,13 +208,9 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void doAnimationExit() {
-        imageTop.hide();
-        imageBottom.hide();
     }
 
     private void doAnimationExter() {
-        imageTop.show();
-        imageBottom.show();
         mHomeFragment.showFromBottom();
     }
 
@@ -329,9 +319,9 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void startAppLaunchActivity(String packageName) {
-        if(Build.VERSION.SDK_INT == 18){
-            homeBgView.stopSelf();
-        }
+//        if(Build.VERSION.SDK_INT == 18){
+//            homeBgView.stopSelf();
+//        }
         AppLaunchActivity.startAppLaunchActivity(this, packageName, drawerBlurHelper.createBitmap());
     }
 
