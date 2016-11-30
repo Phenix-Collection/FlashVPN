@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.polestar.multiaccount.R;
@@ -39,7 +42,12 @@ import com.polestar.multiaccount.widgets.AppIconBgView;
 import com.polestar.multiaccount.widgets.CustomDragableView;
 import com.polestar.multiaccount.widgets.CustomFloatView;
 import com.polestar.multiaccount.widgets.GifView;
+import com.polestar.multiaccount.widgets.GridAppCell;
 import com.polestar.multiaccount.widgets.PageIndicator;
+import com.polestar.multiaccount.widgets.dragdrop.DragController;
+import com.polestar.multiaccount.widgets.dragdrop.DragImageView;
+import com.polestar.multiaccount.widgets.dragdrop.DragLayer;
+import com.polestar.multiaccount.widgets.dragdrop.DragSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,17 +57,16 @@ import java.util.List;
  */
 public class HomeFragment extends BaseFragment {
     private View contentView;
-    private CustomDragableView appGridView;
     private GridView pkgGridView;
     private PackageGridAdapter pkgGridAdapter;
-    private PageIndicator indicator;
-    private AppHomeAdapter adapter;
     private List<AppModel> appInfos;
     private ImageView addBtn, removeBtn;
     private CustomFloatView floatView;
     private LinearLayout guideLayout;
     private GifView iconGifView;
     private ExplosionField mExplosionField;
+    private DragController mDragController;
+    private DragLayer mDragLayer;
 
     @Nullable
     @Override
@@ -70,24 +77,86 @@ public class HomeFragment extends BaseFragment {
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
+        mDragController = new DragController(getActivity());
+        mDragController.setDragListener(mDragListener);
+        mDragController.setWindowToken(contentView.getWindowToken());
+        mDragLayer.setDragController(mDragController);
+
         Logs.e("onCreateView time = " + (System.currentTimeMillis() - time));
         return contentView;
     }
-
-    private class PackageGridAdapter extends BaseAdapter {
-        class ViewHolder {
-            ImageView appIcon;
-            TextView appName;
+    DragController.DragListener mDragListener = new DragController.DragListener() {
+        @Override
+        public void onDragStart(DragSource source, Object info, int dragAction) {
+            Logs.d("onDragStart");
+            floatView.animToExtands();
+            mDragController.addDropTarget(floatView);
         }
 
         @Override
+        public void onDragEnd(DragSource source, Object info, int action) {
+            Logs.d("onDragEnd + " + floatView.getSelectedState());
+            switch (floatView.getSelectedState()) {
+                case CustomFloatView.SELECT_BTN_LEFT:
+                    MTAManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
+                    EventReportManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
+                    CommonUtils.createShortCut(mActivity,((AppModel) info));
+                    floatView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+                        }
+                    },CustomFloatView.ANIM_DURATION / 2);
+                    break;
+                case CustomFloatView.SELECT_BTN_RIGHT:
+                    pkgGridAdapter.notifyDataSetChanged();
+                    floatView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showDeleteDialog((AppModel) info);
+                        }
+                    },CustomFloatView.ANIM_DURATION / 2);
+                    break;
+                default:
+                    break;
+            }
+            floatView.animToIdel();
+            mDragController.removeDropTarget(floatView);
+        }
+    };
+
+    private class PackageGridAdapter extends BaseAdapter {
+
+        public int getPosition(AppModel appModel) {
+            int ret = 0;
+            for(AppModel m: appInfos ) {
+                if (m.getPackageName().equals(appModel.getPackageName())) {
+                    return ret;
+                }
+                ret ++;
+            }
+            return  -1;
+        }
+        @Override
         public int getCount() {
-            return appInfos == null ? 0 : appInfos.size();
+            int size = appInfos == null ? 0 : appInfos.size();
+            if ( size < 15 ) {
+                size = 15;
+            } else {
+                size = size + 3 - (size % 3);
+            }
+            return size;
         }
 
         @Override
         public Object getItem(int position) {
-            return appInfos == null ? null : appInfos.get(position);
+            if ( appInfos == null) {
+                return  null;
+            }
+            if (position < appInfos.size()) {
+                return  appInfos.get(position);
+            }
+            return null;
         }
 
         @Override
@@ -97,40 +166,32 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            PackageGridAdapter.ViewHolder holder = null;
-//        if (view != null) {
-//            holder = (ViewHolder) view.getTag();
-//        }
-//        if (view == null || holder == null) {
-            view = LayoutInflater.from(getActivity()).inflate(R.layout.item_app, null);
-            holder = new PackageGridAdapter.ViewHolder();
-            holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-            holder.appName = (TextView) view.findViewById(R.id.app_name);
-            view.setTag(holder);
-//        }
+            view = new GridAppCell(mActivity);
 
-            AppModel appModel = appInfos.get(i);
-            if (appModel.getCustomIcon() == null) {
-                appModel.setCustomIcon(BitmapUtils.createCustomIcon(getActivity(), appModel.initDrawable(getActivity())));
-            }
+            ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
+            TextView appName = (TextView) view.findViewById(R.id.app_name);
 
-            if (appModel.getCustomIcon() != null) {
-                holder.appIcon.setImageBitmap(appModel.getCustomIcon());
-            } else {
-//            holder.appIcon.setImageDrawable(appModel.initDrawable(mContext));
+            AppModel appModel = (AppModel) getItem(i);
+            if (appModel != null) {
+                if (appModel.getCustomIcon() == null) {
+                    appModel.setCustomIcon(BitmapUtils.createCustomIcon(getActivity(), appModel.initDrawable(getActivity())));
+                }
+
+                if (appModel.getCustomIcon() != null) {
+                    appIcon.setImageBitmap(appModel.getCustomIcon());
+                }
+                appName.setText(appModel.getName());
             }
-            holder.appName.setText(appModel.getName());
 
             return view;
         }
     }
     private void initView() {
-        appGridView = (CustomDragableView) contentView.findViewById(R.id.dragable_view);
+        mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
         pkgGridView = (GridView) contentView.findViewById(R.id.grid_app);
         pkgGridAdapter = new PackageGridAdapter();
         pkgGridView.setAdapter(pkgGridAdapter);
-        pkgGridView.setVisibility(View.GONE);
-        indicator = (PageIndicator) contentView.findViewById(R.id.indicator);
+
         guideLayout = (LinearLayout) contentView.findViewById(R.id.guide_layout);
         iconGifView = (GifView) contentView.findViewById(R.id.icon_gif);
         floatView = (CustomFloatView) contentView.findViewById(R.id.addApp_btn);
@@ -139,23 +200,22 @@ public class HomeFragment extends BaseFragment {
         floatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Logs.d("JJJJ Add onClick");
                 startAppListActivity();
                 MTAManager.homeAdd(getActivity());
                 EventReportManager.homeAdd(getActivity());
             }
         });
-        floatView.post(new Runnable() {
-            @Override
-            public void run() {
-                appGridView.setLayoutPercent(1f - ((float) floatView.getHeight()) / ((float) appGridView.getHeight()));
-            }
-        });
+//        floatView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                appGridView.setLayoutPercent(1f - ((float) floatView.getHeight()) / ((float) appGridView.getHeight()));
+//            }
+//        });
 
         pkgGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                final int i = adapter.getNatureIndex(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //final int i = pkgGridAdapter.getNatureIndex(position);
                 if(i >= 0 && i < appInfos.size()){
                     if(floatView.isIdle()){
                         startAppLaunchActivity(appInfos.get(i).getPackageName());
@@ -174,139 +234,139 @@ public class HomeFragment extends BaseFragment {
         pkgGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                DragImageView iv = (DragImageView)view.findViewById(R.id.app_icon);
+                mDragController.startDrag(iv, iv, pkgGridAdapter.getItem(i),DragController.DRAG_ACTION_COPY);
                 return true;
             }
         });
 
-        appGridView.setOnDragListener(new CustomDragableView.OnDragListener() {
-            @Override
-            public void onDragStart(View view) {
-                AppIconBgView bgView = (AppIconBgView) view.findViewById(R.id.app_icon_anim_bg);
-                if(bgView != null){
-                    bgView.startAnim();
-                }
-                floatView.animToExtands();
-            }
-
-            @Override
-            public void onDragEnd(View view) {
-                AppIconBgView bgView = (AppIconBgView) view.findViewById(R.id.app_icon_anim_bg);
-                if(bgView != null){
-                    bgView.reset();
-                }
-                floatView.animToIdel();
-            }
-
-            @Override
-            public boolean onDragOutSide(int dragLocation) {
-                switch (dragLocation) {
-                    case CustomDragableView.DRAG_OUTSIDE_BOTTOM_LEFT:
-                        floatView.selecteLeftBtn();
-                        break;
-                    case CustomDragableView.DRAG_OUTSIDE_BOTTOM_RIGHT:
-                        floatView.selecteRightBtn();
-                        break;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean completeDragOutSide(int dragLocation, int position) {
-                final int appPosition = adapter.getNatureIndex(position);
-                floatView.clearSelectedBtn();
-                switch (dragLocation) {
-                    case CustomDragableView.DRAG_OUTSIDE_BOTTOM_LEFT:
-                        MTAManager.addShortCut(mActivity, appInfos.get(appPosition).getPackageName());
-                        EventReportManager.addShortCut(mActivity, appInfos.get(appPosition).getPackageName());
-                        CommonUtils.createShortCut(mActivity,appInfos.get(appPosition));
-                        floatView.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
-                            }
-                        },CustomFloatView.ANIM_DURATION / 2);
-                        showFullScreenAd();                        break;
-                    case CustomDragableView.DRAG_OUTSIDE_BOTTOM_RIGHT:
-                        adapter.notifyDataSetChanged();
-                        floatView.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                showDeleteDialog(appPosition,position);
-                            }
-                        },CustomFloatView.ANIM_DURATION / 2);
-                        return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onCancleDragOutSide() {
-                floatView.clearSelectedBtn();
-                return false;
-            }
-        });
-        appGridView.setOnPageChangeListener(new CustomDragableView.OnPageChangeListener() {
-            @Override
-            public void onPageCountChanged(int pageCount) {
-//                if(appGridView.getPageCount() <= 1){
-//                    indicator.setVisibility(View.INVISIBLE);
-//                }else{
-//                    indicator.setVisibility(View.VISIBLE);
-//                    indicator.setTotalPageSize(appGridView.getPageCount());
+//        appGridView.setOnDragListener(new CustomDragableView.OnDragListener() {
+//            @Override
+//            public void onDragStart(View view) {
+//                AppIconBgView bgView = (AppIconBgView) view.findViewById(R.id.app_icon_anim_bg);
+//                if(bgView != null){
+//                    bgView.startAnim();
 //                }
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-              //  indicator.setCurrentPage(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        appGridView.setOnRearrangeListener(new CustomDragableView.OnRearrangeListener() {
-            @Override
-            public void onRearrange(int oldIndex, int newIndex) {
-                if (oldIndex < 0 || newIndex < 0 || oldIndex >= appInfos.size() || newIndex >= appInfos.size()) {
-                    return;
-                }
-                AppModel model = appInfos.get(oldIndex);
-                appInfos.remove(oldIndex);
-                appInfos.add(newIndex, model);
-                adapter.notifyDataSetChanged();
-                if (oldIndex > newIndex) {
-                    updateModelIndex(newIndex, oldIndex);
-                } else {
-                    updateModelIndex(oldIndex, newIndex);
-                }
-            }
-        });
-        removeBtn = (ImageView) contentView.findViewById(R.id.remove);
-        addBtn = (ImageView) contentView.findViewById(R.id.add);
+//                floatView.animToExtands();
+//            }
+//
+//            @Override
+//            public void onDragEnd(View view) {
+//                AppIconBgView bgView = (AppIconBgView) view.findViewById(R.id.app_icon_anim_bg);
+//                if(bgView != null){
+//                    bgView.reset();
+//                }
+//                floatView.animToIdel();
+//            }
+//
+//            @Override
+//            public boolean onDragOutSide(int dragLocation) {
+//                switch (dragLocation) {
+//                    case CustomDragableView.DRAG_OUTSIDE_BOTTOM_LEFT:
+//                        floatView.selecteLeftBtn();
+//                        break;
+//                    case CustomDragableView.DRAG_OUTSIDE_BOTTOM_RIGHT:
+//                        floatView.selecteRightBtn();
+//                        break;
+//                }
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean completeDragOutSide(int dragLocation, int position) {
+//                final int appPosition = adapter.getNatureIndex(position);
+//                floatView.clearSelectedBtn();
+//                switch (dragLocation) {
+//                    case CustomDragableView.DRAG_OUTSIDE_BOTTOM_LEFT:
+//                        MTAManager.addShortCut(mActivity, appInfos.get(appPosition).getPackageName());
+//                        EventReportManager.addShortCut(mActivity, appInfos.get(appPosition).getPackageName());
+//                        CommonUtils.createShortCut(mActivity,appInfos.get(appPosition));
+//                        floatView.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+//                            }
+//                        },CustomFloatView.ANIM_DURATION / 2);
+//                        showFullScreenAd();                        break;
+//                    case CustomDragableView.DRAG_OUTSIDE_BOTTOM_RIGHT:
+//                        adapter.notifyDataSetChanged();
+//                        floatView.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showDeleteDialog(appPosition,position);
+//                            }
+//                        },CustomFloatView.ANIM_DURATION / 2);
+//                        return true;
+//                }
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onCancleDragOutSide() {
+//                floatView.clearSelectedBtn();
+//                return false;
+//            }
+//        });
+//        appGridView.setOnPageChangeListener(new CustomDragableView.OnPageChangeListener() {
+//            @Override
+//            public void onPageCountChanged(int pageCount) {
+////                if(appGridView.getPageCount() <= 1){
+////                    indicator.setVisibility(View.INVISIBLE);
+////                }else{
+////                    indicator.setVisibility(View.VISIBLE);
+////                    indicator.setTotalPageSize(appGridView.getPageCount());
+////                }
+//            }
+//
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//              //  indicator.setCurrentPage(position);
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
+//        appGridView.setOnRearrangeListener(new CustomDragableView.OnRearrangeListener() {
+//            @Override
+//            public void onRearrange(int oldIndex, int newIndex) {
+//                if (oldIndex < 0 || newIndex < 0 || oldIndex >= appInfos.size() || newIndex >= appInfos.size()) {
+//                    return;
+//                }
+//                AppModel model = appInfos.get(oldIndex);
+//                appInfos.remove(oldIndex);
+//                appInfos.add(newIndex, model);
+//                adapter.notifyDataSetChanged();
+//                if (oldIndex > newIndex) {
+//                    updateModelIndex(newIndex, oldIndex);
+//                } else {
+//                    updateModelIndex(oldIndex, newIndex);
+//                }
+//            }
+//        });
     }
 
     private void initData(){
         CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
             @Override
             public void onInstalled(List<AppModel> clonedApp) {
-                if(adapter != null){
-                    adapter.notifyDataSetChanged();
+                if(pkgGridAdapter != null){
+                    pkgGridAdapter.notifyDataSetChanged();
                 }
                 needShowGuideLayout();
-                appGridView.setCurrentPage(appGridView.getPageCount() - 1,false);
+                //appGridView.setCurrentPage(appGridView.getPageCount() - 1,false);
             }
 
             @Override
             public void onUnstalled(List<AppModel> clonedApp) {
-                if(adapter != null){
-                    adapter.notifyDataSetChanged();
+                if(pkgGridAdapter != null){
+                    pkgGridAdapter.notifyDataSetChanged();
                 }
                 needShowGuideLayout();
             }
@@ -314,11 +374,11 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onLoaded(List<AppModel> clonedApp) {
                 appInfos = clonedApp;
-                if(adapter != null){
-                    adapter.notifyDataSetChanged();
+                if(pkgGridAdapter != null){
+                    pkgGridAdapter.notifyDataSetChanged();
                 }
-                adapter = new AppHomeAdapter(mActivity, appInfos,appGridView.getmPageSize());
-                appGridView.setAdapter(adapter);
+                //adapter = new AppHomeAdapter(mActivity, appInfos,appGridView.getmPageSize());
+                //appGridView.setAdapter(adapter);
                 needShowGuideLayout();
             }
         });
@@ -336,7 +396,7 @@ public class HomeFragment extends BaseFragment {
         guideLayout.setVisibility(View.GONE);
     }
 
-    private void showDeleteDialog(int appPosition,int itemPosition){
+    private void showDeleteDialog(AppModel appModel){
         CustomDialogUtils.showCustomDialog(mActivity,mActivity.getResources().getString(R.string.delete_dialog_title),
                 mActivity.getResources().getString(R.string.delete_dialog_content),
                 mActivity.getResources().getString(R.string.delete_dialog_left),mActivity.getResources().getString(R.string.delete_dialog_right),
@@ -348,48 +408,44 @@ public class HomeFragment extends BaseFragment {
                             case CustomDialogUtils.LEFT_BUTTON:
                                 break;
                             case CustomDialogUtils.RIGHT_BUTTON:
-                                deleteAppWithAnim(appPosition,itemPosition);
+                                deleteAppWithAnim(appModel);
                                 break;
                         }
                     }
                 });
     }
 
-    private void deleteAppWithAnim(int appPosition,int itemPosition){
-        if(appPosition < 0 || appPosition >= appInfos.size())
-            return;
-        if(itemPosition >= 0 && itemPosition < pkgGridView.getCount()) {
-            AppModel appModel = appInfos.get(itemPosition);
-            if(appModel != null){
-                appModel.setUnEnable(true);
-                adapter.onDelete();
-            }
-            View view = pkgGridView.getChildAt(itemPosition);
-            mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
-                @Override
-                public void onExplodeFinish(View v) {
-                    v.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            deleteApp(appPosition);
-                        }
-                    },1000);
-                }
-            });
+    private void deleteAppWithAnim(AppModel appModel){
+        if(appModel != null){
+            appModel.setUnEnable(true);
+            pkgGridAdapter.notifyDataSetChanged();
+            //adapter.onDelete();
         }
+        View view = pkgGridView.getChildAt(pkgGridAdapter.getPosition(appModel));
+        mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
+            @Override
+            public void onExplodeFinish(View v) {
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        deleteApp(appModel);
+                    }
+                },1000);
+            }
+        });
     }
 
-    private void deleteApp(int itemPosition){
-        AppModel appModel = appInfos.remove(itemPosition);
+    private void deleteApp(AppModel appModel){
+        appInfos.remove(appModel);
         MTAManager.deleteClonedApp(mActivity, appModel.getPackageName());
         EventReportManager.deleteClonedApp(mActivity, appModel.getPackageName());
-        updateModelIndex(itemPosition,appInfos.size() - 1);
+//        updateModelIndex(itemPosition,appInfos.size() - 1);
         AppManager.uninstallApp(appModel.getPackageName());
         CommonUtils.removeShortCut(mActivity,appModel);
         DbManager.deleteAppModel(mActivity, appModel);
         DbManager.notifyChanged();
-        adapter.notifyDataSetChanged();
-        adapter.deleteComplete();
+        pkgGridAdapter.notifyDataSetChanged();
+        //adapter.deleteComplete();
         needShowGuideLayout();
         showFullScreenAd();
     }
@@ -458,12 +514,12 @@ public class HomeFragment extends BaseFragment {
         }
     }
     public void showGuidePopWindow(){
-        View childView = appGridView.getChildAt(adapter.getFirstAppIndex());
-        View iconView = childView.findViewById(R.id.app_icon);
-        int[] location= new int[2];
-        iconView.getLocationInWindow(location);
-        if(mActivity instanceof  HomeActivity){
-            ((HomeActivity)mActivity).showGuidePopWindow(location[0] + iconView.getWidth(),location[1] + iconView.getHeight());
-        }
+//        View childView = appGridView.getChildAt(adapter.getFirstAppIndex());
+//        View iconView = childView.findViewById(R.id.app_icon);
+//        int[] location= new int[2];
+//        iconView.getLocationInWindow(location);
+//        if(mActivity instanceof  HomeActivity){
+//            ((HomeActivity)mActivity).showGuidePopWindow(location[0] + iconView.getWidth(),location[1] + iconView.getHeight());
+//        }
     }
 }

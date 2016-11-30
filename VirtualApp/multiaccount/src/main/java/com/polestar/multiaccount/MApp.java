@@ -93,6 +93,7 @@ public class MApp extends Application {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
                 Logs.e("uncaughtException");
+                Logs.e(ex.toString());
                 CrashReport.startCrashReport();
                 Context innerContext = AppManager.getInnerContext();
 

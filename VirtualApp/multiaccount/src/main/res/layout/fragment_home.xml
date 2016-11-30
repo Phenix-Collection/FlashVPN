@@ -1,72 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.polestar.multiaccount.widgets.dragdrop.DragLayer
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drag_layer"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.polestar.multiaccount.widgets.CustomFloatView
-        android:id="@+id/addApp_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="66dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="26dp"
-        android:layout_marginRight="26dp"
-        android:layout_marginTop="16dp" />
-
-    <!--<com.polestar.multiaccount.widgets.PageIndicator-->
-        <!--android:id="@+id/indicator"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginBottom="80dp"-->
-        <!--android:background="#00000000" />-->
-
-    <com.polestar.multiaccount.widgets.CustomDragableView
-        android:id="@+id/dragable_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusable="true" />
-    <GridView
-        android:id="@+id/grid_app"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:horizontalSpacing="0dp"
-        android:listSelector="#00000000"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="0dp" />
-    <LinearLayout
-        android:id="@+id/guide_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/addApp_btn"
-        android:visibility="gone"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingTop="130dp">
+        android:layout_height="match_parent">
 
-        <com.polestar.multiaccount.widgets.GifView
-            android:id="@+id/icon_gif"
-            android:layout_width="@dimen/icon_size_default"
-            android:layout_height="@dimen/icon_size_default" />
+            <GridView
+                android:id="@+id/grid_app"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="0dp"
+                android:listSelector="#00000000"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="0dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
-            android:gravity="center_horizontal"
-            android:text="@string/start_tips"
-            android:textColor="#5D6589"
-            android:textSize="15sp" />
+            <com.polestar.multiaccount.widgets.CustomFloatView
+                android:id="@+id/addApp_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="66dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="16dp"
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/icon_arrows_bottom" />
-    </LinearLayout>
+                android:layout_marginRight="26dp" />
+            <LinearLayout
+                android:id="@+id/guide_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/addApp_btn"
+                android:visibility="gone"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="130dp">
 
-</RelativeLayout>
+                <com.polestar.multiaccount.widgets.GifView
+                    android:id="@+id/icon_gif"
+                    android:layout_width="@dimen/icon_size_default"
+                    android:layout_height="@dimen/icon_size_default" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="23dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/start_tips"
+                    android:textColor="#5D6589"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="40dp"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/icon_arrows_bottom" />
+            </LinearLayout>
+
+    </RelativeLayout>
+</com.polestar.multiaccount.widgets.dragdrop.DragLayer>

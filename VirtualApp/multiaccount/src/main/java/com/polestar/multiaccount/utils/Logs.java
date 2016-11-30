@@ -2,6 +2,8 @@ package com.polestar.multiaccount.utils;
 
 import android.util.Log;
 
+import com.polestar.multiaccount.BuildConfig;
+
 import java.io.File;
 
 /**
@@ -9,8 +11,8 @@ import java.io.File;
  */
 public class Logs {
 
-    public final static boolean DEBUG = isDebugMode();
-    public final static String DEFAULT_TAG = "Parallel Box";
+    public final static boolean DEBUG = BuildConfig.DEBUG || isDebugMode();
+    public final static String DEFAULT_TAG = "JJJJ";
 
     public static void e(String msg) {
         e(DEFAULT_TAG, msg);

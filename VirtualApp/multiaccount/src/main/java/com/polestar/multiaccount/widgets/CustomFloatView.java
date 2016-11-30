@@ -32,11 +32,14 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.widgets.dragdrop.DragSource;
+import com.polestar.multiaccount.widgets.dragdrop.DragView;
+import com.polestar.multiaccount.widgets.dragdrop.DropTarget;
 
 /**
  * Created by yxx on 2016/8/11.
  */
-public class CustomFloatView extends View {
+public class CustomFloatView extends View implements DropTarget{
 
     public static final int ANIM_DURATION = 500;
     private static final int STATE_IDLE = 1;
@@ -46,9 +49,9 @@ public class CustomFloatView extends View {
     private static final int STATE_BTN_LEFT_TO_RIGHT = 5;
     private static final int STATE_BTN_RIGHT_TO_LEFT = 6;
 
-    private static final int SELECT_BTN_NONE = 0;
-    private static final int SELECT_BTN_LEFT = 1;
-    private static final int SELECT_BTN_RIGHT = 2;
+    public static final int SELECT_BTN_NONE = 0;
+    public static final int SELECT_BTN_LEFT = 1;
+    public static final int SELECT_BTN_RIGHT = 2;
 
     private int currentState = STATE_IDLE;
     private int nextState = STATE_IDLE;
@@ -85,6 +88,10 @@ public class CustomFloatView extends View {
         init();
     }
 
+    public int getSelectedState(){
+        return selectedBtn;
+    }
+
     public CustomFloatView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -119,11 +126,11 @@ public class CustomFloatView extends View {
         centerDotRect = new RectF();
         btnBgRect = new RectF();
 
-        outerColor = Color.parseColor("#3490FB");
+        outerColor = getResources().getColor(R.color.add_app_color);
         defaultOuterStrokeWidth = DisplayUtils.dip2px(getContext(), 2f);
         outerStrokeWidth = defaultOuterStrokeWidth;
 
-        innerColor = Color.parseColor("#FFFF3485");
+        innerColor = getResources().getColor(R.color.left_right_anim_color);
         defaultInnerPaddingWidth = DisplayUtils.dip2px(getContext(), 3);
         innerPaddingWidth = defaultInnerPaddingWidth;
 
@@ -132,7 +139,7 @@ public class CustomFloatView extends View {
 
         defaultPadding = DisplayUtils.dip2px(getContext(), 5);
         leftAndRightSidePadding = DisplayUtils.dip2px(getContext(),16);
-        centerDotColor = Color.parseColor("#2A73C9");
+        centerDotColor = getResources().getColor(R.color.left_right_anim_color);
         centerDotWidth = DisplayUtils.dip2px(getContext(), 2);
     }
 
@@ -557,5 +564,45 @@ public class CustomFloatView extends View {
 
     public void clearSelectedBtn() {
         animChangeBtn(SELECT_BTN_NONE);
+    }
+
+    @Override
+    public void onDrop(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
+        Logs.d("onDrop");
+    }
+
+    @Override
+    public void onDragEnter(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
+        Logs.d("onDrop " + " " + x + "," + y + " ," + xOffset + ", " + yOffset);
+    }
+
+    @Override
+    public void onDragOver(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
+        Logs.d("onDragOver " + " " + x + "," + y + " ," + xOffset + ", " + yOffset);
+        if (x + xOffset > leftBtnRect.left && x+xOffset < leftBtnRect.right) {
+            selecteLeftBtn();
+        } else   if (x + xOffset > rightBtnRect.left && x+xOffset < rightBtnRect.right) {
+            selecteRightBtn();
+        } else {
+            clearSelectedBtn();
+        }
+        Logs.d("left:" + leftBtnRect.toString());
+        Logs.d("right:" + rightBtnRect.toString());
+    }
+
+    @Override
+    public void onDragExit(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
+        Logs.d("onDragExit");
+        clearSelectedBtn();
+    }
+
+    @Override
+    public boolean acceptDrop(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
+        return true;
+    }
+
+    @Override
+    public Rect estimateDropLocation(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo, Rect recycle) {
+        return null;
     }
 }
