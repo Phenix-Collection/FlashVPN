@@ -108,7 +108,7 @@ public class DrawerBlurHelper {
     }
 
     public void createCacheBitmap() {
-        bgView.setBackgroundResource(R.mipmap.main_bg_min);
+       // bgView.setBackgroundResource(R.mipmap.main_bg_min);
         Logs.e("createCacheBitmap");
         bgView.destroyDrawingCache();
         if (!bgView.isDrawingCacheEnabled()) {
@@ -128,7 +128,7 @@ public class DrawerBlurHelper {
 
     public Bitmap createBitmap() {
         Bitmap bgBitmap;
-        bgView.setBackgroundResource(R.mipmap.main_bg_min);
+       // bgView.setBackgroundResource(R.mipmap.main_bg_min);
         Logs.e("createCacheBitmap");
         bgView.destroyDrawingCache();
         if (!bgView.isDrawingCacheEnabled()) {

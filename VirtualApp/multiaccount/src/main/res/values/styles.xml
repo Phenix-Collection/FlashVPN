@@ -48,6 +48,7 @@
     <style name="TextStyle_Activity_Title">
         <item name="android:textSize">@dimen/title_bar_title_size</item>
         <item name="android:textColor">@color/title_bar_text_color</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">

@@ -14,12 +14,13 @@
         android:background="@drawable/clone_button"
         android:focusable="false"
         android:textAllCaps="false"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/item_app_icon"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"/>
 
@@ -31,7 +32,7 @@
         android:layout_marginTop="20.5dp"
         android:layout_toLeftOf="@id/btn_clone"
         android:layout_toRightOf="@id/item_app_icon"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="@dimen/title_bar_title_size"/>
 
     <TextView
@@ -42,7 +43,7 @@
         android:layout_below="@id/item_app_name"
         android:layout_marginTop="8dp"
         android:layout_toLeftOf="@id/btn_clone"
-        android:textColor="@color/gray"
+        android:textColor="@color/text_gray_dark"
         android:textSize="10sp"/>
 
 </RelativeLayout>

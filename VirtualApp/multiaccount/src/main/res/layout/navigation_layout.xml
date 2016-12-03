@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:background="@drawable/bg_sliding_layout"
+    android:background="@drawable/drawer_bg"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginBottom="23dp"
             android:layout_marginTop="63dp"
             android:src="@mipmap/app_icon_big" />

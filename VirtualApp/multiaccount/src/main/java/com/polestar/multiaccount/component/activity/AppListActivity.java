@@ -70,7 +70,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     }
 
     private void initView() {
-        setTitle(Constants.TITLE_CLONE_APPS);
+        setTitle(getResources().getString(R.string.clone_apps_title));
 
         mTextPopular = (TextView) findViewById(R.id.text_popular);
         mTextMore = (TextView) findViewById(R.id.text_more);

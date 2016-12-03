@@ -120,7 +120,7 @@ public class AppIconBgView extends View {
 
         if(currentState == STATE_IDLE){
             if(iconIdle == null){
-                iconIdle = ((BitmapDrawable) getResources().getDrawable(R.mipmap.app_bg)).getBitmap();
+                iconIdle = ((BitmapDrawable) getResources().getDrawable(R.mipmap.app_icon_big)).getBitmap();
             }
             bgIdleScale = bg1Width / (float)iconIdle.getWidth();
             matrix.reset();

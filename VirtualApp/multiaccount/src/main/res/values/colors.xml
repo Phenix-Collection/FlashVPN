@@ -8,9 +8,10 @@
     <color name="black">#000000</color>
     <color name="gray">#A9A5A3</color>
     <color name="divider_gray">#D0CCC7</color>
+    <color name="divider_light_gray">#FFFAFAFA</color>
     <color name="light_gray">#F6F6F6</color>
-    <color name="title_bar_bg">#141725</color>
-    <color name="title_bar_text_color">#3490FB</color>
+    <color name="title_bar_bg">#FF16B6CD</color>
+    <color name="title_bar_text_color">#FFFFFF</color>
     <color name="main_blue">#3490FB</color>
     <color name="diglog_btn_red">#FD0268</color>
     <color name="diglog_btn_gray">#BBBBBB</color>
@@ -25,6 +26,7 @@
     <color name="add_app_color">#3490FB</color>
     <color name="left_right_anim_color">#5d6173</color>
     <color name="theme_color2">#FF16B6CD</color>
+    <color name="launch_page_color">#ace5f2</color>
     <color name="theme_text_color">#FF4A4A4A</color>
     <color name="theme_color_presss">#0A9EB3</color>
     <color name="grid_line">#FFF2F2F2</color>

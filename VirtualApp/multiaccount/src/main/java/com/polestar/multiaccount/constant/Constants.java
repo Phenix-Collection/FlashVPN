@@ -11,7 +11,7 @@ public class Constants {
 
     public static final int HOME_GRID_COLUMN = 3;
 
-    public static final String EXTRA_APP_MODEL = "com.avazu.dotcunit.dotspace.utils.extra.APP_MODEL";
+    public static final String EXTRA_APP_MODEL = "com.polestar.applab.utils.extra.APP_MODEL";
 
     public static final String KEY_CLONED_APPS = "Cloned Apps";
 
@@ -39,10 +39,9 @@ public class Constants {
 
     public static final String TITLE_FEEDBACK = "Feedback";
 
-    public static final String URL_FAQ = "http://appclone.info/apphtml5/faq.html";
-    public static final String URL_PRIVACY_POLICY = "http://appclone.info/apphtml5/privacy_policy.html";
-    public static final String URL_TERMS = "http://appclone.info/apphtml5/terms_service.html";
-    public static final String URL_FACEBOOK = "https://www.facebook.com/appclone/";
-    public static final String URL_AD_SDK = "http://169.55.74.167:12201/v3/config?pubid=700";
+    public static final String URL_FAQ = "http://baidu.com";
+    public static final String URL_PRIVACY_POLICY = "http://baidu.com";
+    public static final String URL_TERMS = "http://baidu.com";
+    public static final String URL_FACEBOOK = "http://baidu.com";
 
 }

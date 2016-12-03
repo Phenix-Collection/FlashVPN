@@ -85,7 +85,7 @@ public class HomeBgView extends SurfaceView implements SurfaceHolder.Callback {
         screenHeight = DisplayUtils.getScreenHeight(mContext);
         screenWidth = DisplayUtils.getScreenWidth(mContext);
 
-        mainBg = BitmapFactory.decodeResource(getResources(), R.mipmap.main_bg_min);
+        mainBg = BitmapFactory.decodeResource(getResources(), R.mipmap.main_bg_04_min);
 
         scaleX = DisplayUtils.getScreenWidth(mContext) / (float) mainBg.getWidth();
         scaleY = DisplayUtils.getScreenHeight(mContext) / (float) mainBg.getHeight();

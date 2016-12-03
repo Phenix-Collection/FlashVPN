@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 
+import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.Constants;
@@ -18,6 +20,7 @@ import com.polestar.multiaccount.widgets.BlueSwitch;
  */
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
+    private TextView versionTv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +31,8 @@ public class SettingsActivity extends BaseActivity {
 
     private void initView() {
         setTitle("Settings");
+        versionTv = (TextView)findViewById(R.id.version_info);
+        versionTv.setText("Version: " + BuildConfig.VERSION_NAME);
         shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
         shortCutSwich.setChecked(PreferencesUtils.getBoolean(this,Constants.KEY_AUTO_CREATE_SHORTCUT,false));
         shortCutSwich.setOnClickListener(new View.OnClickListener() {

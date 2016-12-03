@@ -2,20 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/launcher_bg"
-    android:background="@mipmap/launcher_bg_main"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/launch_page_color">
     <ImageView
         android:layout_width="match_parent"
-        android:layout_marginTop="35dp"
-        android:src="@mipmap/launcher_bg_icon"
+        android:layout_marginTop="120dp"
+        android:src="@mipmap/launch_logo"
         android:scaleType="centerInside"
-        android:layout_height="wrap_content" />
-    <ImageView
-        android:layout_width="match_parent"
-        android:src="@mipmap/launcher_bg_front"
-        android:layout_marginBottom="75dp"
-        android:scaleType="centerInside"
-        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>

@@ -59,7 +59,7 @@ public class BaseActivity extends AppCompatActivity {
      */
     public void setTitle(String title){
         if(titleTv != null){
-            titleTv.setText(title);
+            titleTv.setText( title);
         }
     }
 
