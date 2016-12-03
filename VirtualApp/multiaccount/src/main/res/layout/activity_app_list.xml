@@ -18,7 +18,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:text="@string/most_popular_apps"
-            android:textColor="@color/text_gray_dark"
+            android:textColor="@color/text_gray_light"
             android:textSize="12sp"/>
 
         <FrameLayout
@@ -43,7 +43,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:text="@string/more_apps"
-            android:textColor="@color/text_gray_dark"
+            android:textColor="@color/text_gray_light"
             android:textSize="12sp"/>
 
         <com.polestar.multiaccount.widgets.FixedGridView

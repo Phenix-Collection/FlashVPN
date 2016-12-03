@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">App Clone</string>
-    <string name="app_alias_name">App Clone</string>
+    <string name="app_name">Super Clone</string>
+    <string name="app_alias_name">Super Clone</string>
 
     <string name="app_icon">app_icon</string>
 
@@ -9,8 +9,12 @@
     <string name="most_popular_apps">Most Popular</string>
     <string name="more_apps">More Supported</string>
     <string name="btn_clone">Clone</string>
-    <string name="launching">Starting...</string>
+    <string name="start">Start</string>
+    <string name="cancel">Cancel</string>
     <string name="cloning">Cloning...</string>
+    <string name="cloning_tips">Super clone is creating an new instance of %s. \nPlease wait several seconds.</string>
+    <string name="clone_success">%s is cloned. Enjoy it now!</string>
+    <string name="success_tip1">Access accounts simultaneously</string>
 
     <!-- nav menu -->
     <string name="notifications">Notifications</string>
@@ -25,7 +29,7 @@
     <string name="delete_dialog_content">Removing this cloned app means\n deleting all if its data.</string>
     <string name="delete_dialog_left">Cancel</string>
     <string name="delete_dialog_right">Delete</string>
-    <string name="installFailure">This app is not supported yet, but we’re working on this for an upcoming version.</string>
+    <string name="installFailure">Sorry, this app is not supported yet, and we are coming up with it soon.</string>
     <string name="start_tips">Let\'s get started by cloning\n your first app here!</string>
     <string name="long_press_tips">Long press &amp; drag the app to add a\nshortcut on home screen or remove\nthe clone</string>
 

@@ -60,13 +60,11 @@
             android:name=".component.activity.SettingsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.AppInstallActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.FullScreen"/>
+            android:name=".component.activity.AppCloneActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".component.activity.HomeActivity"
             android:launchMode="singleTask"
-            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".component.activity.AppLaunchActivity"

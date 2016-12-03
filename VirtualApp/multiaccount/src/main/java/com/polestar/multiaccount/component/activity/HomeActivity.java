@@ -332,23 +332,12 @@ public class HomeActivity extends BaseActivity {
             if (requestCode == Constants.REQUEST_SELECT_APP) {
                 Logs.e("install time2 = " + System.currentTimeMillis());
                 AppModel model = data.getParcelableExtra(Constants.EXTRA_APP_MODEL);
-                AppInstallActivity.startAppInstallActivity(this, model, drawerBlurHelper.createBitmap());
+               // AppInstallActivity.startAppInstallActivity(this, model, drawerBlurHelper.createBitmap());
+                AppCloneActivity.startAppCloneActivity(this, model);
                 loadInstallAd();
                 mHomeFragment.hideToBottom();
             } else if (requestCode == Constants.REQUEST_INSTALL_APP) {
-                AppModel model = data.getParcelableExtra(Constants.EXTRA_APP_MODEL);
-                boolean isInstallSuccess = data.getBooleanExtra(Constants.EXTRA_IS_INSTALL_SUCCESS, false);
-                if (isInstallSuccess) {
-                    cloneHelper.installApp(HomeActivity.this, model);
-                    doAnimationExter();
-                    AppManager.setAppNotificationFlag(model.getPackageName(), true);
-                    EventReportManager.applistClone(this, model.getPackageName());
-                    MTAManager.applistClone(this, model.getPackageName());
-                   // showAd(installAd);
-                } else {
-                    ToastUtils.ToastDefult(this, getString(R.string.installFailure));
-                    doAnimationExter();
-                }
+
             }
         } else {
             doAnimationExter();
