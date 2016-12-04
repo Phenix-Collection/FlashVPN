@@ -23,7 +23,7 @@ public class Constants {
 
     public static final int APP_ICON_WIDTH = 50;//dp
     public static final int APP_ICON_RADIUS = 12;//dp
-    public static final int APP_ICON_PADDING = 3;//dp
+    public static final int APP_ICON_PADDING = 5;//dp
 
     public static final String PREFERENCE_NAME = "DotSpace preference";
     public static final String KEY_SERVER_PUSH = "key_server_push";

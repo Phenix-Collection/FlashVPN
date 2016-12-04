@@ -27,9 +27,7 @@
                 android:layout_height="66dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="16dp"
-
-                android:layout_marginRight="26dp" />
+                android:layout_marginBottom="16dp"/>
             <LinearLayout
                 android:id="@+id/guide_layout"
                 android:layout_width="match_parent"

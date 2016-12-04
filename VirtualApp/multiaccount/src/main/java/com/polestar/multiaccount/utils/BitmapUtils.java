@@ -44,15 +44,15 @@ public class BitmapUtils {
             int width = DisplayUtils.dip2px(context, Constants.APP_ICON_WIDTH);
             int padding = DisplayUtils.dip2px(context, Constants.APP_ICON_PADDING);
             shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
-            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon_shape);
+            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ring_icon);
             Canvas canvas = new Canvas(shortCutBitMap);
 
             Paint paint = new Paint();
-            paint.setColor(Color.WHITE);
+            paint.setColor(Color.TRANSPARENT);
             final Rect rect = new Rect(0, 0, width, width);
             final float roundPx = DisplayUtils.dip2px(context,Constants.APP_ICON_RADIUS);
             canvas.drawRoundRect(new RectF(rect),roundPx,roundPx,paint);
-            canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
 
             appIcon.setBounds(padding,padding,width - padding,width - padding);
             appIcon.draw(canvas);

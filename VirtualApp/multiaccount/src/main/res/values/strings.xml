@@ -12,7 +12,8 @@
     <string name="start">Start</string>
     <string name="cancel">Cancel</string>
     <string name="cloning">Cloning...</string>
-    <string name="cloning_tips">Super clone is creating an new instance of %s. \nPlease wait several seconds.</string>
+    <string name="cloning_tips">%s is being cloned ...</string>
+    <string name="app_starting_tips">%s clone is starting ...</string>
     <string name="clone_success">%s is cloned. Enjoy it now!</string>
     <string name="success_tip1">Access accounts simultaneously</string>
 

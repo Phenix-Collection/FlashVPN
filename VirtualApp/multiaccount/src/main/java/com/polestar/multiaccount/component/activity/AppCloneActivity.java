@@ -1,5 +1,9 @@
 package com.polestar.multiaccount.component.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +18,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -29,6 +34,7 @@ import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.Constants;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppManager;
+import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.EventReportManager;
@@ -42,7 +48,6 @@ import java.util.TimerTask;
  */
 
 public class AppCloneActivity extends BaseActivity {
-    public static final String PLUGIN_INSTALLED_WITHOUT_CANCEL = "plugin_installed without_cancel";
 
     private String mPkgName;
     private String mPkgLabel;
@@ -149,7 +154,8 @@ public class AppCloneActivity extends BaseActivity {
         mBtnStart.setVisibility(View.INVISIBLE);
 
         mTxtAppLabel.setText(mPkgLabel);
-        mImgAppIcon.setBackground(getAppIcon(mPkgName));
+        appModel.setIcon(appModel.initDrawable(this));
+        mImgAppIcon.setBackground(appModel.getIcon());
 
         mTxtInstalling.setText(String.format(getString(R.string.cloning_tips), mPkgLabel));
         mTxtInstalled.setText(String.format(getString(R.string.clone_success), mPkgLabel));
@@ -307,6 +313,14 @@ public class AppCloneActivity extends BaseActivity {
             }
         });
         mImgSuccessBg.setVisibility(View.VISIBLE);
+        appModel.setCustomIcon(BitmapUtils.createCustomIcon(AppCloneActivity.this, appModel.getIcon() ));
+        mImgAppIcon.setImageBitmap(appModel.getCustomIcon());
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImgAppIcon, "scaleX", 0.7f, 1.2f, 1.0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImgAppIcon, "scaleY", 0.7f, 1.2f, 1.0f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleX).with(scaleY);
+        animSet.setInterpolator(new BounceInterpolator());
+        animSet.setDuration(800).start();
         mProgressBar.startAnimation(progressFadeOut);
         mImgSuccessBg.startAnimation(successBgFadeIn);
         installingFadeOut.setAnimationListener(new Animation.AnimationListener() {

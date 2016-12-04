@@ -319,10 +319,8 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void startAppLaunchActivity(String packageName) {
-//        if(Build.VERSION.SDK_INT == 18){
-//            homeBgView.stopSelf();
-//        }
-        AppLaunchActivity.startAppLaunchActivity(this, packageName, drawerBlurHelper.createBitmap());
+        //AppLaunchActivity.startAppLaunchActivity(this, packageName, drawerBlurHelper.createBitmap());
+        AppStartActivity.startAppStartActivity(this, packageName);
     }
 
     @Override

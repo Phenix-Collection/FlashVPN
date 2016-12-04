@@ -74,6 +74,7 @@ public class CustomFloatView extends View implements DropTarget{
     private RectF rightBtnRect;
     private RectF btnBgRect;
     private int btnWidth;
+    private int lineWidth;
     private int centerDotColor;
     private int centerDotWidth;
     private float btnExtraWidth;
@@ -126,12 +127,13 @@ public class CustomFloatView extends View implements DropTarget{
         centerDotRect = new RectF();
         btnBgRect = new RectF();
 
+        lineWidth = DisplayUtils.dip2px(getContext(), 2);
         outerColor = getResources().getColor(R.color.add_app_color);
-        defaultOuterStrokeWidth = DisplayUtils.dip2px(getContext(), 2f);
+        defaultOuterStrokeWidth = DisplayUtils.dip2px(getContext(), 5);
         outerStrokeWidth = defaultOuterStrokeWidth;
 
         innerColor = getResources().getColor(R.color.left_right_anim_color);
-        defaultInnerPaddingWidth = DisplayUtils.dip2px(getContext(), 3);
+        defaultInnerPaddingWidth = DisplayUtils.dip2px(getContext(), 4);
         innerPaddingWidth = defaultInnerPaddingWidth;
 
         defaultContentPadding = DisplayUtils.dip2px(getContext(), 13);
@@ -139,7 +141,7 @@ public class CustomFloatView extends View implements DropTarget{
 
         defaultPadding = DisplayUtils.dip2px(getContext(), 5);
         leftAndRightSidePadding = DisplayUtils.dip2px(getContext(),16);
-        centerDotColor = getResources().getColor(R.color.left_right_anim_color);
+        centerDotColor = getResources().getColor(R.color.white);
         centerDotWidth = DisplayUtils.dip2px(getContext(), 2);
     }
 
@@ -479,7 +481,7 @@ public class CustomFloatView extends View implements DropTarget{
                 Shader shader = new RadialGradient(centerX,centerY,getHeight() / 2 - defaultPadding,innerColor,outerColor,RadialGradient.TileMode.CLAMP);
                 mPaint.setShader(shader);
             }
-            canvas.drawCircle(centerX, centerY, radius, mPaint);
+            canvas.drawCircle(centerX, centerY, radius , mPaint);
             mPaint.setShader(null);
         }
 
@@ -488,9 +490,9 @@ public class CustomFloatView extends View implements DropTarget{
             if(roteDegree > 0){
                 canvas.rotate(roteDegree,centerX,centerY);
             }
-            canvas.drawLine(centerX - radius + contentPadding, centerY, centerX + radius - contentPadding, centerY, mPaint);
-            canvas.drawLine(centerX, contentPadding + defaultPadding + innerPaddingWidth, centerX, getHeight() - contentPadding - defaultPadding - innerPaddingWidth, mPaint);
-        }
+            canvas.drawRect(centerX - radius + contentPadding,centerY - lineWidth/2, centerX + radius - contentPadding, centerY + lineWidth/2, mPaint);
+            canvas.drawRect(centerX - lineWidth/2, contentPadding + defaultPadding + innerPaddingWidth, centerX + lineWidth/2, getHeight() - contentPadding - defaultPadding - innerPaddingWidth, mPaint);
+         }
 //        }else{
 //
 //        }

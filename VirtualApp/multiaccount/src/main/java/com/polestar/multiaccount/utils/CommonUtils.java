@@ -13,7 +13,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.polestar.multiaccount.R;
-import com.polestar.multiaccount.component.activity.AppLaunchActivity;
+import com.polestar.multiaccount.component.activity.AppStartActivity;
 import com.polestar.multiaccount.constant.Constants;
 import com.polestar.multiaccount.model.AppModel;
 
@@ -28,7 +28,7 @@ public class CommonUtils {
         Bitmap iconBitmap = BitmapUtils.createCustomIcon(context, appModel.initDrawable(context));
         String appName = appModel.getName();
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
-        actionIntent.setClassName(context.getPackageName(), AppLaunchActivity.class.getName());
+        actionIntent.setClassName(context.getPackageName(), AppStartActivity.class.getName());
         actionIntent.putExtra(Constants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
         actionIntent.putExtra(Constants.EXTRA_FROM, Constants.VALUE_FROM_SHORTCUT);
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -39,7 +39,7 @@ public class CommonUtils {
     public static void removeShortCut(Context context, AppModel appModel) {
         String appName = appModel.getName();
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
-        actionIntent.setClassName(context.getPackageName(), AppLaunchActivity.class.getName());
+        actionIntent.setClassName(context.getPackageName(), AppStartActivity.class.getName());
         actionIntent.putExtra(Constants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
         actionIntent.putExtra(Constants.EXTRA_FROM, Constants.VALUE_FROM_SHORTCUT);
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
