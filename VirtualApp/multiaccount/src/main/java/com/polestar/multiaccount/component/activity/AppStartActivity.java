@@ -58,7 +58,10 @@ public class AppStartActivity extends BaseActivity {
 
 
     public static void startAppStartActivity(Activity activity, String packageName) {
-
+        if (  VirtualCore.get().isAppRunning(packageName, VUserHandle.myUserId())) {
+            AppManager.launchApp(packageName);
+            return;
+        }
         Intent intent = new Intent(activity, AppStartActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -158,10 +161,7 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (  VirtualCore.get().isAppRunning(appModel.getPackageName(), VUserHandle.myUserId())) {
-            AppManager.launchApp(appModel.getPackageName());
-            return;
-        }
+
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         setContentView(R.layout.activity_start);
 
