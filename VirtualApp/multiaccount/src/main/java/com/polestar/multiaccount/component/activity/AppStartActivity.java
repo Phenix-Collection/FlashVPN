@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.os.VUserHandle;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.Constants;
@@ -56,6 +58,7 @@ public class AppStartActivity extends BaseActivity {
 
 
     public static void startAppStartActivity(Activity activity, String packageName) {
+
         Intent intent = new Intent(activity, AppStartActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -68,6 +71,7 @@ public class AppStartActivity extends BaseActivity {
     }
 
     private void initData() {
+
         Intent intent = getIntent();
         if (intent != null) {
             String packageName = intent.getStringExtra(Constants.EXTRA_CLONED_APP_PACKAGENAME);
@@ -86,6 +90,8 @@ public class AppStartActivity extends BaseActivity {
                 @Override
                 public void run() {
                     Looper.prepare();
+                    int delay = 1200;
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -95,7 +101,7 @@ public class AppStartActivity extends BaseActivity {
                             AppManager.launchApp(appModel.getPackageName());
 //                            finish();
                         }
-                    }, 1000);
+                    }, delay);
                     Looper.loop();
                 }
             }).start();
@@ -152,6 +158,10 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (  VirtualCore.get().isAppRunning(appModel.getPackageName(), VUserHandle.myUserId())) {
+            AppManager.launchApp(appModel.getPackageName());
+            return;
+        }
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         setContentView(R.layout.activity_start);
 

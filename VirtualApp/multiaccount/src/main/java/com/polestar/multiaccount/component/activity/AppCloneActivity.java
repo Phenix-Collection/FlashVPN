@@ -314,9 +314,10 @@ public class AppCloneActivity extends BaseActivity {
         });
         mImgSuccessBg.setVisibility(View.VISIBLE);
         appModel.setCustomIcon(BitmapUtils.createCustomIcon(AppCloneActivity.this, appModel.getIcon() ));
+        mImgAppIcon.setBackground(null);
         mImgAppIcon.setImageBitmap(appModel.getCustomIcon());
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImgAppIcon, "scaleX", 0.7f, 1.2f, 1.0f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImgAppIcon, "scaleY", 0.7f, 1.2f, 1.0f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImgAppIcon, "scaleX", 0.7f, 1.3f, 1.1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImgAppIcon, "scaleY", 0.7f, 1.3f, 1.1f);
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(scaleX).with(scaleY);
         animSet.setInterpolator(new BounceInterpolator());
