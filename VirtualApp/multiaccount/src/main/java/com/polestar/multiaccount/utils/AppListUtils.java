@@ -86,7 +86,7 @@ public class AppListUtils implements DataObserver {
                 if (!isAppInstalled(pName)) {
                     continue;
                 }
-                String description = jobj.getString("monthly_active_users");
+                String description = jobj.getString("description");
                 PackageInfo packageInfo = null;
                 try {
                     packageInfo = mContext.getPackageManager().getPackageInfo(pName, 0);

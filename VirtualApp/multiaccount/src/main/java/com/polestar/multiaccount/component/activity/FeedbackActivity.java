@@ -1,6 +1,8 @@
 package com.polestar.multiaccount.component.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,9 +22,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private Context mContext;
     private EditText mEtFeedback;
-    private EditText mEtEmail;
     private Button mBtSubmit;
-    private ProgressBar mProgressBar;
 
 
     @Override
@@ -36,9 +36,7 @@ public class FeedbackActivity extends BaseActivity {
     private void initView() {
         setTitle(Constants.TITLE_FEEDBACK);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.fb_progressbar);
         mEtFeedback = (EditText) findViewById(R.id.et_feedback);
-        mEtEmail = (EditText) findViewById(R.id.et_email);
         mBtSubmit = (Button) findViewById(R.id.bt_submit);
         mBtSubmit.setEnabled(false);
 
@@ -71,28 +69,12 @@ public class FeedbackActivity extends BaseActivity {
                     ToastUtils.ToastDefult(mContext, "Description can not be empty!");
                     return;
                 }
-                String email = mEtEmail.getText().toString();
-                showProgressBar();
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int result = HttpUtil.submitFeedback(mContext, content, email);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                hideProgressBar();
-                                if (result == 0) {
-                                    ToastUtils.ToastDefult(mContext, getString(R.string.submit_success));
-                                    finish();
-                                } else {
-                                    ToastUtils.ToastDefult(mContext, getString(R.string.submit_failed));
-                                }
-                            }
-                        });
-
-                    }
-                }).start();
+                Intent data=new Intent(Intent.ACTION_SENDTO);
+                data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
+                data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about SuperClone");
+                data.putExtra(Intent.EXTRA_TEXT, content);
+                startActivity(data);
             }
         });
     }
@@ -105,19 +87,4 @@ public class FeedbackActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void showProgressBar() {
-        mEtFeedback.setEnabled(false);
-        mEtEmail.setEnabled(false);
-        mBtSubmit.setEnabled(false);
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar() {
-        mProgressBar.setVisibility(View.GONE);
-        mEtFeedback.setEnabled(true);
-        mEtEmail.setEnabled(true);
-        mBtSubmit.setEnabled(true);
-    }
-
 }

@@ -31,4 +31,6 @@
     <color name="theme_text_color">#FF4A4A4A</color>
     <color name="theme_color_presss">#0A9EB3</color>
     <color name="grid_line">#FFF2F2F2</color>
+    <color name="faq_title_color">#00aab8</color>
+    <color name="faq_content_color">#4a4a4a</color>
 </resources>

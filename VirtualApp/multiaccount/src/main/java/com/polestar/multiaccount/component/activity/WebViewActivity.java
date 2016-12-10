@@ -29,7 +29,7 @@ public class WebViewActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_faq_layout);
+        setContentView(R.layout.activity_webview);
         initData();
         initView();
     }

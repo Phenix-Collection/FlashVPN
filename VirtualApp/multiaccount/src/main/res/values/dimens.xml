@@ -16,4 +16,7 @@
     <dimen name="title_bar_title_size">16sp</dimen>
 
     <dimen name="notification_item_margin">22dp</dimen>
+
+    <dimen name="faq_title_size">16sp</dimen>
+    <dimen name="faq_content_size">14sp</dimen>
 </resources>

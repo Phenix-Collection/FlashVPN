@@ -54,6 +54,9 @@
             android:name=".component.activity.FeedbackActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".component.activity.FaqActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".component.activity.WebViewActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -130,6 +133,10 @@
             android:exported="true" >
         </provider>
 
+        <!-- fb ad -->
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <activity android:name="com.facebook.ads.AudienceNetworkActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 
 </manifest>

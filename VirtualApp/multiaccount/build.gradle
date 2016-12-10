@@ -16,7 +16,7 @@ android {
             variant.outputs.each { output ->
                 output.outputFile = new File(
                         output.outputFile.parent,
-                        "AppClone-${variant.productFlavors[0].name}-${variant.buildType.name}-${variant.productFlavors[0].versionName}.apk")
+                        "SuperClone-${variant.productFlavors[0].name}-${variant.buildType.name}-${variant.productFlavors[0].versionName}.apk")
             }
         }
     }
@@ -33,10 +33,10 @@ android {
 
     signingConfigs {
         myConfig {
-            storeFile file("../release.keystore")
-            storePassword "sqUC8ZqP"
-            keyAlias "android"
-            keyPassword "sqUC8ZqP"
+            storeFile file("D:\\Project\\VirtualApp\\VirtualApp\\publish\\test.keystore")
+           storePassword "123456"
+            keyAlias "test.keystore"
+           keyPassword "123456"
         }
     }
 
@@ -47,7 +47,7 @@ android {
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 0
+            versionCode 100
             versionName "1.0.0.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
@@ -105,6 +105,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.google.firebase:firebase-ads:9.4.0'
+    compile 'com.facebook.android:audience-network-sdk:4.+'
 
     compile project(':lib')
 }

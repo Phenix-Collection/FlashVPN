@@ -40,8 +40,6 @@ public class Constants {
     public static final String TITLE_FEEDBACK = "Feedback";
 
     public static final String URL_FAQ = "http://baidu.com";
-    public static final String URL_PRIVACY_POLICY = "http://baidu.com";
-    public static final String URL_TERMS = "http://baidu.com";
-    public static final String URL_FACEBOOK = "http://baidu.com";
+    public static final String URL_FACEBOOK = "https://www.facebook.com/polestar.applab";
 
 }

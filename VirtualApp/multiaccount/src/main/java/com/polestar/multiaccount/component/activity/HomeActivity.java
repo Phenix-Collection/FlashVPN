@@ -32,12 +32,9 @@ import com.polestar.multiaccount.utils.Logs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RenderScriptManager;
-import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.utils.UpdateSDKManager;
 import com.polestar.multiaccount.widgets.AnimationImageView;
-import com.polestar.multiaccount.widgets.AnimationLayout;
 import com.polestar.multiaccount.widgets.GuideForLongPressPopWindow;
-import com.polestar.multiaccount.widgets.HomeBgView;
 
 public class HomeActivity extends BaseActivity {
 
@@ -50,13 +47,8 @@ public class HomeActivity extends BaseActivity {
     private TextView appNameTv;
     private DrawerBlurHelper drawerBlurHelper;
     private AnimationImageView giftView;
-    private AnimationLayout imageTop, imageBottom;
     private boolean showGiftGif;
-    private Handler mHandler = new Handler();
     private CloneHelper cloneHelper;
-    private boolean isGiftViewInit;
-    private HomeBgView homeBgView;
-    private ImageView homeBgCoverImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,9 +237,7 @@ public class HomeActivity extends BaseActivity {
             case 1:
                 MTAManager.menuFAQ(this);
                 EventReportManager.menuFAQ(this);
-                Intent intentToFAQ = new Intent(this, WebViewActivity.class);
-                intentToFAQ.putExtra(WebViewActivity.EXTRA_TITLE, "FAQ");
-                intentToFAQ.putExtra(WebViewActivity.EXTRA_URL, Constants.URL_FAQ);
+                Intent intentToFAQ = new Intent(this, FaqActivity.class);
                 startActivity(intentToFAQ);
                 break;
             case 2:

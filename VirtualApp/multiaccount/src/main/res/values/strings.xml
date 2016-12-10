@@ -35,17 +35,16 @@
     <string name="long_press_tips">Long press &amp; drag the app to add a\nshortcut on home screen or remove\nthe clone</string>
 
     <!-- notification -->
-    <string name="notification_decription">Enable to receive messages from the DevTeam</string>
+    <string name="notification_decription">Enable to receive notification for this cloned application</string>
 
-    <string name="share_with_friends_tip">I just downloaded the %s app, and it’s a great multi account manager app. You can get it here: </string>
+    <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
 
     <!-- feedback -->
-    <string name="feedback_hint">Please describe the problem in as much detail as possible. Tell us more about what happened, including the steps we can take to reproduce the problem.(Required)</string>
-    <string name="email_description">Please provide us your email if you are happy to be contacted.(Optional)</string>
+    <string name="feedback_hint">Please tell us the detail about the problem you met , and please tell us the steps to reproduce it and better with screenshot.</string>
     <string name="button_submit">Submit</string>
-    <string name="submit_success">Thanks for providing feedback!\nWe\'ll do our best to improve your reading experience.</string>
-    <string name="submit_failed">Comment failed to submit. Try again.</string>
-    <string name="extra_feedback_decription">You can also send us an email at polestar.applab@gmail.com. Please attach a screenshot, video or file to help us understand the problem. Thank you very much!</string>
+    <string name="submit_success">Thanks for providing feedback!.</string>
+    <string name="submit_failed">Feedback failed to submit. Please try again.</string>
+    <string name="extra_feedback_decription">We will resolve the issue for you ASAP and appreciate your help to improve the product.Thank you very much!</string>
 
     <!-- toast -->
     <string name="toast_shortcut_added">Shortcut added</string>
@@ -73,5 +72,19 @@
     <!-- titles -->
     <string name="clone_apps_title">Clone Apps</string>
 
+    <string name="facebook_app_id">1700354860278115</string>
+
     <string name="crash_hint">Ooops, seems this app not supported yet, and we will fix it soon.</string>
+
+    <string name="text_Q1_title">Q1: Why cannot I receive message notifications from Super Clone enabled apps?</string>
+    <string name="text_Q1_content_2">A1: Please ensure that Super Clone has network access</string>
+    <string name="text_Q2_title">Q2: Will Super Clone collect and use my private information?</string>
+    <string name="text_Q2_content">A2: No, Super Clone will only collect small amounts of your “public data” (e.g. Avatar, nickname etc), and these will only be used within your device to create a better user experience for you. Super Clone promises that none of your private data will be collected or used.</string>
+    <string name="text_Q3_title">Q3: Why is Super Clone’s storage consumption increasing?</string>
+    <string name="text_Q3_content">A3: All sub-accounts added on your device are by default listed under Super Clone by the Android operating system. For example, when you add a Facebook sub-account to your device, all of the storage used for your second Facebook account (app) is listed under Super Clone. Therefore, the storage consumption listed for Super Clone will appear to increase significantly when you add more sub-accounts. Rest assured that the storage consumption of Super Clone itself is not actually increasing by much.</string>
+    <string name="text_Q4_title">Q4: Why has Super Clone used up so much storage space?</string>
+    <string name="text_Q4_content">A4: All sub-accounts added on your device are by default listed under Super Clone by the Android operating system. The large amount of storage consumption listed under Super Clone is the overall total storage used for all sub-accounts you’ve added. Super Clone itself uses little storage.</string>
+    <string name="text_Q5_title">Q5: How does Super Clone’s Private App function protects my privacy?</string>
+    <string name="text_Q5_content">A5: A password is required to access Private Apps each time you wake your device. Additionally, all Private Apps are installed on Super Clone, and therefore all Private Apps’ data are not accessible by any external programs.</string>
+
 </resources>
