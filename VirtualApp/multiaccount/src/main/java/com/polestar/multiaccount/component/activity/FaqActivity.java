@@ -20,7 +20,7 @@ public class FaqActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq_layout);
-        setTitle(R.string.faq);
+        setTitle(getResources().getString(R.string.faq));
         mContext = this;
         initView();
     }

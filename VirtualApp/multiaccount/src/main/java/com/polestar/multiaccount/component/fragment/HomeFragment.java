@@ -5,24 +5,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.polestar.ad.AdConstants;
+import com.polestar.ad.adapters.FuseNativeAdLoader;
+import com.polestar.ad.adapters.INativeAd;
+import com.polestar.ad.adapters.INativeAdLoadListener;
+import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
 import com.polestar.multiaccount.component.activity.AppListActivity;
 import com.polestar.multiaccount.component.activity.HomeActivity;
-import com.polestar.multiaccount.component.adapter.AppHomeAdapter;
 import com.polestar.multiaccount.constant.Constants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
@@ -64,6 +66,10 @@ public class HomeFragment extends BaseFragment {
     private ExplosionField mExplosionField;
     private DragController mDragController;
     private DragLayer mDragLayer;
+    private LinearLayout nativeAdContainer;
+
+
+    private FuseNativeAdLoader mNativeAdLoader;
 
     @Nullable
     @Override
@@ -184,6 +190,8 @@ public class HomeFragment extends BaseFragment {
         }
     }
     private void initView() {
+        nativeAdContainer = (LinearLayout) getActivity().findViewById(R.id.native_ad_container);
+//        nativeAdContainer.setVisibility(View.GONE);
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
         pkgGridView = (GridView) contentView.findViewById(R.id.grid_app);
         pkgGridAdapter = new PackageGridAdapter();
@@ -348,8 +356,70 @@ public class HomeFragment extends BaseFragment {
 //            }
 //        });
     }
+    private void inflateFbNativeAdView(INativeAd ad) {
+        View adView = LayoutInflater.from(getActivity()).inflate(R.layout.front_page_native_ad, null);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        adView.setLayoutParams(params);
+        if (ad != null && adView != null) {
+            BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
+            coverView.setDefaultResource(0);
+            coverView.requestDisplayURL(ad.getCoverImageUrl());
+            BasicLazyLoadImageView iconView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_icon_image);
+            iconView.setDefaultResource(0);
+            iconView.requestDisplayURL(ad.getIconImageUrl());
+            TextView titleView = (TextView) adView.findViewById(R.id.ad_title);
+            titleView.setText(ad.getTitle());
+            TextView subtitleView = (TextView) adView.findViewById(R.id.ad_subtitle_text);
+            subtitleView.setText(ad.getBody());
+            TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
+            ctaView.setText(ad.getCallToActionText());
+
+            nativeAdContainer.addView(adView);
+            ad.registerViewForInteraction(nativeAdContainer);
+            if (ad.getPrivacyIconUrl() != null) {
+                BasicLazyLoadImageView choiceIconImage = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_choices_image);
+                choiceIconImage.setDefaultResource(0);
+                choiceIconImage.requestDisplayURL(ad.getPrivacyIconUrl());
+                ad.registerPrivacyIconView(choiceIconImage);
+            }
+        }
+    }
+
+    private void loadNativeAd() {
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.loadAd(1, new INativeAdLoadListener() {
+                @Override
+                public void onAdLoaded(INativeAd ad) {
+                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
+                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
+                        inflateFbNativeAdView(ad);
+                    } else if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL)) {
+                       // inflateAdmobInstallAdView(ad);
+                    } else if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT)) {
+                      //  inflateAdmobContentAdView(ad);
+                    }
+
+                }
+
+                @Override
+                public void onAdListLoaded(List<INativeAd> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+        }
+    }
 
     private void initData(){
+        if (mNativeAdLoader == null) {
+            mNativeAdLoader = new FuseNativeAdLoader(getActivity());
+            mNativeAdLoader.addNativeAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
+        }
+        loadNativeAd();
         CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
             @Override
             public void onInstalled(List<AppModel> clonedApp) {

@@ -146,7 +146,7 @@ public class MApp extends Application {
     }
 
     private void initAd() {
-//        AdAgent.getInstance().init(this, Constants.URL_AD_SDK, "lite", "lite", new DotAdEventsListener() {
+//        AdAgent.getInstance().init(this, AdConstants.URL_AD_SDK, "lite", "lite", new DotAdEventsListener() {
 //            @Override
 //            public void sendUAEvent(String s, String s1, Long aLong, Map<String, String> map) {
 //

@@ -33,4 +33,8 @@
     <color name="grid_line">#FFF2F2F2</color>
     <color name="faq_title_color">#00aab8</color>
     <color name="faq_content_color">#4a4a4a</color>
+
+    <color name="native_ad_text_white">#ffffff</color>
+    <color name="native_ad_transparent_black">#64000000</color>
+    <color name="ad_calltoaction">#00a652</color>
 </resources>
