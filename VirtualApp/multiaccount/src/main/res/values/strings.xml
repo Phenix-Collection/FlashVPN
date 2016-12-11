@@ -57,7 +57,7 @@
     <string name="settings_more">More Settings</string>
     <string name="settings_general">General Settings</string>
     <string name="settings_terms_of_service">Terms of Service</string>
-    <string name="settings_follow_us">Follow us on FaceBook Page</string>
+    <string name="settings_follow_us">Follow us on Facebook Page</string>
     <string name="settings_right">2016 Polestar Applab All rights reserved</string>
 
     <array name="navigationItem">

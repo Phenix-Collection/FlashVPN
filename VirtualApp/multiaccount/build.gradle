@@ -5,7 +5,7 @@ apply plugin: 'org.greenrobot.greendao'
 
 
 def releaseTime() {
-    return new Date().format("MMdd", TimeZone.getTimeZone("UTC"))
+    return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
 }
 android {
     compileSdkVersion 23
@@ -43,12 +43,12 @@ android {
     productFlavors {
         develop {
             versionCode 9999
-            versionName '1.0.0.9999'
+            versionName '1.0.1.9999'
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 100
-            versionName "1.0.0.${releaseTime()}"
+            versionCode 101
+            versionName "1.0.1.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }

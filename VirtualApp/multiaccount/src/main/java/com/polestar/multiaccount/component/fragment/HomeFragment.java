@@ -14,6 +14,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -49,6 +50,7 @@ import com.polestar.multiaccount.widgets.dragdrop.DragSource;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by yxx on 2016/7/19.
@@ -106,7 +108,8 @@ public class HomeFragment extends BaseFragment {
                     floatView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+                            Toast.makeText(getActivity(), R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
+                            //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
                         }
                     },CustomFloatView.ANIM_DURATION / 2);
                     break;
