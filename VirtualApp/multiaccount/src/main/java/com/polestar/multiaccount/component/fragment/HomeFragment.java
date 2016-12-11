@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -17,9 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.polestar.ad.AdConstants;
-import com.polestar.ad.adapters.FuseNativeAdLoader;
-import com.polestar.ad.adapters.INativeAd;
-import com.polestar.ad.adapters.INativeAdLoadListener;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
@@ -69,7 +68,7 @@ public class HomeFragment extends BaseFragment {
     private LinearLayout nativeAdContainer;
 
 
-    private FuseNativeAdLoader mNativeAdLoader;
+    private FuseAdLoader mNativeAdLoader;
 
     @Nullable
     @Override
@@ -198,7 +197,7 @@ public class HomeFragment extends BaseFragment {
         pkgGridView.setAdapter(pkgGridAdapter);
 
         guideLayout = (LinearLayout) contentView.findViewById(R.id.guide_layout);
-        iconGifView = (GifView) contentView.findViewById(R.id.icon_gif);
+
         floatView = (CustomFloatView) contentView.findViewById(R.id.addApp_btn);
         floatView.startBreath();
 
@@ -356,10 +355,10 @@ public class HomeFragment extends BaseFragment {
 //            }
 //        });
     }
-    private void inflateFbNativeAdView(INativeAd ad) {
+    private void inflateFbNativeAdView(IAd ad) {
         View adView = LayoutInflater.from(getActivity()).inflate(R.layout.front_page_native_ad, null);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        adView.setLayoutParams(params);
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        adView.setLayoutParams(params);
         if (ad != null && adView != null) {
             BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
             coverView.setDefaultResource(0);
@@ -374,6 +373,7 @@ public class HomeFragment extends BaseFragment {
             TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
             ctaView.setText(ad.getCallToActionText());
 
+
             nativeAdContainer.addView(adView);
             ad.registerViewForInteraction(nativeAdContainer);
             if (ad.getPrivacyIconUrl() != null) {
@@ -387,9 +387,9 @@ public class HomeFragment extends BaseFragment {
 
     private void loadNativeAd() {
         if (mNativeAdLoader != null) {
-            mNativeAdLoader.loadAd(1, new INativeAdLoadListener() {
+            mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
-                public void onAdLoaded(INativeAd ad) {
+                public void onAdLoaded(IAd ad) {
                     if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
                             || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
                         inflateFbNativeAdView(ad);
@@ -402,7 +402,7 @@ public class HomeFragment extends BaseFragment {
                 }
 
                 @Override
-                public void onAdListLoaded(List<INativeAd> ads) {
+                public void onAdListLoaded(List<IAd> ads) {
 
                 }
 
@@ -416,8 +416,8 @@ public class HomeFragment extends BaseFragment {
 
     private void initData(){
         if (mNativeAdLoader == null) {
-            mNativeAdLoader = new FuseNativeAdLoader(getActivity());
-            mNativeAdLoader.addNativeAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
+            mNativeAdLoader = new FuseAdLoader(getActivity());
+            mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
         loadNativeAd();
         CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {

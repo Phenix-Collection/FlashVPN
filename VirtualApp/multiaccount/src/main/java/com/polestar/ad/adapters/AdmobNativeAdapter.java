@@ -18,11 +18,11 @@ import com.polestar.ad.L;
  * Created by guojia on 2016/10/31.
  */
 
-public class AdmobNativeAdapter extends NativeAd implements INativeAdLoader {
+public class AdmobNativeAdapter extends Ad implements IAdLoader {
 
     private String mFilter;
     private Context mContext;
-    private INativeAdLoadListener mListener;
+    private IAdLoadListener mListener;
 
     private com.google.android.gms.ads.formats.NativeAd mRawAd;
 
@@ -35,7 +35,7 @@ public class AdmobNativeAdapter extends NativeAd implements INativeAdLoader {
         mFilter = filter;
     }
     @Override
-    public void loadAd(int num, INativeAdLoadListener listener) {
+    public void loadAd(int num, IAdLoadListener listener) {
         if (listener == null) {
             L.e("listener not set.");
             return;

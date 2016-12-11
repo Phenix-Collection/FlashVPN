@@ -1,8 +1,6 @@
 package com.polestar.multiaccount.widgets;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Movie;
 import android.graphics.Paint;
@@ -28,9 +26,11 @@ public class GifView extends View {
     private float mScale;
     private int mMeasuredMovieWidth;
     private int mMeasuredMovieHeight;
-    private volatile boolean mPaused;
+    private volatile boolean mPaused = true;
     private boolean mVisible;
     private boolean playOnce;
+
+    private long playDuration = -1;
 
     public GifView(Context context) {
         this(context, (AttributeSet) null);
@@ -72,11 +72,16 @@ public class GifView extends View {
             this.mMovieStart = SystemClock.uptimeMillis() - (long) this.mCurrentAnimationTime;
             this.invalidate();
         }
+        playDuration = -1;
     }
 
     public void playOnce() {
         mCurrentAnimationTime = 0;
         playOnce = true;
+        playDuration = this.movie.duration();
+        if(playDuration == 0) {
+            playDuration = 1000;
+        }
         play();
     }
 
@@ -167,8 +172,7 @@ public class GifView extends View {
         }
 
         this.mCurrentAnimationTime = (int) ((now - this.mMovieStart) % (long) dur);
-        if (playOnce && now - this.mMovieStart >= dur) {
-            playOnce = false;
+        if (playDuration != -1 && (now - this.mMovieStart >= playDuration)) {
             mCurrentAnimationTime = dur;
             pause();
         }
@@ -198,5 +202,21 @@ public class GifView extends View {
         super.onWindowVisibilityChanged(visibility);
         this.mVisible = visibility == View.VISIBLE;
         this.invalidateView();
+    }
+
+    public void play(long duration) {
+        if (this.mPaused) {
+            this.mPaused = false;
+            this.mMovieStart = SystemClock.uptimeMillis() - (long) this.mCurrentAnimationTime;
+            this.invalidate();
+        }
+        long movieDuration = this.movie.duration() == 0 ? 1000 : this.movie.duration();
+        Logs.d("movie duration " + movieDuration);
+        if (duration < movieDuration) {
+            playDuration = movieDuration;
+        } else {
+            playDuration = ((duration + movieDuration) / movieDuration) * movieDuration;
+        }
+        Logs.d("playDuration " + playDuration);
     }
 }

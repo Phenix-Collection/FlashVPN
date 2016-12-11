@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.View;
 
-import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSettings;
@@ -18,18 +17,18 @@ import com.polestar.ad.L;
  * Created by guojia on 2016/10/31.
  */
 
-public class FBNativeAdapter extends NativeAd implements INativeAdLoader {
+public class FBNativeAdapter extends Ad implements IAdLoader {
 
     private com.facebook.ads.NativeAd mRawAd ;
     private Context mContext;
-    private INativeAdLoadListener mListener;
+    private IAdLoadListener mListener;
 
     public FBNativeAdapter(Context context, String key) {
         mContext = context;
         mKey = key;
     }
     @Override
-    public void loadAd(int num, INativeAdLoadListener listener) {
+    public void loadAd(int num, IAdLoadListener listener) {
         if (AdConstants.DEBUG) {
             SharedPreferences sp = mContext.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
             String deviceIdHash = sp.getString("deviceIdHash", "");
@@ -41,18 +40,18 @@ public class FBNativeAdapter extends NativeAd implements INativeAdLoader {
         mListener = listener;
         mRawAd.setAdListener(new AdListener() {
             @Override
-            public void onError(Ad ad, AdError adError) {
+            public void onError(com.facebook.ads.Ad ad, AdError adError) {
                 mListener.onError(adError.getErrorMessage());
             }
 
             @Override
-            public void onAdLoaded(Ad ad) {
+            public void onAdLoaded(com.facebook.ads.Ad ad) {
                 mLoadedTime = System.currentTimeMillis();
                 mListener.onAdLoaded(FBNativeAdapter.this);
             }
 
             @Override
-            public void onAdClicked(Ad ad) {
+            public void onAdClicked(com.facebook.ads.Ad ad) {
                 //TODO
             }
         });

@@ -2,18 +2,20 @@ package com.polestar.multiaccount.component.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.polestar.ad.AdConstants;
+import com.polestar.ad.adapters.FBInterstitialAdapter;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.NavigationAdapter;
@@ -21,20 +23,19 @@ import com.polestar.multiaccount.component.fragment.HomeFragment;
 import com.polestar.multiaccount.constant.Constants;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.EventReportManager;
-import com.polestar.multiaccount.utils.AnimatorHelper;
 import com.polestar.multiaccount.utils.AppListUtils;
-import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DrawerBlurHelper;
-import com.polestar.multiaccount.utils.LocalAdUtils;
 import com.polestar.multiaccount.utils.Logs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RenderScriptManager;
 import com.polestar.multiaccount.utils.UpdateSDKManager;
-import com.polestar.multiaccount.widgets.AnimationImageView;
+import com.polestar.multiaccount.widgets.GifView;
 import com.polestar.multiaccount.widgets.GuideForLongPressPopWindow;
+
+import java.util.List;
 
 public class HomeActivity extends BaseActivity {
 
@@ -46,8 +47,8 @@ public class HomeActivity extends BaseActivity {
     private View navigationLayout;
     private TextView appNameTv;
     private DrawerBlurHelper drawerBlurHelper;
-    private AnimationImageView giftView;
-    private boolean showGiftGif;
+    private GifView giftView;
+    private FuseAdLoader adLoader;
     private CloneHelper cloneHelper;
 
     @Override
@@ -55,6 +56,7 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
+        loadAd();
         cloneHelper = CloneHelper.getInstance(this);
         AppListUtils.getInstance(this); // init AppListUtils
     }
@@ -67,8 +69,10 @@ public class HomeActivity extends BaseActivity {
         navigationLayout = findViewById(R.id.navigation_layout);
         appNameTv = (TextView) findViewById(R.id.app_name);
         forgroundLayout = findViewById(R.id.blur_forground);
-        giftView = (AnimationImageView) findViewById(R.id.gifView);
-        giftView.setVisibility(View.GONE);
+        giftView = (GifView) findViewById(R.id.gifView);
+        giftView.setVisibility(View.INVISIBLE);
+//        giftView.play();
+        //giftView.setVisibility(View.GONE);
         navigationList.setAdapter(new NavigationAdapter(this));
         navigationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -105,7 +109,7 @@ public class HomeActivity extends BaseActivity {
         appNameTv.post(new Runnable() {
             @Override
             public void run() {
-                loadAd();
+
 //                drawerBlurHelper = new DrawerBlurHelper(HomeActivity.this, drawer, contentLayout, forgroundLayout, navigationLayout);
                 float contentWidth = appNameTv.getWidth();
                 float totalWidth = navigationLayout.getWidth();
@@ -133,44 +137,39 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void loadAd() {
-        Logs.e("ad","start loadAd");
-//        LocalAdUtils.showFullScreenAd(this, true, new OnAdLoadListener() {
-//            @Override
-//            public void onLoad(IAd iAd) {
-//
-//            }
-//
-//            @Override
-//            public void onLoadFailed(AdError adError) {
-//                Logs.e("ad", "onLoadFailed  " + adError);
-//            }
-//
-//            @Override
-//            public void onLoadInterstitialAd(WrapInterstitialAd wrapInterstitialAd) {
-//                Logs.e("ad", "onLoadInterstitialAd");
-//                if(!isGiftViewInit){
-//                    isGiftViewInit = true;
-//                    giftView.setImageResource(R.drawable.ad_gift_anim);
-//                }
-//                if (isResumed()) {
-//                    giftView.setVisibility(View.VISIBLE);
-//                    giftView.playOnce();
-//                } else {
-//                    showGiftGif = true;
-//                }
-//                HomeActivity.this.wrapInterstitialAd = wrapInterstitialAd;
-//            }
-//        });
+        Logs.e("start INTERSTITIAL loadAd");
+        adLoader = new FuseAdLoader(this);
+        adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL, "1700354860278115_1702702800043321", -1);
+        adLoader.loadAd(1, new IAdLoadListener() {
+            @Override
+            public void onAdLoaded(IAd ad) {
+                giftView.setGifResource(R.drawable.front_page_gift_icon);
+                giftView.setVisibility(View.VISIBLE);
+                giftView.play(10*1000);
+                giftView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ad.show();
+                    }
+                });
+            }
+
+            @Override
+            public void onAdListLoaded(List<IAd> ads) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (showGiftGif) {
-            showGiftGif = false;
-            giftView.setVisibility(View.VISIBLE);
-            giftView.playOnce();
-        }
+
     }
 
     @Override

@@ -13,15 +13,6 @@ public class EventReportManager {
     private static final String COMMON_EVENT = "common_event";
 
     public static void init(Context context) {
-        // 初始化
-        String url;
-        if (Constants.IS_RELEASE_VERSION) {
-            // for release
-            url = "http://st.appclone.info"; //若使用域名，需要先绑定ip
-        } else {
-            // for test
-            url = "http://192.168.5.222:11011"; //若使用域名，需要先绑定ip
-        }
 
         String trafficId = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_TID");
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");

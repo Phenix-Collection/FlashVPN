@@ -2,70 +2,71 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
-            android:id="@+id/native_ad_container"
-            android:orientation="vertical"
+
+        <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <FrameLayout
-            android:layout_width="match_parent"
+            android:id="@+id/content_home"
             android:layout_height="match_parent">
-
-            <android.support.percent.PercentRelativeLayout
+            <RelativeLayout
+                android:id="@+id/layout_setting"
                 android:layout_width="match_parent"
-                android:id="@+id/content_home"
-                android:layout_height="match_parent">
+                android:layout_height="56dp"
+                android:layout_alignParentTop="true"
+                android:background="@color/theme_color2">
                 <RelativeLayout
-                    android:id="@+id/layout_setting"
-                    android:layout_width="match_parent"
+                    android:layout_width="48dp"
                     android:layout_height="56dp"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:background="@color/theme_color2">
-                    <RelativeLayout
-                        android:layout_width="48dp"
-                        android:layout_height="56dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:onClick="onNavigationClick"
-                        android:background="@drawable/selector_setting_theme2">
+                    android:onClick="onNavigationClick"
+                    android:background="@drawable/selector_setting_theme2">
 
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="12dp"
-                            android:id="@+id/image_navigation"
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:id="@+id/image_navigation"
 
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/menu_icon" />
-                    </RelativeLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="@string/app_alias_name"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                    <com.polestar.multiaccount.widgets.AnimationImageView
-                        android:id="@+id/gifView"
-                        android:layout_width="50dp"
-                        android:layout_marginTop="9dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_height="50dp" />
+                        android:src="@drawable/menu_icon" />
                 </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/app_alias_name"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                <com.polestar.multiaccount.widgets.GifView
+                    android:id="@+id/gifView"
+                    android:layout_width="23dp"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="23dp" />
+            </RelativeLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_setting" >
+                <LinearLayout
+                    android:id="@+id/native_ad_container"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
                 <FrameLayout
                     android:id="@+id/frag_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/layout_setting" />
-                <!--android:layout_above="@id/image_bottom"-->
-            </android.support.percent.PercentRelativeLayout>
-        </FrameLayout>
-    </LinearLayout>
+                    />
+            </LinearLayout>
+            <!--android:layout_above="@id/image_bottom"-->
+        </android.support.percent.PercentRelativeLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/blur_forground"

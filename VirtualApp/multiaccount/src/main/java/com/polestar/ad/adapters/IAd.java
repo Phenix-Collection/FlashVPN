@@ -6,7 +6,7 @@ import android.view.View;
  * Created by guojia on 2016/10/31.
  */
 
-public interface INativeAd {
+public interface IAd {
     String getAdType();
 
     String getCoverImageUrl();
@@ -40,4 +40,6 @@ public interface INativeAd {
     boolean isShowed();
 
     long getLoadedTime();
+
+    void show();
 }

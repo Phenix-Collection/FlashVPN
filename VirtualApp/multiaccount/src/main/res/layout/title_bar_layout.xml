@@ -5,7 +5,7 @@
     <ImageView
         android:id="@+id/navigation_bar"
         android:src="@drawable/back_btn"
-        android:paddingTop="17dp"
+        android:paddingTop="20dp"
         android:paddingLeft="13dp"
         android:paddingRight="13dp"
         android:layout_width="wrap_content"
