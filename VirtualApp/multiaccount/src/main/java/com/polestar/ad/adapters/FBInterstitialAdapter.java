@@ -10,7 +10,6 @@ import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.L;
-import com.polestar.multiaccount.constant.Constants;
 
 /**
  * Created by guojia on 2016/12/11.
@@ -23,6 +22,11 @@ public class FBInterstitialAdapter extends Ad implements InterstitialAdListener,
 
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
+        adListener = listener;
+        if (listener == null) {
+            L.e("Not set listener!");
+            return;
+        }
         if (AdConstants.DEBUG) {
             SharedPreferences sp = mContext.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
             String deviceIdHash = sp.getString("deviceIdHash", "");

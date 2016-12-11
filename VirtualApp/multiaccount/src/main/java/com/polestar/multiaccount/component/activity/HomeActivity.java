@@ -140,6 +140,7 @@ public class HomeActivity extends BaseActivity {
         Logs.e("start INTERSTITIAL loadAd");
         adLoader = new FuseAdLoader(this);
         adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL, "1700354860278115_1702702800043321", -1);
+        adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
         adLoader.loadAd(1, new IAdLoadListener() {
             @Override
             public void onAdLoaded(IAd ad) {

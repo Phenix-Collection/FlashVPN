@@ -36,6 +36,7 @@ public class AdConstants {
         public static final String AD_SOURCE_ADMOB = "ab";
         public static final String AD_SOURCE_FACEBOOK = "fb";
         public static final String AD_SOURCE_FACEBOOK_INTERSTITIAL = "fb_interstitial";
+        public static final String AD_SOURCE_ADMOB_INTERSTITIAL = "ab_interstitial";
         public static final String AD_SOURCE_VK = "vk";
     }
 }

@@ -104,28 +104,23 @@
         </receiver>
 
         <!-- firebase -->
-        <service android:name=".firebase.PbFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-        <service android:name=".firebase.PbFirebaseInstanceIdService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
+        <!--<service android:name=".firebase.FirebaseInstanceIdService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
-        <receiver
-            android:name=".firebase.PbFirebaseInstanceIdReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter android:priority="1000">
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+        <!--<receiver-->
+            <!--android:name=".firebase.PbFirebaseInstanceIdReceiver"-->
+            <!--android:exported="true"-->
+            <!--android:permission="com.google.android.c2dm.permission.SEND">-->
+            <!--<intent-filter android:priority="1000">-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE"/>-->
+                <!--<action android:name="com.google.android.c2dm.intent.REGISTRATION"/>-->
 
-                <category android:name="com.polestar.multiaccount"/>
-            </intent-filter>
-        </receiver>
+                <!--<category android:name="com.polestar.multiaccount"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <provider
             android:name="com.tencent.mid.api.MidProvider"

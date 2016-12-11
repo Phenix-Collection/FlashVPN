@@ -137,6 +137,8 @@ public class FuseAdLoader implements IAdLoader {
                 return new FBNativeAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL:
                 return new FBInterstitialAdapter(mContext, config.key);
+            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL:
+                return new AdmobInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_VK:
             default:
                 L.e("not suppported source " + config.source);
