@@ -58,14 +58,17 @@
                     android:id="@+id/native_ad_container"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <!--<com.google.android.gms.ads.NativeExpressAdView-->
-                    <!--android:id="@+id/ab_native_express"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--ads:adUnitId="ca-app-pub-5490912237269284/2431070657"-->
-                    <!--ads:adSize="360x320">-->
-                <!--</com.google.android.gms.ads.NativeExpressAdView>-->
+                    android:layout_height="wrap_content">
+
+                </LinearLayout>
+                <com.google.android.gms.ads.NativeExpressAdView
+                    android:id="@+id/ab_native_express"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/light_gray"
+                    ads:adUnitId="ca-app-pub-5490912237269284/2431070657"
+                    ads:adSize="360x320">
+                </com.google.android.gms.ads.NativeExpressAdView>
                 <FrameLayout
                     android:id="@+id/frag_content"
                     android:layout_width="match_parent"

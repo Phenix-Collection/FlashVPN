@@ -200,15 +200,9 @@ public class HomeFragment extends BaseFragment {
     }
     private void initView() {
         nativeAdContainer = (LinearLayout) getActivity().findViewById(R.id.native_ad_container);
-        mAdmobExpressView = new NativeExpressAdView(getActivity());
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mAdmobExpressView.setLayoutParams(layoutParams);
-        nativeAdContainer.addView(mAdmobExpressView);
-//        mAdmobExpressView = (NativeExpressAdView) getActivity().findViewById(R.id.ab_native_express);
-        mAdmobExpressView.setAdSize(new AdSize(AdSize.FULL_WIDTH, AdSize.AUTO_HEIGHT));
-        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
-        //mAdmobExpressView.setVisibility(View.GONE);
-//        nativeAdContainer.setVisibility(View.GONE);
+        mAdmobExpressView = (NativeExpressAdView) getActivity().findViewById(R.id.ab_native_express);
+        mAdmobExpressView.setVisibility(View.GONE);
+
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
         pkgGridView = (GridView) contentView.findViewById(R.id.grid_app);
         pkgGridAdapter = new PackageGridAdapter();
@@ -403,91 +397,76 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    private void loadNativeAd() {
+    private void loadAdmobNativeExpress(){
+        mAdmobExpressView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                L.d("onAdClosed");
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                L.d("onAdFailedToLoad " + i);
+                mAdmobExpressView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdmobExpressView.setVisibility(View.VISIBLE);
+                L.d("onAdLoaded ");
+            }
+        });
         if (AdConstants.DEBUG) {
             String android_id = AdUtils.getAndroidID(getActivity());
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
             boolean isTestDevice = request.isTestDevice(getActivity());
             L.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
-            mAdmobExpressView.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    L.d("onAdClosed");
-                }
-
-                @Override
-                public void onAdFailedToLoad(int i) {
-                    super.onAdFailedToLoad(i);
-                    L.d("onAdFailedToLoad " + i);
-                    mAdmobExpressView.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAdLeftApplication() {
-                    super.onAdLeftApplication();
-                }
-
-                @Override
-                public void onAdOpened() {
-                    super.onAdOpened();
-                }
-
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    L.d("onAdLoaded ");
-                }
-            });
             mAdmobExpressView.loadAd(request );
         } else {
             mAdmobExpressView.loadAd(new AdRequest.Builder().build());
         }
-        mAdmobExpressView.setVisibility(View.VISIBLE);
-//        if (mNativeAdLoader != null) {
-//            mNativeAdLoader.loadAd(1, new IAdLoadListener() {
-//                @Override
-//                public void onAdLoaded(IAd ad) {
-//                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
-//                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
-//                        inflateFbNativeAdView(ad);
-//                    } else if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL)) {
-//                       // inflateAdmobInstallAdView(ad);
-//                    } else if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT)) {
-//                      //  inflateAdmobContentAdView(ad);
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onAdListLoaded(List<IAd> ads) {
-//
-//                }
-//
-//                @Override
-//                public void onError(String error) {
-//                    if (AdConstants.DEBUG) {
-//                        String android_id = AdUtils.getAndroidID(getActivity());
-//                        String deviceId = AdUtils.MD5(android_id).toUpperCase();
-//                        AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-//                        boolean isTestDevice = request.isTestDevice(getActivity());
-//                        L.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
-//                        mAdmobExpressView.loadAd(request );
-//                    } else {
-//                        mAdmobExpressView.loadAd(new AdRequest.Builder().build());
-//                    }
-//                    mAdmobExpressView.setVisibility(View.VISIBLE);
-//                }
-//            });
-//        }
     }
-
-    private void initData(){
+    private void loadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = new FuseAdLoader(getActivity());
             mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
+        mNativeAdLoader.loadAd(1, new IAdLoadListener() {
+            @Override
+            public void onAdLoaded(IAd ad) {
+                if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
+                        || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
+                    inflateFbNativeAdView(ad);
+                }
+            }
+
+            @Override
+            public void onAdListLoaded(List<IAd> ads) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+                loadAdmobNativeExpress();
+            }
+        });
+    }
+
+    private void initData(){
         loadNativeAd();
         CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
             @Override
@@ -496,7 +475,6 @@ public class HomeFragment extends BaseFragment {
                     pkgGridAdapter.notifyDataSetChanged();
                 }
                 needShowGuideLayout();
-                //appGridView.setCurrentPage(appGridView.getPageCount() - 1,false);
             }
 
             @Override
