@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
 import android.os.DropBoxManager;
+import android.util.Log;
 
 import com.lody.virtual.client.core.PatchManager;
 import com.lody.virtual.client.core.VirtualCore;
@@ -12,6 +13,7 @@ import com.lody.virtual.client.hook.patchs.dropbox.DropBoxManagerPatch;
 import com.lody.virtual.client.hook.patchs.graphics.GraphicsStatsPatch;
 import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.helper.utils.ReflectException;
+import com.lody.virtual.helper.utils.VLog;
 
 import mirror.android.app.ContextImpl;
 import mirror.android.app.ContextImplKitkat;
@@ -32,6 +34,10 @@ public class ContextFixer {
 	 *            插件Context
 	 */
 	public static void fixContext(Context context) {
+		if(context == null) {
+			VLog.e("ContextFixer", "null context in fitContext");
+			return;
+		}
 		PatchManager.getInstance().checkEnv(GraphicsStatsPatch.class);
 		int deep = 0;
 		while (context instanceof ContextWrapper) {
