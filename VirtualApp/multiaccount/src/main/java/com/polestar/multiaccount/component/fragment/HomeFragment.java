@@ -1,5 +1,9 @@
 package com.polestar.multiaccount.component.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -31,18 +36,15 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
 import com.polestar.multiaccount.component.activity.AppListActivity;
 import com.polestar.multiaccount.component.activity.HomeActivity;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.BitmapUtils;
-import com.polestar.multiaccount.utils.DisplayUtils;
-import com.polestar.multiaccount.utils.EventReportManager;
 import com.polestar.multiaccount.utils.AnimatorHelper;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.CustomDialogUtils;
-import com.polestar.multiaccount.utils.CustomToastUtils;
 import com.polestar.multiaccount.utils.ExplosionField;
 import com.polestar.multiaccount.utils.LocalAdUtils;
 import com.polestar.multiaccount.utils.Logs;
@@ -111,7 +113,6 @@ public class HomeFragment extends BaseFragment {
             switch (floatView.getSelectedState()) {
                 case CustomFloatView.SELECT_BTN_LEFT:
                     MTAManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
-                    EventReportManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
                     CommonUtils.createShortCut(mActivity,((AppModel) info));
                     floatView.postDelayed(new Runnable() {
                         @Override
@@ -205,8 +206,6 @@ public class HomeFragment extends BaseFragment {
         mAdmobExpressView.setAdSize(new AdSize(360, 132));
 //        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
         mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/6006659059");
-
-        nativeAdContainer.addView(mAdmobExpressView);
         mAdmobExpressView.setVisibility(View.GONE);
 
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
@@ -224,7 +223,6 @@ public class HomeFragment extends BaseFragment {
             public void onClick(View view) {
                 startAppListActivity();
                 MTAManager.homeAdd(getActivity());
-                EventReportManager.homeAdd(getActivity());
             }
         });
 //        floatView.post(new Runnable() {
@@ -431,7 +429,21 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                nativeAdContainer.removeAllViews();
                 mAdmobExpressView.setVisibility(View.VISIBLE);
+                nativeAdContainer.addView(mAdmobExpressView);
+                ObjectAnimator scaleX = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleX", 0.7f, 1.0f, 1.0f);
+                ObjectAnimator scaleY = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleY", 0.7f, 1.0f, 1.0f);
+                AnimatorSet animSet = new AnimatorSet();
+                animSet.play(scaleX).with(scaleY);
+                animSet.setInterpolator(new BounceInterpolator());
+                animSet.setDuration(800).start();
+                animSet.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+                });
                 L.d("onAdLoaded ");
             }
         });
@@ -558,7 +570,6 @@ public class HomeFragment extends BaseFragment {
     private void deleteApp(AppModel appModel){
         appInfos.remove(appModel);
         MTAManager.deleteClonedApp(mActivity, appModel.getPackageName());
-        EventReportManager.deleteClonedApp(mActivity, appModel.getPackageName());
 //        updateModelIndex(itemPosition,appInfos.size() - 1);
         AppManager.uninstallApp(appModel.getPackageName());
         CommonUtils.removeShortCut(mActivity,appModel);
@@ -629,7 +640,7 @@ public class HomeFragment extends BaseFragment {
             ((HomeActivity)mActivity).startAppListActivity();
         }else {
             Intent i = new Intent(mActivity, AppListActivity.class);
-            mActivity.startActivityForResult(i, Constants.REQUEST_SELECT_APP);
+            mActivity.startActivityForResult(i, AppConstants.REQUEST_SELECT_APP);
             mActivity.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         }
     }
