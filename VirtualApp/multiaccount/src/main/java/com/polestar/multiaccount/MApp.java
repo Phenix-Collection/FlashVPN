@@ -42,11 +42,12 @@ public class MApp extends Application {
         mInstance = this;
         super.onCreate();
         //AppManager.appOnCreate(this);
+        Logs.d("E MTAManager.init(this);");
         MTAManager.init(this);
         initEventReport(this);
+        Logs.d("X MTAManager.init(this);");
 
         if (AppManager.isMainProcess()) {
-            initAd();
             preInstallPkg();
             ImageLoaderUtil.init(this);
             initRawData();
@@ -66,25 +67,32 @@ public class MApp extends Application {
     }
 
     private void preInstallPkg() {
-        VirtualCore virtualCore = VirtualCore.get();
-        PackageManager pm = virtualCore.getUnHookPackageManager();
-        final String[] list = AppManager.getPreInstalledPkgs();
-        for (String pkg : list) {
-            if (virtualCore.isAppInstalled(pkg)) {
-                continue;
-            }
-            try {
-                ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
-                String apkPath = appInfo.sourceDir;
-                InstallResult res = VirtualCore.get().installApp(apkPath,
-                        InstallStrategy.DEPEND_SYSTEM_IF_EXIST | InstallStrategy.TERMINATE_IF_EXIST);
-                if (!res.isSuccess) {
-                    VLog.e(getClass().getSimpleName(), "Warning: Unable to install app %s: %s.", appInfo.packageName, res.error);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                VirtualCore virtualCore = VirtualCore.get();
+                Logs.d("E preInstallPkg");
+                PackageManager pm = virtualCore.getUnHookPackageManager();
+                final String[] list = AppManager.getPreInstalledPkgs();
+                for (String pkg : list) {
+                    if (virtualCore.isAppInstalled(pkg)) {
+                        continue;
+                    }
+                    try {
+                        ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
+                        String apkPath = appInfo.sourceDir;
+                        InstallResult res = VirtualCore.get().installApp(apkPath,
+                                InstallStrategy.DEPEND_SYSTEM_IF_EXIST | InstallStrategy.TERMINATE_IF_EXIST);
+                        if (!res.isSuccess) {
+                            VLog.e(getClass().getSimpleName(), "Warning: Unable to install app %s: %s.", appInfo.packageName, res.error);
+                        }
+                    } catch (Throwable e) {
+                        // Ignore
+                    }
                 }
-            } catch (Throwable e) {
-                // Ignore
             }
-        }
+        }).start();
+        Logs.d("X preInstallPkg");
     }
 
     private void setDefaultUncaughtExceptionHandler(Context context) {
@@ -145,15 +153,6 @@ public class MApp extends Application {
         });
     }
 
-    private void initAd() {
-//        AdAgent.getInstance().init(this, AdConstants.URL_AD_SDK, "lite", "lite", new DotAdEventsListener() {
-//            @Override
-//            public void sendUAEvent(String s, String s1, Long aLong, Map<String, String> map) {
-//
-//            }
-//        });
-    }
-
     private void initRawData() {
         String localFilePath = getApplicationContext().getFilesDir().toString();
         String path = localFilePath + "/" + Constants.POPULAR_FILE_NAME;
@@ -193,7 +192,9 @@ public class MApp extends Application {
 
         // init exception handler and bugly before attatchBaseContext and appOnCreate
         setDefaultUncaughtExceptionHandler(this);
+        Logs.d("E initBugly");
         initBugly(this);
+        Logs.d("X initBugly");
 
         try {
             AppManager.attatchBaseContext(base);

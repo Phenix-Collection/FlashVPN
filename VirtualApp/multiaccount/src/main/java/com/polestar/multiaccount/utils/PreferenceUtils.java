@@ -5,4 +5,7 @@ package com.polestar.multiaccount.utils;
  */
 
 public class PreferenceUtils {
+    public long getInstallTime() {
+        return -1;
+    }
 }

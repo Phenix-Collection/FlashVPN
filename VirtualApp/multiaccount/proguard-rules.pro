@@ -121,3 +121,5 @@
 -keepclasseswithmembers public class * {
     public static void main(java.lang.String[]);
 }
+
+-printmapping mapping.txt

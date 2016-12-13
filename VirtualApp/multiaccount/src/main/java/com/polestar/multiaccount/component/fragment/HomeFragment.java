@@ -201,13 +201,11 @@ public class HomeFragment extends BaseFragment {
     }
     private void initView() {
         nativeAdContainer = (LinearLayout) getActivity().findViewById(R.id.native_ad_container);
-//        mAdmobExpressView = (NativeExpressAdView) getActivity().findViewById(R.id.ab_native_express);
-//        mAdmobExpressView.setVisibility(View.GONE);
-//        LinearLayout layout = (LinearLayout)this.findViewById(R.id.adView_layout);
         mAdmobExpressView = new NativeExpressAdView(getActivity());
-//        mAdmobExpressView.setAdSize(new AdSize(DisplayUtils.px2dip(getActivity(),DisplayUtils.getScreenWidth(getActivity()))-10, 250));
-        mAdmobExpressView.setAdSize(new AdSize(360, 270));
-        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
+        mAdmobExpressView.setAdSize(new AdSize(360, 132));
+//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
+        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/6006659059");
+
         nativeAdContainer.addView(mAdmobExpressView);
         mAdmobExpressView.setVisibility(View.GONE);
 
