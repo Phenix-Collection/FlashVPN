@@ -35,6 +35,7 @@ import com.polestar.multiaccount.constant.Constants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.BitmapUtils;
+import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.EventReportManager;
 import com.polestar.multiaccount.utils.AnimatorHelper;
 import com.polestar.multiaccount.utils.AppManager;
@@ -200,7 +201,14 @@ public class HomeFragment extends BaseFragment {
     }
     private void initView() {
         nativeAdContainer = (LinearLayout) getActivity().findViewById(R.id.native_ad_container);
-        mAdmobExpressView = (NativeExpressAdView) getActivity().findViewById(R.id.ab_native_express);
+//        mAdmobExpressView = (NativeExpressAdView) getActivity().findViewById(R.id.ab_native_express);
+//        mAdmobExpressView.setVisibility(View.GONE);
+//        LinearLayout layout = (LinearLayout)this.findViewById(R.id.adView_layout);
+        mAdmobExpressView = new NativeExpressAdView(getActivity());
+//        mAdmobExpressView.setAdSize(new AdSize(DisplayUtils.px2dip(getActivity(),DisplayUtils.getScreenWidth(getActivity()))-10, 250));
+        mAdmobExpressView.setAdSize(new AdSize(360, 270));
+        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
+        nativeAdContainer.addView(mAdmobExpressView);
         mAdmobExpressView.setVisibility(View.GONE);
 
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
@@ -443,7 +451,7 @@ public class HomeFragment extends BaseFragment {
     private void loadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = new FuseAdLoader(getActivity());
-            mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
+            //mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
         mNativeAdLoader.loadAd(1, new IAdLoadListener() {
             @Override

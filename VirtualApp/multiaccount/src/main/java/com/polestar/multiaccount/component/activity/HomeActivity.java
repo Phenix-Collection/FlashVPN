@@ -50,13 +50,14 @@ public class HomeActivity extends BaseActivity {
     private GifView giftView;
     private FuseAdLoader adLoader;
     private CloneHelper cloneHelper;
+    private boolean isInterstitialAdClicked;
+    private boolean isInterstitialAdLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
-        loadAd();
         cloneHelper = CloneHelper.getInstance(this);
         AppListUtils.getInstance(this); // init AppListUtils
     }
@@ -138,18 +139,22 @@ public class HomeActivity extends BaseActivity {
 
     private void loadAd() {
         Logs.e("start INTERSTITIAL loadAd");
+        isInterstitialAdClicked = false;
+        isInterstitialAdLoaded = false;
         adLoader = new FuseAdLoader(this);
-        adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL, "1700354860278115_1702702800043321", -1);
+        //adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL, "1700354860278115_1702702800043321", -1);
         adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
         adLoader.loadAd(1, new IAdLoadListener() {
             @Override
             public void onAdLoaded(IAd ad) {
+                isInterstitialAdLoaded = true;
                 giftView.setGifResource(R.drawable.front_page_gift_icon);
                 giftView.setVisibility(View.VISIBLE);
-                giftView.play(10*1000);
+                giftView.play();
                 giftView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        isInterstitialAdClicked = true;
                         ad.show();
                     }
                 });
@@ -170,6 +175,10 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
+            giftView.setVisibility(View.GONE);
+            loadAd();
+        }
 
     }
 
