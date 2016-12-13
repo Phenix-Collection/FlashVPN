@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.Feedback;
 import com.polestar.multiaccount.utils.DigestUtils;
 import com.polestar.multiaccount.utils.JNISecretApi;
@@ -32,7 +32,7 @@ public class HttpUtil {
     public static int submitFeedback(Context context, String content, String email) {
         int resultCode = -1;
         String feedbackUrl;
-        if (Constants.IS_RELEASE_VERSION) {
+        if (AppConstants.IS_RELEASE_VERSION) {
             feedbackUrl = "http://api.appclone.info/feedback/report"; //线上地址
         } else {
             feedbackUrl = "http://192.168.40.234:3235/feedback/report"; // 测试地址

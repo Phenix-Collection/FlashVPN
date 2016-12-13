@@ -1,6 +1,6 @@
 package com.polestar.multiaccount.constant;
 
-public class Constants {
+public class AppConstants {
 
     public static boolean IS_RELEASE_VERSION;
 
@@ -41,5 +41,9 @@ public class Constants {
 
     public static final String URL_FAQ = "http://baidu.com";
     public static final String URL_FACEBOOK = "https://www.facebook.com/polestar.applab";
+
+    public class PreferencesKey {
+        public static final String IS_FIRST_USE = "is_first_use";
+    }
 
 }

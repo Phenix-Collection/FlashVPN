@@ -5,7 +5,6 @@ import android.app.Application;
 import android.os.Bundle;
 
 import com.polestar.multiaccount.MApp;
-import com.polestar.multiaccount.utils.EventReportManager;
 import com.polestar.multiaccount.utils.Logs;
 import com.polestar.multiaccount.utils.MTAManager;
 
@@ -30,8 +29,6 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
     @Override
     public void onActivityStarted(Activity activity) {
         Logs.e("onActivityStarted");
-        //Analytics
-        EventReportManager.onStart(activity);
     }
 
     @Override
@@ -55,8 +52,6 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
 		Logs.e("onActivityStopped");
         if(!isForground ){
         }
-        //Analytics
-        EventReportManager.onStop(activity);
     }
 
     @Override

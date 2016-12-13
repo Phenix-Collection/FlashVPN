@@ -14,7 +14,7 @@ import android.net.Uri;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.activity.AppStartActivity;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
 
 import java.util.List;
@@ -29,8 +29,8 @@ public class CommonUtils {
         String appName = appModel.getName();
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppStartActivity.class.getName());
-        actionIntent.putExtra(Constants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
-        actionIntent.putExtra(Constants.EXTRA_FROM, Constants.VALUE_FROM_SHORTCUT);
+        actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
+        actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         createShortcut(context, actionIntent, appName, false, iconBitmap);
 //        iconBitmap.recycle();
@@ -40,8 +40,8 @@ public class CommonUtils {
         String appName = appModel.getName();
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppStartActivity.class.getName());
-        actionIntent.putExtra(Constants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
-        actionIntent.putExtra(Constants.EXTRA_FROM, Constants.VALUE_FROM_SHORTCUT);
+        actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
+        actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         removeShortcut(context, actionIntent, appName);
     }

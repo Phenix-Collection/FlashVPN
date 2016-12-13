@@ -1,6 +1,5 @@
 package com.polestar.multiaccount.utils;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
@@ -9,7 +8,7 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.helper.proto.InstallResult;
 import com.lody.virtual.os.VUserHandle;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 
@@ -89,7 +88,7 @@ public class AppManager {
     public static boolean installApp(Context context, AppModel appModel) {
         Logs.d(TAG, "apkPath = " + appModel.getApkPath());
         InstallResult result = VirtualCore.get().installApp(appModel.getApkPath(), InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
-        if (result.isSuccess && PreferencesUtils.getBoolean(context, Constants.KEY_AUTO_CREATE_SHORTCUT, false)) {
+        if (result.isSuccess && PreferencesUtils.getBoolean(context, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
             CommonUtils.createShortCut(context, appModel);
         }
         return result.isSuccess;
@@ -117,14 +116,6 @@ public class AppManager {
 //    public static void appOnCreate(Application application) {
 //        VirtualCore.get().applicationOnCreate(application);
 //    }
-
-    public static void attatchBaseContext(Context base) throws Throwable {
-        try {
-            VirtualCore.get().startup(base);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
 
 //    public static Context getOuterContext() {
 //        return VirtualCore.get().getOutterContext();

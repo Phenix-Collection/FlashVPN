@@ -8,7 +8,7 @@ import android.view.View;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.NotificationAdapter;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.PreferencesUtils;
@@ -43,20 +43,20 @@ public class NotificationActivity extends BaseActivity {
     }
 
     private void initView() {
-        setTitle(Constants.TITLE_NOTIFICATION);
+        setTitle(AppConstants.TITLE_NOTIFICATION);
 
         mMasterSwitch = (BlueSwitch) findViewById(R.id.switch_notification_dotspace);
         mListView = (FixedListView) findViewById(R.id.switch_notifications_apps);
         mNotificationAdapter = new NotificationAdapter(mContext);
         mListView.setAdapter(mNotificationAdapter);
         mNotificationAdapter.setModels(mClonedModels);
-        mMasterSwitch.setChecked(PreferencesUtils.getBoolean(mContext, Constants.KEY_SERVER_PUSH, true));
+        mMasterSwitch.setChecked(PreferencesUtils.getBoolean(mContext, AppConstants.KEY_SERVER_PUSH, true));
         mMasterSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String pName = mContext.getPackageName();
                 boolean val = ((BlueSwitch) v).isChecked();
-                PreferencesUtils.putBoolean(mContext, Constants.KEY_SERVER_PUSH, val);
+                PreferencesUtils.putBoolean(mContext, AppConstants.KEY_SERVER_PUSH, val);
             }
         });
     }

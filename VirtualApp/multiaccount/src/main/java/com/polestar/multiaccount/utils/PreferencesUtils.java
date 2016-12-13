@@ -4,14 +4,14 @@ package com.polestar.multiaccount.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 
 /**
  * Created by yxx on 2016/7/15.
  */
 public class PreferencesUtils {
 
-    public static String PREFERENCE_NAME = Constants.PREFERENCE_NAME;
+    public static String PREFERENCE_NAME = AppConstants.PREFERENCE_NAME;
 
     private PreferencesUtils() {
         throw new AssertionError();
@@ -225,5 +225,13 @@ public class PreferencesUtils {
     public static boolean getBoolean(Context context, String key, boolean defaultValue) {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return settings.getBoolean(key, defaultValue);
+    }
+
+    public static void  setAppUsed(Context c){
+        putBoolean(c, AppConstants.PreferencesKey.IS_FIRST_USE, false);
+    }
+
+    public static boolean isFirstLaunch(Context c){
+        return getBoolean(c, AppConstants.PreferencesKey.IS_FIRST_USE, true);
     }
 }

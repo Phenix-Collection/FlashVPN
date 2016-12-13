@@ -19,7 +19,7 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.AppGridAdapter;
 import com.polestar.multiaccount.component.adapter.AppListAdapter;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.pbinterface.DataObserver;
 import com.polestar.multiaccount.utils.AppListUtils;
@@ -125,7 +125,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent data = new Intent();
-                data.putExtra(Constants.EXTRA_APP_MODEL, mPopularModels.get(position));
+                data.putExtra(AppConstants.EXTRA_APP_MODEL, mPopularModels.get(position));
                 setResult(Activity.RESULT_OK, data);
                 finish();
             }
@@ -136,7 +136,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent data = new Intent();
-                data.putExtra(Constants.EXTRA_APP_MODEL, mInstalledModels.get(position));
+                data.putExtra(AppConstants.EXTRA_APP_MODEL, mInstalledModels.get(position));
                 setResult(Activity.RESULT_OK, data);
                 finish();
             }

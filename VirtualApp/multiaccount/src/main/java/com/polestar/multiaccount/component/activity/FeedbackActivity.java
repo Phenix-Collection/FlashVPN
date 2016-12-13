@@ -10,12 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
-import com.polestar.multiaccount.constant.Constants;
-import com.polestar.multiaccount.net.HttpUtil;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.ToastUtils;
 
 public class FeedbackActivity extends BaseActivity {
@@ -34,7 +32,7 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void initView() {
-        setTitle(Constants.TITLE_FEEDBACK);
+        setTitle(AppConstants.TITLE_FEEDBACK);
 
         mEtFeedback = (EditText) findViewById(R.id.et_feedback);
         mBtSubmit = (Button) findViewById(R.id.bt_submit);

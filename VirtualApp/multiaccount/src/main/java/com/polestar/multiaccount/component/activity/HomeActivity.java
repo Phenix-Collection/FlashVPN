@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.polestar.ad.AdConstants;
-import com.polestar.ad.adapters.FBInterstitialAdapter;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -20,9 +19,8 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.NavigationAdapter;
 import com.polestar.multiaccount.component.fragment.HomeFragment;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
-import com.polestar.multiaccount.utils.EventReportManager;
 import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
@@ -53,9 +51,14 @@ public class HomeActivity extends BaseActivity {
     private boolean isInterstitialAdClicked;
     private boolean isInterstitialAdLoaded;
 
+    private boolean isFirstLaunch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isFirstLaunch = PreferencesUtils.isFirstLaunch(this);
+        if (isFirstLaunch) {
+            PreferencesUtils.setAppUsed(this);
+        }
         setContentView(R.layout.activity_home);
         initView();
         cloneHelper = CloneHelper.getInstance(this);
@@ -90,7 +93,6 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 MTAManager.homeMenu(HomeActivity.this);
-                EventReportManager.homeMenu(HomeActivity.this);
             }
 
             @Override
@@ -204,7 +206,7 @@ public class HomeActivity extends BaseActivity {
     public void startAppListActivity() {
         Intent i = new Intent(this, AppListActivity.class);
         doAnimationExit();
-        startActivityForResult(i, Constants.REQUEST_SELECT_APP);
+        startActivityForResult(i, AppConstants.REQUEST_SELECT_APP);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
@@ -239,35 +241,29 @@ public class HomeActivity extends BaseActivity {
         switch (position) {
             case 0:
                 MTAManager.menuNotification(this);
-                EventReportManager.menuNotification(this);
                 Intent notification = new Intent(this, NotificationActivity.class);
                 startActivity(notification);
                 break;
             case 1:
                 MTAManager.menuFAQ(this);
-                EventReportManager.menuFAQ(this);
                 Intent intentToFAQ = new Intent(this, FaqActivity.class);
                 startActivity(intentToFAQ);
                 break;
             case 2:
                 MTAManager.menuFeedback(this);
-                EventReportManager.menuFeedback(this);
                 Intent feedback = new Intent(this, FeedbackActivity.class);
                 startActivity(feedback);
                 break;
             case 3:
                 MTAManager.menuRate(this);
                 CommonUtils.jumpToMarket(this, getPackageName());
-                EventReportManager.menuRate(this);
                 break;
             case 4:
                 MTAManager.menuShare(this);
-                EventReportManager.menuShare(this);
                 CommonUtils.shareWithFriends(this);
                 break;
             case 5:
                 MTAManager.menuSettings(this);
-                EventReportManager.menuSettings(this);
                 Intent intentToSettings = new Intent(this, SettingsActivity.class);
                 startActivity(intentToSettings);
                 break;
@@ -326,14 +322,14 @@ public class HomeActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK
                 && data != null) {
-            if (requestCode == Constants.REQUEST_SELECT_APP) {
+            if (requestCode == AppConstants.REQUEST_SELECT_APP) {
                 Logs.e("install time2 = " + System.currentTimeMillis());
-                AppModel model = data.getParcelableExtra(Constants.EXTRA_APP_MODEL);
+                AppModel model = data.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
                // AppInstallActivity.startAppInstallActivity(this, model, drawerBlurHelper.createBitmap());
                 AppCloneActivity.startAppCloneActivity(this, model);
                 loadInstallAd();
                 mHomeFragment.hideToBottom();
-            } else if (requestCode == Constants.REQUEST_INSTALL_APP) {
+            } else if (requestCode == AppConstants.REQUEST_INSTALL_APP) {
 
             }
         } else {
@@ -342,8 +338,8 @@ public class HomeActivity extends BaseActivity {
     }
 
     private boolean needShowGuide() {
-        if (cloneHelper.getClonedApps().size() == 1 && PreferencesUtils.getBoolean(this, Constants.KEY_SHOW_GUIDE_FOR_LONG_PRESS, true)) {
-            PreferencesUtils.putBoolean(this, Constants.KEY_SHOW_GUIDE_FOR_LONG_PRESS, false);
+        if (cloneHelper.getClonedApps().size() == 1 && PreferencesUtils.getBoolean(this, AppConstants.KEY_SHOW_GUIDE_FOR_LONG_PRESS, true)) {
+            PreferencesUtils.putBoolean(this, AppConstants.KEY_SHOW_GUIDE_FOR_LONG_PRESS, false);
             mHomeFragment.showGuidePopWindow();
             return true;
         }

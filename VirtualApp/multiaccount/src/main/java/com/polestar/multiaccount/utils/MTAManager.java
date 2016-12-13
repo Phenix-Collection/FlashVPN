@@ -2,7 +2,7 @@ package com.polestar.multiaccount.utils;
 
 import android.content.Context;
 
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.tencent.stat.MtaSDkException;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -18,7 +18,7 @@ public class MTAManager {
 
     public static void init(Context context) {
         //StatConfig.init(context);
-        StatConfig.setDebugEnable(!Constants.IS_RELEASE_VERSION);
+        StatConfig.setDebugEnable(!AppConstants.IS_RELEASE_VERSION);
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         StatConfig.setInstallChannel(context, channel);
         StatConfig.setAutoExceptionCaught(true);
@@ -53,9 +53,9 @@ public class MTAManager {
     public static void launchApp(Context context, String packageName, String from) {
         Properties prop = new Properties();
         prop.setProperty("package", packageName);
-        if (from.equals(Constants.VALUE_FROM_HOME)) {
+        if (from.equals(AppConstants.VALUE_FROM_HOME)) {
             StatService.trackCustomKVEvent(context, "home_launch", prop);
-        } else if (from.equals(Constants.VALUE_FROM_SHORTCUT)) {
+        } else if (from.equals(AppConstants.VALUE_FROM_SHORTCUT)) {
             StatService.trackCustomKVEvent(context, "mobile_launch", prop);
         }
     }

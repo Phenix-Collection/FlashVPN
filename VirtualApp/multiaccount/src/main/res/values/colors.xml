@@ -26,7 +26,9 @@
     <color name="left_right_anim_color">#E2E22d</color>
     <color name="dialog_right_btn_color">#E2E22d</color>
     <color name="theme_color2">#4164ef</color>
-    <color name="launch_page_color">#ace5f2</color>
+    <color name="clone_activity_start_btn">#4164ef</color>
+    <color name="clone_activity_start_btn_pressed">#2542b4</color>
+    <color name="launch_page_color">#5183e6</color>
     <color name="theme_text_color">#FF4A4A4A</color>
     <color name="grid_line">#FFF2F2F2</color>
     <color name="faq_title_color">#00aab8</color>

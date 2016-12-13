@@ -1,7 +1,5 @@
 package com.polestar.multiaccount.component.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -31,13 +29,12 @@ import com.nostra13.universalimageloader.utils.L;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.DisplayUtils;
-import com.polestar.multiaccount.utils.EventReportManager;
 import com.polestar.multiaccount.utils.MTAManager;
 
 import java.util.Timer;
@@ -96,12 +93,12 @@ public class AppCloneActivity extends BaseActivity {
     private void initData() {
         Intent intent = getIntent();
         if (intent != null) {
-            appModel = intent.getParcelableExtra(Constants.EXTRA_APP_MODEL);
+            appModel = intent.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
         }
         if (appModel == null) {
             Intent intentFail = new Intent();
-            intentFail.putExtra(Constants.EXTRA_IS_INSTALL_SUCCESS, isInstallSuccess);
-            intentFail.putExtra(Constants.EXTRA_APP_MODEL, appModel);
+            intentFail.putExtra(AppConstants.EXTRA_IS_INSTALL_SUCCESS, isInstallSuccess);
+            intentFail.putExtra(AppConstants.EXTRA_APP_MODEL, appModel);
             setResult(RESULT_OK, intentFail);
             finish();
         } else {
@@ -120,8 +117,6 @@ public class AppCloneActivity extends BaseActivity {
                                     AppManager.setAppNotificationFlag(mPkgName, true);
                                 }
                             });
-
-                            EventReportManager.applistClone(AppCloneActivity.this, mPkgName);
                             MTAManager.applistClone(AppCloneActivity.this, appModel.getPackageName());
                             // showAd(installAd);
                         }
@@ -187,8 +182,8 @@ public class AppCloneActivity extends BaseActivity {
 
     public static void startAppCloneActivity(Activity activity, AppModel appModel) {
         Intent intent = new Intent(activity, AppCloneActivity.class);
-        intent.putExtra(Constants.EXTRA_APP_MODEL, appModel);
-        activity.startActivityForResult(intent, Constants.REQUEST_INSTALL_APP);
+        intent.putExtra(AppConstants.EXTRA_APP_MODEL, appModel);
+        activity.startActivityForResult(intent, AppConstants.REQUEST_INSTALL_APP);
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 

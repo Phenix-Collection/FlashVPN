@@ -11,20 +11,15 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
 import com.polestar.multiaccount.R;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,8 +36,8 @@ public class BitmapUtils {
         }
         Bitmap shortCutBitMap;
         try{
-            int width = DisplayUtils.dip2px(context, Constants.APP_ICON_WIDTH);
-            int padding = DisplayUtils.dip2px(context, Constants.APP_ICON_PADDING);
+            int width = DisplayUtils.dip2px(context, AppConstants.APP_ICON_WIDTH);
+            int padding = DisplayUtils.dip2px(context, AppConstants.APP_ICON_PADDING);
             shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
             Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ring_icon);
             Canvas canvas = new Canvas(shortCutBitMap);
@@ -50,7 +45,7 @@ public class BitmapUtils {
             Paint paint = new Paint();
             paint.setColor(Color.TRANSPARENT);
             final Rect rect = new Rect(0, 0, width, width);
-            final float roundPx = DisplayUtils.dip2px(context,Constants.APP_ICON_RADIUS);
+            final float roundPx = DisplayUtils.dip2px(context, AppConstants.APP_ICON_RADIUS);
             canvas.drawRoundRect(new RectF(rect),roundPx,roundPx,paint);
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
 

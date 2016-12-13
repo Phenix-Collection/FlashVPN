@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.activity.AppListActivity;
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
 
 import java.util.List;
@@ -73,7 +73,7 @@ public class AppListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent data = new Intent();
-                data.putExtra(Constants.EXTRA_APP_MODEL, model);
+                data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
                 ((AppListActivity) mContext).setResult(Activity.RESULT_OK, data);
                 ((AppListActivity) mContext).finish();
             }

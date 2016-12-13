@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
-import com.polestar.multiaccount.constant.Constants;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.pbinterface.DataObserver;
@@ -73,7 +73,7 @@ public class AppListUtils implements DataObserver {
         } else {
             list.clear();
         }
-        String str = FileUtils.readFromFile(mContext.getFilesDir().toString() + "/" + Constants.POPULAR_FILE_NAME);
+        String str = FileUtils.readFromFile(mContext.getFilesDir().toString() + "/" + AppConstants.POPULAR_FILE_NAME);
         if (str == null) {
             return;
         }
