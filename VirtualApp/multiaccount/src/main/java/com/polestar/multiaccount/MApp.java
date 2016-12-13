@@ -10,11 +10,11 @@ import android.content.pm.PackageManager;
 
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.helper.proto.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
-import com.polestar.multiaccount.constant.Constants;
-import com.polestar.multiaccount.utils.EventReportManager;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.ImageLoaderUtil;
@@ -36,7 +36,19 @@ public class MApp extends Application {
     public static MApp getInstance() {
         return mInstance;
     }
+    class MyPhoneInfoDelegate implements PhoneInfoDelegate {
 
+        @Override
+        public String getDeviceId(String oldDeviceId) {
+            return oldDeviceId;
+        }
+
+        @Override
+        public String getBluetoothAddress(String oldAddress) {
+            return oldAddress;
+        }
+
+    }
     @Override
     public void onCreate() {
         mInstance = this;
@@ -44,25 +56,15 @@ public class MApp extends Application {
         //AppManager.appOnCreate(this);
         Logs.d("E MTAManager.init(this);");
         MTAManager.init(this);
-        initEventReport(this);
         Logs.d("X MTAManager.init(this);");
 
-        if (AppManager.isMainProcess()) {
+        if (VirtualCore.get().isMainProcess()) {
             preInstallPkg();
             ImageLoaderUtil.init(this);
             initRawData();
             registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this,true));
-        }else{
-//            AppManager.setInitCallback(new IinitCallback() {
-//                @Override
-//                public void afterApplicationCreate(Application application) {
-//                    Logs.e("afterApplicationCreate");
-//                    if(application != null){
-//                        Logs.e("registerActivityLifecycleCallbacks on other App");
-//                        application.registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this,false));
-//                    }
-//                }
-//            });
+        } else if (VirtualCore.get().isVAppProcess()){
+            //VirtualCore.get().setPhoneInfoDelegate(new MyPhoneInfoDelegate());
         }
     }
 
@@ -155,7 +157,7 @@ public class MApp extends Application {
 
     private void initRawData() {
         String localFilePath = getApplicationContext().getFilesDir().toString();
-        String path = localFilePath + "/" + Constants.POPULAR_FILE_NAME;
+        String path = localFilePath + "/" + AppConstants.POPULAR_FILE_NAME;
         copyRawDataToLocal(path, R.raw.popular_apps);
     }
 
@@ -197,27 +199,22 @@ public class MApp extends Application {
         Logs.d("X initBugly");
 
         try {
-            AppManager.attatchBaseContext(base);
+            VirtualCore.get().startup(base);
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-    }
-
-    private void initEventReport(Context context) {
-        EventReportManager.init(context);
-        EventReportManager.reportActive(context);
     }
 
     private void initBugly(Context context) {
         //Bugly
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
-        Constants.IS_RELEASE_VERSION = !channel.equals(Constants.DEVELOP_CHANNEL);
-        Logs.e("IS_RELEASE_VERSION: " + Constants.IS_RELEASE_VERSION);
+        AppConstants.IS_RELEASE_VERSION = !channel.equals(AppConstants.DEVELOP_CHANNEL);
+        Logs.e("IS_RELEASE_VERSION: " + AppConstants.IS_RELEASE_VERSION);
         Logs.e("bugly channel: " + channel);
         Logs.e("versioncode: " + CommonUtils.getCurrentVersionCode(context) + ", versionName:" + CommonUtils.getCurrentVersionName(context));
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
         strategy.setAppChannel(channel);
-        CrashReport.initCrashReport(context, "900060178", !Constants.IS_RELEASE_VERSION, strategy);
+        CrashReport.initCrashReport(context, "900060178", !AppConstants.IS_RELEASE_VERSION, strategy);
         // close auto report, manual control
         CrashReport.closeCrashReport();
     }
