@@ -38,6 +38,11 @@
 -dontwarn javax.swing.**
 -dontwarn net.soureceforge.pinyin4j.**
 -dontwarn demo.**
+-dontwarn org.greenrobot.**
+-dontwarn android.**
+-dontwarn com.google.**
+-dontwarn org.slf4j.**
+-dontwarn com.polestar.multiaccount.utils.**
 
 -keepnames class * implements java.io.Serializable
 
@@ -122,4 +127,7 @@
     public static void main(java.lang.String[]);
 }
 
--printmapping mapping.txt
+-keep class com.tencent.stat.**  {* ;}
+-keep class com.tencent.mid.**  {* ;}
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
