@@ -1,5 +1,7 @@
 package com.lody.virtual.client.hook.patchs.pm;
 
+import android.content.pm.PackageManager;
+
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.os.VUserHandle;
@@ -24,6 +26,9 @@ import java.lang.reflect.Method;
 		String permName = (String) args[0];
 		String pkgName = (String) args[1];
 		int userId = VUserHandle.myUserId();
+		if (permName.startsWith("com.google")) {
+			return PackageManager.PERMISSION_GRANTED;
+		}
 		return VPackageManager.get().checkPermission(permName, pkgName, userId);
 	}
 
