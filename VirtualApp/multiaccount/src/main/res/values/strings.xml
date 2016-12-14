@@ -42,8 +42,8 @@
     <!-- feedback -->
     <string name="feedback_hint">Please tell us the detail about the problem you met , and please tell us the steps to reproduce it and better with screenshot.</string>
     <string name="button_submit">Submit</string>
-    <string name="submit_success">Thanks for providing feedback!.</string>
-    <string name="submit_failed">Feedback failed to submit. Please try again.</string>
+    <string name="submit_success">Thanks for providing feedback!</string>
+    <string name="feedback_no_description">Description can not be empty!</string>
     <string name="extra_feedback_decription">We will resolve the issue for you ASAP and appreciate your help to improve the product.Thank you very much!</string>
 
     <!-- toast -->

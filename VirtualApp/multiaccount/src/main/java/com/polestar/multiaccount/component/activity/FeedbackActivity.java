@@ -10,10 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
+import com.polestar.multiaccount.utils.Logs;
 import com.polestar.multiaccount.utils.ToastUtils;
 
 public class FeedbackActivity extends BaseActivity {
@@ -64,7 +66,7 @@ public class FeedbackActivity extends BaseActivity {
             public void onClick(View v) {
                 String content = mEtFeedback.getText().toString();
                 if (content == null) {
-                    ToastUtils.ToastDefult(mContext, "Description can not be empty!");
+                    ToastUtils.ToastDefult(mContext, getResources().getString(R.string.feedback_no_description));
                     return;
                 }
 
@@ -72,7 +74,12 @@ public class FeedbackActivity extends BaseActivity {
                 data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about SuperClone");
                 data.putExtra(Intent.EXTRA_TEXT, content);
-                startActivity(data);
+                try {
+                    startActivity(data);
+                }catch (Exception e) {
+                    Logs.e("Start email activity fail!");
+                    ToastUtils.ToastDefult(FeedbackActivity.this, getResources().getString(R.string.submit_success));
+                }
             }
         });
     }
