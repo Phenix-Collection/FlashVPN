@@ -44,7 +44,7 @@ public final class GetPackageInfo extends Hook {
 				return packageInfo;
 			}
 		}
-		return null;
+		return packageInfo;
 	}
 
 }
