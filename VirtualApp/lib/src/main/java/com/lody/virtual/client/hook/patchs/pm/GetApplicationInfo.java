@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
 				return applicationInfo;
 			}
 		}
-		return null;
+		return applicationInfo;
 	}
 
 	@Override
