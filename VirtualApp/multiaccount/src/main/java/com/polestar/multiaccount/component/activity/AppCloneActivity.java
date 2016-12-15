@@ -119,6 +119,8 @@ public class AppCloneActivity extends BaseActivity {
                             });
                             MTAManager.applistClone(AppCloneActivity.this, appModel.getPackageName());
                             // showAd(installAd);
+                        } else {
+                            MTAManager.keyLog(AppCloneActivity.this, MTAManager.KeyLogTag.AERROR, "cloneError:"+ mPkgName);
                         }
                     } else {
                         isInstallSuccess = true;
