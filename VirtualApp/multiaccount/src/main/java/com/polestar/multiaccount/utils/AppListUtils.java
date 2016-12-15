@@ -2,6 +2,7 @@ package com.polestar.multiaccount.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -126,6 +127,10 @@ public class AppListUtils implements DataObserver {
                 continue;
             }
             if (isPreInstalledPkg(pkgName)) {
+                continue;
+            }
+            //Skip system app
+            if ((resolveInfo.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM )!=0) {
                 continue;
             }
             if (isAlreadyClonedApp(pkgName)) {
