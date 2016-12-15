@@ -40,6 +40,17 @@ public class VPackageManager {
 					Object remote = IPackageManager.Stub.asInterface(pmBinder);
 					mRemote = LocalProxyUtils.genProxy(IPackageManager.class, remote);
 				}
+				if (mRemote == null) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} finally {
+						final IBinder pmBinder = ServiceManagerNative.getService(ServiceManagerNative.PACKAGE);
+						Object remote = IPackageManager.Stub.asInterface(pmBinder);
+						mRemote = LocalProxyUtils.genProxy(IPackageManager.class, remote);
+					}
+				}
 			}
 		}
 		return mRemote;

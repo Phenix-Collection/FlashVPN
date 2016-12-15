@@ -105,17 +105,17 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	public void onCreate(Context context) {
 		AttributeCache.init(context);
 		PackageManager pm = context.getPackageManager();
-		PackageInfo packageInfo = null;
-		try {
-			packageInfo = pm.getPackageInfo(context.getPackageName(),
-					PackageManager.GET_ACTIVITIES | PackageManager.GET_PROVIDERS | PackageManager.GET_META_DATA);
-		} catch (PackageManager.NameNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		if (packageInfo == null) {
-			throw new RuntimeException("Unable to found PackageInfo : " + context.getPackageName());
-		}
+//		PackageInfo packageInfo = null;
+//		try {
+//			packageInfo = pm.getPackageInfo(context.getPackageName(),
+//					PackageManager.GET_ACTIVITIES | PackageManager.GET_PROVIDERS | PackageManager.GET_META_DATA);
+//		} catch (PackageManager.NameNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//
+//		if (packageInfo == null) {
+//			throw new RuntimeException("Unable to found PackageInfo : " + context.getPackageName());
+//		}
 		sService.set(this);
 
 	}
