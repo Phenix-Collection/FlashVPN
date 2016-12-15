@@ -34,6 +34,7 @@ import com.lody.virtual.client.hook.secondary.ProxyServiceFactory;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.server.secondary.FakeIdentityBinder;
 
@@ -290,6 +291,10 @@ public final class VClientImpl extends IVClient.Stub {
 		VMRuntime.setTargetSdkVersion.call(VMRuntime.getRuntime.call(), data.appInfo.targetSdkVersion);
 
 		Application app = LoadedApk.makeApplication.call(data.info, false, null);
+		if (data.info == null) {
+			VLog.keyLog(VirtualCore.get().getContext(),
+					VLog.VKeyLogTag.VERROR, "bindApplicationNoCheck:" + packageName + ":"+processName + ":data.info null");
+		}
 		mInitialApplication = app;
 		mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, app);
 		ContextFixer.fixContext(app);

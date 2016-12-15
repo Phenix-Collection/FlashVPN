@@ -138,6 +138,7 @@ public class VAppManagerService extends IAppManager.Stub {
 		if (existOne != null) {
 			if ((flags & InstallStrategy.IGNORE_NEW_VERSION) != 0) {
 				res.isUpdate = true;
+				res.isSuccess = true;
 				return res;
 			}
 			if (!canUpdate(existOne, pkg, flags)) {

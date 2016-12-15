@@ -44,6 +44,10 @@ public class VirtualRuntime {
 		}
 		sInitialPackageName = appInfo.packageName;
 		sProcessName = processName;
+//		if(processName.equals("com.google.android.gms"))
+//		{
+//			Process.setArgV0("com.google.android.gms.persistent");
+//		}
 		mirror.android.os.Process.setArgV0.call(processName);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			DdmHandleAppNameJBMR1.setAppName.call(processName, 0);
