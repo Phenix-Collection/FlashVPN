@@ -3,6 +3,7 @@ package com.lody.virtual.server.pm;
 import android.content.pm.PackageParser;
 
 import com.lody.virtual.helper.proto.AppSetting;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.helper.utils.collection.ArrayMap;
 
 /**
@@ -32,6 +33,14 @@ public class PackageCache {
 		synchronized (PackageCache.class) {
 			VPackageManagerService.get().deletePackageLocked(packageName);
 			return sPackageCaches.remove(packageName);
+		}
+	}
+
+	public static void dump(){
+		synchronized (PackageCache.class){
+			for (String s: sPackageCaches.keySet()) {
+				VLog.d("PackageCache","PKG: " + s);
+			}
 		}
 	}
 }
