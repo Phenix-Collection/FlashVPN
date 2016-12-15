@@ -31,7 +31,7 @@ public class CrashReporter {
 			String dateStr = SIMPLE_DATE_FORMAT.format(e);
 
 			File file = new File(Environment.getExternalStorageDirectory(),
-					String.format("vapp/crash/CrashLog_%s_%s.log", dateStr, Process.myPid()));
+					String.format("spclone/crash/CrashLog_%s_%s.log", dateStr, Process.myPid()));
 
 			if (!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
