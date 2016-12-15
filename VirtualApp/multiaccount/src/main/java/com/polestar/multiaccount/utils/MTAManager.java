@@ -2,6 +2,7 @@ package com.polestar.multiaccount.utils;
 
 import android.content.Context;
 
+import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.tencent.stat.MtaSDkException;
 import com.tencent.stat.StatConfig;
@@ -18,6 +19,16 @@ public class MTAManager {
 
     public static void init(Context context) {
         //StatConfig.init(context);
+        VLog.setKeyLogger(new VLog.IKeyLogger() {
+            @Override
+            public void keyLog(Context context, String tag, String log) {
+                if (context != null) {
+                    Properties prop = new Properties();
+                    prop.setProperty(tag, log);
+                    StatService.trackCustomKVEvent(context, "key_log", prop);
+                }
+            }
+        });
         StatConfig.setDebugEnable(!AppConstants.IS_RELEASE_VERSION);
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         StatConfig.setInstallChannel(context, channel);
@@ -34,6 +45,17 @@ public class MTAManager {
         }
     }
 
+    class KeyLogTag {
+        public static final String AERROR = "aerror";
+    }
+
+    public static void keyLog(Context context, String tag, String log) {
+        if (context != null) {
+            Properties prop = new Properties();
+            prop.setProperty(tag, log);
+            StatService.trackCustomKVEvent(context, "key_log", prop);
+        }
+    }
     public static void homeAdd(Context context) {
         StatService.trackCustomEvent(context, "home_add");
     }

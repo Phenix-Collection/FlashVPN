@@ -1,5 +1,6 @@
 package com.lody.virtual.helper.utils;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -11,10 +12,29 @@ import java.io.File;
  */
 public class VLog {
 
+	public interface IKeyLogger {
+		void keyLog(Context context, String tag, String log);
+	}
+	public static IKeyLogger sKeyLogger = null;
 	public static boolean OPEN_LOG = isDebugMode();
 	public static String VTAG = "VAPP_";
 
 	static boolean existDebugFile = false;
+
+	public static void keyLog(Context context, String tag, String log){
+		if(sKeyLogger != null) {
+			sKeyLogger.keyLog(context, tag, log);
+		}
+	}
+
+	public static void setKeyLogger(IKeyLogger logger) {
+		sKeyLogger = logger;
+	}
+
+	class VKeyLogTag {
+		public static final String VERROR = "verror";
+	}
+
 	public static boolean isDebugMode(){
 		if (existDebugFile) return  true;
 		File file = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "vapp.debug");
