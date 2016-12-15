@@ -12,7 +12,7 @@ import java.io.File;
 public class Logs {
 
     public final static boolean DEBUG = BuildConfig.DEBUG || isDebugMode();
-    public final static String DEFAULT_TAG = "JJJJ";
+    public final static String DEFAULT_TAG = "SPC";
 
     public static void e(String msg) {
         e(DEFAULT_TAG, msg);
