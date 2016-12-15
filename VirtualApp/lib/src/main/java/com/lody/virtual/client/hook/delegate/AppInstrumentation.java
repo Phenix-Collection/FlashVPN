@@ -94,10 +94,12 @@ public final class AppInstrumentation extends InstrumentationDelegate implements
 		VActivityManager.get().onActivityResumed(activity);
 		super.callActivityOnResume(activity);
 		Intent intent = activity.getIntent();
-		Bundle bundle = intent.getBundleExtra("_VA_|_sender_");
-		if (bundle != null) {
-			IBinder loadingPageToken = BundleCompat.getBinder(bundle, "_VA_|_loading_token_");
-			ActivityManagerCompat.finishActivity(loadingPageToken, -1, null);
+		if (intent != null) {
+			Bundle bundle = intent.getBundleExtra("_VA_|_sender_");
+			if (bundle != null) {
+				IBinder loadingPageToken = BundleCompat.getBinder(bundle, "_VA_|_loading_token_");
+				ActivityManagerCompat.finishActivity(loadingPageToken, -1, null);
+			}
 		}
 	}
 
