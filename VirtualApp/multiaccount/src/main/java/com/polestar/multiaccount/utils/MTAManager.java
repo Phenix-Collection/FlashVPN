@@ -45,7 +45,7 @@ public class MTAManager {
         }
     }
 
-    class KeyLogTag {
+    public class KeyLogTag {
         public static final String AERROR = "aerror";
     }
 

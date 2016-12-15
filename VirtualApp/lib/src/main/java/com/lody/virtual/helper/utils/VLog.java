@@ -31,7 +31,7 @@ public class VLog {
 		sKeyLogger = logger;
 	}
 
-	class VKeyLogTag {
+	public class VKeyLogTag {
 		public static final String VERROR = "verror";
 	}
 
