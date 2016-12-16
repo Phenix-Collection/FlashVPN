@@ -7,13 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
+import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.proto.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
+import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CommonUtils;
@@ -28,73 +32,102 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
 public class MApp extends Application {
 
-    private static MApp mInstance;
+    private static final String[] GMS_PKG = {
+            "com.android.vending",
 
-    public static MApp getInstance() {
-        return mInstance;
+            "com.google.android.gsf",
+            "com.google.android.gsf.login",
+            "com.google.android.gms",
+
+            "com.google.android.backuptransport",
+            "com.google.android.backup",
+            "com.google.android.configupdater",
+            "com.google.android.syncadapters.contacts",
+            "com.google.android.feedback",
+            "com.google.android.onetimeinitializer",
+            "com.google.android.partnersetup",
+            "com.google.android.setupwizard",
+            "com.google.android.syncadapters.calendar",};
+
+    private static MApp gDefault;
+
+    public static MApp getApp() {
+        return gDefault;
     }
-    class MyPhoneInfoDelegate implements PhoneInfoDelegate {
 
-        @Override
-        public String getDeviceId(String oldDeviceId) {
-            return oldDeviceId;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        Log.d(Logs.DEFAULT_TAG, "APP version: " + BuildConfig.VERSION_NAME + " Type: " + BuildConfig.BUILD_TYPE);
+        Log.d(Logs.DEFAULT_TAG, "LIB version: " + com.lody.virtual.BuildConfig.VERSION_NAME + " Type: " + com.lody.virtual.BuildConfig.BUILD_TYPE );
+
+        StubManifest.STUB_CP_AUTHORITY = BuildConfig.APPLICATION_ID + "." + StubManifest.STUB_DEF_AUTHORITY;
+        ServiceManagerNative.SERVICE_CP_AUTH = BuildConfig.APPLICATION_ID + "." + ServiceManagerNative.SERVICE_DEF_AUTH;
+        //
+
+        VirtualCore.get().setComponentDelegate(new MComponentDelegate());
+        super.attachBaseContext(base);
+        try {
+            VirtualCore.get().startup(base);
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
-
-        @Override
-        public String getBluetoothAddress(String oldAddress) {
-            return oldAddress;
-        }
-
     }
+
     @Override
     public void onCreate() {
-        mInstance = this;
+        gDefault = this;
         super.onCreate();
-        //AppManager.appOnCreate(this);
-        Logs.d("E MTAManager.init(this);");
-        MTAManager.init(this);
-        Logs.d("X MTAManager.init(this);");
-
         if (VirtualCore.get().isMainProcess()) {
-            preInstallPkg();
-            ImageLoaderUtil.init(this);
-            initRawData();
-            registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this,true));
-        } else if (VirtualCore.get().isVAppProcess()){
-            //VirtualCore.get().setPhoneInfoDelegate(new MyPhoneInfoDelegate());
+//            Once.initialise(this);
+            installGms();
+
+        } else if (VirtualCore.get().isVAppProcess()) {
+            VirtualCore.get().setPhoneInfoDelegate(new MyPhoneInfoDelegate());
+        }
+
+        try {
+            // init exception handler and bugly before attatchBaseContext and appOnCreate
+            setDefaultUncaughtExceptionHandler(this);
+            initBugly(this);
+
+            MTAManager.init(this);
+            if (VirtualCore.get().isMainProcess()) {
+                ImageLoaderUtil.init(this);
+                initRawData();
+                registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
+            }
+
+
+        }catch (Exception e){
+
         }
     }
 
-    private void preInstallPkg() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                VirtualCore virtualCore = VirtualCore.get();
-                Logs.d("E preInstallPkg");
-                PackageManager pm = virtualCore.getUnHookPackageManager();
-                final String[] list = AppManager.getPreInstalledPkgs();
-                for (String pkg : list) {
-                    if (virtualCore.isAppInstalled(pkg)) {
-                        continue;
-                    }
-                    try {
-                        ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
-                        String apkPath = appInfo.sourceDir;
-                        InstallResult res = VirtualCore.get().installApp(apkPath,
-                                InstallStrategy.DEPEND_SYSTEM_IF_EXIST | InstallStrategy.TERMINATE_IF_EXIST);
-                        if (!res.isSuccess) {
-                            VLog.e(getClass().getSimpleName(), "Warning: Unable to install app %s: %s.", appInfo.packageName, res.error);
-                        }
-                    } catch (Throwable e) {
-                        // Ignore
-                    }
-                }
+    /**
+     * Install the Google mobile service.
+     */
+    private void installGms() {
+        VirtualCore virtualCore = VirtualCore.get();
+        PackageManager pm = virtualCore.getUnHookPackageManager();
+        for (String pkg : GMS_PKG) {
+            if (virtualCore.isAppInstalled(pkg)) {
+                continue;
             }
-        }).start();
-        Logs.d("X preInstallPkg");
+            try {
+                ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
+                String apkPath = appInfo.sourceDir;
+                InstallResult res = VirtualCore.get().installApp(apkPath,
+                        InstallStrategy.DEPEND_SYSTEM_IF_EXIST | InstallStrategy.TERMINATE_IF_EXIST);
+                if (!res.isSuccess) {
+                    VLog.e(getClass().getSimpleName(), "Warning: Unable to install app %s: %s.", appInfo.packageName, res.error);
+                }
+            } catch (Throwable e) {
+                // Ignore
+            }
+        }
     }
 
     private void setDefaultUncaughtExceptionHandler(Context context) {
@@ -103,7 +136,7 @@ public class MApp extends Application {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
                 Logs.e("uncaughtException");
-                Logs.e(ex.toString());
+                Logs.e(ex);
                 CrashReport.startCrashReport();
                 Context innerContext = AppManager.getInnerContext();
 
@@ -156,9 +189,14 @@ public class MApp extends Application {
     }
 
     private void initRawData() {
-        String localFilePath = getApplicationContext().getFilesDir().toString();
-        String path = localFilePath + "/" + AppConstants.POPULAR_FILE_NAME;
-        copyRawDataToLocal(path, R.raw.popular_apps);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String localFilePath = getApplicationContext().getFilesDir().toString();
+                String path = localFilePath + "/" + AppConstants.POPULAR_FILE_NAME;
+                copyRawDataToLocal(path, R.raw.popular_apps);
+            }
+        }).start();
     }
 
     private void copyRawDataToLocal(String filePath, int resourceId) {
@@ -185,26 +223,6 @@ public class MApp extends Application {
         }
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        if (isCurMainProcess()) {
-            Logs.e("init autolog");
-        }
-        super.attachBaseContext(base);
-
-        // init exception handler and bugly before attatchBaseContext and appOnCreate
-        setDefaultUncaughtExceptionHandler(this);
-        Logs.d("E initBugly");
-        initBugly(this);
-        Logs.d("X initBugly");
-
-        try {
-            VirtualCore.get().startup(base);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
     private void initBugly(Context context) {
         //Bugly
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
@@ -219,8 +237,18 @@ public class MApp extends Application {
         CrashReport.closeCrashReport();
     }
 
-    // Main process: PB
-    private boolean isCurMainProcess() {
-        return ActivityThread.currentActivityThread().getProcessName().equals("com.polestar.multiaccount");
+    class MyPhoneInfoDelegate implements PhoneInfoDelegate {
+
+        @Override
+        public String getDeviceId(String oldDeviceId) {
+            return oldDeviceId;
+        }
+
+        @Override
+        public String getBluetoothAddress(String oldAddress) {
+            return oldAddress;
+        }
+
     }
 }
+

@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId 'com.polestar.multiaccount'
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 21
         ndk {
             // 设置支持的SO库架构
             abiFilters 'armeabi'//, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
@@ -47,8 +47,8 @@ android {
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 102
-            versionName "1.0.2.${releaseTime()}"
+            versionCode 1021
+            versionName "1.0.21.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }

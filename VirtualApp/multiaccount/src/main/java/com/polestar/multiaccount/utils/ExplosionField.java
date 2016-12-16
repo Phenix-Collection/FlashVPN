@@ -94,7 +94,7 @@ public class ExplosionField extends View {
     }
 
     private void init() {
-        Arrays.fill(mExpandInset, DisplayUtils.dip2px(MApp.getInstance(), 32));
+        Arrays.fill(mExpandInset, DisplayUtils.dip2px(MApp.getApp(), 32));
     }
 
     @Override

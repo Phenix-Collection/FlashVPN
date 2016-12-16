@@ -170,7 +170,7 @@ public class AppCloneActivity extends BaseActivity {
 
     public static Drawable getAppIcon(String pkgName){
         Drawable icon;
-        Context context = MApp.getInstance().getApplicationContext();
+        Context context = MApp.getApp().getApplicationContext();
         PackageManager pm = context.getPackageManager();
         try {
             PackageInfo pi = pm.getPackageInfo(pkgName, 0);

@@ -66,7 +66,7 @@ public class DragView extends View
         scaleFactor = mScale = (scaleFactor + DRAG_SCALE) / scaleFactor;
         scale.setScale(scaleFactor, scaleFactor);
         mBitmap = Bitmap.createBitmap(bitmap, left, top, width, height, scale, true);
-        int smallSize = DisplayUtils.dip2px(MApp.getInstance().getApplicationContext(), 50);
+        int smallSize = DisplayUtils.dip2px(MApp.getApp().getApplicationContext(), 50);
         mSmallBitmap = Bitmap.createBitmap(smallBitmap, left, top, smallSize, smallSize, scale, true);
 
         // The point in our scaled bitmap that the touch events are located

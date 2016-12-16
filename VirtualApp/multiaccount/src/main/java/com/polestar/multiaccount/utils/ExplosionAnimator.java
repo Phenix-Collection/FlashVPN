@@ -19,10 +19,10 @@ public class ExplosionAnimator extends ValueAnimator {
     static long DEFAULT_DURATION = 0x450;
     private static final Interpolator DEFAULT_INTERPOLATOR = new AccelerateInterpolator(0.6f);
     private static final float END_VALUE = 1.4f;
-    private static final float X = DisplayUtils.dip2px(MApp.getInstance(),5);
-    private static final float Y = DisplayUtils.dip2px(MApp.getInstance(),20);
-    private static final float V = DisplayUtils.dip2px(MApp.getInstance(),2);
-    private static final float W = DisplayUtils.dip2px(MApp.getInstance(),1);
+    private static final float X = DisplayUtils.dip2px(MApp.getApp(),5);
+    private static final float Y = DisplayUtils.dip2px(MApp.getApp(),20);
+    private static final float V = DisplayUtils.dip2px(MApp.getApp(),2);
+    private static final float W = DisplayUtils.dip2px(MApp.getApp(),1);
     private Paint mPaint;
     private Particle[] mParticles;
     private Rect mBound;

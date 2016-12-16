@@ -9,10 +9,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -200,6 +206,22 @@ public class HomeFragment extends BaseFragment {
             return view;
         }
     }
+
+//    private LayoutAnimationController getGridLayoutAnimController() {
+//        int duration = 100;
+//        AnimationSet set = new AnimationSet(true);
+//        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+//        set.addAnimation(animation);
+//
+//        animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+//                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+//        animation.setDuration(duration);
+//        set.addAnimation(animation);
+//
+//        LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
+//        controller.setOrder(LayoutAnimationController.ORDER_NORMAL);
+//        return controller;
+//    }
     private void initView() {
         nativeAdContainer = (LinearLayout) getActivity().findViewById(R.id.native_ad_container);
         mAdmobExpressView = new NativeExpressAdView(getActivity());
@@ -211,6 +233,7 @@ public class HomeFragment extends BaseFragment {
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
         pkgGridView = (GridView) contentView.findViewById(R.id.grid_app);
         pkgGridAdapter = new PackageGridAdapter();
+//        pkgGridView.setLayoutAnimation(getGridLayoutAnimController());
         pkgGridView.setAdapter(pkgGridAdapter);
 
         guideLayout = (LinearLayout) contentView.findViewById(R.id.guide_layout);
