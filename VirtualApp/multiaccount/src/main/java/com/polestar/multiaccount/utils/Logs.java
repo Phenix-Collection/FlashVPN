@@ -57,4 +57,11 @@ public class Logs {
         if (DEBUG)
             Log.v(tag, msg);
     }
+
+    public static String getStackTraceString(Throwable tr) {
+        return Log.getStackTraceString(tr);
+    }
+    public static void e(Throwable e) {
+        Log.e(DEFAULT_TAG, getStackTraceString(e));
+    }
 }
