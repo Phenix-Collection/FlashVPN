@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.duapps.ad.offerwall.ui.OfferWallAct;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
@@ -25,7 +26,7 @@ import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DrawerBlurHelper;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RenderScriptManager;
@@ -51,14 +52,9 @@ public class HomeActivity extends BaseActivity {
     private boolean isInterstitialAdClicked;
     private boolean isInterstitialAdLoaded;
 
-    private boolean isFirstLaunch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isFirstLaunch = PreferencesUtils.isFirstLaunch(this);
-        if (isFirstLaunch) {
-            PreferencesUtils.setAppUsed(this);
-        }
         setContentView(R.layout.activity_home);
         initView();
         cloneHelper = CloneHelper.getInstance(this);
@@ -120,27 +116,28 @@ public class HomeActivity extends BaseActivity {
                 drawerBlurHelper.blur();
             }
         });
-
+        giftView.setGifResource(R.drawable.front_page_gift_icon);
+        giftView.setVisibility(View.VISIBLE);
+        giftView.play();
         giftView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-//                if (wrapInterstitialAd != null) {
-//                    giftView.setVisibility(View.GONE);
-//                    wrapInterstitialAd.show();
-//                    loadAd();
-//                }
+            public void onClick(View v) {
+                Intent intent3 = new Intent(HomeActivity.this, OfferWallAct.class);
+                Bundle b = new Bundle();
+                b.putInt("pid", 131003);
+                b.putInt(OfferWallAct.KEY_TITLE_ID, R.string.appwall_title); // 可选
+                b.putString(OfferWallAct.KEY_TAB_BACKGROUND_COLOR, "#4164ef"); // 可 选
+                b.putString(OfferWallAct.KEY_TAB_INDICATOR_COLOR, "#000000"); // 可选
+                b.putString(OfferWallAct.KEY_TAB_TEXT_COLOR, "#FFFFFF"); // 可选
+                intent3.putExtras(b);
+                startActivity(intent3);
             }
         });
 
-//        if(Build.VERSION.SDK_INT == 18){
-//            homeBgCoverImg.setVisibility(View.VISIBLE);
-//            homeBgCoverImg.setImageResource(R.mipmap.main_bg_min);
-//            homeBgView.setCoverImg(homeBgCoverImg);
-//        }
     }
 
     private void loadAd() {
-        Logs.e("start INTERSTITIAL loadAd");
+        MLogs.e("start INTERSTITIAL loadAd");
         isInterstitialAdClicked = false;
         isInterstitialAdLoaded = false;
         adLoader = new FuseAdLoader(this);
@@ -177,10 +174,10 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
-            giftView.setVisibility(View.GONE);
-            loadAd();
-        }
+//        if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
+//            giftView.setVisibility(View.GONE);
+//            loadAd();
+//        }
 
     }
 
@@ -323,7 +320,7 @@ public class HomeActivity extends BaseActivity {
         if (resultCode == RESULT_OK
                 && data != null) {
             if (requestCode == AppConstants.REQUEST_SELECT_APP) {
-                Logs.e("install time2 = " + System.currentTimeMillis());
+                MLogs.e("install time2 = " + System.currentTimeMillis());
                 AppModel model = data.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
                // AppInstallActivity.startAppInstallActivity(this, model, drawerBlurHelper.createBitmap());
                 AppCloneActivity.startAppCloneActivity(this, model);
@@ -335,22 +332,6 @@ public class HomeActivity extends BaseActivity {
         } else {
             doAnimationExter();
         }
-    }
-
-    private boolean needShowGuide() {
-        if (cloneHelper.getClonedApps().size() == 1 && PreferencesUtils.getBoolean(this, AppConstants.KEY_SHOW_GUIDE_FOR_LONG_PRESS, true)) {
-            PreferencesUtils.putBoolean(this, AppConstants.KEY_SHOW_GUIDE_FOR_LONG_PRESS, false);
-            mHomeFragment.showGuidePopWindow();
-            return true;
-        }
-        return false;
-    }
-
-    public void showGuidePopWindow(int locationX, int locationY) {
-        if(isFinishing())
-            return;
-        GuideForLongPressPopWindow popWindow = new GuideForLongPressPopWindow(this, locationX, locationY);
-        popWindow.show(contentLayout);
     }
 
     @Override

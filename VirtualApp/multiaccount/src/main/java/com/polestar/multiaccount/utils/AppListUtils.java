@@ -48,7 +48,7 @@ public class AppListUtils implements DataObserver {
     }
 
     private void update() {
-        Logs.e("update app list");
+        MLogs.e("update app list");
         synchronized (this) {
             mClonedModels = DbManager.queryAppList(mContext);
             getPopularApps(mPopularModels);
@@ -143,7 +143,7 @@ public class AppListUtils implements DataObserver {
             //Todo:workground re-check here: [Bug] if app install failed, then kill recent appclone process,
             //and restart PB, will see two same apps, need core level root cause.
             if (isAlreadyContains(list, pkgName)) {
-                Logs.e("same app:" + pkgName);
+                MLogs.e("same app:" + pkgName);
                 continue;
             }
 
@@ -166,7 +166,7 @@ public class AppListUtils implements DataObserver {
         try {
             return mContext.getPackageManager().getPackageInfo(pName, 0) != null;
         } catch (PackageManager.NameNotFoundException e) {
-            Logs.e(pName + " is not installed.");
+            MLogs.e(pName + " is not installed.");
             return false;
         }
     }

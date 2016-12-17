@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.duapps.ad.base.DuAdNetwork;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
@@ -23,12 +24,15 @@ import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.ImageLoaderUtil;
 import com.polestar.multiaccount.utils.LocalExceptionCollectUtils;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -60,8 +64,8 @@ public class MApp extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-        Log.d(Logs.DEFAULT_TAG, "APP version: " + BuildConfig.VERSION_NAME + " Type: " + BuildConfig.BUILD_TYPE);
-        Log.d(Logs.DEFAULT_TAG, "LIB version: " + com.lody.virtual.BuildConfig.VERSION_NAME + " Type: " + com.lody.virtual.BuildConfig.BUILD_TYPE );
+        Log.d(MLogs.DEFAULT_TAG, "APP version: " + BuildConfig.VERSION_NAME + " Type: " + BuildConfig.BUILD_TYPE);
+        Log.d(MLogs.DEFAULT_TAG, "LIB version: " + com.lody.virtual.BuildConfig.VERSION_NAME + " Type: " + com.lody.virtual.BuildConfig.BUILD_TYPE );
 
         StubManifest.STUB_CP_AUTHORITY = BuildConfig.APPLICATION_ID + "." + StubManifest.STUB_DEF_AUTHORITY;
         ServiceManagerNative.SERVICE_CP_AUTH = BuildConfig.APPLICATION_ID + "." + ServiceManagerNative.SERVICE_DEF_AUTH;
@@ -98,6 +102,8 @@ public class MApp extends Application {
                 ImageLoaderUtil.init(this);
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
+
+                DuAdNetwork.init(this, getDAPConfigJSON(this));
             }
 
 
@@ -106,6 +112,30 @@ public class MApp extends Application {
         }
     }
 
+    private String getDAPConfigJSON(Context context) {
+        BufferedInputStream bis = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            bis = new BufferedInputStream(context.getAssets().open("dap.json"));
+            byte[] buffer = new byte[4096];
+            int readLen = -1;
+            while ((readLen = bis.read(buffer)) > 0) {
+                bos.write(buffer, 0, readLen);
+            }
+        } catch (IOException e) {
+            Log.e("", "IOException :" + e.getMessage());
+        } finally {
+            if (bis != null) {
+                try{
+                    bis.close();
+                }catch (Exception e){
+
+                }
+            }
+        }
+
+        return bos.toString();
+    }
     /**
      * Install the Google mobile service.
      */
@@ -135,14 +165,14 @@ public class MApp extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
-                Logs.e("uncaughtException");
-                Logs.e(ex);
+                MLogs.e("uncaughtException");
+                MLogs.e(ex);
                 CrashReport.startCrashReport();
                 Context innerContext = AppManager.getInnerContext();
 
                 //1. innerContext = null, internal error in Pb
                 if (innerContext == null) {
-                    Logs.e("Pb internal exception, exit.");
+                    MLogs.e("Pb internal exception, exit.");
                     CrashReport.postCatchedException(ex);
                     try {
                         Thread.sleep(2000);
@@ -153,25 +183,25 @@ public class MApp extends Application {
                     LocalExceptionCollectUtils.saveExceptionToLocalFile(context, ex);
 
                     //2. innerContext != null, error in third App, bugly and MTA will report.
-                    Logs.e("cur process id:" + android.os.Process.myPid());
-                    Logs.e("cur process name:" + ActivityThread.currentActivityThread().getProcessName());
+                    MLogs.e("cur process id:" + android.os.Process.myPid());
+                    MLogs.e("cur process name:" + ActivityThread.currentActivityThread().getProcessName());
                     ActivityManager.RunningAppProcessInfo info = CommonUtils.getForegroundProcess(context);
                     if (info != null) {
-                        Logs.e("foreground process: " + info.pid);
-                        Logs.e("foreground process: " + info.processName);
+                        MLogs.e("foreground process: " + info.pid);
+                        MLogs.e("foreground process: " + info.processName);
                     }
 
                     //2.1 crash and app exit
                     if (info != null && android.os.Process.myPid() == info.pid) {
                         // Toast
                         Intent crash = new Intent("appclone.intent.action.SHOW_CRASH_DIALOG");
-                        Logs.e("inner packagename: " + innerContext.getPackageName());
+                        MLogs.e("inner packagename: " + innerContext.getPackageName());
                         crash.putExtra("package", innerContext.getPackageName());
                         crash.putExtra("exception", ex);
                         sendBroadcast(crash);
                     } else {
                         //2.2 crash but app not exit
-                        Logs.e("report crash, but app not exit.");
+                        MLogs.e("report crash, but app not exit.");
                         CrashReport.postCatchedException(ex);
                         try {
                             Thread.sleep(2000);
@@ -181,7 +211,7 @@ public class MApp extends Application {
                     }
                 }
 
-                Logs.e("process exit...");
+                MLogs.e("process exit...");
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
             }
@@ -227,9 +257,9 @@ public class MApp extends Application {
         //Bugly
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         AppConstants.IS_RELEASE_VERSION = !channel.equals(AppConstants.DEVELOP_CHANNEL);
-        Logs.e("IS_RELEASE_VERSION: " + AppConstants.IS_RELEASE_VERSION);
-        Logs.e("bugly channel: " + channel);
-        Logs.e("versioncode: " + CommonUtils.getCurrentVersionCode(context) + ", versionName:" + CommonUtils.getCurrentVersionName(context));
+        MLogs.e("IS_RELEASE_VERSION: " + AppConstants.IS_RELEASE_VERSION);
+        MLogs.e("bugly channel: " + channel);
+        MLogs.e("versioncode: " + CommonUtils.getCurrentVersionCode(context) + ", versionName:" + CommonUtils.getCurrentVersionName(context));
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
         strategy.setAppChannel(channel);
         CrashReport.initCrashReport(context, "900060178", !AppConstants.IS_RELEASE_VERSION, strategy);

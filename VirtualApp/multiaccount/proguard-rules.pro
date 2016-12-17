@@ -131,3 +131,18 @@
 -keep class com.tencent.mid.**  {* ;}
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+#virtual app
+-keep class com.loby.virtual.** { *; }
+-keep class mirror.** { *; }
+
+#DAP
+-keep	class	com.dianxinos.DXStatService.stat.TokenManager {	public	static	java.lang.String	getToken(android.content.Context);}
+-keepnames	@com.google.android.gms.common.annotation.KeepName	class	*
+-keepclassmembernames	class *{@com.google.android.gms.common.annotation.KeepName	*;}
+-keep class com.google.android.gms.common.GooglePlayServicesUtil	{	public	<methods>;}
+-keep	class	com.google.android.gms.ads.identifier.AdvertisingIdClient	{	public	<methods>;}
+-keep	class	com.google.android.gms.ads.identifier.AdvertisingIdClient$Info	{	public	<methods>;}
+-keep	class	com.facebook.ads.NativeAd
+-keep	class   com.google.android.gms.ads.formats.NativeContentAd
+-keep class com.duapps.ad.** { *;}

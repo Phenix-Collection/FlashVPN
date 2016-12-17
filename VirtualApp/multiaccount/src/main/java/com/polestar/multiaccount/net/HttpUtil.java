@@ -8,7 +8,7 @@ import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.Feedback;
 import com.polestar.multiaccount.utils.DigestUtils;
 import com.polestar.multiaccount.utils.JNISecretApi;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.RequestHeadersBuilder;
 
 import org.json.JSONObject;
@@ -47,7 +47,7 @@ public class HttpUtil {
         Gson gson = new Gson();
         json = gson.toJson(data);
 
-        Logs.d("json:" + json);
+        MLogs.d("json:" + json);
         String contentBody = encryptHttpBody(context, json.toString());
         Map<String, String> header = RequestHeadersBuilder.getProtocolHeaders(context, contentBody, null, false);
         if (header == null) {
@@ -81,17 +81,17 @@ public class HttpUtil {
                 sb.append(line);
             }
             resultCode = urlConn.getResponseCode();
-            Logs.d("resultCode: " + resultCode + ", sb: " + sb);
+            MLogs.d("resultCode: " + resultCode + ", sb: " + sb);
 
             if (resultCode == HttpURLConnection.HTTP_OK) {
                 // decrypt the response result from server
                 String jsonstr = new String(sb.toString().getBytes(), RequestHeadersBuilder.CHARSET_NAME);
                 jsonstr = DigestUtils.decrypt(jsonstr.trim(),
                         RequestHeadersBuilder.ACCESS_KEY + JNISecretApi.getJNISecretApi().getSecret(JNISecretApi.SecretType.APPDE));
-                Logs.d("decrypt jsonstr: " + jsonstr);
+                MLogs.d("decrypt jsonstr: " + jsonstr);
                 JSONObject ret = new JSONObject(jsonstr);
                 resultCode = ret.getInt("code");
-                Logs.d("code: " + resultCode);
+                MLogs.d("code: " + resultCode);
             }
         } catch (Exception e) {
             e.printStackTrace();

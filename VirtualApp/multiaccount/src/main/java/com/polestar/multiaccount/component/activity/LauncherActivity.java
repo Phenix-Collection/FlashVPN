@@ -3,15 +3,12 @@ package com.polestar.multiaccount.component.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.utils.CloneHelper;
-import com.polestar.multiaccount.utils.Logs;
 
 /**
  * Created by yxx on 2016/8/23.

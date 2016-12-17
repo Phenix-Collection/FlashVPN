@@ -59,7 +59,7 @@ android {
         }
         release {
             signingConfig signingConfigs.myConfig
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -75,8 +75,15 @@ android {
         abortOnError false
     }
 }
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 
 dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
     compile 'com.tencent.bugly:crashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.1.5
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
@@ -100,12 +107,14 @@ dependencies {
     // MTA
     compile files('libs/mid-sdk-3.5.jar')
     compile files('libs/mta-sdk-2.2.0.jar')
-    //ad
+
     compile 'com.google.android.gms:play-services-ads:9.4.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.google.code.gson:gson:2.3.1'
+    //ad
     compile 'com.google.firebase:firebase-ads:+'
     compile 'com.facebook.android:audience-network-sdk:4.+'
+    compile(name: 'DuappsAd-CW-v1.0.8-release',ext: 'aar')
 
     compile project(':lib')
 }

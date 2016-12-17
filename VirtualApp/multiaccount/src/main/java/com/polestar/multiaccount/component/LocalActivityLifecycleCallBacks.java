@@ -5,7 +5,7 @@ import android.app.Application;
 import android.os.Bundle;
 
 import com.polestar.multiaccount.MApp;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 
 /**
@@ -28,12 +28,12 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
 
     @Override
     public void onActivityStarted(Activity activity) {
-        Logs.e("onActivityStarted");
+        MLogs.e("onActivityStarted");
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        Logs.e("onActivityResumed");
+        MLogs.e("onActivityResumed");
         isForground = true;
         //MTA
         MTAManager.onResume(activity);
@@ -41,7 +41,7 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
 
     @Override
     public void onActivityPaused(Activity activity) {
-        Logs.e("onActivityPaused");
+        MLogs.e("onActivityPaused");
         isForground = false;
         //MTA
         MTAManager.onPause(activity);
@@ -49,7 +49,7 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
 
     @Override
     public void onActivityStopped(Activity activity) {
-		Logs.e("onActivityStopped");
+		MLogs.e("onActivityStopped");
         if(!isForground ){
         }
     }

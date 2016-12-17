@@ -18,11 +18,11 @@ public class TaskManager {
             ActivityManager activityManager =  (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
             final List<ActivityManager.RecentTaskInfo> recentTasks =
                     activityManager.getRecentTasks(MAX_RECENT_TASKS, ActivityManager.RECENT_IGNORE_UNAVAILABLE);
-            Logs.e("target packageName = " + packageName);
+            MLogs.e("target packageName = " + packageName);
             for(ActivityManager.RecentTaskInfo taskInfo : recentTasks){
                 Intent intent = taskInfo.baseIntent;
-                Logs.e("task packageName = " + taskInfo.baseIntent.getExtras());
-                Logs.e("task packageName = " + taskInfo.baseIntent);
+                MLogs.e("task packageName = " + taskInfo.baseIntent.getExtras());
+                MLogs.e("task packageName = " + taskInfo.baseIntent);
                 if(taskInfo.baseIntent.getComponent().getPackageName().equals(packageName)){
                     activityManager.moveTaskToFront(taskInfo.persistentId, ActivityManager.MOVE_TASK_WITH_HOME);
                     return true;

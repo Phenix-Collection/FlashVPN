@@ -4,9 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.duapps.ad.base.DuAdNetwork;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.utils.CloneHelper;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 
 /**
  * Created by yxx on 2016/9/7.
@@ -19,7 +20,7 @@ public class PackageChangeReceiver extends BroadcastReceiver{
         }
         if (intent.getAction().equals("android.intent.action.PACKAGE_REMOVED")) {
             String packageName = intent.getDataString();
-            Logs.e("app uninstall: packageName = " + packageName);
+            MLogs.e("app uninstall: packageName = " + packageName);
             if (packageName != null && packageName.startsWith("package:")) {
                 packageName = packageName.replaceFirst("package:", "");
             }
@@ -29,7 +30,8 @@ public class PackageChangeReceiver extends BroadcastReceiver{
         if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
             String packageName = intent.getDataString();
             DbManager.notifyChanged();
-            Logs.e("app install: packageName = " + packageName);
+            DuAdNetwork.onPackageAddReceived(context, intent);
+            MLogs.e("app install: packageName = " + packageName);
         }
     }
 }

@@ -1,13 +1,11 @@
 package com.polestar.multiaccount.widgets;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RadialGradient;
@@ -20,18 +18,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnticipateInterpolator;
 import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.utils.DisplayUtils;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.widgets.dragdrop.DragSource;
 import com.polestar.multiaccount.widgets.dragdrop.DragView;
 import com.polestar.multiaccount.widgets.dragdrop.DropTarget;
@@ -393,12 +385,12 @@ public class CustomFloatView extends View implements DropTarget{
         switch (action & MotionEventCompat.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 if(!isPointInInnerCircle(event.getX(),event.getY())){
-                    Logs.e("onclick -- ignore");
+                    MLogs.e("onclick -- ignore");
                     return false;
                 }
                 break;
         }
-        Logs.e("onclick -- sure");
+        MLogs.e("onclick -- sure");
         return super.onTouchEvent(event);
     }
 
@@ -570,17 +562,17 @@ public class CustomFloatView extends View implements DropTarget{
 
     @Override
     public void onDrop(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
-        Logs.d("onDrop");
+        MLogs.d("onDrop");
     }
 
     @Override
     public void onDragEnter(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
-        Logs.d("onDrop " + " " + x + "," + y + " ," + xOffset + ", " + yOffset);
+        MLogs.d("onDrop " + " " + x + "," + y + " ," + xOffset + ", " + yOffset);
     }
 
     @Override
     public void onDragOver(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
-        Logs.d("onDragOver " + " " + x + "," + y + " ," + xOffset + ", " + yOffset);
+        MLogs.d("onDragOver " + " " + x + "," + y + " ," + xOffset + ", " + yOffset);
         if (x + xOffset > leftBtnRect.left && x+xOffset < leftBtnRect.right) {
             selecteLeftBtn();
         } else   if (x + xOffset > rightBtnRect.left && x+xOffset < rightBtnRect.right) {
@@ -588,13 +580,13 @@ public class CustomFloatView extends View implements DropTarget{
         } else {
             clearSelectedBtn();
         }
-        Logs.d("left:" + leftBtnRect.toString());
-        Logs.d("right:" + rightBtnRect.toString());
+        MLogs.d("left:" + leftBtnRect.toString());
+        MLogs.d("right:" + rightBtnRect.toString());
     }
 
     @Override
     public void onDragExit(DragSource source, int x, int y, int xOffset, int yOffset, DragView dragView, Object dragInfo) {
-        Logs.d("onDragExit");
+        MLogs.d("onDragExit");
         clearSelectedBtn();
     }
 

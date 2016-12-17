@@ -227,11 +227,11 @@ public class PreferencesUtils {
         return settings.getBoolean(key, defaultValue);
     }
 
-    public static void  setAppUsed(Context c){
-        putBoolean(c, AppConstants.PreferencesKey.IS_FIRST_USE, false);
+    public static void setCloneGuideShowed(Context c){
+        putBoolean(c, AppConstants.PreferencesKey.SHOWN_CLONE_GUIDE, true);
     }
 
-    public static boolean isFirstLaunch(Context c){
-        return getBoolean(c, AppConstants.PreferencesKey.IS_FIRST_USE, true);
+    public static boolean haveShownCloneGuide(Context c){
+        return getBoolean(c, AppConstants.PreferencesKey.SHOWN_CLONE_GUIDE, false);
     }
 }

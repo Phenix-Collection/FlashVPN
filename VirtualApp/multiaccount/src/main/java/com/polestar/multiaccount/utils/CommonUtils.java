@@ -111,7 +111,7 @@ public class CommonUtils {
         try {
             return context.getPackageManager().getPackageInfo(packageName, 0) != null;
         } catch (PackageManager.NameNotFoundException e) {
-            Logs.e(packageName + " isn't installed.");
+            MLogs.e(packageName + " isn't installed.");
             return false;
         }
     }

@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * Created by yxx on 2016/8/4.
  */
-public class Logs {
+public class MLogs {
 
     public final static boolean DEBUG = BuildConfig.DEBUG || isDebugMode();
     public final static String DEFAULT_TAG = "SPC";

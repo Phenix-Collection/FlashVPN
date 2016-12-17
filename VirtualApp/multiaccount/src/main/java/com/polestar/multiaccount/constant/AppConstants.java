@@ -43,7 +43,7 @@ public class AppConstants {
     public static final String URL_FACEBOOK = "https://www.facebook.com/polestar.applab";
 
     public class PreferencesKey {
-        public static final String IS_FIRST_USE = "is_first_use";
+        public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";
     }
 
 }

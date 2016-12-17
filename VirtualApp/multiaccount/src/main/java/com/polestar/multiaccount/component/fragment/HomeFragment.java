@@ -6,19 +6,16 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.text.Layout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
+import android.view.ViewTreeObserver;
 import android.view.animation.BounceInterpolator;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -53,11 +50,14 @@ import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.CustomDialogUtils;
 import com.polestar.multiaccount.utils.ExplosionField;
 import com.polestar.multiaccount.utils.LocalAdUtils;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.widgets.CustomFloatView;
 import com.polestar.multiaccount.widgets.GifView;
 import com.polestar.multiaccount.widgets.GridAppCell;
+import com.polestar.multiaccount.widgets.TutorialGuides;
+import com.polestar.multiaccount.widgets.TutorialGuidesUtils;
 import com.polestar.multiaccount.widgets.dragdrop.DragController;
 import com.polestar.multiaccount.widgets.dragdrop.DragImageView;
 import com.polestar.multiaccount.widgets.dragdrop.DragLayer;
@@ -75,10 +75,7 @@ public class HomeFragment extends BaseFragment {
     private GridView pkgGridView;
     private PackageGridAdapter pkgGridAdapter;
     private List<AppModel> appInfos;
-    private ImageView addBtn, removeBtn;
     private CustomFloatView floatView;
-    private LinearLayout guideLayout;
-    private GifView iconGifView;
     private ExplosionField mExplosionField;
     private DragController mDragController;
     private DragLayer mDragLayer;
@@ -91,8 +88,6 @@ public class HomeFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        long time = System.currentTimeMillis();
-        Logs.e("onCreateView time1 = " + time);
         contentView = inflater.inflate(R.layout.fragment_home, null);
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
@@ -101,21 +96,19 @@ public class HomeFragment extends BaseFragment {
         mDragController.setDragListener(mDragListener);
         mDragController.setWindowToken(contentView.getWindowToken());
         mDragLayer.setDragController(mDragController);
-
-        Logs.e("onCreateView time = " + (System.currentTimeMillis() - time));
         return contentView;
     }
     DragController.DragListener mDragListener = new DragController.DragListener() {
         @Override
         public void onDragStart(DragSource source, Object info, int dragAction) {
-            Logs.d("onDragStart");
+            MLogs.d("onDragStart");
             floatView.animToExtands();
             mDragController.addDropTarget(floatView);
         }
 
         @Override
         public void onDragEnd(DragSource source, Object info, int action) {
-            Logs.d("onDragEnd + " + floatView.getSelectedState());
+            MLogs.d("onDragEnd + " + floatView.getSelectedState());
             switch (floatView.getSelectedState()) {
                 case CustomFloatView.SELECT_BTN_LEFT:
                     MTAManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
@@ -236,7 +229,6 @@ public class HomeFragment extends BaseFragment {
 //        pkgGridView.setLayoutAnimation(getGridLayoutAnimController());
         pkgGridView.setAdapter(pkgGridAdapter);
 
-        guideLayout = (LinearLayout) contentView.findViewById(R.id.guide_layout);
 
         floatView = (CustomFloatView) contentView.findViewById(R.id.addApp_btn);
         floatView.startBreath();
@@ -245,15 +237,10 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 startAppListActivity();
+                PreferencesUtils.setCloneGuideShowed(getActivity());
                 MTAManager.homeAdd(getActivity());
             }
         });
-//        floatView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                appGridView.setLayoutPercent(1f - ((float) floatView.getHeight()) / ((float) appGridView.getHeight()));
-//            }
-//        });
 
         pkgGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -277,12 +264,18 @@ public class HomeFragment extends BaseFragment {
         pkgGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                DragImageView iv = (DragImageView)view.findViewById(R.id.app_icon);
-                mDragController.startDrag(iv, iv, pkgGridAdapter.getItem(i),DragController.DRAG_ACTION_COPY);
-                return true;
+                if (pkgGridAdapter.getItem(i) != null) {
+                    DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
+                    mDragController.startDrag(iv, iv, pkgGridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
+                    return true;
+                } else {
+                    return  false;
+                }
+
             }
         });
     }
+
     private void inflateFbNativeAdView(IAd ad) {
         View adView = LayoutInflater.from(getActivity()).inflate(R.layout.front_page_native_ad, null);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -311,6 +304,43 @@ public class HomeFragment extends BaseFragment {
                 ad.registerPrivacyIconView(choiceIconImage);
             }
         }
+    }
+
+    private TutorialGuides.Builder mTutorialBuilder;
+    private void showCloneAppGuide(){
+        pkgGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                MLogs.d("onGlobalLayout");
+
+            }
+        });
+        //TutorialGuidesUtils.removeOnGlobalLayoutListener(pkgGridView,this);
+        try {
+            String text = getString(R.string.start_tips);
+            mTutorialBuilder = new TutorialGuides.Builder(getActivity());
+
+            RectF rectF = TutorialGuidesUtils.getRectFInWindow(floatView);
+            mTutorialBuilder.anchorView(floatView);
+            mTutorialBuilder.defaultMaxWidth(true);
+            mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
+                @Override
+                public void onShow(TutorialGuides tooltip) {
+                    PreferencesUtils.setCloneGuideShowed(getActivity());
+                }
+            });
+            mTutorialBuilder.text(text)
+                    .gravity(Gravity.TOP)
+                    .build()
+                    .show();
+        }catch (Exception e){
+            MLogs.e("error to show guides");
+            MLogs.e(e);
+        }
+    }
+
+    private void showLongClickItemGuide(){
+
     }
 
     private void loadAdmobNativeExpress(){
@@ -404,7 +434,6 @@ public class HomeFragment extends BaseFragment {
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
                 }
-                needShowGuideLayout();
             }
 
             @Override
@@ -412,7 +441,6 @@ public class HomeFragment extends BaseFragment {
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
                 }
-                needShowGuideLayout();
             }
 
             @Override
@@ -421,23 +449,17 @@ public class HomeFragment extends BaseFragment {
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
                 }
-                //adapter = new AppHomeAdapter(mActivity, appInfos,appGridView.getmPageSize());
-                //appGridView.setAdapter(adapter);
-                needShowGuideLayout();
+                if (!PreferencesUtils.haveShownCloneGuide(getActivity()) && (clonedApp == null || clonedApp.size() == 0)) {
+                    pkgGridView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showCloneAppGuide();
+                        }
+                    }, 1000);
+
+                }
             }
         });
-    }
-
-    private void needShowGuideLayout(){
-//        if(appInfos == null || appInfos.size() <= 0){
-//            iconGifView.setGifResource(R.mipmap.logo);
-//            iconGifView.play();
-//            guideLayout.setVisibility(View.VISIBLE);
-//        }else{
-//            iconGifView.pause();
-//            guideLayout.setVisibility(View.GONE);
-//        }
-        guideLayout.setVisibility(View.GONE);
     }
 
     private void showDeleteDialog(AppModel appModel){
@@ -491,7 +513,6 @@ public class HomeFragment extends BaseFragment {
         DbManager.notifyChanged();
         pkgGridAdapter.notifyDataSetChanged();
         //adapter.deleteComplete();
-        needShowGuideLayout();
         showFullScreenAd();
     }
 
@@ -524,23 +545,11 @@ public class HomeFragment extends BaseFragment {
         AnimatorHelper.hideToBottom(contentView);
     }
 
-    private void updateModelIndex(int startIndex, int endIndex) {
-        ArrayList<AppModel> updateList = new ArrayList<>();
-        for (int i = startIndex; i <= endIndex; i++) {
-            AppModel model = appInfos.get(i);
-            model.setIndex(i);
-            updateList.add(model);
-        }
-
-        update(updateList);
-    }
-
     private synchronized void update(ArrayList<AppModel> updateList){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 DbManager.updateAppModelList(mActivity,updateList);
-//                DbManager.notifyChanged();
             }
         }).start();
     }
@@ -557,14 +566,5 @@ public class HomeFragment extends BaseFragment {
             mActivity.startActivityForResult(i, AppConstants.REQUEST_SELECT_APP);
             mActivity.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         }
-    }
-    public void showGuidePopWindow(){
-//        View childView = appGridView.getChildAt(adapter.getFirstAppIndex());
-//        View iconView = childView.findViewById(R.id.app_icon);
-//        int[] location= new int[2];
-//        iconView.getLocationInWindow(location);
-//        if(mActivity instanceof  HomeActivity){
-//            ((HomeActivity)mActivity).showGuidePopWindow(location[0] + iconView.getWidth(),location[1] + iconView.getHeight());
-//        }
     }
 }

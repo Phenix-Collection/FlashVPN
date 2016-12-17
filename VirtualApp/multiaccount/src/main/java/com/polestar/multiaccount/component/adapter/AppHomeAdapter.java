@@ -9,14 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.model.AppModel;
-import com.polestar.multiaccount.utils.LocalAdUtils;
 import com.polestar.multiaccount.utils.BitmapUtils;
-import com.polestar.multiaccount.utils.Logs;
 
 import java.util.List;
 
@@ -181,7 +176,7 @@ public class AppHomeAdapter extends BaseAdapter {
 //        LocalAdUtils.showAd(mContext.getApplicationContext(), null, LocalAdUtils.AD_STYLE[9], true, new OnAdLoadListener() {
 //            @Override
 //            public void onLoad(IAd iAd) {
-//                Logs.e("onLoad");
+//                MLogs.e("onLoad");
 //                if (iAd.getNativeAd() != null) {
 //                    isAdLoaded = true;
 //                    nativeAd = iAd;
@@ -212,27 +207,27 @@ public class AppHomeAdapter extends BaseAdapter {
 //                    });
 //                    notifyDataSetChanged();
 //                } else if (iAd.getAdView() != null) {
-//                    Logs.e("addAd--传统的和banner，返回View");
+//                    MLogs.e("addAd--传统的和banner，返回View");
 //                } else {
-//                    Logs.e("addAd--有父类容器，banner和自定义样式View直接添加到父类容器");
+//                    MLogs.e("addAd--有父类容器，banner和自定义样式View直接添加到父类容器");
 //                }
 //
 //                iAd.setOnAdClickListener(new OnAdClickListener() {
 //                    @Override
 //                    public void onAdClicked() {
-//                        Logs.e("addAd--OnAdClickListener");
+//                        MLogs.e("addAd--OnAdClickListener");
 //                    }
 //                });
 //                iAd.setOnCancelAdListener(new OnCancelAdListener() {
 //                    @Override
 //                    public void cancelAd() {
-//                        Logs.e("addAd--setOnCancelAdListener");
+//                        MLogs.e("addAd--setOnCancelAdListener");
 //                    }
 //                });
 //                iAd.setOnPrivacyIconClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        Logs.e("addAd--setOnPrivacyIconClickListener");
+//                        MLogs.e("addAd--setOnPrivacyIconClickListener");
 //                    }
 //                });
 //
@@ -240,14 +235,14 @@ public class AppHomeAdapter extends BaseAdapter {
 //
 //            @Override
 //            public void onLoadFailed(AdError adError) {
-//                Logs.e("iconAd LoadFailed --" + adError.toString());
+//                MLogs.e("iconAd LoadFailed --" + adError.toString());
 //                MyLog.i(MyLog.TAG, "addAd--应用自定义样式和定义样式的View没有填充父容器，直接使用数据");
 //                notifyDataSetChanged();
 //            }
 //
 //            @Override
 //            public void onLoadInterstitialAd(WrapInterstitialAd wrapInterstitialAd) {
-//                Logs.e("onLoadInterstitialAd");
+//                MLogs.e("onLoadInterstitialAd");
 //            }
 //        });
     }

@@ -4,6 +4,8 @@
 
     <string name="app_icon">app_icon</string>
 
+    <string name="appwall_title">Discover</string>
+
     <string name="action_settings">Settings</string>
     <string name="clone_apps">Clone Apps</string>
     <string name="most_popular_apps">Most Popular</string>

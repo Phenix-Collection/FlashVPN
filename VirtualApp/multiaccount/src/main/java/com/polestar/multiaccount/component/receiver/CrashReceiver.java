@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.polestar.multiaccount.R;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.ToastUtils;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -19,7 +19,7 @@ public class CrashReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-            Logs.e("CrashReceiver onReceive");
+            MLogs.e("CrashReceiver onReceive");
             if (intent == null || intent.getAction() == null) {
                 return;
             }
@@ -28,7 +28,7 @@ public class CrashReceiver extends BroadcastReceiver {
                 Throwable ex = (Throwable) intent.getSerializableExtra("exception");
                 MTAManager.reportCrash(context, pName);
                 if (ex != null) {
-                    Logs.e("report crash and app exited.");
+                    MLogs.e("report crash and app exited.");
                     // bugly:若是导致app退出的崩溃，特殊上报，并标签
                     CrashReport.startCrashReport();
                     CrashReport.setUserSceneTag(context, 32459);

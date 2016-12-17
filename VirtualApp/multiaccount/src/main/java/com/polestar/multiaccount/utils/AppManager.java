@@ -50,7 +50,7 @@ public class AppManager {
 
     public static void launchApp(String packageName) {
         try {
-            Logs.d(TAG, "packageName = " + packageName);
+            MLogs.d(TAG, "packageName = " + packageName);
             Intent intent = VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId());
             VActivityManager.get().startActivity(intent, VUserHandle.myUserId());
         } catch (Exception e) {
@@ -86,7 +86,7 @@ public class AppManager {
     }
 
     public static boolean installApp(Context context, AppModel appModel) {
-        Logs.d(TAG, "apkPath = " + appModel.getApkPath());
+        MLogs.d(TAG, "apkPath = " + appModel.getApkPath());
         InstallResult result = VirtualCore.get().installApp(appModel.getApkPath(), InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
         if (result.isSuccess && PreferencesUtils.getBoolean(context, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
             CommonUtils.createShortCut(context, appModel);
@@ -95,7 +95,7 @@ public class AppManager {
     }
 
     public static boolean uninstallApp(String packageName) {
-        Logs.d(TAG, "packageName = " + packageName);
+        MLogs.d(TAG, "packageName = " + packageName);
         return VirtualCore.get().uninstallApp(packageName);
     }
 
@@ -104,12 +104,12 @@ public class AppManager {
 //    }
 
     public static void killApp(String packageName) {
-        Logs.d(TAG, "packageName = " + packageName);
+        MLogs.d(TAG, "packageName = " + packageName);
         VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
     }
 
     public static void setAppNotificationFlag(String packageName, boolean enable) {
-        Logs.d(TAG, "packageName = " + packageName + ", enable = " + enable);
+        MLogs.d(TAG, "packageName = " + packageName + ", enable = " + enable);
         //VirtualCore.get().getService().setAppNotificationFlag(packageName, enable);
     }
 

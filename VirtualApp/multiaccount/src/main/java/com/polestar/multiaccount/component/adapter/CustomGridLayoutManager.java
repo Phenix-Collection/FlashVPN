@@ -6,7 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 
 /**
  * Created by yxx on 2016/8/8.
@@ -26,9 +26,9 @@ public class CustomGridLayoutManager extends GridLayoutManager{
 
     @Override
     public void setMeasuredDimension(Rect childrenBounds, int wSpec, int hSpec) {
-        Logs.e(hSpec + "----");
+        MLogs.e(hSpec + "----");
         int heightSpec = View.MeasureSpec.makeMeasureSpec(hSpec - 300, View.MeasureSpec.EXACTLY);
-        Logs.e(heightSpec + "*******");
+        MLogs.e(heightSpec + "*******");
         super.setMeasuredDimension(childrenBounds, wSpec, heightSpec);
     }
 }

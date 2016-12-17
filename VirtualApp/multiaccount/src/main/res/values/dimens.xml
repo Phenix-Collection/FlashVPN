@@ -19,4 +19,12 @@
 
     <dimen name="faq_title_size">16sp</dimen>
     <dimen name="faq_content_size">14sp</dimen>
+
+    <dimen name="guidetooltip_text_size">15sp</dimen>
+    <dimen name="guidetooltip_padding">5dp</dimen>
+    <dimen name="guidetooltip_arrow_width">10dp</dimen>
+    <dimen name="guidetooltip_arrow_height">10dp</dimen>
+    <dimen name="guidetooltip_animation_padding">5dp</dimen>
+    <dimen name="guidetooltip_margin">5dp</dimen>
+    <dimen name="guidetooltip_maxwidth">200dp</dimen>
 </resources>

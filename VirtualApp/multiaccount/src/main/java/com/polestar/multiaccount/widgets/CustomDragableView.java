@@ -10,7 +10,6 @@ import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -18,17 +17,13 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationSet;
 import android.view.animation.Interpolator;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.Scroller;
 
 import com.polestar.multiaccount.utils.DisplayUtils;
-import com.polestar.multiaccount.utils.Logs;
 
 import java.util.ArrayList;
 
@@ -1311,11 +1306,11 @@ public class CustomDragableView extends ViewGroup {
         if (mLastPosition >= 0) {
             int page = mLastPosition / (mRowCount * mColCount);
             View child = getChildAt(mLastPosition);
-//            Logs.e("left = " + child.getLeft() + "\nx = " + localX);
-//            Logs.e("right = " + child.getRight() + "\nx = " + localX);
-//            Logs.e("top = " + child.getTop() + "\ny = " + localY);
-//            Logs.e("bottom = " + child.getRight() + "\ny = " + localY);
-//            Logs.e("page = " + page);
+//            MLogs.e("left = " + child.getLeft() + "\nx = " + localX);
+//            MLogs.e("right = " + child.getRight() + "\nx = " + localX);
+//            MLogs.e("top = " + child.getTop() + "\ny = " + localY);
+//            MLogs.e("bottom = " + child.getRight() + "\ny = " + localY);
+//            MLogs.e("page = " + page);
             if(child != null){
                 return localX >= child.getLeft() - slop - page * getWidth() && localY >= child.getTop() - slop && localX < (float) child.getRight() - page * getWidth() +
                         slop && localY < (float) child.getBottom() + slop;

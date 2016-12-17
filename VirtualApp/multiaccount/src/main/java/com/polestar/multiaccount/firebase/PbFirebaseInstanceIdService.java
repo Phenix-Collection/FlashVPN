@@ -2,7 +2,7 @@ package com.polestar.multiaccount.firebase;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 
 /**
  * Created by hxx on 8/11/16.
@@ -19,7 +19,7 @@ public class PbFirebaseInstanceIdService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Logs.e("Refreshed token: " + refreshedToken);
+        MLogs.e("Refreshed token: " + refreshedToken);
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the

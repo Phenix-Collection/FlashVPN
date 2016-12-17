@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,7 +24,7 @@ import java.util.Map;
 public class LocalExceptionCollectUtils {
 
     public static void saveExceptionToLocalFile(Context context,Throwable throwable){
-        if(!Logs.isDebugMode())
+        if(!MLogs.isDebugMode())
             return;
         Map<String, String> infos = new HashMap<>();
         collectDeviceInfo(context,infos);

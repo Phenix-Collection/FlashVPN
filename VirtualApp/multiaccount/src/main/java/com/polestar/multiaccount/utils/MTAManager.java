@@ -33,14 +33,14 @@ public class MTAManager {
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         StatConfig.setInstallChannel(context, channel);
         StatConfig.setAutoExceptionCaught(true);
-        Logs.e("MTA channel: " + channel);
+        MLogs.e("MTA channel: " + channel);
 
         try {
             StatService.startStatService(context, APP_KEY,
                     com.tencent.stat.common.StatConstants.VERSION);
         } catch (MtaSDkException e) {
             // MTA初始化失败
-            Logs.e("MTA start failed.");
+            MLogs.e("MTA start failed.");
             e.printStackTrace();
         }
     }

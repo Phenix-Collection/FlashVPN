@@ -37,4 +37,7 @@
     <color name="native_ad_text_white">#ffffff</color>
     <color name="native_ad_transparent_black">#64000000</color>
     <color name="ad_calltoaction">#E2E22d</color>
+
+    <color name="guidetooltip_background">#5171f2</color>
+    <color name="guidetooltip_arrow">#5171f2</color>
 </resources>

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.polestar.multiaccount.constant.AppConstants;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 
 /**
@@ -20,12 +20,12 @@ public class PbFirebaseInstanceIdReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Logs.d("onReceive");
+        MLogs.d("onReceive");
 
         // 如果用户关闭PB推送，则收到广播以后中断该广播,
         // 否则继续传递给Firebase默认的receiver处理（这里确保我们能先于Firebase sdk收到该广播）
         if (!PreferencesUtils.getBoolean(context, AppConstants.KEY_SERVER_PUSH, true)) {
-            Logs.d("abortBroadcast");
+            MLogs.d("abortBroadcast");
             abortBroadcast();
         }
     }

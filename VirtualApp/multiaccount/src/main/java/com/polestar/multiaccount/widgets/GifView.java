@@ -9,7 +9,7 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 
 /**
  * Created by yxx on 2016/8/8.
@@ -211,12 +211,12 @@ public class GifView extends View {
             this.invalidate();
         }
         long movieDuration = this.movie.duration() == 0 ? 1000 : this.movie.duration();
-        Logs.d("movie duration " + movieDuration);
+        MLogs.d("movie duration " + movieDuration);
         if (duration < movieDuration) {
             playDuration = movieDuration;
         } else {
             playDuration = ((duration + movieDuration) / movieDuration) * movieDuration;
         }
-        Logs.d("playDuration " + playDuration);
+        MLogs.d("playDuration " + playDuration);
     }
 }

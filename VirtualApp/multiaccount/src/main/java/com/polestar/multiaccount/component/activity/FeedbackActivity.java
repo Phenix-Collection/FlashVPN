@@ -10,12 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
-import com.polestar.multiaccount.utils.Logs;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.ToastUtils;
 
 public class FeedbackActivity extends BaseActivity {
@@ -77,7 +76,7 @@ public class FeedbackActivity extends BaseActivity {
                 try {
                     startActivity(data);
                 }catch (Exception e) {
-                    Logs.e("Start email activity fail!");
+                    MLogs.e("Start email activity fail!");
                     ToastUtils.ToastDefult(FeedbackActivity.this, getResources().getString(R.string.submit_success));
                 }
             }

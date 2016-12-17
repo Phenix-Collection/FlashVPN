@@ -12,8 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-import com.polestar.multiaccount.R;
-
 /**
  * 模糊drawerlayout侧边栏背景
  * Created by yxx on 2016/8/3.
@@ -109,7 +107,7 @@ public class DrawerBlurHelper {
 
     public void createCacheBitmap() {
        // bgView.setBackgroundResource(R.mipmap.main_bg_min);
-        Logs.e("createCacheBitmap");
+        MLogs.e("createCacheBitmap");
         bgView.destroyDrawingCache();
         if (!bgView.isDrawingCacheEnabled()) {
             bgView.setDrawingCacheEnabled(true);
@@ -129,7 +127,7 @@ public class DrawerBlurHelper {
     public Bitmap createBitmap() {
         Bitmap bgBitmap;
        // bgView.setBackgroundResource(R.mipmap.main_bg_min);
-        Logs.e("createCacheBitmap");
+        MLogs.e("createCacheBitmap");
         bgView.destroyDrawingCache();
         if (!bgView.isDrawingCacheEnabled()) {
             bgView.setDrawingCacheEnabled(true);
