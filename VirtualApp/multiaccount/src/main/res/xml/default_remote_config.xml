@@ -9,4 +9,8 @@
         <key>slot_home_gift_interstitial</key>
         <value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>
     </entry>
+    <entry>
+        <key>home_show_header_ad</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>

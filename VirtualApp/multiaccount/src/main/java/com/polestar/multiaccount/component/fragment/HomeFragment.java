@@ -53,6 +53,7 @@ import com.polestar.multiaccount.utils.LocalAdUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.CustomFloatView;
 import com.polestar.multiaccount.widgets.GifView;
 import com.polestar.multiaccount.widgets.GridAppCell;
@@ -405,29 +406,38 @@ public class HomeFragment extends BaseFragment {
             mNativeAdLoader = new FuseAdLoader(getActivity());
             //mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
-        mNativeAdLoader.loadAd(1, new IAdLoadListener() {
-            @Override
-            public void onAdLoaded(IAd ad) {
-                if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
-                        || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
-                    inflateFbNativeAdView(ad);
+        if (mNativeAdLoader.hasValidAdSource()) {
+            mNativeAdLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAd ad) {
+                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
+                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
+                        inflateFbNativeAdView(ad);
+                    }
                 }
-            }
 
-            @Override
-            public void onAdListLoaded(List<IAd> ads) {
+                @Override
+                public void onAdListLoaded(List<IAd> ads) {
 
-            }
+                }
 
-            @Override
-            public void onError(String error) {
-                loadAdmobNativeExpress();
-            }
-        });
+                @Override
+                public void onError(String error) {
+                    loadAdmobNativeExpress();
+                }
+            });
+        } else {
+            loadAdmobNativeExpress();
+        }
     }
 
+    private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
     private void initData(){
-        loadNativeAd();
+        boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD);
+        MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
+        if (showHeaderAd) {
+            loadNativeAd();
+        }
         CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
             @Override
             public void onInstalled(List<AppModel> clonedApp) {
