@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>home_gift_offerwall_percentage</key>
+        <value>50</value>
+    </entry>
+    <entry>
+        <key>slot_home_gift_interstitial</key>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>
+    </entry>
+</defaultsMap>

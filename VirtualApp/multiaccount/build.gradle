@@ -103,18 +103,20 @@ dependencies {
     compile 'org.greenrobot:greendao:3.0.1'
     compile 'com.google.code.gson:gson:2.3.1'
     //firebase messaging/notifications
-    compile 'com.google.firebase:firebase-messaging:9.4.0'
+    compile 'com.google.firebase:firebase-core:9.8.0'
+    compile 'com.google.firebase:firebase-config:9.8.0'
     // MTA
     compile files('libs/mid-sdk-3.5.jar')
     compile files('libs/mta-sdk-2.2.0.jar')
 
-    compile 'com.google.android.gms:play-services-ads:9.4.0'
+    compile 'com.google.android.gms:play-services-ads:9.8.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.google.code.gson:gson:2.3.1'
     //ad
-    compile 'com.google.firebase:firebase-ads:+'
+    compile 'com.google.firebase:firebase-ads:9.8.0'
     compile 'com.facebook.android:audience-network-sdk:4.+'
     compile(name: 'DuappsAd-CW-v1.0.8-release',ext: 'aar')
 
     compile project(':lib')
 }
+apply plugin: 'com.google.gms.google-services'

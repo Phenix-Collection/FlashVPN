@@ -2,6 +2,7 @@ package com.polestar.ad.adapters;
 
 import android.content.Context;
 
+import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.L;
 
@@ -16,21 +17,10 @@ import java.util.List;
 
 public class FuseAdLoader implements IAdLoader {
     private Context mContext;
-    private List<NativeAdConfig> mNativeAdConfigList = new ArrayList();
+    private List<AdConfig> mNativeAdConfigList = new ArrayList();
     private HashMap<String, IAd> mNativeAdCache = new HashMap<>();
     private IAdLoadListener mListener;
     private int currentLoadingIdx = -1;
-
-    private class NativeAdConfig {
-        public String key;
-        public String source;
-        public long cacheTime;
-        public NativeAdConfig(String source, String key, long cacheTime) {
-            this.key = key;
-            this.source = source;
-            this.cacheTime = cacheTime;
-        }
-    }
 
     public FuseAdLoader(Context context) {
         this.mContext = context;
@@ -43,7 +33,17 @@ public class FuseAdLoader implements IAdLoader {
      * @param cacheTime cache time of the ad source, or you can set it -1 to use the default one.
      */
     public void addAdSource(String source, String key, long cacheTime) {
-        mNativeAdConfigList.add(new NativeAdConfig(source, key, cacheTime));
+        mNativeAdConfigList.add(new AdConfig(source, key, cacheTime));
+    }
+
+    public void addAdConfig(AdConfig adConfig) {
+        if (adConfig != null) {
+            mNativeAdConfigList.add(adConfig);
+        }
+    }
+
+    public boolean hasValidAdSource() {
+        return mNativeAdConfigList!=null && mNativeAdConfigList.size() > 0;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class FuseAdLoader implements IAdLoader {
             mListener.onError("No Fill");
             return;
         }
-        NativeAdConfig config = mNativeAdConfigList.get(currentLoadingIdx);
+        AdConfig config = mNativeAdConfigList.get(currentLoadingIdx);
         //Find cache
         IAd ad = mNativeAdCache.get(config.key);
         if (ad != null) {
@@ -118,7 +118,7 @@ public class FuseAdLoader implements IAdLoader {
         });
     }
 
-    private IAdLoader getNativeAdAdapter(NativeAdConfig config){
+    private IAdLoader getNativeAdAdapter(AdConfig config){
         if (config == null || config.source == null) {
             return null;
         }

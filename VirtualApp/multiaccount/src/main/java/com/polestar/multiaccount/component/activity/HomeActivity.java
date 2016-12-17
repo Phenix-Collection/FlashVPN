@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.duapps.ad.offerwall.ui.OfferWallAct;
+import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
@@ -28,13 +29,15 @@ import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DrawerBlurHelper;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
-import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.RenderScriptManager;
 import com.polestar.multiaccount.utils.UpdateSDKManager;
 import com.polestar.multiaccount.widgets.GifView;
-import com.polestar.multiaccount.widgets.GuideForLongPressPopWindow;
 
 import java.util.List;
+import java.util.Random;
+
+import static com.tencent.stat.StatConfig.getCustomProperty;
 
 public class HomeActivity extends BaseActivity {
 
@@ -48,17 +51,43 @@ public class HomeActivity extends BaseActivity {
     private DrawerBlurHelper drawerBlurHelper;
     private GifView giftView;
     private FuseAdLoader adLoader;
-    private CloneHelper cloneHelper;
     private boolean isInterstitialAdClicked;
     private boolean isInterstitialAdLoaded;
 
+    private static final String KEY_HOME_GIFT_OFFERWALL_PERCENTAGE = "home_gift_offerwall_percentage";
+    private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial";
+    private boolean isShowOfferWall = true;
+
+    private static final int OFFER_WALL_SHOW_DELAY = 2000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
+        int random = new Random().nextInt(100);
+        isShowOfferWall = (random < RemoteConfig.getLong(KEY_HOME_GIFT_OFFERWALL_PERCENTAGE));
         initView();
-        cloneHelper = CloneHelper.getInstance(this);
         AppListUtils.getInstance(this); // init AppListUtils
+    }
+
+    private void showOfferWall(){
+        giftView.setGifResource(R.drawable.front_page_gift_icon);
+        giftView.setVisibility(View.VISIBLE);
+        giftView.play();
+        giftView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent3 = new Intent(HomeActivity.this, OfferWallAct.class);
+                Bundle b = new Bundle();
+                b.putInt("pid", 131003);
+                b.putInt(OfferWallAct.KEY_TITLE_ID, R.string.appwall_title); // 可选
+                b.putString(OfferWallAct.KEY_TAB_BACKGROUND_COLOR, "#4164ef"); // 可 选
+                b.putString(OfferWallAct.KEY_TAB_INDICATOR_COLOR, "#000000"); // 可选
+                b.putString(OfferWallAct.KEY_TAB_TEXT_COLOR, "#FFFFFF"); // 可选
+                intent3.putExtras(b);
+                startActivity(intent3);
+            }
+        });
     }
 
     private void initView() {
@@ -71,8 +100,7 @@ public class HomeActivity extends BaseActivity {
         forgroundLayout = findViewById(R.id.blur_forground);
         giftView = (GifView) findViewById(R.id.gifView);
         giftView.setVisibility(View.INVISIBLE);
-//        giftView.play();
-        //giftView.setVisibility(View.GONE);
+
         navigationList.setAdapter(new NavigationAdapter(this));
         navigationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -116,24 +144,14 @@ public class HomeActivity extends BaseActivity {
                 drawerBlurHelper.blur();
             }
         });
-        giftView.setGifResource(R.drawable.front_page_gift_icon);
-        giftView.setVisibility(View.VISIBLE);
-        giftView.play();
-        giftView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent3 = new Intent(HomeActivity.this, OfferWallAct.class);
-                Bundle b = new Bundle();
-                b.putInt("pid", 131003);
-                b.putInt(OfferWallAct.KEY_TITLE_ID, R.string.appwall_title); // 可选
-                b.putString(OfferWallAct.KEY_TAB_BACKGROUND_COLOR, "#4164ef"); // 可 选
-                b.putString(OfferWallAct.KEY_TAB_INDICATOR_COLOR, "#000000"); // 可选
-                b.putString(OfferWallAct.KEY_TAB_TEXT_COLOR, "#FFFFFF"); // 可选
-                intent3.putExtras(b);
-                startActivity(intent3);
-            }
-        });
-
+        if (isShowOfferWall) {
+            giftView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showOfferWall();
+                }
+            }, OFFER_WALL_SHOW_DELAY);
+        }
     }
 
     private void loadAd() {
@@ -141,44 +159,57 @@ public class HomeActivity extends BaseActivity {
         isInterstitialAdClicked = false;
         isInterstitialAdLoaded = false;
         adLoader = new FuseAdLoader(this);
-        //adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL, "1700354860278115_1702702800043321", -1);
-        adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
-        adLoader.loadAd(1, new IAdLoadListener() {
-            @Override
-            public void onAdLoaded(IAd ad) {
-                isInterstitialAdLoaded = true;
-                giftView.setGifResource(R.drawable.front_page_gift_icon);
-                giftView.setVisibility(View.VISIBLE);
-                giftView.play();
-                giftView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        isInterstitialAdClicked = true;
-                        ad.show();
-                    }
-                });
-            }
+        List<AdConfig> adSources = RemoteConfig.getAdConfigList(SLOT_HOME_GIFT_INTERSTITIAL);
+        for(AdConfig adConfig: adSources) {
+            adLoader.addAdConfig(adConfig);
+            MLogs.d(SLOT_HOME_GIFT_INTERSTITIAL + " "+ adConfig.toString());
+        }
+        //adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
+        if (adLoader.hasValidAdSource()) {
+            adLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAd ad) {
+                    isInterstitialAdLoaded = true;
+                    giftView.setGifResource(R.drawable.front_page_gift_icon);
+                    giftView.setVisibility(View.VISIBLE);
+                    giftView.play();
+                    giftView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            isInterstitialAdClicked = true;
+                            ad.show();
+                        }
+                    });
+                }
+                @Override
+                public void onAdListLoaded(List<IAd> ads) {
 
-            @Override
-            public void onAdListLoaded(List<IAd> ads) {
-
-            }
-
-            @Override
-            public void onError(String error) {
-
-            }
-        });
+                }
+                @Override
+                public void onError(String error) {
+                    showOfferWall();
+                }
+            });
+        } else {
+            giftView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showOfferWall();
+                }
+            }, OFFER_WALL_SHOW_DELAY);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
-//            giftView.setVisibility(View.GONE);
-//            loadAd();
-//        }
-
+        if (! isShowOfferWall) {
+            MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
+            if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
+                giftView.setVisibility(View.GONE);
+                loadAd();
+            }
+        }
     }
 
     @Override

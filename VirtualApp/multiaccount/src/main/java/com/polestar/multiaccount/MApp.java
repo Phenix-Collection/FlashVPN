@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.duapps.ad.base.DuAdNetwork;
+import com.google.firebase.FirebaseApp;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
@@ -26,6 +27,7 @@ import com.polestar.multiaccount.utils.ImageLoaderUtil;
 import com.polestar.multiaccount.utils.LocalExceptionCollectUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.RemoteConfig;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.BufferedInputStream;
@@ -102,7 +104,8 @@ public class MApp extends Application {
                 ImageLoaderUtil.init(this);
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
-
+//                FirebaseApp.initializeApp(this);
+                RemoteConfig.init();
                 DuAdNetwork.init(this, getDAPConfigJSON(this));
             }
 
