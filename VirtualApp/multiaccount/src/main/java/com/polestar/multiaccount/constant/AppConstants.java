@@ -28,22 +28,19 @@ public class AppConstants {
     public static final String PREFERENCE_NAME = "DotSpace preference";
     public static final String KEY_SERVER_PUSH = "key_server_push";
     public static final String KEY_AUTO_CREATE_SHORTCUT = "key_auto_create_shortcut";
-    public static final String KEY_SHOW_GUIDE_FOR_LONG_PRESS = "key_show_guide_for_long_press";
 
     public static final String POPULAR_FILE_NAME = "popular_apps.txt";
 
-    // Titles
-    public static final String TITLE_CLONE_APPS = "Clone Apps";
 
     public static final String TITLE_NOTIFICATION = "Notifications";
 
     public static final String TITLE_FEEDBACK = "Feedback";
 
-    public static final String URL_FAQ = "http://baidu.com";
     public static final String URL_FACEBOOK = "https://www.facebook.com/polestar.applab";
 
     public class PreferencesKey {
         public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";
+        public static final String SHOWN_LONG_CLICK_GUIDE = "show_guide_for_long_press";
     }
 
 }

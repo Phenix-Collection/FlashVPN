@@ -231,7 +231,15 @@ public class PreferencesUtils {
         putBoolean(c, AppConstants.PreferencesKey.SHOWN_CLONE_GUIDE, true);
     }
 
-    public static boolean haveShownCloneGuide(Context c){
+    public static boolean hasShownCloneGuide(Context c){
         return getBoolean(c, AppConstants.PreferencesKey.SHOWN_CLONE_GUIDE, false);
+    }
+
+    public static boolean hasShownLongClickGuide(Context c){
+        return getBoolean(c, AppConstants.PreferencesKey.SHOWN_LONG_CLICK_GUIDE, false);
+    }
+
+    public static void setLongClickGuideShowed(Context c){
+        putBoolean(c, AppConstants.PreferencesKey.SHOWN_LONG_CLICK_GUIDE, true);
     }
 }

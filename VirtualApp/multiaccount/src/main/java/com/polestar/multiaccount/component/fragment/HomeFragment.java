@@ -55,7 +55,6 @@ import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.CustomFloatView;
-import com.polestar.multiaccount.widgets.GifView;
 import com.polestar.multiaccount.widgets.GridAppCell;
 import com.polestar.multiaccount.widgets.TutorialGuides;
 import com.polestar.multiaccount.widgets.TutorialGuidesUtils;
@@ -309,13 +308,6 @@ public class HomeFragment extends BaseFragment {
 
     private TutorialGuides.Builder mTutorialBuilder;
     private void showCloneAppGuide(){
-        pkgGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                MLogs.d("onGlobalLayout");
-
-            }
-        });
         //TutorialGuidesUtils.removeOnGlobalLayoutListener(pkgGridView,this);
         try {
             String text = getString(R.string.start_tips);
@@ -340,8 +332,31 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    private TutorialGuides longClickGuide = null;
     private void showLongClickItemGuide(){
+        try {
+            String text = getString(R.string.long_press_tips);
+            mTutorialBuilder = new TutorialGuides.Builder(getActivity());
+            mTutorialBuilder.anchorView(pkgGridView.getChildAt(0));
+            mTutorialBuilder.defaultMaxWidth(true);
+            mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
+                @Override
+                public void onShow(TutorialGuides tooltip) {
+                    PreferencesUtils.setLongClickGuideShowed(getActivity());
+                }
+            });
+            longClickGuide = mTutorialBuilder.text(text)
+                    .gravity(Gravity.BOTTOM)
+                    .build();
+            longClickGuide.show();
+        }catch (Exception e){
+            MLogs.e("error to showLongClickItemGuide");
+            MLogs.e(e);
+        }
+    }
 
+    private void dismissLongClickGuide() {
+        if (longClickGuide !=null) longClickGuide.dismiss();
     }
 
     private void loadAdmobNativeExpress(){
@@ -387,6 +402,7 @@ public class HomeFragment extends BaseFragment {
 
                     }
                 });
+                dismissLongClickGuide();
                 L.d("onAdLoaded ");
             }
         });
@@ -414,6 +430,7 @@ public class HomeFragment extends BaseFragment {
                             || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
                         inflateFbNativeAdView(ad);
                     }
+                    dismissLongClickGuide();
                 }
 
                 @Override
@@ -429,6 +446,19 @@ public class HomeFragment extends BaseFragment {
         } else {
             loadAdmobNativeExpress();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        pkgGridView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(getActivity())) {
+                    showLongClickItemGuide();
+                }
+            }
+        }, 1500);
     }
 
     private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
@@ -459,7 +489,7 @@ public class HomeFragment extends BaseFragment {
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
                 }
-                if (!PreferencesUtils.haveShownCloneGuide(getActivity()) && (clonedApp == null || clonedApp.size() == 0)) {
+                if (!PreferencesUtils.hasShownCloneGuide(getActivity()) && (clonedApp == null || clonedApp.size() == 0)) {
                     pkgGridView.postDelayed(new Runnable() {
                         @Override
                         public void run() {

@@ -34,7 +34,7 @@
     <string name="delete_dialog_right">Delete</string>
     <string name="installFailure">Sorry, this app is not supported yet, and we are coming up with it soon.</string>
     <string name="start_tips">Let\'s get started by cloning\n your first app here!</string>
-    <string name="long_press_tips">Long press &amp; drag the app to add a\nshortcut on home screen or remove\nthe clone</string>
+    <string name="long_press_tips">Long press &amp; drag it to add shortcut on home screen or remove it</string>
 
     <!-- notification -->
     <string name="notification_decription">Enable to receive notification for this cloned application</string>
