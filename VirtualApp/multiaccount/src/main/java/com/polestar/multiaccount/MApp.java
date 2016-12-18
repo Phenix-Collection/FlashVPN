@@ -175,62 +175,73 @@ public class MApp extends Application {
         }
     }
 
-    private void setDefaultUncaughtExceptionHandler(Context context) {
-        //MTA
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
-                MLogs.logBug("uncaughtException");
-                MLogs.e(ex);
-                CrashReport.startCrashReport();
-                Context innerContext = VClientImpl.getClient().getCurrentApplication();
-                //1. innerContext = null, internal error in Pb
-                if (innerContext == null) {
-                    MLogs.e("Pb internal exception, exit.");
-                    CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);
+    private class MAppCrashHandler implements Thread.UncaughtExceptionHandler {
+
+        private Context context;
+        private Thread.UncaughtExceptionHandler orig;
+        MAppCrashHandler(Context c, Thread.UncaughtExceptionHandler orig) {
+            context = c;
+            this.orig = orig;
+        }
+
+        @Override
+        public void uncaughtException(Thread thread, Throwable ex) {
+            MLogs.logBug("uncaughtException");
+            MLogs.e(ex);
+            CrashReport.startCrashReport();
+            Context innerContext = VClientImpl.getClient().getCurrentApplication();
+            //1. innerContext = null, internal error in Pb
+            if (innerContext == null) {
+                MLogs.logBug("MApp internal exception, exit.");
+                CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);
+                CrashReport.postCatchedException(ex);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                LocalExceptionCollectUtils.saveExceptionToLocalFile(context, ex);
+
+                //2. innerContext != null, error in third App, bugly and MTA will report.
+                MLogs.e("cur process id:" + android.os.Process.myPid());
+                MLogs.e("cur process name:" + ActivityThread.currentActivityThread().getProcessName());
+                ActivityManager.RunningAppProcessInfo info = CommonUtils.getForegroundProcess(context);
+                if (info != null) {
+                    MLogs.e("foreground process: " + info.pid);
+                    MLogs.e("foreground process: " + info.processName);
+                }
+
+                //2.1 crash and app exit
+
+                if (info != null && android.os.Process.myPid() == info.pid) {
+                    // Toast
+                    Intent crash = new Intent("appclone.intent.action.SHOW_CRASH_DIALOG");
+                    MLogs.logBug("inner packagename: " + innerContext.getPackageName());
+                    crash.putExtra("package", innerContext.getPackageName());
+                    crash.putExtra("exception", ex);
+                    sendBroadcast(crash);
+                } else {
+                    //2.2 crash but app not exit
+                    MLogs.logBug("report crash, but app not exit.");
                     CrashReport.postCatchedException(ex);
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    LocalExceptionCollectUtils.saveExceptionToLocalFile(context, ex);
-
-                    //2. innerContext != null, error in third App, bugly and MTA will report.
-                    MLogs.e("cur process id:" + android.os.Process.myPid());
-                    MLogs.e("cur process name:" + ActivityThread.currentActivityThread().getProcessName());
-                    ActivityManager.RunningAppProcessInfo info = CommonUtils.getForegroundProcess(context);
-                    if (info != null) {
-                        MLogs.e("foreground process: " + info.pid);
-                        MLogs.e("foreground process: " + info.processName);
-                    }
-
-                    //2.1 crash and app exit
-                    if (info != null && android.os.Process.myPid() == info.pid) {
-                        // Toast
-                        Intent crash = new Intent("appclone.intent.action.SHOW_CRASH_DIALOG");
-                        MLogs.logBug("inner packagename: " + innerContext.getPackageName());
-                        crash.putExtra("package", innerContext.getPackageName());
-                        crash.putExtra("exception", ex);
-                        sendBroadcast(crash);
-                    } else {
-                        //2.2 crash but app not exit
-                        MLogs.logBug("report crash, but app not exit.");
-                        CrashReport.postCatchedException(ex);
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
-
-                MLogs.e("process exit...");
+            }
+            if (orig != null) {
+                orig.uncaughtException(thread, ex);
+            } else {
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
             }
-        });
+        }
+    }
+    private void setDefaultUncaughtExceptionHandler(Context context) {
+        Thread.setDefaultUncaughtExceptionHandler(new MAppCrashHandler(context, Thread.getDefaultUncaughtExceptionHandler()));
     }
 
     private void initRawData() {
