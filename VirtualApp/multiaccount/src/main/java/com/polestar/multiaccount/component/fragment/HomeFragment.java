@@ -142,11 +142,13 @@ public class HomeFragment extends BaseFragment {
 
         public int getPosition(AppModel appModel) {
             int ret = 0;
-            for(AppModel m: appInfos ) {
-                if (m.getPackageName().equals(appModel.getPackageName())) {
-                    return ret;
+            if (appModel != null ) {
+                for (AppModel m : appInfos) {
+                    if (m.getPackageName().equals(appModel.getPackageName())) {
+                        return ret;
+                    }
+                    ret++;
                 }
-                ret ++;
             }
             return  -1;
         }
