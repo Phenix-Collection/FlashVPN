@@ -292,8 +292,10 @@ public final class VClientImpl extends IVClient.Stub {
 
 		Application app = LoadedApk.makeApplication.call(data.info, false, null);
 		if (data.info == null) {
-			VLog.keyLog(VirtualCore.get().getContext(),
-					VLog.VKeyLogTag.VERROR, "bindApplicationNoCheck:" + packageName + ":"+processName + ":data.info null");
+			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":data.info null");
+		}
+		if (app == null) {
+			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + "app context null");
 		}
 		mInitialApplication = app;
 		mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, app);
@@ -314,7 +316,7 @@ public final class VClientImpl extends IVClient.Stub {
 		} catch (Exception e) {
 			if (!mInstrumentation.onException(app, e)) {
 				throw new RuntimeException(
-						"Unable to create application " + app.getClass().getName()
+						"Unable to create application " + app == null? "null app" : app.getClass().getName()
 								+ ": " + e.toString(), e);
 			}
 		}
