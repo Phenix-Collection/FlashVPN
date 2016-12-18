@@ -37,6 +37,7 @@ import com.lody.virtual.client.hook.patchs.pm.PackageManagerPatch;
 import com.lody.virtual.client.hook.patchs.power.PowerManagerPatch;
 import com.lody.virtual.client.hook.patchs.restriction.RestrictionPatch;
 import com.lody.virtual.client.hook.patchs.search.SearchManagerPatch;
+import com.lody.virtual.client.hook.patchs.statusbar.StatusBarManagerPatch;
 import com.lody.virtual.client.hook.patchs.telephony.TelephonyPatch;
 import com.lody.virtual.client.hook.patchs.user.UserManagerPatch;
 import com.lody.virtual.client.hook.patchs.vibrator.VibratorPatch;
@@ -130,6 +131,7 @@ public final class PatchManager {
 			addPatch(new AudioManagerPatch());
 			addPatch(new SearchManagerPatch());
 			addPatch(new ContentServicePatch());
+			addPatch(new StatusBarManagerPatch());
 
 			if (Build.VERSION.SDK_INT >= JELLY_BEAN_MR2) {
 				addPatch(new VibratorPatch());
