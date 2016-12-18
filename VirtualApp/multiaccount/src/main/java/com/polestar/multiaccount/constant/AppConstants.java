@@ -43,4 +43,8 @@ public class AppConstants {
         public static final String SHOWN_LONG_CLICK_GUIDE = "show_guide_for_long_press";
     }
 
+    public class CrashTag {
+        public static final int MAPP_CRASH = 33117;
+    }
+
 }

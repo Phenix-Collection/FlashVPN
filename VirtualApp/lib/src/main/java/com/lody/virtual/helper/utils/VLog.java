@@ -14,6 +14,7 @@ public class VLog {
 
 	public interface IKeyLogger {
 		void keyLog(Context context, String tag, String log);
+		void logBug(String tag, String log);
 	}
 	public static IKeyLogger sKeyLogger = null;
 	public static boolean OPEN_LOG = isDebugMode();
@@ -84,5 +85,11 @@ public class VLog {
 
 	public static void e(String tag, Throwable e) {
 		Log.e(VTAG+tag, getStackTraceString(e));
+	}
+	public static void logbug(String tag, String msg, Object... format) {
+		e(VTAG+tag, String.format(msg, format));
+		if (sKeyLogger != null) {
+			sKeyLogger.logBug(tag, String.format(msg, format));
+		}
 	}
 }

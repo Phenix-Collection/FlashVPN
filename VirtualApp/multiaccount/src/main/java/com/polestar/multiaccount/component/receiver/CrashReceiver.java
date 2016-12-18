@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.polestar.multiaccount.R;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.ToastUtils;
@@ -28,10 +29,10 @@ public class CrashReceiver extends BroadcastReceiver {
                 Throwable ex = (Throwable) intent.getSerializableExtra("exception");
                 MTAManager.reportCrash(context, pName);
                 if (ex != null) {
-                    MLogs.e("report crash and app exited.");
+                    MLogs.logBug("report crash and app exited. " + pName);
                     // bugly:若是导致app退出的崩溃，特殊上报，并标签
                     CrashReport.startCrashReport();
-                    CrashReport.setUserSceneTag(context, 32459);
+                    CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);
                     CrashReport.postCatchedException(ex);
                     //MTA
                     StatService.reportException(context, ex);

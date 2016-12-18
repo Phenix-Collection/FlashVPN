@@ -3,6 +3,7 @@ package com.polestar.multiaccount.utils;
 import android.util.Log;
 
 import com.polestar.multiaccount.BuildConfig;
+import com.tencent.bugly.crashreport.BuglyLog;
 
 import java.io.File;
 
@@ -63,5 +64,15 @@ public class MLogs {
     }
     public static void e(Throwable e) {
         Log.e(DEFAULT_TAG, getStackTraceString(e));
+    }
+
+    public static void logBug(String tag, String msg) {
+        e(tag, msg);
+        BuglyLog.e(tag, msg);
+    }
+
+    public static void logBug(String msg) {
+        e(DEFAULT_TAG, msg);
+        BuglyLog.e(DEFAULT_TAG, msg);
     }
 }

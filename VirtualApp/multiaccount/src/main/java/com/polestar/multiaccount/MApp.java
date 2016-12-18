@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.duapps.ad.base.DuAdNetwork;
 import com.google.firebase.FirebaseApp;
+import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
@@ -100,6 +101,17 @@ public class MApp extends Application {
             initBugly(this);
 
             MTAManager.init(this);
+            VLog.setKeyLogger(new VLog.IKeyLogger() {
+                @Override
+                public void keyLog(Context context, String tag, String log) {
+                    MTAManager.keyLog(context,tag,log);
+                }
+
+                @Override
+                public void logBug(String tag, String log) {
+                    MLogs.logBug(tag, log);
+                }
+            });
             if (VirtualCore.get().isMainProcess()) {
                 ImageLoaderUtil.init(this);
                 initRawData();
@@ -168,14 +180,14 @@ public class MApp extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
-                MLogs.e("uncaughtException");
+                MLogs.logBug("uncaughtException");
                 MLogs.e(ex);
                 CrashReport.startCrashReport();
-                Context innerContext = AppManager.getInnerContext();
-
+                Context innerContext = VClientImpl.getClient().getCurrentApplication();
                 //1. innerContext = null, internal error in Pb
                 if (innerContext == null) {
                     MLogs.e("Pb internal exception, exit.");
+                    CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);
                     CrashReport.postCatchedException(ex);
                     try {
                         Thread.sleep(2000);
@@ -198,13 +210,13 @@ public class MApp extends Application {
                     if (info != null && android.os.Process.myPid() == info.pid) {
                         // Toast
                         Intent crash = new Intent("appclone.intent.action.SHOW_CRASH_DIALOG");
-                        MLogs.e("inner packagename: " + innerContext.getPackageName());
+                        MLogs.logBug("inner packagename: " + innerContext.getPackageName());
                         crash.putExtra("package", innerContext.getPackageName());
                         crash.putExtra("exception", ex);
                         sendBroadcast(crash);
                     } else {
                         //2.2 crash but app not exit
-                        MLogs.e("report crash, but app not exit.");
+                        MLogs.logBug("report crash, but app not exit.");
                         CrashReport.postCatchedException(ex);
                         try {
                             Thread.sleep(2000);

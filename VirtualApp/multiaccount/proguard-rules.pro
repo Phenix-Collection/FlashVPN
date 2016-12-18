@@ -133,8 +133,36 @@
 -keep public class com.tencent.bugly.**{*;}
 
 #virtual app
--keep class com.loby.virtual.** { *; }
--keep class mirror.** { *; }
+-keep class com.loby.virtual.** {*;}
+-keep class com.lody.virtual.client.** {*;}
+-keep class com.lody.virtual.helper.** {*;}
+-keep class com.lody.virtual.os.** {*;}
+-keep class com.lody.virtual.server.** {*;}
+-keep class android.content.pm.** {*;}
+#-keep class com.lody.virtual.client.ipc.** {*;}
+#-keep class com.lody.virtual.client.core.** {*;}
+#-keep class com.lody.virtual.client.fixer.** {*;}
+#-keep class com.lody.virtual.client.hook.** {*;}
+#-keep class com.lody.virtual.client.interfaces.** {*;}
+#-keep class com.lody.virtual.client.stub.** {*;}
+-keep class mirror.** {*;}
+-keep  class org.greenrobot.** {*;}
+### greenDAO 3
+-keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+public static java.lang.String TABLENAME;
+}
+-keep class **$Properties
+
+# If you do not use SQLCipher:
+-dontwarn org.greenrobot.greendao.database.**
+# If you do not use RxJava:
+-dontwarn rx.**
+
+### greenDAO 2
+-keepclassmembers class * extends de.greenrobot.dao.AbstractDao {
+public static java.lang.String TABLENAME;
+}
+-keep class **$Properties
 
 #DAP
 -keep	class	com.dianxinos.DXStatService.stat.TokenManager {	public	static	java.lang.String	getToken(android.content.Context);}
@@ -145,4 +173,4 @@
 -keep	class	com.google.android.gms.ads.identifier.AdvertisingIdClient$Info	{	public	<methods>;}
 -keep	class	com.facebook.ads.NativeAd
 -keep	class   com.google.android.gms.ads.formats.NativeContentAd
--keep class com.duapps.ad.** { *;}
+-keepclassmembernames class com.duapps.ad.** { *;}

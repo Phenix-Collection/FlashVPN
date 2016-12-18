@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.constant.AppConstants;
+import com.tencent.bugly.crashreport.BuglyLog;
 import com.tencent.stat.MtaSDkException;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -19,16 +20,7 @@ public class MTAManager {
 
     public static void init(Context context) {
         //StatConfig.init(context);
-        VLog.setKeyLogger(new VLog.IKeyLogger() {
-            @Override
-            public void keyLog(Context context, String tag, String log) {
-                if (context != null) {
-                    Properties prop = new Properties();
-                    prop.setProperty(tag, log);
-                    StatService.trackCustomKVEvent(context, "key_log", prop);
-                }
-            }
-        });
+
         StatConfig.setDebugEnable(!AppConstants.IS_RELEASE_VERSION);
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         StatConfig.setInstallChannel(context, channel);
@@ -50,6 +42,7 @@ public class MTAManager {
     }
 
     public static void keyLog(Context context, String tag, String log) {
+        BuglyLog.e(tag,log);
         if (context != null) {
             Properties prop = new Properties();
             prop.setProperty(tag, log);
