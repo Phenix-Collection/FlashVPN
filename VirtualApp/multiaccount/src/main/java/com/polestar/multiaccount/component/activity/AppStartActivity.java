@@ -69,9 +69,11 @@ public class AppStartActivity extends BaseActivity {
             String packageName = intent.getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
             from = intent.getStringExtra(AppConstants.EXTRA_FROM);
 
-            List<AppModel> appModels = DbManager.queryAppModelByPackageName(this, packageName);
-            if (appModels != null && appModels.size() > 0) {
-                appModel = appModels.get(0);
+            if (packageName != null) {
+                List<AppModel> appModels = DbManager.queryAppModelByPackageName(this, packageName);
+                if (appModels != null && appModels.size() > 0) {
+                    appModel = appModels.get(0);
+                }
             }
         }
         if (appModel == null) {
