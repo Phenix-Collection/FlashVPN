@@ -55,6 +55,7 @@ public class PreferencesUtils {
      * this name that is not a string
      */
     public static String getString(Context context, String key, String defaultValue) {
+        if (context == null) return defaultValue;
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return settings.getString(key, defaultValue);
     }
@@ -139,6 +140,7 @@ public class PreferencesUtils {
      * this name that is not a long
      */
     public static long getLong(Context context, String key, long defaultValue) {
+        if (context == null) return defaultValue;
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return settings.getLong(key, defaultValue);
     }
@@ -181,6 +183,7 @@ public class PreferencesUtils {
      * this name that is not a float
      */
     public static float getFloat(Context context, String key, float defaultValue) {
+        if (context == null) return defaultValue;
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return settings.getFloat(key, defaultValue);
     }
@@ -223,6 +226,7 @@ public class PreferencesUtils {
      * this name that is not a boolean
      */
     public static boolean getBoolean(Context context, String key, boolean defaultValue) {
+        if (context == null) return  defaultValue;
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return settings.getBoolean(key, defaultValue);
     }

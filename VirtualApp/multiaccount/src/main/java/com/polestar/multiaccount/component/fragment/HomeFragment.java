@@ -456,8 +456,10 @@ public class HomeFragment extends BaseFragment {
         pkgGridView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(getActivity())) {
-                    showLongClickItemGuide();
+                if (getActivity() != null) {
+                    if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(getActivity())) {
+                        showLongClickItemGuide();
+                    }
                 }
             }
         }, 1500);
