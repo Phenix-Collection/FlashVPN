@@ -133,19 +133,27 @@
 -keep public class com.tencent.bugly.**{*;}
 
 #virtual app
--keep class com.loby.virtual.** {*;}
--keep class com.lody.virtual.client.** {*;}
--keep class com.lody.virtual.helper.** {*;}
--keep class com.lody.virtual.os.** {*;}
--keep class com.lody.virtual.server.** {*;}
--keep class android.content.pm.** {*;}
+#-keep class com.loby.virtual.** {*;}
+#-keep class com.lody.virtual.client.** {*;}
 #-keep class com.lody.virtual.client.ipc.** {*;}
 #-keep class com.lody.virtual.client.core.** {*;}
 #-keep class com.lody.virtual.client.fixer.** {*;}
 #-keep class com.lody.virtual.client.hook.** {*;}
 #-keep class com.lody.virtual.client.interfaces.** {*;}
 #-keep class com.lody.virtual.client.stub.** {*;}
--keep class mirror.** {*;}
+#
+#-keep class com.lody.virtual.helper.** {*;}
+#-keep class com.lody.virtual.helper.compat.** {*;}
+#-keep class com.lody.virtual.helper.component.** {*;}
+#-keep class com.lody.virtual.helper.proto.** {*;}
+#-keep class com.lody.virtual.helper.utils.** {*;}
+#-keep class com.lody.virtual.helper.utils.collection.** {*;}
+#
+#-keep class com.lody.virtual.os.** {*;}
+#-keep class com.lody.virtual.server.** {*;}
+#-keep class android.content.pm.** {*;}
+#
+#-keep class mirror.** {*;}
 -keep  class org.greenrobot.** {*;}
 ### greenDAO 3
 -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
