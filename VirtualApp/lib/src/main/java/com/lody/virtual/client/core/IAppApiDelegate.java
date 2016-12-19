@@ -9,4 +9,6 @@ import android.graphics.Bitmap;
 public interface IAppApiDelegate {
 
     Bitmap createCloneTagedBitmap(String pkg, Bitmap icon);
+
+    String getCloneTagedLabel(String label);
 }

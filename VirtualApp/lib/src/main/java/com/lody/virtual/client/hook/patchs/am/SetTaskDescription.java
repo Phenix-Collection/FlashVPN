@@ -32,17 +32,16 @@ import java.lang.reflect.Method;
 		ActivityManager.TaskDescription td = (ActivityManager.TaskDescription)args[1];
 		String label = td.getLabel();
 		Bitmap icon = td.getIcon();
-		String VACLIENT_SUFFIX = " ["+ "Cloned"+"]";
-		if ((label == null || !label.startsWith(VACLIENT_SUFFIX) || icon == null)){
+		String VACLIENT_SUFFIX = " Cloned";
+//		if ((label == null || !label.startsWith(VACLIENT_SUFFIX) || icon == null)){
 			Application app = VClientImpl.getClient().getCurrentApplication();
 			if (label == null) {
-				label = VACLIENT_SUFFIX+app.getApplicationInfo().loadLabel(app.getPackageManager());
-			} else {
-				label = VACLIENT_SUFFIX+label;
+				label = ""+app.getApplicationInfo().loadLabel(app.getPackageManager());
 			}
 
 			if (VirtualCore.get().getAppApiDelegate()!=null) {
 				icon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(app.getPackageName(), icon);
+				label = VirtualCore.get().getAppApiDelegate().getCloneTagedLabel(label);
 			}
 
 			if (icon == null) {
@@ -52,7 +51,7 @@ import java.lang.reflect.Method;
 				}
 			}
 			args[1] = new ActivityManager.TaskDescription(label, icon, td.getPrimaryColor());
-		}
+//		}
 		return method.invoke(who, args);
 	}
 
