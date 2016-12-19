@@ -12,7 +12,7 @@ import java.io.File;
  */
 public class MLogs {
 
-    public final static boolean DEBUG = BuildConfig.DEBUG || isDebugMode();
+    public static boolean DEBUG = BuildConfig.DEBUG ;
     public final static String DEFAULT_TAG = "SPC";
 
     public static void e(String msg) {
@@ -29,14 +29,6 @@ public class MLogs {
 
     public static void v(String msg) {
         v(DEFAULT_TAG, msg);
-    }
-
-    public static boolean isDebugMode(){
-        File file = new File(FileUtils.getInnerSDCardPath() + File.separator + "test.debug");
-        if(file.exists()){
-            return true;
-        }
-        return false;
     }
 
     public static void e(String tag, String msg) {

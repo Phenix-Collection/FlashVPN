@@ -101,17 +101,6 @@ public class MApp extends Application {
             initBugly(this);
 
             MTAManager.init(this);
-            VLog.setKeyLogger(new VLog.IKeyLogger() {
-                @Override
-                public void keyLog(Context context, String tag, String log) {
-                    MTAManager.keyLog(context,tag,log);
-                }
-
-                @Override
-                public void logBug(String tag, String log) {
-                    MLogs.logBug(tag, log);
-                }
-            });
             if (VirtualCore.get().isMainProcess()) {
                 ImageLoaderUtil.init(this);
                 initRawData();
@@ -120,11 +109,25 @@ public class MApp extends Application {
                 RemoteConfig.init();
                 DuAdNetwork.init(this, getDAPConfigJSON(this));
             }
-
-
         }catch (Exception e){
-
+            e.printStackTrace();
         }
+
+        if (!AppConstants.IS_RELEASE_VERSION) {
+            VLog.openLog();
+            MLogs.DEBUG = true;
+        }
+        VLog.setKeyLogger(new VLog.IKeyLogger() {
+            @Override
+            public void keyLog(Context context, String tag, String log) {
+                MTAManager.keyLog(context,tag,log);
+            }
+
+            @Override
+            public void logBug(String tag, String log) {
+                MLogs.logBug(tag, log);
+            }
+        });
     }
 
     private String getDAPConfigJSON(Context context) {

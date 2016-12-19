@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.lody.virtual.BuildConfig;
+
 import java.io.File;
 
 /**
@@ -17,15 +19,17 @@ public class VLog {
 		void logBug(String tag, String log);
 	}
 	public static IKeyLogger sKeyLogger = null;
-	public static boolean OPEN_LOG = isDebugMode();
+	public static boolean OPEN_LOG = BuildConfig.DEBUG;
 	public static String VTAG = "VAPP_";
-
-	static boolean existDebugFile = false;
 
 	public static void keyLog(Context context, String tag, String log){
 		if(sKeyLogger != null) {
 			sKeyLogger.keyLog(context, tag, log);
 		}
+	}
+
+	public static void openLog() {
+		OPEN_LOG = true;
 	}
 
 	public static void setKeyLogger(IKeyLogger logger) {
@@ -36,15 +40,6 @@ public class VLog {
 		public static final String VERROR = "verror";
 	}
 
-	public static boolean isDebugMode(){
-		if (existDebugFile) return  true;
-		File file = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "vapp.debug");
-		if(file.exists()){
-			existDebugFile = true;
-			return true;
-		}
-		return false;
-	}
 	public static void i(String tag, String msg, Object... format) {
 		if (OPEN_LOG) {
 			Log.i(VTAG+tag, String.format(msg, format));

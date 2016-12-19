@@ -24,7 +24,7 @@ import java.util.Map;
 public class LocalExceptionCollectUtils {
 
     public static void saveExceptionToLocalFile(Context context,Throwable throwable){
-        if(!MLogs.isDebugMode())
+        if(!MLogs.DEBUG)
             return;
         Map<String, String> infos = new HashMap<>();
         collectDeviceInfo(context,infos);
