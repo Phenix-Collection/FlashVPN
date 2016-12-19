@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
 		ActivityManager.TaskDescription td = (ActivityManager.TaskDescription)args[1];
 		String label = td.getLabel();
 		Bitmap icon = td.getIcon();
-		String VACLIENT_SUFFIX = " ["+ VUserManager.get().getUserName()+"]";
+		String VACLIENT_SUFFIX = " ["+ "Cloned"+"]";
 		if ((label == null || !label.startsWith(VACLIENT_SUFFIX) || icon == null)){
 			Application app = VClientImpl.getClient().getCurrentApplication();
 			if (label == null) {
