@@ -113,6 +113,7 @@ public class MApp extends Application {
             e.printStackTrace();
         }
 
+        VirtualCore.get().setAppApiDelegate(new AppApiDelegate());
         if (!AppConstants.IS_RELEASE_VERSION) {
             VLog.openLog();
             MLogs.DEBUG = true;

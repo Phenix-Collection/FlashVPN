@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import com.lody.virtual.client.VClientImpl;
+import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.helper.utils.DrawableUtils;
 import com.lody.virtual.os.VUserManager;
@@ -38,6 +39,10 @@ import java.lang.reflect.Method;
 				label = VACLIENT_SUFFIX+app.getApplicationInfo().loadLabel(app.getPackageManager());
 			} else {
 				label = VACLIENT_SUFFIX+label;
+			}
+
+			if (VirtualCore.get().getAppApiDelegate()!=null) {
+				icon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(app.getPackageName(), icon);
 			}
 
 			if (icon == null) {

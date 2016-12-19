@@ -79,6 +79,15 @@ public final class VirtualCore {
 	private ConditionVariable initLock = new ConditionVariable();
 	private PhoneInfoDelegate phoneInfoDelegate;
 	private ComponentDelegate componentDelegate;
+	private IAppApiDelegate appApiDelegate;
+
+	public void setAppApiDelegate(IAppApiDelegate delegate){
+		appApiDelegate = delegate;
+	}
+
+	public IAppApiDelegate getAppApiDelegate() {
+		return appApiDelegate;
+	}
 
 	public ConditionVariable getInitLock() {
 		return initLock;
