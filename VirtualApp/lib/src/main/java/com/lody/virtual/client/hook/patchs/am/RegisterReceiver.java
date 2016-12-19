@@ -115,6 +115,8 @@ import mirror.android.content.IIntentReceiverJB;
             if (broadcastIntent != null) {
                 intent = broadcastIntent;
             }
+            String action = SpecialComponentList.unprotectAction(intent.getAction());
+            intent.setAction(action);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
                 IIntentReceiverJB.performReceive.call(old, intent, resultCode, data, extras, ordered, sticky, sendingUser);
             } else {
