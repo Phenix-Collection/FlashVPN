@@ -53,6 +53,16 @@ public class MTAManager {
         StatService.trackCustomEvent(context, "home_add");
     }
 
+    public static void homeShow(Context context) {
+        StatService.trackCustomEvent(context, "home_show");
+    }
+
+    public static void homeGiftClick(Context context, String adSource) {
+        Properties prop = new Properties();
+        prop.setProperty("ad_source", adSource);
+        StatService.trackCustomKVEvent(context, "home_gift_click", prop);
+    }
+
     public static void applistClone(Context context, String packageName) {
         Properties prop = new Properties();
         prop.setProperty("package", packageName);

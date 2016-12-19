@@ -77,6 +77,7 @@ public class HomeActivity extends BaseActivity {
         giftView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MTAManager.homeGiftClick(HomeActivity.this, "duapps_offer_wall");
                 Intent intent3 = new Intent(HomeActivity.this, OfferWallAct.class);
                 Bundle b = new Bundle();
                 b.putInt("pid", 131003);
@@ -177,6 +178,7 @@ public class HomeActivity extends BaseActivity {
                         @Override
                         public void onClick(View v) {
                             isInterstitialAdClicked = true;
+                            MTAManager.homeGiftClick(HomeActivity.this, ad.getAdType());
                             ad.show();
                         }
                     });
@@ -203,6 +205,7 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        MTAManager.homeShow(this);
         if (! isShowOfferWall) {
             MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
             if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
