@@ -35,10 +35,12 @@ import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.DisplayUtils;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by guojia on 2016/12/4.
@@ -251,7 +253,11 @@ public class AppCloneActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mTimer.scheduleAtFixedRate(task, 0, STEP_INTERVAL);
+                try {
+                    mTimer.scheduleAtFixedRate(task, 0, STEP_INTERVAL);
+                }catch (Exception e) {
+                    MLogs.e(e);
+                }
             }
 
             @Override
