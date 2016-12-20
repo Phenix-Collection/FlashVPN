@@ -34,23 +34,25 @@ import java.lang.reflect.Method;
 		Bitmap icon = td.getIcon();
 		String VACLIENT_SUFFIX = " Cloned";
 //		if ((label == null || !label.startsWith(VACLIENT_SUFFIX) || icon == null)){
-			Application app = VClientImpl.getClient().getCurrentApplication();
+		Application app = VClientImpl.getClient().getCurrentApplication();
+		if (app != null) {
 			if (label == null) {
-				label = ""+app.getApplicationInfo().loadLabel(app.getPackageManager());
+				label = "" + app.getApplicationInfo().loadLabel(app.getPackageManager());
 			}
 
-			if (VirtualCore.get().getAppApiDelegate()!=null) {
+			if (VirtualCore.get().getAppApiDelegate() != null) {
 				icon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(app.getPackageName(), icon);
 				label = VirtualCore.get().getAppApiDelegate().getCloneTagedLabel(label);
 			}
 
 			if (icon == null) {
 				Drawable drawable = app.getApplicationInfo().loadIcon(app.getPackageManager());
-				if(drawable != null) {
+				if (drawable != null) {
 					icon = DrawableUtils.drawableToBitMap(drawable);
 				}
 			}
 			args[1] = new ActivityManager.TaskDescription(label, icon, td.getPrimaryColor());
+		}
 //		}
 		return method.invoke(who, args);
 	}
