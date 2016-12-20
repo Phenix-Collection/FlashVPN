@@ -80,7 +80,7 @@ public final class SpecialComponentList {
                 return next.getKey();
             }
         }
-        return null;
+        return action;
     }
 
     public static boolean isWhitePermission(String permission) {
