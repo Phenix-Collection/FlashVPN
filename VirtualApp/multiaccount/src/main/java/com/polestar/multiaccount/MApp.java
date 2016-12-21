@@ -100,8 +100,8 @@ public class MApp extends Application {
             setDefaultUncaughtExceptionHandler(this);
             initBugly(this);
 
-            MTAManager.init(this);
             if (VirtualCore.get().isMainProcess()) {
+                MTAManager.init(this);
                 ImageLoaderUtil.init(this);
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
@@ -116,12 +116,13 @@ public class MApp extends Application {
         VirtualCore.get().setAppApiDelegate(new AppApiDelegate());
         if (!AppConstants.IS_RELEASE_VERSION) {
             VLog.openLog();
+            VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             MLogs.DEBUG = true;
         }
         VLog.setKeyLogger(new VLog.IKeyLogger() {
             @Override
             public void keyLog(Context context, String tag, String log) {
-                MTAManager.keyLog(context,tag,log);
+                MLogs.logBug(tag,log);
             }
 
             @Override
