@@ -560,8 +560,6 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			if (app == null) {
 				ApplicationInfo appInfo = VPackageManagerService.get().getApplicationInfo(packageName, 0, userId);
 				if (appInfo == null) {
-					VLog.keyLog(VirtualCore.get().getContext(),
-							VLog.VKeyLogTag.VERROR, "processRestarted:" + packageName + ":" + processName + ":" + userId + ":appInfo null");
 					return;
 				}
 				appInfo.flags |= ApplicationInfo.FLAG_HAS_CODE;
