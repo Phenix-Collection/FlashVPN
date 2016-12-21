@@ -220,8 +220,13 @@ public class TutorialGuides implements PopupWindow.OnDismissListener {
         if (dismissed) return;
 
         dismissed = true;
-        if (mPopupWindow != null){
-            mPopupWindow.dismiss();
+        if (mPopupWindow != null ){
+            try {
+                mPopupWindow.dismiss();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
 
