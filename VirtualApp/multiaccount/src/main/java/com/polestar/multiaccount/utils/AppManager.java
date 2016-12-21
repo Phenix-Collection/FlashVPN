@@ -27,6 +27,10 @@ public class AppManager {
                 uninstalledApp.add(model);
                 continue;
             }
+            if (! VirtualCore.get().isAppInstalled(model.getPackageName())){
+                uninstalledApp.add(model);
+                continue;
+            }
             if (model.getCustomIcon() == null) {
                 model.setCustomIcon(BitmapUtils.createCustomIcon(context, model.initDrawable(context)));
             }
@@ -54,7 +58,7 @@ public class AppManager {
             Intent intent = VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId());
             VActivityManager.get().startActivity(intent, VUserHandle.myUserId());
         } catch (Exception e) {
-
+            MLogs.e(e);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
