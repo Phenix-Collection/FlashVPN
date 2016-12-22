@@ -229,10 +229,10 @@ public class VPackageManagerService extends IPackageManager.Stub {
 
 	@Override
 	public int checkPermission(String permName, String pkgName, int userId) {
-//		if ("android.permission.INTERACT_ACROSS_USERS".equals(permName)
-//				|| "android.permission.INTERACT_ACROSS_USERS_FULL".equals(permName)) {
-//			return PackageManager.PERMISSION_DENIED;
-//		}
+		if ("android.permission.INTERACT_ACROSS_USERS".equals(permName)
+				|| "android.permission.INTERACT_ACROSS_USERS_FULL".equals(permName)) {
+			return PackageManager.PERMISSION_DENIED;
+		}
 		return PackageManager.PERMISSION_GRANTED;
 		//return VirtualCore.get().getPackageManager().checkPermission(permName, VirtualCore.get().getHostPkg());
 	}
