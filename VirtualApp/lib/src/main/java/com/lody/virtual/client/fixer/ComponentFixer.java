@@ -4,6 +4,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Process;
 import android.text.TextUtils;
 
 import com.lody.virtual.client.core.VirtualCore;
@@ -41,7 +42,9 @@ public class ComponentFixer {
 		applicationInfo.enabled = true;
 		applicationInfo.nativeLibraryDir = setting.libPath;
 		applicationInfo.dataDir = VEnvironment.getDataUserPackageDirectory(userId, setting.packageName).getPath();
-		applicationInfo.uid = setting.appId;
+		//applicationInfo.uid = setting.appId;
+		//createPackageContext(Context.INCLUDE_CODE) fail
+		applicationInfo.uid = Process.myUid();
 		if (setting.dependSystem) {
 			String[] sharedLibraryFiles = sSharedLibCache.get(setting.packageName);
 			if (sharedLibraryFiles == null) {
