@@ -21,14 +21,15 @@ import java.lang.reflect.Method;
 	@Override
 	public Object call(Object who, Method method, Object... args) throws Throwable {
 		String permission = (String) args[0];
-		if (SpecialComponentList.isWhitePermission(permission)) {
-			return PackageManager.PERMISSION_GRANTED;
-		}
-		if (permission.startsWith("com.google")) {
-			return PackageManager.PERMISSION_GRANTED;
-		}
-		args[args.length - 1] = getRealUid();
-		return method.invoke(who, args);
+//		if (SpecialComponentList.isWhitePermission(permission)) {
+//			return PackageManager.PERMISSION_GRANTED;
+//		}
+//		if (permission.startsWith("com.google")) {
+//			return PackageManager.PERMISSION_GRANTED;
+//		}
+//		args[args.length - 1] = getRealUid();
+//		return method.invoke(who, args);
+		return PackageManager.PERMISSION_GRANTED;
 	}
 
 	@Override

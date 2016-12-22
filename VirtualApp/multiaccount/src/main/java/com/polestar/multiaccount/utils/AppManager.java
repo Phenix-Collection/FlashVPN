@@ -28,6 +28,7 @@ public class AppManager {
                 continue;
             }
             if (! VirtualCore.get().isAppInstalled(model.getPackageName())){
+                MLogs.d("App not installed : " + model.getPackageName());
                 uninstalledApp.add(model);
                 continue;
             }
