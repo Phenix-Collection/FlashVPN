@@ -237,12 +237,13 @@ public class MApp extends Application {
                     }
                 }
             }
-            if (orig != null) {
-                orig.uncaughtException(thread, ex);
-            } else {
-                android.os.Process.killProcess(android.os.Process.myPid());
-                System.exit(0);
-            }
+//            if (orig != null) {
+//                orig.uncaughtException(thread, ex);
+//            } else {
+//
+//            }
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         }
     }
     private void setDefaultUncaughtExceptionHandler(Context context) {
