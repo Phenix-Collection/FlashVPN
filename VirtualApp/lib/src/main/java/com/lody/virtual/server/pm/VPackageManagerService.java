@@ -17,6 +17,7 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Parcel;
+import android.os.Process;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
@@ -594,7 +595,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 		synchronized (mPackages) {
 			for (PackageParser.Provider p : mProvidersByComponent.values()) {
 				AppSetting setting = (AppSetting) p.owner.mExtras;
-				if (processName == null || setting.appId == VUserHandle.getAppId(vuid) && p.info.processName.equals(processName)) {
+				if (processName == null || p.info.processName.equals(processName)) {
 					ProviderInfo providerInfo = PackageParserCompat.generateProviderInfo(p, flags);
 					ComponentFixer.fixApplicationInfo(setting, providerInfo.applicationInfo, userId);
 					finalList.add(providerInfo);
@@ -723,14 +724,15 @@ public class VPackageManagerService extends IPackageManager.Stub {
 	@Override
 	public int getPackageUid(String packageName, int userId) {
 		checkUserId(userId);
-		synchronized (mPackages) {
-			PackageParser.Package p = mPackages.get(packageName);
-			if (p != null) {
-				AppSetting settings = (AppSetting) p.mExtras;
-				return VUserHandle.getUid(userId, settings.appId);
-			}
-			return -1;
-		}
+		return VUserHandle.getUid(userId, Process.myUid());
+//		synchronized (mPackages) {
+//			PackageParser.Package p = mPackages.get(packageName);
+//			if (p != null) {
+//				AppSetting settings = (AppSetting) p.mExtras;
+//				return VUserHandle.getUid(userId, settings.appId);
+//			}
+//			return -1;
+//		}
 	}
 
 

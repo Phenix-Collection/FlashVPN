@@ -31,7 +31,7 @@ import java.util.List;
 	public Object call(Object who, Method method, Object... args) throws Throwable {
 		String processName = (String) args[0];
 		int flags = (int) args[2];
-		List<ProviderInfo> infos = VPackageManager.get().queryContentProviders(processName, flags, 0);
+		List<ProviderInfo> infos = VPackageManager.get().queryContentProviders(processName, 0, flags);
 		if (ParceledListSliceCompat.isReturnParceledListSlice(method)) {
 			return ParceledListSliceCompat.create(infos);
 		}
