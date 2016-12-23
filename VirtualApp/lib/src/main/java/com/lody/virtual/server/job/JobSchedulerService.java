@@ -19,6 +19,7 @@ import android.os.SystemClock;
 
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.Constants;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.helper.utils.collection.ArraySet;
 import com.lody.virtual.helper.utils.collection.SparseArray;
 import com.lody.virtual.os.VBinder;
@@ -653,12 +654,15 @@ public class JobSchedulerService implements StateChangedListener, JobCompletedLi
                 throw new IllegalArgumentException("No such service " + service);
             }
             if (si.applicationInfo.uid != uid) {
-                throw new IllegalArgumentException("uid " + uid +
-                        " cannot schedule job in " + service.getPackageName());
+                VLog.logbug(VLog.VTAG, "enforceValidJobRequest error: uid " + uid + " ai.uid " + si.applicationInfo.uid);
+//                throw new IllegalArgumentException("uid " + uid +
+//                        " cannot schedule job in " + service.getPackageName());
             }
             if (!JobService.PERMISSION_BIND.equals(si.permission)) {
-                throw new IllegalArgumentException("Scheduled service " + service
+                VLog.logbug(VLog.VTAG, "Scheduled service " + service
                         + " does not require android.permission.BIND_JOB_SERVICE permission");
+//                throw new IllegalArgumentException("Scheduled service " + service
+//                        + " does not require android.permission.BIND_JOB_SERVICE permission");
             }
         }
 
