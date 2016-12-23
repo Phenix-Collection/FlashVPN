@@ -74,7 +74,7 @@ public class BaseActivity extends AppCompatActivity {
     public void onBackPressed() {
         try{
             super.onBackPressed();
-        }catch (IllegalArgumentException e){
+        }catch (Exception e){
             finish();
         }
     }
