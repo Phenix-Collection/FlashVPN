@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.ProviderInfo;
+import android.content.res.CompatibilityInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -31,7 +33,7 @@ import mirror.RefStaticMethod;
 
 public class ActivityThread {
     public static Class<?> TYPE = RefClass.load(ActivityThread.class, "android.app.ActivityThread");
-    public static RefStaticMethod currentActivityThread;
+    public static RefStaticMethod<android.app.ActivityThread> currentActivityThread;
     public static RefMethod<String> getProcessName;
     public static RefMethod<Handler> getHandler;
     public static RefMethod<Object> installProvider;
