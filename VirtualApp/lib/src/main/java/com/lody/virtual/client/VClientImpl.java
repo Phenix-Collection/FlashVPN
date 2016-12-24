@@ -1,6 +1,7 @@
 package com.lody.virtual.client;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.ComponentName;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
+import android.content.res.CompatibilityInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.ConditionVariable;
@@ -117,7 +119,7 @@ public final class VClientImpl extends IVClient.Stub {
 		String processName;
 		ApplicationInfo appInfo;
 		List<ProviderInfo> providers;
-		Object info;
+		Object info; //LoadedApk
 	}
 
 	private void sendMessage(int what, Object obj) {
@@ -240,7 +242,7 @@ public final class VClientImpl extends IVClient.Stub {
 			StrictMode.setThreadPolicy(newPolicy);
 		}
 		IOHook.hookNative();
-		Object mainThread = VirtualCore.mainThread();
+		android.app.ActivityThread mainThread = (android.app.ActivityThread) VirtualCore.mainThread();
 		IOHook.startDexOverride();
 		Context context = createPackageContext(data.appInfo.packageName);
 		System.setProperty("java.io.tmpdir", context.getCacheDir().getAbsolutePath());
@@ -286,7 +288,14 @@ public final class VClientImpl extends IVClient.Stub {
 			}
 		}
 		Object boundApp = fixBoundApp(mBoundApplication);
-		mBoundApplication.info = ContextImpl.mPackageInfo.get(context);
+		if (mainThread != null) {
+			mBoundApplication.info = mainThread.getPackageInfoNoCheck(data.appInfo,
+					CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO);
+		}
+		if (mBoundApplication.info == null) {
+			VLog.logbug(TAG, "getPackageInfoNoCheck mainThread : " + mainThread == null? "null":"not null" + " error");
+			mBoundApplication.info = ContextImpl.mPackageInfo.get(context);
+		}
 		mirror.android.app.ActivityThread.AppBindData.info.set(boundApp, data.info);
 		VMRuntime.setTargetSdkVersion.call(VMRuntime.getRuntime.call(), data.appInfo.targetSdkVersion);
 
