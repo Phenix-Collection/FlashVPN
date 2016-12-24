@@ -46,7 +46,7 @@ public class ArrayUtils {
 			int N = -1;
 			for (Object one : array) {
 				N++;
-				if (one != null && type == one.getClass()) {
+				if (one != null && isClass(one, type)) {
 					return N;
 				}
 			}
@@ -87,7 +87,7 @@ public class ArrayUtils {
 			int N = -1;
 			for (Object one : array) {
 				N++;
-				if (one != null && one.getClass() == type) {
+				if (one != null && isClass(one, type)) {
 					if (--sequence <= 0) {
 						return N;
 					}
@@ -101,7 +101,7 @@ public class ArrayUtils {
 		if (!isEmpty(array)) {
 			for (int N = array.length; N > 0; N--) {
 				Object one = array[N - 1];
-				if (one != null && one.getClass() == type) {
+				if (one != null && isClass(one,type)) {
 					return N - 1;
 				}
 			}
@@ -126,5 +126,28 @@ public class ArrayUtils {
 		if ((offset | count) < 0 || offset > arrayLength || arrayLength - offset < count) {
 			throw new ArrayIndexOutOfBoundsException(offset);
 		}
+	}
+
+	public static boolean isClass(Object obj, Class type)
+	{
+		boolean retValue = false;
+		try
+		{
+			;
+			for(Class clzz = obj.getClass(); clzz != null; clzz = clzz.getSuperclass())
+			{
+				if(clzz.getName().equals(type.getName()))
+				{
+					retValue = true;
+					return retValue;
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return retValue;
+
 	}
 }
