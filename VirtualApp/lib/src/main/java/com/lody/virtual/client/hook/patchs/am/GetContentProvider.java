@@ -8,6 +8,7 @@ import com.lody.virtual.client.hook.providers.ProviderHook;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 
 import java.lang.reflect.Method;
@@ -29,7 +30,10 @@ import mirror.android.app.IActivityManager;
 		String name = (String) args[nameIdx];
 		int userId = VUserHandle.myUserId();
 		ProviderInfo info = VPackageManager.get().resolveContentProvider(name, 0, userId);
-		if (info != null && info.enabled && isAppPkg(info.packageName)) {
+		if (info != null &&  isAppPkg(info.packageName)) {
+			if (!info.enabled) {
+				VLog.logbug("GetContentProvider", "GetContentProvider not enabled: name " + name + " pkg: " + info.packageName);
+			}
 			int targetVPid = VActivityManager.get().initProcess(info.packageName, info.processName, userId);
 			if (targetVPid == -1) {
 				return null;
@@ -47,6 +51,7 @@ import mirror.android.app.IActivityManager;
 			IActivityManager.ContentProviderHolder.info.set(holder, info);
 			return holder;
 		}
+		VLog.logbug("GetContentProvider", "Not found provider for : " + name);
 		Object holder = method.invoke(who, args);
 		if (holder != null) {
 			IInterface provider = IActivityManager.ContentProviderHolder.provider.get(holder);
