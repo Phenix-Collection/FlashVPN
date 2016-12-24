@@ -1,6 +1,8 @@
 package com.lody.virtual.client.hook.patchs.am;
 
+import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -17,6 +19,7 @@ import com.lody.virtual.client.ipc.ActivityClientRecord;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.helper.utils.ArrayUtils;
 import com.lody.virtual.helper.utils.ComponentUtils;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 
 import java.lang.reflect.Method;
@@ -37,13 +40,18 @@ import java.lang.reflect.Method;
 		super.call(who, method, args);
 		int intentIndex = ArrayUtils.indexOfFirst(args, Intent.class);
 		int resultToIndex = ArrayUtils.indexOfObject(args, IBinder.class, 2);
+		if (intentIndex == -1) {
+			//Not sure why this happen, intent should be null here
+			VLog.logbug(VLog.VTAG, "Error!!! intent is null!!!");
+			ArrayUtils.dumpArrayType(args);
+			VLog.logbug(VLog.VTAG, VLog.getStackTraceString(new Exception()));
 
+		}
 		String resolvedType = (String) args[intentIndex + 1];
 		Intent intent = (Intent) args[intentIndex];
 		intent.setDataAndType(intent.getData(), resolvedType);
 		IBinder resultTo = resultToIndex >= 0 ? (IBinder) args[resultToIndex] : null;
 		int userId = VUserHandle.myUserId();
-
 		if (ComponentUtils.isStubComponent(intent)) {
 			return method.invoke(who, args);
 		}
