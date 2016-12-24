@@ -55,7 +55,7 @@ public class HomeActivity extends BaseActivity {
     private boolean isInterstitialAdLoaded;
 
     private static final String KEY_HOME_GIFT_OFFERWALL_PERCENTAGE = "home_gift_offerwall_percentage";
-    private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial";
+    private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial_1026";
     private boolean isShowOfferWall = true;
 
     private static final int OFFER_WALL_SHOW_DELAY = 2000;
@@ -161,10 +161,7 @@ public class HomeActivity extends BaseActivity {
         isInterstitialAdLoaded = false;
         adLoader = new FuseAdLoader(this);
         List<AdConfig> adSources = RemoteConfig.getAdConfigList(SLOT_HOME_GIFT_INTERSTITIAL);
-        for(AdConfig adConfig: adSources) {
-            adLoader.addAdConfig(adConfig);
-            MLogs.d(SLOT_HOME_GIFT_INTERSTITIAL + " "+ adConfig.toString());
-        }
+        adLoader.addAdConfigList(adSources);
         //adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
         if (adLoader.hasValidAdSource()) {
             adLoader.loadAd(1, new IAdLoadListener() {

@@ -10,11 +10,11 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -28,6 +28,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.L;
@@ -219,11 +220,6 @@ public class HomeFragment extends BaseFragment {
 //    }
     private void initView() {
         nativeAdContainer = (LinearLayout) getActivity().findViewById(R.id.native_ad_container);
-        mAdmobExpressView = new NativeExpressAdView(getActivity());
-        mAdmobExpressView.setAdSize(new AdSize(360, 132));
-//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
-        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/6006659059");
-        mAdmobExpressView.setVisibility(View.GONE);
 
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
         pkgGridView = (GridView) contentView.findViewById(R.id.grid_app);
@@ -362,6 +358,25 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void loadAdmobNativeExpress(){
+        if (mAdmobExpressView == null) {
+            mAdmobExpressView = new NativeExpressAdView(getActivity());
+        }
+        String adunit  = null;
+        if (headerNativeAdConfigs != null) {
+            for (AdConfig adConfig: headerNativeAdConfigs) {
+                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
+                    adunit = adConfig.source;
+                    break;
+                }
+            }
+        }
+        if (TextUtils.isEmpty(adunit)) {
+            return;
+        }
+        mAdmobExpressView.setAdSize(new AdSize(360, 132));
+//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
+        mAdmobExpressView.setAdUnitId(adunit);
+        mAdmobExpressView.setVisibility(View.GONE);
         mAdmobExpressView.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
@@ -419,10 +434,12 @@ public class HomeFragment extends BaseFragment {
             mAdmobExpressView.loadAd(new AdRequest.Builder().build());
         }
     }
-    private void loadNativeAd() {
+
+    private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = new FuseAdLoader(getActivity());
-            //mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
+            mNativeAdLoader.addAdConfigList(headerNativeAdConfigs);
+            ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
         if (mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
@@ -466,11 +483,15 @@ public class HomeFragment extends BaseFragment {
     }
 
     private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
+    private static final String SLOT_HOME_HEADER_NATIVE = "slot_home_header_native";
+    private List<AdConfig> headerNativeAdConfigs ;
+
     private void initData(){
         boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD);
         MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
-        if (showHeaderAd) {
-            loadNativeAd();
+        headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
+        if (showHeaderAd && headerNativeAdConfigs.size() > 0 ) {
+            loadHeadNativeAd();
         }
         CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
             @Override

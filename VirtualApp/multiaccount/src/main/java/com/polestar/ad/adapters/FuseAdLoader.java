@@ -1,6 +1,7 @@
 package com.polestar.ad.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
@@ -8,6 +9,7 @@ import com.polestar.ad.L;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -26,19 +28,31 @@ public class FuseAdLoader implements IAdLoader {
         this.mContext = context;
     }
 
-    /**
-     *  Add native ad sources
-     * @param source source of the native ad: ab, ab_install, ab_content, fb, apx,vk ... see AdConstants.NativeAdType
-     * @param key the key of the ad source,
-     * @param cacheTime cache time of the ad source, or you can set it -1 to use the default one.
-     */
-    public void addAdSource(String source, String key, long cacheTime) {
-        mNativeAdConfigList.add(new AdConfig(source, key, cacheTime));
+    public static final HashSet<String> SUPPORTED_TYPES = new HashSet<>();
+    static {
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
+
     }
 
     public void addAdConfig(AdConfig adConfig) {
-        if (adConfig != null) {
-            mNativeAdConfigList.add(adConfig);
+        if (adConfig != null && !TextUtils.isEmpty(adConfig.source) && !TextUtils.isEmpty(adConfig.key)) {
+            if (SUPPORTED_TYPES.contains(adConfig.source)) {
+                mNativeAdConfigList.add(adConfig);
+                L.d("add adConfig : " + adConfig.toString());
+            }
+        }
+    }
+
+    public void addAdConfigList(List<AdConfig> adConfigList) {
+        if (adConfigList != null) {
+            for(AdConfig adConfig: adConfigList) {
+                addAdConfig(adConfig);
+            }
         }
     }
 
