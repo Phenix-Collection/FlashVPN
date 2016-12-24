@@ -20,7 +20,7 @@ public class VLog {
 	}
 	public static IKeyLogger sKeyLogger = null;
 	public static boolean OPEN_LOG = BuildConfig.DEBUG;
-	public static String VTAG = "VAPP_";
+	public static String VTAG = "PLIB_";
 
 	public static void keyLog(Context context, String tag, String log){
 		if(sKeyLogger != null) {
@@ -75,14 +75,14 @@ public class VLog {
 	}
 
 	public static void printStackTrace(String tag) {
-		Log.e(VTAG+tag, getStackTraceString(new Exception()));
+		Log.e(tag, getStackTraceString(new Exception()));
 	}
 
 	public static void e(String tag, Throwable e) {
 		Log.e(VTAG+tag, getStackTraceString(e));
 	}
 	public static void logbug(String tag, String msg, Object... format) {
-		e(VTAG+tag, String.format(msg, format));
+		e(tag, String.format(msg, format));
 		if (sKeyLogger != null) {
 			sKeyLogger.logBug(tag, String.format(msg, format));
 		}
