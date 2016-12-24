@@ -527,13 +527,17 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	@Override
 	public VParceledListSlice<ActivityManager.RunningServiceInfo> getServices(int maxNum, int flags, int userId) {
 		synchronized (mHistory) {
+			int cnt = 0;
+			int size = mHistory.size() > maxNum ? maxNum: mHistory.size();
 			List<ActivityManager.RunningServiceInfo> services = new ArrayList<>(mHistory.size());
 			for (ServiceRecord r : mHistory) {
-				if (r.process.userId != userId) {
-					continue;
-				}
+//				if (r.process.userId != userId) {
+//					continue;
+//				}
+				if (cnt++ >= size) break;
 				ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
-				info.uid = r.process.vuid;
+//				info.uid = r.process.vuid;
+				info.uid = Process.myUid();
 				info.pid = r.process.pid;
 				ProcessRecord processRecord = findProcessLocked(r.process.pid);
 				if (processRecord != null) {
@@ -545,6 +549,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				info.clientCount = r.getClientCount();
 				info.service = ComponentUtils.toComponentName(r.serviceInfo);
 				info.started = r.startId > 0;
+				services.add(info);
 			}
 			return new VParceledListSlice<>(services);
 		}
