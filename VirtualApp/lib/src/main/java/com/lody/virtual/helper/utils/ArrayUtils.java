@@ -81,6 +81,16 @@ public class ArrayUtils {
 		return -1;
 	}
 
+	public static void dumpArrayType(Object[] array) {
+		if (array == null) {
+			return ;
+		}
+		int sequence = 0;
+		while (sequence < array.length) {
+			VLog.logbug(VLog.VTAG, "Type["+sequence+"]:" + array[sequence] == null ? "null" : array[sequence].getClass().getName());
+			sequence++;
+		}
+	}
 
 	public static int indexOf(Object[] array, Class<?> type, int sequence) {
 		if (!isEmpty(array)) {
