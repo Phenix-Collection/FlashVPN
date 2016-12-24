@@ -346,7 +346,23 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	@Override
 	public boolean stopServiceToken(ComponentName className, IBinder token, int startId, int userId) {
 		synchronized (this) {
-			ServiceRecord r = (ServiceRecord) token;
+			//ServiceRecord r = (ServiceRecord) token;
+			ServiceRecord r = null;
+			if(className != null) {
+				Intent service = new Intent().setComponent(className);
+				ServiceInfo si = resolveServiceInfo(service, userId);
+				if (si != null) {
+					r = findRecordLocked(userId, si);
+				}
+			}
+
+			try {
+				if (r == null) {
+					r = (ServiceRecord) token;
+				}
+			}catch (Exception e) {
+				VLog.logbug("VAMS", VLog.getStackTraceString(e));
+			}
 			if (r != null && r.startId == startId) {
 				try {
 					IApplicationThreadCompat.scheduleStopService(r.process.appThread, r);
