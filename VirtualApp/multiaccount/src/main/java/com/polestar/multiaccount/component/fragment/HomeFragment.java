@@ -93,7 +93,7 @@ public class HomeFragment extends BaseFragment {
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
-        mDragController = new DragController(getActivity());
+        mDragController = new DragController(mActivity);
         mDragController.setDragListener(mDragListener);
         mDragController.setWindowToken(contentView.getWindowToken());
         mDragLayer.setDragController(mDragController);
@@ -117,7 +117,7 @@ public class HomeFragment extends BaseFragment {
                     floatView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(), R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
                             //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
                         }
                     },CustomFloatView.ANIM_DURATION / 2);
@@ -190,7 +190,7 @@ public class HomeFragment extends BaseFragment {
             AppModel appModel = (AppModel) getItem(i);
             if (appModel != null) {
                 if (appModel.getCustomIcon() == null) {
-                    appModel.setCustomIcon(BitmapUtils.createCustomIcon(getActivity(), appModel.initDrawable(getActivity())));
+                    appModel.setCustomIcon(BitmapUtils.createCustomIcon(mActivity, appModel.initDrawable(mActivity)));
                 }
 
                 if (appModel.getCustomIcon() != null) {
@@ -219,7 +219,7 @@ public class HomeFragment extends BaseFragment {
 //        return controller;
 //    }
     private void initView() {
-        nativeAdContainer = (LinearLayout) getActivity().findViewById(R.id.native_ad_container);
+        nativeAdContainer = (LinearLayout) mActivity.findViewById(R.id.native_ad_container);
 
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
         pkgGridView = (GridView) contentView.findViewById(R.id.grid_app);
@@ -235,8 +235,8 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 startAppListActivity();
-                PreferencesUtils.setCloneGuideShowed(getActivity());
-                MTAManager.homeAdd(getActivity());
+                PreferencesUtils.setCloneGuideShowed(mActivity);
+                MTAManager.homeAdd(mActivity);
             }
         });
 
@@ -276,7 +276,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initAdmobBannerView() {
-        mAdmobExpressView = new NativeExpressAdView(getActivity());
+        mAdmobExpressView = new NativeExpressAdView(mActivity);
         String adunit  = null;
         if (headerNativeAdConfigs != null) {
             for (AdConfig adConfig: headerNativeAdConfigs) {
@@ -341,7 +341,7 @@ public class HomeFragment extends BaseFragment {
         });
     }
     private void inflateFbNativeAdView(IAd ad) {
-        View adView = LayoutInflater.from(getActivity()).inflate(R.layout.front_page_native_ad, null);
+        View adView = LayoutInflater.from(mActivity).inflate(R.layout.front_page_native_ad, null);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        adView.setLayoutParams(params);
         if (ad != null && adView != null) {
@@ -375,7 +375,7 @@ public class HomeFragment extends BaseFragment {
         //TutorialGuidesUtils.removeOnGlobalLayoutListener(pkgGridView,this);
         try {
             String text = getString(R.string.start_tips);
-            mTutorialBuilder = new TutorialGuides.Builder(getActivity());
+            mTutorialBuilder = new TutorialGuides.Builder(mActivity);
 
             RectF rectF = TutorialGuidesUtils.getRectFInWindow(floatView);
             mTutorialBuilder.anchorView(floatView);
@@ -383,7 +383,7 @@ public class HomeFragment extends BaseFragment {
             mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
                 @Override
                 public void onShow(TutorialGuides tooltip) {
-                    PreferencesUtils.setCloneGuideShowed(getActivity());
+                    PreferencesUtils.setCloneGuideShowed(mActivity);
                 }
             });
             mTutorialBuilder.text(text)
@@ -400,13 +400,13 @@ public class HomeFragment extends BaseFragment {
     private void showLongClickItemGuide(){
         try {
             String text = getString(R.string.long_press_tips);
-            mTutorialBuilder = new TutorialGuides.Builder(getActivity());
+            mTutorialBuilder = new TutorialGuides.Builder(mActivity);
             mTutorialBuilder.anchorView(pkgGridView.getChildAt(0));
             mTutorialBuilder.defaultMaxWidth(true);
             mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
                 @Override
                 public void onShow(TutorialGuides tooltip) {
-                    PreferencesUtils.setLongClickGuideShowed(getActivity());
+                    PreferencesUtils.setLongClickGuideShowed(mActivity);
                 }
             });
             longClickGuide = mTutorialBuilder.text(text)
@@ -426,10 +426,10 @@ public class HomeFragment extends BaseFragment {
     private void loadAdmobNativeExpress(){
 
         if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID(getActivity());
+            String android_id = AdUtils.getAndroidID(mActivity);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-            boolean isTestDevice = request.isTestDevice(getActivity());
+            boolean isTestDevice = request.isTestDevice(mActivity);
             L.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
             mAdmobExpressView.loadAd(request );
         } else {
@@ -439,7 +439,7 @@ public class HomeFragment extends BaseFragment {
 
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
-            mNativeAdLoader = new FuseAdLoader(getActivity());
+            mNativeAdLoader = new FuseAdLoader(mActivity);
             mNativeAdLoader.addAdConfigList(headerNativeAdConfigs);
             ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
@@ -475,8 +475,8 @@ public class HomeFragment extends BaseFragment {
         pkgGridView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getActivity() != null) {
-                    if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(getActivity())) {
+                if (mActivity != null) {
+                    if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(mActivity)) {
                         showLongClickItemGuide();
                     }
                 }
@@ -516,7 +516,7 @@ public class HomeFragment extends BaseFragment {
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
                 }
-                if (!PreferencesUtils.hasShownCloneGuide(getActivity()) && (clonedApp == null || clonedApp.size() == 0)) {
+                if (!PreferencesUtils.hasShownCloneGuide(mActivity) && (clonedApp == null || clonedApp.size() == 0)) {
                     pkgGridView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
