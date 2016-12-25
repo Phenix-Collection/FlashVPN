@@ -93,6 +93,7 @@ public class HomeFragment extends BaseFragment {
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
+        initAdmobBannerView();
         mDragController = new DragController(mActivity);
         mDragController.setDragListener(mDragListener);
         mDragController.setWindowToken(contentView.getWindowToken());
@@ -272,7 +273,6 @@ public class HomeFragment extends BaseFragment {
 
             }
         });
-        initAdmobBannerView();
     }
 
     private void initAdmobBannerView() {
