@@ -272,8 +272,74 @@ public class HomeFragment extends BaseFragment {
 
             }
         });
+        initAdmobBannerView();
     }
 
+    private void initAdmobBannerView() {
+        mAdmobExpressView = new NativeExpressAdView(getActivity());
+        String adunit  = null;
+        if (headerNativeAdConfigs != null) {
+            for (AdConfig adConfig: headerNativeAdConfigs) {
+                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
+                    adunit = adConfig.source;
+                    break;
+                }
+            }
+        }
+        if (TextUtils.isEmpty(adunit)) {
+            return;
+        }
+        mAdmobExpressView.setAdSize(new AdSize(360, 132));
+//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
+        mAdmobExpressView.setAdUnitId(adunit);
+        mAdmobExpressView.setVisibility(View.GONE);
+        mAdmobExpressView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                L.d("onAdClosed");
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                L.d("onAdFailedToLoad " + i);
+                mAdmobExpressView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                nativeAdContainer.removeAllViews();
+                mAdmobExpressView.setVisibility(View.VISIBLE);
+                nativeAdContainer.addView(mAdmobExpressView);
+                ObjectAnimator scaleX = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleX", 0.7f, 1.0f, 1.0f);
+                ObjectAnimator scaleY = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleY", 0.7f, 1.0f, 1.0f);
+                AnimatorSet animSet = new AnimatorSet();
+                animSet.play(scaleX).with(scaleY);
+                animSet.setInterpolator(new BounceInterpolator());
+                animSet.setDuration(800).start();
+                animSet.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+                });
+                dismissLongClickGuide();
+                L.d("onAdLoaded ");
+            }
+        });
+    }
     private void inflateFbNativeAdView(IAd ad) {
         View adView = LayoutInflater.from(getActivity()).inflate(R.layout.front_page_native_ad, null);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -358,71 +424,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void loadAdmobNativeExpress(){
-        if (mAdmobExpressView == null) {
-            mAdmobExpressView = new NativeExpressAdView(getActivity());
-        }
-        String adunit  = null;
-        if (headerNativeAdConfigs != null) {
-            for (AdConfig adConfig: headerNativeAdConfigs) {
-                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
-                    adunit = adConfig.source;
-                    break;
-                }
-            }
-        }
-        if (TextUtils.isEmpty(adunit)) {
-            return;
-        }
-        mAdmobExpressView.setAdSize(new AdSize(360, 132));
-//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
-        mAdmobExpressView.setAdUnitId(adunit);
-        mAdmobExpressView.setVisibility(View.GONE);
-        mAdmobExpressView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                L.d("onAdClosed");
-            }
 
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                L.d("onAdFailedToLoad " + i);
-                mAdmobExpressView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                nativeAdContainer.removeAllViews();
-                mAdmobExpressView.setVisibility(View.VISIBLE);
-                nativeAdContainer.addView(mAdmobExpressView);
-                ObjectAnimator scaleX = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleX", 0.7f, 1.0f, 1.0f);
-                ObjectAnimator scaleY = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleY", 0.7f, 1.0f, 1.0f);
-                AnimatorSet animSet = new AnimatorSet();
-                animSet.play(scaleX).with(scaleY);
-                animSet.setInterpolator(new BounceInterpolator());
-                animSet.setDuration(800).start();
-                animSet.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-
-                    }
-                });
-                dismissLongClickGuide();
-                L.d("onAdLoaded ");
-            }
-        });
         if (AdConstants.DEBUG) {
             String android_id = AdUtils.getAndroidID(getActivity());
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
