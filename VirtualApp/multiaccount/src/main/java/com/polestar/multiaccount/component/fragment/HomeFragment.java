@@ -358,7 +358,7 @@ public class HomeFragment extends BaseFragment {
             TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
             ctaView.setText(ad.getCallToActionText());
 
-
+            nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
             ad.registerViewForInteraction(nativeAdContainer);
             if (ad.getPrivacyIconUrl() != null) {
