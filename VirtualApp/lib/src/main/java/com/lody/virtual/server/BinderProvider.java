@@ -11,6 +11,7 @@ import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.stub.DaemonService;
 import com.lody.virtual.helper.compat.BundleCompat;
 import com.lody.virtual.helper.component.BaseContentProvider;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.server.accounts.VAccountManagerService;
 import com.lody.virtual.server.am.VActivityManagerService;
 import com.lody.virtual.server.filter.IntentFilterService;
@@ -26,27 +27,34 @@ import com.lody.virtual.service.interfaces.IServiceFetcher;
 public final class BinderProvider extends BaseContentProvider {
 
 	private final ServiceFetcher mServiceFetcher = new ServiceFetcher();
+	private static boolean isCreated = false;
 
 	@Override
 	public boolean onCreate() {
+		VLog.d("BinderProvider", "onCreate");
 		Context context = getContext();
 		DaemonService.startup(context);
 		if (!VirtualCore.get().isStartup()) {
 			return true;
 		}
-		VPackageManagerService.systemReady();
-		addService(ServiceManagerNative.PACKAGE, VPackageManagerService.get());
-		VActivityManagerService.systemReady(context);
-		addService(ServiceManagerNative.ACTIVITY, VActivityManagerService.get());
-		addService(ServiceManagerNative.USER, VUserManagerService.get());
-		VAppManagerService.systemReady();
-		addService(ServiceManagerNative.APP, VAppManagerService.get());
-		VAccountManagerService.systemReady();
-		addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
-		addService(ServiceManagerNative.INTENT_FILTER, IntentFilterService.get());
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			JobSchedulerService.systemReady(context);
-			addService(ServiceManagerNative.JOB, JobSchedulerService.getStub());
+		if(!isCreated) {
+			VPackageManagerService.systemReady();
+			addService(ServiceManagerNative.PACKAGE, VPackageManagerService.get());
+			VActivityManagerService.systemReady(context);
+			addService(ServiceManagerNative.ACTIVITY, VActivityManagerService.get());
+			addService(ServiceManagerNative.USER, VUserManagerService.get());
+			VAppManagerService.systemReady();
+			addService(ServiceManagerNative.APP, VAppManagerService.get());
+			VAccountManagerService.systemReady();
+			addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
+			addService(ServiceManagerNative.INTENT_FILTER, IntentFilterService.get());
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				JobSchedulerService.systemReady(context);
+				addService(ServiceManagerNative.JOB, JobSchedulerService.getStub());
+			}
+			isCreated = true;
+		} else {
+			VLog.e("BinderProvider", "onCreate after isCreated. Skip it");
 		}
 		return true;
 	}
