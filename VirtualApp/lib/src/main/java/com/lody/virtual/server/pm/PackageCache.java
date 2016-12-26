@@ -19,7 +19,7 @@ public class PackageCache {
 		synchronized (PackageCache.class) {
 			pkg.mExtras = appSetting;
 			sPackageCaches.put(pkg.packageName, pkg);
-			VPackageManagerService.get().analyzePackageLocked(pkg);
+			VPackageManagerService.get().analyzePackageLocked(appSetting, pkg, 0);
 		}
 	}
 

@@ -29,6 +29,7 @@ import mirror.android.app.IActivityManager;
 		int nameIdx = getProviderNameIndex();
 		String name = (String) args[nameIdx];
 		int userId = VUserHandle.myUserId();
+		VLog.d("GetContentProvider", "for : " + name);
 		ProviderInfo info = VPackageManager.get().resolveContentProvider(name, 0, userId);
 		if (info != null &&  isAppPkg(info.packageName)) {
 			if (!info.enabled) {
@@ -36,22 +37,27 @@ import mirror.android.app.IActivityManager;
 			}
 			int targetVPid = VActivityManager.get().initProcess(info.packageName, info.processName, userId);
 			if (targetVPid == -1) {
+				VLog.logbug("GetContentProvider", "argetVPid == -1  " + name + " pkg: " + info.packageName);
 				return null;
 			}
 			args[nameIdx] = StubManifest.getStubAuthority(targetVPid);
 			Object holder = method.invoke(who, args);
 			if (holder == null) {
+				VLog.logbug("GetContentProvider", "holder == null " + name + " pkg: " + info.packageName);
 				return null;
 			}
 			IInterface provider = IActivityManager.ContentProviderHolder.provider.get(holder);
 			if (provider != null) {
 				provider = VActivityManager.get().acquireProviderClient(userId, info);
+				VLog.logbug("GetContentProvider", "provider != null " + name + " pkg: " + info.packageName);
+			} else {
+				VLog.logbug("GetContentProvider", "provider == null " + name + " pkg: " + info.packageName);
+				return null;
 			}
 			IActivityManager.ContentProviderHolder.provider.set(holder, provider);
 			IActivityManager.ContentProviderHolder.info.set(holder, info);
 			return holder;
 		}
-		VLog.logbug("GetContentProvider", "Not found provider for : " + name);
 		Object holder = method.invoke(who, args);
 		if (holder != null) {
 			IInterface provider = IActivityManager.ContentProviderHolder.provider.get(holder);

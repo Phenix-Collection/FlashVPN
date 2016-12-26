@@ -32,6 +32,7 @@ import com.lody.virtual.helper.proto.AppSetting;
 import com.lody.virtual.helper.proto.ReceiverInfo;
 import com.lody.virtual.helper.proto.VParceledListSlice;
 import com.lody.virtual.helper.utils.ComponentUtils;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.service.IPackageManager;
 
@@ -115,13 +116,14 @@ public class VPackageManagerService extends IPackageManager.Stub {
 		return info != null && (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
 	}
 
-	public void analyzePackageLocked(PackageParser.Package pkg) {
+	public void analyzePackageLocked(AppSetting appInfo, PackageParser.Package pkg, int userid) {
 		int N = pkg.activities.size();
 		for (int i = 0; i < N; i++) {
 			PackageParser.Activity a = pkg.activities.get(i);
 			if (a.info.processName == null) {
 				a.info.processName = a.info.packageName;
 			}
+			ComponentFixer.fixComponentInfo(appInfo, a.info, userid);
 			mActivities.addActivity(a, "activity");
 		}
 		N = pkg.services.size();
@@ -130,6 +132,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 			if (a.info.processName == null) {
 				a.info.processName = a.info.packageName;
 			}
+			ComponentFixer.fixComponentInfo(appInfo, a.info, userid);
 			mServices.addService(a);
 		}
 		N = pkg.receivers.size();
@@ -138,6 +141,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 			if (a.info.processName == null) {
 				a.info.processName = a.info.packageName;
 			}
+			ComponentFixer.fixComponentInfo(appInfo, a.info, userid);
 			mReceivers.addActivity(a, "receiver");
 		}
 
@@ -147,6 +151,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 			if (p.info.processName == null) {
 				p.info.processName = p.info.packageName;
 			}
+			ComponentFixer.fixComponentInfo(appInfo, p.info, userid);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 				mProviders.addProvider(p);
 			}
@@ -677,6 +682,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 	@Override
 	public ProviderInfo resolveContentProvider(String name, int flags, int userId) {
 		checkUserId(userId);
+		VLog.d(TAG, "resolveContentProvider is for name: " + name);
 		synchronized (mPackages) {
 			final PackageParser.Provider provider = mProvidersByAuthority.get(name);
 			if (provider != null) {
@@ -687,6 +693,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 				return providerInfo;
 			}
 		}
+		VLog.d(TAG, "resolveContentProvider is empty for name: " + name);
 		return null;
 	}
 
@@ -724,15 +731,15 @@ public class VPackageManagerService extends IPackageManager.Stub {
 	@Override
 	public int getPackageUid(String packageName, int userId) {
 		checkUserId(userId);
-		return VUserHandle.getUid(userId, Process.myUid());
-//		synchronized (mPackages) {
-//			PackageParser.Package p = mPackages.get(packageName);
-//			if (p != null) {
-//				AppSetting settings = (AppSetting) p.mExtras;
-//				return VUserHandle.getUid(userId, settings.appId);
-//			}
-//			return -1;
-//		}
+		//return VUserHandle.getUid(userId, Process.myUid());
+		synchronized (mPackages) {
+			PackageParser.Package p = mPackages.get(packageName);
+			if (p != null) {
+				AppSetting settings = (AppSetting) p.mExtras;
+				return VUserHandle.getUid(userId, settings.appId);
+			}
+			return -1;
+		}
 	}
 
 

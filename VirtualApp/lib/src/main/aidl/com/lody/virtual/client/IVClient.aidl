@@ -13,4 +13,5 @@ interface IVClient {
     IBinder getAppThread();
     IBinder getToken();
     String getDebugInfo();
+    void bindApplication(in String pkg, in String processName);
 }

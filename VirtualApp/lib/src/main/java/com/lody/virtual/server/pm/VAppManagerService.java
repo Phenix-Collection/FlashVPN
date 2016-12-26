@@ -65,8 +65,10 @@ public class VAppManagerService extends IAppManager.Stub {
 
 
 	public static void systemReady() {
+
 		VAppManagerService instance = new VAppManagerService();
 		instance.mUidSystem.initUidList();
+		VLog.d(TAG, "systemReady ");
 		instance.preloadAllApps();
 		gService.set(instance);
 	}
@@ -77,6 +79,7 @@ public class VAppManagerService extends IAppManager.Stub {
 			String pkgName = appDir.getName();
 			File storeFile = new File(appDir, "base.apk");
 			int flags = 0;
+			VLog.d(TAG, "preloadAllApps " + appDir + "/base.apk");
 			if (!storeFile.exists()) {
 				ApplicationInfo appInfo = null;
 				try {

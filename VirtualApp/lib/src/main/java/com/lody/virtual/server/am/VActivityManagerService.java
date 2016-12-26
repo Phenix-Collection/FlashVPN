@@ -200,6 +200,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	@Override
 	public IBinder acquireProviderClient(int userId, ProviderInfo info) {
 		ProcessRecord callerApp;
+		VLog.d(TAG, "acquireProviderClient " + info.authority);
 		synchronized (mPidsSelfLocked) {
 			callerApp  = findProcessLocked(VBinder.getCallingPid());
 		}
@@ -218,6 +219,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				e.printStackTrace();
 			}
 		}
+		VLog.e(TAG, "acquireProviderClient return null : " + info.authority);
 		return null;
 	}
 
@@ -552,8 +554,8 @@ public class VActivityManagerService extends IActivityManager.Stub {
 //				}
 				if (cnt++ >= size) break;
 				ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
-//				info.uid = r.process.vuid;
-				info.uid = Process.myUid();
+				info.uid = r.process.vuid;
+//				info.uid = Process.myUid();
 				info.pid = r.process.pid;
 				ProcessRecord processRecord = findProcessLocked(r.process.pid);
 				if (processRecord != null) {
@@ -664,6 +666,11 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			mProcessNames.put(app.processName, app.vuid, app);
 			mPidsSelfLocked.put(app.pid, app);
 		}
+//		try {
+//			client.bindApplication(app.info.packageName, app.processName);
+//		} catch (RemoteException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	private void onProcessDead(ProcessRecord record) {

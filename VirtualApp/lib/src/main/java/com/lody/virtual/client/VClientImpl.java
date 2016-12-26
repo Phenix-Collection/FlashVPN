@@ -156,6 +156,7 @@ public final class VClientImpl extends IVClient.Stub {
 		}
 		this.token = token;
 		this.vuid = vuid;
+		VLog.d(TAG, "initProcess for vuid: " + vuid);
 	}
 
 	private class H extends Handler {
@@ -197,6 +198,7 @@ public final class VClientImpl extends IVClient.Stub {
         }
 	}
 
+	@Override
 	public void bindApplication(final String packageName, final String processName) {
 		if (Looper.getMainLooper() == Looper.myLooper()) {
 			bindApplicationNoCheck(packageName, processName, new ConditionVariable());
@@ -214,6 +216,7 @@ public final class VClientImpl extends IVClient.Stub {
 	}
 
 	private void bindApplicationNoCheck(String packageName, String processName, ConditionVariable lock) {
+		VLog.d(TAG, "bindApplicationNoCheck " + packageName + " proc: " + processName);
 		mTempLock = lock;
 		try {
 			fixInstalledProviders();
@@ -300,11 +303,12 @@ public final class VClientImpl extends IVClient.Stub {
 		VMRuntime.setTargetSdkVersion.call(VMRuntime.getRuntime.call(), data.appInfo.targetSdkVersion);
 
 		Application app = LoadedApk.makeApplication.call(data.info, false, null);
+		//android.app.LoadedApk
 		if (data.info == null) {
 			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":data.info null");
 		}
 		if (app == null) {
-			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + "app context null");
+			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":app context null");
 		}
 		mInitialApplication = app;
 		mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, app);
@@ -371,6 +375,7 @@ public final class VClientImpl extends IVClient.Stub {
 		if (mTempLock != null) {
 			mTempLock.block();
 		}
+		VLog.d(TAG, "acquireProviderClient " + info.authority);
 		if (!VClientImpl.getClient().isBound()) {
 			VClientImpl.getClient().bindApplication(info.packageName, info.processName);
 		}

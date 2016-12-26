@@ -42,9 +42,9 @@ public class ComponentFixer {
 		applicationInfo.enabled = true;
 		applicationInfo.nativeLibraryDir = setting.libPath;
 		applicationInfo.dataDir = VEnvironment.getDataUserPackageDirectory(userId, setting.packageName).getPath();
-		//applicationInfo.uid = setting.appId;
+		applicationInfo.uid = setting.appId;
 		//createPackageContext(Context.INCLUDE_CODE) fail
-		applicationInfo.uid = Process.myUid();
+//		applicationInfo.uid = Process.myUid();
 		if (setting.dependSystem) {
 			String[] sharedLibraryFiles = sSharedLibCache.get(setting.packageName);
 			if (sharedLibraryFiles == null) {
