@@ -1,5 +1,6 @@
 package com.lody.virtual.client.hook.patchs.am;
 
+import android.app.ActivityManagerNative;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.ComponentInfo;
@@ -48,6 +49,14 @@ import java.lang.reflect.Method;
 		if (args.length > 7 && args[7] instanceof Integer) {
             args[7] = PendingIntent.FLAG_UPDATE_CURRENT;
         }
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			if (args[args.length-1] instanceof Integer) {
+				int userId = (int)args[args.length-1];
+				if (userId == VUserHandle.USER_CURRENT) {
+					args[args.length-1] = VUserHandle.CURRENT_OR_SELF;
+				}
+			}
+		}
 		args[6] = new String[] {null};
 		IInterface sender = (IInterface) method.invoke(who, args);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && sender != null && creator != null) {
