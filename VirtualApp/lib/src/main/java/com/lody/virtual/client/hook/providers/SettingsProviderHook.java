@@ -51,7 +51,6 @@ public class SettingsProviderHook extends ExternalProviderHook {
 	public Bundle call(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
 		String methodName = (String) args[args.length - 3];
 		String arg = (String) args[args.length - 2];
-		VLog.d("SettingsProviderHook", methodName + ":" + arg);
 		int methodType = getMethodType(methodName);
 		if (METHOD_GET == methodType) {
 			String presetValue = PRE_SET_VALUES.get(arg);
