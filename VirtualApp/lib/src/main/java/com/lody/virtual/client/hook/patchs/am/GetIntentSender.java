@@ -13,6 +13,7 @@ import com.lody.virtual.client.stub.StubPendingActivity;
 import com.lody.virtual.client.stub.StubPendingReceiver;
 import com.lody.virtual.client.stub.StubPendingService;
 import com.lody.virtual.helper.compat.ActivityManagerCompat;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 
 import java.lang.reflect.Method;
@@ -71,7 +72,7 @@ import java.lang.reflect.Method;
 
 		switch (type) {
 			case ActivityManagerCompat.INTENT_SENDER_ACTIVITY: {
-
+				VLog.d("GetIntentSender", "INTENT_SENDER_BROADCAST " + intent.toString());
 				ComponentInfo info = VirtualCore.get().resolveActivityInfo(intent, VUserHandle.myUserId());
 				if (info != null) {
 					ok = true;
@@ -83,6 +84,7 @@ import java.lang.reflect.Method;
 
 			case ActivityManagerCompat.INTENT_SENDER_SERVICE: {
 				ComponentInfo info = VirtualCore.get().resolveServiceInfo(intent, VUserHandle.myUserId());
+				VLog.d("GetIntentSender", "INTENT_SENDER_SERVICE " + intent.toString());
 				if (info != null) {
 					ok= true;
 					newIntent.setClass(getHostContext(), StubPendingService.class);
@@ -92,6 +94,7 @@ import java.lang.reflect.Method;
 
 			case ActivityManagerCompat.INTENT_SENDER_BROADCAST: {
 				ok = true;
+				VLog.d("GetIntentSender", "INTENT_SENDER_BROADCAST " + intent.toString());
 				newIntent.setClass(getHostContext(), StubPendingReceiver.class);
 			} break;
 
