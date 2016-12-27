@@ -309,6 +309,13 @@ public final class VClientImpl extends IVClient.Stub {
 		}
 		if (app == null) {
 			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":app context null");
+			if (data.info!= null) {
+				android.app.LoadedApk loadedApk = (android.app.LoadedApk) data.info;
+				app = loadedApk.makeApplication(false, null);
+				if (app == null) {
+					VLog.logbug(TAG, "bug app == null");
+				}
+			}
 		}
 		mInitialApplication = app;
 		mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, app);
