@@ -311,7 +311,8 @@ public class AppCloneActivity extends BaseActivity {
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppManager.launchApp(mPkgName);
+                //AppManager.launchApp(mPkgName);
+                AppStartActivity.startAppStartActivity(AppCloneActivity.this, mPkgName);
                 finish();
             }
         });
