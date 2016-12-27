@@ -62,7 +62,7 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        MTAManager.homeShow(this);
         setContentView(R.layout.activity_home);
         int random = new Random().nextInt(100);
         isShowOfferWall = (random < RemoteConfig.getLong(KEY_HOME_GIFT_OFFERWALL_PERCENTAGE));
@@ -202,7 +202,6 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MTAManager.homeShow(this);
         if (! isShowOfferWall) {
             MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
             if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
