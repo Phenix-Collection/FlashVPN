@@ -7,9 +7,13 @@ import android.os.IInterface;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VActivityManager;
+import com.lody.virtual.client.stub.StubPendingService;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 
 import java.lang.reflect.Method;
+
+import static mirror.android.app.ActivityThread.ActivityClientRecord.intent;
 
 /**
  * @author Lody
@@ -27,7 +31,11 @@ import java.lang.reflect.Method;
 		IInterface appThread = (IInterface) args[0];
 		Intent service = (Intent) args[1];
 		String resolvedType = (String) args[2];
+		if(service!=null) {
+			VLog.d("StartService", "intent: " + service.toString());
+		}
 		if (service.getComponent() != null
+				&& (!service.getComponent().getClassName().equals(StubPendingService.class.getName()))
 				&& getHostPkg().equals(service.getComponent().getPackageName())) {
 			// for server process
 			return method.invoke(who, args);
