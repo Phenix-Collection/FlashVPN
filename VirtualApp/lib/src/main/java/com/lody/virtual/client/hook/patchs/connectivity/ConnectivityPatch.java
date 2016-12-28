@@ -40,7 +40,9 @@ public class ConnectivityPatch extends PatchDelegate<ConnectivityBinderDelegate>
         VLog.d("ConnectivityPatch", "onBindHooks");
         if (Build.VERSION.SDK_INT >= KITKAT) {
             addHook(new CheckMobileProvisioning());
+
         }
+        addHook(new ReportInetCondition());
     }
 
     private static class CheckMobileProvisioning extends Hook {
@@ -53,6 +55,19 @@ public class ConnectivityPatch extends PatchDelegate<ConnectivityBinderDelegate>
         public Object call(Object who, Method method, Object... args) throws Throwable {
             VLog.logbug("ConnectivityPatch", "CheckMobileProvisioning hooked");
             return -1;
+        }
+    }
+
+    private static class ReportInetCondition extends Hook {
+        @Override
+        public String getName() {
+            return "reportInetCondition";
+        }
+
+        @Override
+        public Object call(Object who, Method method, Object... args) throws Throwable {
+            VLog.logbug("ConnectivityPatch", "reportInetCondition hooked");
+            return null;
         }
     }
 }
