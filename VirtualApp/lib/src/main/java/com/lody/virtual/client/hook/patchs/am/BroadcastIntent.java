@@ -32,6 +32,11 @@ import java.lang.reflect.Method;
     public Object call(Object who, Method method, Object... args) throws Throwable {
         Intent intent = (Intent) args[1];
         VLog.d("BroadcastIntent", "enter call for : " + intent.toString());
+        if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")
+                || intent.getAction().equals("com.facebook.GET_UNIQUE_ID")
+                || intent.getAction().equals("com.facebook.GET_PHONE_ID")) {
+            return 0;
+        }
         String type = (String) args[2];
         intent.setDataAndType(intent.getData(), type);
         if (VirtualCore.get().getComponentDelegate() != null) {
@@ -44,9 +49,6 @@ import java.lang.reflect.Method;
         if (args[7] instanceof String || args[7] instanceof String[]) {
             // clear the permission
             args[7] = null;
-        }
-        if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")) {
-            return 0;
         }
         Object ret = method.invoke(who, args);
         if(newIntent != null) {
