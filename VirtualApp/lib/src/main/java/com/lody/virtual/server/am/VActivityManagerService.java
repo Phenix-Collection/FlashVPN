@@ -977,10 +977,12 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		if (realIntent == null) {
 			realIntent = intent;
 		}
+		VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent.toString());
 		String originAction = SpecialComponentList.unprotectAction(realIntent.getAction());
 		if (originAction != null) {
 			realIntent.setAction(originAction);
 		}
+		VLog.d(TAG, "handleStaticBroadcast unprotected realintent:　" + realIntent.toString());
 		if (userId >= 0) {
 			int uid = VUserHandle.getUid(userId, appId);
 			handleStaticBroadcastAsUser(uid, info, realIntent, receiver, result);

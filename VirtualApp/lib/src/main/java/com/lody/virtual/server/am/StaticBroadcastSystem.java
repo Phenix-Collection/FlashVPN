@@ -2,6 +2,7 @@ package com.lody.virtual.server.am;
 
 import com.lody.virtual.client.env.SpecialComponentList;
 import com.lody.virtual.helper.proto.AppSetting;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.helper.utils.collection.ArrayMap;
 import com.lody.virtual.server.pm.VAppManagerService;
 
@@ -40,6 +41,7 @@ public class StaticBroadcastSystem {
 
 	public void startApp(PackageParser.Package p) {
 		AppSetting setting = (AppSetting) p.mExtras;
+		VLog.d("StaticBroadcastSystem","startApp " + p.packageName);
 		for (PackageParser.Activity receiver : p.receivers) {
 			ActivityInfo info = receiver.info;
 			List<? extends IntentFilter> filters = receiver.intents;
@@ -52,6 +54,7 @@ public class StaticBroadcastSystem {
 			IntentFilter componentFilter = new IntentFilter(componentAction);
 			BroadcastReceiver r = new StaticBroadcastReceiver(setting.appId, info, componentFilter);
 			mContext.registerReceiver(r, componentFilter, null, mScheduler);
+			VLog.d("StaticBroadcastSystem", "register " + componentFilter.getAction(0));
 			receivers.add(r);
 			for (IntentFilter filter : filters) {
 				IntentFilter cloneFilter = new IntentFilter(filter);
@@ -76,6 +79,7 @@ public class StaticBroadcastSystem {
 			if (protectedAction != null) {
 				iterator.set(protectedAction);
 			}
+			VLog.d("StaticBroadcastSystem", "register redirected action " + protectedAction);
 		}
 	}
 
@@ -107,6 +111,7 @@ public class StaticBroadcastSystem {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			VLog.d("StaticBroadcastReceiver", "onReceive " + intent.toString());
 			if (mApp.isBooting()) {
 				return;
 			}
