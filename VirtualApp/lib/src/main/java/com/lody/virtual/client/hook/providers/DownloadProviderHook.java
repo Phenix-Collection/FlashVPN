@@ -17,6 +17,10 @@ public class DownloadProviderHook extends ExternalProviderHook {
 
 	@Override
 	public Uri insert(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
-		return super.insert(method, args);
+		try {
+			return super.insert(method, args);
+		}catch (Exception e) {
+			return null;
+		}
 	}
 }
