@@ -269,6 +269,7 @@ public class VAppManagerService extends IAppManager.Stub {
 		Intent virtualIntent = new Intent(Constants.ACTION_PACKAGE_ADDED);
 		Uri uri = Uri.fromParts("package", setting.packageName, null);
 		virtualIntent.setData(uri);
+		virtualIntent.putExtra(Intent.EXTRA_REPLACING, false);
 		for (int userId : VUserManagerService.get().getUserIds()) {
 			Intent intent = new Intent(virtualIntent);
 			intent.putExtra(Intent.EXTRA_UID, VUserHandle.getUid(userId, setting.appId));
@@ -290,6 +291,7 @@ public class VAppManagerService extends IAppManager.Stub {
 		Intent virtualIntent = new Intent(Constants.ACTION_PACKAGE_REMOVED);
 		Uri uri = Uri.fromParts("package", setting.packageName, null);
 		virtualIntent.setData(uri);
+		virtualIntent.putExtra(Intent.EXTRA_REPLACING, false);
 		for (int userId : VUserManagerService.get().getUserIds()) {
 			Intent intent = new Intent(virtualIntent);
 			intent.putExtra(Intent.EXTRA_UID, VUserHandle.getUid(userId, setting.appId));
