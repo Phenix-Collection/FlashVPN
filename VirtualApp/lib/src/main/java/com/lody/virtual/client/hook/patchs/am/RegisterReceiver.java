@@ -1,5 +1,6 @@
 package com.lody.virtual.client.hook.patchs.am;
 
+import android.app.ActivityManagerNative;
 import android.content.IIntentReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,6 +13,7 @@ import android.os.RemoteException;
 import com.lody.virtual.client.env.SpecialComponentList;
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.hook.utils.HookUtils;
+import com.lody.virtual.helper.utils.VLog;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
@@ -50,9 +52,11 @@ import mirror.android.content.IIntentReceiverJB;
         HookUtils.replaceFirstAppPkg(args);
         args[IDX_RequiredPermission] = null;
         IntentFilter filter = (IntentFilter) args[IDX_IntentFilter];
-        redirectIntentFilter(filter);
+        VLog.d("RegisterReceiver", filter.getAction(0));
         if (args.length > IDX_IIntentReceiver && IIntentReceiver.class.isInstance(args[IDX_IIntentReceiver])) {
             final IInterface old = (IInterface) args[IDX_IIntentReceiver];
+            redirectIntentFilter(filter);
+            VLog.d("RegisterReceiver", "will wrap intentReceiver " );
             if (!ProxyIIntentReceiver.class.isInstance(old)) {
                 final IBinder token = old.asBinder();
                 if (token != null) {
@@ -76,6 +80,7 @@ import mirror.android.content.IIntentReceiverJB;
                 }
             }
         }
+        VLog.d("RegisterReceiver", "after redirect " + filter.getAction(0));
         return method.invoke(who, args);
     }
 
