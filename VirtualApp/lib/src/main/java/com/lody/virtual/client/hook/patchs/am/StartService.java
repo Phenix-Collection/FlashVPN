@@ -42,8 +42,8 @@ import static mirror.android.app.ActivityThread.ActivityClientRecord.intent;
 		}
 		int userId = VUserHandle.myUserId();
 		if (service.getBooleanExtra("_VA_|_from_inner_", false)) {
-			service = service.getParcelableExtra("_VA_|_intent_");
 			userId = service.getIntExtra("_VA_|_user_id_", userId);
+			service = service.getParcelableExtra("_VA_|_intent_");
 		} else {
 			if (isServerProcess()) {
 				userId = service.getIntExtra("_VA_|_user_id_", VUserHandle.USER_NULL);
