@@ -32,7 +32,8 @@ import java.lang.reflect.Method;
     public Object call(Object who, Method method, Object... args) throws Throwable {
         Intent intent = (Intent) args[1];
         VLog.d("BroadcastIntent", "enter call for : " + intent.toString());
-        if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")
+        if (intent == null || intent.getAction() == null
+                || intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")
                 || intent.getAction().equals("com.facebook.GET_UNIQUE_ID")
                 || intent.getAction().equals("com.facebook.GET_PHONE_ID")) {
             return 0;
