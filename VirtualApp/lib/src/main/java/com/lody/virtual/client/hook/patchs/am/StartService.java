@@ -41,12 +41,22 @@ import static mirror.android.app.ActivityThread.ActivityClientRecord.intent;
 			return method.invoke(who, args);
 		}
 		int userId = VUserHandle.myUserId();
-		if (service.getBooleanExtra("_VA_|_from_inner_", false)) {
+		boolean fromInner = false;
+		try {
+			fromInner = service.getBooleanExtra("_VA_|_from_inner_", false);
+		}catch (Exception e) {
+			VLog.logbug("StartService", VLog.getStackTraceString(e));
+		}
+		if (fromInner) {
 			userId = service.getIntExtra("_VA_|_user_id_", userId);
 			service = service.getParcelableExtra("_VA_|_intent_");
 		} else {
 			if (isServerProcess()) {
-				userId = service.getIntExtra("_VA_|_user_id_", VUserHandle.USER_NULL);
+				try {
+					userId = service.getIntExtra("_VA_|_user_id_", VUserHandle.USER_NULL);
+				}catch (Exception e){
+					VLog.logbug("StartService", VLog.getStackTraceString(e));
+				}
 			}
 		}
 		service.setDataAndType(service.getData(), resolvedType);
