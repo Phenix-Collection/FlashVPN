@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
-import com.polestar.ad.L;
+import com.polestar.ad.AdLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ public class FuseAdLoader implements IAdLoader {
         if (adConfig != null && !TextUtils.isEmpty(adConfig.source) && !TextUtils.isEmpty(adConfig.key)) {
             if (SUPPORTED_TYPES.contains(adConfig.source)) {
                 mNativeAdConfigList.add(adConfig);
-                L.d("add adConfig : " + adConfig.toString());
+                AdLog.d("add adConfig : " + adConfig.toString());
             }
         }
     }
@@ -66,7 +66,7 @@ public class FuseAdLoader implements IAdLoader {
             return;
         }
         if ( num  < 0 || mNativeAdConfigList.size() == 0) {
-            L.d("FuseAdLoader :" + "load num wrong: " + num);
+            AdLog.d("FuseAdLoader :" + "load num wrong: " + num);
             listener.onError("Wrong config");
             return;
         }
@@ -78,7 +78,7 @@ public class FuseAdLoader implements IAdLoader {
 
     private void loadNextNativeAd() {
         if ( currentLoadingIdx >= mNativeAdConfigList.size()) {
-            L.e("Tried to load all source, no fill. Index : " + currentLoadingIdx);
+            AdLog.e("Tried to load all source, no fill. Index : " + currentLoadingIdx);
             mListener.onError("No Fill");
             return;
         }
@@ -87,7 +87,7 @@ public class FuseAdLoader implements IAdLoader {
         IAd ad = mNativeAdCache.get(config.key);
         if (ad != null) {
             if (ad.isShowed() || (System.currentTimeMillis() - ad.getLoadedTime()) > config.cacheTime) {
-                L.d("Ad cache time out : " + ad.getTitle() + " type: " + ad.getAdType());
+                AdLog.d("Ad cache time out : " + ad.getTitle() + " type: " + ad.getAdType());
                 mNativeAdCache.remove(config.key);
             } else {
                 mListener.onAdLoaded(ad);
@@ -106,9 +106,9 @@ public class FuseAdLoader implements IAdLoader {
                 if (currentLoadingIdx < mNativeAdConfigList.size()) {
                     mNativeAdCache.put(mNativeAdConfigList.get(currentLoadingIdx).key, ad);
                 } else {
-                    L.e("Ad loaded but not put into cache");
+                    AdLog.e("Ad loaded but not put into cache");
                 }
-                L.d("ad loaded " + ad.getAdType());
+                AdLog.d("ad loaded " + ad.getAdType());
                 mListener.onAdLoaded(ad);
             }
 
@@ -120,11 +120,11 @@ public class FuseAdLoader implements IAdLoader {
             @Override
             public void onError(String error) {
                 if(currentLoadingIdx >= mNativeAdConfigList.size()) {
-                    L.e("Tried to load all source, no fill. Index : " + currentLoadingIdx);
+                    AdLog.e("Tried to load all source, no fill. Index : " + currentLoadingIdx);
                     mListener.onError("No Fill");
                     return;
                 }
-                L.e("Load current source " + mNativeAdConfigList.get(currentLoadingIdx).source + " error : " + error);
+                AdLog.e("Load current source " + mNativeAdConfigList.get(currentLoadingIdx).source + " error : " + error);
                 currentLoadingIdx++;
                 loadNextNativeAd();
 
@@ -155,7 +155,7 @@ public class FuseAdLoader implements IAdLoader {
                 return new AdmobInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_VK:
             default:
-                L.e("not suppported source " + config.source);
+                AdLog.e("not suppported source " + config.source);
                 return null;
         }
     }

@@ -30,8 +30,8 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
+import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
-import com.polestar.ad.L;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -297,13 +297,13 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                L.d("onAdClosed");
+                AdLog.d("onAdClosed");
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                L.d("onAdFailedToLoad " + i);
+                AdLog.d("onAdFailedToLoad " + i);
                 mAdmobExpressView.setVisibility(View.GONE);
             }
 
@@ -336,7 +336,7 @@ public class HomeFragment extends BaseFragment {
                     }
                 });
                 dismissLongClickGuide();
-                L.d("onAdLoaded ");
+                AdLog.d("onAdLoaded ");
             }
         });
     }
@@ -430,7 +430,7 @@ public class HomeFragment extends BaseFragment {
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
             boolean isTestDevice = request.isTestDevice(mActivity);
-            L.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
+            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
             mAdmobExpressView.loadAd(request );
         } else {
             mAdmobExpressView.loadAd(new AdRequest.Builder().build());

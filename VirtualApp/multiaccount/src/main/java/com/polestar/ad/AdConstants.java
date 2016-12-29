@@ -11,18 +11,7 @@ import java.io.File;
  */
 
 public class AdConstants {
-    public static boolean DEBUG = BuildConfig.DEBUG || isDebugMode();
-
-    static boolean existDebugFile = false;
-    public static boolean isDebugMode(){
-        if (existDebugFile) return  true;
-        File file = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "polestar.debug");
-        if(file.exists()){
-            existDebugFile = true;
-            return true;
-        }
-        return false;
-    }
+    public static boolean DEBUG = BuildConfig.DEBUG ;
 
     public static final class AdMob {
         public static final String FILTER_BOTH_INSTALL_AND_CONTENT = "both";

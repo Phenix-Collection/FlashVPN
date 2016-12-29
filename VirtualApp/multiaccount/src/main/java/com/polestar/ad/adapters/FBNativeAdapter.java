@@ -10,7 +10,7 @@ import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSettings;
 import com.polestar.ad.AdConstants;
-import com.polestar.ad.L;
+import com.polestar.ad.AdLog;
 
 
 /**
@@ -34,7 +34,7 @@ public class FBNativeAdapter extends Ad implements IAdLoader {
             String deviceIdHash = sp.getString("deviceIdHash", "");
             AdSettings.addTestDevice(deviceIdHash);
             boolean isTestDevice = AdSettings.isTestMode(mContext);
-            L.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
+            AdLog.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
         }
         mRawAd = new com.facebook.ads.NativeAd(mContext, mKey);
         mListener = listener;

@@ -8,7 +8,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdUtils;
-import com.polestar.ad.L;
+import com.polestar.ad.AdLog;
 
 /**
  * Created by guojia on 2016/12/11.
@@ -48,7 +48,7 @@ public class AdmobInterstitialAdapter extends Ad implements IAdLoader  {
     public void loadAd(int num, IAdLoadListener listener) {
         adLoadListener = listener;
         if (listener == null){
-            L.e("listener is null!!");
+            AdLog.e("listener is null!!");
             return;
         }
         rawAd = new InterstitialAd(mContext);
@@ -92,7 +92,7 @@ public class AdmobInterstitialAdapter extends Ad implements IAdLoader  {
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
             rawAd.loadAd(request);
             boolean isTestDevice = request.isTestDevice(mContext);
-            L.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
+            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
         } else {
             rawAd.loadAd(new AdRequest.Builder().build());
         }

@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 
-import com.polestar.ad.L;
+import com.polestar.ad.AdLog;
 import com.polestar.imageloader.widget.BaseLazyLoadImageView;
 
 import java.lang.ref.WeakReference;
@@ -167,7 +167,7 @@ public class ImageLoader implements Callback {
 	}
 
 	public void onLowMemory() {
-		L.e("ImageLoader onLowMemory");
+		AdLog.e("ImageLoader onLowMemory");
 	}
 
 	public HashSet<String> getWifiOnlySet() {

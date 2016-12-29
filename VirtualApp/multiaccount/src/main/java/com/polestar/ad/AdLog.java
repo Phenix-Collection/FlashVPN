@@ -7,7 +7,7 @@ package com.polestar.ad;
 import android.util.Log;
 
 
-public class L {
+public class AdLog {
 
     private static final String DEFAULT_TAG = "pole_ad";
 

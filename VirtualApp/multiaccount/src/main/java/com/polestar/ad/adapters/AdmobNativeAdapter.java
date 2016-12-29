@@ -10,8 +10,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.formats.NativeAppInstallAd;
 import com.google.android.gms.ads.formats.NativeContentAd;
 import com.polestar.ad.AdConstants;
+import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
-import com.polestar.ad.L;
 
 
 /**
@@ -37,12 +37,12 @@ public class AdmobNativeAdapter extends Ad implements IAdLoader {
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
         if (listener == null) {
-            L.e("listener not set.");
+            AdLog.e("listener not set.");
             return;
         }
         mListener = listener;
         if (num > 1) {
-            L.d("Admob not support load for more than 1 ads. Only return 1 ad");
+            AdLog.d("Admob not support load for more than 1 ads. Only return 1 ad");
         }
         AdLoader.Builder  builder = new AdLoader.Builder(mContext, mKey);
         boolean isContent = false;
@@ -87,7 +87,7 @@ public class AdmobNativeAdapter extends Ad implements IAdLoader {
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
             adLoader.loadAd(request);
             boolean isTestDevice = request.isTestDevice(mContext);
-            L.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
+            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
         } else {
             adLoader.loadAd(new AdRequest.Builder().build());
         }

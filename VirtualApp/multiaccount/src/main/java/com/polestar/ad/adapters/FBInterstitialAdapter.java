@@ -9,7 +9,7 @@ import com.facebook.ads.AdSettings;
 import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 import com.polestar.ad.AdConstants;
-import com.polestar.ad.L;
+import com.polestar.ad.AdLog;
 
 /**
  * Created by guojia on 2016/12/11.
@@ -24,7 +24,7 @@ public class FBInterstitialAdapter extends Ad implements InterstitialAdListener,
     public void loadAd(int num, IAdLoadListener listener) {
         adListener = listener;
         if (listener == null) {
-            L.e("Not set listener!");
+            AdLog.e("Not set listener!");
             return;
         }
         if (AdConstants.DEBUG) {
@@ -32,7 +32,7 @@ public class FBInterstitialAdapter extends Ad implements InterstitialAdListener,
             String deviceIdHash = sp.getString("deviceIdHash", "");
             AdSettings.addTestDevice(deviceIdHash);
             boolean isTestDevice = AdSettings.isTestMode(mContext);
-            L.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
+            AdLog.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
         }
         interstitialAd = new InterstitialAd(mContext, key);
         interstitialAd.setAdListener(this);

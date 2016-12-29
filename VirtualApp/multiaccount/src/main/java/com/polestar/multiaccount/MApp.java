@@ -19,6 +19,7 @@ import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.proto.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
+import com.polestar.ad.AdConstants;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -118,6 +119,7 @@ public class MApp extends Application {
             VLog.openLog();
             VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             MLogs.DEBUG = true;
+            AdConstants.DEBUG = true;
         }
         VLog.setKeyLogger(new VLog.IKeyLogger() {
             @Override
