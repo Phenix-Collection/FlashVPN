@@ -1,6 +1,7 @@
 package com.lody.virtual.client.hook.patchs.am;
 
 import android.content.ComponentName;
+import android.content.IIntentReceiver;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.Constants;
 import com.lody.virtual.client.env.SpecialComponentList;
 import com.lody.virtual.client.hook.base.Hook;
+import com.lody.virtual.helper.utils.ArrayUtils;
 import com.lody.virtual.helper.utils.BitmapUtils;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.helper.utils.VLog;
@@ -51,6 +53,13 @@ import java.lang.reflect.Method;
             // clear the permission
             args[7] = null;
         }
+        int resultToIdx = ArrayUtils.indexOfFirst(args, IIntentReceiver.class);
+        if (resultToIdx != -1) {
+            IIntentReceiver resultTo = (IIntentReceiver)args[resultToIdx];
+            IIntentReceiver proxy = new RegisterReceiver.ProxyIIntentReceiver(resultTo);
+            args[resultToIdx] = proxy;
+        }
+
         Object ret = method.invoke(who, args);
         if(newIntent != null) {
             VLog.d("BroadcastIntent", "x call for : " + newIntent.toString());
