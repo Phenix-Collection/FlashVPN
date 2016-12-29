@@ -107,7 +107,7 @@ import mirror.android.content.IIntentReceiverJB;
         return isAppProcess();
     }
 
-    private static class ProxyIIntentReceiver extends IIntentReceiver.Stub {
+    public static class ProxyIIntentReceiver extends IIntentReceiver.Stub {
         IInterface old;
 
         ProxyIIntentReceiver(IInterface old) {
@@ -116,16 +116,23 @@ import mirror.android.content.IIntentReceiverJB;
 
         public void performReceive(Intent intent, int resultCode, String data, Bundle extras, boolean ordered,
                                    boolean sticky, int sendingUser) throws RemoteException {
-            Intent broadcastIntent = intent.getParcelableExtra("_VA_|_intent_");
+            Intent broadcastIntent = null;
+            try {
+                broadcastIntent = intent.getParcelableExtra("_VA_|_intent_");
+            } catch (Exception e) {
+                VLog.logbug("RegisterReceiver", VLog.getStackTraceString(e));
+            }
             if (broadcastIntent != null) {
                 intent = broadcastIntent;
             }
             String action = SpecialComponentList.unprotectAction(intent.getAction());
             intent.setAction(action);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                IIntentReceiverJB.performReceive.call(old, intent, resultCode, data, extras, ordered, sticky, sendingUser);
-            } else {
-                mirror.android.content.IIntentReceiver.performReceive.call(old, intent, resultCode, data, extras, ordered, sticky);
+            if (old != null && old.asBinder().isBinderAlive()) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                    IIntentReceiverJB.performReceive.call(old, intent, resultCode, data, extras, ordered, sticky, sendingUser);
+                } else {
+                    mirror.android.content.IIntentReceiver.performReceive.call(old, intent, resultCode, data, extras, ordered, sticky);
+                }
             }
         }
 
