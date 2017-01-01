@@ -72,7 +72,7 @@ import static com.lody.virtual.os.VUserHandle.getUserId;
  */
 public class VActivityManagerService extends IActivityManager.Stub {
 
-	private static final boolean BROADCAST_NOT_STARTED_PKG = true;
+	private static final boolean BROADCAST_NOT_STARTED_PKG = false;
 
 	private static final AtomicReference<VActivityManagerService> sService = new AtomicReference<>();
 	private static final String TAG = VActivityManagerService.class.getSimpleName();
@@ -730,7 +730,6 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	}
 
 	private ProcessRecord performStartProcessLocked(int vuid, int vpid, ApplicationInfo info, String processName) {
-		VLog.d(TAG, "performStartProcessLocked e " + processName);
 		ProcessRecord app = new ProcessRecord(info, processName, vuid, vpid);
 		Bundle extras = new Bundle();
 		BundleCompat.putBinder(extras, "_VA_|_binder_", app);
@@ -743,9 +742,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		}
 		int pid = res.getInt("_VA_|_pid_");
 		IBinder clientBinder = BundleCompat.getBinder(res, "_VA_|_client_");
-		VLog.d(TAG, "performStartProcessLocked x 1 " + processName);
 		attachClient(pid, clientBinder);
-		VLog.d(TAG, "performStartProcessLocked x 2 " + processName);
 		return app;
 	}
 
@@ -1005,16 +1002,12 @@ public class VActivityManagerService extends IActivityManager.Stub {
 
 	private void handleStaticBroadcastAsUser(int uid, ActivityInfo info, Intent intent, BroadcastReceiver receiver,
 											 BroadcastReceiver.PendingResult result) {
-		VLog.d(TAG, "handleStaticBroadcastAsUser %s" ,intent.toString());
 		synchronized (this) {
 			ProcessRecord r = findProcessLocked(info.processName, uid);
 			if (BROADCAST_NOT_STARTED_PKG && r == null) {
-				VLog.d(TAG, "handleStaticBroadcastAsUser %s x0" ,intent.toString());
 				r = startProcessIfNeedLocked(info.processName, getUserId(uid), info.packageName);
 			}
-			VLog.d(TAG, "handleStaticBroadcastAsUser %s x1" ,intent.toString());
 			if (r != null && r.appThread != null) {
-				VLog.d(TAG, "handleStaticBroadcastAsUser %s x2" ,intent.toString());
 				performScheduleReceiver(r.appThread, getUserId(uid), info, intent, receiver.isOrderedBroadcast(),
 						result);
 			}
@@ -1024,7 +1017,6 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	private void performScheduleReceiver(IInterface thread, int sendingUser, ActivityInfo info, Intent intent,
 										 boolean sync, BroadcastReceiver.PendingResult result) {
 
-		VLog.d(TAG, "performScheduleReceiver %s" ,intent.toString());
 		ComponentName componentName = ComponentUtils.toComponentName(info);
 		if (intent.getComponent() != null && !componentName.equals(intent.getComponent())) {
 			return;
@@ -1032,7 +1024,6 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		if (intent.getComponent() == null) {
 			intent.setComponent(componentName);
 		}
-		VLog.d(TAG, "performScheduleReceiver %s" ,componentName);
 		try {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 				IApplicationThreadKitkat.scheduleReceiver.call(thread, intent, info,

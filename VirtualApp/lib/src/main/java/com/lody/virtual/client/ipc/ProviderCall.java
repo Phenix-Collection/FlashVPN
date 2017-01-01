@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.helper.utils.VLog;
 
 import java.io.Serializable;
 
@@ -23,7 +22,6 @@ public class ProviderCall {
 
 	public static Bundle call(String authority, Context context, String methodName, String arg, Bundle bundle) {
 		Uri uri = Uri.parse("content://" + authority);
-		VLog.d("ProviderCall", "call " + uri.toString());
 		ContentResolver contentResolver = context.getContentResolver();
 		return contentResolver.call(uri, methodName, arg, bundle);
 	}
