@@ -7,6 +7,8 @@ typedef void (*Bridge_DalvikBridgeFunc)(const void **, void *, const void *, voi
 typedef jobject (*Native_openDexNativeFunc)(JNIEnv *, jclass, jstring, jstring, jint);
 typedef jobject (*Native_openDexNativeFunc_N)(JNIEnv *, jclass, jstring, jstring, jint, jobject, jobject);
 typedef jint (*Native_getCallingUid)(JNIEnv *, jclass);
+typedef jint (*Native_cameraNativeSetup21)(JNIEnv *env, jobject thiz,
+                                         jobject weak_this, jint cameraId, jint version, jstring clientPackageName);
 
 
 
@@ -27,6 +29,7 @@ static struct {
     void* g_sym_IPCThreadState_getCallingUid;
 
     Native_getCallingUid orig_getCallingUid;
+    void* orig_cameraNativeSetup;
 
     Bridge_DalvikBridgeFunc orig_openDexFile_dvm;
     union {
@@ -59,6 +62,60 @@ jint getCallingUid(JNIEnv *env, jclass jclazz) {
     return uid;
 }
 
+//jstring CStr2Jstring( JNIEnv* env, const char* pat )
+//{
+//    //定义Java String类 strClass
+//    jclass strClass = (env)->FindClass("Ljava/lang/String;");
+//    //获取Java String类方法String(byte[],String)的构造器,用于将本地byte[]数组转换为一个新String
+//    jmethodID ctorID = (env)->GetMethodID(strClass, "<init>", "([BLjava/lang/String;)V");
+//    //建立byte数组
+//    jbyteArray bytes = (env)->NewByteArray((jsize)strlen(pat));
+//    //将char* 转换为byte数组
+//    (env)->SetByteArrayRegion(bytes, 0, (jsize)strlen(pat), (jbyte*)pat);
+//    //设置String, 保存语言类型,用于byte数组转换至String时的参数
+//    jstring encoding = (env)->NewStringUTF("GB2312");
+//    //将byte数组转换为java String,并输出
+//    return (jstring)(env)->NewObject(strClass, ctorID, bytes, encoding);
+//
+//}
+//
+//jstring clientStringFromStdString(JNIEnv *env,const std::string &str){
+////    return env->NewStringUTF(str.c_str());
+//    jbyteArray array = env->NewByteArray(str.size());
+//    env->SetByteArrayRegion(array, 0, str.size(), (const jbyte*)str.c_str());
+//    jstring strEncode = env->NewStringUTF("UTF-8");
+//    jclass cls = env->FindClass("java/lang/String");
+//    jmethodID ctor = env->GetMethodID(cls, "<init>", "([BLjava/lang/String;)V");
+//    jstring object = (jstring) env->NewObject(cls, ctor, array, strEncode);
+//    return object;
+//}
+
+void cameraNativeSetup(const void **args, void *pResult, const void *method, void *self) {
+    JNIEnv *env = NULL;
+    g_vm->GetEnv((void **) &env, JNI_VERSION_1_6);
+    g_vm->AttachCurrentThread(&env, NULL);
+
+    typedef char* (*GetCstrFromString)(void *);
+    typedef void* (*GetStringFromCstr)(const char*);
+
+  //const char* origPkg3 = args[3] == NULL ? NULL : gOffset.GetCstrFromString((void*) args[3]);
+
+    args[3] = gOffset.GetStringFromCstr("com.polestar.multiaccount");
+    void (*func)(const void **, void *, const void *, void *) = (void (*)(const void **, void *, const void *, void *)) gOffset.orig_cameraNativeSetup;
+    return func(args, pResult, method, self);
+
+}
+
+jint cameraNativeSetup21(JNIEnv *env, jobject thiz,
+                       jobject weak_this, jint cameraId, jint version, jstring clientPackageName) {
+    LOGD("PLIB cameraNativeSetup cameraId %d version %d", cameraId, version);
+    jstring pkg = env->NewStringUTF("com.polestar.multiaccount");
+    Native_cameraNativeSetup21 func = (Native_cameraNativeSetup21)gOffset.orig_cameraNativeSetup;
+    int ret = func(env, thiz,weak_this, cameraId, version, pkg);
+    LOGD("ret %d", ret);
+    return ret;
+
+}
 
 static JNINativeMethod gMarkMethods[] = {
         NATIVE_METHOD((void *) mark, "nativeMark", "()V"),
@@ -67,9 +124,6 @@ static JNINativeMethod gMarkMethods[] = {
 JNINativeMethod gUidMethods[] = {
         NATIVE_METHOD((void *) getCallingUid, "getCallingUid", "()I"),
 };
-
-
-
 
 static jobject new_native_openDexNativeFunc(JNIEnv* env, jclass jclazz, jstring javaSourceName, jstring javaOutputName, jint options) {
     jclass stringClass = env->FindClass("java/lang/String");
@@ -188,8 +242,6 @@ void searchJniOffset(JNIEnv *env, bool isArt) {
 
 
 inline void replaceGetCallingUid(JNIEnv *env, jboolean isArt) {
-
-
     if (isArt) {
         size_t mtd_getCallingUid = (size_t) env->GetStaticMethodID(gOffset.g_binder_classs, "getCallingUid", "()I");
         int nativeFuncOffset = gOffset.nativeOffset;
@@ -199,7 +251,41 @@ inline void replaceGetCallingUid(JNIEnv *env, jboolean isArt) {
     } else {
         env->RegisterNatives(gOffset.g_binder_classs, gUidMethods, NELEM(gUidMethods));
     }
+}
 
+inline void replaceCameraNativeSetup(JNIEnv *env, jboolean isArt, int apiLevel) {
+    if (apiLevel < 19)
+        return;
+    LOGD("PLIB replaceCameraNativeSetup");
+    if (gOffset.nativeOffset == 0) {
+        LOGE("native offset null");
+        return;
+    }
+    jclass camera_class = env->FindClass("android/hardware/Camera");
+    if (camera_class != NULL) {
+        size_t mtd_nativeSetup ;
+        if (apiLevel <= 19) {
+            mtd_nativeSetup = (size_t) env->GetMethodID(camera_class, "native_setup",
+                                                        "(Ljava/lang/Object;ILjava/lang/String;)V");
+        } else {
+            mtd_nativeSetup = (size_t) env->GetMethodID(camera_class, "native_setup",
+                                                        "(Ljava/lang/Object;IILjava/lang/String;)I");
+        }
+        if (mtd_nativeSetup == 0){
+            LOGE("mtd_nativeSetup null");
+            return;
+        }
+        void **jniFuncPtr = (void **) (gOffset.nativeOffset + mtd_nativeSetup);
+        LOGD("PLIB replaceCameraNativeSetup jniFuncPtr 0x%x " ,jniFuncPtr);
+
+        gOffset.orig_cameraNativeSetup = *jniFuncPtr;
+        LOGD("PLIB replaceCameraNativeSetup orig %x ", gOffset.orig_cameraNativeSetup);
+        if (apiLevel <= 19) {
+            *jniFuncPtr = (void *) cameraNativeSetup;
+        } else {
+            *jniFuncPtr = (void *) cameraNativeSetup21;
+        }
+    }
 }
 
 inline void replaceOpenDexFileMethod(JNIEnv *env, jobject javaMethod, jboolean isArt, int apiLevel) {
@@ -268,6 +354,7 @@ void hookNative(jobject javaMethod, jboolean isArt, jint apiLevel) {
     searchJniOffset(env, isArt);
     replaceGetCallingUid(env, isArt);
     replaceOpenDexFileMethod(env, javaMethod, isArt, apiLevel);
+    replaceCameraNativeSetup(env, isArt, apiLevel);
 }
 
 
