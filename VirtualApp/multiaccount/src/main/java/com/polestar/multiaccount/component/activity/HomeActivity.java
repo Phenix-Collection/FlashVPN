@@ -255,6 +255,11 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    public void onLockIconClick(View view) {
+        MLogs.d("onLockIconClick");
+        LockSettingsActivity.start(this, LockSettingsActivity.FROM_HOME_ICON);
+    }
+
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {

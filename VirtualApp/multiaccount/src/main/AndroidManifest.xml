@@ -55,6 +55,9 @@
             android:name=".component.activity.FeedbackActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".component.activity.LockSettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".component.activity.FaqActivity"
             android:screenOrientation="portrait"/>
         <activity

@@ -90,4 +90,10 @@
     <string name="text_Q5_content">A5: A password is required to access Private Apps each time you wake your device. Additionally, all Private Apps are installed on Super Clone, and therefore all Private Apps’ data are not accessible by any external programs.</string>
 
     <string name="clone_label_tag">Cloned %s</string>
+
+    <!-- lock settings -->
+    <string name="lock_settings_title">Locker Settings</string>
+    <string name="enable_lock_settings_title">Privacy Locker</string>
+    <string name="enable_lock_settings_content">Toggle to enable or disable privacy locker feature</string>
+    <string name="password_setting_title">Change Password</string>
 </resources>

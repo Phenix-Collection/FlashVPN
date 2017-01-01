@@ -23,7 +23,6 @@ import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.pbinterface.DataObserver;
 import com.polestar.multiaccount.utils.AppListUtils;
-import com.polestar.multiaccount.utils.LocalAdUtils;
 import com.polestar.multiaccount.widgets.FixedGridView;
 import com.polestar.multiaccount.widgets.FixedListView;
 
@@ -141,8 +140,6 @@ public class AppListActivity extends BaseActivity implements DataObserver {
                 finish();
             }
         });
-
-        LocalAdUtils.showAd(this, adContent, LocalAdUtils.AD_STYLE[6], true);
     }
 
     private void showMoreApps() {

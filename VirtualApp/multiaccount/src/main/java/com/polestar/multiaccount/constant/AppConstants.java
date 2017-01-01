@@ -41,6 +41,7 @@ public class AppConstants {
     public class PreferencesKey {
         public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";
         public static final String SHOWN_LONG_CLICK_GUIDE = "show_guide_for_long_press";
+        public static final String LOCKER_FEATHER_ENABLED = "locker_feature_enabled";
     }
 
     public class CrashTag {

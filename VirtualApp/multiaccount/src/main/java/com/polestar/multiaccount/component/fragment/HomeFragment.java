@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,7 +49,6 @@ import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.CustomDialogUtils;
 import com.polestar.multiaccount.utils.ExplosionField;
-import com.polestar.multiaccount.utils.LocalAdUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
@@ -602,12 +600,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void showFullScreenAd(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                LocalAdUtils.showFullScreenAd(mActivity,false);
-            }
-        },AnimatorHelper.DURATION_NORMAL);
     }
 
     public void showFromBottom(){
