@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <GridView
+            <com.polestar.multiaccount.widgets.HeaderGridView
                 android:id="@+id/grid_app"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

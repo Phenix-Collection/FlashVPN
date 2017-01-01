@@ -57,6 +57,7 @@ import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.CustomFloatView;
 import com.polestar.multiaccount.widgets.GridAppCell;
+import com.polestar.multiaccount.widgets.HeaderGridView;
 import com.polestar.multiaccount.widgets.TutorialGuides;
 import com.polestar.multiaccount.widgets.TutorialGuidesUtils;
 import com.polestar.multiaccount.widgets.dragdrop.DragController;
@@ -73,7 +74,7 @@ import java.util.List;
  */
 public class HomeFragment extends BaseFragment {
     private View contentView;
-    private GridView pkgGridView;
+    private HeaderGridView pkgGridView;
     private PackageGridAdapter pkgGridAdapter;
     private List<AppModel> appInfos;
     private CustomFloatView floatView;
@@ -93,7 +94,13 @@ public class HomeFragment extends BaseFragment {
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
-        initAdmobBannerView();
+        boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD);
+        MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
+        headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
+        if (showHeaderAd && headerNativeAdConfigs.size() > 0 ) {
+            initAdmobBannerView();
+            loadHeadNativeAd();
+        }
         mDragController = new DragController(mActivity);
         mDragController.setDragListener(mDragListener);
         mDragController.setWindowToken(contentView.getWindowToken());
@@ -220,10 +227,14 @@ public class HomeFragment extends BaseFragment {
 //        return controller;
 //    }
     private void initView() {
-        nativeAdContainer = (LinearLayout) mActivity.findViewById(R.id.native_ad_container);
+        //nativeAdContainer = (LinearLayout) mActivity.findViewById(R.id.native_ad_container);
+        nativeAdContainer = new LinearLayout(mActivity);
+        nativeAdContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        nativeAdContainer.setOrientation(LinearLayout.VERTICAL);
 
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
-        pkgGridView = (GridView) contentView.findViewById(R.id.grid_app);
+        pkgGridView = (HeaderGridView) contentView.findViewById(R.id.grid_app);
+        pkgGridView.addHeaderView(nativeAdContainer);
         pkgGridAdapter = new PackageGridAdapter();
 //        pkgGridView.setLayoutAnimation(getGridLayoutAnimController());
         pkgGridView.setAdapter(pkgGridAdapter);
@@ -323,6 +334,7 @@ public class HomeFragment extends BaseFragment {
                 nativeAdContainer.removeAllViews();
                 mAdmobExpressView.setVisibility(View.VISIBLE);
                 nativeAdContainer.addView(mAdmobExpressView);
+                pkgGridAdapter.notifyDataSetChanged();
                 ObjectAnimator scaleX = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleX", 0.7f, 1.0f, 1.0f);
                 ObjectAnimator scaleY = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleY", 0.7f, 1.0f, 1.0f);
                 AnimatorSet animSet = new AnimatorSet();
@@ -360,6 +372,7 @@ public class HomeFragment extends BaseFragment {
 
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
+            pkgGridAdapter.notifyDataSetChanged();
             ad.registerViewForInteraction(nativeAdContainer);
             if (ad.getPrivacyIconUrl() != null) {
                 BasicLazyLoadImageView choiceIconImage = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_choices_image);
@@ -443,7 +456,7 @@ public class HomeFragment extends BaseFragment {
             mNativeAdLoader.addAdConfigList(headerNativeAdConfigs);
             ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
-        if (mNativeAdLoader.hasValidAdSource()) {
+        if (mNativeAdLoader.hasValidAdSource() && false) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
@@ -489,12 +502,6 @@ public class HomeFragment extends BaseFragment {
     private List<AdConfig> headerNativeAdConfigs ;
 
     private void initData(){
-        boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD);
-        MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
-        headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
-        if (showHeaderAd && headerNativeAdConfigs.size() > 0 ) {
-            loadHeadNativeAd();
-        }
         CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
             @Override
             public void onInstalled(List<AppModel> clonedApp) {
