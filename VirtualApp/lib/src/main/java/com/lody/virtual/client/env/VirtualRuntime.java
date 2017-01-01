@@ -42,6 +42,9 @@ public class VirtualRuntime {
 		if (sProcessName != null) {
 			return;
 		}
+		if (appInfo == null) {
+			return;
+		}
 		sInitialPackageName = appInfo.packageName;
 		sProcessName = processName;
 //		if(processName.equals("com.google.android.gms"))
