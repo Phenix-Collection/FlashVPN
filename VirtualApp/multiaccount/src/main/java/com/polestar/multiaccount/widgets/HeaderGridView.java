@@ -127,6 +127,10 @@ public class HeaderGridView extends GridView {
     public int getHeaderViewCount() {
         return mHeaderViewInfos.size();
     }
+
+    public int getGridItemStartOffset() {
+        return mHeaderViewInfos.size() * getNumColumns();
+    }
     /**
      * Removes a previously-added header view.
      *

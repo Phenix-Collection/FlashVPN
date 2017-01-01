@@ -254,8 +254,10 @@ public class HomeFragment extends BaseFragment {
 
         pkgGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 //final int i = pkgGridAdapter.getNatureIndex(position);
+                int i =pos - pkgGridView.getGridItemStartOffset();
+                MLogs.d("onItemClick " + i);
                 if(i >= 0 && i < appInfos.size()){
                     if(floatView.isIdle()){
                         startAppLaunchActivity(appInfos.get(i).getPackageName());
@@ -273,7 +275,9 @@ public class HomeFragment extends BaseFragment {
         });
         pkgGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                int i = pos - pkgGridView.getGridItemStartOffset();
+                MLogs.d("onItemLongClick " + i);
                 if (pkgGridAdapter.getItem(i) != null) {
                     DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
                     mDragController.startDrag(iv, iv, pkgGridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
@@ -414,7 +418,7 @@ public class HomeFragment extends BaseFragment {
         try {
             String text = getString(R.string.long_press_tips);
             mTutorialBuilder = new TutorialGuides.Builder(mActivity);
-            mTutorialBuilder.anchorView(pkgGridView.getChildAt(0));
+            mTutorialBuilder.anchorView(pkgGridView.getChildAt(0+pkgGridView.getGridItemStartOffset()));
             mTutorialBuilder.defaultMaxWidth(true);
             mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
                 @Override
@@ -456,7 +460,7 @@ public class HomeFragment extends BaseFragment {
             mNativeAdLoader.addAdConfigList(headerNativeAdConfigs);
             ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
-        if (mNativeAdLoader.hasValidAdSource() && false) {
+        if (mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
@@ -559,7 +563,7 @@ public class HomeFragment extends BaseFragment {
         if (appModel == null) return;
         appModel.setUnEnable(true);
         pkgGridAdapter.notifyDataSetChanged();
-        View view = pkgGridView.getChildAt(pkgGridAdapter.getPosition(appModel));
+        View view = pkgGridView.getChildAt(pkgGridAdapter.getPosition(appModel) + pkgGridView.getGridItemStartOffset());
         if(view != null) {
             mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
                 @Override

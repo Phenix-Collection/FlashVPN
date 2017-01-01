@@ -54,13 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/layout_setting" >
-                <LinearLayout
-                    android:id="@+id/native_ad_container"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </LinearLayout>
                 <!--<com.google.android.gms.ads.NativeExpressAdView-->
                     <!--android:id="@+id/ab_native_express"-->
                     <!--android:layout_width="wrap_content"-->
