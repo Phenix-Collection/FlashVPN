@@ -273,7 +273,7 @@ public class VAppManagerService extends IAppManager.Stub {
 		for (int userId : VUserManagerService.get().getUserIds()) {
 			Intent intent = new Intent(virtualIntent);
 			intent.putExtra(Intent.EXTRA_UID, VUserHandle.getUid(userId, setting.appId));
-			VirtualCore.get().getContext().sendBroadcast(virtualIntent);
+			VirtualCore.get().getContext().sendBroadcast(intent);
 		}
 		VAccountManagerService.get().refreshAuthenticatorCache(null);
 	}
@@ -292,10 +292,11 @@ public class VAppManagerService extends IAppManager.Stub {
 		Uri uri = Uri.fromParts("package", setting.packageName, null);
 		virtualIntent.setData(uri);
 		virtualIntent.putExtra(Intent.EXTRA_REPLACING, false);
+		virtualIntent.putExtra(Intent.EXTRA_DATA_REMOVED, true);
 		for (int userId : VUserManagerService.get().getUserIds()) {
 			Intent intent = new Intent(virtualIntent);
 			intent.putExtra(Intent.EXTRA_UID, VUserHandle.getUid(userId, setting.appId));
-			VirtualCore.get().getContext().sendBroadcast(virtualIntent);
+			VirtualCore.get().getContext().sendBroadcast(intent);
 		}
 		VAccountManagerService.get().refreshAuthenticatorCache(null);
 	}
