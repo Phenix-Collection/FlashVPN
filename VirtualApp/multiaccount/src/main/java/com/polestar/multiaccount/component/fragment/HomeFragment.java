@@ -461,7 +461,7 @@ public class HomeFragment extends BaseFragment {
             mNativeAdLoader.addAdConfigList(headerNativeAdConfigs);
             ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
-        if (false && mNativeAdLoader.hasValidAdSource()) {
+        if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
