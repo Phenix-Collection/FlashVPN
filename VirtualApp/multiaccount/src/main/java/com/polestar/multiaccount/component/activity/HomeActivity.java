@@ -272,29 +272,32 @@ public class HomeActivity extends BaseActivity {
     public boolean onNavigationItemSelected(int position) {
         switch (position) {
             case 0:
+                LockSettingsActivity.start(this,"home_menu");
+                break;
+            case 1:
                 MTAManager.menuNotification(this);
                 Intent notification = new Intent(this, NotificationActivity.class);
                 startActivity(notification);
                 break;
-            case 1:
+            case 2:
                 MTAManager.menuFAQ(this);
                 Intent intentToFAQ = new Intent(this, FaqActivity.class);
                 startActivity(intentToFAQ);
                 break;
-            case 2:
+            case 3:
                 MTAManager.menuFeedback(this);
                 Intent feedback = new Intent(this, FeedbackActivity.class);
                 startActivity(feedback);
                 break;
-            case 3:
+            case 4:
                 MTAManager.menuRate(this);
                 CommonUtils.jumpToMarket(this, getPackageName());
                 break;
-            case 4:
+            case 5:
                 MTAManager.menuShare(this);
                 CommonUtils.shareWithFriends(this);
                 break;
-            case 5:
+            case 6:
                 MTAManager.menuSettings(this);
                 Intent intentToSettings = new Intent(this, SettingsActivity.class);
                 startActivity(intentToSettings);

@@ -18,7 +18,7 @@ import com.polestar.multiaccount.R;
 public class NavigationAdapter extends BaseAdapter {
 
     private Context mContext;
-    private int[] iconArray = new int[]{R.mipmap.notification_settings,R.mipmap.icon_faq,R.mipmap.feedback,
+    private int[] iconArray = new int[]{R.drawable.lock_icon_small, R.mipmap.notification_settings,R.mipmap.icon_faq,R.mipmap.feedback,
             R.mipmap.icon_rate_us,R.mipmap.icon_share,R.mipmap.icon_setting};
     private String[] itemArray;
     private Resources mResources;

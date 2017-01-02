@@ -42,6 +42,17 @@ public class AppConstants {
         public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";
         public static final String SHOWN_LONG_CLICK_GUIDE = "show_guide_for_long_press";
         public static final String LOCKER_FEATHER_ENABLED = "locker_feature_enabled";
+        public static final String ENCODED_PATTERN_PWD = "encoded_pattern_pwd";
+        public static final String IS_LOCKER_SCREEN = "is_locker_screen";
+        public static final String SAFE_QUESTION_ANSWER = "safe_question_answer";
+        public static final String CUSTOMIZED_SAFE_QUESTION = "custom_safe_ques";
+        public static final String SAFE_QUESTION_ID = "safe_question_id";
+    }
+
+    public class AppLockState{
+        public static final int DISABLED = 0;
+        public static final int ENABLED_FOR_CLONE = 1;
+        public static final int ENABLED_FOR_BOTH = 2;
     }
 
     public class CrashTag {

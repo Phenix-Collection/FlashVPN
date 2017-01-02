@@ -7,10 +7,11 @@ import android.view.View;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
-import com.polestar.multiaccount.component.adapter.NotificationAdapter;
+import com.polestar.multiaccount.component.adapter.BasicPackageSwitchAdapter;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
 import com.polestar.multiaccount.widgets.FixedListView;
@@ -21,7 +22,7 @@ public class NotificationActivity extends BaseActivity {
 
     private BlueSwitch mMasterSwitch;
     private FixedListView mListView;
-    private NotificationAdapter mNotificationAdapter;
+    private BasicPackageSwitchAdapter mNotificationAdapter;
     private List<AppModel> mClonedModels;
     private Context mContext;
 
@@ -47,7 +48,22 @@ public class NotificationActivity extends BaseActivity {
 
         mMasterSwitch = (BlueSwitch) findViewById(R.id.switch_notification_dotspace);
         mListView = (FixedListView) findViewById(R.id.switch_notifications_apps);
-        mNotificationAdapter = new NotificationAdapter(mContext);
+        mNotificationAdapter = new BasicPackageSwitchAdapter(mContext);
+        mNotificationAdapter.setOnCheckStatusChangedListener(new BasicPackageSwitchAdapter.OnCheckStatusChangedListener() {
+            @Override
+            public void onCheckStatusChangedListener(AppModel model, boolean status) {
+                model.setNotificationEnable(status);
+                DbManager.updateAppModel(mContext, model);
+//                DbManager.notifyChanged();
+                AppManager.setAppNotificationFlag(model.getPackageName(), status);
+            }
+        });
+        mNotificationAdapter.setIsCheckedCallback(new BasicPackageSwitchAdapter.IsCheckedCallback() {
+            @Override
+            public boolean isCheckedCallback(AppModel model) {
+                return model == null? false: model.getNotificationEnable();
+            }
+        });
         mListView.setAdapter(mNotificationAdapter);
         mNotificationAdapter.setModels(mClonedModels);
         mMasterSwitch.setChecked(PreferencesUtils.getBoolean(mContext, AppConstants.KEY_SERVER_PUSH, true));

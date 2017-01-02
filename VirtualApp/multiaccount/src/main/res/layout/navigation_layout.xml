@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginBottom="53dp"
+            android:layout_marginBottom="32dp"
             android:text="@string/app_alias_name"
             android:textColor="@android:color/white"
             android:textSize="16sp" />

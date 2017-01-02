@@ -120,4 +120,36 @@ public class MD5Utils {
 		}
 	}
 
+	public static String getStringMd5(String plainText) {
+		MessageDigest md = null;
+		try {
+
+			md = MessageDigest.getInstance("MD5");
+			md.update(plainText.getBytes());
+
+		} catch (Exception e) {
+			return null;
+
+		}
+		return encodeHex(md.digest());
+	}
+
+
+	public static String encodeHex(byte[] data) {
+		if (data == null) {
+			return null;
+		}
+
+		final String HEXES = "0123456789abcdef";
+		int len = data.length;
+		StringBuilder hex = new StringBuilder(len * 2);
+
+		for (int i = 0; i < len; ++i) {
+
+			hex.append(HEXES.charAt((data[i] & 0xF0) >>> 4));
+			hex.append(HEXES.charAt((data[i] & 0x0F)));
+		}
+
+		return hex.toString();
+	}
 }

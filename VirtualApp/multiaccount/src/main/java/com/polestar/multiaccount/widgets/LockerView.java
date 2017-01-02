@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.utils.LockPatternUtils;
+import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ResourcesUtil;
 
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by guojia on 2017/1/1.
  */
 
-public abstract class LockerView extends LinearLayout implements View.OnClickListener {
+public class LockerView extends LinearLayout implements View.OnClickListener {
 
     private static final int TITLE_COLOR_WHITE = Color.parseColor("#FFFFFFFF");
     private static final int TITLE_COLOR_GRAY = Color.parseColor("#FF4A4A4A");
@@ -75,15 +77,15 @@ public abstract class LockerView extends LinearLayout implements View.OnClickLis
         }
     }
 
-    public AppLockScreenView(Context context) {
+    public LockerView(Context context) {
         this(context, null);
     }
 
-    public AppLockScreenView(Context context, AttributeSet attrs) {
+    public LockerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AppLockScreenView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LockerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -146,7 +148,7 @@ public abstract class LockerView extends LinearLayout implements View.OnClickLis
             case CONFIRM_PASSWORD:
                 mSwitchOrResetHint.setVisibility(View.VISIBLE);
                 mSwitchOrResetHint.setText(ResourcesUtil.getString(R.string.al_btn_reset));
-                mSwitchOrResetHint.setTextColor(ResourcesUtil.getColor(R.color.applock_antiharass_item_color_gray));
+                mSwitchOrResetHint.setTextColor(ResourcesUtil.getColor(R.color.text_gray_dark));
                 break;
             default:
         }
@@ -214,7 +216,7 @@ public abstract class LockerView extends LinearLayout implements View.OnClickLis
                 mLockPatternView = (LockPatternView) findViewById(R.id.lockpattern_layout);
                 mLockPatternView.setOnPatternListener(mLockPatternViewListener);
             } catch (Exception e) {
-
+                MLogs.e(e);
             }
             mLockPatternViewInflated.set(true);
         }
@@ -254,7 +256,7 @@ public abstract class LockerView extends LinearLayout implements View.OnClickLis
                     updateLockPatternViewAndHint(TYPE_PATTERN_ERROR);
                 } else {
                     if (isPatternCorrect(pattern)) {
-                        SharedPreferenceUtils.setLockScreen(false);
+                        PreferencesUtils.setLockScreen(mContext,false);
                         if (mOnUnlockListener != null){
                             mOnUnlockListener.onCorrectPassword();
                         }

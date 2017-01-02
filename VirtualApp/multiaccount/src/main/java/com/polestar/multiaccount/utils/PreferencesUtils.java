@@ -3,6 +3,7 @@ package com.polestar.multiaccount.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.polestar.multiaccount.constant.AppConstants;
 
@@ -245,5 +246,45 @@ public class PreferencesUtils {
 
     public static void setLongClickGuideShowed(Context c){
         putBoolean(c, AppConstants.PreferencesKey.SHOWN_LONG_CLICK_GUIDE, true);
+    }
+
+    public static String getEncodedPatternPassword(Context c) {
+        return getString(c, AppConstants.PreferencesKey.ENCODED_PATTERN_PWD);
+    }
+
+    public static void setEncodedPatternPassword(Context c, String pwd) {
+        putString(c, AppConstants.PreferencesKey.ENCODED_PATTERN_PWD, pwd );
+    }
+
+    public static void setLockScreen(Context c, boolean b) {
+        putBoolean(c,AppConstants.PreferencesKey.IS_LOCKER_SCREEN, b);
+    }
+
+    public static boolean isLockScreen(Context c ) {
+        return getBoolean(c,AppConstants.PreferencesKey.IS_LOCKER_SCREEN, false);
+    }
+
+    public static boolean isSafeQuestionSet(Context c ) {
+        return !TextUtils.isEmpty(getSafeAnswer(c));
+    }
+
+    public static String getSafeAnswer(Context c) {
+        return getString(c, AppConstants.PreferencesKey.SAFE_QUESTION_ANSWER, null);
+    }
+
+    public static void setSafeAnswer(Context c, String answer) {
+        putString(c, AppConstants.PreferencesKey.SAFE_QUESTION_ANSWER, answer);
+    }
+
+    public static int getSafeQuestionId(Context c) {
+        return getInt(c, AppConstants.PreferencesKey.SAFE_QUESTION_ID, 0);
+    }
+
+    public static void setSafeQuestionId(Context c, int id) {
+        putInt(c, AppConstants.PreferencesKey.SAFE_QUESTION_ID, id);
+    }
+
+    public static void setCustomizedQuestion(Context c, String strQuestion) {
+        putString(c, AppConstants.PreferencesKey.CUSTOMIZED_SAFE_QUESTION, strQuestion);
     }
 }

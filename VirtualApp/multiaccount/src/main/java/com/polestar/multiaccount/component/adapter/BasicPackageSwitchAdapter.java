@@ -16,13 +16,30 @@ import com.polestar.multiaccount.widgets.BlueSwitch;
 
 import java.util.List;
 
-public class NotificationAdapter extends BaseAdapter {
+public class BasicPackageSwitchAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private List<AppModel> mModels;
     private Context mContext;
+    private OnCheckStatusChangedListener mListener;
+    private IsCheckedCallback mCallback;
 
-    public NotificationAdapter(Context context) {
+    public void setOnCheckStatusChangedListener(OnCheckStatusChangedListener l) {
+        mListener = l;
+    }
+
+    public interface OnCheckStatusChangedListener {
+        void onCheckStatusChangedListener(AppModel model, boolean status);
+    }
+
+    public interface IsCheckedCallback {
+        boolean isCheckedCallback(AppModel model);
+    }
+
+    public void setIsCheckedCallback(IsCheckedCallback cb) {
+        mCallback = cb;
+    }
+    public BasicPackageSwitchAdapter(Context context) {
         mContext = context;
         this.mInflater = LayoutInflater.from(context);
     }
@@ -68,16 +85,15 @@ public class NotificationAdapter extends BaseAdapter {
         } else {
             viewHolder.divider.setVisibility(View.VISIBLE);
         }
-        viewHolder.switchView.setChecked(model.getNotificationEnable());
+        viewHolder.switchView.setChecked(mCallback == null? false: mCallback.isCheckedCallback(model));
         viewHolder.switchView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 boolean val = ((BlueSwitch) v).isChecked();
-                model.setNotificationEnable(val);
-                DbManager.updateAppModel(mContext, model);
-//                DbManager.notifyChanged();
-                AppManager.setAppNotificationFlag(model.getPackageName(), val);
+                if (mListener != null) {
+                    mListener.onCheckStatusChangedListener(model, val);
+                }
             }
         });
 

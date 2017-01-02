@@ -40,4 +40,13 @@
 
     <color name="guidetooltip_background">#5171f2</color>
     <color name="guidetooltip_arrow">#5171f2</color>
+
+    <color name="applock_lockpattern_pattern_path_light">#FF4A4A4A</color>
+    <color name="applock_lockpattern_pattern_path_white_light">#FFFFFFFF</color>
+    <color name="applock_lockpattern_pattern_path_red_light">#FFEC4F62</color>
+    <color name="applock_change_password_mode_text_color">#39b549</color>
+    <color name="applock_antiharass_item_color_gray">#8d8d8d</color>
+    <color name="applock_passcode_warning_text_color">#FFF96E79</color>
+
+    <color name="applock_scanresult_item_title">#7f7f7f</color>
 </resources>

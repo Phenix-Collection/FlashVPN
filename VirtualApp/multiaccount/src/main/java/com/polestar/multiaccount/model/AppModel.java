@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.polestar.multiaccount.constant.AppConstants;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -36,6 +38,8 @@ public class AppModel implements Parcelable {
     private Bitmap customIcon;
     @Transient
     private boolean unEnable;
+    @Transient
+    private int lockerState = 0;
 
     public AppModel() {
         //For Database
@@ -59,7 +63,7 @@ public class AppModel implements Parcelable {
 
     @Generated(hash = 396567536)
     public AppModel(Long id, String packageName, String path, String name,
-                    String description, int index, long clonedTime, boolean notificationEnable) {
+            String description, int index, long clonedTime, boolean notificationEnable) {
         this.id = id;
         this.packageName = packageName;
         this.path = path;
@@ -207,6 +211,14 @@ public class AppModel implements Parcelable {
 
     public boolean getNotificationEnable() {
         return this.notificationEnable;
+    }
+
+    public void setLockerState(int state) {
+        lockerState = state;
+    }
+
+    public int getLockerState() {
+        return lockerState;
     }
 
     public Bitmap getCustomIcon() {

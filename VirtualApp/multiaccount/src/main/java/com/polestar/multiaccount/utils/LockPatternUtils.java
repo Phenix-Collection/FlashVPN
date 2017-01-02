@@ -7,6 +7,7 @@ package com.polestar.multiaccount.utils;
 
 import android.text.TextUtils;
 
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.widgets.LockPatternView;
 
 import java.math.BigInteger;
@@ -116,11 +117,11 @@ public class LockPatternUtils {
         }
 
         public String getEncodedPatternPassword() {
-            return SharedPreferenceUtils.getEncodedPatternPassword();
+            return PreferencesUtils.getEncodedPatternPassword(MApp.getApp());
         }
 
         public void setEncodedPatternPassword(String encodedPwd) {
-            SharedPreferenceUtils.setEncodedPatternPassword(encodedPwd);
+            PreferencesUtils.setEncodedPatternPassword(MApp.getApp(),encodedPwd);
         }
 
     }

@@ -63,6 +63,7 @@
     <string name="settings_right">2016 Polestar Applab All rights reserved</string>
 
     <array name="navigationItem">
+        <item name="navigation_notifications">Privacy Locker</item>
         <item name="navigation_notifications">Notifications</item>
         <item name="navigation_FAQ">FAQ</item>
         <item name="navigation_feedback">FeedBack</item>
@@ -95,5 +96,85 @@
     <string name="lock_settings_title">Locker Settings</string>
     <string name="enable_lock_settings_title">Privacy Locker</string>
     <string name="enable_lock_settings_content">Toggle to enable or disable privacy locker feature</string>
-    <string name="password_setting_title">Change Password</string>
+    <string name="password_setting_title">Password Setting</string>
+    <string name="password_set_no_question">No secure question was set.</string>
+    <string name="password_set_complete">Password was set.</string>
+    <string name="password_setting_content">Click to set password and security question</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="lock_settings_for_apps">Enable privacy locker for cloned applications</string>
+
+    <string name="al_enter_passcode">Enter passcode</string>
+    <string name="al_lockpattern_unlock_to_continue">Confirm your identity</string>
+    <string name="al_lockpattern_draw_unlock_pattern">Draw Pattern to Unlock</string>
+    <string name="al_use_passcode">Change to PIN code</string>
+    <string name="al_use_unlock_pattern">Change to pattern</string>
+    <string name="al_lockpattern_create_new_password_subtitle">Passcode will be used to protect apps</string>
+    <string name="al_lockpattern_create_new_password">Set new passcode</string>
+    <string name="al_lockpattern_confirm_password">Confirm passcode</string>
+    <string name="al_change_enter_again">Enter again</string>
+    <string name="al_lockpattern_confirm_unlock_pattern">Please Confirm Pattern</string>
+    <string name="al_lockpattern_confirm_unlock_pattern_hint">Draw again</string>
+    <string name="al_btn_reset">Reset</string>
+    <string name="al_lockpattern_release_hint">Release finger when done</string>
+    <string name="al_lockpattern_try_again">Patterns Do Not Match, Please Try Again.</string>
+    <string name="applock_permission_contacts_toast">This helps you to retrieve your password.</string>
+    <string name="al_lockpattern_create_unlock_pattern">Set an New Pattern</string>
+    <string name="al_lockpattern_number_no_correct">Please Connect at Least 4 Dots</string>
+    <string name="al_lockpattern_create_new_password_outofbound">Passcode must be less than 10 digits</string>
+    <string name="al_btn_finish">Done</string>
+    <string name="al_btn_next">Next</string>
+    <string name="al_lockpattern_error">Wrong Pattern, Please Try Again.</string>
+    <string name="al_changepassword">Change Password</string>
+    <string name="al_unlcok_pattern">Unlock Pattern</string>
+    <string name="al_passcode">Passcode</string>
+    <string name="al_invisable_patterns">Hide Pattern</string>
+    <string name="al_change_security_question">Change Secure Question</string>
+    <string name="app_lock_safe_info_hint">To verify your identity when resetting password</string>
+    <string name="app_lock_safe_question_hint">Set a Secure Question</string>
+    <string name="app_lock_safe_answer_hint">Enter the answer (Up to 20 characters)</string>
+    <string name="app_lock_verifier_tile">Set a Secure Question</string>
+    <string name="app_lock_reset_password">Reset passwords</string>
+
+    <string name="app_lock_safe_answer_reset_hint">Please enter the answer</string>
+    <string name="app_lock_date_picker_month">month</string>
+    <string name="app_lock_safe_question_toast_ask_Question">You didn\'t set a Secure Question</string>
+    <string name="app_lock_safe_question_toast_ask_Answer">You didn\'t enter answer yet.</string>
+    <string name="app_lock_safe_question_toast_error">Authentication failed, please enter again</string>
+
+    <string-array name="month">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
+
+    <string-array name="secure_questions">
+        <item>When\'s your birthday?</item>
+        <item>What\'s your father\'s name?</item>
+        <item>What\'s your mother\'s name?</item>
+        <item>When are you married?</item>
+        <item>Where did you go to junior school?</item>
+        <item>Where did you go to high school?</item>
+        <item>What\'s your favorite movie?</item>
+        <item>Customize questions</item>
+    </string-array>
+
+    <string-array name="secure_question_by_day_config">
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+    </string-array>
 </resources>
