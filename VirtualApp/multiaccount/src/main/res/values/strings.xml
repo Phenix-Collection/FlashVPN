@@ -97,8 +97,9 @@
     <string name="enable_lock_settings_title">Privacy Locker</string>
     <string name="enable_lock_settings_content">Toggle to enable or disable privacy locker feature</string>
     <string name="password_setting_title">Password Setting</string>
-    <string name="password_set_no_question">No secure question was set.</string>
+    <string name="password_set_no_question">No secure question set.</string>
     <string name="password_set_complete">Password was set.</string>
+    <string name="no_password_set">Please set a password for locker at first.</string>
     <string name="password_setting_content">Click to set password and security question</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="lock_settings_for_apps">Enable privacy locker for cloned applications</string>

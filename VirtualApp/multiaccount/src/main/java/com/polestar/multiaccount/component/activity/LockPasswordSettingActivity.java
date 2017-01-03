@@ -144,9 +144,10 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        MLogs.d("password onActivityResult:　" + requestCode + ":" + resultCode);
         switch (requestCode){
             case REQUEST_SET_QUESTION:
-                switch (requestCode) {
+                switch (resultCode) {
                     case Activity.RESULT_CANCELED:
                         ToastUtils.ToastDefult(this, getResources().getString(R.string.password_set_no_question));
                         break;

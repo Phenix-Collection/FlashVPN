@@ -10,9 +10,12 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.BasicPackageSwitchAdapter;
 import com.polestar.multiaccount.constant.AppConstants;
+import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.CloneHelper;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
 
 import android.app.Activity;
@@ -81,6 +84,8 @@ public class LockSettingsActivity extends BaseActivity {
                             @Override
                             public void onCheckStatusChangedListener(AppModel model, boolean status) {
                                 //
+                                model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                                DbManager.updateAppModel(mContext, model);
                             }
                         });
                         mAppsAdapter.setIsCheckedCallback(new BasicPackageSwitchAdapter.IsCheckedCallback() {
@@ -126,8 +131,10 @@ public class LockSettingsActivity extends BaseActivity {
         if (enabled) {
             if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext))) {
                 LockPasswordSettingActivity.start(this, true, REQUEST_SET_PASSWORD);
+                ToastUtils.ToastDefult(this, getString(R.string.no_password_set));
+            } else {
+                detailedSettingLayout.setVisibility(View.VISIBLE);
             }
-            detailedSettingLayout.setVisibility(View.VISIBLE);
         }else{
             detailedSettingLayout.setVisibility(View.GONE);
         }
@@ -140,10 +147,12 @@ public class LockSettingsActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        MLogs.d("onActivityResult:　" + requestCode + ":" + resultCode);
         switch (requestCode) {
             case REQUEST_SET_PASSWORD:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
+                        onLockerEnabled(true);
                         break;
                     case Activity.RESULT_CANCELED:
                         onLockerEnabled(false);
