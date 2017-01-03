@@ -25,11 +25,13 @@ public class AppModel implements Parcelable {
     private String path;
     private String name;
     private String description;
+    @NotNull
     private int index;
 
     @NotNull
     private long clonedTime;
     private boolean notificationEnable;
+    private int lockerState = 0;
     @Transient
     private PackageInfo packageInfo;
     @Transient
@@ -38,8 +40,7 @@ public class AppModel implements Parcelable {
     private Bitmap customIcon;
     @Transient
     private boolean unEnable;
-    @Transient
-    private int lockerState = 0;
+
 
     public AppModel() {
         //For Database
@@ -50,6 +51,7 @@ public class AppModel implements Parcelable {
         this.packageName = packageInfo.packageName;
         this.path = packageInfo.applicationInfo.publicSourceDir;
         this.notificationEnable = true;
+        this.lockerState = AppConstants.AppLockState.DISABLED;
         loadData(context);
     }
 
@@ -58,12 +60,12 @@ public class AppModel implements Parcelable {
         path = in.readString();
         name = in.readString();
         notificationEnable = in.readByte() != 0;
+        lockerState = in.readInt();
         packageInfo = in.readParcelable(getClass().getClassLoader());
     }
 
-    @Generated(hash = 396567536)
-    public AppModel(Long id, String packageName, String path, String name,
-            String description, int index, long clonedTime, boolean notificationEnable) {
+    @Generated(hash = 847407646)
+    public AppModel(Long id, String packageName, String path, String name, String description, int index, long clonedTime, boolean notificationEnable, int lockerState) {
         this.id = id;
         this.packageName = packageName;
         this.path = path;
@@ -72,6 +74,7 @@ public class AppModel implements Parcelable {
         this.index = index;
         this.clonedTime = clonedTime;
         this.notificationEnable = notificationEnable;
+        this.lockerState = lockerState;
     }
 
     @Override
@@ -80,6 +83,7 @@ public class AppModel implements Parcelable {
         dest.writeString(path);
         dest.writeString(name);
         dest.writeByte((byte) (notificationEnable ? 1 : 0));
+        dest.writeInt(lockerState);
         dest.writeParcelable(packageInfo, flags);
     }
 
