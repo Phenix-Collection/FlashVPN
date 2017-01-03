@@ -59,12 +59,12 @@ public class MLogs {
     }
 
     public static void logBug(String tag, String msg) {
-        e(tag, msg);
+        Log.e(tag, msg);
         BuglyLog.e(tag, msg);
     }
 
     public static void logBug(String msg) {
-        e(DEFAULT_TAG, msg);
+        Log.e(DEFAULT_TAG, msg);
         BuglyLog.e(DEFAULT_TAG, msg);
     }
 }
