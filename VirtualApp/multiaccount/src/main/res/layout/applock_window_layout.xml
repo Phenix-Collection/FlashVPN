@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:paddingTop="50dp">
 
-        <com.cmcm.multiaccount.ui.widget.FeedbackImageView
+        <com.polestar.multiaccount.widgets.FeedbackImageView
             android:id="@+id/window_applock_icon"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -41,7 +41,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center"
         android:clipChildren="false">
         <com.polestar.multiaccount.widgets.locker.LockPatternView
@@ -50,4 +51,15 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/forgot_password_tv"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:text="@string/applock_forgot_password"
+        android:autoLink="all"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="bottom|center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

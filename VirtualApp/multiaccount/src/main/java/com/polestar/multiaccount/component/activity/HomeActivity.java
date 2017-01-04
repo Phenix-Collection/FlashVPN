@@ -113,6 +113,12 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 onNavigationItemSelected(i);
+                drawer.closeDrawer(GravityCompat.START);
+//                int drawerLockMode = drawer.getDrawerLockMode(GravityCompat.START);
+//                if (drawer.isDrawerVisible(GravityCompat.START)
+//                        && (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_OPEN)) {
+//                    drawer.closeDrawer(GravityCompat.START);
+//                }
             }
         });
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {

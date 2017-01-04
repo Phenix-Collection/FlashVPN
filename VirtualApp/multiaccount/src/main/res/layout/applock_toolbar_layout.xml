@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cmx_toolbar_applock"
+    android:id="@+id/toolbar_applock"
     android:layout_width="match_parent"
     android:layout_height="56dp"
     >
     <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@mipmap/ic_launcher"
         android:layout_gravity="center"
-        android:layout_marginLeft="20dp"/>
+        android:layout_marginLeft="6dp"/>
+    <TextView
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold|italic"
+        android:textColor="@color/white"
+        android:text="@string/powered_by_app"
+        android:textSize="14sp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,6 +43,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:visibility="gone"
             android:layout_gravity="right">
             <ImageView
                 android:layout_width="20dp"

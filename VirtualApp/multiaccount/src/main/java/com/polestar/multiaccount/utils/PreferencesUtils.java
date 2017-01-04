@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.polestar.multiaccount.component.activity.LockSettingsActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 
 /**
@@ -290,5 +291,13 @@ public class PreferencesUtils {
 
     public static boolean getAppLockInVisiablePatternPath(Context c) {
         return getBoolean(c, AppConstants.PreferencesKey.APP_LOCK_INVISIBLE_PATTERN_PATH, false);
+    }
+
+    public static void setLockerEnabled(Context c, boolean enabled) {
+        putBoolean(c,AppConstants.PreferencesKey.LOCKER_FEATHER_ENABLED,enabled);
+    }
+
+    public static boolean isLockerEnabled(Context c) {
+        return getBoolean(c,AppConstants.PreferencesKey.LOCKER_FEATHER_ENABLED,false);
     }
 }

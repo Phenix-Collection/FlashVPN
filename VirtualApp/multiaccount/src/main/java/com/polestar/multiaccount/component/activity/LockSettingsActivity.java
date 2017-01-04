@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.polestar.multiaccount.R;
+import com.polestar.multiaccount.component.AppLockMonitor;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.BasicPackageSwitchAdapter;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -117,8 +118,6 @@ public class LockSettingsActivity extends BaseActivity {
         lockerEnableSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferencesUtils.putBoolean(LockSettingsActivity.this,
-                        AppConstants.PreferencesKey.LOCKER_FEATHER_ENABLED,lockerEnableSwitch.isChecked());
                 onLockerEnabled(lockerEnableSwitch.isChecked());
             }
         });
@@ -134,11 +133,14 @@ public class LockSettingsActivity extends BaseActivity {
                 ToastUtils.ToastDefult(this, getString(R.string.no_password_set));
             } else {
                 detailedSettingLayout.setVisibility(View.VISIBLE);
+                PreferencesUtils.setLockerEnabled(this, true);
             }
         }else{
             detailedSettingLayout.setVisibility(View.GONE);
+            PreferencesUtils.setLockerEnabled(this, false);
         }
     }
+
     public void onPasswordSettingClick(View view) {
         PreferencesUtils.setEncodedPatternPassword(mContext,"");
         LockPasswordSettingActivity.start(this, true, REQUEST_SET_PASSWORD);
@@ -161,5 +163,11 @@ public class LockSettingsActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppLockMonitor.getInstance().onLockSettingChanged();
     }
 }
