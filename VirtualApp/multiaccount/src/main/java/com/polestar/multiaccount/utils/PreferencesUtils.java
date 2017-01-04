@@ -287,4 +287,8 @@ public class PreferencesUtils {
     public static void setCustomizedQuestion(Context c, String strQuestion) {
         putString(c, AppConstants.PreferencesKey.CUSTOMIZED_SAFE_QUESTION, strQuestion);
     }
+
+    public static boolean getAppLockInVisiablePatternPath(Context c) {
+        return getBoolean(c, AppConstants.PreferencesKey.APP_LOCK_INVISIBLE_PATTERN_PATH, false);
+    }
 }

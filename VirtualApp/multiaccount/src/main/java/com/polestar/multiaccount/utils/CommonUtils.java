@@ -11,7 +11,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.activity.AppStartActivity;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -23,7 +25,12 @@ import java.util.List;
  * Created by yxx on 2016/7/21.
  */
 public class CommonUtils {
-
+    public static void gotoHomeScreen() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        MApp.getApp().startActivity(intent);
+    }
     public static void createShortCut(Context context, AppModel appModel) {
         Bitmap iconBitmap = BitmapUtils.createCustomIcon(context, appModel.initDrawable(context));
         String appName = appModel.getName();
@@ -191,5 +198,13 @@ public class CommonUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean isSamsungDevice() {
+        final String manufacturer = Build.MANUFACTURER.toLowerCase();
+        if (manufacturer.equals("samsung")) {
+            return true;
+        }
+        return false;
     }
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cmx_toolbar_applock"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    >
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@mipmap/ic_launcher"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--<com.cmcm.multiaccount.ui.widget.FeedbackLinearLayout-->
+            <!--android:id="@+id/cmx_toolbar_applock_menu"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_gravity="right">-->
+            <!--<ImageView-->
+                <!--android:layout_width="20dp"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:background="@drawable/menu_dot_window"-->
+                <!--android:clickable="false"/>-->
+        <!--</com.cmcm.multiaccount.ui.widget.FeedbackLinearLayout> -->
+        <LinearLayout
+            android:id="@+id/cmx_toolbar_applock_menu"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="right">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:background="@drawable/menu_dot"
+                android:clickable="false"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

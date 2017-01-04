@@ -8,7 +8,7 @@ package com.polestar.multiaccount.utils;
 import android.text.TextUtils;
 
 import com.polestar.multiaccount.MApp;
-import com.polestar.multiaccount.widgets.LockPatternView;
+import com.polestar.multiaccount.widgets.locker.LockPatternView;
 
 import java.math.BigInteger;
 import java.util.List;

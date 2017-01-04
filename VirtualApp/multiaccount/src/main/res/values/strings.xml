@@ -141,6 +141,7 @@
     <string name="app_lock_safe_question_toast_ask_Question">You didn\'t set a Secure Question</string>
     <string name="app_lock_safe_question_toast_ask_Answer">You didn\'t enter answer yet.</string>
     <string name="app_lock_safe_question_toast_error">Authentication failed, please enter again</string>
+    <string name="applock_window_title">Privacy Locker is Protecting</string>
 
     <string-array name="month">
         <item>Jan</item>

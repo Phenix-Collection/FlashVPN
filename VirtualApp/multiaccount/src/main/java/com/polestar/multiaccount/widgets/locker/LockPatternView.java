@@ -1,4 +1,4 @@
-package com.polestar.multiaccount.widgets;
+package com.polestar.multiaccount.widgets.locker;
 
 /*
  * Copyright (C) 2007 The Android Open Source Project

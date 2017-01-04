@@ -3,12 +3,9 @@ package com.polestar.multiaccount.component.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.polestar.multiaccount.R;
@@ -16,7 +13,7 @@ import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ToastUtils;
-import com.polestar.multiaccount.widgets.LockerView;
+import com.polestar.multiaccount.widgets.locker.LockerView;
 
 public class LockPasswordSettingActivity extends BaseActivity implements View.OnClickListener {
     public static final String EXTRA_MODE_RESET_PASSWORD = "launch_mode";

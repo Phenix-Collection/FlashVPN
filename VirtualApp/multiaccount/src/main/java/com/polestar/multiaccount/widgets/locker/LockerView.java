@@ -1,4 +1,4 @@
-package com.polestar.multiaccount.widgets;
+package com.polestar.multiaccount.widgets.locker;
 
 import android.content.Context;
 import android.graphics.Color;

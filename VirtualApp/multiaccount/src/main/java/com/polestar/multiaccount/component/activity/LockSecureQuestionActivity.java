@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +19,7 @@ import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MD5Utils;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ResourcesUtil;
-import com.polestar.multiaccount.widgets.PopupMenu;
+import com.polestar.multiaccount.widgets.MenuPopup;
 import com.polestar.multiaccount.widgets.WheelView;
 
 import java.util.ArrayList;
@@ -185,7 +182,7 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
     }
 
     private void showQuestionMenu(){
-        ArrayList<PopupMenu.MenuPopItem> items = new ArrayList<>();
+        ArrayList<MenuPopup.MenuPopItem> items = new ArrayList<>();
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,12 +216,12 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
                     mEtQuestion.requestFocus();
                 }
 
-                PopupMenu.dismiss();
+                MenuPopup.dismiss();
             }
         };
-        PopupMenu.MenuPopItem item = null;
+        MenuPopup.MenuPopItem item = null;
         for (int i = 0; i < mQuestionArray.length;i++){
-            item = new PopupMenu.MenuPopItem(i, mQuestionArray[i], clickListener);
+            item = new MenuPopup.MenuPopItem(i, mQuestionArray[i], clickListener);
             items.add(item);
         }
 
@@ -232,7 +229,7 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
             return;
         }
         int x = - DisplayUtils.dip2px(this,145);
-        PopupMenu.show(mBtnShowQuestion,x,items);
+        MenuPopup.show(mBtnShowQuestion,x,items);
     }
 
 
@@ -275,7 +272,7 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
     @Override
     protected void onPause() {
         super.onPause();
-        PopupMenu.dismiss();
+        MenuPopup.dismiss();
     }
 
     private ArrayList<String> createMonthString() {
