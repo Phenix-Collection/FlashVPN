@@ -1,5 +1,7 @@
 package com.polestar.multiaccount.component.activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,13 +9,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.duapps.ad.offerwall.ui.OfferWallAct;
 import com.polestar.ad.AdConfig;
-import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -24,7 +27,6 @@ import com.polestar.multiaccount.component.fragment.HomeFragment;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppListUtils;
-import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DrawerBlurHelper;
 import com.polestar.multiaccount.utils.MLogs;
@@ -49,7 +51,8 @@ public class HomeActivity extends BaseActivity {
     private View navigationLayout;
     private TextView appNameTv;
     private DrawerBlurHelper drawerBlurHelper;
-    private GifView giftView;
+    private GifView giftGifView;
+    private ImageView giftIconView;
     private FuseAdLoader adLoader;
     private boolean isInterstitialAdClicked;
     private boolean isInterstitialAdLoaded;
@@ -71,10 +74,11 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void showOfferWall(){
-        giftView.setGifResource(R.drawable.front_page_gift_icon);
-        giftView.setVisibility(View.VISIBLE);
-        giftView.play();
-        giftView.setOnClickListener(new View.OnClickListener() {
+        giftGifView.setGifResource(R.drawable.front_page_gift_icon);
+        giftIconView.setVisibility(View.GONE);
+        giftGifView.setVisibility(View.VISIBLE);
+        giftGifView.play();
+        giftGifView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MTAManager.homeGiftClick(HomeActivity.this, "duapps_offer_wall");
@@ -99,8 +103,10 @@ public class HomeActivity extends BaseActivity {
         navigationLayout = findViewById(R.id.navigation_layout);
         appNameTv = (TextView) findViewById(R.id.app_name);
         forgroundLayout = findViewById(R.id.blur_forground);
-        giftView = (GifView) findViewById(R.id.gifView);
-        giftView.setVisibility(View.INVISIBLE);
+        giftGifView = (GifView) findViewById(R.id.gifView);
+        giftIconView = (ImageView) findViewById(R.id.gift_icon);
+        giftIconView.setVisibility(View.GONE);
+        giftGifView.setVisibility(View.GONE);
 
         navigationList.setAdapter(new NavigationAdapter(this));
         navigationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -146,7 +152,7 @@ public class HomeActivity extends BaseActivity {
             }
         });
         if (isShowOfferWall) {
-            giftView.postDelayed(new Runnable() {
+            giftGifView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     showOfferWall();
@@ -168,10 +174,17 @@ public class HomeActivity extends BaseActivity {
                 @Override
                 public void onAdLoaded(IAd ad) {
                     isInterstitialAdLoaded = true;
-                    giftView.setGifResource(R.drawable.front_page_gift_icon);
-                    giftView.setVisibility(View.VISIBLE);
-                    giftView.play();
-                    giftView.setOnClickListener(new View.OnClickListener() {
+                   // giftGifView.setGifResource(R.drawable.front_page_gift_icon);
+                    giftIconView.setImageResource(R.drawable.ad_taged_gift_icon);
+                    giftIconView.setVisibility(View.VISIBLE);
+                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIconView, "scaleX", 0.7f, 1.3f, 1.0f);
+                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIconView, "scaleY", 0.7f, 1.3f, 1.0f);
+                    AnimatorSet animSet = new AnimatorSet();
+                    animSet.play(scaleX).with(scaleY);
+                    animSet.setInterpolator(new BounceInterpolator());
+                    animSet.setDuration(800).start();
+                    giftGifView.setVisibility(View.GONE);
+                    giftIconView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             isInterstitialAdClicked = true;
@@ -190,7 +203,7 @@ public class HomeActivity extends BaseActivity {
                 }
             });
         } else {
-            giftView.postDelayed(new Runnable() {
+            giftGifView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     showOfferWall();
@@ -205,7 +218,8 @@ public class HomeActivity extends BaseActivity {
         if (! isShowOfferWall) {
             MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
             if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
-                giftView.setVisibility(View.GONE);
+                giftGifView.setVisibility(View.GONE);
+                giftIconView.setVisibility(View.GONE);
                 loadAd();
             }
         }

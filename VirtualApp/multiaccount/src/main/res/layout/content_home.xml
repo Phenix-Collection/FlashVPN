@@ -50,6 +50,14 @@
                     android:layout_alignParentRight="true"
                     android:layout_height="23dp" />
 
+                <ImageView
+                    android:id="@+id/gift_icon"
+                    android:layout_width="23dp"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="23dp" />
+
             </RelativeLayout>
             <LinearLayout
                 android:orientation="vertical"
