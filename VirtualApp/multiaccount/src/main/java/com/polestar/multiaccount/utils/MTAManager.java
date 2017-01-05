@@ -97,6 +97,11 @@ public class MTAManager {
         StatService.trackCustomKVEvent(context, "app_crash", prop);
     }
 
+    public static void lockerEnable(Context context, String status) {
+        Properties prop = new Properties();
+        prop.setProperty("status", status);
+        StatService.trackCustomKVEvent(context, "locker_enable", prop);
+    }
     public static void homeMenu(Context context) {
         StatService.trackCustomEvent(context, "home_menu");
     }

@@ -15,6 +15,7 @@ import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
@@ -42,6 +43,7 @@ public class LockSettingsActivity extends BaseActivity {
     private List<AppModel> mClonedModels;
     private BasicPackageSwitchAdapter mAppsAdapter;
     private ListView mCloneAppsListView;
+    private boolean isSettingChanged = false;
 
     public static void start(Activity activity, String from) {
         Intent intent = new Intent(activity, LockSettingsActivity.class);
@@ -85,10 +87,13 @@ public class LockSettingsActivity extends BaseActivity {
                             @Override
                             public void onCheckStatusChangedListener(AppModel model, boolean status) {
                                 //
+                                isSettingChanged = true;
                                 if(status) {
                                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                                    MTAManager.lockerEnable(LockSettingsActivity.this, "enable:"+model.getPackageName());
                                 } else {
                                     model.setLockerState(AppConstants.AppLockState.DISABLED);
+                                    MTAManager.lockerEnable(LockSettingsActivity.this, "disable:"+model.getPackageName());
                                 }
                                 DbManager.updateAppModel(mContext, model);
                             }
@@ -122,6 +127,7 @@ public class LockSettingsActivity extends BaseActivity {
         lockerEnableSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isSettingChanged = true;
                 onLockerEnabled(lockerEnableSwitch.isChecked());
             }
         });
@@ -135,18 +141,22 @@ public class LockSettingsActivity extends BaseActivity {
             if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
                 LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
                 ToastUtils.ToastDefult(this, getString(R.string.no_password_set));
+                MTAManager.lockerEnable(this, "no_password");
             } else {
                 detailedSettingLayout.setVisibility(View.VISIBLE);
                 PreferencesUtils.setLockerEnabled(this, true);
+                MTAManager.lockerEnable(this, "enable");
             }
         }else{
             detailedSettingLayout.setVisibility(View.GONE);
             PreferencesUtils.setLockerEnabled(this, false);
+            MTAManager.lockerEnable(this, "disable");
         }
     }
 
     public void onPasswordSettingClick(View view) {
         //PreferencesUtils.setEncodedPatternPassword(mContext,"");
+        isSettingChanged = true;
         LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
     }
 
@@ -172,6 +182,8 @@ public class LockSettingsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        PreferencesUtils.setLockSettingChangeMark(this);
+        if (isSettingChanged) {
+            PreferencesUtils.setLockSettingChangeMark(this);
+        }
     }
 }
