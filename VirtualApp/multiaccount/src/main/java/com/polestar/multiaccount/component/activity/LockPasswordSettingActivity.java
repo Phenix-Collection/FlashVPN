@@ -31,10 +31,10 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
     public static void start(Activity activity, boolean resetPwd, String title, int requestCode) {
         Intent intent = new Intent(activity, LockPasswordSettingActivity.class);
         intent.putExtra(EXTRA_MODE_RESET_PASSWORD, resetPwd);
-        activity.startActivityForResult(intent,requestCode);
         if (title != null) {
             intent.putExtra(EXTRA_TITLE, title);
         }
+        activity.startActivityForResult(intent,requestCode);
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
     @Override
