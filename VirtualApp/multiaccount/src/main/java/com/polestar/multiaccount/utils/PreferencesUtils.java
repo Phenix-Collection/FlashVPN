@@ -289,6 +289,10 @@ public class PreferencesUtils {
         putString(c, AppConstants.PreferencesKey.CUSTOMIZED_SAFE_QUESTION, strQuestion);
     }
 
+    public static String getCustomizedQuestion(Context c) {
+        return getString(c, AppConstants.PreferencesKey.CUSTOMIZED_SAFE_QUESTION, null);
+    }
+
     public static boolean getAppLockInVisiablePatternPath(Context c) {
         return getBoolean(c, AppConstants.PreferencesKey.APP_LOCK_INVISIBLE_PATTERN_PATH, false);
     }
@@ -299,5 +303,13 @@ public class PreferencesUtils {
 
     public static boolean isLockerEnabled(Context c) {
         return getBoolean(c,AppConstants.PreferencesKey.LOCKER_FEATHER_ENABLED,false);
+    }
+
+    public static void setLockSettingChangeMark(Context c) {
+        putLong(c, "lock_setting_mark", System.currentTimeMillis());
+    }
+
+    public static long getLockSettingChangeMark(Context c) {
+        return getLong(c, "lock_setting_mark", 0);
     }
 }

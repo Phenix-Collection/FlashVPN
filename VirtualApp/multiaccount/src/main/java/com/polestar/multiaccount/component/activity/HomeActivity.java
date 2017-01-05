@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -31,11 +32,13 @@ import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DrawerBlurHelper;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.RenderScriptManager;
 import com.polestar.multiaccount.utils.UpdateSDKManager;
 import com.polestar.multiaccount.widgets.GifView;
 
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 
@@ -60,6 +63,8 @@ public class HomeActivity extends BaseActivity {
     private static final String KEY_HOME_GIFT_OFFERWALL_PERCENTAGE = "home_gift_offerwall_percentage";
     private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial_1026";
     private boolean isShowOfferWall = true;
+
+    private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
     private static final int OFFER_WALL_SHOW_DELAY = 2000;
     @Override
@@ -289,10 +294,29 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    static boolean existDebugFile = false;
+    public static boolean isDebugMode(){
+        if (existDebugFile) return  true;
+        try {
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "polestarunlocktest");
+            if (file.exists()) {
+                existDebugFile = true;
+                return true;
+            }
+        } catch (Exception e) {
+            MLogs.e(e);
+        }
+        return false;
+    }
     public boolean onNavigationItemSelected(int position) {
         switch (position) {
             case 0:
-                LockSettingsActivity.start(this,"home_menu");
+                if (PreferencesUtils.isLockerEnabled(this) || isDebugMode()) {
+                    LockPasswordSettingActivity.start(this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
+                } else {
+                    LockSettingsActivity.start(this,"home");
+                }
+                MTAManager.menuPrivacyLocker(this);
                 break;
             case 1:
                 MTAManager.menuNotification(this);
@@ -375,6 +399,16 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_UNLOCK_SETTINGS) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    LockSettingsActivity.start(this, "home");
+                    break;
+                case RESULT_CANCELED:
+                    break;
+            }
+            return;
+        }
         if (resultCode == RESULT_OK
                 && data != null) {
             if (requestCode == AppConstants.REQUEST_SELECT_APP) {

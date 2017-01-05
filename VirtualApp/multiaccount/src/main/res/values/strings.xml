@@ -37,7 +37,7 @@
     <string name="long_press_tips">Long press &amp; drag it to add shortcut on home screen or remove it.</string>
 
     <!-- notification -->
-    <string name="notification_decription">Enable to receive notification for this cloned application</string>
+    <string name="notification_decription">Enable to receive notification from this cloned application</string>
 
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
 
@@ -55,6 +55,8 @@
     <!-- settings -->
     <string name="settings_shortcut_title">Shortcut</string>
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
+    <string name="settings_privacy_locker_content">Click to set privacy locker for cloned apps</string>
+    <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
     <string name="settings_privacy_policy">Privacy Policy</string>
     <string name="settings_more">More Settings</string>
     <string name="settings_general">General Settings</string>
@@ -121,10 +123,10 @@
     <string name="al_lockpattern_release_hint">Release finger when done</string>
     <string name="al_lockpattern_try_again">Patterns Do Not Match, Please Try Again.</string>
     <string name="applock_permission_contacts_toast">This helps you to retrieve your password.</string>
-    <string name="al_lockpattern_create_unlock_pattern">Set an New Pattern</string>
+    <string name="al_lockpattern_create_unlock_pattern">Set a New Pattern</string>
     <string name="al_lockpattern_number_no_correct">Please Connect at Least 4 Dots</string>
     <string name="al_lockpattern_create_new_password_outofbound">Passcode must be less than 10 digits</string>
-    <string name="al_btn_finish">Done</string>
+    <string name="al_btn_finish">Confirm</string>
     <string name="al_btn_next">Next</string>
     <string name="al_lockpattern_error">Wrong Pattern, Please Try Again.</string>
     <string name="al_changepassword">Change Password</string>
@@ -145,6 +147,7 @@
     <string name="app_lock_safe_question_toast_error">Authentication failed, please enter again</string>
     <string name="applock_window_title">Cloned %s</string>
     <string name="applock_forgot_password"><u>Forgot Password?</u></string>
+    <string name="need_set_secure_answer">Please set answer for secure question and then press confirm button.</string>
 
     <string-array name="month">
         <item>Jan</item>

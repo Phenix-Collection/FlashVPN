@@ -17,8 +17,10 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MD5Utils;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ResourcesUtil;
+import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.widgets.MenuPopup;
 import com.polestar.multiaccount.widgets.WheelView;
 
@@ -30,8 +32,7 @@ import java.util.ArrayList;
 
 public class LockSecureQuestionActivity extends BaseActivity implements View.OnClickListener {
 
-    public final static String EXTRA_TITLE = "title";
-    public final static String EXTRA_RESET = "password_reset";
+    public final static String EXTRA_IS_SETTING= "is_setting_question";
 
     private TextView mBtnFinish;
 
@@ -51,7 +52,7 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
     private int mQuestionId = 0;
 
     // 是否执行重置逻辑
-    private boolean bIsReset = false;
+    private boolean isSettingQuestion = false;
 
     private boolean mIsBdayQuestion = true;
 
@@ -65,8 +66,6 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
     private int mSelectedMonth = mDefaulMonth;
     private int mSelectedDay = mDefaultDay;
 
-    private String mTitle = null;
-
     private String[] mMonthArray;
 
     private String[] mQuestionArray;
@@ -74,55 +73,50 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
 
     private Context mContext;
 
-    public static void start(Activity activity, int requestCode, boolean bIsReset, String title) {
+    public static void start(Activity activity, int requestCode, boolean isSettingQuestion) {
         Intent intent = new Intent(activity, LockSecureQuestionActivity.class);
-        intent.putExtra(LockSecureQuestionActivity.EXTRA_RESET, bIsReset);
-        if (title != null) {
-            intent.putExtra(LockSecureQuestionActivity.EXTRA_TITLE, title);
-        }
+        intent.putExtra(LockSecureQuestionActivity.EXTRA_IS_SETTING, isSettingQuestion);
         activity.startActivityForResult(intent, requestCode);
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            setResult(Activity.RESULT_CANCELED);
-            finish();
-            return true;
+        if (!isSettingQuestion) {
+            if (item.getItemId() == android.R.id.home) {
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        } else {
+            ToastUtils.ToastDefult(this, getString(R.string.need_set_secure_answer));
+            return false;
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        setResult(Activity.RESULT_CANCELED);
-        finish();
+        if (isSettingQuestion) {
+            ToastUtils.ToastDefult(this, getString(R.string.need_set_secure_answer));
+        } else {
+            super.onBackPressed();
+            setResult(Activity.RESULT_CANCELED);
+            finish();
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mContext = this;
         setContentView(R.layout.activity_secure_question);
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.hasExtra(EXTRA_TITLE)) {
-                mTitle = intent.getStringExtra(EXTRA_TITLE);
-            }
-
-            if (intent.hasExtra(EXTRA_RESET)) {
-                bIsReset = intent.getBooleanExtra(EXTRA_RESET, false);
-            }
-
+            isSettingQuestion = intent.getBooleanExtra(EXTRA_IS_SETTING, false);
         }
-
-        if (mTitle == null){
-            mTitle = ResourcesUtil.getString(R.string.app_lock_verifier_tile);
-        }
-        setTitle(mTitle);
-
+        MLogs.d("onCreate is setting? " + isSettingQuestion);
         mMonthArray = getResources().getStringArray(R.array.month);
         mQuestionArray = getResources().getStringArray(R.array.secure_questions);
         mQuestionByDayArray = getResources().getStringArray(R.array.secure_question_by_day_config);
@@ -131,6 +125,12 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
     }
 
     private void initView() {
+        if (isSettingQuestion) {
+            View navBtn = findViewById(R.id.navigation_bar);
+            if (navBtn != null) {
+                navBtn.setVisibility(View.INVISIBLE);
+            }
+        }
         mBtnFinish = (TextView) findViewById(R.id.btn_finish);
         mBtnShowQuestion = (LinearLayout) findViewById(R.id.btn_show_question);
         mBtnFinish.setOnClickListener(this);
@@ -140,22 +140,30 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
         mEtQuestion = (EditText) findViewById(R.id.et_question);
         mEtAnswer = (EditText) findViewById(R.id.et_answer);
         mEtQuestion.setFocusable(false);
-        if (bIsReset) {
-            mEtQuestion.setText(mQuestionArray[0]);
-            PreferencesUtils.setSafeQuestionId(mContext,0);
-            PreferencesUtils.setSafeAnswer(mContext, "");
+        int id = PreferencesUtils.getSafeQuestionId(mContext);
+        mIsBdayQuestion = mQuestionByDayArray.length > id ? mQuestionByDayArray[id].equals("1"): false;
+        if (isSettingQuestion) {
+            if ((id == mQuestionArray.length - 1 ) &&
+                    (!TextUtils.isEmpty(PreferencesUtils.getCustomizedQuestion(this)))){
+                mEtQuestion.setText(PreferencesUtils.getCustomizedQuestion(this));
+            } else {
+                mEtQuestion.setText(mQuestionArray[id]);
+            }
             mEtAnswer.requestFocus();
             mBtnShowQuestion.setOnClickListener(this);
-            setTitle(ResourcesUtil.getString(R.string.app_lock_verifier_tile));
+            setTitle(getString(R.string.app_lock_verifier_tile));
         }else {
             mEtQuestion.setFocusable(false);
             mEtQuestion.setFocusableInTouchMode(false);
-            int id = PreferencesUtils.getSafeQuestionId(mContext);
-            mEtQuestion.setText(mQuestionArray[id]);
+            if ((id == mQuestionArray.length - 1 ) &&
+                    (!TextUtils.isEmpty(PreferencesUtils.getCustomizedQuestion(this)))){
+                mEtQuestion.setText(PreferencesUtils.getCustomizedQuestion(this));
+            } else {
+                mEtQuestion.setText(mQuestionArray[id]);
+            }
             mEtAnswer.setHint(ResourcesUtil.getString(R.string.app_lock_safe_answer_reset_hint));
-            mIsBdayQuestion = mQuestionByDayArray.length > id ? mQuestionByDayArray[id].equals("1"): false;
             mBtnShowQuestion.setVisibility(View.GONE);
-            setTitle(ResourcesUtil.getString(R.string.app_lock_reset_password));
+            setTitle(getString(R.string.app_lock_reset_password));
         }
 
         if (mIsBdayQuestion) {
@@ -360,14 +368,13 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
                 }
                 // 判断是否进入验证过程
                 String answerMd5 = MD5Utils.getStringMd5(strAnswer);
-                if (!bIsReset) {
+                if (!isSettingQuestion) {
                     if (PreferencesUtils.getSafeAnswer(mContext).equals(answerMd5)) {
-                        Intent intent = new Intent(LockSecureQuestionActivity.this,
-                                LockPasswordSettingActivity.class);
-                        intent.putExtra(LockPasswordSettingActivity.EXTRA_MODE_RESET_PASSWORD, true);
-                        startActivity(intent);
-
                         setResult(Activity.RESULT_OK);
+                        PreferencesUtils.setSafeQuestionId(mContext,mQuestionId);
+                        PreferencesUtils.setCustomizedQuestion(mContext,strQuestion);
+                        PreferencesUtils.setSafeAnswer(mContext, answerMd5);
+                        LockPasswordSettingActivity.start(this, true, null, 0);
                         finish();
                     } else {
                         // 没有验证通过，则清掉密码

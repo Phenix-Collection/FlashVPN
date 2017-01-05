@@ -25,6 +25,8 @@ import com.polestar.multiaccount.widgets.FeedbackImageView;
 import com.polestar.multiaccount.widgets.FloatWindow;
 import com.polestar.multiaccount.widgets.PopupMenu;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 /**
  * Created by guojia on 2017/1/3.
  */
@@ -156,19 +158,11 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     }
 
     private void forgotPassword() {
-        Intent intent = null;
         if (PreferencesUtils.isSafeQuestionSet(VirtualCore.get().getContext())) {
-            intent = new Intent(MApp.getApp(), LockSecureQuestionActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(LockSecureQuestionActivity.EXTRA_TITLE, ResourcesUtil.getString(R.string.al_change_security_question));
-            intent.putExtra(LockSecureQuestionActivity.EXTRA_RESET, false);
-        }
-        try {
-            if (intent != null){
-                VirtualCore.get().getContext().startActivity(intent);
-            }
-        }catch (Exception e){
-            MLogs.e(e);
+            Intent intent = new Intent(VirtualCore.get().getContext(), LockSecureQuestionActivity.class);
+            intent.putExtra(LockSecureQuestionActivity.EXTRA_IS_SETTING, false);
+            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+            MApp.getApp().getApplicationContext().startActivity(intent);
         }
     }
 

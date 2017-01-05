@@ -85,7 +85,11 @@ public class LockSettingsActivity extends BaseActivity {
                             @Override
                             public void onCheckStatusChangedListener(AppModel model, boolean status) {
                                 //
-                                model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                                if(status) {
+                                    model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                                } else {
+                                    model.setLockerState(AppConstants.AppLockState.DISABLED);
+                                }
                                 DbManager.updateAppModel(mContext, model);
                             }
                         });
@@ -128,8 +132,8 @@ public class LockSettingsActivity extends BaseActivity {
 
     private void onLockerEnabled(boolean enabled) {
         if (enabled) {
-            if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext))) {
-                LockPasswordSettingActivity.start(this, true, REQUEST_SET_PASSWORD);
+            if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+                LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
                 ToastUtils.ToastDefult(this, getString(R.string.no_password_set));
             } else {
                 detailedSettingLayout.setVisibility(View.VISIBLE);
@@ -142,8 +146,8 @@ public class LockSettingsActivity extends BaseActivity {
     }
 
     public void onPasswordSettingClick(View view) {
-        PreferencesUtils.setEncodedPatternPassword(mContext,"");
-        LockPasswordSettingActivity.start(this, true, REQUEST_SET_PASSWORD);
+        //PreferencesUtils.setEncodedPatternPassword(mContext,"");
+        LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
     }
 
     @Override
@@ -166,8 +170,8 @@ public class LockSettingsActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AppLockMonitor.getInstance().onLockSettingChanged();
+    protected void onPause() {
+        super.onPause();
+        PreferencesUtils.setLockSettingChangeMark(this);
     }
 }

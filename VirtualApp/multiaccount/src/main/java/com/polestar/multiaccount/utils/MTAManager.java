@@ -105,6 +105,10 @@ public class MTAManager {
         StatService.trackCustomEvent(context, "menu_notifications");
     }
 
+    public static void menuPrivacyLocker(Context context) {
+        StatService.trackCustomEvent(context, "menu_privacy_locker");
+    }
+
     public static void menuFAQ(Context context) {
         StatService.trackCustomEvent(context, "menu_faq");
     }

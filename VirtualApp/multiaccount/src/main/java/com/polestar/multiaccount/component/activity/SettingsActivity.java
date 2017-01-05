@@ -21,6 +21,7 @@ import com.polestar.multiaccount.widgets.BlueSwitch;
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
     private TextView versionTv;
+    private final static int REQUEST_UNLOCK_SETTINGS = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class SettingsActivity extends BaseActivity {
     private void initView() {
         setTitle("Settings");
         versionTv = (TextView)findViewById(R.id.version_info);
-        versionTv.setText("Version: " + BuildConfig.VERSION_NAME);
+        versionTv.setText(getString(R.string.settings_right) + "\n" + "Version: " + BuildConfig.VERSION_NAME);
         shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
         shortCutSwich.setChecked(PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,false));
         shortCutSwich.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +42,19 @@ public class SettingsActivity extends BaseActivity {
                 PreferencesUtils.putBoolean(SettingsActivity.this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,shortCutSwich.isChecked());
             }
         });
+    }
+
+    public void onNotificationSettingClick(View view) {
+        Intent notification = new Intent(this, NotificationActivity.class);
+        startActivity(notification);
+    }
+
+    public void onPrivacyLockerClick(View view) {
+        if (PreferencesUtils.isLockerEnabled(this) ) {
+            LockPasswordSettingActivity.start(this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
+        } else {
+            LockSettingsActivity.start(this,"home");
+        }
     }
 
     public void onPrivacyPolicyClick(View view) {
@@ -75,6 +89,19 @@ public class SettingsActivity extends BaseActivity {
 //                intent.putExtra("START_OUTTER_APP_FLAG",true);
                 startActivity(intent);
             } catch (Exception localException2) {
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_UNLOCK_SETTINGS) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    LockSettingsActivity.start(this, "home");
+                    break;
+                case RESULT_CANCELED:
+                    break;
             }
         }
     }

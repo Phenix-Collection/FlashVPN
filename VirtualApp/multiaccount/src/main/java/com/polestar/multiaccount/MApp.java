@@ -49,6 +49,7 @@ public class MApp extends Application {
             "com.google.android.gsf.login",
             "com.google.android.gms",
 
+//            "com.google.android.play.games",
             "com.google.android.backuptransport",
             "com.google.android.backup",
             "com.google.android.configupdater",

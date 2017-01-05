@@ -19,6 +19,8 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
     public static final String EXTRA_MODE_RESET_PASSWORD = "launch_mode";
     public static final String EXTRA_PASSWORD_BACKGROUND_WHITE = "password_background";
     public static final int REQUEST_SET_QUESTION = 0;
+    public static final int REQUEST_CHECK_ANSWER = 1;
+    private static final String EXTRA_TITLE = "extra_title";
 
     private TextView mForgetPasswordBtn;
     private LockerView mAppLockScreenView;
@@ -26,17 +28,21 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
     private boolean mIsReset = false;
     private boolean mIsWhiteBackground = false;
 
-    public static void start(Activity activity, boolean resetPwd, int resultCode) {
+    public static void start(Activity activity, boolean resetPwd, String title, int requestCode) {
         Intent intent = new Intent(activity, LockPasswordSettingActivity.class);
         intent.putExtra(EXTRA_MODE_RESET_PASSWORD, resetPwd);
-        activity.startActivityForResult(intent,resultCode);
+        activity.startActivityForResult(intent,requestCode);
+        if (title != null) {
+            intent.putExtra(EXTRA_TITLE, title);
+        }
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_applock_password);
-        setTitle(getResources().getString(R.string.password_setting_title));
+        String title = getIntent().getStringExtra(EXTRA_TITLE);
+        setTitle(title != null? title : getResources().getString(R.string.password_setting_title));
         initView();
     }
 
@@ -74,11 +80,10 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
         public void onCorrectPassword() {
             MLogs.d("Password correct");
             if (mIsReset) {
-                LockSecureQuestionActivity.start(LockPasswordSettingActivity.this, REQUEST_SET_QUESTION, mIsReset, null);
-            } else {
-                setResult(Activity.RESULT_OK);
-                finish();
+                LockSecureQuestionActivity.start(LockPasswordSettingActivity.this, REQUEST_SET_QUESTION, true);
             }
+            setResult(Activity.RESULT_OK);
+            finish();
         }
 
         @Override
@@ -125,15 +130,7 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.forgot_password_tv:
-                Intent intent = null;
-//                try {
-//                    intent = new Intent(LockPasswordSettingActivity.this, AppLockSafeQuestionActivity.class);
-//                    intent.putExtra(AppLockSafeQuestionActivity.EXTRA_TITLE,getString(R.string.al_change_security_question));
-//                    intent.putExtra(AppLockSafeQuestionActivity.EXTRA_RESET, true);
-//                    startActivity(intent);
-//                }finally {
-//                    finish();
-//                }
+                LockSecureQuestionActivity.start(this, REQUEST_CHECK_ANSWER, false );
                 break;
         }
     }
@@ -154,6 +151,10 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
                 }
                 setResult(Activity.RESULT_OK);
                 finish();
+                break;
+            case REQUEST_CHECK_ANSWER:
+//                setResult(resultCode);
+//                finish();
                 break;
         }
     }
