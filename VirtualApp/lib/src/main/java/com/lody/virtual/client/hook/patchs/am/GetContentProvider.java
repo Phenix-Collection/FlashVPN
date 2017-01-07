@@ -3,6 +3,7 @@ package com.lody.virtual.client.hook.patchs.am;
 import android.content.pm.ProviderInfo;
 import android.os.IInterface;
 
+import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.hook.providers.ProviderHook;
 import com.lody.virtual.client.ipc.VActivityManager;
@@ -51,8 +52,11 @@ import mirror.android.app.IActivityManager;
 				provider = VActivityManager.get().acquireProviderClient(userId, info);
 				VLog.logbug("GetContentProvider", "provider != null " + name + " pkg: " + info.packageName);
 			} else {
-				VLog.logbug("GetContentProvider", "provider == null " + name + " pkg: " + info.packageName);
-				return null;
+				VLog.logbug("GetContentProvider", "provider == null " + name +
+						" pkg: " + info.packageName + " current: " + VClientImpl.getClient().getCurrentPackage());
+				if (! info.packageName.equals(VClientImpl.getClient().getCurrentPackage())) {
+					provider = VActivityManager.get().acquireProviderClient(userId, info);
+				}
 			}
 			IActivityManager.ContentProviderHolder.provider.set(holder, provider);
 			IActivityManager.ContentProviderHolder.info.set(holder, info);

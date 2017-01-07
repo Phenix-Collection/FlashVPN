@@ -379,10 +379,11 @@ public final class VClientImpl extends IVClient.Stub {
 
 	@Override
 	public IBinder acquireProviderClient(ProviderInfo info) {
+		VLog.d(TAG, "enter acquireProviderClient " + info.authority);
 		if (mTempLock != null) {
 			mTempLock.block();
 		}
-		VLog.d(TAG, "acquireProviderClient " + info.authority);
+		VLog.d(TAG, "no lock acquireProviderClient " + info.authority);
 		if (!VClientImpl.getClient().isBound()) {
 			VClientImpl.getClient().bindApplication(info.packageName, info.processName);
 		}
@@ -414,6 +415,7 @@ public final class VClientImpl extends IVClient.Stub {
 				IInterface provider = ActivityThread.ProviderClientRecordJB.mProvider.get(clientRecord);
 				Object holder = ActivityThread.ProviderClientRecordJB.mHolder.get(clientRecord);
 				ProviderInfo info = IActivityManager.ContentProviderHolder.info.get(holder);
+				VLog.d(TAG, "fixInstalledProviders " + info.authority);
 				if (holder != null && !info.authority.startsWith(StubManifest.STUB_CP_AUTHORITY)) {
 					provider = ProviderHook.createProxy(true, info.authority, provider);
 					ActivityThread.ProviderClientRecordJB.mProvider.set(clientRecord, provider);
