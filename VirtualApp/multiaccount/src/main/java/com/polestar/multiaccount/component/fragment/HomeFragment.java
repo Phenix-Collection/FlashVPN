@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -47,12 +46,12 @@ import com.polestar.multiaccount.utils.AnimatorHelper;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
-import com.polestar.multiaccount.utils.CustomDialogUtils;
 import com.polestar.multiaccount.utils.ExplosionField;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
+import com.polestar.multiaccount.widgets.LeftRightDialog;
 import com.polestar.multiaccount.widgets.CustomFloatView;
 import com.polestar.multiaccount.widgets.GridAppCell;
 import com.polestar.multiaccount.widgets.HeaderGridView;
@@ -540,7 +539,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void showDeleteDialog(AppModel appModel){
-        CustomDialogUtils.showCustomDialog(mActivity,mActivity.getResources().getString(R.string.delete_dialog_title),
+        LeftRightDialog.show(mActivity,mActivity.getResources().getString(R.string.delete_dialog_title),
                 mActivity.getResources().getString(R.string.delete_dialog_content),
                 mActivity.getResources().getString(R.string.delete_dialog_left),mActivity.getResources().getString(R.string.delete_dialog_right),
                 new DialogInterface.OnClickListener(){
@@ -548,9 +547,11 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i){
-                            case CustomDialogUtils.LEFT_BUTTON:
+                            case LeftRightDialog.LEFT_BUTTON:
+                                dialogInterface.dismiss();
                                 break;
-                            case CustomDialogUtils.RIGHT_BUTTON:
+                            case LeftRightDialog.RIGHT_BUTTON:
+                                dialogInterface.dismiss();
                                 deleteAppWithAnim(appModel);
                                 break;
                         }
