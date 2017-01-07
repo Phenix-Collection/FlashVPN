@@ -123,9 +123,10 @@ public class MTAManager {
         StatService.trackCustomEvent(context, "menu_feedback");
     }
 
-    public static void menuRate(Context context, String status) {
+    public static void reportRate(Context context, String status, String from) {
         Properties prop = new Properties();
         prop.setProperty("status", status);
+        prop.setProperty("from", from);
         prop.setProperty("model", Build.FINGERPRINT);
         StatService.trackCustomKVEvent(context, "menu_rate", prop);
     }

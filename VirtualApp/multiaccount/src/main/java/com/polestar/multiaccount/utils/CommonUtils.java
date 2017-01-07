@@ -200,6 +200,17 @@ public class CommonUtils {
         return null;
     }
 
+    public static long getInstallTime(Context context, String pkg) {
+        PackageManager packageManager=context.getPackageManager();
+        try {
+            PackageInfo packageInfo=packageManager.getPackageInfo(pkg, 0);
+            return packageInfo.firstInstallTime;//应用第一次安装的时间
+        } catch (Exception e) {
+            MLogs.logBug(MLogs.getStackTraceString(e));
+            return System.currentTimeMillis();
+        }
+    }
+
     public static boolean isSamsungDevice() {
         final String manufacturer = Build.MANUFACTURER.toLowerCase();
         if (manufacturer.equals("samsung")) {

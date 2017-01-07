@@ -29,6 +29,7 @@ import com.polestar.multiaccount.component.fragment.HomeFragment;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppListUtils;
+import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DrawerBlurHelper;
 import com.polestar.multiaccount.utils.MLogs;
@@ -65,6 +66,9 @@ public class HomeActivity extends BaseActivity {
     private static final String KEY_HOME_GIFT_OFFERWALL_PERCENTAGE = "home_gift_offerwall_percentage";
     private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial_1026";
     private boolean isShowOfferWall = true;
+
+    private static final String RATE_FROM_QUIT = "quit";
+    private static final String RATE_FROM_MENU = "menu";
 
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
@@ -287,12 +291,35 @@ public class HomeActivity extends BaseActivity {
         LockSettingsActivity.start(this, LockSettingsActivity.FROM_HOME_ICON);
     }
 
+    private final static String QUIT_RATE_RANDOM = "quit_rating_random";
+    private final static String QUIT_RATE_INTERVAL = "quit_rating_interval";
+    private final static String QUIT_RATE_CLONED_APP_GATE = "quit_rating_cloned_app_gate";
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (! PreferencesUtils.isRated()) {
+                MLogs.d("Quit Rate config:" +  RemoteConfig.getLong(QUIT_RATE_INTERVAL)+" , "
+                        + RemoteConfig.getLong(QUIT_RATE_RANDOM) + " , gate " +RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
+                long interval = RemoteConfig.getLong(QUIT_RATE_INTERVAL) * 60 * 60 * 1000;
+                long lastTime = PreferencesUtils.getRateDialogTime(this);
+                if (PreferencesUtils.getLoveApp() == -1) {
+                    //Don't love app
+                    interval = 5*interval;
+                }
+                int random = new Random().nextInt(100);
+                int clonedCnt = CloneHelper.getInstance(this).getClonedApps().size();
+                boolean isShowRateDialog = PreferencesUtils.getLoveApp() == 1 ||
+                        ((random < RemoteConfig.getLong(QUIT_RATE_RANDOM)) && clonedCnt >= RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
+                if (isShowRateDialog && (System.currentTimeMillis() - lastTime) > interval) {
+                    showRateDialog(RATE_FROM_QUIT);
+                } else {
+                    super.onBackPressed();
+                }
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -336,53 +363,7 @@ public class HomeActivity extends BaseActivity {
                 startActivity(feedback);
                 break;
             case 4:
-                MTAManager.menuRate(this,"menu_click");
-                UpDownDialog.show(this, getString(R.string.rate_us),
-                        getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
-                        getString(R.string.yes), R.drawable.dialog_tag_congratulations,
-                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case UpDownDialog.NEGATIVE_BUTTON:
-                                        UpDownDialog.show(HomeActivity.this, getString(R.string.feedback),
-                                                getString(R.string.dialog_feedback_content),
-                                                getString(R.string.no_thanks),
-                                                getString(R.string.ok), R.drawable.dialog_tag_comment,
-                                                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        switch (which) {
-                                                            case UpDownDialog.POSITIVE_BUTTON:
-                                                                MTAManager.menuRate(HomeActivity.this, "go_faq");
-                                                                Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
-                                                                startActivity(feedback);
-                                                                break;
-                                                        }
-                                                    }
-                                                });
-                                        break;
-                                    case UpDownDialog.POSITIVE_BUTTON:
-                                        UpDownDialog.show(HomeActivity.this, getString(R.string.dialog_love_title),
-                                                getString(R.string.dialog_love_content),
-                                                getString(R.string.remind_me_later),
-                                                getString(R.string.star_rating), R.drawable.dialog_tag_love,
-                                                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        switch (which) {
-                                                            case UpDownDialog.POSITIVE_BUTTON:
-                                                                MTAManager.menuRate(HomeActivity.this, "go_rating");
-                                                                CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
-                                                                break;
-                                                        }
-                                                    }
-                                                });
-                                        break;
-                                }
-                            }
-                        });
-
+                showRateDialog(RATE_FROM_MENU);
                 break;
             case 5:
                 MTAManager.menuShare(this);
@@ -403,6 +384,60 @@ public class HomeActivity extends BaseActivity {
 //        },600);
 
         return true;
+    }
+
+    private void showRateDialog(String from){
+        MTAManager.reportRate(this,"start", from);
+        PreferencesUtils.updateRateDialogTime(this);
+        UpDownDialog.show(this, getString(R.string.rate_us),
+                getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
+                getString(R.string.yes), R.drawable.dialog_tag_congratulations,
+                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                PreferencesUtils.setLoveApp(false);
+                                UpDownDialog.show(HomeActivity.this, getString(R.string.feedback),
+                                        getString(R.string.dialog_feedback_content),
+                                        getString(R.string.no_thanks),
+                                        getString(R.string.ok), R.drawable.dialog_tag_comment,
+                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which) {
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        MTAManager.reportRate(HomeActivity.this, "go_faq", from);
+                                                        Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
+                                                        startActivity(feedback);
+                                                        break;
+                                                }
+                                            }
+                                        });
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                PreferencesUtils.setLoveApp(true);
+                                UpDownDialog.show(HomeActivity.this, getString(R.string.dialog_love_title),
+                                        getString(R.string.dialog_love_content),
+                                        getString(R.string.remind_me_later),
+                                        getString(R.string.star_rating), R.drawable.dialog_tag_love,
+                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which) {
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        MTAManager.reportRate(HomeActivity.this, "go_rating",from);
+                                                        PreferencesUtils.setRated(true);
+                                                        CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                                        break;
+                                                }
+                                            }
+                                        });
+                                break;
+                        }
+                    }
+                });
+
     }
 
     private void loadInstallAd() {

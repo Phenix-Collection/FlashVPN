@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.component.activity.LockSettingsActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 
@@ -311,5 +312,33 @@ public class PreferencesUtils {
 
     public static long getLockSettingChangeMark(Context c) {
         return getLong(c, "lock_setting_mark", 0);
+    }
+
+    public static void setLoveApp(  boolean b) {
+        putInt(MApp.getApp(),"love_app", b? 1:-1);
+    }
+
+    public static int getLoveApp() {
+        return getInt(MApp.getApp(),"love_app", 0);
+    }
+
+    public static void setRated(boolean b) {
+        putBoolean(MApp.getApp(),"is_rated", b);
+    }
+
+    public static boolean isRated() {
+        return getBoolean(MApp.getApp(),"is_rated", false);
+    }
+
+    public static void updateRateDialogTime(Context c) {
+        putLong(c, "last_rate_dialog", System.currentTimeMillis());
+    }
+
+    public static long getRateDialogTime(Context c) {
+        long last = getLong(c, "last_rate_dialog",-1);
+        if (last == -1) {
+            last = CommonUtils.getInstallTime(c, c.getPackageName());
+        }
+        return last;
     }
 }
