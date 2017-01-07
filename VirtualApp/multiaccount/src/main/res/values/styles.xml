@@ -109,7 +109,7 @@
         <item name="android:layout_marginLeft">10.0dip</item>
         <item name="android:layout_marginTop">2.0sp</item>
         <item name="android:layout_marginRight">2.0dip</item>
-        <item name="android:layout_marginBottom">2.0dip</item>
+        <item name="android:layout_marginBottom">6.0dip</item>
     </style>
     <style name="guide_dialog_positive_button">
         <item name="android:textSize">16.0sp</item>
@@ -123,9 +123,9 @@
         <item name="android:paddingRight">10.0dip</item>
         <item name="android:paddingBottom">2.0dip</item>
         <item name="android:layout_marginLeft">10.0dip</item>
-        <item name="android:layout_marginTop">2.0sp</item>
+        <item name="android:layout_marginTop">6.0dp</item>
         <item name="android:layout_marginRight">2.0dip</item>
-        <item name="android:layout_marginBottom">2.0dip</item>
+        <item name="android:layout_marginBottom">6.0dip</item>
     </style>
     <style name="guide_dialog_title">
         <item name="android:textSize">18.0sp</item>

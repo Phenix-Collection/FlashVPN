@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_margin="8.0dip"
+        android:layout_margin="6.0dip"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -40,7 +40,7 @@
             android:layout_marginTop="10dip"
             android:orientation="vertical">
 
-            <Button
+            <TextView
                 android:id="@+id/button_negative"
                 style="@style/guide_dialog_negative_button"
                 android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_weight="1.0" />
 
-            <Button
+            <TextView
                 android:id="@+id/button_positive"
                 style="@style/guide_dialog_positive_button"
                 android:layout_width="wrap_content"
@@ -60,8 +60,8 @@
 
     <ImageView
         android:id="@+id/tag_img"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center|right|top"
-        android:layout_marginTop="4.0dip" />
+        android:layout_marginTop="2.0dip" />
 </FrameLayout>

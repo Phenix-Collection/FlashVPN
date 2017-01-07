@@ -1,4 +1,4 @@
-package com.polestar.multiaccount.utils;
+package com.polestar.multiaccount.widgets;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -11,18 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.polestar.multiaccount.R;
+import com.polestar.multiaccount.utils.AnimatorHelper;
+import com.polestar.multiaccount.utils.DisplayUtils;
 
-
-/**
- * Created by yxx on 2016/7/25.
- */
-public class RatingDialogUtils {
+public class UpDownDialog {
 
     public final static int NEGATIVE_BUTTON = 1;
     public final static int POSITIVE_BUTTON = 2;
 
-    public static Dialog showCustomDialog(Context context, String title, String content, String negBtnName,
-                String posBtnName, int tagResId, int layoutResId, final DialogInterface.OnClickListener onClickListener) {
+    public static Dialog show(Context context, String title, String content, String negBtnName,
+                              String posBtnName, int tagResId, int layoutResId, final DialogInterface.OnClickListener onClickListener) {
         final Dialog dialog = new Dialog(context, R.style.CustomDialog);
         View dialogView = LayoutInflater.from(context).inflate(layoutResId, null);
         DialogViewHolder holder = new DialogViewHolder();
@@ -35,7 +33,7 @@ public class RatingDialogUtils {
         if (negBtnName == null || TextUtils.isEmpty(negBtnName)) {
             holder.negBtn.setVisibility(View.GONE);
         } else {
-            holder.negBtn.setText(posBtnName);
+            holder.negBtn.setText(negBtnName);
         }
 
         if (title == null || TextUtils.isEmpty(title)) {
@@ -45,7 +43,7 @@ public class RatingDialogUtils {
         }
 
         holder.content.setText(content);
-        holder.posBtn.setText(negBtnName);
+        holder.posBtn.setText(posBtnName);
         if(tagResId != -1) {
             holder.tagImage.setImageResource(tagResId);
         } else {
@@ -58,6 +56,7 @@ public class RatingDialogUtils {
                 if (onClickListener != null) {
                     onClickListener.onClick(dialog, NEGATIVE_BUTTON);
                 }
+                dialog.dismiss();
             }
         });
         holder.posBtn.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +65,7 @@ public class RatingDialogUtils {
                 if (onClickListener != null) {
                     onClickListener.onClick(dialog, POSITIVE_BUTTON);
                 }
+                dialog.dismiss();
             }
         });
 

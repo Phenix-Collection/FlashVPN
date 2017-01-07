@@ -55,7 +55,7 @@
 
     <color name="dialog_guide_button_negative_text">#ff454545</color>
     <color name="dialog_guide_button_positive_text">#ff2dbbfb</color>
-    <color name="dialog_guide_button_press_bg">#22000000</color>
+    <color name="dialog_guide_button_press_bg">#22dddddd</color>
     <color name="dialog_guide_content_text">#ff454545</color>
     <color name="dialog_guide_high_light_content_text">#ff2dbbfb</color>
     <color name="dialog_guide_title_text">#ff454545</color>

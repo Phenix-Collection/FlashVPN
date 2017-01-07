@@ -32,6 +32,16 @@
     <string name="delete_dialog_content">Removing this cloned app means\n deleting all of its data.</string>
     <string name="delete_dialog_left">CANCEL</string>
     <string name="delete_dialog_right">DELETE</string>
+    <string name="dialog_rating_us_content">Enjoy using Super Clone app?</string>
+    <string name="dialog_feedback_content">Would you kindly give us some feedback to help improve it?</string>
+    <string name="not_really">Not Really</string>
+    <string name="no_thanks">No, thanks</string>
+    <string name="dialog_love_title">Love Super Clone</string>
+    <string name="dialog_love_content">Would you mind give us a 5-star rating on the Play Store? It will inspire us and we appreciate your support!</string>
+    <string name="remind_me_later">Remind me later</string>
+    <string name="star_rating">Go 5-star rating now</string>
+    <string name="yes">Yes</string>
+    <string name="ok">OK</string>
     <string name="installFailure">Sorry, this app is not supported yet, and we are coming up with it soon.</string>
     <string name="start_tips">Let\'s get started by cloning\n your first app here!</string>
     <string name="long_press_tips">Long press &amp; drag it to add shortcut on home screen or remove it.</string>

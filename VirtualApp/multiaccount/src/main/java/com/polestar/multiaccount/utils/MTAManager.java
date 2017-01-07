@@ -1,6 +1,7 @@
 package com.polestar.multiaccount.utils;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -122,8 +123,11 @@ public class MTAManager {
         StatService.trackCustomEvent(context, "menu_feedback");
     }
 
-    public static void menuRate(Context context) {
-        StatService.trackCustomEvent(context, "menu_rate");
+    public static void menuRate(Context context, String status) {
+        Properties prop = new Properties();
+        prop.setProperty("status", status);
+        prop.setProperty("model", Build.FINGERPRINT);
+        StatService.trackCustomKVEvent(context, "menu_rate", prop);
     }
 
     public static void menuShare(Context context) {

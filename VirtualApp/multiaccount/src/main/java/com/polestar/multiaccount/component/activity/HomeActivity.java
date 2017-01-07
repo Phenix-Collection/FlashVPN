@@ -2,6 +2,7 @@ package com.polestar.multiaccount.component.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.polestar.multiaccount.utils.DrawerBlurHelper;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.widgets.UpDownDialog;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.RenderScriptManager;
 import com.polestar.multiaccount.utils.UpdateSDKManager;
@@ -334,8 +336,53 @@ public class HomeActivity extends BaseActivity {
                 startActivity(feedback);
                 break;
             case 4:
-                MTAManager.menuRate(this);
-                CommonUtils.jumpToMarket(this, getPackageName());
+                MTAManager.menuRate(this,"menu_click");
+                UpDownDialog.show(this, getString(R.string.rate_us),
+                        getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
+                        getString(R.string.yes), R.drawable.dialog_tag_congratulations,
+                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case UpDownDialog.NEGATIVE_BUTTON:
+                                        UpDownDialog.show(HomeActivity.this, getString(R.string.feedback),
+                                                getString(R.string.dialog_feedback_content),
+                                                getString(R.string.no_thanks),
+                                                getString(R.string.ok), R.drawable.dialog_tag_comment,
+                                                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        switch (which) {
+                                                            case UpDownDialog.POSITIVE_BUTTON:
+                                                                MTAManager.menuRate(HomeActivity.this, "go_faq");
+                                                                Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
+                                                                startActivity(feedback);
+                                                                break;
+                                                        }
+                                                    }
+                                                });
+                                        break;
+                                    case UpDownDialog.POSITIVE_BUTTON:
+                                        UpDownDialog.show(HomeActivity.this, getString(R.string.dialog_love_title),
+                                                getString(R.string.dialog_love_content),
+                                                getString(R.string.remind_me_later),
+                                                getString(R.string.star_rating), R.drawable.dialog_tag_love,
+                                                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        switch (which) {
+                                                            case UpDownDialog.POSITIVE_BUTTON:
+                                                                MTAManager.menuRate(HomeActivity.this, "go_rating");
+                                                                CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                                                break;
+                                                        }
+                                                    }
+                                                });
+                                        break;
+                                }
+                            }
+                        });
+
                 break;
             case 5:
                 MTAManager.menuShare(this);
