@@ -56,7 +56,8 @@
     <string name="button_submit">Submit</string>
     <string name="submit_success">Thanks for providing feedback!</string>
     <string name="feedback_no_description">Description can not be empty!</string>
-    <string name="extra_feedback_decription">We will resolve the issue for you ASAP and appreciate your help to improve the product.Thank you very much!</string>
+    <string name="feedback_go_faq">Click here to check our handy FAQ.</string>
+    <string name="extra_feedback_decription">We will resolve the issue for you ASAP and appreciate your help to improve the product!</string>
 
     <!-- toast -->
     <string name="toast_shortcut_added">Shortcut added</string>
