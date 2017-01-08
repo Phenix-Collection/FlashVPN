@@ -2,11 +2,11 @@
 <defaultsMap>
     <entry>
         <key>quit_rating_random</key>
-        <value>95</value>
+        <value>100</value>
     </entry>
     <entry>
         <key>quit_rating_interval</key>
-        <value>1</value>
+        <value>72</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -16,7 +16,7 @@
 
     <entry>
         <key>home_gift_offerwall_percentage</key>
-        <value>50</value>
+        <value>5</value>
     </entry>
     <entry>
         <key>slot_home_gift_interstitial</key>
@@ -27,13 +27,13 @@
         <key>slot_home_gift_interstitial_1026</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>
-            fb_interstitial:1700354860278115_1702702800043321:0;ab_interstitial:ca-app-pub-5490912237269284/5384537050
+            ab_interstitial:ca-app-pub-5490912237269284/5384537050:0;fb_interstitial:1700354860278115_1702702800043321:0
         </value>
     </entry>
     <entry>
         <key>slot_home_header_native</key>
         <value>
-            ab_native_banner:ca-app-pub-5490912237269284/6006659059:0;fb:1700354860278115_1702636763383258:0;
+            fb:1700354860278115_1702636763383258:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0;
         </value>
     </entry>
     <entry>
