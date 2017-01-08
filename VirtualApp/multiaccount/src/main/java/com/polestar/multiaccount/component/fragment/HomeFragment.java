@@ -38,6 +38,7 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
 import com.polestar.multiaccount.component.activity.AppListActivity;
 import com.polestar.multiaccount.component.activity.HomeActivity;
+import com.polestar.multiaccount.component.activity.LockSettingsActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
@@ -63,6 +64,7 @@ import com.polestar.multiaccount.widgets.dragdrop.DragLayer;
 import com.polestar.multiaccount.widgets.dragdrop.DragSource;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -83,11 +85,13 @@ public class HomeFragment extends BaseFragment {
 
     private FuseAdLoader mNativeAdLoader;
     private NativeExpressAdView mAdmobExpressView;
+    private ImageView mLockSettingIcon;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_home, null);
+        mLockSettingIcon = (ImageView) mActivity.findViewById(R.id.lock_setting);
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
@@ -385,6 +389,45 @@ public class HomeFragment extends BaseFragment {
     }
 
     private TutorialGuides.Builder mTutorialBuilder;
+
+    private int getLockRecommandAppIdx() {
+        if (appInfos == null || appInfos.size() == 0) {
+            return  -1;
+        }
+        for (int i = 0; i < appInfos.size(); i++) {
+            AppModel model = appInfos.get(i);
+            if (CommonUtils.isSocialApp(model.getPackageName())) {
+                return i;
+            }
+        }
+        return  -1;
+    }
+
+    private void showApplockGuide(int index) {
+        try {
+            if (mLockSettingIcon == null) {
+                return;
+            }
+            String text = getString(R.string.applock_guide_text);
+            mTutorialBuilder = new TutorialGuides.Builder(mActivity);
+            mTutorialBuilder.anchorView(mLockSettingIcon);
+            mTutorialBuilder.defaultMaxWidth(true);
+            mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
+                @Override
+                public void onShow(TutorialGuides tooltip) {
+                    PreferencesUtils.setApplockGuideShowed();
+                }
+            });
+            mTutorialBuilder.text(text)
+                    .gravity(Gravity.BOTTOM)
+                    .build()
+                    .show();
+        }catch (Exception e){
+            MLogs.e("error to show guides");
+            MLogs.e(e);
+        }
+    }
+
     private void showCloneAppGuide(){
         //TutorialGuidesUtils.removeOnGlobalLayoutListener(pkgGridView,this);
         try {
@@ -493,6 +536,12 @@ public class HomeFragment extends BaseFragment {
                 if (mActivity != null) {
                     if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(mActivity)) {
                         showLongClickItemGuide();
+                    } else if (appInfos.size() > 0 && !PreferencesUtils.isApplockGuideShowed()
+                            && !PreferencesUtils.isLockerEnabled(mActivity)) {
+                        int index = getLockRecommandAppIdx();
+                        if ( index != -1) {
+                            showApplockGuide(index);
+                        }
                     }
                 }
             }

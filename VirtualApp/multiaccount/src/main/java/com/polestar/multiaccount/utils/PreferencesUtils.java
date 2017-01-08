@@ -341,4 +341,13 @@ public class PreferencesUtils {
         }
         return last;
     }
+
+    public static void setApplockGuideShowed() {
+        putBoolean(MApp.getApp(),"app_lock_guide_showed", true);
+    }
+
+    public static boolean isApplockGuideShowed() {
+        return false;
+        //return getBoolean(MApp.getApp(),"app_lock_guide_showed",false);
+    }
 }
