@@ -90,10 +90,10 @@ public class LockSettingsActivity extends BaseActivity {
                                 isSettingChanged = true;
                                 if(status) {
                                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
-                                    MTAManager.lockerEnable(LockSettingsActivity.this, "enable:"+model.getPackageName());
+                                    MTAManager.lockerEnable(LockSettingsActivity.this, "enable",model.getPackageName());
                                 } else {
                                     model.setLockerState(AppConstants.AppLockState.DISABLED);
-                                    MTAManager.lockerEnable(LockSettingsActivity.this, "disable:"+model.getPackageName());
+                                    MTAManager.lockerEnable(LockSettingsActivity.this, "disable", model.getPackageName());
                                 }
                                 DbManager.updateAppModel(mContext, model);
                             }
@@ -128,29 +128,35 @@ public class LockSettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 isSettingChanged = true;
-                onLockerEnabled(lockerEnableSwitch.isChecked());
+                onLockerEnabled(lockerEnableSwitch.isChecked(), true);
             }
         });
-        onLockerEnabled(lockerEnableSwitch.isChecked());
+        onLockerEnabled(lockerEnableSwitch.isChecked(), false);
         mCloneAppsListView = (ListView)findViewById(R.id.switch_lock_apps);
 
     }
 
-    private void onLockerEnabled(boolean enabled) {
+    private void onLockerEnabled(boolean enabled, boolean report) {
         if (enabled) {
             if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
                 LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
                 ToastUtils.ToastDefult(this, getString(R.string.no_password_set));
-                MTAManager.lockerEnable(this, "no_password");
+                if(report) {
+                    MTAManager.lockerEnable(this, "no_password", "none");
+                }
             } else {
                 detailedSettingLayout.setVisibility(View.VISIBLE);
                 PreferencesUtils.setLockerEnabled(this, true);
-                MTAManager.lockerEnable(this, "enable");
+                if(report) {
+                    MTAManager.lockerEnable(this, "enable", "none");
+                }
             }
         }else{
             detailedSettingLayout.setVisibility(View.GONE);
             PreferencesUtils.setLockerEnabled(this, false);
-            MTAManager.lockerEnable(this, "disable");
+            if(report) {
+                MTAManager.lockerEnable(this, "disable", "none");
+            }
         }
     }
 
@@ -168,10 +174,10 @@ public class LockSettingsActivity extends BaseActivity {
             case REQUEST_SET_PASSWORD:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        onLockerEnabled(true);
+                        onLockerEnabled(true, true);
                         break;
                     case Activity.RESULT_CANCELED:
-                        onLockerEnabled(false);
+                        onLockerEnabled(false, true);
                         lockerEnableSwitch.setChecked(false);
                         break;
                 }
