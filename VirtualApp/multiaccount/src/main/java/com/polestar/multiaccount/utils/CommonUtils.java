@@ -202,8 +202,8 @@ public class CommonUtils {
     }
 
     public static long getInstallTime(Context context, String pkg) {
-        PackageManager packageManager=context.getPackageManager();
         try {
+            PackageManager packageManager=context.getPackageManager();
             PackageInfo packageInfo=packageManager.getPackageInfo(pkg, 0);
             return packageInfo.firstInstallTime;//应用第一次安装的时间
         } catch (Exception e) {

@@ -41,8 +41,8 @@
     <color name="native_ad_transparent_black">#64000000</color>
     <color name="ad_calltoaction">#E2E22d</color>
 
-    <color name="guidetooltip_background">#5171f2</color>
-    <color name="guidetooltip_arrow">#5171f2</color>
+    <color name="guidetooltip_background">#626262</color>
+    <color name="guidetooltip_arrow">#626262</color>
 
     <color name="applock_lockpattern_pattern_path_light">#FF4A4A4A</color>
     <color name="applock_lockpattern_pattern_path_white_light">#FFFFFFFF</color>

@@ -578,7 +578,7 @@ public class TutorialGuides implements PopupWindow.OnDismissListener {
 //                tv.setGravity(Gravity.CENTER);
                 tv.setTextColor(textColor);
                 tv.setTextSize(TutorialGuidesUtils.dpFromPx(textSize));
-                tv.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                tv.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                 contentView = tv;
             }
 

@@ -91,7 +91,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_home, null);
-        mLockSettingIcon = mActivity.findViewById(R.id.lock_setting);
+        mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
@@ -539,7 +539,8 @@ public class HomeFragment extends BaseFragment {
                     } else if (appInfos.size() > 0 && !PreferencesUtils.isApplockGuideShowed()
                             && !PreferencesUtils.isLockerEnabled(mActivity)) {
                         int index = getLockRecommandAppIdx();
-                        if ( index != -1) {
+                        if ( index != -1 ||
+                                (CommonUtils.getInstallTime(mActivity, mActivity.getPackageName()) - System.currentTimeMillis() > 48*60*60*1000)) {
                             showApplockGuide(index);
                         }
                     }

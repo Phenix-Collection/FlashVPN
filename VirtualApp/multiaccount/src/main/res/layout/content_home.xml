@@ -51,6 +51,7 @@
                     android:background="@drawable/selector_setting_theme2">
                     <ImageView
                         android:src="@drawable/lock_setting_icon"
+                        android:id="@+id/lock_setting_icon"
                         android:layout_width="23dp"
                         android:layout_marginTop="17dp"
                         android:layout_marginRight="10dp"
