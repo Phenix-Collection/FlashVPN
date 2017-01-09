@@ -59,7 +59,6 @@ public class HomeActivity extends BaseActivity {
     private DrawerBlurHelper drawerBlurHelper;
     private GifView giftGifView;
     private ImageView giftIconView;
-    private ImageView lockIconView;
     private FuseAdLoader adLoader;
     private boolean isInterstitialAdClicked;
     private boolean isInterstitialAdLoaded;
@@ -117,17 +116,6 @@ public class HomeActivity extends BaseActivity {
         forgroundLayout = findViewById(R.id.blur_forground);
         giftGifView = (GifView) findViewById(R.id.gifView);
         giftIconView = (ImageView) findViewById(R.id.gift_icon);
-        lockIconView = (ImageView) findViewById(R.id.lock_setting);
-        lockIconView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (PreferencesUtils.isLockerEnabled(HomeActivity.this) || isDebugMode()) {
-                    LockPasswordSettingActivity.start(HomeActivity.this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
-                } else {
-                    LockSettingsActivity.start(HomeActivity.this,"home");
-                }
-            }
-        });
         giftIconView.setVisibility(View.GONE);
         giftGifView.setVisibility(View.GONE);
 
@@ -297,6 +285,16 @@ public class HomeActivity extends BaseActivity {
             drawer.openDrawer(GravityCompat.START);
         }
     }
+
+    public void onLockSettingClick(View view) {
+        if (PreferencesUtils.isLockerEnabled(HomeActivity.this) || isDebugMode()) {
+            LockPasswordSettingActivity.start(HomeActivity.this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
+        } else {
+            LockSettingsActivity.start(HomeActivity.this,"home");
+        }
+    }
+
+
 
     private final static String QUIT_RATE_RANDOM = "quit_rating_random";
     private final static String QUIT_RATE_INTERVAL = "quit_rating_interval";

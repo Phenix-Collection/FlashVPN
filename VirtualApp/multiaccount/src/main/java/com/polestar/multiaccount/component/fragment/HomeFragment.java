@@ -85,13 +85,13 @@ public class HomeFragment extends BaseFragment {
 
     private FuseAdLoader mNativeAdLoader;
     private NativeExpressAdView mAdmobExpressView;
-    private ImageView mLockSettingIcon;
+    private View mLockSettingIcon;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_home, null);
-        mLockSettingIcon = (ImageView) mActivity.findViewById(R.id.lock_setting);
+        mLockSettingIcon = mActivity.findViewById(R.id.lock_setting);
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();

@@ -41,20 +41,27 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
-                <ImageView
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="56dp"
                     android:id="@+id/lock_setting"
-                    android:src="@drawable/lock_setting_icon"
-                    android:layout_width="23dp"
-                    android:layout_marginTop="17dp"
-                    android:layout_marginRight="10dp"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/selector_setting_theme2"
-                    android:layout_height="23dp" />
+                    android:layout_alignParentTop="true"
+                    android:onClick="onLockSettingClick"
+                    android:background="@drawable/selector_setting_theme2">
+                    <ImageView
+                        android:src="@drawable/lock_setting_icon"
+                        android:layout_width="23dp"
+                        android:layout_marginTop="17dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_height="23dp" />
+                </RelativeLayout>
                 <com.polestar.multiaccount.widgets.GifView
                     android:id="@+id/gifView"
                     android:layout_width="23dp"
                     android:layout_marginTop="17dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/lock_setting"
 
                     android:layout_height="23dp" />
@@ -62,7 +69,7 @@
                     android:id="@+id/gift_icon"
                     android:layout_width="23dp"
                     android:layout_marginTop="17dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/lock_setting"
                     android:background="@drawable/selector_setting_theme2"
                     android:layout_height="23dp" />
