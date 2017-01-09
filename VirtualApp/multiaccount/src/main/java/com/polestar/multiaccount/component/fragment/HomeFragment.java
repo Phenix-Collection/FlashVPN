@@ -557,6 +557,7 @@ public class HomeFragment extends BaseFragment {
         CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
             @Override
             public void onInstalled(List<AppModel> clonedApp) {
+                appInfos = clonedApp;
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
                 }
@@ -564,6 +565,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onUnstalled(List<AppModel> clonedApp) {
+                appInfos = clonedApp;
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
                 }
