@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.polestar.multiaccount.MApp;
-import com.polestar.multiaccount.component.activity.LockSettingsActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 
 /**
@@ -299,11 +298,11 @@ public class PreferencesUtils {
     }
 
     public static void setLockerEnabled(Context c, boolean enabled) {
-        putBoolean(c,AppConstants.PreferencesKey.LOCKER_FEATHER_ENABLED,enabled);
+        putBoolean(c,AppConstants.PreferencesKey.LOCKER_FEATURE_ENABLED,enabled);
     }
 
     public static boolean isLockerEnabled(Context c) {
-        return getBoolean(c,AppConstants.PreferencesKey.LOCKER_FEATHER_ENABLED,false);
+        return getBoolean(c,AppConstants.PreferencesKey.LOCKER_FEATURE_ENABLED,false);
     }
 
     public static void setLockSettingChangeMark(Context c) {

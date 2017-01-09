@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.polestar.multiaccount.R;
-import com.polestar.multiaccount.component.AppLockMonitor;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.BasicPackageSwitchAdapter;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -123,7 +122,7 @@ public class LockSettingsActivity extends BaseActivity {
     private void initView(){
         detailedSettingLayout = (LinearLayout)findViewById(R.id.locker_detailed_settings);
         lockerEnableSwitch = (BlueSwitch)findViewById(R.id.enable_lock_switch);
-        lockerEnableSwitch.setChecked(PreferencesUtils.getBoolean(mContext,AppConstants.PreferencesKey.LOCKER_FEATHER_ENABLED));
+        lockerEnableSwitch.setChecked(PreferencesUtils.getBoolean(mContext,AppConstants.PreferencesKey.LOCKER_FEATURE_ENABLED));
         lockerEnableSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,8 +176,12 @@ public class LockSettingsActivity extends BaseActivity {
                         onLockerEnabled(true, true);
                         break;
                     case Activity.RESULT_CANCELED:
-                        onLockerEnabled(false, true);
-                        lockerEnableSwitch.setChecked(false);
+                        if (!PreferencesUtils.isLockerEnabled(this)
+                                || TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))
+                                || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+                            onLockerEnabled(false, true);
+                            lockerEnableSwitch.setChecked(false);
+                        }
                         break;
                 }
                 break;

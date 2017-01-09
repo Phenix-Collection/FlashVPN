@@ -106,7 +106,7 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
                 mAppLockScreenView.setResetStatus(mIsReset);
                 if (mIsReset){
                     mForgetPasswordBtn.setVisibility(View.GONE);
-                    PreferencesUtils.setSafeAnswer(this, "");
+//                    PreferencesUtils.setSafeAnswer(this, "");
                 }
             }
 
