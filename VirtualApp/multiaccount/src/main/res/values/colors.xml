@@ -46,6 +46,7 @@
 
     <color name="applock_lockpattern_pattern_path_light">#FF4A4A4A</color>
     <color name="applock_lockpattern_pattern_path_white_light">#FFFFFFFF</color>
+    <color name="applock_lockpattern_pattern_path_green_light">#05f1f9</color>
     <color name="applock_lockpattern_pattern_path_red_light">#FFEC4F62</color>
     <color name="applock_change_password_mode_text_color">#39b549</color>
     <color name="applock_antiharass_item_color_gray">#8d8d8d</color>

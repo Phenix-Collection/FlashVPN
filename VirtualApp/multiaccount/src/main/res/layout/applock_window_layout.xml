@@ -4,7 +4,7 @@
     android:id="@+id/applock_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF54545D"
+    android:background="#ff73737e"
     android:clipChildren="false"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
@@ -21,8 +21,8 @@
 
         <com.polestar.multiaccount.widgets.FeedbackImageView
             android:id="@+id/window_applock_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center_horizontal"/>
 
         <TextView

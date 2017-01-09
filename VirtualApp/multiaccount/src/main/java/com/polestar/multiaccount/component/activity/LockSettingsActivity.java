@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.os.VUserHandle;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.BasicPackageSwitchAdapter;
@@ -90,6 +92,7 @@ public class LockSettingsActivity extends BaseActivity {
                                 if(status) {
                                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
                                     MTAManager.lockerEnable(LockSettingsActivity.this, "enable",model.getPackageName());
+                                    VirtualCore.get().killApp(model.getPackageName(), VUserHandle.myUserId());
                                 } else {
                                     model.setLockerState(AppConstants.AppLockState.DISABLED);
                                     MTAManager.lockerEnable(LockSettingsActivity.this, "disable", model.getPackageName());
@@ -191,8 +194,5 @@ public class LockSettingsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (isSettingChanged) {
-            PreferencesUtils.setLockSettingChangeMark(this);
-        }
     }
 }

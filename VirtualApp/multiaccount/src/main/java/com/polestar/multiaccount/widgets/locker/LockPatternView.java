@@ -146,16 +146,6 @@ public class LockPatternView extends View {
     private int mPaddingTop = mPadding;
     protected int mPaddingBottom = mPadding;
 
-    protected String mDefault_GreenPathColor = "applock_lockpattern_pattern_path_light";
-    protected String mDefault_RedPathColor = "applock_lockpattern_pattern_path_red_light";
-    protected String mDefault_BtnDefautlResId = "applock_pattern_default_btn_gray_point";//"applock_lockpattern_btn_code_lock_default_holo_light";
-    protected String mDefault_BtnTouchedResId = "applock_pattern_touched_btn_black_point";//"applock_lockpattern_btn_code_lock_touched_holo_light";
-    protected String mDefault_BtnIncorrectResId = "applock_pattern_incorrect_btn_point";//"applock_lockpattern_btn_code_lock_red_holo_light";
-
-    protected String mDefault_CircleIncorrectResId = "applock_lockpattern_indicator_code_lock_point_area_red_holo";
-    protected String mDefault_CircleDefaultResId = "applock_lockpattern_indicator_code_lock_backgorund_holo";
-    protected String mDefault_CircleTouchedResId = "applock_lockpattern_indicator_code_lock_point_area_green_holo";
-
     private float mDotPivotX = 0.5f;
     private float mDotPivotY = 0.5f;
 
@@ -356,15 +346,7 @@ public class LockPatternView extends View {
 
         mGreenPathPaint.setAntiAlias(true);
         mGreenPathPaint.setDither(true);
-        if(resolveAttribute(getContext(),
-                ResourcesUtil.getAttrId(this.getContext(), "applock_lockpattern_color_pattern_path"), 0) != 0 && !useBackupStyle) {
-            mGreenPathPaint.setColor(getContext().getResources().getColor(
-                    resolveAttribute(getContext(),
-                            ResourcesUtil.getAttrId(this.getContext(), "applock_lockpattern_color_pattern_path"), 0)));
-        } else {
-            mGreenPathPaint.setColor(getContext().getResources().getColor(
-                    ResourcesUtil.getColorId(this.getContext(), mDefault_GreenPathColor)));
-        }
+        mGreenPathPaint.setColor(getContext().getResources().getColor(R.color.applock_lockpattern_pattern_path_white_light));
 
         mGreenPathPaint.setAlpha(mStrokeAlpha);
         mGreenPathPaint.setStyle(Paint.Style.STROKE);
@@ -373,8 +355,7 @@ public class LockPatternView extends View {
 
         mRedPathPaint.setAntiAlias(true);
         mRedPathPaint.setDither(true);
-        mRedPathPaint.setColor(getContext().getResources().getColor(
-                ResourcesUtil.getColorId(this.getContext(), mDefault_RedPathColor)));
+        mRedPathPaint.setColor(getContext().getResources().getColor(R.color.applock_lockpattern_pattern_path_red_light));
         mRedPathPaint.setAlpha(mStrokeAlpha);
         mRedPathPaint.setStyle(Paint.Style.STROKE);
         mRedPathPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -382,51 +363,21 @@ public class LockPatternView extends View {
         /*
          * lot's of bitmaps!
          */
-        if(resolveAttribute(getContext(),
-                ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_btn_code_lock_default_holo"),0
-        ) != 0 && !useBackupStyle) {
-            mBitmapBtnDefault = getBitmapFor(resolveAttribute(getContext(),
-                    ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_btn_code_lock_default_holo"),0));
-        } else {
-            mBitmapBtnDefault = ResourcesUtil.getBitmap(R.drawable.applock_pattern_default_btn_gray_point);//getBitmapFor(mDefault_BtnDefautlResId);
-        }
 
-        if(resolveAttribute(getContext(),
-                ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_btn_code_lock_touched_holo"),0) != 0 && !useBackupStyle) {
-            mBitmapBtnTouched = getBitmapFor(resolveAttribute(getContext(),
-                    ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_btn_code_lock_touched_holo"),0));
-        } else {
-            mBitmapBtnTouched = ResourcesUtil.getBitmap(R.drawable.applock_pattern_touched_btn_black_point);//getBitmapFor(mDefault_BtnTouchedResId);
-        }
+        mBitmapBtnDefault = ResourcesUtil.getBitmap(R.drawable.applock_pattern_default_btn_gray_point);
 
-        if(resolveAttribute(getContext(),
-                ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_btn_code_lock_error_holo"),0) != 0 && !useBackupStyle) {
-            mBitmapBtnIncorrect = getBitmapFor(resolveAttribute(getContext(),
-                    ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_btn_code_lock_error_holo"),0));
-        } else {
-            mBitmapBtnIncorrect = ResourcesUtil.getBitmap(R.drawable.applock_pattern_incorrect_btn_point);//getBitmapFor(mDefault_BtnIncorrectResId);
-        }
+        mBitmapBtnTouched = ResourcesUtil.getBitmap(R.drawable.applock_lockpattern_applock_btn_code_lock_touched_holo_light);
 
-        if(resolveAttribute(
-                getContext(),
-                ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_indicator_code_lock_point_area_default_holo"),0) != 0 && !useBackupStyle) {
-            mBitmapCircleDefault = getBitmapFor(
-                    resolveAttribute(
-                            getContext(),
-                            ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_indicator_code_lock_point_area_default_holo"),0));
-        } else {
-            mBitmapCircleDefault = getBitmapFor(mDefault_CircleDefaultResId);
-        }
 
-        if(resolveAttribute(getContext(),
-                ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_indicator_code_lock_point_area_normal"),0) != 0 && !useBackupStyle) {
-            mBitmapCircleTouched = getBitmapFor(resolveAttribute(getContext(),
-                    ResourcesUtil.getAttrId(getContext(), "applock_lockpattern_drawable_indicator_code_lock_point_area_normal"),0));
-        } else {
-            mBitmapCircleTouched = getBitmapFor(mDefault_CircleTouchedResId);
-        }
+        mBitmapBtnIncorrect = ResourcesUtil.getBitmap(R.drawable.applock_lockpattern_applock_btn_code_lock_red_holo_light);
 
-        mBitmapCircleIncorrect = getBitmapFor(mDefault_CircleIncorrectResId);
+        mBitmapCircleDefault = getBitmapFor(R.drawable.applock_lockpattern_indicator_code_lock_backgorund_holo);
+
+        mBitmapCircleTouched = getBitmapFor(R.drawable.applock_lockpattern_indicator_code_lock_point_area_green_holo);
+
+//        mBitmapCircleIncorrect = getBitmapFor(mDefault_CircleIncorrectResId);
+        mBitmapCircleIncorrect = getBitmapFor(R.drawable.applock_lockpattern_indicator_code_lock_point_area_red_holo);
+
 
         mBitmapArrowGreenUp = getBitmapFor(ResourcesUtil.getDrawableId(getContext(), "applock_touch_pattern_arrow"));
         mBitmapArrowRedUp = getBitmapFor(ResourcesUtil.getDrawableId(getContext(), "applock_touch_pattern_arrow_red"));
@@ -1455,9 +1406,9 @@ public class LockPatternView extends View {
         mCircleBtnMatrix.preTranslate((cellWidth - innerCircle.getWidth()) / 2.0f, (cellHeight - innerCircle.getHeight()) / 2);
 
         if (mPatternDisplayMode == DisplayMode.Wrong) {
-            if (mBitmapBtnDefault != null) {
-                canvas.drawBitmap(mBitmapBtnDefault, mCircleBtnMatrix, mPaint);
-            }
+//            if (mBitmapBtnDefault != null) {
+//                canvas.drawBitmap(mBitmapBtnDefault, mCircleBtnMatrix, mPaint);
+//            }
 //            int alpha = 255 - (255/mRedAnimationMaxCount) * (mRedAnimationMaxCount - mRedAnimationCount);
 //	    	mPaint.setAlpha(alpha);
             canvas.drawBitmap(innerCircle, mCircleBtnMatrix, mPaint);

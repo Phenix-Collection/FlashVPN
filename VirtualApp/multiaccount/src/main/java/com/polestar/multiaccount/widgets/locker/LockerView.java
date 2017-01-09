@@ -222,7 +222,7 @@ public class LockerView extends LinearLayout implements View.OnClickListener {
         }
         mLockPatternView.setVisibility(View.VISIBLE);
         mLockPatternView.setInArrowMode(false);
-        mLockPatternView.setInCircleMode(false);
+        mLockPatternView.setInCircleMode(true);
         updatePatternPointColor();
     }
 
@@ -321,12 +321,12 @@ public class LockerView extends LinearLayout implements View.OnClickListener {
     private void updatePatternPointColor() {
         if (mLockPatternView == null) return;
         if (mState == STATE.RESET_PASSWORD || mIsWhiteBackground) {
-            mLockPatternView.setBitmapBtnDefault(R.drawable.applock_pattern_default_btn_gray_point);
-            mLockPatternView.setBitmapBtnTouched(R.drawable.applock_pattern_touched_btn_black_point);
-            mLockPatternView.setGreenPathPaintColor(TITLE_COLOR_GRAY);
+//            mLockPatternView.setBitmapBtnDefault(R.drawable.applock_pattern_default_btn_gray_point);
+//            mLockPatternView.setBitmapBtnTouched(R.drawable.applock_pattern_touched_btn_black_point);
+            mLockPatternView.setGreenPathPaintColor(getResources().getColor(R.color.applock_lockpattern_pattern_path_green_light));
         } else {
-            mLockPatternView.setBitmapBtnDefault(R.drawable.applock_pattern_default_btn_white_point);
-            mLockPatternView.setBitmapBtnTouched(R.drawable.applock_pattern_touched_btn_white_point);
+//            mLockPatternView.setBitmapBtnDefault(R.drawable.applock_pattern_default_btn_white_point);
+//            mLockPatternView.setBitmapBtnTouched(R.drawable.applock_pattern_touched_btn_white_point);
             mLockPatternView.setGreenPathPaintColor(TITLE_COLOR_WHITE);
         }
     }

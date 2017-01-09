@@ -305,14 +305,6 @@ public class PreferencesUtils {
         return getBoolean(c,AppConstants.PreferencesKey.LOCKER_FEATURE_ENABLED,false);
     }
 
-    public static void setLockSettingChangeMark(Context c) {
-        putLong(c, "lock_setting_mark", System.currentTimeMillis());
-    }
-
-    public static long getLockSettingChangeMark(Context c) {
-        return getLong(c, "lock_setting_mark", 0);
-    }
-
     public static void setLoveApp(  boolean b) {
         putInt(MApp.getApp(),"love_app", b? 1:-1);
     }

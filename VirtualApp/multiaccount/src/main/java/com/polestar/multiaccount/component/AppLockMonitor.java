@@ -27,11 +27,10 @@ public class AppLockMonitor {
     private static AppLockMonitor sInstance = null;
     private HashMap<String , AppModel> modelHashMap = new HashMap<>();
     private Handler mHandler;
-    private final static long RELOCK_DELAY = 15*1000; //if paused for 2 minutes, and then resume, it need be locked
+    private final static long RELOCK_DELAY = 3*1000; //if paused for 2 minutes, and then resume, it need be locked
     private final static int MSG_DELAY_LOCK_APP = 0;
     public final static int MSG_PACKAGE_UNLOCKED = 1;
     private final static String TAG = "AppLockMonitor";
-    private long settingMark;
 
     private AppLockWindowManager mAppLockWindows = AppLockWindowManager.getInstance();
 
@@ -56,11 +55,11 @@ public class AppLockMonitor {
     }
 
     private void initSetting() {
+        MLogs.d("initSetting");
         List<AppModel> list = DbManager.queryAppList(MApp.getApp());
         for (AppModel model: list) {
             modelHashMap.put(model.getPackageName(), model);
         }
-        settingMark = PreferencesUtils.getLockSettingChangeMark(MApp.getApp());
     }
 
     public static synchronized AppLockMonitor getInstance(){
@@ -70,23 +69,10 @@ public class AppLockMonitor {
         return sInstance;
     }
 
-    private void resetSettingIfNeeded(){
-        long newMark = PreferencesUtils.getLockSettingChangeMark(MApp.getApp());
-        if (settingMark != newMark) {
-            settingMark = newMark;
-            MLogs.d(TAG, "need reset setting");
-            initSetting();
-        }
-    }
-
-    public void onLockSettingChanged() {
-        initSetting();
-    }
 
     public void onActivityResume(Activity activity) {
         String pkg = activity.getPackageName();
         MLogs.d(TAG, "onActivityResume " + pkg);
-        resetSettingIfNeeded();
         AppModel model = modelHashMap.get(pkg);
         if (model == null || pkg == null) {
             MLogs.logBug(TAG, "cannot find cloned model : " + pkg);
