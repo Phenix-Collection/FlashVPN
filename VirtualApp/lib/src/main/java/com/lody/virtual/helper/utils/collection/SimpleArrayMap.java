@@ -404,7 +404,9 @@ public class SimpleArrayMap<K, V> {
                 System.arraycopy(oarray, 0, mArray, 0, oarray.length);
             }
 
-            freeArrays(ohashes, oarray, mSize);
+            if (oarray.length >= 2) {
+                freeArrays(ohashes, oarray, mSize);
+            }
         }
 
         if (index < mSize) {
