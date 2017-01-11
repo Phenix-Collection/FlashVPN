@@ -16,6 +16,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemClock;
 
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VBinder;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.server.am.VActivityManagerService;
@@ -434,7 +435,11 @@ public class JobServiceContext extends IJobCallback.Stub implements ServiceConne
         private void closeAndCleanupJobH(boolean reschedule) {
             final JobStatus completedJob = mRunningJob;
             synchronized (mLock) {
-                mContext.unbindService(JobServiceContext.this);
+                try {
+                    mContext.unbindService(JobServiceContext.this);
+                }catch (Exception e) {
+                    VLog.logbug(VLog.VTAG, VLog.getStackTraceString(e));
+                }
                 mRunningJob = null;
                 mParams = null;
                 mVerb = -1;
