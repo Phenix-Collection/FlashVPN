@@ -121,7 +121,7 @@ public class StaticBroadcastSystem {
 			PendingResult result = getPendingResult();
 			synchronized (mAMS) {
                 if (!mAMS.handleStaticBroadcast(appId, info, intent, this, result)) {
-                    result.finish();
+//                    result.finish();
 //					if (mOrderedHint) {
 //						am.finishReceiver(mToken, mResultCode, mResultData, mResultExtras,
 //								mAbortBroadcast, mFlags);

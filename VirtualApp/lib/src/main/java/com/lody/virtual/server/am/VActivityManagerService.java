@@ -1033,7 +1033,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		VLog.d(TAG, "E performScheduleReceiver");
 		if (intent.getComponent() != null && !componentName.equals(intent.getComponent())) {
 			VLog.logbug(TAG, "intent cmp name error " + intent.toString());
-			result.finish();
+			//result.finish();
 			return;
 		}
 		if (intent.getComponent() == null) {
@@ -1054,9 +1054,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 						result.getResultExtras(false), sync);
 			}
 		} catch (Throwable e) {
-			if (result != null) {
-				result.finish();
-			}
+//			if (result != null) {
+//				result.finish();
+//			}
 		}
 		VLog.d(TAG, "X performScheduleReceiver");
 	}
