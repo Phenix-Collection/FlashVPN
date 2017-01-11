@@ -75,7 +75,6 @@ public class MApp extends Application {
         ServiceManagerNative.SERVICE_CP_AUTH = BuildConfig.APPLICATION_ID + "." + ServiceManagerNative.SERVICE_DEF_AUTH;
         //
 
-        VirtualCore.get().setComponentDelegate(new MComponentDelegate());
         super.attachBaseContext(base);
         try {
             VirtualCore.get().startup(base);
@@ -93,6 +92,7 @@ public class MApp extends Application {
             installGms();
 
         } else if (VirtualCore.get().isVAppProcess()) {
+            VirtualCore.get().setComponentDelegate(new MComponentDelegate());
             VirtualCore.get().setPhoneInfoDelegate(new MyPhoneInfoDelegate());
         }
 
