@@ -111,19 +111,28 @@ public class StaticBroadcastSystem {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			VLog.d("StaticBroadcastReceiver", "onReceive " + intent.toString());
+			VLog.d("StaticBroadcastReceiver", "E onReceive " + intent.toString());
 			if (mApp.isBooting()) {
 				return;
 			}
 			if ((intent.getFlags() & FLAG_RECEIVER_REGISTERED_ONLY) != 0) {
                 return;
             }
-			PendingResult result = goAsync();
+			PendingResult result = getPendingResult();
 			synchronized (mAMS) {
                 if (!mAMS.handleStaticBroadcast(appId, info, intent, this, result)) {
                     result.finish();
+//					if (mOrderedHint) {
+//						am.finishReceiver(mToken, mResultCode, mResultData, mResultExtras,
+//								mAbortBroadcast, mFlags);
+//					} else {
+//						// This broadcast was sent to a component; it is not ordered,
+//						// but we still need to tell the activity manager we are done.
+//						am.finishReceiver(mToken, 0, null, null, false, mFlags);
+//					}
                 }
             }
+			VLog.d("StaticBroadcastReceiver", "X onReceive " + intent.toString());
 		}
 	}
 }

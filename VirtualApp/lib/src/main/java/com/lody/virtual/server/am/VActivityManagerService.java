@@ -985,12 +985,18 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		VLog.d(TAG, "handleStaticBroadcast unprotected realintent:　" + realIntent.toString());
 		if (userId >= 0) {
 			int uid = VUserHandle.getUid(userId, appId);
-			handleStaticBroadcastAsUser(uid, info, realIntent, receiver, result);
+			if(!handleStaticBroadcastAsUser(uid, info, realIntent, receiver, result)) {
+				VLog.d(TAG, "handleStaticBroadcastAsUser ret false");
+				return false;
+			}
 		} else if (userId == VUserHandle.USER_ALL) {
 			List<VUserInfo> userList = VUserManager.get().getUsers(false);
 			for (VUserInfo userInfo : userList) {
 				int uid = VUserHandle.getUid(userInfo.id, appId);
-				handleStaticBroadcastAsUser(uid, info, realIntent, receiver, result);
+				if(!handleStaticBroadcastAsUser(uid, info, realIntent, receiver, result)) {
+					VLog.d(TAG, "handleStaticBroadcastAsUser USER_ALL ret false");
+					return false;
+				}
 			}
 		} else {
 			VLog.w(TAG, "Unknown User for receive the broadcast : #%d.", userId);
@@ -1000,16 +1006,22 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	}
 
 
-	private void handleStaticBroadcastAsUser(int uid, ActivityInfo info, Intent intent, BroadcastReceiver receiver,
+	private boolean handleStaticBroadcastAsUser(int uid, ActivityInfo info, Intent intent, BroadcastReceiver receiver,
 											 BroadcastReceiver.PendingResult result) {
 		synchronized (this) {
 			ProcessRecord r = findProcessLocked(info.processName, uid);
 			if (BROADCAST_NOT_STARTED_PKG && r == null) {
+				VLog.d(TAG, "startProcess for " + intent.toString());
 				r = startProcessIfNeedLocked(info.processName, getUserId(uid), info.packageName);
 			}
 			if (r != null && r.appThread != null) {
+				VLog.d(TAG, "performReceive " + intent.toString());
 				performScheduleReceiver(r.appThread, getUserId(uid), info, intent, receiver.isOrderedBroadcast(),
 						result);
+				return true;
+			} else {
+				VLog.logbug(TAG, "Not schedule receiver for not started process: " + intent.toString());
+				return false;
 			}
 		}
 	}
@@ -1018,7 +1030,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
 										 boolean sync, BroadcastReceiver.PendingResult result) {
 
 		ComponentName componentName = ComponentUtils.toComponentName(info);
+		VLog.d(TAG, "E performScheduleReceiver");
 		if (intent.getComponent() != null && !componentName.equals(intent.getComponent())) {
+			VLog.logbug(TAG, "intent cmp name error " + intent.toString());
+			result.finish();
 			return;
 		}
 		if (intent.getComponent() == null) {
@@ -1043,5 +1058,6 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				result.finish();
 			}
 		}
+		VLog.d(TAG, "X performScheduleReceiver");
 	}
 }
