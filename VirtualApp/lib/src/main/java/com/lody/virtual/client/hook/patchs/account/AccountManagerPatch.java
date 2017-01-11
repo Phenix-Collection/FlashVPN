@@ -226,7 +226,7 @@ public class AccountManagerPatch extends PatchDelegate<AccountBinderDelegate> {
 		public Object call(Object who, Method method, Object... args) throws Throwable {
 			IAccountManagerResponse response = (IAccountManagerResponse) args[0];
 			Account account = (Account) args[1];
-			boolean expectActivityLaunch = (boolean) args[2];
+			boolean expectActivityLaunch = (boolean) (args.length >= 3 ? args[2] : false);
 			Mgr.removeAccount(response, account, expectActivityLaunch);
 			return 0;
 		}
