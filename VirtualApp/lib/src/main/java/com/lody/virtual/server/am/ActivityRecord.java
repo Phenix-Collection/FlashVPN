@@ -1,6 +1,7 @@
 package com.lody.virtual.server.am;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.os.IBinder;
 
 /**
@@ -18,8 +19,10 @@ import android.os.IBinder;
 	public int flags;
 	public boolean marked;
 	public String affinity;
+	public Intent intent;
 
-	public ActivityRecord(TaskRecord task, ComponentName component, ComponentName caller, IBinder token, int userId, ProcessRecord process, int launchMode, int flags, String affinity) {
+	public ActivityRecord(TaskRecord task, ComponentName component, ComponentName caller, IBinder token,
+						  int userId, ProcessRecord process, int launchMode, int flags, String affinity, Intent intent) {
 		this.task = task;
 		this.component = component;
 		this.caller = caller;
@@ -29,6 +32,7 @@ import android.os.IBinder;
 		this.launchMode = launchMode;
 		this.flags = flags;
 		this.affinity = affinity;
+		this.intent = intent;
 	}
 
 }

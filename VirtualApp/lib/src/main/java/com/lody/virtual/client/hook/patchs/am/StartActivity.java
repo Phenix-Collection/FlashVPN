@@ -51,6 +51,7 @@ import java.lang.reflect.Method;
 		Intent intent = (Intent) args[intentIndex];
 		intent.setDataAndType(intent.getData(), resolvedType);
 		IBinder resultTo = resultToIndex >= 0 ? (IBinder) args[resultToIndex] : null;
+		VLog.d("StartActivity", "resultTo " + resultTo + " of intent " + intent.toString());
 		int userId = VUserHandle.myUserId();
 		if (ComponentUtils.isStubComponent(intent)) {
 			return method.invoke(who, args);

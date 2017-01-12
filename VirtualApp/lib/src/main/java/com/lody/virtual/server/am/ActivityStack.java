@@ -19,6 +19,7 @@ import com.lody.virtual.helper.proto.StubActivityRecord;
 import com.lody.virtual.helper.utils.ArrayUtils;
 import com.lody.virtual.helper.utils.ClassUtils;
 import com.lody.virtual.helper.utils.ComponentUtils;
+import com.lody.virtual.helper.utils.VLog;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,6 +43,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 	private final ActivityManager mAM;
 	private final VActivityManagerService mService;
 
+	private static final String TAG = "ActivityStack";
 	/**
 	 * [Key] = TaskId [Value] = TaskRecord
 	 */
@@ -202,6 +204,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 
 		Intent destIntent;
 		ActivityRecord sourceRecord = findActivityByToken(userId, resultTo);
+		VLog.d(TAG, "startActivityLocked sourceRecord " + sourceRecord);
 		TaskRecord sourceTask = sourceRecord != null ? sourceRecord.task : null;
 
 		ReuseTarget reuseTarget = ReuseTarget.CURRENT;
@@ -470,6 +473,10 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		StubActivityRecord saveInstance = new StubActivityRecord(intent, info,
 				sourceRecord != null ? sourceRecord.component : null, userId);
 		saveInstance.saveToIntent(targetIntent);
+		if (sourceRecord != null) {
+			VLog.d("ActivityStack", "startActivityProcess sourceRecord " + sourceRecord.component.toString());
+		}
+		VLog.d("ActivityStack", "intent: " + intent.toString() + " target " + targetIntent.toString());
 		return targetIntent;
 	}
 
@@ -483,7 +490,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 				mHistory.put(taskId, task);
 			}
 			ActivityRecord record = new ActivityRecord(task, component, caller, token, targetApp.userId, targetApp,
-					launchMode, flags, affinity);
+					launchMode, flags, affinity, taskRoot);
 			synchronized (task.activities) {
 				task.activities.add(record);
 			}
@@ -555,6 +562,22 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		synchronized (mHistory) {
 			ActivityRecord r = findActivityByToken(userId, token);
 			if (r != null) {
+				if (r.caller == null) {
+					if (r.component != null && r.component.getClassName().equals("com.google.android.gms.games.ui.signin.SignInActivity")){
+						String pkg = r.intent.getStringExtra("com.google.android.gms.games.GAME_PACKAGE_NAME");
+						ComponentName cn = r.intent.getParcelableExtra("_VA_|_caller_");
+						if (cn != null) {
+							VLog.d(TAG, "find component caller from extra " + cn.toString());
+							r.caller = cn;
+						} else {
+							if (pkg != null) {
+								r.caller = new ComponentName(pkg, "PLIB_FAKE_CLASS" );
+							}
+						}
+
+					}
+				}
+				VLog.d(VLog.VTAG, "getCallingActivity caller " + r.caller);
 				return r.caller;
 			}
 			return null;
