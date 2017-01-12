@@ -2,9 +2,11 @@ package com.lody.virtual.client.hook.patchs.am;
 
 import android.app.ActivityManagerNative;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ComponentInfo;
 import android.os.Build;
+import android.os.IBinder;
 import android.os.IInterface;
 
 import com.lody.virtual.client.core.VirtualCore;
@@ -13,6 +15,7 @@ import com.lody.virtual.client.stub.StubPendingActivity;
 import com.lody.virtual.client.stub.StubPendingReceiver;
 import com.lody.virtual.client.stub.StubPendingService;
 import com.lody.virtual.helper.compat.ActivityManagerCompat;
+import com.lody.virtual.helper.utils.ArrayUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 
@@ -23,6 +26,7 @@ import java.lang.reflect.Method;
  */
 /* package */ class GetIntentSender extends BaseStartActivity {
 
+	private final static String TAG = "GetIntentSender";
 	@Override
 	public String getName() {
 		return "getIntentSender";
@@ -33,6 +37,8 @@ import java.lang.reflect.Method;
 		String creator = (String) args[1];
 		args[1] = getHostPkg();
 		String[] resolvedTypes = (String[]) args[6];
+		int indexToken = ArrayUtils.indexOfFirst(args, IBinder.class);
+		IBinder token = indexToken == -1 ? null : (IBinder) args[indexToken];
 		int type = (int) args[0];
 		if (args[5] instanceof Intent[]) {
 			Intent[] intents = (Intent[]) args[5];
@@ -41,7 +47,7 @@ import java.lang.reflect.Method;
 				if (resolvedTypes != null && resolvedTypes.length > 0) {
 					intent.setDataAndType(intent.getData(), resolvedTypes[resolvedTypes.length - 1]);
 				}
-				Intent proxyIntent = redirectIntentSender(type, creator, intent);
+				Intent proxyIntent = redirectIntentSender(type, creator, intent, token);
 				if (proxyIntent != null) {
 					intents[intents.length - 1] = proxyIntent;
 				}
@@ -54,11 +60,15 @@ import java.lang.reflect.Method;
 			if (args[args.length-1] instanceof Integer) {
 				int userId = (int)args[args.length-1];
 				if (userId == VUserHandle.USER_CURRENT) {
-					args[args.length-1] = VUserHandle.CURRENT_OR_SELF;
+					args[args.length-1] = VUserHandle.USER_CURRENT_OR_SELF;
 				}
 			}
 		}
-		args[6] = new String[] {null};
+		if (resolvedTypes != null && resolvedTypes.length != 0) {
+			args[6] = new String[resolvedTypes.length];
+		} else {
+			args[6] = new String[] { null};
+		}
 		IInterface sender = (IInterface) method.invoke(who, args);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && sender != null && creator != null) {
 			VActivityManager.get().addPendingIntent(sender.asBinder(), creator);
@@ -66,25 +76,42 @@ import java.lang.reflect.Method;
 		return sender;
 	}
 
-	private Intent redirectIntentSender(int type, String creator, Intent intent) {
+	private Intent redirectIntentSender(int type, String creator, Intent intent, IBinder token) {
 		Intent newIntent = intent.cloneFilter();
 		boolean ok = false;
 
 		switch (type) {
 			case ActivityManagerCompat.INTENT_SENDER_ACTIVITY: {
-				VLog.d("GetIntentSender", "INTENT_SENDER_BROADCAST " + intent.toString());
+				VLog.d(TAG, "INTENT_SENDER_ACTIVITY " + intent.toString());
 				ComponentInfo info = VirtualCore.get().resolveActivityInfo(intent, VUserHandle.myUserId());
 				if (info != null) {
 					ok = true;
 					newIntent.setClass(getHostContext(), StubPendingActivity.class);
 					newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					if (token != null) {
+						VLog.d(TAG, "token not null");
+						try {
+							ComponentName componentName = VActivityManager.get().getActivityForToken(token);
+							if (componentName != null) {
+								VLog.d(TAG, "component " + componentName.toString());
+								newIntent.putExtra("_VA_|_caller_", componentName);
+							}
+						}catch (Exception e){
+							VLog.logbug(TAG, VLog.getStackTraceString(e));
+						}
+					}
 				}
 
 			} break;
 
+			case ActivityManagerCompat.INTENT_SENDER_ACTIVITY_RESULT: {
+				VLog.d(TAG, "INTENT_SENDER_ACTIVITY_RESULT " + intent.toString());
+				break;
+			}
+
 			case ActivityManagerCompat.INTENT_SENDER_SERVICE: {
 				ComponentInfo info = VirtualCore.get().resolveServiceInfo(intent, VUserHandle.myUserId());
-				VLog.d("GetIntentSender", "INTENT_SENDER_SERVICE " + intent.toString());
+				VLog.d(TAG, "INTENT_SENDER_SERVICE " + intent.toString());
 				if (info != null) {
 					ok= true;
 					newIntent.setClass(getHostContext(), StubPendingService.class);
@@ -94,7 +121,7 @@ import java.lang.reflect.Method;
 
 			case ActivityManagerCompat.INTENT_SENDER_BROADCAST: {
 				ok = true;
-				VLog.d("GetIntentSender", "INTENT_SENDER_BROADCAST " + intent.toString());
+				VLog.d(TAG, "INTENT_SENDER_BROADCAST " + intent.toString());
 				newIntent.setClass(getHostContext(), StubPendingReceiver.class);
 			} break;
 
