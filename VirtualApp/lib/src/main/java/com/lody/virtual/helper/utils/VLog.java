@@ -82,9 +82,10 @@ public class VLog {
 		Log.e(VTAG+tag, getStackTraceString(e));
 	}
 	public static void logbug(String tag, String msg, Object... format) {
-		Log.e(VTAG + tag, String.format(msg, format));
 		if (sKeyLogger != null) {
 			sKeyLogger.logBug(tag, String.format(msg, format));
+		} else {
+			Log.e(VTAG + tag, String.format(msg, format));
 		}
 	}
 }
