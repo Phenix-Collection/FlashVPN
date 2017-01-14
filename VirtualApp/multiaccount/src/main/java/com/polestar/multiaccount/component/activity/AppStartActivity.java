@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -27,6 +28,7 @@ import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ToastUtils;
 
 import java.util.List;
@@ -41,6 +43,7 @@ public class AppStartActivity extends BaseActivity {
     private ImageView mImgCircle;
     private ImageView mImgAppIcon;
     private TextView mTxtTips;
+    private TextView mFirstStartTips;
 
     private  AppModel appModel;
     private String from;
@@ -111,6 +114,7 @@ public class AppStartActivity extends BaseActivity {
         mImgCircle = (ImageView) findViewById(R.id.img_success_bg2);
         mImgAppIcon = (ImageView) findViewById(R.id.img_app_icon);
         mTxtTips = (TextView) findViewById(R.id.txt_launch_tips);
+        mFirstStartTips = (TextView) findViewById(R.id.txt_first_launch_tips);
 
 
         try{
@@ -129,6 +133,11 @@ public class AppStartActivity extends BaseActivity {
                 }
             });
             mTxtTips.setText(String.format(getString(R.string.app_starting_tips), appModel.getName()));
+            if (PreferencesUtils.isFirstStart(appModel.getName())){
+                PreferencesUtils.setStarted(appModel.getName());
+                mFirstStartTips.setVisibility(View.VISIBLE);
+                mFirstStartTips.setText(getString(R.string.first_start_tips));
+            }
 
             ScaleAnimation sa = new ScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             sa.setDuration(2000);

@@ -340,4 +340,12 @@ public class PreferencesUtils {
     public static boolean isApplockGuideShowed() {
         return getBoolean(MApp.getApp(),"app_lock_guide_showed",false);
     }
+
+    public static boolean isFirstStart(String name) {
+        return getLong(MApp.getApp(), name+"_first_start", -1) == -1;
+    }
+
+    public static void setStarted(String name) {
+        putLong(MApp.getApp(), name+"_first_start", System.currentTimeMillis());
+    }
 }
