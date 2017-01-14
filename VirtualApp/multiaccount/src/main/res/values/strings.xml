@@ -103,7 +103,7 @@
     <string name="text_Q5_title">Q5: How does Super Clone’s Private App function protects my privacy?</string>
     <string name="text_Q5_content">A5: A password is required to access Private Apps each time you wake your device. Additionally, all Private Apps are installed on Super Clone, and therefore all Private Apps’ data are not accessible by any external programs.</string>
 
-    <string name="clone_label_tag">Cloned %s</string>
+    <string name="clone_label_tag">%s+</string>
 
     <string name="powered_by_app">Powered by Super Clone</string>
 

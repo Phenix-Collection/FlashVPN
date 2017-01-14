@@ -83,10 +83,11 @@ import java.lang.reflect.Method;
 
     private void handleInstallShortcutIntent(Intent intent) {
         Intent shortcut = intent.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT);
+        String pkg;
         if (shortcut != null) {
             ComponentName component = shortcut.resolveActivity(VirtualCore.getPM());
             if (component != null) {
-                String pkg = component.getPackageName();
+                pkg = component.getPackageName();
                 Intent newShortcutIntent = new Intent();
                 newShortcutIntent.setClassName(getHostPkg(), Constants.SHORTCUT_PROXY_ACTIVITY_NAME);
                 newShortcutIntent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -95,7 +96,11 @@ import java.lang.reflect.Method;
                 newShortcutIntent.putExtra("_VA_|_user_id_", VUserHandle.myUserId());
                 intent.removeExtra(Intent.EXTRA_SHORTCUT_INTENT);
                 intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, newShortcutIntent);
-
+                if (VirtualCore.get().getAppApiDelegate() != null) {
+                    String label = intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
+                    label = VirtualCore.get().getAppApiDelegate().getCloneTagedLabel(label);
+                    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, label);
+                }
                 Intent.ShortcutIconResource icon = intent.getParcelableExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE);
                 if (icon != null && !TextUtils.equals(icon.packageName, getHostPkg())) {
                     try {
@@ -105,6 +110,7 @@ import java.lang.reflect.Method;
                             if (resId > 0) {
                                 Drawable iconDrawable = resources.getDrawable(resId);
                                 Bitmap newIcon = BitmapUtils.drawableToBitmap(iconDrawable);
+                                newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(icon.packageName, newIcon);
                                 if (newIcon != null) {
                                     intent.removeExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE);
                                     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, newIcon);
@@ -112,6 +118,19 @@ import java.lang.reflect.Method;
                             }
                         }
                     } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        Bitmap origIcon = intent.getParcelableExtra(Intent.EXTRA_SHORTCUT_ICON);
+                        if (origIcon != null && pkg != null && !TextUtils.equals(pkg, getHostPkg())){
+                            Bitmap newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(pkg, origIcon);
+                            if (newIcon != null) {
+                                intent.removeExtra(Intent.EXTRA_SHORTCUT_ICON);
+                                intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, newIcon);
+                            }
+                        }
+                    }catch (Throwable e) {
                         e.printStackTrace();
                     }
                 }

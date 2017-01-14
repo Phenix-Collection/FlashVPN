@@ -34,7 +34,7 @@ public class CommonUtils {
     }
     public static void createShortCut(Context context, AppModel appModel) {
         Bitmap iconBitmap = BitmapUtils.createCustomIcon(context, appModel.initDrawable(context));
-        String appName = appModel.getName();
+        String appName = context.getResources().getString(R.string.clone_label_tag,appModel.getName());
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppStartActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
