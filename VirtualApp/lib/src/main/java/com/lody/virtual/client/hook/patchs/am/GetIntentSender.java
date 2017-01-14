@@ -87,7 +87,8 @@ import java.lang.reflect.Method;
 				if (info != null) {
 					ok = true;
 					newIntent.setClass(getHostContext(), StubPendingActivity.class);
-					newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					newIntent.setFlags(intent.getFlags());
+//					newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					if (token != null) {
 						VLog.d(TAG, "token not null");
 						try {

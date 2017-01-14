@@ -204,7 +204,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 
 		Intent destIntent;
 		ActivityRecord sourceRecord = findActivityByToken(userId, resultTo);
-		VLog.d(TAG, "startActivityLocked sourceRecord " + sourceRecord);
+		VLog.d(TAG, "startActivityLocked sourceRecord " + sourceRecord + " resultTo " + resultTo);
 		TaskRecord sourceTask = sourceRecord != null ? sourceRecord.task : null;
 
 		ReuseTarget reuseTarget = ReuseTarget.CURRENT;
@@ -588,6 +588,22 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		synchronized (mHistory) {
 			ActivityRecord r = findActivityByToken(userId, token);
 			if (r != null) {
+				if (r.caller == null) {
+					if (r.component != null && r.component.getClassName().equals("com.google.android.gms.games.ui.signin.SignInActivity")){
+						String pkg = r.intent.getStringExtra("com.google.android.gms.games.GAME_PACKAGE_NAME");
+						ComponentName cn = r.intent.getParcelableExtra("_VA_|_caller_");
+						if (cn != null) {
+							VLog.d(TAG, "find component caller from extra " + cn.toString());
+							r.caller = cn;
+						} else {
+							if (pkg != null) {
+								r.caller = new ComponentName(pkg, "PLIB_FAKE_CLASS" );
+							}
+						}
+
+					}
+				}
+				VLog.d(VLog.VTAG, "getCallingPackage caller " + r.caller);
 				return r.caller != null ? r.caller.getPackageName() : null;
 			}
 			return null;
