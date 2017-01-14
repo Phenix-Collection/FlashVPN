@@ -36,8 +36,8 @@ import mirror.android.util.Singleton;
 
 @Patch({StartActivity.class, StartActivityAsCaller.class,
 		StartActivityAndWait.class, StartActivityWithConfig.class, StartActivityIntentSender.class,
-		StartNextMatchingActivity.class, StartVoiceActivity.class,
-		GetIntentSender.class, RegisterReceiver.class, GetContentProvider.class,
+		StartNextMatchingActivity.class, StartVoiceActivity.class, StartActivities.class,
+		GetIntentSender.class, RegisterReceiver.class, GetContentProvider.class,RefContentProvider.class,
 		GetContentProviderExternal.class,
 
 		GetActivityClassForToken.class, GetTasks.class, GetRunningAppProcesses.class,
