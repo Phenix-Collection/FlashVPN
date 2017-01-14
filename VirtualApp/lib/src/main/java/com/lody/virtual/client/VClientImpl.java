@@ -383,7 +383,7 @@ public final class VClientImpl extends IVClient.Stub {
 		if (mTempLock != null) {
 			mTempLock.block();
 		}
-		VLog.d(TAG, "no lock acquireProviderClient " + info.authority);
+		VLog.d(TAG, "no lock acquireProviderClient " + info.authority + " process " + info.processName);
 		if (!VClientImpl.getClient().isBound()) {
 			VClientImpl.getClient().bindApplication(info.packageName, info.processName);
 		}
@@ -404,7 +404,10 @@ public final class VClientImpl extends IVClient.Stub {
 		if (client != null) {
 			provider = mirror.android.content.ContentProviderClient.mContentProvider.get(client);
 			client.release();
+		} else {
+			VLog.logbug(TAG, "acquireProviderClient client is null");
 		}
+		VLog.d(TAG, "acquireProviderClient return " + provider);
 		return provider != null ? provider.asBinder() : null;
 	}
 

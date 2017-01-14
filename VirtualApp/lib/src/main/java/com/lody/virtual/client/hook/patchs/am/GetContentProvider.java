@@ -20,6 +20,7 @@ import mirror.android.app.IActivityManager;
  * @author Lody
  */
 /* package */ class GetContentProvider extends Hook {
+	private static final String TAG = "GetContentProvider";
 	@Override
 	public String getName() {
 		return "getContentProvider";
@@ -30,33 +31,34 @@ import mirror.android.app.IActivityManager;
 		int nameIdx = getProviderNameIndex();
 		String name = (String) args[nameIdx];
 		int userId = VUserHandle.myUserId();
-		VLog.d("GetContentProvider", "for : " + name);
+		VLog.d(TAG, "for : " + name);
 		ProviderInfo info = VPackageManager.get().resolveContentProvider(name, 0, userId);
 		if (info != null &&  isAppPkg(info.packageName)) {
 			if (!info.enabled) {
-				VLog.logbug("GetContentProvider", "GetContentProvider not enabled: name " + name + " pkg: " + info.packageName);
+				VLog.logbug(TAG, "GetContentProvider not enabled: name " + name + " pkg: " + info.packageName);
 			}
 			int targetVPid = VActivityManager.get().initProcess(info.packageName, info.processName, userId);
 			if (targetVPid == -1) {
-				VLog.logbug("GetContentProvider", "argetVPid == -1  " + name + " pkg: " + info.packageName);
+				VLog.logbug(TAG, "argetVPid == -1  " + name + " pkg: " + info.packageName);
 				return null;
 			}
 			args[nameIdx] = StubManifest.getStubAuthority(targetVPid);
 			Object holder = method.invoke(who, args);
 			if (holder == null) {
-				VLog.logbug("GetContentProvider", "holder == null " + name + " pkg: " + info.packageName);
+				VLog.logbug(TAG, "holder == null " + name + " pkg: " + info.packageName);
 				return null;
 			}
 			IInterface provider = IActivityManager.ContentProviderHolder.provider.get(holder);
 			if (provider != null) {
 				provider = VActivityManager.get().acquireProviderClient(userId, info);
-				VLog.logbug("GetContentProvider", "provider != null " + name + " pkg: " + info.packageName);
+				VLog.logbug(TAG, "provider != null " + name + " pkg: " + info.packageName + " provider " + provider);
 			} else {
-				VLog.logbug("GetContentProvider", "provider == null " + name +
+				VLog.logbug(TAG, "provider == null " + name +
 						" pkg: " + info.packageName + " current: " + VClientImpl.getClient().getCurrentPackage());
 				if (! info.packageName.equals(VClientImpl.getClient().getCurrentPackage())) {
 					provider = VActivityManager.get().acquireProviderClient(userId, info);
 				}
+				VLog.logbug(TAG, "provider result " + provider);
 			}
 			IActivityManager.ContentProviderHolder.provider.set(holder, provider);
 			IActivityManager.ContentProviderHolder.info.set(holder, info);

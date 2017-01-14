@@ -219,7 +219,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				e.printStackTrace();
 			}
 		}
-		VLog.e(TAG, "acquireProviderClient return null : " + info.authority);
+		VLog.logbug(TAG, "acquireProviderClient return null : " + info.authority);
 		return null;
 	}
 
