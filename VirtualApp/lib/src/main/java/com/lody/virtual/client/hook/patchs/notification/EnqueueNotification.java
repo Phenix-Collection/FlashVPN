@@ -6,6 +6,7 @@ import android.os.Build;
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.hook.patchs.notification.compat.NotificationHandler;
 import com.lody.virtual.helper.utils.ArrayUtils;
+import com.lody.virtual.os.VUserHandle;
 
 import java.lang.reflect.Method;
 
@@ -34,6 +35,15 @@ import java.lang.reflect.Method;
 		args[0] = getHostPkg();
 		if (getName().endsWith("WithTag") && Build.VERSION.SDK_INT >= 18 && args[1] instanceof String) {
 			args[1] = getHostPkg();
+		}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			if(args[args.length - 1] instanceof Integer) {
+				int userId = (int) args[args.length - 1];
+				if (userId == VUserHandle.USER_ALL) {
+					userId = VUserHandle.myUserId();
+				}
+				args[args.length - 1] = userId;
+			}
 		}
 		return method.invoke(who, args);
 	}
