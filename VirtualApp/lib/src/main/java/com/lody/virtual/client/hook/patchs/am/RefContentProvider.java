@@ -21,13 +21,13 @@ class RefContentProvider extends Hook {
     public Object call(Object who, Method method, Object... args) throws Throwable {
         if (args[0] == null) {
             VLog.logbug(TAG, "connection is null. return");
-            return null;
+            return false;
         }else{
             try{
                 return method.invoke(who, args);
             }catch (InvocationTargetException e){
                 VLog.logbug(TAG, VLog.getStackTraceString(e));
-                return null;
+                return false;
             }
         }
     }
