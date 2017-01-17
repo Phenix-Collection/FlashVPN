@@ -38,6 +38,7 @@ import mirror.android.util.Singleton;
 		StartActivityAndWait.class, StartActivityWithConfig.class, StartActivityIntentSender.class,
 		StartNextMatchingActivity.class, StartVoiceActivity.class, StartActivities.class,
 		GetIntentSender.class, RegisterReceiver.class, GetContentProvider.class,RefContentProvider.class,
+		RemoveContentProvider.class,
 		GetContentProviderExternal.class,
 
 		GetActivityClassForToken.class, GetTasks.class, GetRunningAppProcesses.class,
