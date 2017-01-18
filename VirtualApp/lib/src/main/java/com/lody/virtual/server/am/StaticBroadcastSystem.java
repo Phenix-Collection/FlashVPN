@@ -51,15 +51,16 @@ public class StaticBroadcastSystem {
 				mReceivers.put(p.packageName, receivers);
 			}
 			String componentAction = String.format("_VA_%s_%s", info.packageName, info.name);
-			IntentFilter componentFilter = new IntentFilter(componentAction);
-			BroadcastReceiver r = new StaticBroadcastReceiver(setting.appId, info, componentFilter);
-			mContext.registerReceiver(r, componentFilter, null, mScheduler);
-			VLog.d("StaticBroadcastSystem", "register " + componentFilter.getAction(0));
-			receivers.add(r);
+//			IntentFilter componentFilter = new IntentFilter(componentAction);
+//			BroadcastReceiver r = new StaticBroadcastReceiver(setting.appId, info, componentFilter);
+//			mContext.registerReceiver(r, componentFilter, null, mScheduler);
+//			VLog.d("StaticBroadcastSystem", "register " + componentFilter.getAction(0));
+//			receivers.add(r);
 			for (IntentFilter filter : filters) {
 				IntentFilter cloneFilter = new IntentFilter(filter);
 				redirectFilterActions(cloneFilter);
-				r = new StaticBroadcastReceiver(setting.appId, info, cloneFilter);
+				cloneFilter.addAction(componentAction);
+				BroadcastReceiver r = new StaticBroadcastReceiver(setting.appId, info, cloneFilter);
 				mContext.registerReceiver(r, cloneFilter, null, mScheduler);
 				receivers.add(r);
 			}
