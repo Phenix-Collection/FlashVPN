@@ -178,7 +178,7 @@ public class HomeFragment extends BaseFragment {
             if ( appInfos == null) {
                 return  null;
             }
-            if (position < appInfos.size()) {
+            if (position < appInfos.size() && position >= 0) {
                 return  appInfos.get(position);
             }
             return null;
