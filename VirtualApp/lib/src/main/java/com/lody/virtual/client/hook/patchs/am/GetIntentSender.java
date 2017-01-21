@@ -64,11 +64,11 @@ import java.lang.reflect.Method;
 				}
 			}
 		}
-		if (resolvedTypes != null && resolvedTypes.length != 0) {
-			args[6] = new String[resolvedTypes.length];
-		} else {
-			args[6] = new String[] { null};
-		}
+//		if (resolvedTypes != null && resolvedTypes.length != 0) {
+//			args[6] = new String[resolvedTypes.length];
+//		} else {
+//			args[6] = new String[] { null};
+//		}
 		IInterface sender = (IInterface) method.invoke(who, args);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && sender != null && creator != null) {
 			VActivityManager.get().addPendingIntent(sender.asBinder(), creator);
