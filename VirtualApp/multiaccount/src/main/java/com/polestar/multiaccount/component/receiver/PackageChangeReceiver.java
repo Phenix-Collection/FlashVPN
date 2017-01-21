@@ -25,7 +25,10 @@ public class PackageChangeReceiver extends BroadcastReceiver{
                 packageName = packageName.replaceFirst("package:", "");
             }
             DbManager.notifyChanged();
-            CloneHelper.getInstance(context).unInstallApp(context, packageName);
+            boolean replacing = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
+            if (!replacing) {
+                CloneHelper.getInstance(context).unInstallApp(context, packageName);
+            }
         }
         if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
             String packageName = intent.getDataString();
