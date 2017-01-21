@@ -15,6 +15,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+
+import com.lody.virtual.client.env.Constants;
 import com.lody.virtual.os.VUserInfo;
 import android.os.Binder;
 import android.os.Build;
@@ -966,18 +968,22 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	boolean handleStaticBroadcast(int appId, ActivityInfo info, Intent intent, BroadcastReceiver receiver,
 								  BroadcastReceiver.PendingResult result) {
 		// Maybe send from System
-		int userId = intent.getIntExtra("_VA_|_user_id_", VUserHandle.USER_ALL);
-		ComponentName component = intent.getParcelableExtra("_VA_|_component_");
-		Intent realIntent = intent.getParcelableExtra("_VA_|_intent_");
+		int userId = intent.getIntExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_ALL);
+		ComponentName component = intent.getParcelableExtra(Constants.VA_INTENT_KEY_COMPONENT);
+		Intent realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
 		if (component != null) {
 			if (!ComponentUtils.toComponentName(info).equals(component)) {
 				return false;
 			}
 		}
+		String pkg = intent.getStringExtra(Constants.VA_INTENT_KEY_PACKAGE);
+		if (pkg != null && !pkg.equals(info.packageName)) {
+			return false;
+		}
 		if (realIntent == null) {
 			realIntent = intent;
 		}
-		VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent.toString());
+		VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent.toString() + " activityInfo: " + info.name);
 		String originAction = SpecialComponentList.unprotectAction(realIntent.getAction());
 		if (originAction != null) {
 			realIntent.setAction(originAction);

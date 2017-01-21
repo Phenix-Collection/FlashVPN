@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.client.env.Constants;
 import com.lody.virtual.client.env.SpecialComponentList;
 import com.lody.virtual.helper.compat.ObjectsCompat;
 
@@ -108,6 +109,7 @@ public class ComponentUtils {
         Intent newIntent = intent.cloneFilter();
 		ComponentName component = intent.getComponent();
 		String pkg = intent.getPackage();
+		newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
 		if (component != null) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 if (!(intent.getSelector() != null && pkg != null)) {
@@ -116,22 +118,19 @@ public class ComponentUtils {
             }
 			newIntent.setComponent(null);
 			newIntent.setPackage(null);
-			newIntent.putExtra("_VA_|_user_id_", userId);
-			newIntent.setAction(String.format("_VA_%s_%s", component.getPackageName(), component.getClassName()));
-			newIntent.putExtra("_VA_|_component_", component);
-			newIntent.putExtra("_VA_|_intent_", new Intent(intent));
+			newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
+			newIntent.setAction(String.format(Constants.VA_INTENT_KEY_COMPONENT_ACTION_FMT, component.getPackageName(), component.getClassName()));
+			newIntent.putExtra(Constants.VA_INTENT_KEY_COMPONENT, component);
 		} else if (pkg != null) {
 			newIntent.setPackage(null);
-			newIntent.putExtra("_VA_|_user_id_", userId);
-			newIntent.putExtra("_VA_|_creator_", pkg);
-			newIntent.putExtra("_VA_|_intent_", new Intent(intent));
+			newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
+			newIntent.putExtra(Constants.VA_INTENT_KEY_PACKAGE, pkg);
             String protectedAction = SpecialComponentList.protectAction(intent.getAction());
             if (protectedAction != null) {
                 newIntent.setAction(protectedAction);
             }
 		} else {
-			newIntent.putExtra("_VA_|_user_id_", userId);
-			newIntent.putExtra("_VA_|_intent_", new Intent(intent));
+			newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
             String protectedAction = SpecialComponentList.protectAction(intent.getAction());
             if (protectedAction != null) {
                 newIntent.setAction(protectedAction);

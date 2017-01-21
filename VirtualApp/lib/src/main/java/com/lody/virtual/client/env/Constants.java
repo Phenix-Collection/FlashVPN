@@ -57,4 +57,10 @@ public class Constants {
 	public static final String ACTION_USER_INFO_CHANGED = "virtual." + "android.intent.action.USER_CHANGED";
 
 	public static final String ACTION_USER_STARTED = "Virtual." + "android.intent.action.USER_STARTED";
+
+	public static final String VA_INTENT_KEY_USERID = "_VA_|_user_id_";
+	public static final String VA_INTENT_KEY_COMPONENT = "_VA_|_component_";
+	public static final String VA_INTENT_KEY_INTENT = "_VA_|_intent_";
+	public static final String VA_INTENT_KEY_PACKAGE = "_VA_|_creator_";
+	public static final String VA_INTENT_KEY_COMPONENT_ACTION_FMT = "_VA_%s_%s";
 }
