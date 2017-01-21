@@ -1021,7 +1021,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				r = startProcessIfNeedLocked(info.processName, getUserId(uid), info.packageName);
 			}
 			if (r != null && r.appThread != null) {
-				VLog.d(TAG, "performReceive " + intent.toString());
+				VLog.logbug(TAG, "performReceive " + intent.toString());
 				performScheduleReceiver(r.appThread, getUserId(uid), info, intent, receiver.isOrderedBroadcast(),
 						result);
 				return true;
