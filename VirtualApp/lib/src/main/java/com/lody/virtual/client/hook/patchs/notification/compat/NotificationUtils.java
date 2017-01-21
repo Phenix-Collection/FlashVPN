@@ -187,7 +187,7 @@ import mirror.com.android.internal.R_Hide;
 					bitmap = drawableToBitMap(appContext.getResources().getDrawable(iconId));
 				}
 				remoteViews.setImageViewBitmap(id, bitmap);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		} else {
@@ -198,7 +198,7 @@ import mirror.com.android.internal.R_Hide;
 					icon = notification.getSmallIcon();
 				}
 				remoteViews.setImageViewIcon(id, icon);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		}
