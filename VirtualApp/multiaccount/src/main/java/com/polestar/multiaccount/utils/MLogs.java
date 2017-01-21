@@ -60,11 +60,11 @@ public class MLogs {
 
     public static void logBug(String tag, String msg) {
         Log.e(tag, msg);
-        BuglyLog.e(tag, msg);
+        BuglyLog.e(tag+"_BUGLY", msg);
     }
 
     public static void logBug(String msg) {
         Log.e(DEFAULT_TAG, msg);
-        BuglyLog.e(DEFAULT_TAG, msg);
+        BuglyLog.e(DEFAULT_TAG+"_BUGLY", msg);
     }
 }
