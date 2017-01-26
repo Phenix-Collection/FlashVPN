@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.polestar.ad.AdConfig;
+import com.polestar.ad.AdControlInfo;
 import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 
@@ -57,6 +58,29 @@ public class RemoteConfig {
         return mFirebaseRemoteConfig.getString(key);
     }
 
+    public static AdControlInfo getAdControlInfo(String placement) {
+        String config = getString(placement);
+        if (TextUtils.isEmpty(config)) {
+            return  null;
+        }
+        String[] arr = config.split(":");
+        if (arr == null || arr.length != 3) {
+            MLogs.d("Wrong config : " + config);
+            return  null;
+        }
+        try {
+            int random = Integer.valueOf(arr[0]);
+            int coldDown = Integer.valueOf(arr[1]);
+            if (arr[2].equalsIgnoreCase("wifi")) {
+                return new AdControlInfo(AdControlInfo.NETWORK_WIFI_ONLY, random, coldDown);
+            } else {
+                return new AdControlInfo(AdControlInfo.NETWORK_BOTH,random,coldDown);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     //fb:adfdf:-1;ab:sdff:-2;
     public static List<AdConfig> getAdConfigList(String placement) {
         String config = getString(placement);

@@ -10,6 +10,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 
@@ -245,5 +247,21 @@ public class CommonUtils {
 
     public static boolean isSocialApp(String pkg) {
         return SOCIAL_APP_LIST.contains(pkg);
+    }
+
+    public static boolean isWiFiActive(Context inContext) {
+        Context context = inContext.getApplicationContext();
+        ConnectivityManager connectivity = (ConnectivityManager) context  .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getTypeName().equalsIgnoreCase("WIFI") && info[i].isConnected()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

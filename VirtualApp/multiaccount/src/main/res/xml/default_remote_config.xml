@@ -40,4 +40,12 @@
         <key>home_show_header_ad</key>
         <value>false</value>
     </entry>
+    <entry>
+        <key>applist_native_control</key>
+        <value>100:48:both</value>
+    </entry>
+    <entry>
+        <key>slot_applist_native</key>
+        <value>ab_native_banner:ca-app-pub-5490912237269284/7040042657:0</value>
+    </entry>
 </defaultsMap>

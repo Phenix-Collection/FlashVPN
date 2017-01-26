@@ -27,6 +27,7 @@
     <color name="dialog_right_btn_color">#E2E22d</color>
     <color name="dialog_divide_color">#e8e8e8</color>
     <color name="theme_color2">#4164ef</color>
+    <color name="native_cta_color">#48d27f</color>
     <color name="clone_activity_start_btn">#4164ef</color>
     <color name="clone_activity_start_btn_pressed">#2542b4</color>
     <color name="launch_page_color">#5183e6</color>

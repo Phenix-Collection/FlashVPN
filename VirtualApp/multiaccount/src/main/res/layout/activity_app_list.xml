@@ -21,11 +21,6 @@
             android:textColor="@color/text_gray_light"
             android:textSize="12sp"/>
 
-        <FrameLayout
-            android:id="@+id/ad_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
         <com.polestar.multiaccount.widgets.FixedListView
             android:id="@+id/app_list_popular"
             android:layout_width="match_parent"
@@ -57,6 +52,24 @@
             android:stretchMode="columnWidth">
         </com.polestar.multiaccount.widgets.FixedGridView>
 
+        <TextView
+            android:id="@+id/sponsor_text"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/sponsor_text"
+            android:textColor="@color/text_gray_light"
+            android:textSize="12sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ad_container"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

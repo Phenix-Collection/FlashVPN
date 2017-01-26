@@ -120,6 +120,12 @@ public class MTAManager {
         StatService.trackCustomEvent(context, "menu_faq");
     }
 
+    public static void applistAdLoad(Context context, String status) {
+        Properties prop = new Properties();
+        prop.setProperty("status", status);
+        StatService.trackCustomKVEvent(context, "applist_native_ad", prop);
+    }
+
     public static void menuFeedback(Context context) {
         StatService.trackCustomEvent(context, "menu_feedback");
     }
