@@ -112,7 +112,7 @@ public class StaticBroadcastSystem {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			VLog.d("StaticBroadcastReceiver", "E onReceive " + intent.toString());
+			VLog.logbug("StaticBroadcastReceiver", "E onReceive " + intent.toString());
 			if (mApp.isBooting()) {
 				return;
 			}

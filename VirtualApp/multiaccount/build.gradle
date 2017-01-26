@@ -33,7 +33,7 @@ android {
 
     signingConfigs {
         myConfig {
-            storeFile file("D:\\Project\\VirtualApp\\VirtualApp\\publish\\test.keystore")
+            storeFile file("C:\\Marc\\VirtualApp\\VirtualApp\\publish\\test.keystore")
            storePassword "123456"
             keyAlias "test.keystore"
            keyPassword "123456"

@@ -8,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.ProviderInfo;
-import android.content.res.CompatibilityInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -27,9 +25,9 @@ import mirror.RefObject;
 import mirror.RefMethod;
 import mirror.MethodParams;
 import mirror.MethodReflectParams;
+import mirror.RefStaticMethod;
 import mirror.RefStaticObject;
 import mirror.RefStaticInt;
-import mirror.RefStaticMethod;
 
 public class ActivityThread {
     public static Class<?> TYPE = RefClass.load(ActivityThread.class, "android.app.ActivityThread");
