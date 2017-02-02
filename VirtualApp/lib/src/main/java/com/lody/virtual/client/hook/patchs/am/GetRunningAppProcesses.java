@@ -33,7 +33,9 @@ import java.util.List;
 					if (processName != null) {
 						info.processName = processName;
 					}
-					info.pkgList = pkgList.toArray(new String[pkgList.size()]);
+					if (pkgList != null) {
+						info.pkgList = pkgList.toArray(new String[pkgList.size()]);
+					}
 					info.uid = VUserHandle.getAppId(VActivityManager.get().getUidByPid(info.pid));
 				}
 			}
