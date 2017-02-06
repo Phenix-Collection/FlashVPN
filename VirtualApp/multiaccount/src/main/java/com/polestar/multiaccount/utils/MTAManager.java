@@ -3,7 +3,6 @@ package com.polestar.multiaccount.utils;
 import android.content.Context;
 import android.os.Build;
 
-import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.tencent.bugly.crashreport.BuglyLog;
 import com.tencent.stat.MtaSDkException;
@@ -134,7 +133,12 @@ public class MTAManager {
         Properties prop = new Properties();
         prop.setProperty("status", status);
         prop.setProperty("from", from);
-        prop.setProperty("model", Build.FINGERPRINT);
+        int clonedCnt = CloneHelper.getInstance(context).getClonedApps().size();
+        prop.setProperty("clone_num",""+clonedCnt);
+        long installTime = CommonUtils.getInstallTime(context, context.getPackageName());
+        long hour = (System.currentTimeMillis() - installTime)/(1000*60*60);
+        prop.setProperty("install_hour",""+hour);
+       // prop.setProperty("model", Build.FINGERPRINT);
         StatService.trackCustomKVEvent(context, "menu_rate", prop);
     }
 
