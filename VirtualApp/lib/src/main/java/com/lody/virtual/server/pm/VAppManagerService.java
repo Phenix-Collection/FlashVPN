@@ -274,6 +274,7 @@ public class VAppManagerService extends IAppManager.Stub {
 			Intent intent = new Intent(virtualIntent);
 			intent.putExtra(Intent.EXTRA_UID, VUserHandle.getUid(userId, setting.appId));
 			VirtualCore.get().getContext().sendBroadcast(intent);
+			VLog.logbug(TAG, "Package added broadcast: " + intent.toString());
 		}
 		VAccountManagerService.get().refreshAuthenticatorCache(null);
 	}
