@@ -90,14 +90,20 @@ public class ComponentUtils {
 	}
 
 	public static boolean isSystemApp(PackageInfo packageInfo) {
-		return packageInfo != null && packageInfo.applicationInfo != null
-				&& (ApplicationInfo.FLAG_SYSTEM & packageInfo.applicationInfo.flags) != 0;
+		return packageInfo != null && isSystemApp(packageInfo.applicationInfo);
 	}
 
 	public static boolean isSystemApp(ApplicationInfo applicationInfo) {
-		return applicationInfo != null && (ApplicationInfo.FLAG_SYSTEM & applicationInfo.flags) != 0;
+		return applicationInfo != null && ((ApplicationInfo.FLAG_SYSTEM & applicationInfo.flags) != 0
+				|| isWebViewApp(applicationInfo));
 	}
 
+	private static boolean isWebViewApp(ApplicationInfo applicationInfo) {
+//		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
+//			return IWebViewUpdateService.getCurrentWebViewPackageName.call(WebViewFactory.getUpdateService.call()).equals(applicationInfo.packageName);
+//		else
+		return applicationInfo != null && "com.google.android.webview".equals(applicationInfo.packageName);
+	}
 
 	public static boolean isStubComponent(Intent intent) {
 		return intent != null
