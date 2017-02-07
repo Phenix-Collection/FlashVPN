@@ -303,6 +303,7 @@ public class HomeFragment extends BaseFragment {
             }
         }
         if (TextUtils.isEmpty(adunit)) {
+            mAdmobExpressView = null;
             return;
         }
         mAdmobExpressView.setAdSize(new AdSize(360, 132));
@@ -481,7 +482,9 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void loadAdmobNativeExpress(){
-
+        if (mAdmobExpressView == null) {
+            return;
+        }
         if (AdConstants.DEBUG) {
             String android_id = AdUtils.getAndroidID(mActivity);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();

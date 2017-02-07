@@ -33,6 +33,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.imageloader.widget.BasicLazyLoadImageView;
+import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.AppGridAdapter;
@@ -83,9 +84,10 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         adControl = RemoteConfig.getAdControlInfo(KEY_APPLIST_CONTROL_INFO);
         adConfigList = RemoteConfig.getAdConfigList("slot_applist_native");
         int random = new Random().nextInt(100);
-        if (random < adControl.random) {
+        if (random < adControl.random || BuildConfig.DEBUG) {
             if (adControl.network == AdControlInfo.NETWORK_BOTH
                     || (adControl.network == AdControlInfo.NETWORK_WIFI_ONLY && CommonUtils.isWiFiActive(this))){
+                initAdmobBannerView();
                 loadNativeAd();
                 MTAManager.applistAdLoad(this, "load");
             } else {
@@ -286,9 +288,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
     private void loadAdmobNativeExpress() {
         if (expressAdView == null) {
-            initAdmobBannerView();
-        }
-        if (expressAdView == null) {
+            AdLog.d("Don't load : No admob banner view configured");
             return;
         }
         if (AdConstants.DEBUG) {
@@ -316,6 +316,8 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             }
         }
         if (TextUtils.isEmpty(adunit)) {
+            expressAdView = null;
+            AdLog.d("No admob banner view configured");
             return;
         }
         expressAdView.setAdSize(new AdSize(360, 320));
