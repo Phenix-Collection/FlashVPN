@@ -1,5 +1,7 @@
 package mirror;
 
+import com.lody.virtual.helper.utils.VLog;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -62,12 +64,14 @@ public class RefMethod<T> {
         try {
             return (T) this.method.invoke(receiver, args);
         } catch (InvocationTargetException e) {
+            VLog.logbug("PLIB", "Caught method call exception");
             if (e.getCause() != null) {
                 e.getCause().printStackTrace();
             } else {
                 e.printStackTrace();
             }
         } catch (Throwable e) {
+            VLog.logbug("PLIB", "Caught method call exception");
             e.printStackTrace();
         }
         return null;
