@@ -219,6 +219,14 @@ public final class VClientImpl extends IVClient.Stub {
 	private void bindApplicationNoCheck(String packageName, String processName, ConditionVariable lock) {
 		VLog.d(TAG, "bindApplicationNoCheck " + packageName + " proc: " + processName);
 		mTempLock = lock;
+		if (isBound()) {
+			mTempLock  = null;
+			if (lock != null) {
+				lock.open();
+			}
+			VLog.logbug(TAG,"Already bound process: " + processName + " for package: " + packageName );
+			return;
+		}
 		try {
 			fixInstalledProviders();
 		} catch (Throwable e) {
