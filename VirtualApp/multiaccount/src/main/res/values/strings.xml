@@ -7,7 +7,6 @@
     <string name="appwall_title">Discover</string>
 
     <string name="action_settings">Settings</string>
-    <string name="clone_apps">Clone Apps</string>
     <string name="most_popular_apps">Most Popular</string>
     <string name="more_apps">More Supported</string>
     <string name="sponsor_text">Sponsor Apps</string>
@@ -81,7 +80,7 @@
         <item name="navigation_notifications">Privacy Locker</item>
         <item name="navigation_notifications">Notifications</item>
         <item name="navigation_FAQ">FAQ</item>
-        <item name="navigation_feedback">FeedBack</item>
+        <item name="navigation_feedback">Feedback</item>
         <item name="navigation_rate_us">Rate Us</item>
         <item name="navigation_share">Share with friends</item>
         <item name="navigation_setting">Settings</item>

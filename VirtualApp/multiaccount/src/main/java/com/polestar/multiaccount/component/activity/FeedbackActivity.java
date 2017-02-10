@@ -41,7 +41,7 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void initView() {
-        setTitle(AppConstants.TITLE_FEEDBACK);
+        setTitle(getString(R.string.feedback));
 
         mEtFeedback = (EditText) findViewById(R.id.et_feedback);
         mBtSubmit = (Button) findViewById(R.id.bt_submit);

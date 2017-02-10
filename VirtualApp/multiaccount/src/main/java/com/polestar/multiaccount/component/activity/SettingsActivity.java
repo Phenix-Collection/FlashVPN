@@ -31,7 +31,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void initView() {
-        setTitle("Settings");
+        setTitle(getString(R.string.settings));
         versionTv = (TextView)findViewById(R.id.version_info);
         versionTv.setText(getString(R.string.settings_right) + "\n" + "Version: " + BuildConfig.VERSION_NAME);
         shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);

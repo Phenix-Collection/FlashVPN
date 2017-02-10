@@ -44,7 +44,7 @@ public class NotificationActivity extends BaseActivity {
     }
 
     private void initView() {
-        setTitle(AppConstants.TITLE_NOTIFICATION);
+        setTitle(getString(R.string.notifications));
 
         mMasterSwitch = (BlueSwitch) findViewById(R.id.switch_notification_dotspace);
         mListView = (FixedListView) findViewById(R.id.switch_notifications_apps);

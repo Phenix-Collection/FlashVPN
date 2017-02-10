@@ -31,11 +31,6 @@ public class AppConstants {
 
     public static final String POPULAR_FILE_NAME = "popular_apps.txt";
 
-
-    public static final String TITLE_NOTIFICATION = "Notifications";
-
-    public static final String TITLE_FEEDBACK = "Feedback";
-
     public static final String URL_FACEBOOK = "https://www.facebook.com/polestar.applab";
 
     public class PreferencesKey {
