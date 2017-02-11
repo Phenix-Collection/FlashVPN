@@ -51,9 +51,10 @@ import mirror.android.app.IActivityManager;
 			IInterface provider = IActivityManager.ContentProviderHolder.provider.get(holder);
 			if (provider != null) {
 				provider = VActivityManager.get().acquireProviderClient(userId, info);
-				VLog.logbug(TAG, "provider != null " + name + " pkg: " + info.packageName + " provider " + provider);
+				VLog.logbug(TAG, "provider != null " + name + " process: " + info.processName +
+						" pkg: " + info.packageName + " provider " + provider);
 			} else {
-				VLog.logbug(TAG, "provider == null " + name +
+				VLog.logbug(TAG, "provider == null " + name + " process: " + info.processName +
 						" pkg: " + info.packageName + " current: " + VClientImpl.getClient().getCurrentPackage());
 				if (! info.packageName.equals(VClientImpl.getClient().getCurrentPackage())) {
 					provider = VActivityManager.get().acquireProviderClient(userId, info);
