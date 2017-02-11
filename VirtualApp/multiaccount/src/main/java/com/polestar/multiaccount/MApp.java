@@ -9,8 +9,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import com.duapps.ad.base.DuAdNetwork;
-import com.google.firebase.FirebaseApp;
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
@@ -108,7 +106,6 @@ public class MApp extends Application {
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
 //                FirebaseApp.initializeApp(this);
                 RemoteConfig.init();
-                DuAdNetwork.init(this, getDAPConfigJSON(this));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -134,30 +131,6 @@ public class MApp extends Application {
         });
     }
 
-    private String getDAPConfigJSON(Context context) {
-        BufferedInputStream bis = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            bis = new BufferedInputStream(context.getAssets().open("dap.json"));
-            byte[] buffer = new byte[4096];
-            int readLen = -1;
-            while ((readLen = bis.read(buffer)) > 0) {
-                bos.write(buffer, 0, readLen);
-            }
-        } catch (IOException e) {
-            Log.e("", "IOException :" + e.getMessage());
-        } finally {
-            if (bis != null) {
-                try{
-                    bis.close();
-                }catch (Exception e){
-
-                }
-            }
-        }
-
-        return bos.toString();
-    }
     /**
      * Install the Google mobile service.
      */

@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.duapps.ad.offerwall.ui.OfferWallAct;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
@@ -44,10 +43,7 @@ import com.polestar.multiaccount.widgets.GifView;
 
 import java.io.File;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
-
-import static com.tencent.stat.StatConfig.getCustomProperty;
 
 public class HomeActivity extends BaseActivity {
 
@@ -65,47 +61,20 @@ public class HomeActivity extends BaseActivity {
     private boolean isInterstitialAdClicked;
     private boolean isInterstitialAdLoaded;
 
-    private static final String KEY_HOME_GIFT_OFFERWALL_PERCENTAGE = "home_gift_offerwall_percentage";
     private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial_1026";
-    private boolean isShowOfferWall = true;
 
     private static final String RATE_FROM_QUIT = "quit";
     private static final String RATE_FROM_MENU = "menu";
 
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
-    private static final int OFFER_WALL_SHOW_DELAY = 2000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MTAManager.homeShow(this);
         setContentView(R.layout.activity_home);
-        int random = new Random().nextInt(100);
-        isShowOfferWall = (random < RemoteConfig.getLong(KEY_HOME_GIFT_OFFERWALL_PERCENTAGE));
         initView();
         AppListUtils.getInstance(this); // init AppListUtils
-    }
-
-    private void showOfferWall(){
-        giftGifView.setGifResource(R.drawable.front_page_gift_icon);
-        giftIconView.setVisibility(View.GONE);
-        giftGifView.setVisibility(View.VISIBLE);
-        giftGifView.play();
-        giftGifView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MTAManager.homeGiftClick(HomeActivity.this, "duapps_offer_wall");
-                Intent intent3 = new Intent(HomeActivity.this, OfferWallAct.class);
-                Bundle b = new Bundle();
-                b.putInt("pid", 131003);
-                b.putInt(OfferWallAct.KEY_TITLE_ID, R.string.appwall_title); // 可选
-                b.putString(OfferWallAct.KEY_TAB_BACKGROUND_COLOR, "#4164ef"); // 可 选
-                b.putString(OfferWallAct.KEY_TAB_INDICATOR_COLOR, "#000000"); // 可选
-                b.putString(OfferWallAct.KEY_TAB_TEXT_COLOR, "#FFFFFF"); // 可选
-                intent3.putExtras(b);
-                startActivity(intent3);
-            }
-        });
     }
 
     private void initView() {
@@ -175,14 +144,6 @@ public class HomeActivity extends BaseActivity {
                 }
             });
         }
-        if (isShowOfferWall) {
-            giftGifView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showOfferWall();
-                }
-            }, OFFER_WALL_SHOW_DELAY);
-        }
     }
 
     private void loadAd() {
@@ -223,29 +184,20 @@ public class HomeActivity extends BaseActivity {
                 }
                 @Override
                 public void onError(String error) {
-                    showOfferWall();
+                    MLogs.e(error);
                 }
             });
-        } else {
-            giftGifView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showOfferWall();
-                }
-            }, OFFER_WALL_SHOW_DELAY);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (! isShowOfferWall) {
-            MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
-            if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
-                giftGifView.setVisibility(View.GONE);
-                giftIconView.setVisibility(View.GONE);
-                loadAd();
-            }
+        MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
+        if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
+            giftGifView.setVisibility(View.GONE);
+            giftIconView.setVisibility(View.GONE);
+            loadAd();
         }
     }
 

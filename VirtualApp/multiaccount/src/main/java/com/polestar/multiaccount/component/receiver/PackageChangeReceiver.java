@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.duapps.ad.base.DuAdNetwork;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.MLogs;
@@ -33,7 +32,6 @@ public class PackageChangeReceiver extends BroadcastReceiver{
         if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
             String packageName = intent.getDataString();
             DbManager.notifyChanged();
-            DuAdNetwork.onPackageAddReceived(context, intent);
             MLogs.e("app install: packageName = " + packageName);
         }
     }

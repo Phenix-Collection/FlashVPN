@@ -143,17 +143,6 @@
         <activity android:name="com.facebook.ads.AudienceNetworkActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
-        <!--DAP ad -->
-        <meta-data
-            android:name= "app_license"
-            android:value= "c8b703b6e844dc5c05134731a4b9aeb3" />
-        <provider
-            android:name="com.duapps.ad.stats.DuAdCacheProvider"
-            android:authorities="${applicationId}.DuAdCacheProvider"
-            android:exported="false">
-        </provider>
-        <activity android:name="com.duapps.ad.offerwall.ui.OfferWallAct" />
-
         <!-- lib start -->
         <provider
             android:name="com.lody.virtual.server.BinderProvider"
