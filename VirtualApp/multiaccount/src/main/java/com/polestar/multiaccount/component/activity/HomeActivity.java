@@ -42,6 +42,7 @@ import com.polestar.multiaccount.utils.UpdateSDKManager;
 import com.polestar.multiaccount.widgets.GifView;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -160,7 +161,24 @@ public class HomeActivity extends BaseActivity {
                 public void onAdLoaded(IAd ad) {
                     isInterstitialAdLoaded = true;
                    // giftGifView.setGifResource(R.drawable.front_page_gift_icon);
-                    giftIconView.setImageResource(R.drawable.ad_taged_gift_icon);
+                    final Calendar c = Calendar.getInstance();
+                    String day = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
+                    MLogs.d("Week of day: "+ day);
+                    int giftRes;
+                    switch (day) {
+                        case "1":
+                        case "7":
+                            giftRes = R.drawable.ring_ad;
+                            break;
+                        case "2":
+                        case "6":
+                            giftRes = R.drawable.egg_ad;
+                            break;
+                        default:
+                            giftRes = R.drawable.ad_taged_gift_icon;
+                            break;
+                    }
+                    giftIconView.setImageResource(giftRes);
                     giftIconView.setVisibility(View.VISIBLE);
                     ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIconView, "scaleX", 0.7f, 1.3f, 1.0f);
                     ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIconView, "scaleY", 0.7f, 1.3f, 1.0f);
