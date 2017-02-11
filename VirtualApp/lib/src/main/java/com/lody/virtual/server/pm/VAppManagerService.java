@@ -77,6 +77,9 @@ public class VAppManagerService extends IAppManager.Stub {
 		isBooting = true;
 		for (File appDir : VEnvironment.getDataAppDirectory().listFiles()) {
 			String pkgName = appDir.getName();
+			if ("android".equals(pkgName)) {
+				continue;
+			}
 			File storeFile = new File(appDir, "base.apk");
 			int flags = 0;
 			VLog.d(TAG, "preloadAllApps " + appDir + "/base.apk");
@@ -145,7 +148,7 @@ public class VAppManagerService extends IAppManager.Stub {
 				return res;
 			}
 			if (!canUpdate(existOne, pkg, flags)) {
-				return InstallResult.makeFailure("Unable to update the Apk.");
+				return InstallResult.makeFailure("Not allowed to update the Apk.");
 			}
 			res.isUpdate = true;
 		}
