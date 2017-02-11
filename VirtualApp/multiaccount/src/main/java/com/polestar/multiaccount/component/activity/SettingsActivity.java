@@ -59,14 +59,14 @@ public class SettingsActivity extends BaseActivity {
 
     public void onPrivacyPolicyClick(View view) {
         Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.EXTRA_TITLE, "Privacy Policy");
+        intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.settings_privacy_policy));
         intent.putExtra(WebViewActivity.EXTRA_URL, "file:///android_asset/privacy_policy.html");
         startActivity(intent);
     }
 
     public void onTermsClick(View view) {
         Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.EXTRA_TITLE, "Terms of Service");
+        intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.settings_terms_of_service));
         intent.putExtra(WebViewActivity.EXTRA_URL, "file:///android_asset/term_of_service.html");
         startActivity(intent);
     }

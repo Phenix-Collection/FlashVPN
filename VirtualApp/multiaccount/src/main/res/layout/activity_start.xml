@@ -26,11 +26,13 @@
             android:id="@+id/img_success_bg1"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_centerInParent="true"
             android:src="@drawable/circle_install_success_bg"/>
         <ImageView
             android:id="@+id/img_success_bg2"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_centerInParent="true"
             android:src="@drawable/circle_install_success_bg"/>
         <RelativeLayout
             android:layout_width="84dp"

@@ -2,6 +2,7 @@ package com.polestar.multiaccount.component.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -43,6 +44,7 @@ import com.polestar.multiaccount.widgets.GifView;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import static com.tencent.stat.StatConfig.getCustomProperty;
@@ -112,6 +114,9 @@ public class HomeActivity extends BaseActivity {
         drawer.setScrimColor(Color.TRANSPARENT);
         navigationList = (ListView) findViewById(R.id.navigation_list);
         navigationLayout = findViewById(R.id.navigation_layout);
+        if (CommonUtils.isArab(this)) {
+            navigationLayout.setBackgroundColor(getResources().getColor(R.color.gray_drawer));
+        }
         appNameTv = (TextView) findViewById(R.id.app_name);
         forgroundLayout = findViewById(R.id.blur_forground);
         giftGifView = (GifView) findViewById(R.id.gifView);
@@ -121,7 +126,7 @@ public class HomeActivity extends BaseActivity {
 
         navigationList.setAdapter(new NavigationAdapter(this));
         navigationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
+
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 onNavigationItemSelected(i);
                 drawer.closeDrawer(GravityCompat.START);
@@ -156,18 +161,20 @@ public class HomeActivity extends BaseActivity {
         mHomeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mHomeFragment).commitAllowingStateLoss();
         UpdateCheck();
-        drawerBlurHelper = new DrawerBlurHelper(HomeActivity.this, drawer, contentLayout, forgroundLayout, navigationLayout);
-        appNameTv.post(new Runnable() {
-            @Override
-            public void run() {
+        if (!CommonUtils.isArab(this)) {
+            drawerBlurHelper = new DrawerBlurHelper(HomeActivity.this, drawer, contentLayout, forgroundLayout, navigationLayout);
+            appNameTv.post(new Runnable() {
+                @Override
+                public void run() {
 
 //                drawerBlurHelper = new DrawerBlurHelper(HomeActivity.this, drawer, contentLayout, forgroundLayout, navigationLayout);
-                float contentWidth = appNameTv.getWidth();
-                float totalWidth = navigationLayout.getWidth();
-                drawerBlurHelper.setContentPercentage(contentWidth / totalWidth);
-                drawerBlurHelper.blur();
-            }
-        });
+                    float contentWidth = appNameTv.getWidth();
+                    float totalWidth = navigationLayout.getWidth();
+                    drawerBlurHelper.setContentPercentage(contentWidth / totalWidth);
+                    drawerBlurHelper.blur();
+                }
+            });
+        }
         if (isShowOfferWall) {
             giftGifView.postDelayed(new Runnable() {
                 @Override
@@ -281,7 +288,9 @@ public class HomeActivity extends BaseActivity {
                 && (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_OPEN)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {
-            drawerBlurHelper.createCacheBitmap();
+            if (!CommonUtils.isArab(this)) {
+                drawerBlurHelper.createCacheBitmap();
+            }
             drawer.openDrawer(GravityCompat.START);
         }
     }

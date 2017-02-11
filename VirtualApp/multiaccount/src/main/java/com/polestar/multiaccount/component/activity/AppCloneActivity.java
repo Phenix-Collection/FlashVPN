@@ -170,20 +170,6 @@ public class AppCloneActivity extends BaseActivity {
         });
     }
 
-    public static Drawable getAppIcon(String pkgName){
-        Drawable icon;
-        Context context = MApp.getApp().getApplicationContext();
-        PackageManager pm = context.getPackageManager();
-        try {
-            PackageInfo pi = pm.getPackageInfo(pkgName, 0);
-            icon = pm.getApplicationIcon(pi.applicationInfo);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            icon = pm.getDefaultActivityIcon();
-        }
-        return icon;
-    }
-
     public static void startAppCloneActivity(Activity activity, AppModel appModel) {
         Intent intent = new Intent(activity, AppCloneActivity.class);
         intent.putExtra(AppConstants.EXTRA_APP_MODEL, appModel);

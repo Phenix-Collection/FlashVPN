@@ -23,6 +23,7 @@ import com.polestar.multiaccount.model.AppModel;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by yxx on 2016/7/21.
@@ -79,6 +80,10 @@ public class CommonUtils {
         context.sendBroadcast(intent);
     }
 
+    public static boolean isArab(Context c) {
+        Locale locale = c.getResources().getConfiguration().locale;
+        return locale.getLanguage().equalsIgnoreCase("ar");
+    }
 
     private static boolean hasShortcut(Context context, String appName) {
         boolean isInstallShortcut = false;

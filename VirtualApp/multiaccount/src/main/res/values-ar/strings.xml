@@ -1,0 +1,167 @@
+<resources>
+
+    <string name="appwall_title">اكتشف</string>
+
+    <string name="action_settings">إعدادات</string>
+    <string name="most_popular_apps">إعدادات</string>
+    <string name="more_apps">أكثر المدعومة</string>
+    <string name="sponsor_text">توصية</string>
+    <string name="btn_clone">استنساخ</string>
+    <string name="start">بداية</string>
+    <string name="cancel">إلغاء</string>
+    <string name="cloning">استنساخ...</string>
+    <string name="cloning_tips">ويتم استنساخ تطبيق ...</string>
+    <string name="app_starting_tips">تطبيق بدأت ...</string>
+    <string name="first_start_tips">وسوف يستغرق وقتا أطول قليلا لبدء أول.</string>
+    <string name="clone_success">نجاح استنساخ. يتمتع بها الآن!</string>
+    <string name="success_tip1">حسابات الوصول في وقت واحد</string>
+
+    <!-- nav menu -->
+    <string name="notifications">إخطارات</string>
+    <string name="faq">يرشد</string>
+    <string name="feedback">ردود الفعل</string>
+    <string name="rate_us">قيمنا</string>
+    <string name="share_with_friends">شارك مع الاصدقاء</string>
+    <string name="settings">إعدادات</string>
+
+    <!-- home -->
+    <string name="delete_dialog_title">الحذر</string>
+    <string name="delete_dialog_content">إزالة هذا التطبيق المستنسخة يعني حذف كافة البيانات الخاصة به.</string>
+    <string name="delete_dialog_left">إلغاء</string>
+    <string name="delete_dialog_right">حذف</string>
+    <string name="dialog_rating_us_content">التمتع باستخدام هذا التطبيق؟</string>
+    <string name="dialog_feedback_content">أرجو التكرم تعطينا بعض ردود الفعل للمساعدة في تحسين ذلك؟</string>
+    <string name="not_really">ليس صحيحا</string>
+    <string name="no_thanks">لا شكرا</string>
+    <string name="dialog_love_title">أحبها</string>
+    <string name="dialog_love_content">هل لديك مانع تعطينا تصنيف 5 نجوم في متجر Play؟ أن يكون مصدر إلهام لنا، ونحن نقدر دعمكم!</string>
+    <string name="remind_me_later">ذكرني لاحقا</string>
+    <string name="star_rating">الذهاب تصنيف 5 نجوم الآن</string>
+    <string name="yes">نعم فعلا</string>
+    <string name="ok">حسنا</string>
+    <string name="installFailure">عذرا، لا يتم اعتماد هذا التطبيق حتى الآن، ونحن قادمون مع ذلك قريبا.</string>
+    <string name="start_tips">دعونا نبدأ عن طريق الاستنساخ تطبيقك الأول هنا!</string>
+    <string name="long_press_tips">الضغط لفترة طويلة واسحبه لإضافة اختصار على الشاشة الرئيسية أو إزالته.</string>
+
+    <!-- notification -->
+    <string name="notification_decription">تمكين لتلقي إخطارا من هذا التطبيق المستنسخة</string>
+
+    <string name="share_with_friends_tip">ويسرني أن أدعوكم لاستخدام هذا التطبيق الرائع. إنه لأمر مدهش، ويمكن دعم العديد من تعاطيه على الانترنت في الوقت نفسه. يمكنك تحميله من هنا:</string>
+
+    <!-- feedback -->
+    <string name="feedback_hint">من فضلك قل لنا التفاصيل حول المشكلة التي اجتمعت، ومن فضلك قل لنا خطوات لإعادة إنتاجه وأفضل مع قطة.</string>
+    <string name="button_submit">عرض</string>
+    <string name="submit_success">شكرا لتوفير التغذية المرتدة!</string>
+    <string name="feedback_no_description">الوصف لا يمكن أن يكون فارغا!</string>
+    <string name="feedback_go_faq">Click here to check our handy FAQ.</string>
+    <string name="extra_feedback_decription">نحن سنحل مشكلة بالنسبة لك قريبا ونقدر مساعدتكم لتحسين المنتج!</string>
+
+    <!-- toast -->
+    <string name="toast_shortcut_added">وأضاف اختصار</string>
+    <string name="toast_shortcut_invalid">الاختصار غير صالح</string>
+
+    <!-- settings -->
+    <string name="settings_shortcut_title">الاختصار</string>
+    <string name="settings_shortcut_content">تمكين لإضافة اختصار عند استنساخ التطبيقات تلقائيا</string>
+    <string name="settings_privacy_locker_content">انقر لتعيين خلع الملابس الخصوصية لتطبيقات المستنسخة</string>
+    <string name="settings_notification_content">انقر لتمكين أو تعطيل إخطار من التطبيقات المستنسخة</string>
+    <string name="settings_privacy_policy">سياسة الخصوصية</string>
+    <string name="settings_more">مزيد من الإعدادات</string>
+    <string name="settings_general">الاعدادات العامة</string>
+    <string name="settings_terms_of_service">شروط الخدمة</string>
+    <string name="settings_follow_us">تابعنا في الفيسبوك الصفحة</string>
+    <string name="settings_right">2016 Polestar Applab All rights reserved</string>
+
+    <array name="navigationItem">
+        <item name="navigation_notifications">الخزانة الخصوصية</item>
+        <item name="navigation_notifications">إخطارات</item>
+        <item name="navigation_FAQ">يرشد</item>
+        <item name="navigation_feedback">ردود الفعل</item>
+        <item name="navigation_rate_us">قيمنا</item>
+        <item name="navigation_share">شارك مع الاصدقاء</item>
+        <item name="navigation_setting">إعدادات</item>
+    </array>
+
+    <!-- titles -->
+    <string name="clone_apps_title">استنساخ التطبيقات</string>
+
+    <string name="crash_hint">عذرا، يحدث بعض الخطأ، ونحن سوف إصلاحه في النسخة المقبلة.</string>
+
+    <string name="text_Q1_title">Q1: لماذا لا يمكنني استلام إشعارات رسالة من التطبيقات المستنسخة؟</string>
+    <string name="text_Q1_content_2">A1: الرجاء التأكد من سوبر استنساخ ديه حق الوصول إلى الشبكة</string>
+    <string name="text_Q2_title">Q2: فإنه جمع واستخدام المعلومات الخاصة بي؟</string>
+    <string name="text_Q2_content">A2: لا، فإنه سيتم جمع كميات صغيرة فقط من بك "البيانات العامة" (على سبيل المثال الرمزية، لقب الخ)، وسوف تستخدم هذه فقط داخل الجهاز لخلق تجربة أفضل للمستخدم بالنسبة لك. وهي تعد بأن أيا من البيانات الخاصة بك وسيتم جمع أو استخدامها.</string>
+    <string name="text_Q3_title">Q3: لماذا استهلاك التخزين لديها ازدياد؟</string>
+    <string name="text_Q3_content">A3: جميع الحسابات الفرعية تضاف على الجهاز الخاص بك افتراضيا المدرجة تحته من قبل نظام التشغيل أندرويد. على سبيل المثال، عند إضافة الفيسبوك دون حساب لجهازك، كل من التخزين المستخدمة لبلدكم الثاني حساب الفيسبوك (التطبيق) والمدرجة تحت هذا التطبيق. ولذلك، فإن استهلاك التخزين المدرجة لهذا التطبيق تظهر زيادة كبيرة عند إضافة المزيد من الحسابات الفرعية. تطمئن إلى أن استهلاك تخزين هذا التطبيق نفسه لا يتزايد فعلا من ذلك بكثير.</string>
+    <string name="text_Q4_title">Q4: لماذا هذا التطبيق استخدام ما يصل الكثير من مساحة التخزين؟</string>
+    <string name="text_Q4_content">A4: جميع الحسابات الفرعية تضاف على الجهاز الخاص بك افتراضيا المدرجة تحت هذا التطبيق من خلال نظام التشغيل أندرويد. كمية كبيرة من استهلاك التخزين المدرجة تحت هذا التطبيق هو مجموع التخزين الكلي استخدامها لجميع الحسابات الفرعية التي قمت بإضافتها. هذا التطبيق نفسه يستخدم تخزين القليل.</string>
+    <string name="text_Q5_title">Q5: كيف خزانة الخصوصية يحمي الخصوصية؟</string>
+    <string name="text_Q5_content">A5: مطلوب كلمة مرور للوصول إلى التطبيق محمي في كل مرة تستيقظ جهازك. ليس هناك أي تطبيق آخر يمكن الوصول إلى البيانات الخاصة بهم كما أنها محمية من قبلنا.</string>
+
+    <string name="clone_label_tag">+%s</string>
+
+    <!-- lock settings -->
+    <string name="lock_settings_title">إعدادات خزانة</string>
+    <string name="enable_lock_settings_title">الخزانة الخصوصية</string>
+    <string name="enable_lock_settings_content">تبديل لتمكين أو ميزة خزانة الخصوصية تعطيل</string>
+    <string name="password_setting_title">إعداد كلمة المرور</string>
+    <string name="password_set_no_question">تعيين شك آمن.</string>
+    <string name="password_set_complete">تم تعيين كلمة المرور.</string>
+    <string name="no_password_set">يرجى وضع كلمة سر للخزانة في البداية.</string>
+    <string name="password_setting_content">انقر لتعيين كلمة المرور والأمن مسألة</string>
+    <string name="forgot_password">هل نسيت كلمة المرور</string>
+    <string name="lock_settings_for_apps">تمكين خزانة الخصوصية لتطبيقات المستنسخة</string>
+
+    <string name="al_enter_passcode">أدخل رمز المرور</string>
+    <string name="al_lockpattern_unlock_to_continue">اكد هويتك</string>
+    <string name="al_lockpattern_draw_unlock_pattern">ارسم أنموذجا لتلغي الاقفال</string>
+    <string name="al_use_passcode">تغيير الرقم السري</string>
+    <string name="al_use_unlock_pattern">تغيير نمط</string>
+    <string name="al_lockpattern_create_new_password_subtitle">وسيتم استخدام رمز مرور لحماية التطبيقات</string>
+    <string name="al_lockpattern_create_new_password">تعيين رمز المرور الجديد</string>
+    <string name="al_lockpattern_confirm_password">تأكيد رمز المرور</string>
+    <string name="al_change_enter_again">أدخل مرة أخرى</string>
+    <string name="al_lockpattern_confirm_unlock_pattern">يرجى تأكيد نمط</string>
+    <string name="al_lockpattern_confirm_unlock_pattern_hint">رسم مرة أخرى</string>
+    <string name="al_btn_reset">إعادة تعيين</string>
+    <string name="al_lockpattern_release_hint">الافراج عن الإصبع عند القيام به</string>
+    <string name="al_lockpattern_try_again">أنماط لا تتطابق، يرجى المحاولة مرة أخرى.</string>
+    <string name="applock_permission_contacts_toast">هذا يساعدك على استرجاع كلمة المرور الخاصة بك.</string>
+    <string name="al_lockpattern_create_unlock_pattern">تعيين نمط جديد</string>
+    <string name="al_lockpattern_number_no_correct">الرجاء الاتصال لا يقل عن 4 نقاط</string>
+    <string name="al_lockpattern_create_new_password_outofbound">يجب أن يكون رمز المرور أقل من 10 أرقام</string>
+    <string name="al_btn_finish">تؤكد</string>
+    <string name="al_btn_next">التالى</string>
+    <string name="al_lockpattern_error">نمط خاطئ، من فضلك حاول مرة أخرى.</string>
+    <string name="al_changepassword">تغيير كلمة السر</string>
+    <string name="al_unlcok_pattern">فتح نمط</string>
+    <string name="al_passcode">رمز عبور</string>
+    <string name="al_invisable_patterns">إخفاء نمط</string>
+    <string name="al_change_security_question">تغيير السؤال آمن</string>
+    <string name="app_lock_safe_info_hint">للتحقق من هويتك عند إعادة ضبط كلمة المرور</string>
+    <string name="app_lock_safe_question_hint">تعيين سؤال آمن</string>
+    <string name="app_lock_safe_answer_hint">أدخل الإجابة (ما يصل إلى 20 حرفا)</string>
+    <string name="app_lock_verifier_tile">تعيين سؤال آمن</string>
+    <string name="app_lock_reset_password">إعادة تعيين كلمات مرور</string>
+
+    <string name="app_lock_safe_answer_reset_hint">الرجاء إدخال الجواب</string>
+    <string name="app_lock_date_picker_month">شهر</string>
+    <string name="app_lock_safe_question_toast_ask_Question">لم تقم بتعيين سؤال آمن</string>
+    <string name="app_lock_safe_question_toast_ask_Answer">أنك لم تدخل اجابه بعد.</string>
+    <string name="app_lock_safe_question_toast_error">المصادقة الفاشلة، يرجى الدخول مرة أخرى</string>
+    <string name="applock_window_title">+ %s</string>
+    <string name="applock_forgot_password"><u>هل نسيت كلمة المرور</u></string>
+    <string name="applock_guide_text">الخصوصية الإعداد خلع الملابس لحماية الحيوانات المستنسخة الخاصة</string>
+    <string name="need_set_secure_answer">يرجى تحديد الإجابة عن السؤال آمن ثم اضغط زر تأكيد.</string>
+
+    <string-array name="secure_questions">
+        <item>متى يحين عيد ميلادك</item>
+        <item>ما هو اسم والدك؟</item>
+        <item>ما هو اسم والدتك؟</item>
+        <item>عندما أنت متزوج؟</item>
+        <item>ما هو طعامك المفضل؟</item>
+        <item>أين ذهبت إلى المدرسة؟</item>
+        <item>ما هو فيلمك المفضل؟</item>
+        <item>تخصيص الأسئلة</item>
+    </string-array>
+</resources>
