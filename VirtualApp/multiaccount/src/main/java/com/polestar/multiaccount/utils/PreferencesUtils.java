@@ -348,4 +348,14 @@ public class PreferencesUtils {
     public static void setStarted(String name) {
         putLong(MApp.getApp(), name+"_first_start", System.currentTimeMillis());
     }
+
+    public static void setShortCutCreated() {
+        putBoolean(MApp.getApp(),"super_clone_shortcut",true);
+    }
+
+    public static boolean isShortCutCreated() {
+        return getBoolean(MApp.getApp(),"super_clone_shortcut",false)
+                || hasShownCloneGuide(MApp.getApp());
+        //avoid create short cut for updated user
+    }
 }
