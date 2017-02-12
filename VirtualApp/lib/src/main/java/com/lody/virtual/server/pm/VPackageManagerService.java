@@ -600,7 +600,9 @@ public class VPackageManagerService extends IPackageManager.Stub {
 		synchronized (mPackages) {
 			for (PackageParser.Provider p : mProvidersByComponent.values()) {
 				AppSetting setting = (AppSetting) p.owner.mExtras;
-				if (processName == null || p.info.processName.equals(processName)) {
+
+				if (processName == null ||
+						(p.info.processName.equals(processName) && setting.appId == VUserHandle.getAppId(vuid))) {
 					ProviderInfo providerInfo = PackageParserCompat.generateProviderInfo(p, flags);
 					ComponentFixer.fixApplicationInfo(setting, providerInfo.applicationInfo, userId);
 					finalList.add(providerInfo);
