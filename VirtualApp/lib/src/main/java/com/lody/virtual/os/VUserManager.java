@@ -4,12 +4,12 @@ import android.graphics.Bitmap;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.lody.virtual.client.ipc.LocalProxyUtils;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.service.IUserManager;
 
 import java.util.List;
 
+import static com.lody.virtual.client.ipc.ServiceManagerNative.USER;
 
 /**
  * Manages users and user details on a multi-user system.
@@ -108,21 +108,12 @@ public class VUserManager {
     /** @hide */
     public synchronized static VUserManager get() {
         if (sInstance == null) {
-            IUserManager remote = LocalProxyUtils.genProxy(IUserManager.class, getStubInterface(), new LocalProxyUtils.DeadServerHandler() {
-                @Override
-                public Object getNewRemoteInterface() {
-                    sInstance = null;
-                    return getStubInterface();
-                }
-            });
+            IUserManager remote = IUserManager.Stub.asInterface(ServiceManagerNative.getService(USER));
             sInstance = new VUserManager(remote);
         }
         return sInstance;
     }
-    private static Object getStubInterface() {
-        return IUserManager.Stub
-                .asInterface(ServiceManagerNative.getService(ServiceManagerNative.USER));
-    }
+
     /** @hide */
     public VUserManager(IUserManager service) {
         mService = service;

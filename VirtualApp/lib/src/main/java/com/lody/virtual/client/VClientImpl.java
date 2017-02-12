@@ -153,7 +153,7 @@ public final class VClientImpl extends IVClient.Stub {
 
 	public void initProcess(IBinder token, int vuid) {
 		if (this.token != null) {
-			VLog.logbug(TAG, "Token is exist!");
+			throw new IllegalStateException("Token is exist!");
 		}
 		this.token = token;
 		this.vuid = vuid;
@@ -374,19 +374,15 @@ public final class VClientImpl extends IVClient.Stub {
 	private void installContentProviders(Context app, List<ProviderInfo> providers) {
 		long origId = Binder.clearCallingIdentity();
 		Object mainThread = VirtualCore.mainThread();
-		VLog.d(TAG, "e installContentProviders");
 		try {
 			for (ProviderInfo cpi : providers) {
 				if (cpi.enabled) {
-					VLog.d(TAG, "installProvider : " + cpi.packageName + " process: " + cpi.processName
-						+ " authority: " + cpi.authority);
 					ActivityThread.installProvider(mainThread, app, cpi, null);
 				}
 			}
 		} finally {
 			Binder.restoreCallingIdentity(origId);
 		}
-		VLog.d(TAG, "x installContentProviders");
 	}
 
 

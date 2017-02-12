@@ -60,19 +60,18 @@ public class VirtualRuntime {
 	}
 
 	public static <T> T crash(RemoteException e) throws RuntimeException {
-		VLog.logbug("Remote crash", VLog.getStackTraceString(e));
+		e.printStackTrace();
 		CrashReporter.report(getProcessName(), e);
 		if (VirtualCore.get().isVAppProcess()) {
 			exit();
 		}
-		throw new DeadServiceException(e);
+		throw new RuntimeException(e);
 	}
 
 	public static void exit() {
-		VLog.logbug(VirtualRuntime.class.getSimpleName(), "Exit process : %s (%s).", getProcessName(),
+		VLog.d(VirtualRuntime.class.getSimpleName(), "Exit process : %s (%s).", getProcessName(),
 				VirtualCore.get().getProcessName());
 		Process.killProcess(Process.myPid());
-		System.exit(0);
 	}
 
 	public static boolean isArt() {

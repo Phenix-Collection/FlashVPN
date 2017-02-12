@@ -200,23 +200,13 @@ public final class VirtualCore {
 		if (mService == null) {
 			synchronized (this) {
 				if (mService == null) {
-                    Object remote = getStubInterface();
-                    mService = LocalProxyUtils.genProxy(IAppManager.class, remote, new LocalProxyUtils.DeadServerHandler() {
-                        @Override
-                        public Object getNewRemoteInterface() {
-							mService = null; //need lock?
-                            return getStubInterface();
-                        }
-                    });
-                }
-            }
-        }
-        return mService;
-    }
-
-    private Object getStubInterface() {
-        return IAppManager.Stub
+					IAppManager remote = IAppManager.Stub
 							.asInterface(ServiceManagerNative.getService(ServiceManagerNative.APP));
+					mService = LocalProxyUtils.genProxy(IAppManager.class, remote);
+				}
+			}
+		}
+		return mService;
 	}
 
 	/**

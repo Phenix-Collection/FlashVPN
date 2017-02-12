@@ -207,7 +207,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			callerApp  = findProcessLocked(VBinder.getCallingPid());
 		}
 		if (callerApp == null) {
-			VLog.logbug(TAG, VLog.getStackTraceString(new Exception("Unknown calling process: " + VBinder.getCallingPid())));
+			throw new SecurityException("Who are you?");
 		}
 		String processName = info.processName;
 		ProcessRecord r;
