@@ -93,7 +93,9 @@ public class HCallbackHook implements Handler.Callback, Injectable {
 		Object r = msg.obj;
 		Intent stubIntent = ActivityThread.ActivityClientRecord.intent.get(r);
 		StubActivityRecord saveInstance = new StubActivityRecord(stubIntent);
+		VLog.d(TAG, "handleLaunchActivity stub: " + stubIntent + " real: " + saveInstance.intent);
 		if (saveInstance.intent == null) {
+			VLog.logbug(TAG, "saveInstance.intent is null " + stubIntent);
 			return true;
 		}
 		Intent intent = saveInstance.intent;
@@ -103,11 +105,13 @@ public class HCallbackHook implements Handler.Callback, Injectable {
 		if (VClientImpl.getClient().getToken() == null) {
 			VActivityManager.get().processRestarted(info.packageName, info.processName, saveInstance.userId);
 			getH().sendMessageAtFrontOfQueue(Message.obtain(msg));
+			VLog.logbug(TAG, "getToken is null. real intent " + saveInstance.intent);
 			return false;
 		}
 		if (!VClientImpl.getClient().isBound()) {
 			VClientImpl.getClient().bindApplication(info.packageName, info.processName);
 			getH().sendMessageAtFrontOfQueue(Message.obtain(msg));
+			VLog.logbug(TAG, "not bound real intent " + saveInstance.intent);
 			return false;
 		}
 		int taskId = IActivityManager.getTaskForActivity.call(
