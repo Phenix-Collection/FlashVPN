@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
+import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.DrawerBlurHelper;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
@@ -55,7 +57,6 @@ public class HomeActivity extends BaseActivity {
     private ListView navigationList;
     private View navigationLayout;
     private TextView appNameTv;
-    private DrawerBlurHelper drawerBlurHelper;
     private GifView giftGifView;
     private ImageView giftIconView;
     private FuseAdLoader adLoader;
@@ -84,9 +85,6 @@ public class HomeActivity extends BaseActivity {
         drawer.setScrimColor(Color.TRANSPARENT);
         navigationList = (ListView) findViewById(R.id.navigation_list);
         navigationLayout = findViewById(R.id.navigation_layout);
-        if (CommonUtils.isArab(this)) {
-            navigationLayout.setBackgroundColor(getResources().getColor(R.color.gray_drawer));
-        }
         appNameTv = (TextView) findViewById(R.id.app_name);
         forgroundLayout = findViewById(R.id.blur_forground);
         giftGifView = (GifView) findViewById(R.id.gifView);
@@ -95,6 +93,10 @@ public class HomeActivity extends BaseActivity {
         giftGifView.setVisibility(View.GONE);
 
         navigationList.setAdapter(new NavigationAdapter(this));
+//        int width = DisplayUtils.getScreenWidth(this);
+//        int listWidth = DisplayUtils.px2dip(this, width*2/3);
+//        MLogs.d("width set to " + listWidth);
+//        navigationList.setLayoutParams(new LinearLayout.LayoutParams(listWidth, ViewGroup.LayoutParams.MATCH_PARENT));
         navigationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -131,20 +133,6 @@ public class HomeActivity extends BaseActivity {
         mHomeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mHomeFragment).commitAllowingStateLoss();
         UpdateCheck();
-        if (!CommonUtils.isArab(this)) {
-            drawerBlurHelper = new DrawerBlurHelper(HomeActivity.this, drawer, contentLayout, forgroundLayout, navigationLayout);
-            appNameTv.post(new Runnable() {
-                @Override
-                public void run() {
-
-//                drawerBlurHelper = new DrawerBlurHelper(HomeActivity.this, drawer, contentLayout, forgroundLayout, navigationLayout);
-                    float contentWidth = appNameTv.getWidth();
-                    float totalWidth = navigationLayout.getWidth();
-                    drawerBlurHelper.setContentPercentage(contentWidth / totalWidth);
-                    drawerBlurHelper.blur();
-                }
-            });
-        }
     }
 
     private void loadAd() {
@@ -258,9 +246,6 @@ public class HomeActivity extends BaseActivity {
                 && (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_OPEN)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {
-            if (!CommonUtils.isArab(this)) {
-                drawerBlurHelper.createCacheBitmap();
-            }
             drawer.openDrawer(GravityCompat.START);
         }
     }

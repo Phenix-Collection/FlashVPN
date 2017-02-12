@@ -19,5 +19,6 @@
         android:layout_height="50dp"
         android:gravity="center_vertical"
         android:textColor="@android:color/white"
+        android:singleLine="true"
         android:textSize="14sp" />
 </LinearLayout>
