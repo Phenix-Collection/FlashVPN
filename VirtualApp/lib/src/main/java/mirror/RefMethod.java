@@ -64,14 +64,17 @@ public class RefMethod<T> {
         try {
             return (T) this.method.invoke(receiver, args);
         } catch (InvocationTargetException e) {
-            VLog.logbug("PLIB", "Caught method call exception");
+            VLog.logbug("PLIB", "Caught method call InvocationTargetException");
             if (e.getCause() != null) {
                 e.getCause().printStackTrace();
+                VLog.logbug("PLIB", VLog.getStackTraceString(e.getCause()));
             } else {
+                VLog.logbug("PLIB", VLog.getStackTraceString(e));
                 e.printStackTrace();
             }
         } catch (Throwable e) {
             VLog.logbug("PLIB", "Caught method call exception");
+            VLog.logbug("PLIB", VLog.getStackTraceString(e.getCause()));
             e.printStackTrace();
         }
         return null;

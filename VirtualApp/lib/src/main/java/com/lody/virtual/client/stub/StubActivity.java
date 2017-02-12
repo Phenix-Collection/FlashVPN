@@ -21,6 +21,7 @@ public abstract class StubActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// The savedInstanceState's classLoader is not exist.
+		//Won't be called , as HCallbackHook was hooked
 		super.onCreate(null);
 		finish();
         // It seems that we have conflict with the other Android-Plugin-Framework.

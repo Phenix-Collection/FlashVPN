@@ -67,6 +67,7 @@ public final class BinderProvider extends BaseContentProvider {
 	public Bundle call(String method, String arg, Bundle extras) {
 		Bundle bundle = new Bundle();
 		BundleCompat.putBinder(bundle, "_VA_|_binder_", mServiceFetcher);
+		VLog.d("BinderProvider", "call arg " + arg);
 		return bundle;
 	}
 
