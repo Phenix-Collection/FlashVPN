@@ -32,7 +32,15 @@ import mirror.android.app.IActivityManager;
 		String name = (String) args[nameIdx];
 		int userId = VUserHandle.myUserId();
 		VLog.d(TAG, "for : " + name);
-		ProviderInfo info = VPackageManager.get().resolveContentProvider(name, 0, userId);
+		ProviderInfo info;
+		if (name != null && name.equals("com.polestar.multiaccount.virtual.service.BinderProvider")) {
+			//Hot reboot will getContentProvider from here
+			VLog.logbug(TAG,"Not expected GetContentProvider for " + name);
+			VLog.logbug(TAG,VLog.getStackTraceString(new Exception("")));
+			return method.invoke(who, args);
+		} else {
+			info = VPackageManager.get().resolveContentProvider(name, 0, userId);
+		}
 		if (info != null &&  isAppPkg(info.packageName)) {
 			if (!info.enabled) {
 				VLog.logbug(TAG, "GetContentProvider not enabled: name " + name + " pkg: " + info.packageName);

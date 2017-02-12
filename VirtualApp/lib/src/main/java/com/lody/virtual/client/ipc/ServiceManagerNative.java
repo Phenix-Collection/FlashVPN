@@ -56,8 +56,7 @@ public class ServiceManagerNative {
 			@Override
 			public void binderDied() {
 				binder.unlinkToDeath(this, 0);
-				VLog.e(TAG, "Ops, the server has crashed.");
-				VirtualRuntime.exit();
+				VLog.logbug("PLIB", "Server died !!!");
 			}
 		};
 		try {
