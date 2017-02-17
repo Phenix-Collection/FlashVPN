@@ -81,11 +81,11 @@ public class VLog {
 	public static void e(String tag, Throwable e) {
 		Log.e(VTAG+tag, getStackTraceString(e));
 	}
-	public static void logbug(String tag, String msg, Object... format) {
+	public static void logbug(String tag, String msg) {
 		if (sKeyLogger != null) {
-			sKeyLogger.logBug(tag, String.format(msg, format));
+			sKeyLogger.logBug(tag, msg);
 		} else {
-			Log.e(VTAG + tag, String.format(msg, format));
+			Log.e(VTAG + tag, msg);
 		}
 	}
 }
