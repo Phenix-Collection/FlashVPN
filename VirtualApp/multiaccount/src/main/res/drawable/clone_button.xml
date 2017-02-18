@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" android:drawable="@drawable/clone_button_pressed"/>
-    <item android:state_focused="true" android:drawable="@drawable/clone_button_pressed"/>
-    <item android:drawable="@drawable/clone_button_normal"/>
-</selector>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<solid
+    android:color="@color/native_cta_color"/>
+<corners android:topLeftRadius="4dp"
+    android:topRightRadius="4dp"
+    android:bottomLeftRadius="4dp"
+    android:bottomRightRadius="4dp"/>
+</shape>
