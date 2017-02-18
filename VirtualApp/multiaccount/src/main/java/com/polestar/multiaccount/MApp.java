@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.util.Log;
 
 import com.lody.virtual.client.VClientImpl;
@@ -63,6 +64,14 @@ public class MApp extends Application {
         return gDefault;
     }
 
+    public static boolean isOpenLog(){
+        File file = new File(Environment.getExternalStorageDirectory() + "/polelog");
+        boolean ret =  file.exists();
+        if(ret) {
+            Log.d(MLogs.DEFAULT_TAG, "log opened by file");
+        }
+        return  ret;
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -112,7 +121,7 @@ public class MApp extends Application {
         }
 
         VirtualCore.get().setAppApiDelegate(new AppApiDelegate());
-        if (!AppConstants.IS_RELEASE_VERSION) {
+        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION ) {
             VLog.openLog();
             VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             MLogs.DEBUG = true;
