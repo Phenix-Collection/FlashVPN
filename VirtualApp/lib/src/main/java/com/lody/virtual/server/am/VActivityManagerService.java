@@ -1022,6 +1022,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			}
 			if (r != null && r.appThread != null) {
 				VLog.logbug(TAG, "performReceive " + intent.toString());
+				if (Intent.ACTION_PACKAGE_ADDED.equals(intent.getAction()) && intent.getExtras() == null) {
+					intent.putExtra("FIX", "FIX");
+					VLog.logbug(TAG,"package added intent extra is null! ActivityInfo " + info);
+				}
 				performScheduleReceiver(r.appThread, getUserId(uid), info, intent, receiver.isOrderedBroadcast(),
 						result);
 				return true;
