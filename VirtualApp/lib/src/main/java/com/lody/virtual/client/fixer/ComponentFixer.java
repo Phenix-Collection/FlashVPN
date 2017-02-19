@@ -4,7 +4,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Process;
 import android.text.TextUtils;
 
 import com.lody.virtual.client.core.VirtualCore;
@@ -13,6 +12,7 @@ import com.lody.virtual.helper.utils.collection.ArrayMap;
 import com.lody.virtual.os.VEnvironment;
 
 import mirror.android.content.pm.ApplicationInfoL;
+import mirror.android.content.pm.ApplicationInfoN;
 
 /**
  * @author Lody
@@ -34,10 +34,16 @@ public class ComponentFixer {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			applicationInfo.splitSourceDirs = new String[]{setting.apkPath};
 			applicationInfo.splitPublicSourceDirs = applicationInfo.splitSourceDirs;
-			String hostPrimaryCpuAbi = ApplicationInfoL.primaryCpuAbi.get(VirtualCore.get().getContext().getApplicationInfo());
-			ApplicationInfoL.primaryCpuAbi.set(applicationInfo, hostPrimaryCpuAbi);
 			ApplicationInfoL.scanSourceDir.set(applicationInfo, applicationInfo.dataDir);
 			ApplicationInfoL.scanPublicSourceDir.set(applicationInfo, applicationInfo.dataDir);
+			String hostPrimaryCpuAbi = ApplicationInfoL.primaryCpuAbi.get(VirtualCore.get().getContext().getApplicationInfo());
+			ApplicationInfoL.primaryCpuAbi.set(applicationInfo, hostPrimaryCpuAbi);
+		}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			ApplicationInfoN.deviceEncryptedDataDir.set(applicationInfo, applicationInfo.dataDir);
+			ApplicationInfoN.deviceProtectedDataDir.set(applicationInfo, applicationInfo.dataDir);
+			ApplicationInfoN.credentialEncryptedDataDir.set(applicationInfo, applicationInfo.dataDir);
+			ApplicationInfoN.credentialProtectedDataDir.set(applicationInfo, applicationInfo.dataDir);
 		}
 		applicationInfo.enabled = true;
 		applicationInfo.nativeLibraryDir = setting.libPath;
