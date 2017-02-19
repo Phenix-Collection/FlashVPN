@@ -1,7 +1,6 @@
 package com.lody.virtual.client;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.ComponentName;
@@ -131,7 +130,7 @@ public final class VClientImpl extends IVClient.Stub {
 	}
 
 
-	public static VClientImpl getClient() {
+	public static VClientImpl get() {
 		return gClient;
 	}
 
@@ -393,8 +392,8 @@ public final class VClientImpl extends IVClient.Stub {
 			mTempLock.block();
 		}
 		VLog.d(TAG, "no lock acquireProviderClient " + info.authority + " process " + info.processName);
-		if (!VClientImpl.getClient().isBound()) {
-			VClientImpl.getClient().bindApplication(info.packageName, info.processName);
+		if (!VClientImpl.get().isBound()) {
+			VClientImpl.get().bindApplication(info.packageName, info.processName);
 		}
 		IInterface provider = null;
 		String[] authorities = info.authority.split(";");

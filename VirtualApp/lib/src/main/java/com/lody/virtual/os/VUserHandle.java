@@ -282,7 +282,7 @@ public final class VUserHandle implements Parcelable {
      * @hide
      */
     public static int myUserId() {
-        return getUserId(VClientImpl.getClient().getVUid());
+        return getUserId(VClientImpl.get().getVUid());
     }
 
     /**

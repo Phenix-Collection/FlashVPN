@@ -22,7 +22,6 @@ import com.polestar.ad.AdConstants;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
-import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.ImageLoaderUtil;
 import com.polestar.multiaccount.utils.LocalExceptionCollectUtils;
@@ -31,11 +30,8 @@ import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.tencent.bugly.crashreport.CrashReport;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -178,7 +174,7 @@ public class MApp extends Application {
             MLogs.logBug("uncaughtException");
             MLogs.e(ex);
             CrashReport.startCrashReport();
-            Context innerContext = VClientImpl.getClient().getCurrentApplication();
+            Context innerContext = VClientImpl.get().getCurrentApplication();
             //1. innerContext = null, internal error in Pb
             if (innerContext == null) {
                 MLogs.logBug("MApp internal exception, exit.");

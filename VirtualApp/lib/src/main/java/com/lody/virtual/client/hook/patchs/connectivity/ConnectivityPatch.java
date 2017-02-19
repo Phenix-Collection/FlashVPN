@@ -4,35 +4,27 @@ import android.content.Context;
 import android.os.Build;
 
 import com.lody.virtual.client.hook.base.Hook;
-import com.lody.virtual.client.hook.base.PatchDelegate;
-import com.lody.virtual.client.hook.binders.ConnectivityBinderDelegate;
+import com.lody.virtual.client.hook.base.PatchBinderDelegate;
 import com.lody.virtual.helper.utils.VLog;
+
 
 import java.lang.reflect.Method;
 
-import mirror.android.os.ServiceManager;
+import mirror.android.net.IConnectivityManager;
 
 import static android.os.Build.VERSION_CODES.KITKAT;
+
 
 /**
  * @author legency
  */
-public class ConnectivityPatch extends PatchDelegate<ConnectivityBinderDelegate> {
+public class ConnectivityPatch extends PatchBinderDelegate {
 
-    @Override
-    protected ConnectivityBinderDelegate createHookDelegate() {
-        return new ConnectivityBinderDelegate();
+
+    public ConnectivityPatch() {
+        super(IConnectivityManager.Stub.TYPE, Context.CONNECTIVITY_SERVICE);
     }
 
-    @Override
-    public void inject() throws Throwable {
-        getHookDelegate().replaceService(Context.CONNECTIVITY_SERVICE);
-    }
-
-    @Override
-    public boolean isEnvBad() {
-        return ServiceManager.getService.call(Context.CONNECTIVITY_SERVICE) != getHookDelegate();
-    }
 
     @Override
     protected void onBindHooks() {

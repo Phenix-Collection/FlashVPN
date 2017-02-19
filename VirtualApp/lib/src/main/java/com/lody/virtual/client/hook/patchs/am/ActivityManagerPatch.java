@@ -64,15 +64,8 @@ import mirror.android.util.Singleton;
 
 public class ActivityManagerPatch extends PatchDelegate<HookDelegate<IInterface>> {
 
-
-	@Override
-	protected HookDelegate<IInterface> createHookDelegate() {
-		return new HookDelegate<IInterface>() {
-			@Override
-			protected IInterface createInterface() {
-				return ActivityManagerNative.getDefault.call();
-			}
-		};
+	public ActivityManagerPatch() {
+		super(new HookDelegate<IInterface>(ActivityManagerNative.getDefault.call()));
 	}
 
 	@Override
@@ -85,12 +78,7 @@ public class ActivityManagerPatch extends PatchDelegate<HookDelegate<IInterface>
 			Singleton.mInstance.set(gDefault, getHookDelegate().getProxyInterface());
 		}
 
-		HookBinderDelegate hookAMBinder = new HookBinderDelegate() {
-			@Override
-			protected IInterface createInterface() {
-				return getHookDelegate().getBaseInterface();
-			}
-		};
+		HookBinderDelegate hookAMBinder = new HookBinderDelegate(getHookDelegate().getBaseInterface());
 		hookAMBinder.copyHooks(getHookDelegate());
 		ServiceManager.sCache.get().put(Context.ACTIVITY_SERVICE, hookAMBinder);
 	}

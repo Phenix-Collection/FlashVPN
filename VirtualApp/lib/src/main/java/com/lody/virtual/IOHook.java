@@ -118,7 +118,7 @@ public class IOHook {
 	public static int onGetCallingUid(int originUid) {
 		int callingPid = Binder.getCallingPid();
 		if (callingPid == Process.myPid()) {
-			return VClientImpl.getClient().getBaseVUid();
+			return VClientImpl.get().getBaseVUid();
 		}
 		if (callingPid == VirtualCore.get().getSystemPid()) {
 			return Process.SYSTEM_UID;
@@ -128,7 +128,7 @@ public class IOHook {
             return VUserHandle.getAppId(vuid);
         }
 		VLog.d(TAG, "Ops, who are you ? " + callingPid);
-		return VClientImpl.getClient().getBaseVUid();
+		return VClientImpl.get().getBaseVUid();
 	}
 
 	public static void onOpenDexFileNative(String[] params) {
@@ -163,6 +163,6 @@ public class IOHook {
 	private static native void nativeHook(int apiLevel);
 
 	public static int onGetUid(int uid) {
-		return VClientImpl.getClient().getBaseVUid();
+		return VClientImpl.get().getBaseVUid();
 	}
 }

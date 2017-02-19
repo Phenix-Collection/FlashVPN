@@ -55,8 +55,8 @@ import mirror.android.app.IActivityManager;
 						" pkg: " + info.packageName + " provider " + provider);
 			} else {
 				VLog.logbug(TAG, "provider == null " + name + " process: " + info.processName +
-						" pkg: " + info.packageName + " current: " + VClientImpl.getClient().getCurrentPackage());
-				if (! info.packageName.equals(VClientImpl.getClient().getCurrentPackage())) {
+						" pkg: " + info.packageName + " current: " + VClientImpl.get().getCurrentPackage());
+				if (! info.packageName.equals(VClientImpl.get().getCurrentPackage())) {
 					provider = VActivityManager.get().acquireProviderClient(userId, info);
 				}
 				VLog.logbug(TAG, "provider result " + provider);

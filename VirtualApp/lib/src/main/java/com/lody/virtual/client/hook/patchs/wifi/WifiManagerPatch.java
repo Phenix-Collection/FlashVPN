@@ -4,14 +4,13 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 
 import com.lody.virtual.client.hook.base.Patch;
-import com.lody.virtual.client.hook.base.PatchDelegate;
+import com.lody.virtual.client.hook.base.PatchBinderDelegate;
 import com.lody.virtual.client.hook.base.StaticHook;
-import com.lody.virtual.client.hook.binders.WifiBinderDelegate;
 import com.lody.virtual.helper.utils.Reflect;
 
 import java.lang.reflect.Method;
 
-import mirror.android.os.ServiceManager;
+import mirror.android.net.wifi.IWifiManager;
 
 /**
  * @author Lody
@@ -20,15 +19,9 @@ import mirror.android.os.ServiceManager;
  * @see android.net.wifi.WifiManager
  */
 @Patch({GetBatchedScanResults.class, GetScanResults.class, SetWifiEnabled.class})
-public class WifiManagerPatch extends PatchDelegate<WifiBinderDelegate> {
-	@Override
-	protected WifiBinderDelegate createHookDelegate() {
-		return new WifiBinderDelegate();
-	}
-
-	@Override
-	public void inject() throws Throwable {
-		getHookDelegate().replaceService(Context.WIFI_SERVICE);
+public class WifiManagerPatch extends PatchBinderDelegate {
+	public WifiManagerPatch() {
+		super(IWifiManager.Stub.TYPE, Context.WIFI_SERVICE);
 	}
 
 	@Override
@@ -49,8 +42,4 @@ public class WifiManagerPatch extends PatchDelegate<WifiBinderDelegate> {
 		});
 	}
 
-	@Override
-	public boolean isEnvBad() {
-		return ServiceManager.getService.call(Context.WIFI_SERVICE) != getHookDelegate();
-	}
 }

@@ -370,7 +370,7 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
                             intent.getComponent());
                 } else {
                     try {
-                        Reflect.on( VClientImpl.getClient().getCurrentApplication().getPackageManager()).call("setLastChosenActivity",
+                        Reflect.on( VClientImpl.get().getCurrentApplication().getPackageManager()).call("setLastChosenActivity",
                                 intent,
                                 intent.resolveTypeIfNeeded(getContentResolver()),
                                 PackageManager.MATCH_DEFAULT_ONLY,

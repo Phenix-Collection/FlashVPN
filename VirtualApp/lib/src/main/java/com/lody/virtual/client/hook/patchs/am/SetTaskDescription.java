@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
@@ -12,7 +11,6 @@ import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.helper.utils.DrawableUtils;
-import com.lody.virtual.os.VUserManager;
 
 import java.lang.reflect.Method;
 
@@ -34,7 +32,7 @@ import java.lang.reflect.Method;
 		Bitmap icon = td.getIcon();
 		String VACLIENT_SUFFIX = " Cloned";
 //		if ((label == null || !label.startsWith(VACLIENT_SUFFIX) || icon == null)){
-		Application app = VClientImpl.getClient().getCurrentApplication();
+		Application app = VClientImpl.get().getCurrentApplication();
 		if (app != null) {
 			if (label == null) {
 				label = "" + app.getApplicationInfo().loadLabel(app.getPackageManager());

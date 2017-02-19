@@ -30,7 +30,7 @@ import com.lody.virtual.client.hook.patchs.location.LocationManagerPatch;
 import com.lody.virtual.client.hook.patchs.media.router.MediaRouterServicePatch;
 import com.lody.virtual.client.hook.patchs.media.session.SessionManagerPatch;
 import com.lody.virtual.client.hook.patchs.mount.MountServicePatch;
-import com.lody.virtual.client.hook.patchs.net_management.NetworkManagementPatch;
+import com.lody.virtual.client.hook.patchs.network.NetworkManagementPatch;
 import com.lody.virtual.client.hook.patchs.notification.NotificationManagerPatch;
 import com.lody.virtual.client.hook.patchs.persistent_data_block.PersistentDataBlockServicePatch;
 import com.lody.virtual.client.hook.patchs.phonesubinfo.PhoneSubInfoPatch;
