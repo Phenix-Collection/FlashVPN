@@ -12,10 +12,15 @@
 #include <fcntl.h>
 #include <sys/system_properties.h>
 
-#include "../helper/helper.h"
+#include "Helper.h"
 
+enum METHODS {
+    OPEN_DEX = 0, CAMERA_SETUP
+};
 
-void hookNative(jobject javaMethod, jboolean isArt, jint apiLevel);
+void patchAndroidVM(jobjectArray javaMethods, jstring packageName, jboolean isArt, jint apiLevel, jint cameraMethodType);
+
+void *getVMHandle();
 
 
 #endif //NDK_HOOK_NATIVE_H
