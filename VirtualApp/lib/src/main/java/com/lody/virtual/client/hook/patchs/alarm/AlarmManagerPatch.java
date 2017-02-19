@@ -67,7 +67,7 @@ public class AlarmManagerPatch extends PatchBinderDelegate {
 
         @Override
         public boolean beforeCall(Object who, Method method, Object... args) {
-			if (Build.VERSION.SDK_INT >= 25 && args[0] instanceof String) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && args[0] instanceof String) {
 				args[0] = getHostPkg();
 			}
             int index = ArrayUtils.indexOfFirst(args, WorkSource.class);

@@ -6,12 +6,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.lody.virtual.client.ipc.VPackageManager;
+import com.lody.virtual.os.VEnvironment;
+import com.lody.virtual.os.VUserInfo;
+import com.lody.virtual.os.VUserManager;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Lody
- *
  */
 public final class AppSetting implements Parcelable {
 
@@ -22,6 +26,25 @@ public final class AppSetting implements Parcelable {
 	public boolean dependSystem;
 	public int appId;
 	public transient PackageParser parser;
+
+    public List<Integer> getInstalledUsers() {
+        List<Integer> installedUsers = new LinkedList<>();
+        List<VUserInfo> users = VUserManager.get().getUsers();
+        for (VUserInfo info : users) {
+            if (VEnvironment.getDataUserPackageDirectory(info.id, packageName).exists()) {
+                installedUsers.add(info.id);
+            }
+        }
+        return installedUsers;
+    }
+
+    public boolean isInstalled(int userId) {
+        return VEnvironment.getDataUserPackageDirectory(userId, packageName).exists();
+    }
+
+    public void installAsUser(int userId) {
+        VEnvironment.getDataUserPackageDirectory(userId, packageName).mkdirs();
+    }
 
 	public AppSetting() {
 
