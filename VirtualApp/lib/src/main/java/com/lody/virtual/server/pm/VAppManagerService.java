@@ -18,6 +18,7 @@ import com.lody.virtual.helper.compat.PackageParserCompat;
 import com.lody.virtual.helper.proto.AppSetting;
 import com.lody.virtual.helper.proto.InstallResult;
 import com.lody.virtual.helper.utils.FileUtils;
+import com.lody.virtual.helper.utils.ResourcesUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VEnvironment;
 import com.lody.virtual.os.VUserHandle;
@@ -139,8 +140,9 @@ public class VAppManagerService extends IAppManager.Stub {
 		}
 		InstallResult res = new InstallResult();
 		res.packageName = pkg.packageName;
-		// PackageCache holds all packages, try to check if need update.
+        // PackageCache holds all packages, try to check if we need to update.
 		PackageParser.Package existOne = PackageCache.get(pkg.packageName);
+        AppSetting existSetting = findAppInfo(pkg.packageName);
 		if (existOne != null) {
 			if ((flags & InstallStrategy.IGNORE_NEW_VERSION) != 0) {
 				res.isUpdate = true;
@@ -148,7 +150,7 @@ public class VAppManagerService extends IAppManager.Stub {
 				return res;
 			}
 			if (!canUpdate(existOne, pkg, flags)) {
-				return InstallResult.makeFailure("Not allowed to update the Apk.");
+                return InstallResult.makeFailure("Not allowed to update the package.");
 			}
 			res.isUpdate = true;
 		}
@@ -156,16 +158,22 @@ public class VAppManagerService extends IAppManager.Stub {
 
 
 		File libDir = new File(appDir, "lib");
+        if (res.isUpdate) {
+            FileUtils.deleteDir(libDir);
+            VEnvironment.getOdexFile(pkg.packageName).delete();
+            VActivityManagerService.get().killAppByPkg(pkg.packageName, VUserHandle.USER_ALL);
+        }
 		if (!libDir.exists() && !libDir.mkdirs()) {
 			return InstallResult.makeFailure("Unable to create lib dir.");
 		}
 		boolean dependSystem = (flags & InstallStrategy.DEPEND_SYSTEM_IF_EXIST) != 0
 				&& VirtualCore.get().isOutsideInstalled(pkg.packageName);
 
+        if (existSetting != null && existSetting.dependSystem) {
+            dependSystem = false;
+        }
+
 		if (!onlyScan) {
-			if (res.isUpdate) {
-				FileUtils.deleteDir(libDir);
-			}
 			NativeLibraryHelperCompat.copyNativeBinaries(new File(apkPath), libDir);
 			if (!dependSystem) {
 				// /data/app/com.xxx.xxx-1/base.apk
@@ -183,16 +191,14 @@ public class VAppManagerService extends IAppManager.Stub {
 		if (existOne != null) {
 			PackageCache.remove(pkg.packageName);
 		}
+        if (!dependSystem) {
+            ResourcesUtils.chmod(appDir);
+        }
 		AppSetting appSetting = new AppSetting();
 		appSetting.parser = parser;
 		appSetting.dependSystem = dependSystem;
 		appSetting.apkPath = apk.getPath();
 		appSetting.libPath = libDir.getPath();
-		File odexFolder = new File(appDir, VirtualRuntime.isArt() ? "oat" : "odex");
-		if (!odexFolder.exists() && !odexFolder.mkdirs()) {
-			VLog.w(TAG, "Warning: unable to create folder : " + odexFolder.getPath());
-		}
-		appSetting.odexDir = odexFolder.getPath();
 		appSetting.packageName = pkg.packageName;
 		appSetting.appId = VUserHandle.getAppId(mUidSystem.getOrCreateUid(pkg));
 
@@ -228,6 +234,7 @@ public class VAppManagerService extends IAppManager.Stub {
 					mBroadcastSystem.stopApp(pkg);
 					VActivityManagerService.get().killAppByPkg(pkg, VUserHandle.USER_ALL);
 					FileUtils.deleteDir(VEnvironment.getDataAppPackageDirectory(pkg));
+                    VEnvironment.getOdexFile(pkg).delete();
 					for (int userId : VUserManagerService.get().getUserIds()) {
 						FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(userId, pkg));
 					}

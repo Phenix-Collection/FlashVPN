@@ -304,7 +304,7 @@ public final class VClientImpl extends IVClient.Stub {
 		Object boundApp = fixBoundApp(mBoundApplication);
 		if (mainThread != null) {
 			mBoundApplication.info = ActivityThread.getPackageInfoNoCheck.call(mainThread, data.appInfo,
-					CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO);
+					CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO.get());
 		}
 		if (mBoundApplication.info == null) {
 			VLog.logbug(TAG, "getPackageInfoNoCheck mainThread : " + mainThread == null? "null":"not null" + " error");
