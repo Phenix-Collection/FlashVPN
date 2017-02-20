@@ -431,28 +431,6 @@ public final class VClientImpl extends IVClient.Stub {
 		return provider != null ? provider.asBinder() : null;
 	}
 
-	private void clearSettingProvider() {
-		Object cache;
-		if (Settings.System.TYPE != null) {
-			cache = Settings.System.sNameValueCache.get();
-			if (cache != null) {
-				Settings.NameValueCache.mContentProvider.set(cache, null);
-			}
-		}
-		if (Settings.Secure.TYPE != null) {
-			cache = Settings.Secure.sNameValueCache.get();
-			if (cache != null) {
-				Settings.NameValueCache.mContentProvider.set(cache, null);
-			}
-		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Settings.Global.TYPE != null) {
-			cache = Settings.Global.sNameValueCache.get();
-			if (cache != null) {
-				Settings.NameValueCache.mContentProvider.set(cache, null);
-			}
-		}
-	}
-
 	private void fixInstalledProviders() {
 		clearSettingProvider();
 		Map clientMap = ActivityThread.mProviderMap.get(VirtualCore.mainThread());
@@ -480,6 +458,27 @@ public final class VClientImpl extends IVClient.Stub {
 
 	}
 
+    private void clearSettingProvider() {
+        Object cache;
+        if (Settings.System.TYPE != null) {
+            cache = Settings.System.sNameValueCache.get();
+            if (cache != null) {
+                Settings.NameValueCache.mContentProvider.set(cache, null);
+            }
+        }
+        if (Settings.Secure.TYPE != null) {
+            cache = Settings.Secure.sNameValueCache.get();
+            if (cache != null) {
+                Settings.NameValueCache.mContentProvider.set(cache, null);
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Settings.Global.TYPE != null) {
+            cache = Settings.Global.sNameValueCache.get();
+            if (cache != null) {
+                Settings.NameValueCache.mContentProvider.set(cache, null);
+            }
+        }
+    }
 
 	@Override
 	public void finishActivity(IBinder token) {
