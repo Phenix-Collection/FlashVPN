@@ -847,10 +847,10 @@ public class CustomDragableView extends ViewGroup {
     }
 
     private int getPositionByXY(int x, int y) {
-        final int col = (x - mPaddingLeft - paddingLeft) / (itemWidth + mGapSize);
-        final int row = (y - mPaddingTop - paddingTop) / (itemHeight + mGapSize);
-        if (x < mPaddingLeft + paddingLeft || x >= (mPaddingLeft + paddingLeft + col * (itemWidth + mGapSize) + itemWidth) ||
-                y < mPaddingTop + paddingTop || y >= (mPaddingTop + paddingTop + row * (itemHeight + mGapSize) + itemHeight) ||
+        final int col = (x - getPaddingLeft() - paddingLeft) / (itemWidth + mGapSize);
+        final int row = (y - getPaddingTop() - paddingTop) / (itemHeight + mGapSize);
+        if (x < getPaddingLeft() + paddingLeft || x >= (getPaddingLeft() + paddingLeft + col * (itemWidth + mGapSize) + itemWidth) ||
+                y < getPaddingTop() + paddingTop || y >= (getPaddingTop() + paddingTop + row * (itemHeight + mGapSize) + itemHeight) ||
                 col < 0 || col >= mColCount ||
                 row < 0 || row >= mRowCount) {
             // touch in padding
@@ -1127,8 +1127,8 @@ public class CustomDragableView extends ViewGroup {
         final int page = position / mPageSize;
         final int row = (position % mPageSize) / mColCount;
         final int col = (position % mPageSize) % mColCount;
-        final int left = getWidth() * page + mPaddingLeft + col * (itemWidth + mGapSize) + paddingLeft;
-        final int top = mPaddingTop + row * (itemHeight + mGapSize) + paddingTop;
+        final int left = getWidth() * page + getPaddingLeft() + col * (itemWidth + mGapSize) + paddingLeft;
+        final int top = getPaddingTop() + row * (itemHeight + mGapSize) + paddingTop;
         return new Rect(left, top, left + itemWidth, top + itemHeight);
     }
     private Rect getDragedRectByPosition(int position) {
@@ -1136,8 +1136,8 @@ public class CustomDragableView extends ViewGroup {
         final int offset =( currentPage - page ) * getWidth();
         final int row = (position % mPageSize) / mColCount;
         final int col = (position % mPageSize) % mColCount;
-        final int left = getWidth() * page + mPaddingLeft + col * (itemWidth + mGapSize) + paddingLeft + offset;
-        final int top = mPaddingTop + row * (itemHeight + mGapSize) + paddingTop;
+        final int left = getWidth() * page + getPaddingLeft() + col * (itemWidth + mGapSize) + paddingLeft + offset;
+        final int top = getPaddingTop() + row * (itemHeight + mGapSize) + paddingTop;
         return new Rect(left, top, left + itemWidth, top + itemHeight);
     }
 

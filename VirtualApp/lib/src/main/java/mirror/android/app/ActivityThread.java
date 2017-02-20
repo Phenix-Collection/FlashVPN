@@ -31,7 +31,7 @@ import mirror.RefStaticInt;
 
 public class ActivityThread {
     public static Class<?> TYPE = RefClass.load(ActivityThread.class, "android.app.ActivityThread");
-    public static RefStaticMethod<android.app.ActivityThread> currentActivityThread;
+    public static RefStaticMethod currentActivityThread;
     public static RefMethod<String> getProcessName;
     public static RefMethod<Handler> getHandler;
     public static RefMethod<Object> installProvider;
@@ -47,6 +47,7 @@ public class ActivityThread {
     @MethodParams({IBinder.class, String.class, int.class, int.class, Intent.class})
     public static RefMethod<Void> sendActivityResult;
     public static RefMethod<Binder> getApplicationThread;
+    public static RefMethod<Object> getPackageInfoNoCheck;
 
     public static class ActivityClientRecord {
         public static Class<?> TYPE = RefClass.load(ActivityClientRecord.class, "android.app.ActivityThread$ActivityClientRecord");

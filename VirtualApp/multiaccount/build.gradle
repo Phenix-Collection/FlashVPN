@@ -10,6 +10,7 @@ def releaseTime() {
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId 'com.polestar.multiaccount'
@@ -89,7 +90,7 @@ dependencies {
     compile 'com.jonathanfinerty.once:once:1.0.3'
     debugCompile 'com.github.moduth:blockcanary:1.0.2'
     releaseCompile 'com.github.moduth:blockcanary-no-op:1.0.2'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:design:25.+'
     compile 'org.greenrobot:greendao:3.0.1'
     compile 'com.google.code.gson:gson:2.3.1'
     //firebase messaging/notifications

@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
-import android.content.res.CompatibilityInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.ConditionVariable;
@@ -51,6 +50,7 @@ import mirror.android.app.ContextImplICS;
 import mirror.android.app.ContextImplKitkat;
 import mirror.android.app.IActivityManager;
 import mirror.android.app.LoadedApk;
+import mirror.android.content.res.CompatibilityInfo;
 import mirror.android.providers.Settings;
 import mirror.android.renderscript.RenderScriptCacheDir;
 import mirror.android.view.HardwareRenderer;
@@ -68,18 +68,17 @@ import static com.lody.virtual.os.VUserHandle.getUserId;
 public final class VClientImpl extends IVClient.Stub {
 
 	private static final int NEW_INTENT = 11;
+    private static final int RECEIVER = 12;
 
 	private static final String TAG = VClientImpl.class.getSimpleName();
-
-	private ConditionVariable mTempLock;
-
 	@SuppressLint("StaticFieldLeak")
 	private static final VClientImpl gClient = new VClientImpl();
+    private final H mH = new H();
+    private ConditionVariable mTempLock;
 	private Instrumentation mInstrumentation = AppInstrumentation.getDefault();
 
 	private IBinder token;
 	private int vuid;
-	private final H mH = new H();
 	private AppBindData mBoundApplication;
 	private Application mInitialApplication;
 
@@ -182,7 +181,7 @@ public final class VClientImpl extends IVClient.Stub {
 		} else {
 			intent = data.intent;
 		}
-		if (Build.VERSION.SDK_INT <= 24) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
             ActivityThread.performNewIntents.call(
                     VirtualCore.mainThread(),
                     data.token,
@@ -248,12 +247,16 @@ public final class VClientImpl extends IVClient.Stub {
 				super.start();
 			}
 		});
-		if (data.appInfo.targetSdkVersion < Build.VERSION_CODES.GINGERBREAD) {
+        int targetSdkVersion = data.appInfo.targetSdkVersion;
+        if (targetSdkVersion < Build.VERSION_CODES.GINGERBREAD) {
 			StrictMode.ThreadPolicy newPolicy = new StrictMode.ThreadPolicy.Builder(StrictMode.getThreadPolicy()).permitNetwork().build();
 			StrictMode.setThreadPolicy(newPolicy);
 		}
+        if (StubManifest.ENABLE_IO_REDIRECT) {
+            startIOUniformer();
+        }
 		IOHook.hookNative();
-		android.app.ActivityThread mainThread = (android.app.ActivityThread) VirtualCore.mainThread();
+		Object mainThread = VirtualCore.mainThread();
 		IOHook.startDexOverride();
 		Context context = createPackageContext(data.appInfo.packageName);
 		System.setProperty("java.io.tmpdir", context.getCacheDir().getAbsolutePath());
@@ -263,7 +266,7 @@ public final class VClientImpl extends IVClient.Stub {
 		} else {
 			codeCacheDir = context.getCacheDir();
 		}
-		if (Build.VERSION.SDK_INT < 24) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             if (HardwareRenderer.setupDiskCache != null) {
                 HardwareRenderer.setupDiskCache.call(codeCacheDir);
             }
@@ -300,7 +303,7 @@ public final class VClientImpl extends IVClient.Stub {
 		}
 		Object boundApp = fixBoundApp(mBoundApplication);
 		if (mainThread != null) {
-			mBoundApplication.info = mainThread.getPackageInfoNoCheck(data.appInfo,
+			mBoundApplication.info = ActivityThread.getPackageInfoNoCheck.call(mainThread, data.appInfo,
 					CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO);
 		}
 		if (mBoundApplication.info == null) {
@@ -310,16 +313,17 @@ public final class VClientImpl extends IVClient.Stub {
 		mirror.android.app.ActivityThread.AppBindData.info.set(boundApp, data.info);
 		VMRuntime.setTargetSdkVersion.call(VMRuntime.getRuntime.call(), data.appInfo.targetSdkVersion);
 
-		Application app = LoadedApk.makeApplication.call(data.info, false, null);
 		//android.app.LoadedApk
 		if (data.info == null) {
 			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":data.info null");
+			//should return here
 		}
+		Application app = LoadedApk.makeApplication.call(data.info, false, null);
+
 		if (app == null) {
 			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":app context null");
 			if (data.info!= null) {
-				android.app.LoadedApk loadedApk = (android.app.LoadedApk) data.info;
-				app = loadedApk.makeApplication(false, null);
+				app = LoadedApk.makeApplication.call(data.info, false, null);
 				if (app == null) {
 					VLog.logbug(TAG, "bug app == null");
 				}
@@ -349,6 +353,14 @@ public final class VClientImpl extends IVClient.Stub {
 			}
 		}
 		VActivityManager.get().appDoneExecuting();
+	}
+
+	@SuppressLint("SdCardPath")
+	private void startIOUniformer() {
+		ApplicationInfo info = mBoundApplication.appInfo;
+		IOHook.redirect("/data/data/" + info.packageName + "/", info.dataDir + "/");
+		IOHook.redirect("/data/user/0/" + info.packageName + "/", info.dataDir + "/");
+		IOHook.hook();
 	}
 
 	private Context createPackageContext(String packageName) {
@@ -444,8 +456,9 @@ public final class VClientImpl extends IVClient.Stub {
 	private void fixInstalledProviders() {
 		clearSettingProvider();
 		Map clientMap = ActivityThread.mProviderMap.get(VirtualCore.mainThread());
+        boolean highApi = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
 		for (Object clientRecord : clientMap.values()) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (highApi) {
 				IInterface provider = ActivityThread.ProviderClientRecordJB.mProvider.get(clientRecord);
 				Object holder = ActivityThread.ProviderClientRecordJB.mHolder.get(clientRecord);
 				ProviderInfo info = IActivityManager.ContentProviderHolder.info.get(holder);

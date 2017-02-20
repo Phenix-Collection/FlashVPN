@@ -256,7 +256,7 @@ public class LockerView extends LinearLayout implements View.OnClickListener {
                     updateLockPatternViewAndHint(TYPE_PATTERN_ERROR);
                 } else {
                     if (isPatternCorrect(pattern)) {
-                        PreferencesUtils.setLockScreen(mContext,false);
+                        PreferencesUtils.setLockScreen(getContext(),false);
                         if (mOnUnlockListener != null){
                             mOnUnlockListener.onCorrectPassword();
                         }

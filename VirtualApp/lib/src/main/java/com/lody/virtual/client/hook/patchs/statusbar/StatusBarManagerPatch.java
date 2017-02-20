@@ -18,7 +18,7 @@ import mirror.com.android.internal.statusbar.IStatusBarService;
 public class StatusBarManagerPatch extends PatchBinderDelegate{
 
     public StatusBarManagerPatch() {
-        super(IStatusBarService.Stub.TYPE, Context.STATUS_BAR_SERVICE);
+        super(IStatusBarService.Stub.TYPE, "statusbar");
     }
 
     @Override

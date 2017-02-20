@@ -7,4 +7,5 @@
 -keep class com.lody.virtual.helper.proto.** {*;}
 -keep class com.lody.virtual.os.** {*;}
 -keep class com.lody.virtual.service.** {*;}
--keep class com.lody.virtual.service.interfaces.** {*;}
+-keep class com.lody.virtual.server.** {*;}
+-keep class com.lody.virtual.server.interfaces.** {*;}

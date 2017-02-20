@@ -25,8 +25,8 @@ import com.lody.virtual.server.accounts.VAccountManagerService;
 import com.lody.virtual.server.am.StaticBroadcastSystem;
 import com.lody.virtual.server.am.UidSystem;
 import com.lody.virtual.server.am.VActivityManagerService;
-import com.lody.virtual.service.IAppManager;
-import com.lody.virtual.service.interfaces.IAppObserver;
+import com.lody.virtual.server.IAppManager;
+import com.lody.virtual.server.interfaces.IAppObserver;
 
 import java.io.File;
 import java.util.ArrayList;

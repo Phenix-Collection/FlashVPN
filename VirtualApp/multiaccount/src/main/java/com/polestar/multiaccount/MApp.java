@@ -1,7 +1,6 @@
 package com.polestar.multiaccount;
 
 import android.app.ActivityManager;
-import android.app.ActivityThread;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
+import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.proto.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.AdConstants;
@@ -74,6 +74,7 @@ public class MApp extends Application {
 
         super.attachBaseContext(base);
         try {
+            StubManifest.ENABLE_IO_REDIRECT = true;
             VirtualCore.get().startup(base);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -184,7 +185,7 @@ public class MApp extends Application {
 
                 //2. innerContext != null, error in third App, bugly and MTA will report.
                 MLogs.e("cur process id:" + android.os.Process.myPid());
-                MLogs.e("cur process name:" + ActivityThread.currentActivityThread().getProcessName());
+                MLogs.e("cur thread name:" + Thread.currentThread().getName());
                 ActivityManager.RunningAppProcessInfo info = CommonUtils.getForegroundProcess(context);
                 if (info != null) {
                     MLogs.e("foreground process: " + info.pid);

@@ -119,7 +119,7 @@ public class StaticBroadcastSystem {
 			if ((intent.getFlags() & FLAG_RECEIVER_REGISTERED_ONLY) != 0) {
                 return;
             }
-			PendingResult result = getPendingResult();
+			PendingResult result = mirror.android.content.BroadcastReceiver.getPendingResult.call(this);
 			synchronized (mAMS) {
                 if (!mAMS.handleStaticBroadcast(appId, info, intent, this, result)) {
 //                    result.finish();

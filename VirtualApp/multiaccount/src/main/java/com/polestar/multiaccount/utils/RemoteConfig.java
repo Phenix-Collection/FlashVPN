@@ -1,6 +1,6 @@
 package com.polestar.multiaccount.utils;
 
-import android.annotation.NonNull;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.android.gms.tasks.OnFailureListener;

@@ -29,7 +29,7 @@ import com.lody.virtual.server.job.controllers.JobStatus;
 import com.lody.virtual.server.job.controllers.StateController;
 import com.lody.virtual.server.job.controllers.TimeController;
 import com.lody.virtual.server.pm.VPackageManagerService;
-import com.lody.virtual.service.IJobScheduler;
+import com.lody.virtual.server.IJobScheduler;
 
 import java.util.ArrayList;
 import java.util.Iterator;

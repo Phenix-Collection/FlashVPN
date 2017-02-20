@@ -20,8 +20,8 @@ import com.lody.virtual.helper.proto.PendingIntentData;
 import com.lody.virtual.helper.proto.VParceledListSlice;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.os.VUserHandle;
-import com.lody.virtual.service.IActivityManager;
-import com.lody.virtual.service.interfaces.IProcessObserver;
+import com.lody.virtual.server.IActivityManager;
+import com.lody.virtual.server.interfaces.IProcessObserver;
 
 import java.util.HashMap;
 import java.util.List;

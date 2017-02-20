@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
@@ -48,15 +47,17 @@ import com.lody.virtual.helper.utils.collection.SparseArray;
 import com.lody.virtual.os.VBinder;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.os.VUserManager;
+import com.lody.virtual.server.interfaces.IUiObserver;
 import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
 import com.lody.virtual.server.secondary.BinderDelegateService;
-import com.lody.virtual.service.IActivityManager;
-import com.lody.virtual.service.interfaces.IProcessObserver;
+import com.lody.virtual.server.IActivityManager;
+import com.lody.virtual.server.interfaces.IProcessObserver;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import mirror.android.app.ApplicationThreadNative;
@@ -86,6 +87,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			.getSystemService(Context.ACTIVITY_SERVICE);
 	private final VPendingIntents mPendingIntents = new VPendingIntents();
 
+	private Map<String, List<IUiObserver>> uiObservers = new ArrayMap<>();
 	public static VActivityManagerService get() {
 		return sService.get();
 	}
@@ -682,6 +684,15 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		processDead(record);
 		record.lock.open();
 	}
+
+
+    @Override
+    public void registerUIObserver(IUiObserver observer) {
+    }
+
+    @Override
+    public void unregisterUIObserver(IUiObserver observer) {
+    }
 
 	@Override
 	public int getFreeStubCount() {

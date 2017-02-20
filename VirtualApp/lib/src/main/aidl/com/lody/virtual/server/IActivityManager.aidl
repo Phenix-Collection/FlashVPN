@@ -1,5 +1,5 @@
 // IActivityManager.aidl
-package com.lody.virtual.service;
+package com.lody.virtual.server;
 
 import com.lody.virtual.helper.proto.VParceledListSlice;
 import com.lody.virtual.helper.proto.AppTaskInfo;
@@ -9,7 +9,8 @@ import android.content.pm.ActivityInfo;
 import android.app.Notification;
 import android.app.IServiceConnection;
 import android.app.IActivityManager.ContentProviderHolder;
-import com.lody.virtual.service.interfaces.IProcessObserver;
+import com.lody.virtual.server.interfaces.IProcessObserver;
+import com.lody.virtual.server.interfaces.IUiObserver;
 
 
 interface IActivityManager {
@@ -21,6 +22,8 @@ interface IActivityManager {
     int getSystemPid();
 
     int getUidByPid(int pid);
+    void registerUIObserver(IUiObserver observer);
+    void unregisterUIObserver(IUiObserver observer);
 
     boolean isAppProcess(String processName);
 

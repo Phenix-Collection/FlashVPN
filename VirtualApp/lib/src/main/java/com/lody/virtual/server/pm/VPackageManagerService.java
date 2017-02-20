@@ -34,7 +34,7 @@ import com.lody.virtual.helper.proto.VParceledListSlice;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
-import com.lody.virtual.service.IPackageManager;
+import com.lody.virtual.server.IPackageManager;
 
 import java.io.File;
 import java.io.PrintWriter;
