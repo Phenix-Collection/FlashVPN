@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.os.IInterface;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.client.env.Constants;
+import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.stub.StubPendingActivity;
 import com.lody.virtual.client.stub.StubPendingReceiver;
@@ -23,7 +25,7 @@ import java.lang.reflect.Method;
 /**
  * @author Lody
  */
-/* package */ class GetIntentSender extends BaseStartActivity {
+/* package */ class GetIntentSender extends Hook {
 
 	private final static String TAG = "GetIntentSender";
 	@Override

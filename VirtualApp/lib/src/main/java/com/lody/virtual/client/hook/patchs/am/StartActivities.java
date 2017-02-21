@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.IBinder;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.proto.StubActivityRecord;
@@ -21,7 +22,7 @@ import java.lang.reflect.Method;
  * Created by guojia on 2017/1/14.
  */
 
-class StartActivities extends BaseStartActivity {
+class StartActivities extends Hook {
     @Override
     public String getName() {
         return "startActivities";
@@ -29,8 +30,6 @@ class StartActivities extends BaseStartActivity {
 
     @Override
     public Object call(Object who, Method method, Object... args) throws Throwable {
-        //filter
-        super.call(who, method, args);
 
         int intentArrayIndex = ArrayUtils.indexOfFirst(args, Intent[].class);
         if (intentArrayIndex == -1) {

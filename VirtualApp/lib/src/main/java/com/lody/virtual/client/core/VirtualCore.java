@@ -6,12 +6,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.ConditionVariable;
 import android.os.IBinder;
@@ -25,15 +27,17 @@ import com.lody.virtual.client.fixer.ContextFixer;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.ipc.LocalProxyUtils;
+import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
-import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.compat.BundleCompat;
 import com.lody.virtual.helper.proto.AppSetting;
 import com.lody.virtual.helper.proto.InstallResult;
+import com.lody.virtual.helper.utils.BitmapUtils;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.server.IAppManager;
+import com.lody.virtual.server.interfaces.IAppRequestListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,6 +53,7 @@ public final class VirtualCore {
 
 	@SuppressLint("StaticFieldLeak")
 	private static VirtualCore gCore = new VirtualCore();
+    private final int myUid = Process.myUid();
 	/**
 	 * Client Package Manager
 	 */
@@ -75,7 +80,6 @@ public final class VirtualCore {
 	private IAppManager mService;
 	private boolean isStartUp;
 	private PackageInfo hostPkgInfo;
-	private final int myUid = Process.myUid();
 	private int systemPid;
 	private ConditionVariable initLock = new ConditionVariable();
 	private PhoneInfoDelegate phoneInfoDelegate;
@@ -324,6 +328,100 @@ public final class VirtualCore {
 		return intent;
 	}
 
+    public boolean createShortcut(int userId, String packageName, OnEmitShortcutListener listener) {
+        return createShortcut(userId, packageName, null, listener);
+    }
+
+    public boolean createShortcut(int userId, String packageName, Intent splash, OnEmitShortcutListener listener) {
+        AppSetting setting = findApp(packageName);
+        if (setting == null) {
+            return false;
+        }
+        ApplicationInfo appInfo = setting.getApplicationInfo(userId);
+        PackageManager pm = context.getPackageManager();
+        String name;
+        Bitmap icon;
+        try {
+            CharSequence sequence = appInfo.loadLabel(pm);
+            name = sequence.toString();
+            icon = BitmapUtils.drawableToBitmap(appInfo.loadIcon(pm));
+        } catch (Throwable e) {
+            return false;
+        }
+        if (listener != null) {
+            String newName = listener.getName(name);
+            if (newName != null) {
+                name = newName;
+            }
+            Bitmap newIcon = listener.getIcon(icon);
+            if (newIcon != null) {
+                icon = newIcon;
+            }
+        }
+        Intent targetIntent = getLaunchIntent(packageName, userId);
+        if (targetIntent == null) {
+            return false;
+        }
+        Intent shortcutIntent = new Intent();
+        shortcutIntent.setClassName(getHostPkg(), Constants.SHORTCUT_PROXY_ACTIVITY_NAME);
+        shortcutIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        if (splash != null) {
+            shortcutIntent.putExtra("_VA_|_splash_", splash.toUri(0));
+        }
+        shortcutIntent.putExtra("_VA_|_intent_", targetIntent);
+        shortcutIntent.putExtra("_VA_|_uri_", targetIntent.toUri(0));
+        shortcutIntent.putExtra("_VA_|_user_id_", VUserHandle.myUserId());
+
+        Intent addIntent = new Intent();
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon);
+        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        context.sendBroadcast(addIntent);
+        return true;
+    }
+
+    public boolean removeShortcut(int userId, String packageName, Intent splash, OnEmitShortcutListener listener) {
+        AppSetting setting = findApp(packageName);
+        if (setting == null) {
+            return false;
+        }
+        ApplicationInfo appInfo = setting.getApplicationInfo(userId);
+        PackageManager pm = context.getPackageManager();
+        String name;
+        try {
+            CharSequence sequence = appInfo.loadLabel(pm);
+            name = sequence.toString();
+        } catch (Throwable e) {
+            return false;
+        }
+        if (listener != null) {
+            String newName = listener.getName(name);
+            if (newName != null) {
+                name = newName;
+            }
+        }
+        Intent targetIntent = getLaunchIntent(packageName, userId);
+        if (targetIntent == null) {
+            return false;
+        }
+        Intent shortcutIntent = new Intent();
+        shortcutIntent.setClassName(getHostPkg(), Constants.SHORTCUT_PROXY_ACTIVITY_NAME);
+        shortcutIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        if (splash != null) {
+            shortcutIntent.putExtra("_VA_|_splash_", splash.toUri(0));
+        }
+        shortcutIntent.putExtra("_VA_|_intent_", targetIntent);
+        shortcutIntent.putExtra("_VA_|_uri_", targetIntent.toUri(0));
+        shortcutIntent.putExtra("_VA_|_user_id_", VUserHandle.myUserId());
+
+        Intent addIntent = new Intent();
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+        addIntent.setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
+        context.sendBroadcast(addIntent);
+        return true;
+    }
 
 	public void setLoadingPage(Intent intent, Activity activity) {
 		if (activity != null) {
@@ -430,6 +528,14 @@ public final class VirtualCore {
 		}
 	}
 
+    public void clearAppRequestListener() {
+        try {
+            getService().clearAppRequestListener();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
 	public void preloadAllApps() {
 		try {
 			getService().preloadAllApps();
@@ -438,7 +544,42 @@ public final class VirtualCore {
 		}
 	}
 
+    public IAppRequestListener getAppRequestListener() {
+        try {
+            return getService().getAppRequestListener();
+        } catch (RemoteException e) {
+            return VirtualRuntime.crash(e);
+        }
+    }
 
+    public void setAppRequestListener(final AppRequestListener listener) {
+        IAppRequestListener inner = new IAppRequestListener.Stub() {
+            @Override
+            public void onRequestInstall(final String path) throws RemoteException {
+                VirtualRuntime.getUIHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onRequestInstall(path);
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestUninstall(final String pkg) throws RemoteException {
+                VirtualRuntime.getUIHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onRequestUninstall(pkg);
+                    }
+                });
+            }
+        };
+        try {
+            getService().setAppRequestListener(inner);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
 	public boolean isOutsideInstalled(String packageName) {
 		try {
@@ -474,4 +615,16 @@ public final class VirtualCore {
 		 */
 		CHILD
 	}
+
+    public interface AppRequestListener {
+        void onRequestInstall(String path);
+
+        void onRequestUninstall(String pkg);
+    }
+
+    public interface OnEmitShortcutListener {
+        Bitmap getIcon(Bitmap originIcon);
+
+        String getName(String originName);
+    }
 }

@@ -15,7 +15,6 @@ import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.server.accounts.VAccountManagerService;
 import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.am.VActivityManagerService;
-import com.lody.virtual.server.filter.IntentFilterService;
 import com.lody.virtual.server.job.JobSchedulerService;
 import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
@@ -49,7 +48,6 @@ public final class BinderProvider extends BaseContentProvider {
             BroadcastSystem.attach(VActivityManagerService.get(), VAppManagerService.get());
 			VAccountManagerService.systemReady();
 			addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
-			addService(ServiceManagerNative.INTENT_FILTER, IntentFilterService.get());
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				JobSchedulerService.systemReady(context);
 				addService(ServiceManagerNative.JOB, JobSchedulerService.getStub());

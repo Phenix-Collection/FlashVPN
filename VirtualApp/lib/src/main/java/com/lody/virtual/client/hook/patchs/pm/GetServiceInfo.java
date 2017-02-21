@@ -14,11 +14,9 @@ import static android.content.pm.PackageManager.GET_DISABLED_COMPONENTS;
 
 /**
  * @author Lody
- *
- *
- *         原型: public ActivityInfo getServiceInfo(ComponentName className, int
+ *         <p>
+ *         public ActivityInfo getServiceInfo(ComponentName className, int
  *         flags, int userId)
- *
  */
 /* package */ class GetServiceInfo extends Hook {
 
