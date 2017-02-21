@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.InstallStrategy;
@@ -30,6 +31,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -85,7 +87,36 @@ public class MApp extends Application {
     public void onCreate() {
         gDefault = this;
         super.onCreate();
-        if (VirtualCore.get().isMainProcess()) {
+        if (VirtualCore.get().isServerProcess()) {
+            VirtualCore.get().setAppRequestListener(new VirtualCore.AppRequestListener() {
+                @Override
+                public void onRequestInstall(String path) {
+                    //We can start AppInstallActivity TODO
+                    Toast.makeText(MApp.this, "Installing: " + path, Toast.LENGTH_SHORT).show();
+                    InstallResult res = VirtualCore.get().installApp(path, InstallStrategy.UPDATE_IF_EXIST);
+                    if (res.isSuccess) {
+                        try {
+                            VirtualCore.get().preOpt(res.packageName);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (res.isUpdate) {
+                            Toast.makeText(MApp.this, "Update: " + res.packageName + " success!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MApp.this, "Install: " + res.packageName + " success!", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(MApp.this, "Install failed: " + res.error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onRequestUninstall(String pkg) {
+                    Toast.makeText(MApp.this, "Uninstall: " + pkg, Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        } else if (VirtualCore.get().isMainProcess()) {
 //            Once.initialise(this);
             installGms();
 
