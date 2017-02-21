@@ -7,12 +7,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
+import android.os.Parcel;
 import android.os.RemoteException;
 
+import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.env.SpecialComponentList;
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.hook.utils.HookUtils;
+import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.helper.utils.VLog;
+import com.lody.virtual.os.VUserHandle;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
@@ -39,7 +43,7 @@ import mirror.android.content.IIntentReceiverJB;
             ? 3
             : 2;
 
-    private WeakHashMap<IBinder, IIntentReceiver> mProxyIIntentReceiver = new WeakHashMap<>();
+    private WeakHashMap<IBinder, IIntentReceiver> mProxyIIntentReceivers = new WeakHashMap<>();
 
     @Override
     public String getName() {
@@ -52,9 +56,10 @@ import mirror.android.content.IIntentReceiverJB;
         args[IDX_RequiredPermission] = null;
         IntentFilter filter = (IntentFilter) args[IDX_IntentFilter];
         VLog.d("RegisterReceiver", filter.getAction(0));
+        IntentFilter backupFilter = new IntentFilter(filter);
+        protectIntentFilter(filter);
         if (args.length > IDX_IIntentReceiver && IIntentReceiver.class.isInstance(args[IDX_IIntentReceiver])) {
             final IInterface old = (IInterface) args[IDX_IIntentReceiver];
-            redirectIntentFilter(filter);
             VLog.d("RegisterReceiver", "will wrap intentReceiver " );
             if (!ProxyIIntentReceiver.class.isInstance(old)) {
                 final IBinder token = old.asBinder();
@@ -63,13 +68,13 @@ import mirror.android.content.IIntentReceiverJB;
                         @Override
                         public void binderDied() {
                             token.unlinkToDeath(this, 0);
-                            mProxyIIntentReceiver.remove(token);
+                            mProxyIIntentReceivers.remove(token);
                         }
                     }, 0);
-                    IIntentReceiver proxyIIntentReceiver = mProxyIIntentReceiver.get(token);
+                    IIntentReceiver proxyIIntentReceiver = mProxyIIntentReceivers.get(token);
                     if (proxyIIntentReceiver == null) {
                         proxyIIntentReceiver = new ProxyIIntentReceiver(old);
-                        mProxyIIntentReceiver.put(token, proxyIIntentReceiver);
+                        mProxyIIntentReceivers.put(token, proxyIIntentReceiver);
                     }
                     WeakReference mDispatcher = LoadedApk.ReceiverDispatcher.InnerReceiver.mDispatcher.get(old);
                     if (mDispatcher != null) {
@@ -80,10 +85,15 @@ import mirror.android.content.IIntentReceiverJB;
             }
         }
         VLog.d("RegisterReceiver", "after redirect " + filter.getAction(0));
-        return method.invoke(who, args);
+        Object res = method.invoke(who, args);
+        Intent intent = VActivityManager.get().dispatchStickyBroadcast(backupFilter);
+        if (intent != null) {
+            return intent;
+        }
+        return res;
     }
 
-    private void redirectIntentFilter(IntentFilter filter) {
+    private void protectIntentFilter(IntentFilter filter) {
         if (filter != null) {
             List<String> actions = mirror.android.content.IntentFilter.mActions.get(filter);
             ListIterator<String> iterator = actions.listIterator();
@@ -115,6 +125,9 @@ import mirror.android.content.IIntentReceiverJB;
 
         public void performReceive(Intent intent, int resultCode, String data, Bundle extras, boolean ordered,
                                    boolean sticky, int sendingUser) throws RemoteException {
+            if (!accept(intent)) {
+                return;
+            }
             Intent broadcastIntent = null;
             try {
                 broadcastIntent = intent.getParcelableExtra("_VA_|_intent_");
@@ -124,8 +137,7 @@ import mirror.android.content.IIntentReceiverJB;
             if (broadcastIntent != null) {
                 intent = broadcastIntent;
             }
-            String action = SpecialComponentList.unprotectAction(intent.getAction());
-            intent.setAction(action);
+            SpecialComponentList.unprotectIntent(intent);
             if (old != null && old.asBinder().isBinderAlive()) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
                     IIntentReceiverJB.performReceive.call(old, intent, resultCode, data, extras, ordered, sticky, sendingUser);
@@ -133,6 +145,18 @@ import mirror.android.content.IIntentReceiverJB;
                     mirror.android.content.IIntentReceiver.performReceive.call(old, intent, resultCode, data, extras, ordered, sticky);
                 }
             }
+        }
+
+        private boolean accept(Intent intent) {
+            int uid = intent.getIntExtra("_VA_|_uid_", -1);
+            if (uid != -1) {
+                return VClientImpl.get().getVUid() == uid;
+            }
+            int userId = intent.getIntExtra("_VA_|_user_id_", VUserHandle.USER_ALL);
+            if (userId != VUserHandle.USER_ALL) {
+                return userId == VUserHandle.myUserId();
+            }
+            return true;
         }
 
         public void performReceive(Intent intent, int resultCode, String data, Bundle extras, boolean ordered,

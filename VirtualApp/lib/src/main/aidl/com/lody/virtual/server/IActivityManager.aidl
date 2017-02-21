@@ -4,6 +4,7 @@ package com.lody.virtual.server;
 import com.lody.virtual.helper.proto.VParceledListSlice;
 import com.lody.virtual.helper.proto.AppTaskInfo;
 import com.lody.virtual.helper.proto.PendingIntentData;
+import com.lody.virtual.helper.proto.PendingResultData;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.app.Notification;
@@ -105,4 +106,6 @@ interface IActivityManager {
     void removePendingIntent(IBinder binder);
 
     void processRestarted(in String packageName, in String processName, int userId);
+    void broadcastFinish(in PendingResultData res);
+    Intent dispatchStickyBroadcast(in IntentFilter filter);
 }

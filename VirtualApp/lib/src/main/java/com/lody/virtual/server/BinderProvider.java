@@ -13,6 +13,7 @@ import com.lody.virtual.helper.compat.BundleCompat;
 import com.lody.virtual.helper.component.BaseContentProvider;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.server.accounts.VAccountManagerService;
+import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.am.VActivityManagerService;
 import com.lody.virtual.server.filter.IntentFilterService;
 import com.lody.virtual.server.job.JobSchedulerService;
@@ -45,6 +46,7 @@ public final class BinderProvider extends BaseContentProvider {
 			addService(ServiceManagerNative.USER, VUserManagerService.get());
 			VAppManagerService.systemReady();
 			addService(ServiceManagerNative.APP, VAppManagerService.get());
+            BroadcastSystem.attach(VActivityManagerService.get(), VAppManagerService.get());
 			VAccountManagerService.systemReady();
 			addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
 			addService(ServiceManagerNative.INTENT_FILTER, IntentFilterService.get());
@@ -52,6 +54,7 @@ public final class BinderProvider extends BaseContentProvider {
 				JobSchedulerService.systemReady(context);
 				addService(ServiceManagerNative.JOB, JobSchedulerService.getStub());
 			}
+			VAppManagerService.get().preloadAllApps();
 			isCreated = true;
 		} else {
 			VLog.e("BinderProvider", "onCreate after isCreated. Skip it");

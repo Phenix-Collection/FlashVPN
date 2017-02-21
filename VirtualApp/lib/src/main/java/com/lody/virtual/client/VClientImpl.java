@@ -3,6 +3,7 @@ package com.lody.virtual.client;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Instrumentation;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
@@ -35,6 +36,7 @@ import com.lody.virtual.client.hook.secondary.ProxyServiceFactory;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.helper.proto.PendingResultData;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.server.secondary.FakeIdentityBinder;
@@ -83,6 +85,10 @@ public final class VClientImpl extends IVClient.Stub {
 	private AppBindData mBoundApplication;
 	private Application mInitialApplication;
 
+    public static VClientImpl get() {
+        return gClient;
+    }
+
 	public boolean isBound() {
 		return mBoundApplication != null;
 	}
@@ -109,29 +115,11 @@ public final class VClientImpl extends IVClient.Stub {
 		return context.getClassLoader();
 	}
 
-
-	private final class NewIntentData {
-		String creator;
-		IBinder token;
-		Intent intent;
-	}
-	private final class AppBindData {
-		String processName;
-		ApplicationInfo appInfo;
-		List<ProviderInfo> providers;
-		Object info; //LoadedApk
-	}
-
 	private void sendMessage(int what, Object obj) {
 		Message msg = Message.obtain();
 		msg.what = what;
 		msg.obj = obj;
 		mH.sendMessage(msg);
-	}
-
-
-	public static VClientImpl get() {
-		return gClient;
 	}
 
 	@Override
@@ -157,22 +145,6 @@ public final class VClientImpl extends IVClient.Stub {
 		this.token = token;
 		this.vuid = vuid;
 		VLog.d(TAG, "initProcess for vuid: " + vuid);
-	}
-
-	private class H extends Handler {
-
-		private H() {
-			super(Looper.getMainLooper());
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case NEW_INTENT: {
-					handleNewIntent((NewIntentData) msg.obj);
-				} break;
-			}
-		}
 	}
 
 	private void handleNewIntent(NewIntentData data) {
@@ -503,6 +475,37 @@ public final class VClientImpl extends IVClient.Stub {
 		sendMessage(NEW_INTENT, data);
 	}
 
+    @Override
+    public void scheduleReceiver(ComponentName component, Intent intent, PendingResultData resultData) {
+        ReceiverData receiverData = new ReceiverData();
+        receiverData.resultData = resultData;
+        receiverData.intent = intent;
+        receiverData.component = component;
+        sendMessage(RECEIVER, receiverData);
+    }
+
+    private void handleReceiver(ReceiverData data) {
+        BroadcastReceiver.PendingResult result = data.resultData.build();
+        try {
+            Context context = createPackageContext(data.component.getPackageName());
+            Context receiverContext = ContextImpl.getReceiverRestrictedContext.call(context);
+            String className = data.component.getClassName();
+            BroadcastReceiver receiver = (BroadcastReceiver) context.getClassLoader().loadClass(className).newInstance();
+            mirror.android.content.BroadcastReceiver.setPendingResult.call(receiver, result);
+            data.intent.setExtrasClassLoader(context.getClassLoader());
+            receiver.onReceive(receiverContext, data.intent);
+            if (mirror.android.content.BroadcastReceiver.getPendingResult.call(receiver) != null) {
+                result.finish();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(
+                    "Unable to start receiver " + data.component
+                            + ": " + e.toString(), e);
+        }
+        VActivityManager.get().broadcastFinish(data.resultData);
+    }
+
 	@Override
 	public IBinder createProxyService(ComponentName component, IBinder binder) {
 		return ProxyServiceFactory.getProxyService(getCurrentApplication(), component, binder);
@@ -513,5 +516,44 @@ public final class VClientImpl extends IVClient.Stub {
 		return "process : " + VirtualRuntime.getProcessName() + "\n" +
 				"initialPkg : " + VirtualRuntime.getInitialPackageName() + "\n" +
 				"vuid : " + vuid;
+	}
+	private final class NewIntentData {
+		String creator;
+		IBinder token;
+		Intent intent;
+	}
+
+	private final class AppBindData {
+		String processName;
+		ApplicationInfo appInfo;
+		List<ProviderInfo> providers;
+		Object info;
+	}
+
+	private final class ReceiverData {
+		PendingResultData resultData;
+		Intent intent;
+		ComponentName component;
+	}
+
+	private class H extends Handler {
+
+		private H() {
+			super(Looper.getMainLooper());
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case NEW_INTENT: {
+					handleNewIntent((NewIntentData) msg.obj);
+				}
+				break;
+				case RECEIVER: {
+					handleReceiver((ReceiverData) msg.obj);
+				}
+				break;
+			}
+		}
 	}
 }

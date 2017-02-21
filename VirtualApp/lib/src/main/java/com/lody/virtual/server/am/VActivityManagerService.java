@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -39,6 +40,7 @@ import com.lody.virtual.helper.compat.IApplicationThreadCompat;
 import com.lody.virtual.helper.proto.AppSetting;
 import com.lody.virtual.helper.proto.AppTaskInfo;
 import com.lody.virtual.helper.proto.PendingIntentData;
+import com.lody.virtual.helper.proto.PendingResultData;
 import com.lody.virtual.helper.proto.VParceledListSlice;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.helper.utils.VLog;
@@ -57,14 +59,9 @@ import com.lody.virtual.server.interfaces.IProcessObserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import mirror.android.app.ApplicationThreadNative;
-import mirror.android.app.IApplicationThreadICSMR1;
-import mirror.android.app.IApplicationThreadJBMR1;
-import mirror.android.app.IApplicationThreadKitkat;
-import mirror.android.content.res.CompatibilityInfo;
 
 import static android.os.Process.killProcess;
 import static com.lody.virtual.os.VUserHandle.getUserId;
@@ -985,8 +982,8 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		context.sendBroadcast(intent);
 	}
 
-	boolean handleStaticBroadcast(int appId, ActivityInfo info, Intent intent, BroadcastReceiver receiver,
-								  BroadcastReceiver.PendingResult result) {
+    boolean handleStaticBroadcast(int appId, ActivityInfo info, Intent intent,
+								  PendingResultData result) {
 		// Maybe send from System
 		int userId = intent.getIntExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_ALL);
 		ComponentName component = intent.getParcelableExtra(Constants.VA_INTENT_KEY_COMPONENT);
@@ -1004,14 +1001,11 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			realIntent = intent;
 		}
 		VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent.toString() + " activityInfo: " + info.name);
-		String originAction = SpecialComponentList.unprotectAction(realIntent.getAction());
-		if (originAction != null) {
-			realIntent.setAction(originAction);
-		}
+		SpecialComponentList.unprotectIntent(realIntent);
 		VLog.d(TAG, "handleStaticBroadcast unprotected realintent:　" + realIntent.toString());
 		if (userId >= 0) {
 			int uid = VUserHandle.getUid(userId, appId);
-			if(!handleStaticBroadcastAsUser(uid, info, realIntent, receiver, result)) {
+			if(!handleStaticBroadcastAsUser(uid, info, realIntent, result)) {
 				VLog.d(TAG, "handleStaticBroadcastAsUser ret false");
 				return false;
 			}
@@ -1019,7 +1013,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			List<VUserInfo> userList = VUserManager.get().getUsers(false);
 			for (VUserInfo userInfo : userList) {
 				int uid = VUserHandle.getUid(userInfo.id, appId);
-				if(!handleStaticBroadcastAsUser(uid, info, realIntent, receiver, result)) {
+				if(!handleStaticBroadcastAsUser(uid, info, realIntent, result)) {
 					VLog.d(TAG, "handleStaticBroadcastAsUser USER_ALL ret false");
 					return false;
 				}
@@ -1032,13 +1026,13 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	}
 
 
-	private boolean handleStaticBroadcastAsUser(int uid, ActivityInfo info, Intent intent, BroadcastReceiver receiver,
-											 BroadcastReceiver.PendingResult result) {
+	private boolean handleStaticBroadcastAsUser(int vuid, ActivityInfo info, Intent intent,
+												PendingResultData result) {
 		synchronized (this) {
-			ProcessRecord r = findProcessLocked(info.processName, uid);
+			ProcessRecord r = findProcessLocked(info.processName, vuid);
 			if (BROADCAST_NOT_STARTED_PKG && r == null) {
 				VLog.d(TAG, "startProcess for " + intent.toString());
-				r = startProcessIfNeedLocked(info.processName, getUserId(uid), info.packageName);
+				r = startProcessIfNeedLocked(info.processName, getUserId(vuid), info.packageName);
 			}
 			if (r != null && r.appThread != null) {
 				VLog.logbug(TAG, "performReceive " + intent.toString());
@@ -1046,7 +1040,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 					intent.putExtra("FIX", "FIX");
 					VLog.logbug(TAG,"package added intent extra is null! ActivityInfo " + info);
 				}
-				performScheduleReceiver(r.appThread, getUserId(uid), info, intent, receiver.isOrderedBroadcast(),
+				performScheduleReceiver(r.client, vuid, info, intent,
 						result);
 				return true;
 			} else {
@@ -1056,8 +1050,8 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		}
 	}
 
-	private void performScheduleReceiver(IInterface thread, int sendingUser, ActivityInfo info, Intent intent,
-										 boolean sync, BroadcastReceiver.PendingResult result) {
+    private void performScheduleReceiver(IVClient client, int vuid, ActivityInfo info, Intent intent,
+                                         PendingResultData result) {
 
 		ComponentName componentName = ComponentUtils.toComponentName(info);
 		VLog.d(TAG, "E performScheduleReceiver");
@@ -1069,25 +1063,25 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		if (intent.getComponent() == null) {
 			intent.setComponent(componentName);
 		}
+		BroadcastSystem.get().broadcastSent(vuid, info, result);
 		try {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				IApplicationThreadKitkat.scheduleReceiver.call(thread, intent, info,
-						CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO.get(), result.getResultCode(), result.getResultData(),
-						result.getResultExtras(false), sync, sendingUser, 0);
-			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-				IApplicationThreadJBMR1.scheduleReceiver.call(thread, intent, info,
-						CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO.get(), result.getResultCode(), result.getResultData(),
-						result.getResultExtras(false), sync, sendingUser);
-			} else {
-				IApplicationThreadICSMR1.scheduleReceiver.call(thread, intent, info,
-						CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO.get(), result.getResultCode(), result.getResultData(),
-						result.getResultExtras(false), sync);
-			}
+            client.scheduleReceiver(componentName, intent, result);
 		} catch (Throwable e) {
-//			if (result != null) {
-//				result.finish();
-//			}
+			if (result != null) {
+				result.finish();
+			}
 		}
 		VLog.d(TAG, "X performScheduleReceiver");
+	}
+
+	@Override
+	public void broadcastFinish(PendingResultData res) {
+		BroadcastSystem.get().broadcastFinish(res);
+	}
+
+	@Override
+	public Intent dispatchStickyBroadcast(IntentFilter filter) {
+		int vuid = VBinder.getCallingUid();
+		return BroadcastSystem.get().dispatchStickyBroadcast(vuid, filter);
 	}
 }

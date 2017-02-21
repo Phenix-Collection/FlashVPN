@@ -5,6 +5,7 @@ import android.app.IServiceConnection;
 import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ProviderInfo;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.lody.virtual.client.env.VirtualRuntime;
 import com.lody.virtual.helper.compat.ActivityManagerCompat;
 import com.lody.virtual.helper.proto.AppTaskInfo;
 import com.lody.virtual.helper.proto.PendingIntentData;
+import com.lody.virtual.helper.proto.PendingResultData;
 import com.lody.virtual.helper.proto.VParceledListSlice;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.os.VUserHandle;
@@ -485,6 +487,22 @@ public class VActivityManager {
 			return VirtualRuntime.crash(e);
 		}
 	}
+
+    public void broadcastFinish(PendingResultData res) {
+        try {
+            getService().broadcastFinish(res);
+        } catch (RemoteException e) {
+            VirtualRuntime.crash(e);
+        }
+    }
+
+    public Intent dispatchStickyBroadcast(IntentFilter filter) {
+        try {
+            return getService().dispatchStickyBroadcast(filter);
+        } catch (RemoteException e) {
+            return VirtualRuntime.crash(e);
+        }
+    }
 
 	public interface UiObserver {
 

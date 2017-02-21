@@ -22,7 +22,6 @@ import static android.system.OsConstants.SOCK_STREAM;
  * returning the underlying {@link FileDescriptor}. This is useful when the
  * server side needs to strongly assert that a client side is completely
  * hands-off.
- *
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class FileBridge extends Thread {
@@ -32,11 +31,17 @@ public class FileBridge extends Thread {
 
     private static final int MSG_LENGTH = 8;
 
-    /** CMD_WRITE [len] [data] */
+    /**
+     * CMD_WRITE [len] [data]
+     */
     private static final int CMD_WRITE = 1;
-    /** CMD_FSYNC */
+    /**
+     * CMD_FSYNC
+     */
     private static final int CMD_FSYNC = 2;
-    /** CMD_CLOSE */
+    /**
+     * CMD_CLOSE
+     */
     private static final int CMD_CLOSE = 3;
 
     private FileDescriptor mTarget;

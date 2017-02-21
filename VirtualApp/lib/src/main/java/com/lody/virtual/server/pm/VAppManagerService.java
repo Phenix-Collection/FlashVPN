@@ -12,7 +12,6 @@ import android.util.Pair;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.Constants;
-import com.lody.virtual.client.env.VirtualRuntime;
 import com.lody.virtual.helper.compat.NativeLibraryHelperCompat;
 import com.lody.virtual.helper.compat.PackageParserCompat;
 import com.lody.virtual.helper.proto.AppSetting;
@@ -22,12 +21,13 @@ import com.lody.virtual.helper.utils.ResourcesUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VEnvironment;
 import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.server.IAppManager;
 import com.lody.virtual.server.accounts.VAccountManagerService;
-import com.lody.virtual.server.am.StaticBroadcastSystem;
+import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.am.UidSystem;
 import com.lody.virtual.server.am.VActivityManagerService;
-import com.lody.virtual.server.IAppManager;
 import com.lody.virtual.server.interfaces.IAppObserver;
+import com.lody.virtual.server.interfaces.IAppRequestListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,39 +40,27 @@ import java.util.concurrent.atomic.AtomicReference;
 public class VAppManagerService extends IAppManager.Stub {
 
 	private static final String TAG = VAppManagerService.class.getSimpleName();
-
+    private static final AtomicReference<VAppManagerService> gService = new AtomicReference<>();
+    private final UidSystem mUidSystem = new UidSystem();
 	private boolean isBooting;
-
-	private final UidSystem mUidSystem = new UidSystem();
-
-	private final StaticBroadcastSystem mBroadcastSystem =
-			new StaticBroadcastSystem(
-			VirtualCore.get().getContext(),
-					VActivityManagerService.get(),
-			this
-			);
-
-	private static final AtomicReference<VAppManagerService> gService = new AtomicReference<>();
-
 	private RemoteCallbackList<IAppObserver> mRemoteCallbackList = new RemoteCallbackList<IAppObserver>();
+
+    private IAppRequestListener listener;
 
 	public static VAppManagerService get() {
 		return gService.get();
 	}
 
-	public boolean isBooting() {
-		return isBooting;
-	}
-
-
 	public static void systemReady() {
 
 		VAppManagerService instance = new VAppManagerService();
 		instance.mUidSystem.initUidList();
-		VLog.d(TAG, "systemReady ");
-		instance.preloadAllApps();
 		gService.set(instance);
 	}
+
+    public boolean isBooting() {
+        return isBooting;
+    }
 
 	public void preloadAllApps() {
 		isBooting = true;
@@ -203,7 +191,7 @@ public class VAppManagerService extends IAppManager.Stub {
 		appSetting.appId = VUserHandle.getAppId(mUidSystem.getOrCreateUid(pkg));
 
 		PackageCache.put(pkg, appSetting);
-		mBroadcastSystem.startApp(pkg);
+        BroadcastSystem.get().startApp(pkg);
 		if (!onlyScan) {
 			notifyAppInstalled(appSetting);
 		}
@@ -231,7 +219,7 @@ public class VAppManagerService extends IAppManager.Stub {
 			AppSetting setting = findAppInfo(pkg);
 			if (setting != null) {
 				try {
-					mBroadcastSystem.stopApp(pkg);
+                    BroadcastSystem.get().stopApp(pkg);
 					VActivityManagerService.get().killAppByPkg(pkg, VUserHandle.USER_ALL);
 					FileUtils.deleteDir(VEnvironment.getDataAppPackageDirectory(pkg));
                     VEnvironment.getOdexFile(pkg).delete();
@@ -329,6 +317,34 @@ public class VAppManagerService extends IAppManager.Stub {
 			// Ignore
 		}
 	}
+
+    @Override
+    public IAppRequestListener getAppRequestListener() {
+        return listener;
+    }
+
+    @Override
+    public void setAppRequestListener(final IAppRequestListener listener) {
+        this.listener = listener;
+        if (listener != null) {
+            try {
+                listener.asBinder().linkToDeath(new DeathRecipient() {
+                    @Override
+                    public void binderDied() {
+                        listener.asBinder().unlinkToDeath(this, 0);
+                        VAppManagerService.this.listener = null;
+                    }
+                }, 0);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void clearAppRequestListener() {
+        this.listener = null;
+    }
 
 	public AppSetting findAppInfo(String pkg) {
 		synchronized (PackageCache.class) {
