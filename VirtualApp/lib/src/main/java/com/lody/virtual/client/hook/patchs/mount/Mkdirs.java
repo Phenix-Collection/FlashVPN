@@ -1,11 +1,13 @@
 package com.lody.virtual.client.hook.patchs.mount;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import android.os.Build;
 
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.hook.utils.HookUtils;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @author Lody
@@ -25,11 +27,13 @@ import com.lody.virtual.client.hook.utils.HookUtils;
 
 	@Override
 	public Object call(Object who, Method method, Object... args) throws Throwable {
-		try {
-			return super.call(who, method, args);
-		} catch (InvocationTargetException e) {
-			if (!(e.getCause() instanceof SecurityException)) {
-				throw e.getCause();
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+			try {
+				return super.call(who, method, args);
+			} catch (InvocationTargetException e) {
+				if (!(e.getCause() instanceof SecurityException)) {
+					throw e.getCause();
+				}
 			}
 		}
 		String path;
