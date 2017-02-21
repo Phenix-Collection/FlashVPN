@@ -26,7 +26,10 @@ public final class SpecialComponentList {
     private static final HashSet<String> SPEC_SYSTEM_APP_LIST = new HashSet<>(3);
     private static String PROTECT_ACTION_PREFIX = "_VA_protected_";
 
+    private static final HashSet<String> IO_REDIRECT_BLACK_LIST = new HashSet<>(1);
     static {
+        IO_REDIRECT_BLACK_LIST.add("com.snapchat.android");
+
         ACTION_BLACK_LIST.add("android.appwidget.action.APPWIDGET_UPDATE");
 
         WHITE_PERMISSION.add("com.google.android.gms.settings.SECURITY_SETTINGS");
@@ -55,6 +58,13 @@ public final class SpecialComponentList {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static boolean needIORedirect(String pkg) {
+        if (IO_REDIRECT_BLACK_LIST.contains(pkg)) {
+            return false;
+        }
+        return  true;
     }
 
     public static boolean isSpecSystemPackage(String pkg) {

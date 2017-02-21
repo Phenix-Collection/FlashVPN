@@ -261,7 +261,7 @@ public final class VClientImpl extends IVClient.Stub {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && targetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
             mirror.android.os.Message.updateCheckRecycle.call(targetSdkVersion);
         }
-        if (StubManifest.ENABLE_IO_REDIRECT) {
+        if (StubManifest.ENABLE_IO_REDIRECT && SpecialComponentList.needIORedirect(packageName)) {
             startIOUniformer();
         }
 		IOHook.hookNative();

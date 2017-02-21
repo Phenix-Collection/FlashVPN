@@ -116,7 +116,6 @@ public class FileBridge extends Thread {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void closeQuietly(FileDescriptor fd) {
 
         if (fd != null && fd.valid()) {
@@ -132,7 +131,6 @@ public class FileBridge extends Thread {
      * java.io thinks that a read at EOF is an error and should return -1, contrary to traditional
      * Unix practice where you'd read until you got 0 bytes (and any future read would return -1).
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static int read(FileDescriptor fd, byte[] bytes, int byteOffset, int byteCount) throws IOException {
         ArrayUtils.checkOffsetAndCount(bytes.length, byteOffset, byteCount);
         if (byteCount == 0) {
@@ -157,7 +155,6 @@ public class FileBridge extends Thread {
      * java.io always writes every byte it's asked to, or fails with an error. (That is, unlike
      * Unix it never just writes as many bytes as happens to be convenient.)
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void write(FileDescriptor fd, byte[] bytes, int byteOffset, int byteCount) throws IOException {
         ArrayUtils.checkOffsetAndCount(bytes.length, byteOffset, byteCount);
         if (byteCount == 0) {
