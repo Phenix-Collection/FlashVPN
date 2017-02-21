@@ -510,7 +510,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		}
 	}
 
-	boolean onActivityDestroyed(int userId, IBinder token) {
+    ActivityRecord onActivityDestroyed(int userId, IBinder token) {
 		synchronized (mHistory) {
 			optimizeTasksLocked();
 			ActivityRecord r = findActivityByToken(userId, token);
@@ -521,7 +521,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 					// it will be removed by optimizeTasksLocked().
 				}
 			}
-			return false;
+            return r;
 		}
 	}
 

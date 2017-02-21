@@ -22,6 +22,7 @@ import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.server.IActivityManager;
 import com.lody.virtual.server.interfaces.IProcessObserver;
+import com.lody.virtual.server.interfaces.IUiObserver;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +37,9 @@ import mirror.android.content.ContentProviderNative;
 public class VActivityManager {
 
 	private static final VActivityManager sAM = new VActivityManager();
-
+    private final Map<IBinder, ActivityClientRecord> mActivities = new HashMap<IBinder, ActivityClientRecord>(6);
 	private IActivityManager mRemote;
-
-	private final Map<IBinder, ActivityClientRecord> mActivities = new HashMap<IBinder, ActivityClientRecord>(6);
+    private Map<UiObserver, IUiObserver> observerMap = new HashMap<>(2);
 
 	public static VActivityManager get() {
 		return sAM;
@@ -429,6 +429,48 @@ public class VActivityManager {
 		}
 	}
 
+    public void registerUIObserver(final UiObserver observer) {
+        IUiObserver innerObserver = new IUiObserver.Stub() {
+            @Override
+            public void enterAppUI(final int userId, final String packageName) throws RemoteException {
+                VirtualRuntime.getUIHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        observer.enterAppUI(userId, packageName);
+                    }
+                });
+            }
+
+            @Override
+            public void exitAppUI(final int userId, final String packageName) throws RemoteException {
+                VirtualRuntime.getUIHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        observer.exitAppUI(userId, packageName);
+                    }
+                });
+            }
+        };
+        observerMap.put(observer, innerObserver);
+
+        try {
+            getService().registerUIObserver(innerObserver);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unregisterUIObserver(UiObserver observer) {
+        IUiObserver innerObserver = observerMap.remove(observer);
+        if (innerObserver != null) {
+            try {
+                getService().unregisterUIObserver(innerObserver);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 	public void sendBroadcast(Intent intent, int userId) {
 		Intent newIntent = ComponentUtils.redirectBroadcastIntent(intent, userId);
 		if (newIntent != null) {
@@ -442,5 +484,13 @@ public class VActivityManager {
 		} catch (RemoteException e) {
 			return VirtualRuntime.crash(e);
 		}
+	}
+
+	public interface UiObserver {
+
+		void enterAppUI(int userId, String packageName);
+
+		void exitAppUI(int userId, String packageName);
+
 	}
 }

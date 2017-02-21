@@ -83,11 +83,11 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	private final ActivityStack mMainStack = new ActivityStack(this);
 	private final List<ServiceRecord> mHistory = new ArrayList<ServiceRecord>();
 	private final ProcessMap<ProcessRecord> mProcessNames = new ProcessMap<ProcessRecord>();
+	private final UiEngine mUiEngine = new UiEngine();
 	private ActivityManager am = (ActivityManager) VirtualCore.get().getContext()
 			.getSystemService(Context.ACTIVITY_SERVICE);
 	private final VPendingIntents mPendingIntents = new VPendingIntents();
 
-	private Map<String, List<IUiObserver>> uiObservers = new ArrayMap<>();
 	public static VActivityManagerService get() {
 		return sService.get();
 	}
@@ -157,6 +157,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		int pid = Binder.getCallingPid();
 		ProcessRecord targetApp = findProcessLocked(pid);
 		if (targetApp != null) {
+            mUiEngine.enterActivity(targetApp.userId, targetApp.info.packageName);
 			mMainStack.onActivityCreated(targetApp, component, caller, token, intent, affinity, taskId, launchMode, flags);
 		}
 	}
@@ -168,7 +169,12 @@ public class VActivityManagerService extends IActivityManager.Stub {
 
 	@Override
 	public boolean onActivityDestroyed(int userId, IBinder token) {
-		return mMainStack.onActivityDestroyed(userId, token);
+        ActivityRecord r = mMainStack.onActivityDestroyed(userId, token);
+        if (r != null) {
+            mUiEngine.exitActivity(userId, r.process.info.packageName);
+            return true;
+        }
+        return false;
 	}
 
 	@Override
@@ -196,6 +202,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 					iterator.remove();
 				}
 			}
+            mUiEngine.appDead(record.userId, record.info.packageName);
 			mMainStack.processDied(record);
 		}
 	}
@@ -688,10 +695,12 @@ public class VActivityManagerService extends IActivityManager.Stub {
 
     @Override
     public void registerUIObserver(IUiObserver observer) {
+        mUiEngine.addObserver(observer);
     }
 
     @Override
     public void unregisterUIObserver(IUiObserver observer) {
+        mUiEngine.removeObserver(observer);
     }
 
 	@Override
