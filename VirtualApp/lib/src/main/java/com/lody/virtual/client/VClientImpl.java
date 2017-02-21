@@ -25,6 +25,7 @@ import android.os.StrictMode;
 import com.lody.virtual.IOHook;
 import com.lody.virtual.client.core.PatchManager;
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.client.env.SpecialComponentList;
 import com.lody.virtual.client.env.VirtualRuntime;
 import com.lody.virtual.client.fixer.ContextFixer;
 import com.lody.virtual.client.hook.delegate.AppInstrumentation;
@@ -252,6 +253,14 @@ public final class VClientImpl extends IVClient.Stub {
 			StrictMode.ThreadPolicy newPolicy = new StrictMode.ThreadPolicy.Builder(StrictMode.getThreadPolicy()).permitNetwork().build();
 			StrictMode.setThreadPolicy(newPolicy);
 		}
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (mirror.android.os.StrictMode.sVmPolicyMask != null) {
+                mirror.android.os.StrictMode.sVmPolicyMask.set(0);
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && targetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
+            mirror.android.os.Message.updateCheckRecycle.call(targetSdkVersion);
+        }
         if (StubManifest.ENABLE_IO_REDIRECT) {
             startIOUniformer();
         }
@@ -313,42 +322,42 @@ public final class VClientImpl extends IVClient.Stub {
 		mirror.android.app.ActivityThread.AppBindData.info.set(boundApp, data.info);
 		VMRuntime.setTargetSdkVersion.call(VMRuntime.getRuntime.call(), data.appInfo.targetSdkVersion);
 
-		//android.app.LoadedApk
+		boolean conflict = SpecialComponentList.isConflictingInstrumentation(packageName);
+		if (!conflict) {
+			PatchManager.getInstance().checkEnv(AppInstrumentation.class);
+		}
 		if (data.info == null) {
 			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":data.info null");
 			//should return here
 		}
-		Application app = LoadedApk.makeApplication.call(data.info, false, null);
-
-		if (app == null) {
-			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":app context null");
-			if (data.info!= null) {
-				app = LoadedApk.makeApplication.call(data.info, false, null);
-				if (app == null) {
-					VLog.logbug(TAG, "bug app == null");
-				}
-			}
+        mInitialApplication = LoadedApk.makeApplication.call(data.info, false, null);
+		if(mInitialApplication == null) {
+			VLog.logbug(TAG, "mInitialApplication is null");
 		}
-		mInitialApplication = app;
-		mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, app);
-		ContextFixer.fixContext(app);
+        mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, mInitialApplication);
+        ContextFixer.fixContext(mInitialApplication);
 		List<ProviderInfo> providers = VPackageManager.get().queryContentProviders(data.processName, vuid, PackageManager.GET_META_DATA);
 		if (providers != null) {
-			installContentProviders(app, providers);
+            installContentProviders(mInitialApplication, providers);
 		}
 		if (lock != null) {
 			lock.open();
 			mTempLock = null;
 		}
 		try {
-			mInstrumentation.callApplicationOnCreate(app);
+            mInstrumentation.callApplicationOnCreate(mInitialApplication);
 			PatchManager.getInstance().checkEnv(HCallbackHook.class);
-			PatchManager.getInstance().checkEnv(AppInstrumentation.class);
-			mInitialApplication = ActivityThread.mInitialApplication.get(mainThread);
+            if (conflict) {
+				PatchManager.getInstance().checkEnv(AppInstrumentation.class);
+			}
+            Application createdApp = ActivityThread.mInitialApplication.get(mainThread);
+            if (createdApp != null) {
+                mInitialApplication = createdApp;
+            }
 		} catch (Exception e) {
-			if (!mInstrumentation.onException(app, e)) {
+            if (!mInstrumentation.onException(mInitialApplication, e)) {
 				throw new RuntimeException(
-						"Unable to create application " + app == null? "null app" : app.getClass().getName()
+                        "Unable to create application " + mInitialApplication.getClass().getName()
 								+ ": " + e.toString(), e);
 			}
 		}
