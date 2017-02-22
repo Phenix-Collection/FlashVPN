@@ -16,10 +16,11 @@ import com.lody.virtual.server.accounts.VAccountManagerService;
 import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.am.VActivityManagerService;
 import com.lody.virtual.server.job.JobSchedulerService;
+import com.lody.virtual.server.interfaces.IServiceFetcher;
+import com.lody.virtual.server.notification.VNotificationManagerService;
 import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
 import com.lody.virtual.server.pm.VUserManagerService;
-import com.lody.virtual.server.interfaces.IServiceFetcher;
 
 /**
  * @author Lody
@@ -52,6 +53,8 @@ public final class BinderProvider extends BaseContentProvider {
 				JobSchedulerService.systemReady(context);
 				addService(ServiceManagerNative.JOB, JobSchedulerService.getStub());
 			}
+            VNotificationManagerService.systemReady(context);
+            addService(ServiceManagerNative.NOTIFICATION, VNotificationManagerService.get());
 			VAppManagerService.get().preloadAllApps();
 			isCreated = true;
 		} else {
