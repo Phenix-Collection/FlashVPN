@@ -577,7 +577,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 
 					}
 				}
-				VLog.d(VLog.VTAG, "getCallingActivity caller " + r.caller);
+				VLog.d(TAG, "getCallingActivity caller " + r.caller);
 				return r.caller;
 			}
 			return null;
