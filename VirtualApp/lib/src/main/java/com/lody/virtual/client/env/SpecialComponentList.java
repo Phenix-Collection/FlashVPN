@@ -44,7 +44,7 @@ public final class SpecialComponentList {
 
         INSTRUMENTATION_CONFLICTING.add("com.qihoo.magic");
         INSTRUMENTATION_CONFLICTING.add("com.qihoo.magic_mutiple");
-        INSTRUMENTATION_CONFLICTING.add("com.facebook.katana");
+        //INSTRUMENTATION_CONFLICTING.add("com.facebook.katana");
 
         SPEC_SYSTEM_APP_LIST.add("android");
         SPEC_SYSTEM_APP_LIST.add("com.google.android.webview");
