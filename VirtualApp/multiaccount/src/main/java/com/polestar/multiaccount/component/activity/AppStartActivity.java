@@ -87,7 +87,7 @@ public class AppStartActivity extends BaseActivity {
                 @Override
                 public void run() {
                     Looper.prepare();
-                    int delay = 1200;
+                    int delay = 500;
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -125,7 +125,7 @@ public class AppStartActivity extends BaseActivity {
             AnimatorSet animSet = new AnimatorSet();
             animSet.play(scaleX).with(scaleY);
             animSet.setInterpolator(new BounceInterpolator());
-            animSet.setDuration(800).start();
+            animSet.setDuration(500).start();
             animSet.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -140,11 +140,11 @@ public class AppStartActivity extends BaseActivity {
             }
 
             ScaleAnimation sa = new ScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            sa.setDuration(2000);
+            sa.setDuration(1000);
             sa.setRepeatMode(Animation.RESTART);
             sa.setRepeatCount(Animation.INFINITE);
             AlphaAnimation aa = new AlphaAnimation(0, 1);
-            aa.setDuration(2000);
+            aa.setDuration(1000);
             aa.setRepeatMode(Animation.RESTART);
             aa.setRepeatCount(Animation.INFINITE);
             AnimationSet as = new AnimationSet(true);

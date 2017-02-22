@@ -38,7 +38,7 @@ public class LauncherActivity extends BaseActivity{
                 overridePendingTransition(android.R.anim.fade_in, -1);
                 finish();
             }
-        },1000);
+        },300);
         if(!PreferencesUtils.isShortCutCreated() && !created) {
             PreferencesUtils.setShortCutCreated();
             createShortCut();
