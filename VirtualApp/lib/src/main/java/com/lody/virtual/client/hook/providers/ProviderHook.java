@@ -93,6 +93,7 @@ public class ProviderHook implements InvocationHandler {
 			if (e instanceof InvocationTargetException) {
 				if ( e.getCause() instanceof  SecurityException) {
 					VLog.logbug("ProviderHook", "call: " + method.getName() + " (" + Arrays.toString(args) + ") with SecurityException" );
+					return null;
 				} else {
 					throw e.getCause();
 				}
