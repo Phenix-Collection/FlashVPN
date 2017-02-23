@@ -32,6 +32,8 @@ import mirror.android.content.IIntentReceiverJB;
  */
 /* package */ class RegisterReceiver extends Hook {
 
+    private static final String TAG = "RegisterReceiver";
+
     private static final int IDX_IIntentReceiver = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1
             ? 2
             : 1;
@@ -55,12 +57,12 @@ import mirror.android.content.IIntentReceiverJB;
         HookUtils.replaceFirstAppPkg(args);
         args[IDX_RequiredPermission] = null;
         IntentFilter filter = (IntentFilter) args[IDX_IntentFilter];
-        VLog.d("RegisterReceiver", filter.getAction(0));
+        VLog.d(TAG, filter.getAction(0));
         IntentFilter backupFilter = new IntentFilter(filter);
         protectIntentFilter(filter);
         if (args.length > IDX_IIntentReceiver && IIntentReceiver.class.isInstance(args[IDX_IIntentReceiver])) {
             final IInterface old = (IInterface) args[IDX_IIntentReceiver];
-            VLog.d("RegisterReceiver", "will wrap intentReceiver " );
+            VLog.d(TAG, "will wrap intentReceiver " );
             if (!ProxyIIntentReceiver.class.isInstance(old)) {
                 final IBinder token = old.asBinder();
                 if (token != null) {
@@ -84,7 +86,7 @@ import mirror.android.content.IIntentReceiverJB;
                 }
             }
         }
-        VLog.d("RegisterReceiver", "after redirect " + filter.getAction(0));
+        VLog.d(TAG, "after redirect " + filter.getAction(0));
         Object res = method.invoke(who, args);
         Intent intent = VActivityManager.get().dispatchStickyBroadcast(backupFilter);
         if (intent != null) {
@@ -126,6 +128,7 @@ import mirror.android.content.IIntentReceiverJB;
         public void performReceive(Intent intent, int resultCode, String data, Bundle extras, boolean ordered,
                                    boolean sticky, int sendingUser) throws RemoteException {
             if (!accept(intent)) {
+                VLog.logbug(TAG, "intent not accept: " + intent);
                 return;
             }
             Intent broadcastIntent = null;
@@ -149,10 +152,12 @@ import mirror.android.content.IIntentReceiverJB;
 
         private boolean accept(Intent intent) {
             int uid = intent.getIntExtra("_VA_|_uid_", -1);
+            int userId = intent.getIntExtra("_VA_|_user_id_", VUserHandle.USER_ALL);
+            VLog.d("RegisterReceiver", "Accept uid " + uid + " userid:"+userId
+                    + " vuid:"+VClientImpl.get().getVUid() + " myuserId: " + VUserHandle.myUserId());
             if (uid != -1) {
                 return VClientImpl.get().getVUid() == uid;
             }
-            int userId = intent.getIntExtra("_VA_|_user_id_", VUserHandle.USER_ALL);
             if (userId != VUserHandle.USER_ALL) {
                 return userId == VUserHandle.myUserId();
             }

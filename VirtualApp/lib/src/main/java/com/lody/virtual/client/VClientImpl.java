@@ -486,6 +486,7 @@ public final class VClientImpl extends IVClient.Stub {
 
     private void handleReceiver(ReceiverData data) {
         BroadcastReceiver.PendingResult result = data.resultData.build();
+		VLog.d(TAG, "handleReceiver " + data.intent + " on " + data.component);
         try {
             Context context = createPackageContext(data.component.getPackageName());
             Context receiverContext = ContextImpl.getReceiverRestrictedContext.call(context);
@@ -499,11 +500,15 @@ public final class VClientImpl extends IVClient.Stub {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(
+            Exception exc = new RuntimeException(
                     "Unable to start receiver " + data.component
                             + ": " + e.toString(), e);
-        }
-        VActivityManager.get().broadcastFinish(data.resultData);
+			VLog.logbug(TAG, "Unable to start receiver " + data.component
+					+ ": " + e.toString() );
+			VLog.logbug(TAG, VLog.getStackTraceString(exc));
+        } finally {
+			VActivityManager.get().broadcastFinish(data.resultData);
+		}
     }
 
 	@Override
