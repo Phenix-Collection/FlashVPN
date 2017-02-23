@@ -47,6 +47,7 @@ public final class BinderProvider extends BaseContentProvider {
 			VAppManagerService.systemReady();
 			addService(ServiceManagerNative.APP, VAppManagerService.get());
             BroadcastSystem.attach(VActivityManagerService.get(), VAppManagerService.get());
+			VAppManagerService.get().preloadAllApps();
 			VAccountManagerService.systemReady();
 			addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -55,7 +56,7 @@ public final class BinderProvider extends BaseContentProvider {
 			}
             VNotificationManagerService.systemReady(context);
             addService(ServiceManagerNative.NOTIFICATION, VNotificationManagerService.get());
-			VAppManagerService.get().preloadAllApps();
+			//VAppManagerService.get().preloadAllApps();
 			isCreated = true;
 		} else {
 			VLog.e("BinderProvider", "onCreate after isCreated. Skip it");
