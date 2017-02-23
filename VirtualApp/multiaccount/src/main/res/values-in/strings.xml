@@ -1,0 +1,168 @@
+<resources>
+    <string name="appwall_title">Menemukan</string>
+
+    <string name="action_settings">Pengaturan</string>
+    <string name="most_popular_apps">Paling populer</string>
+    <string name="more_apps">Lebih didukung</string>
+    <string name="sponsor_text">Direkomendasikan</string>
+    <string name="btn_clone">Klon</string>
+    <string name="start">Mulai</string>
+    <string name="cancel">Membatalkan</string>
+    <string name="cloning">Kloning...</string>
+    <string name="cloning_tips">%s sedang kloning ...</string>
+    <string name="app_starting_tips">%s mulai ...</string>
+    <string name="first_start_tips">Ini akan memakan waktu sedikit lebih lama untuk start pertama.</string>
+    <string name="clone_success">%s clone selesai. Nikmati sekarang!</string>
+    <string name="success_tip1">Account akses secara bersamaan</string>
+
+    <!-- nav menu -->
+    <string name="notifications">Pemberitahuan</string>
+    <string name="faq">Bantuan</string>
+    <string name="feedback">Umpan Balik</string>
+    <string name="rate_us">Tingkat</string>
+    <string name="share_with_friends">Berbagi Dengan Teman</string>
+    <string name="settings">Pengaturan</string>
+
+    <!-- home -->
+    <string name="delete_dialog_title">Peringatan</string>
+    <string name="delete_dialog_content">Menghapus aplikasi kloning ini berarti menghapus semua data.</string>
+    <string name="delete_dialog_left">Membatalkan</string>
+    <string name="delete_dialog_right">MENGHAPUS</string>
+    <string name="dialog_rating_us_content">Nikmati menggunakan Super Clone aplikasi?</string>
+    <string name="dialog_feedback_content">Bisakah Anda memberikan beberapa masukan untuk membantu memperbaikinya?</string>
+    <string name="not_really">Tidak puas</string>
+    <string name="no_thanks">Tidak, terima kasih</string>
+    <string name="dialog_love_title">Mencintai Super Clone</string>
+    <string name="dialog_love_content">Maukah Anda memberi kami 5-bintang rating di Play Store? Ini akan menginspirasi kami dan kami menghargai dukungan Anda!</string>
+    <string name="remind_me_later">Lain kali</string>
+    <string name="star_rating">Segera kasih 5 bintang</string>
+    <string name="yes">Ya</string>
+    <string name="ok">OK</string>
+    <string name="installFailure">Maaf, aplikasi ini belum didukung, dan kami datang dengan segera.</string>
+    <string name="start_tips">Mari kita mulai dengan kloning aplikasi pertama Anda di sini!</string>
+    <string name="long_press_tips">Tekan lama dan tarik untuk menambahkan shortcut pada layar rumah atau menghapusnya.</string>
+
+    <!-- notification -->
+    <string name="notification_decription">Memungkinkan untuk menerima pemberitahuan dari aplikasi kloning ini</string>
+
+    <string name="share_with_friends_tip">Saya senang untuk mengundang Anda untuk menggunakan ini indah aplikasi %s. Anda dapat men-download di sini:</string>
+
+    <!-- feedback -->
+    <string name="feedback_hint">Silakan beritahu kami detail tentang masalah Anda bertemu, dan silakan beritahu kami langkah-langkah untuk mereproduksi dan lebih baik dengan screenshot.</string>
+    <string name="button_submit">Menyerahkan</string>
+    <string name="submit_success">Terima kasih untuk memberikan umpan balik!</string>
+    <string name="feedback_no_description">Deskripsi tidak boleh kosong.</string>
+    <string name="feedback_go_faq">Klik di sini untuk memeriksa panduan kami FAQ.</string>
+    <string name="extra_feedback_decription">Kami akan menyelesaikan masalah untuk Anda segera dan menghargai bantuan Anda untuk meningkatkan produk!</string>
+
+    <!-- toast -->
+    <string name="toast_shortcut_added">Shortcut ditambahkan</string>
+    <string name="toast_shortcut_invalid">Shortcut tidak valid</string>
+
+    <!-- settings -->
+    <string name="settings_shortcut_title">Shortcut</string>
+    <string name="settings_shortcut_content">Memungkinkan untuk shortcut auto-add ketika kloning aplikasi</string>
+    <string name="settings_privacy_locker_content">Klik untuk mengatur loker privasi untuk aplikasi dikloning</string>
+    <string name="settings_notification_content">Klik untuk mengaktifkan atau menonaktifkan notifikasi dari aplikasi kloning.</string>
+    <string name="settings_privacy_policy">Kebijakan Pribadi</string>
+    <string name="settings_more">Lebih Pengaturan</string>
+    <string name="settings_general">Pengaturan Umum</string>
+    <string name="settings_terms_of_service">Ketentuan Layanan</string>
+    <string name="settings_follow_us">Ikuti kami di Facebook</string>
+    <string name="settings_right">2016 Polestar Applab All rights reserved</string>
+
+    <array name="navigationItem">
+        <item name="navigation_notifications">Locker Privasi</item>
+        <item name="navigation_notifications">Pemberitahuan</item>
+        <item name="navigation_FAQ">FAQ</item>
+        <item name="navigation_feedback">Umpan Balik</item>
+        <item name="navigation_rate_us">Tingkat</item>
+        <item name="navigation_share">Berbagi Dengan Teman</item>
+        <item name="navigation_setting">Pengaturan</item>
+    </array>
+
+    <!-- titles -->
+    <string name="clone_apps_title">Klon Apps</string>
+
+    <string name="crash_hint">Maaf, beberapa kesalahan yang terjadi, dan kami akan memperbaikinya di versi berikutnya.</string>
+
+    <string name="text_Q1_title">Q1: Mengapa saya tidak dapat menerima notifikasi pesan dari Super Clone diaktifkan apps?</string>
+    <string name="text_Q1_content_2">A1: Pastikan bahwa Super Clone memiliki akses jaringan</string>
+    <string name="text_Q2_title">Q2: Akan Super Clone mengumpulkan dan menggunakan informasi pribadi saya?</string>
+    <string name="text_Q2_content">A2: Tidak, Super Clone hanya akan mengumpulkan sejumlah kecil "data publik" Anda (mis Avatar, julukan dll), dan ini hanya akan digunakan dalam perangkat Anda untuk menciptakan pengalaman pengguna yang lebih baik untuk Anda. Super Clone menjanjikan bahwa tidak ada data pribadi Anda akan dikumpulkan atau digunakan.</string>
+    <string name="text_Q3_title">Q3:Mengapa konsumsi storage Super Clone ini meningkat?</string>
+    <string name="text_Q3_content">A3: Semua sub-rekening ditambahkan pada perangkat Anda secara default terdaftar di bawah Super Clone oleh sistem operasi Android. Misalnya, ketika Anda menambahkan sub-akun Facebook untuk perangkat Anda, semua penyimpanan yang digunakan untuk akun Facebook kedua (app) yang terdaftar di bawah Super Clone. Oleh karena itu, konsumsi penyimpanan terdaftar untuk Super Clone akan muncul untuk meningkatkan secara signifikan ketika Anda menambahkan lebih banyak sub-rekening. Yakinlah bahwa konsumsi penyimpanan Super Clone itu sendiri sebenarnya tidak meningkat banyak.</string>
+    <string name="text_Q4_title">Q4: Mengapa Super Clone digunakan ruang penyimpanan begitu banyak?</string>
+    <string name="text_Q4_content">A4: Semua sub-rekening ditambahkan pada perangkat Anda secara default terdaftar di bawah Super Clone oleh sistem operasi Android. Jumlah besar konsumsi penyimpanan data Super Clone total penyimpanan keseluruhan digunakan untuk semua sub-rekening yang telah ditambahkan. Super Clone sendiri menggunakan sedikit penyimpanan.</string>
+    <string name="text_Q5_title">Q5: Bagaimana Super Clone melindungi privasi saya?</string>
+    <string name="text_Q5_content">A5: Sandi diperlukan untuk mengakses aplikasi dilindungi setiap kali Anda bangun perangkat Anda. Selain itu, semua dari mereka diinstal tentang Super Clone, dan karena itu data mereka tidak dapat diakses oleh program eksternal.</string>
+
+    <string name="clone_label_tag">%s+</string>
+
+    <string name="powered_by_app">Powered by Super Clone</string>
+
+    <!-- lock settings -->
+    <string name="lock_settings_title">Pengaturan Locker</string>
+    <string name="enable_lock_settings_title">Locker Privasi</string>
+    <string name="enable_lock_settings_content">Beralih untuk mengaktifkan atau menonaktifkan fitur loker privasi</string>
+    <string name="password_setting_title">Pengaturan Kata Sandi</string>
+    <string name="password_set_no_question">Tidak ada pertanyaan aman ditetapkan.</string>
+    <string name="password_set_complete">Sandi ditetapkan.</string>
+    <string name="no_password_set">Silahkan mengatur sandi untuk loker pada awalnya.</string>
+    <string name="password_setting_content">Klik untuk mengatur password dan keamanan pertanyaan</string>
+    <string name="forgot_password">Lupa kata sandi</string>
+    <string name="lock_settings_for_apps">Aktifkan loker privasi untuk aplikasi dikloning</string>
+
+    <string name="al_enter_passcode">Masukkan passcode</string>
+    <string name="al_lockpattern_unlock_to_continue">Mengkonfirmasi identitas Anda</string>
+    <string name="al_lockpattern_draw_unlock_pattern">Menggambar Pola untuk Aktifkan</string>
+    <string name="al_use_passcode">Perubahan kode PIN</string>
+    <string name="al_use_unlock_pattern">Perubahan pola</string>
+    <string name="al_lockpattern_create_new_password_subtitle">Passcode akan digunakan untuk melindungi aplikasi</string>
+    <string name="al_lockpattern_create_new_password">Mengatur passcode baru</string>
+    <string name="al_lockpattern_confirm_password">Konfirmasi passcode</string>
+    <string name="al_change_enter_again">Masukkan lagi</string>
+    <string name="al_lockpattern_confirm_unlock_pattern">Harap Konfirmasi Pola</string>
+    <string name="al_lockpattern_confirm_unlock_pattern_hint">Menarik lagi</string>
+    <string name="al_btn_reset">Ulang</string>
+    <string name="al_lockpattern_release_hint">Lepaskan jari bila dilakukan</string>
+    <string name="al_lockpattern_try_again">Pola tidak cocok, silahkan coba lagi.</string>
+    <string name="applock_permission_contacts_toast">Hal ini membantu Anda untuk mengambil kata sandi Anda.</string>
+    <string name="al_lockpattern_create_unlock_pattern">Mengatur pola baru</string>
+    <string name="al_lockpattern_number_no_correct">Sambungkan setidaknya 4 titik</string>
+    <string name="al_lockpattern_create_new_password_outofbound">Passcode harus kurang dari 10 digit</string>
+    <string name="al_btn_finish">Memastikan</string>
+    <string name="al_btn_next">Berikutnya</string>
+    <string name="al_lockpattern_error">Pola yang salah, silahkan coba lagi.</string>
+    <string name="al_changepassword">Ganti kata sandi</string>
+    <string name="al_unlcok_pattern">Membuka Pola</string>
+    <string name="al_passcode">Passcode</string>
+    <string name="al_invisable_patterns">Sembunyikan Pola</string>
+    <string name="al_change_security_question">Ubah Pertanyaan Aman</string>
+    <string name="app_lock_safe_info_hint">Untuk memverifikasi identitas Anda ketika ulang kata sandi</string>
+    <string name="app_lock_safe_question_hint">Set Pertanyaan Aman</string>
+    <string name="app_lock_safe_answer_hint">Masukkan jawaban (Hingga 20 karakter)</string>
+    <string name="app_lock_verifier_tile">Set Pertanyaan Aman</string>
+    <string name="app_lock_reset_password">Ulang kata sandi</string>
+
+    <string name="app_lock_safe_answer_reset_hint">Masukkan jawabannya</string>
+    <string name="app_lock_date_picker_month">bulan</string>
+    <string name="app_lock_safe_question_toast_ask_Question">Anda tidak mengatur pertanyaan aman</string>
+    <string name="app_lock_safe_question_toast_ask_Answer">Anda tidak masukkan menjawab belum.</string>
+    <string name="app_lock_safe_question_toast_error">Otentikasi gagal, masukkan lagi</string>
+    <string name="applock_window_title">Klon %s</string>
+    <string name="applock_forgot_password"><u>Lupa kata sandi?</u></string>
+    <string name="applock_guide_text">Set kunci privasi untuk melindungi klon pribadi Anda</string>
+    <string name="need_set_secure_answer">Silahkan mengatur jawaban untuk pertanyaan aman dan kemudian tekan tombol konfirmasi.</string>
+
+    <string-array name="secure_questions">
+        <item>Ketika ulang tahun Anda</item>
+        <item>Siapa nama ayahmu?</item>
+        <item>Siapa nama ibumu?</item>
+        <item>Kapan Anda menikah?</item>
+        <item>Di mana Anda pergi ke sekolah SMP?</item>
+        <item>Di mana Anda pergi ke sekolah tinggi?</item>
+        <item>Apa film favorit Anda?</item>
+        <item>Menyesuaikan pertanyaan</item>
+    </string-array>
+</resources>

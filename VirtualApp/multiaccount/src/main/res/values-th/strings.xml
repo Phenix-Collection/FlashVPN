@@ -1,0 +1,168 @@
+<resources>
+    <string name="appwall_title">ค้นพบ</string>
+
+    <string name="action_settings">การตั้งค่า</string>
+    <string name="most_popular_apps">ที่นิยมมากที่สุด</string>
+    <string name="more_apps">ใช้งานมากขึ้น</string>
+    <string name="sponsor_text">แนะนำ</string>
+    <string name="btn_clone">โคลน</string>
+    <string name="start">เริ่มต้น</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="cloning">โคลน...</string>
+    <string name="cloning_tips">%s จะถูกโคลน ...</string>
+    <string name="app_starting_tips">%s จะเริ่มต้น ...</string>
+    <string name="first_start_tips">มันจะใช้เวลาอีกหน่อยสำหรับการเริ่มต้นครั้งแรก</string>
+    <string name="clone_success">โคลนสำเร็จรูป สนุกกับมันในขณะนี้!</string>
+    <string name="success_tip1">บัญชีการเข้าถึงพร้อมกัน</string>
+
+    <!-- nav menu -->
+    <string name="notifications">การแจ้งเตือน</string>
+    <string name="faq">FAQ</string>
+    <string name="feedback">ข้อเสนอแนะ</string>
+    <string name="rate_us">คะแนน</string>
+    <string name="share_with_friends">แบ่งปันกับเพื่อน</string>
+    <string name="settings">การตั้งค่า</string>
+
+    <!-- home -->
+    <string name="delete_dialog_title">ความระมัดระวัง</string>
+    <string name="delete_dialog_content">การถอดแอปโคลนนี้หมายถึงการลบข้อมูลทั้งหมดของ</string>
+    <string name="delete_dialog_left">ยกเลิก</string>
+    <string name="delete_dialog_right">ลบ</string>
+    <string name="dialog_rating_us_content">สนุกกับการใช้โปรแกรมนี้?</string>
+    <string name="dialog_feedback_content">คุณจะกรุณาให้ข้อเสนอแนะที่จะช่วยปรับปรุงได้อย่างไร</string>
+    <string name="not_really">ไม่ได้จริงๆ</string>
+    <string name="no_thanks">ไม่เป็นไรขอบคุณ</string>
+    <string name="dialog_love_title">รักมัน</string>
+    <string name="dialog_love_content">คุณจะช่วยให้เรามีคะแนนระดับ 5 ดาวบน Google Play? มันจะสร้างแรงบันดาลใจให้เราและเราขอขอบคุณการสนับสนุนของคุณ!</string>
+    <string name="remind_me_later">เตือนฉันภายหลัง</string>
+    <string name="star_rating">ไปประเมินระดับ 5 ดาวในขณะนี้</string>
+    <string name="yes">ใช่</string>
+    <string name="ok">ตกลง</string>
+    <string name="installFailure">ขออภัยโปรแกรมนี้ยังไม่สนับสนุนและเราจะมากับมันเร็ว ๆ นี้้</string>
+    <string name="start_tips">โคลนโปรแกรมแรกของคุณจากที่นี่แล้ว!</string>
+    <string name="long_press_tips">ลองกดและลากไปยังเพิ่มทางลัดบนหน้าจอหลักหรือลบ</string>
+
+    <!-- notification -->
+    <string name="notification_decription">เปิดใช้งานเพื่อรับการแจ้งเตือนจากโปรแกรมโคลนนี้</string>
+
+    <string name="share_with_friends_tip">ฉันดีใจที่จะเชิญชวนให้คุณใช้แอพลิเคชันที่ยอดเยี่ยมนี้ %s คุณสามารถดาวน์โหลดได้ที่นี่:</string>
+
+    <!-- feedback -->
+    <string name="feedback_hint">กรุณาบอกให้เราทราบรายละเอียดเกี่ยวกับปัญหาที่คุณพบและโปรดแจ้งให้เราทราบขั้นตอนในการทำซ้ำและดีกว่าด้วยหน้าจอ</string>
+    <string name="button_submit">เสนอ</string>
+    <string name="submit_success">ขอขอบคุณสำหรับการให้ข้อเสนอแนะ!</string>
+    <string name="feedback_no_description">คำอธิบายต้องไม่ว่างเปล่า!</string>
+    <string name="feedback_go_faq">คลิกที่นี่เพื่อตรวจสอบคำแนะนำของเรา FAQ.</string>
+    <string name="extra_feedback_decription">เราจะแก้ไขปัญหาสำหรับคุณเร็ว ๆ นี้และขอขอบคุณความช่วยเหลือของคุณเพื่อปรับปรุงผลิตภัณฑ์!</string>
+
+    <!-- toast -->
+    <string name="toast_shortcut_added">ทางลัดสร้าง</string>
+    <string name="toast_shortcut_invalid">ทางลัดไม่ถูกต้อง</string>
+
+    <!-- settings -->
+    <string name="settings_shortcut_title">ทางลัด</string>
+    <string name="settings_shortcut_content">เปิดใช้งานเพื่อสร้างทางลัดเมื่อ app โคลนโดยอัตโนมัติ</string>
+    <string name="settings_privacy_locker_content">คลิกเพื่อตั้งค่าความเป็นส่วนตัวล็อกเกอร์สำหรับแอปโคลน</string>
+    <string name="settings_notification_content">คลิ๊กเพื่อเปิดหรือปิดการแจ้งเตือนจากแอปโคลน</string>
+    <string name="settings_privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="settings_more">การตั้งค่าเพิ่มเติม</string>
+    <string name="settings_general">การตั้งค่าทั่วไป</string>
+    <string name="settings_terms_of_service">เงื่อนไขการให้บริการ</string>
+    <string name="settings_follow_us">ติดตามเราบน Facebook</string>
+    <string name="settings_right">2016 Polestar Applab All rights reserved</string>
+
+    <array name="navigationItem">
+        <item name="navigation_notifications">ตู้เก็บความเป็นส่วนตัว</item>
+        <item name="navigation_notifications">การแจ้งเตือน</item>
+        <item name="navigation_FAQ">FAQ</item>
+        <item name="navigation_feedback">ข้อเสนอแนะ</item>
+        <item name="navigation_rate_us">คะแนน</item>
+        <item name="navigation_share">แบ่งปันกับเพื่อน</item>
+        <item name="navigation_setting">การตั้งค่า</item>
+    </array>
+
+    <!-- titles -->
+    <string name="clone_apps_title">โคลนปพลิเคชัน</string>
+	
+    <string name="crash_hint">ขออภัยข้อผิดพลาดบางอย่างเกิดขึ้นและเราจะแก้ไขได้ในรุ่นถัดไป</string>
+
+    <string name="text_Q1_title">Q1: ทำไมฉันไม่สามารถได้รับการแจ้งเตือนข้อความจากแอปเปิดการใช้งาน?</string>
+    <string name="text_Q1_content_2">A1: โปรดตรวจสอบว่าเรามีการเข้าถึงเครือข่าย</string>
+    <string name="text_Q2_title">Q2: โปรแกรมนี้จะรวบรวมและใช้ข้อมูลส่วนตัวของฉัน?</string>
+    <string name="text_Q2_content">A2: ไม่มีโปรแกรมนี้จะรวบรวมจำนวนเงินขนาดเล็กของ "ข้อมูลสาธารณะ" ของคุณ (เช่น Avatar ชื่อเล่น ฯลฯ ) และเหล่านี้จะถูกนำมาใช้เฉพาะในอุปกรณ์ของคุณเพื่อสร้างประสบการณ์การใช้งานที่ดีสำหรับคุณ เราสัญญาว่าไม่มีข้อมูลส่วนตัวของคุณจะถูกเรียกเก็บหรือนำไปใช้</string>
+    <string name="text_Q3_title">Q3: นี่คือเหตุผลที่ใช้พื้นที่เก็บข้อมูลแอพลิเคชันที่เพิ่มขึ้น?</string>
+    <string name="text_Q3_content">A3: ทุกบัญชีย่อยเพิ่มบนอุปกรณ์ของคุณจะเริ่มต้นโดยอยู่ภายใต้การตรวจสอบนี้โดยระบบปฏิบัติการ Android ตัวอย่างเช่นเมื่อคุณเพิ่ม Facebook บัญชีย่อยไปยังอุปกรณ์ของคุณทั้งหมดของการจัดเก็บข้อมูลที่ใช้สำหรับบัญชีผู้ใช้ Facebook ที่สองของคุณ (app) อยู่ภายใต้โปรแกรมนี้ ดังนั้นการบริโภคการจัดเก็บข้อมูลที่ระบุไว้จะปรากฏขึ้นเพื่อเพิ่มอย่างมีนัยสำคัญเมื่อคุณเพิ่มมากขึ้นบัญชีย่อย เรามั่นใจว่าการจัดเก็บข้อมูลการใช้งานของโปรแกรมนี้ตัวเองไม่ได้จริงเพิ่มขึ้นมาก</string>
+    <string name="text_Q4_title">Q4: ทำไมโปรแกรมนี้ใช้พื้นที่จัดเก็บมาก?</string>
+    <string name="text_Q4_content">A4: ทุกบัญชีย่อยเพิ่มบนอุปกรณ์ของคุณจะเริ่มต้นโดยอยู่ภายใต้โปรแกรมนี้โดยระบบปฏิบัติการ Android จำนวนมากของการบริโภคการจัดเก็บอยู่ภายใต้โปรแกรมนี้คือการจัดเก็บรวมรวมใช้สำหรับทุกบัญชีย่อยที่คุณได้เพิ่ม โปรแกรมนี้ตัวเองใช้จัดเก็บข้อมูลเล็ก ๆ น้อย ๆ</string>
+    <string name="text_Q5_title">Q5: วิธีการทำงานของตู้เก็บความเป็นส่วนตัวปกป้องความเป็นส่วนตัวของฉันได้อย่างไร</string>
+    <string name="text_Q5_content">A5: ต้องกรอกรหัสผ่านในการเข้าถึง aaplication ป้องกันทุกครั้งที่คุณตื่นอุปกรณ์ของคุณ นอกจากนี้พวกเขาได้รับการติดตั้งในพื้นที่แบบสแตนด์อโลนนี้และดังนั้นข้อมูลของพวกเขาทั้งหมดจะไม่สามารถเข้าถึงได้โดยโปรแกรมภายนอกใด ๆ</string>
+
+    <string name="clone_label_tag">%s+</string>
+
+    <string name="powered_by_app">Powered by Super Clone</string>
+
+    <!-- lock settings -->
+    <string name="lock_settings_title">การตั้งค่าล็อกเกอร์</string>
+    <string name="enable_lock_settings_title">ตู้เก็บความเป็นส่วนตัว</string>
+    <string name="enable_lock_settings_content">สลับการเปิดหรือปิดใช้งานคุณลักษณะความเป็นส่วนตัวล็อกเกอร์</string>
+    <string name="password_setting_title">ตั้งค่ารหัสผ่าน</string>
+    <string name="password_set_no_question">ไม่มีชุดคำถามที่เชื่อถือได้</string>
+    <string name="password_set_complete">รหัสผ่านที่ถูกกำหนด</string>
+    <string name="no_password_set">กรุณาตั้งค่ารหัสผ่านสำหรับล็อกเกอร์ในตอนแรก</string>
+    <string name="password_setting_content">คลิกเพื่อตั้งค่ารหัสผ่านและคำถามรักษาความปลอดภัย</string>
+    <string name="forgot_password">ลืมรหัสผ่าน</string>
+    <string name="lock_settings_for_apps">เปิดใช้งานการล็อกเกอร์เป็นส่วนตัวสำหรับการใช้งานโคลน</string>
+
+    <string name="al_enter_passcode">ป้อนรหัสผ่าน</string>
+    <string name="al_lockpattern_unlock_to_continue">ยืนยันตัวตนของคุณ</string>
+    <string name="al_lockpattern_draw_unlock_pattern">วาดรูปแบบการปลดล็อค</string>
+    <string name="al_use_passcode">เปลี่ยนรหัส PIN</string>
+    <string name="al_use_unlock_pattern">เปลี่ยนรูปแบบ</string>
+    <string name="al_lockpattern_create_new_password_subtitle">รหัสผ่านจะถูกนำมาใช้เพื่อป้องกันการปพลิเคชัน</string>
+    <string name="al_lockpattern_create_new_password">ตั้งค่ารหัสผ่านใหม่</string>
+    <string name="al_lockpattern_confirm_password">ยืนยันรหัสผ่าน</string>
+    <string name="al_change_enter_again">ลองอีกครั้ง</string>
+    <string name="al_lockpattern_confirm_unlock_pattern">โปรดยืนยันรูปแบบ</string>
+    <string name="al_lockpattern_confirm_unlock_pattern_hint">วาดอีกครั้ง</string>
+    <string name="al_btn_reset">รีเซ็ต</string>
+    <string name="al_lockpattern_release_hint">ปล่อยนิ้วเมื่อดำเนินการเสร็จ</string>
+    <string name="al_lockpattern_try_again">รูปแบบไม่ตรงกันโปรดลองอีกครั้ง</string>
+    <string name="applock_permission_contacts_toast">นี้จะช่วยให้คุณสามารถเรียกรหัสผ่านของคุณ</string>
+    <string name="al_lockpattern_create_unlock_pattern">การตั้งค่ารูปแบบใหม่</string>
+    <string name="al_lockpattern_number_no_correct">โปรดเชื่อมต่ออย่างน้อย 4 จุด</string>
+    <string name="al_lockpattern_create_new_password_outofbound">รหัสผ่านจะต้องน้อยกว่า 10 หลัก</string>
+    <string name="al_btn_finish">ยืนยัน</string>
+    <string name="al_btn_next">ต่อไป</string>
+    <string name="al_lockpattern_error">รูปแบบที่ไม่ถูกต้องโปรดลองอีกครั้ง</string>
+    <string name="al_changepassword">เปลี่ยนรหัสผ่าน</string>
+    <string name="al_unlcok_pattern">ปลดล็อครูปแบบ</string>
+    <string name="al_passcode">รหัสผ่าน</string>
+    <string name="al_invisable_patterns">ซ่อนรูปแบบ</string>
+    <string name="al_change_security_question">เปลี่ยนคำถามการรักษาความปลอดภัย</string>
+    <string name="app_lock_safe_info_hint">เพื่อยืนยันตัวตนของคุณเมื่อการรีเซ็ตรหัสผ่าน</string>
+    <string name="app_lock_safe_question_hint">ตั้งคำถามการรักษาความปลอดภัย</string>
+    <string name="app_lock_safe_answer_hint">ป้อนคำตอบ (ไม่เกิน 20 ตัวอักษร)</string>
+    <string name="app_lock_verifier_tile">ตั้งคำถามการรักษาความปลอดภัย</string>
+    <string name="app_lock_reset_password">รีเซ็ตรหัสผ่าน</string>
+
+    <string name="app_lock_safe_answer_reset_hint">กรุณากรอกคำตอบ</string>
+    <string name="app_lock_date_picker_month">เดือน</string>
+    <string name="app_lock_safe_question_toast_ask_Question">คุณไม่ได้ตั้งคำถามการรักษาความปลอดภัย</string>
+    <string name="app_lock_safe_question_toast_ask_Answer">คุณไม่ได้ป้อนคำตอบเลย</string>
+    <string name="app_lock_safe_question_toast_error">รับรองความถูกต้องล้มเหลวโปรดใส่อีกครั้ง</string>
+    <string name="applock_window_title">โคลน %s</string>
+    <string name="applock_forgot_password"><u>ลืมรหัสผ่าน?</u></string>
+    <string name="applock_guide_text">ตั้งค่าความเป็นส่วนตัวล็อคเพื่อป้องกันโคลนส่วนตัวของคุณ</string>
+    <string name="need_set_secure_answer">กรุณาตั้งค่าคำตอบสำหรับคำถามของความปลอดภัยและจากนั้นกดปุ่มยืนยัน</string>
+
+    <string-array name="secure_questions">
+        <item>วัดเกิดคุณเมื่อไร?</item>
+        <item>พ่อของคุณชื่ออะไร?</item>
+        <item>อะไรของคุณแม่ชื่อ?</item>
+        <item>เมื่อคุณแต่งงานแล้ว?</item>
+        <item>คุณไม่ได้ไปที่ไหนไปโรงเรียนจูเนียร์?</item>
+        <item>คุณไม่ได้ไปที่ไหนที่โรงเรียนมัธยม?</item>
+        <item>อะไรภาพยนตร์ที่คุณชื่นชอบที่สุด?</item>
+        <item>ปรับแต่งคำถาม</item>
+    </string-array>
+</resources>
