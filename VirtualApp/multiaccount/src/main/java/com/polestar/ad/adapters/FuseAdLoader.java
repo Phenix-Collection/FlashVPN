@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
+import com.polestar.imageloader.ImageLoader;
 import com.polestar.multiaccount.utils.RemoteConfig;
 
 import java.util.ArrayList;
@@ -136,6 +137,12 @@ public class FuseAdLoader implements IAdLoader {
                     AdLog.e("Ad loaded but not put into cache");
                 }
                 AdLog.d("ad loaded " + ad.getAdType());
+                if (ad.getCoverImageUrl() != null) {
+                    ImageLoader.getInstance().doPreLoad(mContext, ad.getCoverImageUrl());
+                }
+                if (ad.getIconImageUrl() != null) {
+                    ImageLoader.getInstance().doPreLoad(mContext, ad.getIconImageUrl());
+                }
                 if (mListener != null) {
                     mIsLoading = false;
                     mListener.onAdLoaded(ad);
