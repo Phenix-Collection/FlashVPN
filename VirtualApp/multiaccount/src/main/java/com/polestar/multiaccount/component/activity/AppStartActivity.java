@@ -83,24 +83,16 @@ public class AppStartActivity extends BaseActivity {
             ToastUtils.ToastDefult(this, getString(R.string.toast_shortcut_invalid));
             finish();
         } else {
-            new Thread(new Runnable() {
+            int delay = 500;
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Looper.prepare();
-                    int delay = 500;
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from);
-                            // Todo: if app is already launched, just switch it to front, no need re-launch
-                            AppManager.launchApp(appModel.getPackageName());
+                    MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from);
+                    // Todo: if app is already launched, just switch it to front, no need re-launch
+                    AppManager.launchApp(appModel.getPackageName());
 //                            finish();
-                        }
-                    }, delay);
-                    Looper.loop();
                 }
-            }).start();
+            }, delay);
         }
     }
 
