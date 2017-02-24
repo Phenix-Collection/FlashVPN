@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
+import com.polestar.multiaccount.utils.RemoteConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,9 +25,23 @@ public class FuseAdLoader implements IAdLoader {
     private IAdLoadListener mListener;
     private int currentLoadingIdx = -1;
     private boolean mIsLoading = false;
+    private String mSlot;
 
-    public FuseAdLoader(Context context) {
+    private static HashMap<String, FuseAdLoader> sAdLoaderMap = new HashMap<>();
+    public synchronized static FuseAdLoader get(String slot, Context appContext) {
+        FuseAdLoader adLoader = sAdLoaderMap.get(slot);
+        if (adLoader == null) {
+            adLoader = new FuseAdLoader(slot, appContext.getApplicationContext());
+            sAdLoaderMap.put(slot, adLoader);
+        }
+        return adLoader;
+    }
+
+    private FuseAdLoader(String slot, Context context) {
         this.mContext = context;
+        mSlot = slot;
+        List<AdConfig> adSources = RemoteConfig.getAdConfigList(mSlot);
+        addAdConfigList(adSources);
     }
 
     public static final HashSet<String> SUPPORTED_TYPES = new HashSet<>();

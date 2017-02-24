@@ -500,8 +500,7 @@ public class HomeFragment extends BaseFragment {
 
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
-            mNativeAdLoader = new FuseAdLoader(mActivity);
-            mNativeAdLoader.addAdConfigList(headerNativeAdConfigs);
+            mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity());
             ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
         if ( mNativeAdLoader.hasValidAdSource()) {
@@ -553,7 +552,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
-    private static final String SLOT_HOME_HEADER_NATIVE = "slot_home_header_native";
+    public static final String SLOT_HOME_HEADER_NATIVE = "slot_home_header_native";
     private List<AdConfig> headerNativeAdConfigs ;
 
     private void initData(){

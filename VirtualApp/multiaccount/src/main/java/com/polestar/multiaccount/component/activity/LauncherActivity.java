@@ -7,8 +7,10 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
+import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
+import com.polestar.multiaccount.component.fragment.HomeFragment;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 
@@ -24,6 +26,7 @@ public class LauncherActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mylauncher);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
+        FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this).loadAd(1, null);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -38,7 +41,7 @@ public class LauncherActivity extends BaseActivity{
                 overridePendingTransition(android.R.anim.fade_in, -1);
                 finish();
             }
-        },300);
+        },1000);
         if(!PreferencesUtils.isShortCutCreated() && !created) {
             PreferencesUtils.setShortCutCreated();
             createShortCut();

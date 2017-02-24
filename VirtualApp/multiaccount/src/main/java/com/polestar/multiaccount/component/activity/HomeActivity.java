@@ -139,9 +139,7 @@ public class HomeActivity extends BaseActivity {
         MLogs.e("start INTERSTITIAL loadAd");
         isInterstitialAdClicked = false;
         isInterstitialAdLoaded = false;
-        adLoader = new FuseAdLoader(this);
-        List<AdConfig> adSources = RemoteConfig.getAdConfigList(SLOT_HOME_GIFT_INTERSTITIAL);
-        adLoader.addAdConfigList(adSources);
+        adLoader = FuseAdLoader.get(SLOT_HOME_GIFT_INTERSTITIAL, this);
         //adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
         if (adLoader.hasValidAdSource()) {
             adLoader.loadAd(1, new IAdLoadListener() {

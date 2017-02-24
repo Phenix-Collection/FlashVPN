@@ -74,6 +74,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private FuseAdLoader mNativeAdLoader;
     private final static String KEY_APPLIST_CONTROL_INFO = "applist_native_control";
     private TextView sponsorText;
+    private static final String SLOT_APPLIST_NATIVE = "slot_applist_native";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         mContext = this;
         initView();
         adControl = RemoteConfig.getAdControlInfo(KEY_APPLIST_CONTROL_INFO);
-        adConfigList = RemoteConfig.getAdConfigList("slot_applist_native");
+        adConfigList = RemoteConfig.getAdConfigList(SLOT_APPLIST_NATIVE);
         int random = new Random().nextInt(100);
         if (random < adControl.random || BuildConfig.DEBUG) {
             if (adControl.network == AdControlInfo.NETWORK_BOTH
@@ -226,8 +227,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
     private void loadNativeAd() {
         if (mNativeAdLoader == null) {
-            mNativeAdLoader = new FuseAdLoader(this);
-            mNativeAdLoader.addAdConfigList(adConfigList);
+            mNativeAdLoader = FuseAdLoader.get(SLOT_APPLIST_NATIVE, this);
         }
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {

@@ -103,6 +103,10 @@ public class RemoteConfig {
                     MLogs.e("Wrong config: " + config);
                 }
             }
+            if (cachTime <= 0) {
+                //default cache time
+                cachTime = 15*60; //15min
+            }
             configList.add(new AdConfig(configs[0], configs[1], cachTime));
         }
         return configList;
