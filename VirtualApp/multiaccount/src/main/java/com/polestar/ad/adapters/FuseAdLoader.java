@@ -86,7 +86,7 @@ public class FuseAdLoader implements IAdLoader {
         //Find cache
         IAd ad = mNativeAdCache.get(config.key);
         if (ad != null) {
-            if (ad.isShowed() || (System.currentTimeMillis() - ad.getLoadedTime()) > config.cacheTime) {
+            if (ad.isShowed() || ((System.currentTimeMillis() - ad.getLoadedTime())/1000) > config.cacheTime) {
                 AdLog.d("Ad cache time out : " + ad.getTitle() + " type: " + ad.getAdType());
                 mNativeAdCache.remove(config.key);
             } else {
