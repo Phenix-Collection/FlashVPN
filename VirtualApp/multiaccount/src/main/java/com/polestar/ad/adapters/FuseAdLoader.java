@@ -138,9 +138,11 @@ public class FuseAdLoader implements IAdLoader {
                 }
                 AdLog.d("ad loaded " + ad.getAdType());
                 if (ad.getCoverImageUrl() != null) {
+                    AdLog.d("preload " + ad.getCoverImageUrl());
                     ImageLoader.getInstance().doPreLoad(mContext, ad.getCoverImageUrl());
                 }
                 if (ad.getIconImageUrl() != null) {
+                    AdLog.d("preload " + ad.getIconImageUrl());
                     ImageLoader.getInstance().doPreLoad(mContext, ad.getIconImageUrl());
                 }
                 if (mListener != null) {
