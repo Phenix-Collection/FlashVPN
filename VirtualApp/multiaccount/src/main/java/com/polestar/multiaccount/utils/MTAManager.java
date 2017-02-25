@@ -2,6 +2,7 @@ package com.polestar.multiaccount.utils;
 
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.polestar.multiaccount.constant.AppConstants;
 import com.tencent.bugly.crashreport.BuglyLog;
@@ -140,6 +141,19 @@ public class MTAManager {
         prop.setProperty("install_hour",""+hour);
        // prop.setProperty("model", Build.FINGERPRINT);
         StatService.trackCustomKVEvent(context, "menu_rate", prop);
+    }
+
+    public static void loveCloneApp(Context context, boolean love, String pkg) {
+        if (pkg == null) {
+            return;
+        }
+        Properties prop = new Properties();
+        if (love) {
+            prop.setProperty("love", pkg);
+        } else {
+            prop.setProperty("not_love", pkg);
+        }
+        StatService.trackCustomKVEvent(context, "love_clone_app", prop);
     }
 
     public static void menuShare(Context context) {

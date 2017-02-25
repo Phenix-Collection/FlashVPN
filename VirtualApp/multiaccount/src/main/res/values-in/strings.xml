@@ -165,4 +165,5 @@
         <item>Apa film favorit Anda?</item>
         <item>Menyesuaikan pertanyaan</item>
     </string-array>
+    <string name="congratulations">Selamat!</string>
 </resources>

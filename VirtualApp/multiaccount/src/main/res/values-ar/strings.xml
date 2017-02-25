@@ -164,4 +164,5 @@
         <item>ما هو فيلمك المفضل؟</item>
         <item>تخصيص الأسئلة</item>
     </string-array>
+    <string name="congratulations">مبروك</string>
 </resources>

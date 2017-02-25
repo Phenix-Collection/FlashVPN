@@ -33,7 +33,7 @@
     <entry>
         <key>slot_home_header_native</key>
         <value>
-            fb:1700354860278115_1702636763383258:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0;
+            fb:1700354860278115_1739555343024733:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0;
         </value>
     </entry>
     <entry>
@@ -47,5 +47,16 @@
     <entry>
         <key>slot_applist_native</key>
         <value>fb:1700354860278115_1727890784191189:0;ab_native_banner:ca-app-pub-5490912237269284/7040042657:0</value>
+    </entry>
+    <entry>
+        <key>clone_rate_package</key>
+        <!--off to close; * for all; package:package: -->
+        <value>com.whatsapp:com.facebook.orca</value>
+    </entry>
+    <entry>
+        <key>clone_rate_interval</key>
+        <!-- if not love should wait for hours -->
+        <value>72</value>
+        <!--<value>xhour</value>-->
     </entry>
 </defaultsMap>

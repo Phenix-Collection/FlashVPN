@@ -2,12 +2,13 @@ package com.polestar.multiaccount.component.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -15,11 +16,9 @@ import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.polestar.ad.AdConfig;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -32,8 +31,6 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
-import com.polestar.multiaccount.utils.DisplayUtils;
-import com.polestar.multiaccount.utils.DrawerBlurHelper;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
@@ -47,6 +44,9 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.RunnableFuture;
+
+import mirror.android.providers.Settings;
 
 public class HomeActivity extends BaseActivity {
 
@@ -64,12 +64,16 @@ public class HomeActivity extends BaseActivity {
     private boolean isInterstitialAdLoaded;
 
     private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial_1026";
+    private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
+    private static final String CONFIG_CLONE_RATE_INTERVAL = "clone_rate_interval";
 
     private static final String RATE_FROM_QUIT = "quit";
+    private static final String RATE_AFTER_CLONE = "clone";
     private static final String RATE_FROM_MENU = "menu";
 
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
+    private String cloningPackage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,8 +238,51 @@ public class HomeActivity extends BaseActivity {
     private void doAnimationExit() {
     }
 
-    private void doAnimationExter() {
+    private void doAnimationEnter() {
         mHomeFragment.showFromBottom();
+        if (cloningPackage != null) {
+            String pkg = cloningPackage;
+            cloningPackage = null;
+            MLogs.d("Cloning package: " + pkg);
+            if (PreferencesUtils.isRated()) {
+                return;
+            }
+            String config = RemoteConfig.getString(CONFIG_CLONE_RATE_PACKAGE);
+            if ("off".equalsIgnoreCase(config)) {
+                MLogs.d("Clone rate off");
+                return;
+            }
+            if(PreferencesUtils.getLoveApp() == -1) {
+                // not love, should wait for interval
+                long interval = RemoteConfig.getLong(CONFIG_CLONE_RATE_INTERVAL) * 60 * 60 * 1000;
+                if ((System.currentTimeMillis() - PreferencesUtils.getRateDialogTime(this)) < interval) {
+                    MLogs.d("Not love, need wait longer");
+                    return;
+                }
+            }
+            boolean match = "*".equals(config);
+            if (!match) {
+                String[] pkgList = config.split(":");
+                if (pkgList != null && pkgList.length > 0) {
+                    for (String s: pkgList) {
+                        if(s.equalsIgnoreCase(pkg)) {
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (match) {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showRateDialog(RATE_AFTER_CLONE, pkg);
+                    }
+                }, 800);
+            } else {
+                MLogs.d("No matching package for clone rate");
+            }
+        }
     }
 
     public void onNavigationClick(View view) {
@@ -280,7 +327,7 @@ public class HomeActivity extends BaseActivity {
                 boolean isShowRateDialog = PreferencesUtils.getLoveApp() == 1 ||
                         ((random < RemoteConfig.getLong(QUIT_RATE_RANDOM)) && clonedCnt >= RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
                 if (isShowRateDialog && (System.currentTimeMillis() - lastTime) > interval) {
-                    showRateDialog(RATE_FROM_QUIT);
+                    showRateDialog(RATE_FROM_QUIT, null);
                 } else {
                     super.onBackPressed();
                 }
@@ -330,7 +377,7 @@ public class HomeActivity extends BaseActivity {
                 startActivity(feedback);
                 break;
             case 4:
-                showRateDialog(RATE_FROM_MENU);
+                showRateDialog(RATE_FROM_MENU, null);
                 break;
             case 5:
                 MTAManager.menuShare(this);
@@ -353,10 +400,19 @@ public class HomeActivity extends BaseActivity {
         return true;
     }
 
-    private void showRateDialog(String from){
+    private boolean rateDialogShowed = false;
+    private void showRateDialog(String from, String pkg){
+        if (RATE_AFTER_CLONE.equals(from) || RATE_FROM_QUIT.equals(from)){
+            if (rateDialogShowed ) {
+                MLogs.d("Already showed dialog this time");
+                return;
+            }
+            rateDialogShowed= true;
+        }
         MTAManager.reportRate(this,"start", from);
         PreferencesUtils.updateRateDialogTime(this);
-        UpDownDialog.show(this, getString(R.string.rate_us),
+        String title = RATE_AFTER_CLONE.equals(from) ? getString(R.string.congratulations) : getString(R.string.rate_us);
+        UpDownDialog.show(this, title,
                 getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
                 getString(R.string.yes), R.drawable.dialog_tag_congratulations,
                 R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
@@ -365,6 +421,11 @@ public class HomeActivity extends BaseActivity {
                         switch (which) {
                             case UpDownDialog.NEGATIVE_BUTTON:
                                 PreferencesUtils.setLoveApp(false);
+                                if (!RATE_AFTER_CLONE.equals(from)) {
+                                    MTAManager.loveCloneApp(HomeActivity.this, false, from );
+                                } else {
+                                    MTAManager.loveCloneApp(HomeActivity.this, false,pkg);
+                                }
                                 UpDownDialog.show(HomeActivity.this, getString(R.string.feedback),
                                         getString(R.string.dialog_feedback_content),
                                         getString(R.string.no_thanks),
@@ -384,6 +445,11 @@ public class HomeActivity extends BaseActivity {
                                 break;
                             case UpDownDialog.POSITIVE_BUTTON:
                                 PreferencesUtils.setLoveApp(true);
+                                if (!RATE_AFTER_CLONE.equals(from)) {
+                                    MTAManager.loveCloneApp(HomeActivity.this, true, from );
+                                } else {
+                                    MTAManager.loveCloneApp(HomeActivity.this, true,pkg);
+                                }
                                 UpDownDialog.show(HomeActivity.this, getString(R.string.dialog_love_title),
                                         getString(R.string.dialog_love_content),
                                         getString(R.string.remind_me_later),
@@ -405,40 +471,6 @@ public class HomeActivity extends BaseActivity {
                     }
                 });
 
-    }
-
-    private void loadInstallAd() {
-//        LocalAdUtils.showFullScreenAd(this, false, new OnAdLoadListener() {
-//            @Override
-//            public void onLoad(IAd iAd) {
-//
-//            }
-//
-//            @Override
-//            public void onLoadFailed(AdError adError) {
-//
-//            }
-//
-//            @Override
-//            public void onLoadInterstitialAd(WrapInterstitialAd wrapInterstitialAd) {
-//                HomeActivity.this.installAd = wrapInterstitialAd;
-//            }
-//        });
-
-    }
-
-    private void showAd(Object ad) {
-
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (!needShowGuide()) {
-//                    if (ad != null) {
-//                        ad.show();
-//                    }
-//                }
-//            }
-//        }, AnimatorHelper.DURATION_LONG * 2);
     }
 
     public void startAppLaunchActivity(String packageName) {
@@ -465,13 +497,13 @@ public class HomeActivity extends BaseActivity {
                 AppModel model = data.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
                // AppInstallActivity.startAppInstallActivity(this, model, drawerBlurHelper.createBitmap());
                 AppCloneActivity.startAppCloneActivity(this, model);
-                loadInstallAd();
+                cloningPackage = model.getPackageName();
                 mHomeFragment.hideToBottom();
             } else if (requestCode == AppConstants.REQUEST_INSTALL_APP) {
 
             }
         } else {
-            doAnimationExter();
+            doAnimationEnter();
         }
     }
 

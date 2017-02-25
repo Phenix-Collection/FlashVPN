@@ -165,4 +165,5 @@
         <item>Qual sua comida favorita?</item>
         <item>Personalizar perguntas</item>
     </string-array>
+    <string name="congratulations">Parabéns!</string>
 </resources>
