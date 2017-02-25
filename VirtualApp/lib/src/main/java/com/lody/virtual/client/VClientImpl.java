@@ -305,6 +305,9 @@ public final class VClientImpl extends IVClient.Stub {
         mInitialApplication = LoadedApk.makeApplication.call(data.info, false, null);
 		if(mInitialApplication == null) {
 			VLog.logbug(TAG, "mInitialApplication is null");
+			if (data.info != null) {
+				mInitialApplication = LoadedApk.makeApplication.call(data.info, false, null);
+			}
 		}
         mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, mInitialApplication);
         ContextFixer.fixContext(mInitialApplication);
@@ -329,7 +332,7 @@ public final class VClientImpl extends IVClient.Stub {
 		} catch (Exception e) {
             if (!mInstrumentation.onException(mInitialApplication, e)) {
 				throw new RuntimeException(
-                        "Unable to create application " + mInitialApplication.getClass().getName()
+                        "Unable to create application " + mInitialApplication == null? "null app" : mInitialApplication.getClass().getName()
 								+ ": " + e.toString(), e);
 			}
 		}
