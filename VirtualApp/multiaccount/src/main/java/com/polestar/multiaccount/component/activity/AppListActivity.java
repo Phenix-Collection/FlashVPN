@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -76,6 +79,33 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private TextView sponsorText;
     private static final String SLOT_APPLIST_NATIVE = "slot_applist_native";
 
+    private static boolean burstLoad = true;
+    private static long nativePriorTime = 1*1000;
+    private static final String CONFIG_APPLIST_BURST_LOAD = "applist_burst_load";
+    private static final String CONFIG_APPLIST_NATIVE_PRIOR_TIME = "applist_native_prior_time";
+    private long adLoadStartTime = 0;
+    private static final int NATIVE_AD_READY = 0;
+    private static final int BANNER_AD_READY = 1;
+    private Handler adHandler = new Handler(Looper.getMainLooper()){
+        private boolean adShowed = false;
+        @Override
+        public void handleMessage(Message msg) {
+            if (adShowed){
+                return;
+            }
+            adShowed = true;
+            switch (msg.what) {
+                case NATIVE_AD_READY:
+                    IAd ad = (IAd) msg.obj;
+                    inflateFbNativeAdView(ad);
+                    break;
+                case BANNER_AD_READY:
+                    showBannerAd();
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +114,8 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         initView();
         adControl = RemoteConfig.getAdControlInfo(KEY_APPLIST_CONTROL_INFO);
         adConfigList = RemoteConfig.getAdConfigList(SLOT_APPLIST_NATIVE);
+        burstLoad = RemoteConfig.getBoolean(CONFIG_APPLIST_BURST_LOAD);
+        nativePriorTime = RemoteConfig.getLong(CONFIG_APPLIST_NATIVE_PRIOR_TIME);
         int random = new Random().nextInt(100);
         if (random < adControl.random || BuildConfig.DEBUG) {
             if (adControl.network == AdControlInfo.NETWORK_BOTH
@@ -229,13 +261,17 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_APPLIST_NATIVE, this);
         }
+        if (burstLoad) {
+            loadAdmobNativeExpress();
+        }
         if ( mNativeAdLoader.hasValidAdSource()) {
+            adLoadStartTime = System.currentTimeMillis();
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
                     if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
                             || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
-                        inflateFbNativeAdView(ad);
+                        adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
                     }
                 }
 
@@ -246,11 +282,16 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
                 @Override
                 public void onError(String error) {
-                    loadAdmobNativeExpress();
+                    adLoadStartTime = 0;
+                    if (!burstLoad) {
+                        loadAdmobNativeExpress();
+                    }
                 }
             });
         } else {
-            loadAdmobNativeExpress();
+            if (!burstLoad) {
+                loadAdmobNativeExpress();
+            }
         }
     }
 
@@ -351,24 +392,29 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                adContainer.removeAllViews();
-                adContainer.setVisibility(View.VISIBLE);
-                expressAdView.setVisibility(View.VISIBLE);
-                adContainer.addView(expressAdView);
-                sponsorText.setVisibility(View.VISIBLE);
-                android.animation.ObjectAnimator scaleX = android.animation.ObjectAnimator.ofFloat(expressAdView, "scaleX", 0.7f, 1.1f, 1.0f);
-                android.animation.ObjectAnimator scaleY = android.animation.ObjectAnimator.ofFloat(expressAdView, "scaleY", 0.7f, 1.1f, 1.0f);
-                AnimatorSet animSet = new AnimatorSet();
-                animSet.play(scaleX).with(scaleY);
-                animSet.setInterpolator(new BounceInterpolator());
-                animSet.setDuration(800).start();
-                animSet.addListener(new android.animation.AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(android.animation.Animator animation) {
-
-                    }
-                });
+                long delay = nativePriorTime - (System.currentTimeMillis() - adLoadStartTime);
+                adHandler.sendMessageDelayed(adHandler.obtainMessage(BANNER_AD_READY),delay );
                 AdLog.d("onAdLoaded ");
+            }
+        });
+    }
+
+    private void showBannerAd() {
+        adContainer.removeAllViews();
+        adContainer.setVisibility(View.VISIBLE);
+        expressAdView.setVisibility(View.VISIBLE);
+        adContainer.addView(expressAdView);
+        sponsorText.setVisibility(View.VISIBLE);
+        android.animation.ObjectAnimator scaleX = android.animation.ObjectAnimator.ofFloat(expressAdView, "scaleX", 0.7f, 1.1f, 1.0f);
+        android.animation.ObjectAnimator scaleY = android.animation.ObjectAnimator.ofFloat(expressAdView, "scaleY", 0.7f, 1.1f, 1.0f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleX).with(scaleY);
+        animSet.setInterpolator(new BounceInterpolator());
+        animSet.setDuration(800).start();
+        animSet.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+
             }
         });
     }

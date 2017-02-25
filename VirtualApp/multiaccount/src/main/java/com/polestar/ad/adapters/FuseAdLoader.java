@@ -80,7 +80,7 @@ public class FuseAdLoader implements IAdLoader {
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
         if ( num  < 0 || mNativeAdConfigList.size() == 0) {
-            AdLog.d("FuseAdLoader :" + "load num wrong: " + num);
+            AdLog.d("FuseAdLoader :" + mSlot + " load num wrong: " + num);
             if (listener != null) {
                 listener.onError("Wrong config");
             }
@@ -91,13 +91,13 @@ public class FuseAdLoader implements IAdLoader {
             currentLoadingIdx = 0;
             loadNextNativeAd();
         } else {
-            AdLog.d("Alread loading...");
+            AdLog.d(mSlot + " is already loading...");
         }
     }
 
     private void loadNextNativeAd() {
         if ( currentLoadingIdx >= mNativeAdConfigList.size()) {
-            AdLog.e("Tried to load all source, no fill. Index : " + currentLoadingIdx);
+            AdLog.e(mSlot + " tried to load all source, no fill. Index : " + currentLoadingIdx);
             if (mListener != null) {
                 mIsLoading = false;
                 mListener.onError("No Fill");
@@ -136,7 +136,7 @@ public class FuseAdLoader implements IAdLoader {
                 } else {
                     AdLog.e("Ad loaded but not put into cache");
                 }
-                AdLog.d("ad loaded " + ad.getAdType());
+                AdLog.d(mSlot + " ad loaded " + ad.getAdType());
                 if (ad.getCoverImageUrl() != null) {
                     AdLog.d("preload " + ad.getCoverImageUrl());
                     ImageLoader.getInstance().doPreLoad(mContext, ad.getCoverImageUrl());

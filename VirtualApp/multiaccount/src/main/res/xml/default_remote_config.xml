@@ -59,4 +59,12 @@
         <value>72</value>
         <!--<value>xhour</value>-->
     </entry>
+    <entry>
+        <key>applist_burst_load</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>applist_native_prior_time</key>
+        <value>1000</value>
+    </entry>
 </defaultsMap>
