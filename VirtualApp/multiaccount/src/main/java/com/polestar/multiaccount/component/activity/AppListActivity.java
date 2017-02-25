@@ -289,6 +289,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
                 }
             });
         } else {
+            adLoadStartTime = 0;
             if (!burstLoad) {
                 loadAdmobNativeExpress();
             }
@@ -332,6 +333,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             AdLog.d("Don't load : No admob banner view configured");
             return;
         }
+        MLogs.d("Applist loadAdmobNativeExpress");
         if (AdConstants.DEBUG) {
             String android_id = AdUtils.getAndroidID(this);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();

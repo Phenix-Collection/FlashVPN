@@ -8,6 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -87,12 +90,40 @@ public class HomeFragment extends BaseFragment {
     private NativeExpressAdView mAdmobExpressView;
     private View mLockSettingIcon;
 
+    private static boolean burstLoad = true;
+    private static long nativePriorTime = 2*1000;
+    private static final String CONFIG_HOME_BURST_LOAD = "home_burst_load";
+    private static final String CONFIG_HOME_NATIVE_PRIOR_TIME = "home_native_prior_time";
+    private long adLoadStartTime = 0;
+    private static final int NATIVE_AD_READY = 0;
+    private static final int BANNER_AD_READY = 1;
+    private Handler adHandler = new Handler(Looper.getMainLooper()){
+        private boolean adShowed = false;
+        @Override
+        public void handleMessage(Message msg) {
+            if (adShowed){
+                return;
+            }
+            adShowed = true;
+            switch (msg.what) {
+                case NATIVE_AD_READY:
+                    IAd ad = (IAd) msg.obj;
+                    inflateFbNativeAdView(ad);
+                    break;
+                case BANNER_AD_READY:
+                    showBannerAd();
+                    break;
+            }
+        }
+    };
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_home, null);
         mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
         mExplosionField = ExplosionField.attachToWindow(mActivity);
+        burstLoad = RemoteConfig.getBoolean(CONFIG_HOME_BURST_LOAD);
+        nativePriorTime = RemoteConfig.getLong(CONFIG_HOME_NATIVE_PRIOR_TIME);
         initView();
         initData();
         boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD);
@@ -337,27 +368,33 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                nativeAdContainer.removeAllViews();
-                mAdmobExpressView.setVisibility(View.VISIBLE);
-                nativeAdContainer.addView(mAdmobExpressView);
-                pkgGridAdapter.notifyDataSetChanged();
-                ObjectAnimator scaleX = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleX", 0.7f, 1.0f, 1.0f);
-                ObjectAnimator scaleY = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleY", 0.7f, 1.0f, 1.0f);
-                AnimatorSet animSet = new AnimatorSet();
-                animSet.play(scaleX).with(scaleY);
-                animSet.setInterpolator(new BounceInterpolator());
-                animSet.setDuration(800).start();
-                animSet.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-
-                    }
-                });
-                dismissLongClickGuide();
-                AdLog.d("onAdLoaded ");
+                long delay = nativePriorTime - (System.currentTimeMillis() - adLoadStartTime);
+                adHandler.sendMessageDelayed(adHandler.obtainMessage(BANNER_AD_READY),delay );
+                AdLog.d("on Banner AdLoaded ");
             }
         });
     }
+
+    private void showBannerAd(){
+        nativeAdContainer.removeAllViews();
+        mAdmobExpressView.setVisibility(View.VISIBLE);
+        nativeAdContainer.addView(mAdmobExpressView);
+        pkgGridAdapter.notifyDataSetChanged();
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleX", 0.7f, 1.0f, 1.0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleY", 0.7f, 1.0f, 1.0f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleX).with(scaleY);
+        animSet.setInterpolator(new BounceInterpolator());
+        animSet.setDuration(800).start();
+        animSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+        });
+        dismissLongClickGuide();
+    }
+
     private void inflateFbNativeAdView(IAd ad) {
         View adView = LayoutInflater.from(mActivity).inflate(R.layout.front_page_native_ad, null);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -485,6 +522,7 @@ public class HomeFragment extends BaseFragment {
         if (mAdmobExpressView == null) {
             return;
         }
+        MLogs.d("Home loadAdmobNativeExpress");
         if (AdConstants.DEBUG) {
             String android_id = AdUtils.getAndroidID(mActivity);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
@@ -503,13 +541,16 @@ public class HomeFragment extends BaseFragment {
             mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity());
             ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
+        if (burstLoad) {
+            loadAdmobNativeExpress();
+        }
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
                     if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
                             || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
-                        inflateFbNativeAdView(ad);
+                        adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
                     }
                     dismissLongClickGuide();
                 }
@@ -521,11 +562,17 @@ public class HomeFragment extends BaseFragment {
 
                 @Override
                 public void onError(String error) {
-                    loadAdmobNativeExpress();
+                    adLoadStartTime = 0;
+                    if (!burstLoad) {
+                        loadAdmobNativeExpress();
+                    }
                 }
             });
         } else {
-            loadAdmobNativeExpress();
+            adLoadStartTime = 0;
+            if (!burstLoad) {
+                loadAdmobNativeExpress();
+            }
         }
     }
 
