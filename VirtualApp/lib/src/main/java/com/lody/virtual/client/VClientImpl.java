@@ -140,7 +140,8 @@ public final class VClientImpl extends IVClient.Stub {
 
 	public void initProcess(IBinder token, int vuid) {
 		if (this.token != null) {
-			throw new IllegalStateException("Token is exist!");
+			Exception ex =  new IllegalStateException("Token is exist!");
+			VLog.logbug(TAG, VLog.getStackTraceString(ex));
 		}
 		this.token = token;
 		this.vuid = vuid;
