@@ -8,7 +8,7 @@ import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 
-import com.lody.virtual.helper.proto.AppSetting;
+import com.lody.virtual.remote.AppSetting;
 import com.lody.virtual.server.pm.VAppManagerService;
 
 public class AppAccountParser implements IAccountParser {

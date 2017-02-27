@@ -1,4 +1,4 @@
-package com.lody.virtual.helper.proto;
+package com.lody.virtual.remote;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageParser;

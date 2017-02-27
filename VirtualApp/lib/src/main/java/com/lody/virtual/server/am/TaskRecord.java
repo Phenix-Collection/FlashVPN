@@ -3,7 +3,7 @@ package com.lody.virtual.server.am;
 import android.content.ComponentName;
 import android.content.Intent;
 
-import com.lody.virtual.helper.proto.AppTaskInfo;
+import com.lody.virtual.remote.AppTaskInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;

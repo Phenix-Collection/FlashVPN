@@ -6,7 +6,7 @@ import android.content.Intent;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VActivityManager;
-import com.lody.virtual.helper.proto.InstallResult;
+import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.os.VUserHandle;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;

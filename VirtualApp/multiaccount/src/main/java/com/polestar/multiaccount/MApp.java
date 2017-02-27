@@ -15,7 +15,7 @@ import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.stub.StubManifest;
-import com.lody.virtual.helper.proto.InstallResult;
+import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.AdConstants;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;

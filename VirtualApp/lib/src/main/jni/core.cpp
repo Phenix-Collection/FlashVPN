@@ -66,7 +66,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
     jclass javaClass = env->FindClass(JAVA_CLASS);
     if (javaClass == NULL) {
-        LOGE("Error: Unable to find the IOHook class.");
+        LOGE("Error: Unable to find the NativeEngine class.");
         return JNI_ERR;
     }
     if (env->RegisterNatives(javaClass, gMethods, NELEM(gMethods)) < 0) {

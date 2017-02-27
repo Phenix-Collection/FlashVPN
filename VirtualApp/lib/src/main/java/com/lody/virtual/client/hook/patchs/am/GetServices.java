@@ -4,7 +4,7 @@ import android.app.ActivityManager;
 
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VActivityManager;
-import com.lody.virtual.helper.proto.VParceledListSlice;
+import com.lody.virtual.remote.VParceledListSlice;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
