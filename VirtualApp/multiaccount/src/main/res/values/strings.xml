@@ -49,7 +49,8 @@
     <string name="long_press_tips">Long press &amp; drag it to add shortcut on home screen or remove it.</string>
 
     <!-- notification -->
-    <string name="notification_decription">Enable to receive notification from this cloned application</string>
+    <string name="notification_decription">Enable or disable notifications from cloned application</string>
+    <string name="notification_detail_setting">Enable notification for app</string>
 
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
 

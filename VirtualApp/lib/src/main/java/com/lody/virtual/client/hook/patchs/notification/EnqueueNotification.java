@@ -3,6 +3,7 @@ package com.lody.virtual.client.hook.patchs.notification;
 import android.app.Notification;
 import android.os.Build;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VNotificationManager;
 import com.lody.virtual.server.notification.VNotificationManagerService;
@@ -25,6 +26,9 @@ import java.lang.reflect.Method;
 	public Object call(Object who, Method method, Object... args) throws Throwable {
         //enqueueNotification(pkg, id, notification, idOut);
 		String pkg = (String) args[0];
+		if (!VirtualCore.get().getComponentDelegate().isNotificationEnabled(pkg)){
+			return null;
+		}
 		int notificationIndex = ArrayUtils.indexOfFirst(args, Notification.class);
         int idIndex = ArrayUtils.indexOfFirst(args, Integer.class);
         int id = (int) args[idIndex];

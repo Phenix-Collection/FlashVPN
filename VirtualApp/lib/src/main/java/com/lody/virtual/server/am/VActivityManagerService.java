@@ -1030,7 +1030,8 @@ public class VActivityManagerService extends IActivityManager.Stub {
 												PendingResultData result) {
 		synchronized (this) {
 			ProcessRecord r = findProcessLocked(info.processName, vuid);
-			if (BROADCAST_NOT_STARTED_PKG && r == null) {
+			if (BROADCAST_NOT_STARTED_PKG && r == null
+					&& VirtualCore.get().getComponentDelegate().isNotificationEnabled(info.packageName)) {
 				VLog.d(TAG, "startProcess for " + intent.toString());
 				r = startProcessIfNeedLocked(info.processName, getUserId(vuid), info.packageName);
 			}

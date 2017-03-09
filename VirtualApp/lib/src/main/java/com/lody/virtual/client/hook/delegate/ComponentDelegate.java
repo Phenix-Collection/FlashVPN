@@ -33,6 +33,11 @@ public interface ComponentDelegate {
         public void onSendBroadcast(Intent intent) {
             // Empty
         }
+
+        @Override
+        public boolean isNotificationEnabled(String pkg) {
+            return false;
+        }
     };
 
     void beforeActivityCreate(Activity activity);
@@ -44,4 +49,6 @@ public interface ComponentDelegate {
     void beforeActivityDestroy(Activity activity);
 
     void onSendBroadcast(Intent intent);
+
+    boolean isNotificationEnabled(String pkg);
 }

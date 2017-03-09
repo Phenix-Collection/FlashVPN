@@ -73,6 +73,15 @@ public class NotificationActivity extends BaseActivity {
                 String pName = mContext.getPackageName();
                 boolean val = ((BlueSwitch) v).isChecked();
                 PreferencesUtils.putBoolean(mContext, AppConstants.KEY_SERVER_PUSH, val);
+                if (val) {
+                    mListView.setVisibility(View.VISIBLE);
+                } else {
+                    for (AppModel model: mClonedModels) {
+                        model.setNotificationEnable(false);
+                    }
+                    mNotificationAdapter.notifyDataSetChanged();
+                    mListView.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }

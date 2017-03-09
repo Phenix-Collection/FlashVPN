@@ -116,12 +116,17 @@ public class MApp extends Application {
 
                 }
             });
+            MComponentDelegate delegate = new MComponentDelegate();
+            delegate.init();
+            VirtualCore.get().setComponentDelegate(delegate);
         } else if (VirtualCore.get().isMainProcess()) {
 //            Once.initialise(this);
             installGms();
 
         } else if (VirtualCore.get().isVAppProcess()) {
-            VirtualCore.get().setComponentDelegate(new MComponentDelegate());
+            MComponentDelegate delegate = new MComponentDelegate();
+            delegate.init();
+            VirtualCore.get().setComponentDelegate(delegate);
             VirtualCore.get().setPhoneInfoDelegate(new MyPhoneInfoDelegate());
         }
 

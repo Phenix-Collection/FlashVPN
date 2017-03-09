@@ -24,7 +24,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="18dp"
                 android:paddingLeft="22dp"
-                android:text="@string/app_name"
+                android:text="@string/notifications"
                 android:textColor="@color/primary_dark_material_dark"
                 android:textSize="@dimen/title_bar_title_size"/>
 
@@ -53,10 +53,15 @@
 
         </RelativeLayout>
 
-        <View
-            android:id="@+id/empty_line"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="15dp"/>
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="22dp"
+            android:text="@string/notification_detail_setting"
+            android:textColor="@color/text_gray_light"
+            android:textSize="12sp" />
 
         <com.polestar.multiaccount.widgets.FixedListView
             android:id="@+id/switch_notifications_apps"

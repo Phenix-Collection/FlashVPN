@@ -43,7 +43,7 @@
     <string name="long_press_tips">Tekan lama dan tarik untuk menambahkan shortcut pada layar rumah atau menghapusnya.</string>
 
     <!-- notification -->
-    <string name="notification_decription">Memungkinkan untuk menerima pemberitahuan dari aplikasi kloning ini</string>
+    <string name="notification_decription">Mengaktifkan atau menonaktifkan notifikasi dari aplikasi kloning untuk menerima pemberitahuan dari aplikasi kloning ini</string>
 
     <string name="share_with_friends_tip">Saya senang untuk mengundang Anda untuk menggunakan ini indah aplikasi %s. Anda dapat men-download di sini:</string>
 
@@ -166,4 +166,5 @@
         <item>Menyesuaikan pertanyaan</item>
     </string-array>
     <string name="congratulations">Selamat!</string>
+    <string name="notification_detail_setting">Aktifkan notifikasi untuk aplikasi</string>
 </resources>

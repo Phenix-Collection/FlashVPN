@@ -333,10 +333,10 @@ public final class VClientImpl extends IVClient.Stub {
 		} catch (Exception e) {
             if (!mInstrumentation.onException(mInitialApplication, e)) {
 				throw new RuntimeException(
-                        "Unable to create application " + mInitialApplication == null? "null app" : mInitialApplication.getClass().getName()
-								+ ": " + e.toString(), e);
+                        "Unable to create application : " + e.toString(), e);
 			}
 		}
+		VLog.d(TAG, "bindApplicationNoCheck OK " + packageName + " proc: " + processName);
 		VActivityManager.get().appDoneExecuting();
 	}
 

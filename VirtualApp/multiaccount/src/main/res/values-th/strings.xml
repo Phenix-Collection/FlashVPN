@@ -43,7 +43,7 @@
     <string name="long_press_tips">ลองกดและลากไปยังเพิ่มทางลัดบนหน้าจอหลักหรือลบ</string>
 
     <!-- notification -->
-    <string name="notification_decription">เปิดใช้งานเพื่อรับการแจ้งเตือนจากโปรแกรมโคลนนี้</string>
+    <string name="notification_decription">เปิดหรือปิดการแจ้งเตือนจากแอปพลิเคชันโคลน</string>
 
     <string name="share_with_friends_tip">ฉันดีใจที่จะเชิญชวนให้คุณใช้แอพลิเคชันที่ยอดเยี่ยมนี้ %s คุณสามารถดาวน์โหลดได้ที่นี่:</string>
 
@@ -166,4 +166,5 @@
         <item>ปรับแต่งคำถาม</item>
     </string-array>
     <string name="congratulations">ยินดีด้วยครับ</string>
+    <string name="notification_detail_setting">เปิดใช้งานการแจ้งเตือนสำหรับแอป</string>
 </resources>

@@ -43,7 +43,7 @@
     <string name="long_press_tips">Imprensa longa &amp; arraste-o para adicionar um atalho na tela inicial ou remova-o.</string>
 
     <!-- notification -->
-    <string name="notification_decription">Ativar para receber notificações deste aplicativo clonado</string>
+    <string name="notification_decription">Ativar ou desativar notificações do aplicativo clonado</string>
 
     <string name="share_with_friends_tip">Estou feliz por convidá-lo a usar este maravilhoso aplicativo %s. Você pode baixá-lo aqui:</string>
 
@@ -166,4 +166,5 @@
         <item>Personalizar perguntas</item>
     </string-array>
     <string name="congratulations">Parabéns!</string>
+    <string name="notification_detail_setting">Ativar notificação para a aplicação</string>
 </resources>

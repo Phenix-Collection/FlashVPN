@@ -44,7 +44,7 @@
     <string name="long_press_tips">الضغط لفترة طويلة واسحبه لإضافة اختصار على الشاشة الرئيسية أو إزالته.</string>
 
     <!-- notification -->
-    <string name="notification_decription">تمكين لتلقي إخطارا من هذا التطبيق المستنسخة</string>
+    <string name="notification_decription">تمكين أو تعطيل إخطارات من تطبيق المستنسخة</string>
 
     <string name="share_with_friends_tip">ويسرني أن أدعوكم لاستخدام هذا التطبيق الرائع. إنه لأمر مدهش، ويمكن دعم العديد من تعاطيه على الانترنت في الوقت نفسه. يمكنك تحميله من هنا:</string>
 
@@ -165,4 +165,5 @@
         <item>تخصيص الأسئلة</item>
     </string-array>
     <string name="congratulations">مبروك</string>
+    <string name="notification_detail_setting">تفعيل التبليغ عن التطبيق</string>
 </resources>
