@@ -233,15 +233,15 @@ public class VAppManagerService extends IAppManager.Stub {
 		return false;
 	}
 
-	public boolean uninstallApp(String pkg) {
+	public boolean 	uninstallApp(String pkg) {
 		synchronized (PackageCache.sPackageCaches) {
 			AppSetting setting = findAppInfo(pkg);
 			if (setting != null) {
 				try {
                     BroadcastSystem.get().stopApp(pkg);
 					VActivityManagerService.get().killAppByPkg(pkg, VUserHandle.USER_ALL);
-					FileUtils.deleteDir(VEnvironment.getDataAppPackageDirectory(pkg));
                     VEnvironment.getPackageResourcePath(pkg).delete();
+					FileUtils.deleteDir(VEnvironment.getDataAppPackageDirectory(pkg));
                     VEnvironment.getOdexFile(pkg).delete();
 					for (int userId : VUserManagerService.get().getUserIds()) {
 						FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(userId, pkg));
