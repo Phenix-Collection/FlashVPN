@@ -1,9 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/title_bar_bg</item>
+        <item name="colorPrimaryDark">@color/main_blue</item>
+        <item name="colorAccent">@color/title_bar_bg</item>
         <item name="android:listViewStyle">@style/CustomListViewStyle</item>
         <item name="android:gridViewStyle">@style/CustomListViewStyle</item>
         <item name="android:screenOrientation">portrait</item>
@@ -138,4 +138,8 @@
         <!--<attr name="switchOff" format="reference"/>-->
     <!--</declare-styleable>-->
 
+    <style name="AppTheme2" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item></style>
 </resources>

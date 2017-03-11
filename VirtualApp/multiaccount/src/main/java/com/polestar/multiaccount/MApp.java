@@ -34,6 +34,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
+
+import com.mobvista.msdk.MobVistaConstans;
+import com.mobvista.msdk.MobVistaSDK;
+import com.mobvista.msdk.out.MobVistaSDKFactory;
 
 public class MApp extends Application {
 
@@ -122,6 +127,17 @@ public class MApp extends Application {
         } else if (VirtualCore.get().isMainProcess()) {
 //            Once.initialise(this);
             installGms();
+            MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
+            // test appId and appKey
+            String appId = "33047";
+            String appKey = "e4a6e0bf98078d3fa81ca6d315c28123";
+            Map<String, String> map = sdk.getMVConfigurationMap(appId, appKey);
+
+            // if you modify applicationId, please add the following attributes,
+            // otherwise it will crash
+            // map.put(MobVistaConstans.PACKAGE_NAME_MANIFEST, "your AndroidManifest
+            // package value");
+            sdk.init(map, this);
 
         } else if (VirtualCore.get().isVAppProcess()) {
             MComponentDelegate delegate = new MComponentDelegate();

@@ -58,38 +58,35 @@
                         android:layout_alignParentRight="true"
                         android:layout_height="23dp" />
                 </RelativeLayout>
-                <com.polestar.multiaccount.widgets.GifView
-                    android:id="@+id/gifView"
-                    android:layout_width="23dp"
-                    android:layout_marginTop="17dp"
-                    android:layout_marginRight="5dp"
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="56dp"
+                    android:id="@+id/icon_ad"
                     android:layout_toLeftOf="@id/lock_setting"
-
-                    android:layout_height="23dp" />
-                <ImageView
-                    android:id="@+id/gift_icon"
-                    android:layout_width="23dp"
-                    android:layout_marginTop="17dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_toLeftOf="@id/lock_setting"
-                    android:background="@drawable/selector_setting_theme2"
-                    android:layout_height="23dp" />
-
-
+                    android:layout_alignParentTop="true"
+                    android:onClick="onIconAdClick"
+                    android:background="@drawable/selector_setting_theme2">
+                    <ImageView
+                        android:id="@+id/gift_icon"
+                        android:layout_width="23dp"
+                        android:layout_marginTop="17dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_height="23dp"/>
+                    <RelativeLayout
+                        android:id="@+id/wall_button"
+                        android:layout_width="28dp"
+                        android:layout_marginTop="17dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_height="23dp" />
+                </RelativeLayout>
             </RelativeLayout>
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/layout_setting" >
-                <!--<com.google.android.gms.ads.NativeExpressAdView-->
-                    <!--android:id="@+id/ab_native_express"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@color/light_gray"-->
-                    <!--ads:adUnitId="ca-app-pub-5490912237269284/2431070657"-->
-                    <!--ads:adSize="360x320">-->
-                <!--</com.google.android.gms.ads.NativeExpressAdView>-->
                 <FrameLayout
                     android:id="@+id/frag_content"
                     android:layout_width="match_parent"

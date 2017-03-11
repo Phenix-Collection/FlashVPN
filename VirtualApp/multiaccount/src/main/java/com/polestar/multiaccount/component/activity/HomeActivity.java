@@ -12,13 +12,17 @@ import android.os.Looper;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mobvista.msdk.MobVistaConstans;
+import com.mobvista.msdk.MobVistaSDK;
+import com.mobvista.msdk.out.MobVistaSDKFactory;
+import com.mobvista.msdk.out.MvWallHandler;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -31,27 +35,24 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
+import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.widgets.UpDownDialog;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.RenderScriptManager;
-import com.polestar.multiaccount.utils.UpdateSDKManager;
 import com.polestar.multiaccount.widgets.GifView;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.RunnableFuture;
-
-import mirror.android.providers.Settings;
 
 public class HomeActivity extends BaseActivity {
 
-    private ViewGroup contentLayout;
-    private View forgroundLayout;
     private HomeFragment mHomeFragment;
     private DrawerLayout drawer;
     private ListView navigationList;
@@ -73,7 +74,14 @@ public class HomeActivity extends BaseActivity {
 
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
+    private static final String CONFIG_APP_WALL_PERCENTAGE = "home_gift_offerwall_percentage";
+    private boolean showAppWall;
+    private static final String WALL_UNIT_ID = "8442";
+
     private String cloningPackage;
+    private RelativeLayout iconAdLayout;
+    private RelativeLayout wallButtonLayout;
+    private IAd interstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,20 +89,23 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
         initView();
         AppListUtils.getInstance(this); // init AppListUtils
+        long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);
+        int random = new Random().nextInt(100);
+        showAppWall = random < wallPercent;
+        //showAppWall = true;
     }
 
     private void initView() {
-        contentLayout = (ViewGroup) findViewById(R.id.content_home);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         navigationList = (ListView) findViewById(R.id.navigation_list);
         navigationLayout = findViewById(R.id.navigation_layout);
         appNameTv = (TextView) findViewById(R.id.app_name);
-        forgroundLayout = findViewById(R.id.blur_forground);
-        giftGifView = (GifView) findViewById(R.id.gifView);
         giftIconView = (ImageView) findViewById(R.id.gift_icon);
         giftIconView.setVisibility(View.GONE);
-        giftGifView.setVisibility(View.GONE);
+
+        iconAdLayout = (RelativeLayout)findViewById(R.id.icon_ad);
+        wallButtonLayout = (RelativeLayout)findViewById(R.id.wall_button);
 
         navigationList.setAdapter(new NavigationAdapter(this));
 //        int width = DisplayUtils.getScreenWidth(this);
@@ -136,13 +147,58 @@ public class HomeActivity extends BaseActivity {
         });
         mHomeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mHomeFragment).commitAllowingStateLoss();
-        UpdateCheck();
     }
 
+    private void preloadAppWall() {
+        MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
+        Map<String,Object> preloadMap = new HashMap<String,Object>();
+        preloadMap.put(MobVistaConstans.PROPERTIES_LAYOUT_TYPE, MobVistaConstans.LAYOUT_APPWALL);
+        preloadMap.put(MobVistaConstans.PROPERTIES_UNIT_ID, WALL_UNIT_ID);
+        sdk.preload(preloadMap);
+    }
+
+    private MvWallHandler mvHandler;
+    public void loadMVWallHandler(){
+        MLogs.d("loadMVWallHandler");
+        wallButtonLayout.setVisibility(View.VISIBLE);
+        giftIconView.setVisibility(View.GONE);
+        Map<String,Object> properties = MvWallHandler.getWallProperties(WALL_UNIT_ID);
+        properties.put(MobVistaConstans.PROPERTIES_WALL_STATUS_COLOR, R.color.theme_color2);
+        properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT,  getString(R.string.appwall_title));
+        properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_TYPEFACE,  MobVistaConstans.TITLE_TYPEFACE_DEFAULT_BOLD);
+        properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_SIZE, DisplayUtils.dip2px(this,20));
+        properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_BACKGROUND_COLOR, R.color.theme_color2);
+        mvHandler = new MvWallHandler(properties, this, wallButtonLayout);//nat为点击事件的vg，请确保改vg的点击事件不被拦截
+        //customer entry layout begin 该部分代码可以不用
+        View view = getLayoutInflater().inflate(R.layout.mv_wall_button, null);
+        view.findViewById(R.id.imageview).setTag(MobVistaConstans.WALL_ENTRY_ID_IMAGEVIEW_IMAGE);
+        view.findViewById(R.id.newtip_area).setTag(MobVistaConstans.WALL_ENTRY_ID_VIEWGROUP_NEWTIP);
+        mvHandler.setHandlerCustomerLayout(view);
+        //customer entry layout end */
+        mvHandler.load();
+    }
+
+    public void openWall(){
+        try {
+            Class<?> aClass = Class
+                    .forName("com.mobvista.msdk.shell.MVActivity");
+            Intent intent = new Intent(this, aClass);
+            intent.putExtra(MobVistaConstans.PROPERTIES_UNIT_ID, WALL_UNIT_ID);
+            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_STATUS_COLOR, R.color.theme_color2);
+            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT,  getString(R.string.appwall_title));
+            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_TYPEFACE,  MobVistaConstans.TITLE_TYPEFACE_DEFAULT_BOLD);
+            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_SIZE, DisplayUtils.dip2px(this,20));
+            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_BACKGROUND_COLOR, R.color.theme_color2);
+            this.startActivity(intent);
+        } catch (Exception e) {
+            MLogs.e("MVActivity", e.toString());
+        }
+    }
     private void loadAd() {
         MLogs.e("start INTERSTITIAL loadAd");
         isInterstitialAdClicked = false;
         isInterstitialAdLoaded = false;
+        interstitialAd = null;
         adLoader = FuseAdLoader.get(SLOT_HOME_GIFT_INTERSTITIAL, this);
         //adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
         if (adLoader.hasValidAdSource()) {
@@ -176,15 +232,7 @@ public class HomeActivity extends BaseActivity {
                     animSet.play(scaleX).with(scaleY);
                     animSet.setInterpolator(new BounceInterpolator());
                     animSet.setDuration(800).start();
-                    giftGifView.setVisibility(View.GONE);
-                    giftIconView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            isInterstitialAdClicked = true;
-                            MTAManager.homeGiftClick(HomeActivity.this, ad.getAdType());
-                            ad.show();
-                        }
-                    });
+                    interstitialAd = ad;
                 }
                 @Override
                 public void onAdListLoaded(List<IAd> ads) {
@@ -192,6 +240,8 @@ public class HomeActivity extends BaseActivity {
                 }
                 @Override
                 public void onError(String error) {
+                    loadMVWallHandler();
+                    showAppWall = true;
                     MLogs.e(error);
                 }
             });
@@ -202,10 +252,17 @@ public class HomeActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
-        if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
-            giftGifView.setVisibility(View.GONE);
+        preloadAppWall();
+        if (showAppWall) {
             giftIconView.setVisibility(View.GONE);
-            loadAd();
+            wallButtonLayout.setVisibility(View.GONE);
+            loadMVWallHandler();
+        } else{
+            if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
+                giftIconView.setVisibility(View.GONE);
+                wallButtonLayout.setVisibility(View.GONE);
+                loadAd();
+            }
         }
     }
 
@@ -303,7 +360,17 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
-
+    public void onIconAdClick(View view) {
+        MLogs.d("onIconAdClick showAppWall: " + showAppWall);
+        if (showAppWall) {
+            openWall();
+        } else {
+            if (interstitialAd != null) {
+                interstitialAd.show();
+                isInterstitialAdClicked = true;
+            }
+        }
+    }
 
     private final static String QUIT_RATE_RANDOM = "quit_rating_random";
     private final static String QUIT_RATE_INTERVAL = "quit_rating_interval";
@@ -512,13 +579,5 @@ public class HomeActivity extends BaseActivity {
         return false;
     }
 
-    private void UpdateCheck() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                UpdateSDKManager.init(HomeActivity.this);
-            }
-        }).start();
-    }
 
 }

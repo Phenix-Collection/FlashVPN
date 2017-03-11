@@ -182,3 +182,12 @@ public static java.lang.String TABLENAME;
 -keep	class	com.facebook.ads.NativeAd
 -keep	class   com.google.android.gms.ads.formats.NativeContentAd
 -keepclassmembernames class com.duapps.ad.** { *;}
+
+#Mobvista
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.mobvista.** {*; }
+-keep interface com.mobvista.** {*; }
+-keep class android.support.v4.** { *; }
+-dontwarn com.mobvista.**
+-keep class **.R$* { public static final int mobvista*; }
