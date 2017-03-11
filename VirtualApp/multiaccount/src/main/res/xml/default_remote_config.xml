@@ -15,8 +15,8 @@
     </entry>
 
     <entry>
-        <key>home_gift_offerwall_percentage</key>
-        <value>5</value>
+        <key>home_appwall_percentage</key>
+        <value>50</value>
     </entry>
     <entry>
         <key>slot_home_gift_interstitial</key>

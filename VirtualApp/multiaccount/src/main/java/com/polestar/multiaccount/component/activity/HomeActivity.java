@@ -74,7 +74,7 @@ public class HomeActivity extends BaseActivity {
 
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
-    private static final String CONFIG_APP_WALL_PERCENTAGE = "home_gift_offerwall_percentage";
+    private static final String CONFIG_APP_WALL_PERCENTAGE = "home_appwall_percentage";
     private boolean showAppWall;
     private static final String WALL_UNIT_ID = "8442";
 
