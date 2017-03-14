@@ -203,9 +203,9 @@ new_bridge_cameraNativeSetupFunc(const void **args, void *pResult, const void *m
     // args[0] = this
     LOGE("PLIB_NATIVE method type %d", gOffset.cameraMethodType);
     if (gOffset.cameraMethodType == 1) {
-        args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
+        args[3] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
     } else if (gOffset.cameraMethodType == 2) {
-        args[5] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
+        args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
     }
     gOffset.orig_cameraNativeSetup_dvm(args, pResult, method, self);
 }
