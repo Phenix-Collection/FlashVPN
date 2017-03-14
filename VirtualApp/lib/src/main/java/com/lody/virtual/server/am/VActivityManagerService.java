@@ -719,6 +719,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			killAllApps();
 		}
 		ApplicationInfo info = VPackageManagerService.get().getApplicationInfo(packageName, 0, userId);
+		if (info == null) {
+			return null;
+		}
 		AppSetting setting = VAppManagerService.get().findAppInfo(info.packageName);
 		int uid = VUserHandle.getUid(userId, setting.appId);
 		ProcessRecord app = mProcessNames.get(processName, uid);
