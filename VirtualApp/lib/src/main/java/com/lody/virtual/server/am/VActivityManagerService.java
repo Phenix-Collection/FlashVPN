@@ -259,7 +259,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	private ServiceRecord findRecordLocked(int userId, ServiceInfo serviceInfo) {
 		synchronized (mHistory) {
 			for (ServiceRecord r : mHistory) {
-				if (r.process.userId == userId && ComponentUtils.isSameComponent(serviceInfo, r.serviceInfo)) {
+				if (r != null && r.process.userId == userId && ComponentUtils.isSameComponent(serviceInfo, r.serviceInfo)) {
 					return r;
 				}
 			}
