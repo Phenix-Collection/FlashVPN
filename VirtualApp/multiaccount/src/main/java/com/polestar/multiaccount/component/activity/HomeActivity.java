@@ -93,6 +93,9 @@ public class HomeActivity extends BaseActivity {
         long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);
         int random = new Random().nextInt(100);
         showAppWall = random < wallPercent;
+        if(!showAppWall) {
+            MLogs.d("Config not show app wall! rate: " + wallPercent);
+        }
         //showAppWall = true;
     }
 

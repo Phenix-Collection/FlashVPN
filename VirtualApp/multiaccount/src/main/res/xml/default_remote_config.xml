@@ -75,4 +75,12 @@
         <key>home_native_prior_time</key>
         <value>2000</value>
     </entry>
+    <entry>
+        <key>home_show_lucky_rate</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>home_show_lucky_gate</key>
+        <value>1</value>
+    </entry>
 </defaultsMap>

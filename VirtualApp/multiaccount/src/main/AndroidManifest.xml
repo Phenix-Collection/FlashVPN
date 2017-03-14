@@ -148,6 +148,9 @@
             android:configChanges="keyboard|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme2" />
+        <activity
+            android:name="com.mobvista.msdk.interstitial.view.MVInterstitialActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 
