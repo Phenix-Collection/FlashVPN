@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
@@ -169,6 +170,13 @@ public class HomeActivity extends BaseActivity {
         properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_SIZE, DisplayUtils.dip2px(this,20));
         properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_BACKGROUND_COLOR, R.color.theme_color2);
         mvHandler = new MvWallHandler(properties, this, wallButtonLayout);//nat为点击事件的vg，请确保改vg的点击事件不被拦截
+        wallButtonLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                MTAManager.homeGiftClick(HomeActivity.this, "mv_app_wall");
+                return false;
+            }
+        });
         //customer entry layout begin 该部分代码可以不用
         View view = getLayoutInflater().inflate(R.layout.mv_wall_button, null);
         view.findViewById(R.id.imageview).setTag(MobVistaConstans.WALL_ENTRY_ID_IMAGEVIEW_IMAGE);
@@ -364,9 +372,11 @@ public class HomeActivity extends BaseActivity {
         MLogs.d("onIconAdClick showAppWall: " + showAppWall);
         if (showAppWall) {
             openWall();
+            MTAManager.homeGiftClick(this, "mv_app_wall");
         } else {
             if (interstitialAd != null) {
                 interstitialAd.show();
+                MTAManager.homeGiftClick(this, interstitialAd.getAdType());
                 isInterstitialAdClicked = true;
             }
         }
