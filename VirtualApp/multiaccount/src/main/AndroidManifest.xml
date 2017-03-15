@@ -149,9 +149,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme2" />
         <activity
-            android:name="com.mobvista.msdk.interstitial.view.MVInterstitialActivity"
-            android:screenOrientation="portrait" />
-
+            android:name="com.polestar.multiaccount.component.activity.NativeInterstitialActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

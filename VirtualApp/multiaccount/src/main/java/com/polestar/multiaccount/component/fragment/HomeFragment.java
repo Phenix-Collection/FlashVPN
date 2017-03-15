@@ -46,6 +46,7 @@ import com.polestar.multiaccount.component.BaseFragment;
 import com.polestar.multiaccount.component.activity.AppListActivity;
 import com.polestar.multiaccount.component.activity.HomeActivity;
 import com.polestar.multiaccount.component.activity.LockSettingsActivity;
+import com.polestar.multiaccount.component.activity.NativeInterstitialActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
@@ -106,8 +107,6 @@ public class HomeFragment extends BaseFragment {
     private static final int NATIVE_AD_READY = 0;
     private static final int BANNER_AD_READY = 1;
     private boolean showLucky;
-    private boolean isLuckyReady;
-    private MVInterstitialHandler interstitialHandler;
 
     private Handler adHandler = new Handler(Looper.getMainLooper()){
         private boolean adShowed = false;
@@ -131,11 +130,6 @@ public class HomeFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
-        showLucky = new Random().nextInt(100) < luckyRate ;
-        if (!showLucky) {
-            MLogs.d("Not show lucky. Rate: " + luckyRate);
-        }
         contentView = inflater.inflate(R.layout.fragment_home, null);
         mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
         mExplosionField = ExplosionField.attachToWindow(mActivity);
@@ -157,73 +151,6 @@ public class HomeFragment extends BaseFragment {
         return contentView;
     }
 
-    private void loadLuckyAd() {
-        MLogs.d("load lucky ad");
-        if (interstitialHandler == null) {
-            HashMap<String, Object> hashMap = new HashMap<String, Object>();
-            //设置广告位ID 必填
-            hashMap.put(MobVistaConstans.PROPERTIES_UNIT_ID, "8914");
-            interstitialHandler = new MVInterstitialHandler(mActivity, hashMap);
-
-
-            interstitialHandler.setInterstitialListener(new InterstitialListener() {
-                /**
-                 * 当Interstitial显示成功后回调
-                 */
-                @Override
-                public void onInterstitialShowSuccess() {
-                    MLogs.e("onInterstitialShowSuccess");
-                }
-
-                /**
-                 * 当Interstitial显示错误后回调
-                 *
-                 * @prams errorMsg 错误消息
-                 */
-                @Override
-                public void onInterstitialShowFail(String errorMsg) {
-                    MLogs.e("onInterstitialShowFail errorMsg:" + errorMsg);
-                }
-
-                /**
-                 * 当Interstitial广告加载成功后回调
-                 */
-                @Override
-                public void onInterstitialLoadSuccess() {
-                    MLogs.e("onInterstitialLoadSuccess");
-                    isLuckyReady = true;
-                    pkgGridAdapter.notifyDataSetChanged();
-                }
-
-                /**
-                 * 当Interstitial 广告加载成功后回调
-                 *
-                 * @prams errorMsg 错误消息
-                 */
-                @Override
-                public void onInterstitialLoadFail(String errorMsg) {
-                    MLogs.e("onInterstitialLoadFail errorMsg:" + errorMsg);
-                }
-
-                /**
-                 * 当Interstitial关闭后回调
-                 */
-                @Override
-                public void onInterstitialClosed() {
-                    MLogs.e("onInterstitialClosed");
-                }
-
-                /**
-                 * 当Interstitial广告被点击后回调
-                 */
-                @Override
-                public void onInterstitialAdClick() {
-                    MLogs.e("onInterstitialAdClick");
-                }
-            });
-        }
-        interstitialHandler.preload();
-    }
     DragController.DragListener mDragListener = new DragController.DragListener() {
         @Override
         public void onDragStart(DragSource source, Object info, int dragAction) {
@@ -281,7 +208,7 @@ public class HomeFragment extends BaseFragment {
         @Override
         public int getCount() {
             int size = appInfos == null ? 0 : appInfos.size();
-            if (isLuckyReady && appInfos.size() >= RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE)) {
+            if (showLucky) {
                 size ++;
             }
             if ( size < 15 ) {
@@ -326,8 +253,7 @@ public class HomeFragment extends BaseFragment {
                 }
                 appName.setText(appModel.getName());
             } else {
-                if (isLuckyReady && i == appInfos.size()
-                        && appInfos.size() >= RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE)) {
+                if (showLucky && i == appInfos.size()) {
                     appIcon.setImageResource(R.drawable.icon_feel_lucky);
                     appName.setText(R.string.feel_lucky);
                     appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
@@ -384,10 +310,10 @@ public class HomeFragment extends BaseFragment {
                         },100);
                     }
                 }else{
-                    if(isLuckyReady && interstitialHandler!=null && i == appInfos.size()
-                            && appInfos.size() >= RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE)){
+                    if(showLucky && i == appInfos.size()){
                         MLogs.d("Show lucky");
-                        interstitialHandler.show();
+                        Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
+                        startActivity(intent);
                         MTAManager.homeGiftClick(mActivity, "lucky");
                     }
                 }
@@ -403,10 +329,10 @@ public class HomeFragment extends BaseFragment {
                     mDragController.startDrag(iv, iv, pkgGridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
                     return true;
                 } else {
-                    if(isLuckyReady && interstitialHandler!=null && i == appInfos.size()
-                            && appInfos.size() >= RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE)){
+                    if(showLucky && i == appInfos.size()){
                         MLogs.d("Show lucky");
-                        interstitialHandler.show();
+                        Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
+                        startActivity(intent);
                         MTAManager.homeGiftClick(mActivity, "lucky");
                     }
                     return  false;
@@ -673,9 +599,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (showLucky) {
-            loadLuckyAd();
-        }
         pkgGridView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -720,6 +643,13 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onLoaded(List<AppModel> clonedApp) {
                 appInfos = clonedApp;
+                MLogs.d("onLoaded applist");
+                long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
+                long gate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE);
+                showLucky = appInfos.size() >= gate && new Random().nextInt(100) < luckyRate ;
+                if (!showLucky) {
+                    MLogs.d("Not show lucky. Rate: " + luckyRate);
+                }
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
                 }
