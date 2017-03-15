@@ -388,6 +388,7 @@ public class HomeFragment extends BaseFragment {
                             && appInfos.size() >= RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE)){
                         MLogs.d("Show lucky");
                         interstitialHandler.show();
+                        MTAManager.homeGiftClick(mActivity, "lucky");
                     }
                 }
             }
@@ -406,6 +407,7 @@ public class HomeFragment extends BaseFragment {
                             && appInfos.size() >= RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE)){
                         MLogs.d("Show lucky");
                         interstitialHandler.show();
+                        MTAManager.homeGiftClick(mActivity, "lucky");
                     }
                     return  false;
                 }
