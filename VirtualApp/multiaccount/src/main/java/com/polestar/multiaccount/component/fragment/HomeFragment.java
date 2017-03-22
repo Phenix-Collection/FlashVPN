@@ -616,6 +616,9 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         }, 1500);
+        if (pkgGridAdapter != null) {
+            pkgGridAdapter.notifyDataSetChanged();
+        }
     }
 
     private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
