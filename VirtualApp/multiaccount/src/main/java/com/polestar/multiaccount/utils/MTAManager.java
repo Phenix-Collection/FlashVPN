@@ -61,6 +61,7 @@ public class MTAManager {
     public static void homeGiftClick(Context context, String adSource) {
         Properties prop = new Properties();
         prop.setProperty("ad_source", adSource);
+        MLogs.d("home_gift_click: " + adSource);
         StatService.trackCustomKVEvent(context, "home_gift_click", prop);
     }
 

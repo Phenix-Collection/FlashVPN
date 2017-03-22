@@ -162,10 +162,12 @@ public class HomeActivity extends BaseActivity {
     }
 
     private MvWallHandler mvHandler;
+    private boolean wallClickReported = false;
     public void loadMVWallHandler(){
         MLogs.d("loadMVWallHandler");
         wallButtonLayout.setVisibility(View.VISIBLE);
         giftIconView.setVisibility(View.GONE);
+        wallClickReported = false;
         Map<String,Object> properties = MvWallHandler.getWallProperties(WALL_UNIT_ID);
         properties.put(MobVistaConstans.PROPERTIES_WALL_STATUS_COLOR, R.color.theme_color2);
         properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT,  getString(R.string.appwall_title));
@@ -176,7 +178,10 @@ public class HomeActivity extends BaseActivity {
         wallButtonLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                MTAManager.homeGiftClick(HomeActivity.this, "mv_app_wall");
+                if (!wallClickReported) {
+                    MTAManager.homeGiftClick(HomeActivity.this, "mv_app_wall");
+                }
+                wallClickReported = true;
                 return false;
             }
         });
