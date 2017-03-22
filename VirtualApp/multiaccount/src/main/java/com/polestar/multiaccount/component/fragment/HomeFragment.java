@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +32,13 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.mobvista.msdk.MobVistaConstans;
+import com.mobvista.msdk.MobVistaSDK;
+import com.mobvista.msdk.out.Campaign;
+import com.mobvista.msdk.out.Frame;
 import com.mobvista.msdk.out.InterstitialListener;
 import com.mobvista.msdk.out.MVInterstitialHandler;
+import com.mobvista.msdk.out.MobVistaSDKFactory;
+import com.mobvista.msdk.out.MvNativeHandler;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
@@ -75,6 +81,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -107,6 +114,8 @@ public class HomeFragment extends BaseFragment {
     private static final int NATIVE_AD_READY = 0;
     private static final int BANNER_AD_READY = 1;
     private boolean showLucky;
+    private MvNativeHandler mvNativeHandler;
+    public static String UNIT_ID = "8439";
 
     private Handler adHandler = new Handler(Looper.getMainLooper()){
         private boolean adShowed = false;
@@ -140,9 +149,13 @@ public class HomeFragment extends BaseFragment {
         boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD);
         MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
         headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
-        if (showHeaderAd && headerNativeAdConfigs.size() > 0 ) {
-            initAdmobBannerView();
-            loadHeadNativeAd();
+        if (showHeaderAd) {
+            if (RemoteConfig.getBoolean(RemoteConfig.CONFIG_USE_MV_HOME_NATIVE)) {
+                mvLoadNative();
+            } else if (headerNativeAdConfigs.size() > 0) {
+                initAdmobBannerView();
+                loadHeadNativeAd();
+            }
         }
         mDragController = new DragController(mActivity);
         mDragController.setDragListener(mDragListener);
@@ -554,6 +567,77 @@ public class HomeFragment extends BaseFragment {
         } else {
             mAdmobExpressView.loadAd(new AdRequest.Builder().build());
         }
+    }
+
+    private void inflateMvNativeAd(List<Campaign> campaigns ){
+        if (campaigns != null && campaigns.size() > 0) {
+            Campaign campaign = campaigns.get(0);
+            View adView = LayoutInflater.from(mActivity).inflate(R.layout.front_page_native_ad, null);
+            if (!TextUtils.isEmpty(campaign.getIconUrl())) {
+                BasicLazyLoadImageView iconView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_icon_image);
+                iconView.setDefaultResource(0);
+                iconView.requestDisplayURL(campaign.getIconUrl());
+            }
+            if (!TextUtils.isEmpty(campaign.getImageUrl())) {
+                BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
+                coverView.setDefaultResource(0);
+                coverView.requestDisplayURL(campaign.getImageUrl());
+            }
+
+            TextView titleView = (TextView) adView.findViewById(R.id.ad_title);
+            titleView.setText(campaign.getAppName() + "");
+            TextView subtitleView = (TextView) adView.findViewById(R.id.ad_subtitle_text);
+            subtitleView.setText(campaign.getAppDesc() + "");
+
+            TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
+            ctaView.setText(campaign.getAdCall());
+            nativeAdContainer.removeAllViews();
+            nativeAdContainer.addView(adView);
+            mvNativeHandler.registerView(nativeAdContainer, campaign);
+            pkgGridAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void mvLoadNative() {
+        MLogs.d("MV mvLoadNative");
+        Map<String, Object> properties = MvNativeHandler.getNativeProperties(UNIT_ID);
+        mvNativeHandler = new MvNativeHandler(properties, mActivity);
+        mvNativeHandler.addTemplate(new MvNativeHandler.Template(MobVistaConstans.TEMPLATE_BIG_IMG, 1));
+        mvNativeHandler.setAdListener(new MvNativeHandler.NativeAdListener() {
+
+            @Override
+            public void onAdLoaded(List<Campaign> campaigns, int template) {
+                inflateMvNativeAd(campaigns);
+                preloadNative();
+            }
+
+            @Override
+            public void onAdLoadError(String message) {
+                MLogs.e( "MV onAdLoadError:" + message);
+            }
+
+            @Override
+            public void onAdFramesLoaded(List<Frame> list) {
+
+            }
+
+            @Override
+            public void onAdClick(Campaign campaign) {
+            }
+        });
+        mvNativeHandler.load();
+    }
+
+    public void preloadNative() {
+        MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
+        Map<String, Object> preloadMap = new HashMap<String, Object>();
+        preloadMap.put(MobVistaConstans.PROPERTIES_LAYOUT_TYPE, MobVistaConstans.LAYOUT_NATIVE);
+        preloadMap.put(MobVistaConstans.PROPERTIES_UNIT_ID, UNIT_ID);
+        List<MvNativeHandler.Template> list = new ArrayList<MvNativeHandler.Template>();
+        list.add(new MvNativeHandler.Template(MobVistaConstans.TEMPLATE_BIG_IMG, 1));
+        preloadMap.put(MobVistaConstans.NATIVE_INFO, MvNativeHandler.getTemplateString(list));
+        sdk.preload(preloadMap);
+
     }
 
     private void loadHeadNativeAd() {

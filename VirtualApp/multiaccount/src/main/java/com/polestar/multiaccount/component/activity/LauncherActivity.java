@@ -7,12 +7,22 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
+import com.mobvista.msdk.MobVistaConstans;
+import com.mobvista.msdk.MobVistaSDK;
+import com.mobvista.msdk.out.MobVistaSDKFactory;
+import com.mobvista.msdk.out.MvNativeHandler;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.fragment.HomeFragment;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.RemoteConfig;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yxx on 2016/8/23.
@@ -26,7 +36,11 @@ public class LauncherActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mylauncher);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
-        FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this).loadAd(1, null);
+        if (RemoteConfig.getBoolean(RemoteConfig.CONFIG_USE_MV_HOME_NATIVE)) {
+            mvPreloadHomeNative();
+        } else {
+            FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this).loadAd(1, null);
+        }
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -64,6 +78,16 @@ public class LauncherActivity extends BaseActivity{
         sendBroadcast(shortcutintent);
     }
 
+    public void mvPreloadHomeNative() {
+        MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
+        Map<String, Object> preloadMap = new HashMap<String, Object>();
+        preloadMap.put(MobVistaConstans.PROPERTIES_LAYOUT_TYPE, MobVistaConstans.LAYOUT_NATIVE);
+        preloadMap.put(MobVistaConstans.PROPERTIES_UNIT_ID, HomeFragment.UNIT_ID);
+        List<MvNativeHandler.Template> list = new ArrayList<MvNativeHandler.Template>();
+        list.add(new MvNativeHandler.Template(MobVistaConstans.TEMPLATE_BIG_IMG, 1));
+        preloadMap.put(MobVistaConstans.NATIVE_INFO, MvNativeHandler.getTemplateString(list));
+        sdk.preload(preloadMap);
+    }
     @Override
     protected void onResume() {
         super.onResume();

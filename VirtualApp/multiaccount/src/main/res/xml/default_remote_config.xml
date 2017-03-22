@@ -83,4 +83,8 @@
         <key>home_show_lucky_gate</key>
         <value>1</value>
     </entry>
+    <entry>
+        <key>config_mv_home_native</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>
