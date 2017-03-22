@@ -58,6 +58,15 @@ public class MTAManager {
         StatService.trackCustomEvent(context, "home_show");
     }
 
+    public static void showLockWindow(Context context, String pkg) {
+        if (context != null) {
+            Properties prop = new Properties();
+            prop.setProperty("package", pkg);
+            StatService.trackCustomKVEvent(context, "show_lock_window", prop);
+            MLogs.d("show_lock_window: " + pkg);
+        }
+    }
+
     public static void homeGiftClick(Context context, String adSource) {
         Properties prop = new Properties();
         prop.setProperty("ad_source", adSource);

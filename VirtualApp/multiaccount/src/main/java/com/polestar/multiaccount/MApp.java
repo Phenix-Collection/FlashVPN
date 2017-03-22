@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
@@ -150,15 +151,16 @@ public class MApp extends Application {
             // init exception handler and bugly before attatchBaseContext and appOnCreate
             setDefaultUncaughtExceptionHandler(this);
             initBugly(this);
-
+            MTAManager.init(this);
             if (VirtualCore.get().isMainProcess()) {
-                MTAManager.init(this);
+
                 ImageLoaderUtil.init(this);
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
 //                FirebaseApp.initializeApp(this);
-                RemoteConfig.init();
             }
+            FirebaseApp.initializeApp(this);
+            RemoteConfig.init();
         }catch (Exception e){
             e.printStackTrace();
         }

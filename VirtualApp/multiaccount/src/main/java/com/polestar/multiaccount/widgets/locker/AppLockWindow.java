@@ -19,6 +19,7 @@ import com.polestar.multiaccount.component.activity.LockSecureQuestionActivity;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ResourcesUtil;
 import com.polestar.multiaccount.widgets.FeedbackImageView;
@@ -144,6 +145,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         if (!mIsShowing) {
             mAppLockPasswordLogic.onShow();
             mWindow.show();
+            MTAManager.showLockWindow(mContentView.getContext(), mPkgName);
             mIsShowing = true;
         }
     }
