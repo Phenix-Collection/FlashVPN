@@ -35,9 +35,9 @@ public class CustomFloatView extends View implements DropTarget{
 
     public static final int ANIM_DURATION = 500;
     private static final int STATE_IDLE = 1;
-    private static final int STATE_ANIMATION_TO_EXTAND = 2;
+    private static final int STATE_ANIMATION_TO_EXPAND = 2;
     private static final int STATE_ANIMATION_TO_IDLE = 3;
-    private static final int STATE_EXTAND = 4;
+    private static final int STATE_EXPAND = 4;
     private static final int STATE_BTN_LEFT_TO_RIGHT = 5;
     private static final int STATE_BTN_RIGHT_TO_LEFT = 6;
 
@@ -200,11 +200,11 @@ public class CustomFloatView extends View implements DropTarget{
         extandsAnimator.start();
     }
 
-    public void animToExtands() {
-        if(!isIdle(STATE_ANIMATION_TO_EXTAND)){
+    public void animToExpand() {
+        if(!isIdle(STATE_ANIMATION_TO_EXPAND)){
             return;
         }
-        currentState = STATE_ANIMATION_TO_EXTAND;
+        currentState = STATE_ANIMATION_TO_EXPAND;
 
         ValueAnimator extandsAnimator = ValueAnimator.ofFloat(0f, 1f);
         extandsAnimator.setInterpolator(new AnticipateOvershootInterpolator(2f));
@@ -222,7 +222,7 @@ public class CustomFloatView extends View implements DropTarget{
                     centerRectWidth = (int) ((getContentWidth() - getHeight() + 2 * outerStrokeWidth) * currentValue);
                 }
                 if (currentValue == 1f) {
-                   handleNextState(STATE_EXTAND);
+                   handleNextState(STATE_EXPAND);
                 }
                 invalidate();
             }
@@ -279,7 +279,7 @@ public class CustomFloatView extends View implements DropTarget{
                 }
                 btnBgRect.right = btnBgRect.right + btnExtraWidth;
                 if(currentValue == 1f){
-                   handleNextState(STATE_EXTAND);
+                   handleNextState(STATE_EXPAND);
                 }
                 invalidate();
             }
@@ -317,7 +317,7 @@ public class CustomFloatView extends View implements DropTarget{
                 }
                 btnBgRect.left = btnBgRect.left - btnExtraWidth;
                 if(currentValue == 1f){
-                  handleNextState(STATE_EXTAND);
+                  handleNextState(STATE_EXPAND);
                 }
                 invalidate();
             }
@@ -346,7 +346,7 @@ public class CustomFloatView extends View implements DropTarget{
 
 
     private boolean isIdle(int state){
-        if(currentState == STATE_IDLE || currentState == STATE_EXTAND){
+        if(currentState == STATE_IDLE || currentState == STATE_EXPAND){
             return true;
         }
         if(state == currentState){
@@ -360,8 +360,8 @@ public class CustomFloatView extends View implements DropTarget{
 
     private void handleNextState(int state){
         currentState = state;
-        if (nextState == STATE_ANIMATION_TO_EXTAND) {
-            animToExtands();
+        if (nextState == STATE_ANIMATION_TO_EXPAND) {
+            animToExpand();
         }else if (nextState == STATE_ANIMATION_TO_IDLE) {
             animToIdel();
         }else if(nextState == STATE_BTN_LEFT_TO_RIGHT){
@@ -423,7 +423,7 @@ public class CustomFloatView extends View implements DropTarget{
 
         drawHalfCircleRect(canvas, mRectF, centerRectWidth);
 
-        if (currentState == STATE_EXTAND || currentState == STATE_BTN_LEFT_TO_RIGHT || currentState == STATE_BTN_RIGHT_TO_LEFT) {
+        if (currentState == STATE_EXPAND || currentState == STATE_BTN_LEFT_TO_RIGHT || currentState == STATE_BTN_RIGHT_TO_LEFT) {
             btnWidth = getContentWidth() * 3 / 10;
             leftBtnRect.left = mRectF.left + outerStrokeWidth;
             leftBtnRect.right = leftBtnRect.left + btnWidth;
@@ -445,7 +445,7 @@ public class CustomFloatView extends View implements DropTarget{
                 centerDotRect.offset(centerDotWidth * 2, 0);
             }
             mPaint.setColor(innerColor);
-            if(currentState != STATE_EXTAND && selectedBtn != SELECT_BTN_NONE){
+            if(currentState != STATE_EXPAND && selectedBtn != SELECT_BTN_NONE){
                 drawHalfCircleRect(canvas, btnBgRect, btnWidth - (mRectF.bottom - mRectF.top) + outerStrokeWidth * 2 + btnExtraWidth);
             }else if (selectedBtn == SELECT_BTN_LEFT) {
                 drawHalfCircleRect(canvas, leftBtnRect, btnWidth - (mRectF.bottom - mRectF.top) + outerStrokeWidth * 2);

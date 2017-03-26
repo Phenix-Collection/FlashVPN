@@ -14,7 +14,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +34,6 @@ import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.MobVistaSDK;
 import com.mobvista.msdk.out.Campaign;
 import com.mobvista.msdk.out.Frame;
-import com.mobvista.msdk.out.InterstitialListener;
-import com.mobvista.msdk.out.MVInterstitialHandler;
 import com.mobvista.msdk.out.MobVistaSDKFactory;
 import com.mobvista.msdk.out.MvNativeHandler;
 import com.polestar.ad.AdConfig;
@@ -51,7 +48,6 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
 import com.polestar.multiaccount.component.activity.AppListActivity;
 import com.polestar.multiaccount.component.activity.HomeActivity;
-import com.polestar.multiaccount.component.activity.LockSettingsActivity;
 import com.polestar.multiaccount.component.activity.NativeInterstitialActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
@@ -79,7 +75,6 @@ import com.polestar.multiaccount.widgets.dragdrop.DragSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -168,7 +163,7 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void onDragStart(DragSource source, Object info, int dragAction) {
             MLogs.d("onDragStart");
-            floatView.animToExtands();
+            floatView.animToExpand();
             mDragController.addDropTarget(floatView);
         }
 
