@@ -2,16 +2,14 @@ package io.virtualapp;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 
-import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.stub.StubManifest;
-import com.lody.virtual.helper.proto.InstallResult;
-import com.lody.virtual.helper.utils.VLog;
 
+import io.virtualapp.delegate.MyAppRequestListener;
+import io.virtualapp.delegate.MyComponentDelegate;
+import io.virtualapp.delegate.MyPhoneInfoDelegate;
+import io.virtualapp.delegate.MyTaskDescriptionDelegate;
 import jonathanfinerty.once.Once;
 
 /**
@@ -19,37 +17,18 @@ import jonathanfinerty.once.Once;
  */
 public class VApp extends Application {
 
-    private static final String[] GMS_PKG = {
-            "com.android.vending",
 
-            "com.google.android.gsf",
-            "com.google.android.gsf.login",
-            "com.google.android.gms",
-
-            "com.google.android.backuptransport",
-            "com.google.android.backup",
-            "com.google.android.configupdater",
-            "com.google.android.syncadapters.contacts",
-            "com.google.android.feedback",
-            "com.google.android.onetimeinitializer",
-            "com.google.android.partnersetup",
-            "com.google.android.setupwizard",
-            "com.google.android.syncadapters.calendar",};
-
-    private static VApp gDefault;
+    private static VApp gApp;
 
     public static VApp getApp() {
-        return gDefault;
+        return gApp;
     }
-
 
     @Override
     protected void attachBaseContext(Context base) {
-        StubManifest.STUB_CP_AUTHORITY = BuildConfig.APPLICATION_ID + "." + StubManifest.STUB_DEF_AUTHORITY;
-        ServiceManagerNative.SERVICE_CP_AUTH = BuildConfig.APPLICATION_ID + "." + ServiceManagerNative.SERVICE_DEF_AUTH;
-        //
-        VirtualCore.get().setComponentDelegate(new MyComponentDelegate());
         super.attachBaseContext(base);
+        StubManifest.ENABLE_IO_REDIRECT = true;
+        StubManifest.ENABLE_INNER_SHORTCUT = false;
         try {
             VirtualCore.get().startup(base);
         } catch (Throwable e) {
@@ -59,38 +38,39 @@ public class VApp extends Application {
 
     @Override
     public void onCreate() {
-        gDefault = this;
+        gApp = this;
         super.onCreate();
-        if (VirtualCore.get().isMainProcess()) {
-            Once.initialise(this);
-            installGms();
-        } else if (VirtualCore.get().isVAppProcess()) {
-            VirtualCore.get().setPhoneInfoDelegate(new MyPhoneInfoDelegate());
-        }
-    }
-
-    /**
-     * Install the Google mobile service.
-     */
-    private void installGms() {
         VirtualCore virtualCore = VirtualCore.get();
-        PackageManager pm = virtualCore.getUnHookPackageManager();
-        for (String pkg : GMS_PKG) {
-            if (virtualCore.isAppInstalled(pkg)) {
-                continue;
+        virtualCore.initialize(new VirtualCore.VirtualInitializer() {
+
+            @Override
+            public void onMainProcess() {
+                Once.initialise(VApp.this);
             }
-            try {
-                ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
-                String apkPath = appInfo.sourceDir;
-                InstallResult res = VirtualCore.get().installApp(apkPath,
-                        InstallStrategy.DEPEND_SYSTEM_IF_EXIST | InstallStrategy.TERMINATE_IF_EXIST);
-                if (!res.isSuccess) {
-                    VLog.e(getClass().getSimpleName(), "Warning: Unable to install app %s: %s.", appInfo.packageName, res.error);
-                }
-            } catch (Throwable e) {
-                // Ignore
+
+            @Override
+            public void onVirtualProcess() {
+                //listener components
+                virtualCore.setComponentDelegate(new MyComponentDelegate());
+                //fake phone imei,macAddress,BluetoothAddress
+                virtualCore.setPhoneInfoDelegate(new MyPhoneInfoDelegate());
+                //fake task description's icon and title
+                //virtualCore.setTaskDescriptionDelegate(new MyTaskDescriptionDelegate());
             }
-        }
+
+            @Override
+            public void onServerProcess() {
+                virtualCore.setAppRequestListener(new MyAppRequestListener(VApp.this));
+                virtualCore.addVisibleOutsidePackage("com.tencent.mobileqq");
+                virtualCore.addVisibleOutsidePackage("com.tencent.mobileqqi");
+                virtualCore.addVisibleOutsidePackage("com.tencent.minihd.qq");
+                virtualCore.addVisibleOutsidePackage("com.tencent.qqlite");
+                virtualCore.addVisibleOutsidePackage("com.facebook.katana");
+                virtualCore.addVisibleOutsidePackage("com.whatsapp");
+                virtualCore.addVisibleOutsidePackage("com.tencent.mm");
+                virtualCore.addVisibleOutsidePackage("com.immomo.momo");
+            }
+        });
     }
 
 }
