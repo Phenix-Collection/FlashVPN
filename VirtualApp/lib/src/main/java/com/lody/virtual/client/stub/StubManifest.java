@@ -48,4 +48,5 @@ public class StubManifest {
     public static String getStubAuthority(int index) {
         return String.format(Locale.ENGLISH, "%s%d", STUB_CP_AUTHORITY, index);
     }
+
 }

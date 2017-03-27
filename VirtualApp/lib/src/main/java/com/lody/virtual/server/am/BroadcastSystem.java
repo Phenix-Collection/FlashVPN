@@ -30,6 +30,11 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import mirror.android.app.ContextImpl;
+import mirror.android.app.LoadedApkHuaWei;
+import mirror.android.rms.resource.ReceiverResourceLP;
+import mirror.android.rms.resource.ReceiverResourceM;
+import mirror.android.rms.resource.ReceiverResourceN;
 import static android.content.Intent.FLAG_RECEIVER_REGISTERED_ONLY;
 
 /**
@@ -77,7 +82,7 @@ public class BroadcastSystem {
 		this.mAMS = ams;
 		mScheduler = new StaticScheduler();
         mTimeoutHandler = new TimeoutHandler();
-        //fuckHuaWeiVerifier();
+        fuckHuaWeiVerifier();
         registerSystemReceiver();
     }
 
@@ -124,6 +129,37 @@ public class BroadcastSystem {
 		}
 	}
 
+    private void fuckHuaWeiVerifier() {
+        if (LoadedApkHuaWei.mReceiverResource != null) {
+            Object packageInfo = ContextImpl.mPackageInfo.get(mContext);
+            if (packageInfo != null) {
+                Object receiverResource = LoadedApkHuaWei.mReceiverResource.get(packageInfo);
+                if (receiverResource != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        if (ReceiverResourceN.mWhiteList != null) {
+                            List<String> whiteList = ReceiverResourceN.mWhiteList.get(receiverResource);
+                            List<String> newWhiteList = new ArrayList<>();
+                            newWhiteList.add(mContext.getPackageName());
+                            if (whiteList != null) {
+                                newWhiteList.addAll(whiteList);
+                            }
+                            ReceiverResourceN.mWhiteList.set(receiverResource, newWhiteList);
+                        }
+                    } else {
+                        if (ReceiverResourceM.mWhiteList != null) {
+                            String[] whiteList = ReceiverResourceM.mWhiteList.get(receiverResource);
+                            List<String> newWhiteList = new LinkedList<>();
+                            Collections.addAll(newWhiteList, whiteList);
+                            newWhiteList.add(mContext.getPackageName());
+                            ReceiverResourceM.mWhiteList.set(receiverResource, newWhiteList.toArray(new String[newWhiteList.size()]));
+                        } else if (ReceiverResourceLP.mResourceConfig != null) {
+                            ReceiverResourceLP.mResourceConfig.set(receiverResource, null);
+                        }
+                    }
+                }
+            }
+        }
+    }
 	public void startApp(VPackage p) {
         PackageSetting setting = (PackageSetting) p.mExtras;
 		VLog.d("BroadcastSystem","startApp " + p.packageName);
@@ -281,10 +317,10 @@ public class BroadcastSystem {
             if ((intent.getFlags() & FLAG_RECEIVER_REGISTERED_ONLY) != 0 || isInitialStickyBroadcast()) {
                 return;
             }
-			PendingResult result = mirror.android.content.BroadcastReceiver.getPendingResult.call(this);
+            PendingResult result = goAsync();
 			synchronized (mAMS) {
                 if (!mAMS.handleStaticBroadcast(appId, info, intent, new PendingResultData(result))) {
-//                    result.finish();
+                    result.finish();
 //					if (mOrderedHint) {
 //						am.finishReceiver(mToken, mResultCode, mResultData, mResultExtras,
 //								mAbortBroadcast, mFlags);

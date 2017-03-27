@@ -9,7 +9,7 @@ import com.lody.virtual.server.INotificationManager;
 import com.lody.virtual.server.notification.NotificationCompat;
 
 /**
- * 通知栏管理，多虚拟用户，多包名，但是总通知栏只能显示255个，系统限制
+ * Fake notification manager
  */
 public class VNotificationManager {
     private static final VNotificationManager sInstance = new VNotificationManager();
@@ -42,7 +42,6 @@ public class VNotificationManager {
     }
 
     public int dealNotificationId(int id, String packageName, String tag, int userId) {
-        //不处理id，通过tag处理
         try {
             return getService().dealNotificationId(id, packageName, tag, userId);
         } catch (RemoteException e) {

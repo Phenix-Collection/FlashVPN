@@ -360,7 +360,7 @@ public class PackageParserEx {
             int N = (p.mSignatures != null) ? p.mSignatures.length : 0;
             if (N > 0) {
                 pi.signatures = new Signature[N];
-                if (p.mAppMetaData != null && p.mAppMetaData.containsKey(Constants.FEATURE_FAKE_SIGNATURE)) {
+                if (false) {
                     String sig = p.mAppMetaData.getString("fake-signature");
                     if (sig != null) {
                         p.mSignatures = new Signature[]{new Signature(sig)};

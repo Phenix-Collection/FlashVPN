@@ -561,10 +561,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			int size = mHistory.size() > maxNum ? maxNum: mHistory.size();
 			List<ActivityManager.RunningServiceInfo> services = new ArrayList<>(mHistory.size());
 			for (ServiceRecord r : mHistory) {
-//				if (r.process.userId != userId) {
-//					continue;
-//				}
-				if (cnt++ >= size) break;
+                if (r.process.userId != userId) {
+                    continue;
+                }
 				ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
 				info.uid = r.process.vuid;
 //				info.uid = Process.myUid();
@@ -1012,45 +1011,41 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				return false;
 			}
 		}
+		if (userId < 0) {
+            VLog.w(TAG, "Sent a broadcast without userId " + realIntent);
+            return false;
+        }
 		String pkg = intent.getStringExtra(Constants.VA_INTENT_KEY_PACKAGE);
 		if (pkg != null && !pkg.equals(info.packageName)) {
 			return false;
 		}
 		if (realIntent == null) {
-			realIntent = intent;
-		}
-		VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent.toString() + " activityInfo: " + info.name);
-		SpecialComponentList.unprotectIntent(realIntent);
-		VLog.d(TAG, "handleStaticBroadcast unprotected realintent:　" + realIntent.toString());
-		if (userId >= 0) {
-			int uid = VUserHandle.getUid(userId, appId);
-			if(!handleStaticBroadcastAsUser(uid, info, realIntent, result)) {
-				VLog.d(TAG, "handleStaticBroadcastAsUser ret false");
-				return false;
-			}
-		} else if (userId == VUserHandle.USER_ALL) {
-			List<VUserInfo> userList = VUserManager.get().getUsers(false);
-			for (VUserInfo userInfo : userList) {
-				int uid = VUserHandle.getUid(userInfo.id, appId);
-				if(!handleStaticBroadcastAsUser(uid, info, realIntent, result)) {
-					VLog.d(TAG, "handleStaticBroadcastAsUser USER_ALL ret false");
-					return false;
-				}
-			}
-		} else {
-			VLog.w(TAG, "Unknown User for receive the broadcast : #%d.", userId);
 			return false;
 		}
-		return true;
-	}
+		VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent.toString() + " activityInfo: " + info.name);
+        int vuid = VUserHandle.getUid(userId, appId);
+        return handleUserBroadcast(vuid, info, component, realIntent, result);
+    }
 
+    private boolean handleUserBroadcast(int vuid, ActivityInfo info, ComponentName component, Intent realIntent, PendingResultData result) {
+        if (component != null && !ComponentUtils.toComponentName(info).equals(component)) {
+            // Verify the component.
+            return false;
+        }
+        String originAction = SpecialComponentList.unprotectAction(realIntent.getAction());
+        if (originAction != null) {
+            // restore to origin action.
+            realIntent.setAction(originAction);
+        }
+        return handleStaticBroadcastAsUser(vuid, info, realIntent, result);
+    }
 
 	private boolean handleStaticBroadcastAsUser(int vuid, ActivityInfo info, Intent intent,
 												PendingResultData result) {
 		synchronized (this) {
 			ProcessRecord r = findProcessLocked(info.processName, vuid);
 			if (BROADCAST_NOT_STARTED_PKG && r == null
-					&& VirtualCore.get().getComponentDelegate().isNotificationEnabled(info.packageName)) {
+					) {
 				VLog.d(TAG, "startProcess for " + intent.toString());
 				r = startProcessIfNeedLocked(info.processName, getUserId(vuid), info.packageName);
 			}
