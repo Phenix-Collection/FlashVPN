@@ -1,5 +1,6 @@
 package com.lody.virtual.client.stub;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -74,6 +75,7 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
         return intent;
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final int titleResource;
@@ -94,7 +96,7 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
 
     protected void onCreate(Bundle savedInstanceState, Intent intent,
                             CharSequence title, Intent[] initialIntents, List<ResolveInfo> rList,
-                            boolean alwaysUseOption,int userid) {
+                            boolean alwaysUseOption, int userid) {
         super.onCreate(savedInstanceState);
         mLaunchedFromUid = userid;
         mPm = getPackageManager();
@@ -166,7 +168,7 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
 
     @Override
     protected void onDestroy() {
-        if(dialog != null && dialog.isShowing()) {
+        if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
         super.onDestroy();
@@ -201,7 +203,7 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
-            VLog.e(TAG, "Couldn't find resources for package\n"+VLog.getStackTraceString(e));
+            VLog.e(TAG, "Couldn't find resources for package\n" + VLog.getStackTraceString(e));
         }
         return ri.loadIcon(mPm);
     }
@@ -300,7 +302,7 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
                     try {
                         filter.addDataType(mimeType);
                     } catch (IntentFilter.MalformedMimeTypeException e) {
-                        VLog.w("ResolverActivity","mimeType\n"+VLog.getStackTraceString(e));
+                        VLog.w("ResolverActivity", "mimeType\n" + VLog.getStackTraceString(e));
                         filter = null;
                     }
                 }
@@ -370,34 +372,30 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
                             intent.getComponent());
                 } else {
                     try {
-                        Reflect.on( VClientImpl.get().getCurrentApplication().getPackageManager()).call("setLastChosenActivity",
+                        Reflect.on(VClientImpl.get().getCurrentApplication().getPackageManager()).call("setLastChosenActivity",
                                 intent,
                                 intent.resolveTypeIfNeeded(getContentResolver()),
                                 PackageManager.MATCH_DEFAULT_ONLY,
                                 filter, bestMatch, intent.getComponent());
                     } catch (Exception re) {
-                        VLog.d(TAG, "Error calling setLastChosenActivity\n"+VLog.getStackTraceString(re));
+                        VLog.d(TAG, "Error calling setLastChosenActivity\n" + VLog.getStackTraceString(re));
                     }
                 }
             }
         }
 
         if (intent != null) {
-            VLog.d(TAG, "intent="+intent);
             ActivityInfo info = VirtualCore.get().resolveActivityInfo(intent, mLaunchedFromUid);
-            if(info == null){
-                   //外面的
+            if (info == null) {
+                //外面的
                 startActivity(intent);
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 //                    startActivity(intent);//, mRequestCode, mOptions);
 //                }else{
 //                    startActivity(intent);//, mRequestCode);
 //                }
-            }else{
-                int res = VActivityManager.get().startActivity(intent, info, null, mOptions, mResultWho, mRequestCode, mLaunchedFromUid);
-//            if (res != 0 && resultTo != null && mRequestCode > 0) {
-//                VActivityManager.get().sendActivityResult(resultTo, mResultWho, mRequestCode);
-//            }
+            } else {
+                VActivityManager.get().startActivity(intent, info, null, mOptions, mResultWho, mRequestCode, mLaunchedFromUid);
             }
 
         }
@@ -408,6 +406,18 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
                 .setData(Uri.fromParts("package", ri.activityInfo.packageName, null))
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         startActivity(in);
+    }
+
+    static class ViewHolder {
+        public TextView text;
+        public TextView text2;
+        public ImageView icon;
+
+        public ViewHolder(View view) {
+            text = (TextView) view.findViewById(R.id.text1);
+            text2 = (TextView) view.findViewById(R.id.text2);
+            icon = (ImageView) view.findViewById(R.id.icon);
+        }
     }
 
     private final class DisplayResolveInfo {
@@ -429,14 +439,12 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
     private final class ResolveListAdapter extends BaseAdapter {
         private final Intent[] mInitialIntents;
         private final List<ResolveInfo> mBaseResolveList;
-        private ResolveInfo mLastChosen;
         private final Intent mIntent;
         private final int mLaunchedFromUid;
         private final LayoutInflater mInflater;
-
         List<DisplayResolveInfo> mList;
         List<ResolveInfo> mOrigResolveList;
-
+        private ResolveInfo mLastChosen;
         private int mInitialHighlight = -1;
 
         public ResolveListAdapter(Context context, Intent intent,
@@ -709,18 +717,6 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
                 new LoadIconTask().execute(info);
             }
             holder.icon.setImageDrawable(info.displayIcon);
-        }
-    }
-
-    static class ViewHolder {
-        public TextView text;
-        public TextView text2;
-        public ImageView icon;
-
-        public ViewHolder(View view) {
-            text = (TextView) view.findViewById(R.id.text1);
-            text2 = (TextView) view.findViewById(R.id.text2);
-            icon = (ImageView) view.findViewById(R.id.icon);
         }
     }
 

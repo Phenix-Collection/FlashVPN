@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
-import android.content.pm.PackageInfo;
 import android.os.Build;
 
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.Constants;
 import com.lody.virtual.client.env.SpecialComponentList;
+import com.lody.virtual.client.hook.secondary.GmsSupport;
 import com.lody.virtual.helper.compat.ObjectsCompat;
 
 import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_INSTANCE;
@@ -23,7 +23,7 @@ public class ComponentUtils {
 
 	public static String getTaskAffinity(ActivityInfo info) {
 		if (info.launchMode == LAUNCH_SINGLE_INSTANCE) {
-			return "_#SI#_" + info.packageName + "/" + info.name;
+            return "-SingleInstance-" + info.packageName + "/" + info.name;
 		} else if (info.taskAffinity == null && info.applicationInfo.taskAffinity == null) {
 			return info.packageName;
 		} else if (info.taskAffinity != null) {
@@ -89,12 +89,11 @@ public class ComponentUtils {
 		return new ComponentName(componentInfo.packageName, componentInfo.name);
 	}
 
-	public static boolean isSystemApp(PackageInfo packageInfo) {
-		return packageInfo != null && isSystemApp(packageInfo.applicationInfo);
-	}
-
 	public static boolean isSystemApp(ApplicationInfo applicationInfo) {
-		return applicationInfo != null && ((ApplicationInfo.FLAG_SYSTEM & applicationInfo.flags) != 0
+		if (applicationInfo == null) {
+			return false;
+		}
+        return ((ApplicationInfo.FLAG_SYSTEM & applicationInfo.flags) != 0
                 || SpecialComponentList.isSpecSystemPackage(applicationInfo.packageName));
 	}
 
@@ -106,6 +105,8 @@ public class ComponentUtils {
 
 	public static Intent redirectBroadcastIntent(Intent intent, int userId) {
         Intent newIntent = intent.cloneFilter();
+        newIntent.setComponent(null);
+        newIntent.setPackage(null);
 		ComponentName component = intent.getComponent();
 		String pkg = intent.getPackage();
 		newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
@@ -115,13 +116,10 @@ public class ComponentUtils {
                     intent.setPackage(component.getPackageName());
                 }
             }
-			newIntent.setComponent(null);
-			newIntent.setPackage(null);
 			newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
 			newIntent.setAction(String.format(Constants.VA_INTENT_KEY_COMPONENT_ACTION_FMT, component.getPackageName(), component.getClassName()));
 			newIntent.putExtra(Constants.VA_INTENT_KEY_COMPONENT, component);
 		} else if (pkg != null) {
-			newIntent.setPackage(null);
 			newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
 			newIntent.putExtra(Constants.VA_INTENT_KEY_PACKAGE, pkg);
             String protectedAction = SpecialComponentList.protectAction(intent.getAction());

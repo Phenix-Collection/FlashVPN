@@ -5,23 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageParser;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.SpecialComponentList;
-import com.lody.virtual.remote.AppSetting;
-import com.lody.virtual.remote.PendingResultData;
+import com.lody.virtual.helper.collection.ArrayMap;
 import com.lody.virtual.helper.utils.VLog;
-import com.lody.virtual.helper.utils.collection.ArrayMap;
+import com.lody.virtual.remote.PendingResultData;
+import com.lody.virtual.server.pm.PackageSetting;
 import com.lody.virtual.server.pm.VAppManagerService;
+import com.lody.virtual.server.pm.parser.VPackage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -121,12 +124,11 @@ public class BroadcastSystem {
 		}
 	}
 
-	public void startApp(PackageParser.Package p) {
-		AppSetting setting = (AppSetting) p.mExtras;
+	public void startApp(VPackage p) {
+        PackageSetting setting = (PackageSetting) p.mExtras;
 		VLog.d("BroadcastSystem","startApp " + p.packageName);
-		for (PackageParser.Activity receiver : p.receivers) {
+		for (VPackage.ActivityComponent receiver : p.receivers) {
 			ActivityInfo info = receiver.info;
-			List<? extends IntentFilter> filters = receiver.intents;
 			List<BroadcastReceiver> receivers = mReceivers.get(p.packageName);
 			if (receivers == null) {
 				receivers = new ArrayList<>();
@@ -138,8 +140,8 @@ public class BroadcastSystem {
 //			mContext.registerReceiver(r, componentFilter, null, mScheduler);
 //			VLog.d("BroadcastSystem", "register " + componentFilter.getAction(0));
 //			receivers.add(r);
-			for (IntentFilter filter : filters) {
-				IntentFilter cloneFilter = new IntentFilter(filter);
+            for (VPackage.ActivityIntentInfo ci : receiver.intents)  {
+				IntentFilter cloneFilter = new IntentFilter(ci.filter);
 				redirectFilterActions(cloneFilter);
 				cloneFilter.addAction(componentAction);
 				BroadcastReceiver r = new StaticBroadcastReceiver(setting.appId, info, cloneFilter);

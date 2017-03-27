@@ -234,15 +234,6 @@ public class VPackageManager {
 		}
 	}
 
-	public List<ReceiverInfo> queryReceivers(String processName, int uid, int flags) {
-		try {
-			// noinspection unchecked
-			return getInterface().queryReceivers(processName, uid, flags);
-		} catch (RemoteException e) {
-			return VirtualRuntime.crash(e);
-		}
-	}
-
 	public List<String> querySharedPackages(String packageName) {
 		try {
 			return getInterface().querySharedPackages(packageName);

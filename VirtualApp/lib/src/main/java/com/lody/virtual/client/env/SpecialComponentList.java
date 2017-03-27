@@ -111,7 +111,7 @@ public final class SpecialComponentList {
         if (originAction == null) {
             return null;
         }
-        if (originAction.startsWith("_VA_")) {
+        if (originAction.startsWith("_VA_") || originAction.startsWith(Constants.VIRTUAL_PROTECT_INTENT_PREFIX)) {
             return originAction;
         }
         String newAction = PROTECTED_ACTION_MAP.get(originAction);

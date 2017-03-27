@@ -43,23 +43,6 @@ import com.mobvista.msdk.out.MobVistaSDKFactory;
 
 public class MApp extends Application {
 
-    private static final String[] GMS_PKG = {
-            "com.android.vending",
-
-            "com.google.android.gsf",
-            "com.google.android.gsf.login",
-            "com.google.android.gms",
-            "com.google.android.play.games",
-            "com.google.android.backuptransport",
-            "com.google.android.backup",
-            "com.google.android.configupdater",
-            "com.google.android.syncadapters.contacts",
-            "com.google.android.feedback",
-            "com.google.android.onetimeinitializer",
-            "com.google.android.partnersetup",
-            "com.google.android.setupwizard",
-            "com.google.android.syncadapters.calendar",};
-
     private static MApp gDefault;
 
     public static MApp getApp() {
@@ -83,6 +66,7 @@ public class MApp extends Application {
         super.attachBaseContext(base);
         try {
             StubManifest.ENABLE_IO_REDIRECT = true;
+            StubManifest.ENABLE_INNER_SHORTCUT = false;
             VirtualCore.get().startup(base);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -93,79 +77,94 @@ public class MApp extends Application {
     public void onCreate() {
         gDefault = this;
         super.onCreate();
-        if (VirtualCore.get().isServerProcess()) {
-            VirtualCore.get().setAppRequestListener(new VirtualCore.AppRequestListener() {
-                @Override
-                public void onRequestInstall(String path) {
-                    //We can start AppInstallActivity TODO
-                    Toast.makeText(MApp.this, "Installing: " + path, Toast.LENGTH_SHORT).show();
-                    InstallResult res = VirtualCore.get().installApp(path, InstallStrategy.UPDATE_IF_EXIST);
-                    if (res.isSuccess) {
-                        try {
-                            VirtualCore.get().preOpt(res.packageName);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        if (res.isUpdate) {
-                            Toast.makeText(MApp.this, "Update: " + res.packageName + " success!", Toast.LENGTH_SHORT).show();
+        VirtualCore virtualCore = VirtualCore.get();
+        virtualCore.initialize(new VirtualCore.VirtualInitializer() {
+
+            @Override
+            public void onMainProcess() {
+                MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
+                // test appId and appKey
+                String appId = "33047";
+                String appKey = "e4a6e0bf98078d3fa81ca6d315c28123";
+                Map<String, String> map = sdk.getMVConfigurationMap(appId, appKey);
+
+                // if you modify applicationId, please add the following attributes,
+                // otherwise it will crash
+                // map.put(MobVistaConstans.PACKAGE_NAME_MANIFEST, "your AndroidManifest
+                // package value");
+                sdk.init(map, gDefault);
+
+                ImageLoaderUtil.init(gDefault);
+                initRawData();
+                registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
+            }
+
+            @Override
+            public void onVirtualProcess() {
+                MComponentDelegate delegate = new MComponentDelegate();
+                delegate.init();
+                virtualCore.setComponentDelegate(delegate);
+                virtualCore.setPhoneInfoDelegate(new MyPhoneInfoDelegate());
+
+                virtualCore.setAppApiDelegate(new AppApiDelegate());
+            }
+
+            @Override
+            public void onServerProcess() {
+                VirtualCore.get().setAppRequestListener(new VirtualCore.AppRequestListener() {
+                    @Override
+                    public void onRequestInstall(String path) {
+                        //We can start AppInstallActivity TODO
+                        Toast.makeText(MApp.this, "Installing: " + path, Toast.LENGTH_SHORT).show();
+                        InstallResult res = VirtualCore.get().installPackage(path, InstallStrategy.UPDATE_IF_EXIST);
+                        if (res.isSuccess) {
+                            try {
+                                VirtualCore.get().preOpt(res.packageName);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (res.isUpdate) {
+                                Toast.makeText(MApp.this, "Update: " + res.packageName + " success!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MApp.this, "Install: " + res.packageName + " success!", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(MApp.this, "Install: " + res.packageName + " success!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MApp.this, "Install failed: " + res.error, Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(MApp.this, "Install failed: " + res.error, Toast.LENGTH_SHORT).show();
                     }
-                }
 
-                @Override
-                public void onRequestUninstall(String pkg) {
-                    Toast.makeText(MApp.this, "Uninstall: " + pkg, Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onRequestUninstall(String pkg) {
+                        Toast.makeText(MApp.this, "Uninstall: " + pkg, Toast.LENGTH_SHORT).show();
 
-                }
-            });
-            MComponentDelegate delegate = new MComponentDelegate();
-            delegate.init();
-            VirtualCore.get().setComponentDelegate(delegate);
-        } else if (VirtualCore.get().isMainProcess()) {
-//            Once.initialise(this);
-            installGms();
-            MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
-            // test appId and appKey
-            String appId = "33047";
-            String appKey = "e4a6e0bf98078d3fa81ca6d315c28123";
-            Map<String, String> map = sdk.getMVConfigurationMap(appId, appKey);
+                    }
+                });
 
-            // if you modify applicationId, please add the following attributes,
-            // otherwise it will crash
-            // map.put(MobVistaConstans.PACKAGE_NAME_MANIFEST, "your AndroidManifest
-            // package value");
-            sdk.init(map, this);
-
-        } else if (VirtualCore.get().isVAppProcess()) {
-            MComponentDelegate delegate = new MComponentDelegate();
-            delegate.init();
-            VirtualCore.get().setComponentDelegate(delegate);
-            VirtualCore.get().setPhoneInfoDelegate(new MyPhoneInfoDelegate());
-        }
+                MComponentDelegate delegate = new MComponentDelegate();
+                delegate.init();
+                VirtualCore.get().setComponentDelegate(delegate);
+                virtualCore.addVisibleOutsidePackage("com.tencent.mobileqq");
+                virtualCore.addVisibleOutsidePackage("com.tencent.mobileqqi");
+                virtualCore.addVisibleOutsidePackage("com.tencent.minihd.qq");
+                virtualCore.addVisibleOutsidePackage("com.tencent.qqlite");
+                virtualCore.addVisibleOutsidePackage("com.facebook.katana");
+                virtualCore.addVisibleOutsidePackage("com.whatsapp");
+                virtualCore.addVisibleOutsidePackage("com.tencent.mm");
+                virtualCore.addVisibleOutsidePackage("com.immomo.momo");
+            }
+        });
 
         try {
             // init exception handler and bugly before attatchBaseContext and appOnCreate
             setDefaultUncaughtExceptionHandler(this);
             initBugly(this);
             MTAManager.init(this);
-            if (VirtualCore.get().isMainProcess()) {
-
-                ImageLoaderUtil.init(this);
-                initRawData();
-                registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
-//                FirebaseApp.initializeApp(this);
-            }
             FirebaseApp.initializeApp(this);
             RemoteConfig.init();
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        VirtualCore.get().setAppApiDelegate(new AppApiDelegate());
         if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION ) {
             VLog.openLog();
             VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
@@ -183,30 +182,6 @@ public class MApp extends Application {
                 MLogs.logBug(tag, log);
             }
         });
-    }
-
-    /**
-     * Install the Google mobile service.
-     */
-    private void installGms() {
-        VirtualCore virtualCore = VirtualCore.get();
-        PackageManager pm = virtualCore.getUnHookPackageManager();
-        for (String pkg : GMS_PKG) {
-            if (virtualCore.isAppInstalled(pkg)) {
-                continue;
-            }
-            try {
-                ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
-                String apkPath = appInfo.sourceDir;
-                InstallResult res = VirtualCore.get().installApp(apkPath,
-                        InstallStrategy.DEPEND_SYSTEM_IF_EXIST | InstallStrategy.TERMINATE_IF_EXIST);
-                if (!res.isSuccess) {
-                    VLog.e(getClass().getSimpleName(), "Warning: Unable to install app %s: %s.", appInfo.packageName, res.error);
-                }
-            } catch (Throwable e) {
-                // Ignore
-            }
-        }
     }
 
     private class MAppCrashHandler implements Thread.UncaughtExceptionHandler {
@@ -331,13 +306,21 @@ public class MApp extends Application {
     class MyPhoneInfoDelegate implements PhoneInfoDelegate {
 
         @Override
-        public String getDeviceId(String oldDeviceId) {
+        public String getDeviceId(String oldDeviceId, int userId) {
             return oldDeviceId;
         }
 
         @Override
-        public String getBluetoothAddress(String oldAddress) {
+        public String getBluetoothAddress(String oldAddress, int userId) {
             return oldAddress;
+        }
+
+        @Override
+        public String getMacAddress(String oldMacAddress, int userId) {
+            if (oldMacAddress == null || oldMacAddress.startsWith("00-00-00-00-00-00") ){
+                    return "00:00:08:76:54:32";
+            }
+            return oldMacAddress;
         }
 
     }

@@ -38,12 +38,10 @@ import static android.content.pm.PackageManager.GET_DISABLED_COMPONENTS;
 			return info;
 		}
 		info = (ServiceInfo) method.invoke(who, args);
-		if (info != null) {
-			if (getHostPkg().equals(info.packageName) || ComponentUtils.isSystemApp(info.applicationInfo)) {
-				return info;
+        if (info == null || !isVisiblePackage(info.applicationInfo)) {
+            return null;
 			}
-		}
-		return null;
+        return info;
 	}
 
 	@Override

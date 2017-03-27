@@ -30,6 +30,7 @@ import mirror.android.app.ActivityThread;
 import mirror.android.app.IApplicationThread;
 import mirror.com.android.internal.R_Hide;
 
+import static android.content.pm.ActivityInfo.FLAG_NO_HISTORY;
 import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_INSTANCE;
 import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TASK;
 import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
@@ -134,7 +135,8 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 						marked = true;
 					}
 				}
-			} break;
+            }
+            break;
 			case SPEC_ACTIVITY : {
 				synchronized (task.activities) {
 					for (ActivityRecord r : task.activities) {
@@ -144,7 +146,8 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 						}
 					}
 				}
-			} break;
+            }
+            break;
 			case TOP: {
 				synchronized (task.activities) {
 					int N = task.activities.size();
@@ -161,7 +164,8 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 						}
 					}
 				}
-			} break;
+            }
+            break;
 		}
 
 		return marked;
@@ -321,7 +325,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 			}
 			if (taskMarked) {
 				synchronized (mHistory) {
-					scheduleFinishMarkedActivity();
+                    scheduleFinishMarkedActivityLocked();
 				}
 			}
 			if (reuseTask.isFinishing()) {
@@ -363,7 +367,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		return destIntent;
 	}
 
-	private void scheduleFinishMarkedActivity() {
+    private void scheduleFinishMarkedActivityLocked() {
 		int N = mHistory.size();
 		while (N-- > 0) {
 			final TaskRecord task = mHistory.valueAt(N);
@@ -470,6 +474,9 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 			component = ComponentUtils.toComponentName(info);
 		}
 		targetIntent.setType(component.flattenToString());
+        if ((info.flags & FLAG_NO_HISTORY) != 0 || containFlags(intent, Intent.FLAG_ACTIVITY_NO_HISTORY)) {
+            targetIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        }
 		StubActivityRecord saveInstance = new StubActivityRecord(intent, info,
 				sourceRecord != null ? sourceRecord.component : null, userId);
 		saveInstance.saveToIntent(targetIntent);

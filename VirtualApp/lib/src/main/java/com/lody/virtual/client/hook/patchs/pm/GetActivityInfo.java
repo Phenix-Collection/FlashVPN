@@ -1,6 +1,7 @@
 package com.lody.virtual.client.hook.patchs.pm;
 
 import android.content.ComponentName;
+import android.content.pm.ActivityInfo;
 
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VPackageManager;
@@ -12,11 +13,10 @@ import static android.content.pm.PackageManager.GET_DISABLED_COMPONENTS;
 
 /**
  * @author Lody
- *
- *
- *         原型: public ActivityInfo getActivityInfo(ComponentName className, int
+ *         <p>
+ *         <p>
+ *         public ActivityInfo getActivityInfo(ComponentName className, int
  *         flags, int userId)
- *
  */
 /* package */ class GetActivityInfo extends Hook {
 
@@ -36,7 +36,14 @@ import static android.content.pm.PackageManager.GET_DISABLED_COMPONENTS;
 		if ((flags & GET_DISABLED_COMPONENTS) == 0) {
 			flags |= GET_DISABLED_COMPONENTS;
 		}
-		return VPackageManager.get().getActivityInfo(componentName, flags, userId);
+        ActivityInfo info = VPackageManager.get().getActivityInfo(componentName, flags, userId);
+        if (info == null) {
+            info = (ActivityInfo) method.invoke(who, args);
+            if (info == null || !isVisiblePackage(info.applicationInfo)) {
+                return null;
+            }
+        }
+        return info;
 	}
 
 	@Override

@@ -32,10 +32,10 @@ import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.compat.BundleCompat;
-import com.lody.virtual.remote.AppSetting;
-import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.BitmapUtils;
 import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.remote.InstallResult;
+import com.lody.virtual.remote.InstalledAppInfo;
 import com.lody.virtual.server.IAppManager;
 import com.lody.virtual.server.interfaces.IAppRequestListener;
 
@@ -51,6 +51,7 @@ import mirror.android.app.ActivityThread;
  */
 public final class VirtualCore {
 
+    public static final int GET_HIDDEN_APP = 0x00000001;
 	@SuppressLint("StaticFieldLeak")
 	private static VirtualCore gCore = new VirtualCore();
     private final int myUid = Process.myUid();
@@ -182,6 +183,30 @@ public final class VirtualCore {
 		}
 	}
 
+    public void waitForEngine() {
+        ServiceManagerNative.ensureServerStarted();
+    }
+
+    public void initialize(VirtualInitializer initializer) {
+        if (initializer == null) {
+            throw new IllegalStateException("Initializer = NULL");
+        }
+        switch (processType) {
+            case Main:
+                initializer.onMainProcess();
+                break;
+            case VAppClient:
+                initializer.onVirtualProcess();
+                break;
+            case Server:
+                initializer.onServerProcess();
+                break;
+            case CHILD:
+                initializer.onChildProcess();
+                break;
+        }
+    }
+
 	private void detectProcessType() {
 		// Host package name
 		hostPkgName = context.getApplicationInfo().packageName;
@@ -267,7 +292,7 @@ public final class VirtualCore {
      * @throws IOException
      */
 	public void preOpt(String pkg) throws IOException {
-		AppSetting info = findApp(pkg);
+        InstalledAppInfo info = getInstalledAppInfo(pkg, 0);
 		if (info != null && !info.dependSystem) {
 			DexFile.loadDex(info.apkPath, info.getOdexFile().getPath(), 0).close();
 		}
@@ -286,9 +311,33 @@ public final class VirtualCore {
 		return VActivityManager.get().isAppRunning(packageName, userId);
 	}
 
-	public InstallResult installApp(String apkPath, int flags) {
+    public InstallResult installPackage(String apkPath, int flags) {
 		try {
-			return getService().installApp(apkPath, flags);
+            return getService().installPackage(apkPath, flags);
+        } catch (RemoteException e) {
+            return VirtualRuntime.crash(e);
+        }
+    }
+
+    public void addVisibleOutsidePackage(String pkg) {
+        try {
+            getService().addVisibleOutsidePackage(pkg);
+        } catch (RemoteException e) {
+            VirtualRuntime.crash(e);
+        }
+    }
+
+    public void removeVisibleOutsidePackage(String pkg) {
+        try {
+            getService().removeVisibleOutsidePackage(pkg);
+        } catch (RemoteException e) {
+            VirtualRuntime.crash(e);
+        }
+    }
+
+    public boolean isOutsidePackageVisible(String pkg) {
+        try {
+            return getService().isOutsidePackageVisible(pkg);
 		} catch (RemoteException e) {
 			return VirtualRuntime.crash(e);
 		}
@@ -333,7 +382,7 @@ public final class VirtualCore {
     }
 
     public boolean createShortcut(int userId, String packageName, Intent splash, OnEmitShortcutListener listener) {
-        AppSetting setting = findApp(packageName);
+        InstalledAppInfo setting = getInstalledAppInfo(packageName, 0);
         if (setting == null) {
             return false;
         }
@@ -382,7 +431,7 @@ public final class VirtualCore {
     }
 
     public boolean removeShortcut(int userId, String packageName, Intent splash, OnEmitShortcutListener listener) {
-        AppSetting setting = findApp(packageName);
+        InstalledAppInfo setting = getInstalledAppInfo(packageName, 0);
         if (setting == null) {
             return false;
         }
@@ -437,17 +486,17 @@ public final class VirtualCore {
 		}
 	}
 
-	public AppSetting findApp(String pkg) {
+    public InstalledAppInfo getInstalledAppInfo(String pkg, int flags) {
 		try {
-			return getService().findAppInfo(pkg);
+            return getService().getInstalledAppInfo(pkg, flags);
 		} catch (RemoteException e) {
 			return VirtualRuntime.crash(e);
 		}
 	}
 
-	public int getAppCount() {
+    public int getInstalledAppCount() {
 		try {
-			return getService().getAppCount();
+            return getService().getInstalledAppCount();
 		} catch (RemoteException e) {
 			return VirtualRuntime.crash(e);
 		}
@@ -457,9 +506,9 @@ public final class VirtualCore {
 		return isStartUp;
 	}
 
-	public boolean uninstallApp(String pkgName) {
+    public boolean uninstallPackage(String pkgName, int userId) {
 		try {
-			return getService().uninstallApp(pkgName);
+            return getService().uninstallPackage(pkgName, userId);
 		} catch (RemoteException e) {
 			// Ignore
 		}
@@ -467,10 +516,10 @@ public final class VirtualCore {
 	}
 
 	public Resources getResources(String pkg) {
-		AppSetting appSetting = findApp(pkg);
-		if (appSetting != null) {
+        InstalledAppInfo installedAppInfo = getInstalledAppInfo(pkg, 0);
+        if (installedAppInfo != null) {
 			AssetManager assets = mirror.android.content.res.AssetManager.ctor.newInstance();
-			mirror.android.content.res.AssetManager.addAssetPath.call(assets, appSetting.apkPath);
+            mirror.android.content.res.AssetManager.addAssetPath.call(assets, installedAppInfo.apkPath);
 			Resources hostRes = context.getResources();
 			return new Resources(assets, hostRes.getDisplayMetrics(), hostRes.getConfiguration());
 		}
@@ -520,9 +569,17 @@ public final class VirtualCore {
 		VActivityManager.get().killAllApps();
 	}
 
-	public List<AppSetting> getAllApps() {
+    public List<InstalledAppInfo> getInstalledApps(int flags) {
 		try {
-			return getService().getAllApps();
+            return getService().getInstalledApps(flags);
+        } catch (RemoteException e) {
+            return VirtualRuntime.crash(e);
+        }
+    }
+
+    public List<InstalledAppInfo> getInstalledAppsAsUser(int userId, int flags) {
+        try {
+            return getService().getInstalledAppsAsUser(userId, flags);
 		} catch (RemoteException e) {
 			return VirtualRuntime.crash(e);
 		}
@@ -536,9 +593,9 @@ public final class VirtualCore {
         }
     }
 
-	public void preloadAllApps() {
+    public void scanApps() {
 		try {
-			getService().preloadAllApps();
+            getService().scanApps();
 		} catch (RemoteException e) {
 			// Ignore
 		}
@@ -555,7 +612,7 @@ public final class VirtualCore {
     public void setAppRequestListener(final AppRequestListener listener) {
         IAppRequestListener inner = new IAppRequestListener.Stub() {
             @Override
-            public void onRequestInstall(final String path) throws RemoteException {
+            public void onRequestInstall(final String path) {
                 VirtualRuntime.getUIHandler().post(new Runnable() {
                     @Override
                     public void run() {
@@ -565,7 +622,7 @@ public final class VirtualCore {
             }
 
             @Override
-            public void onRequestUninstall(final String pkg) throws RemoteException {
+            public void onRequestUninstall(final String pkg) {
                 VirtualRuntime.getUIHandler().post(new Runnable() {
                     @Override
                     public void run() {
@@ -578,6 +635,46 @@ public final class VirtualCore {
             getService().setAppRequestListener(inner);
         } catch (RemoteException e) {
             e.printStackTrace();
+        }
+    }
+
+    public boolean isPackageLaunched(int userId, String packageName) {
+        try {
+            return getService().isPackageLaunched(userId, packageName);
+        } catch (RemoteException e) {
+            return VirtualRuntime.crash(e);
+        }
+    }
+
+    public void setPackageHidden(int userId, String packageName, boolean hidden) {
+        try {
+            getService().setPackageHidden(userId, packageName, hidden);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean installPackageAsUser(int userId, String packageName) {
+        try {
+            return getService().installPackageAsUser(userId, packageName);
+        } catch (RemoteException e) {
+            return VirtualRuntime.crash(e);
+        }
+    }
+
+    public boolean isAppInstalledAsUser(int userId, String packageName) {
+        try {
+            return getService().isAppInstalledAsUser(userId, packageName);
+        } catch (RemoteException e) {
+            return VirtualRuntime.crash(e);
+        }
+    }
+
+    public int[] getPackageInstalledUsers(String packageName) {
+        try {
+            return getService().getPackageInstalledUsers(packageName);
+        } catch (RemoteException e) {
+            return VirtualRuntime.crash(e);
         }
     }
 
@@ -626,5 +723,19 @@ public final class VirtualCore {
         Bitmap getIcon(Bitmap originIcon);
 
         String getName(String originName);
+    }
+
+    public static abstract class VirtualInitializer {
+        public void onMainProcess() {
+        }
+
+        public void onVirtualProcess() {
+        }
+
+        public void onServerProcess() {
+        }
+
+        public void onChildProcess() {
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.MobVistaSDK;
 import com.mobvista.msdk.out.MobVistaSDKFactory;
@@ -34,6 +35,7 @@ public class LauncherActivity extends BaseActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        long time = System.currentTimeMillis();
         setContentView(R.layout.activity_mylauncher);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
         if (RemoteConfig.getBoolean(RemoteConfig.CONFIG_USE_MV_HOME_NATIVE)) {
@@ -48,6 +50,9 @@ public class LauncherActivity extends BaseActivity{
                 CloneHelper.getInstance(LauncherActivity.this).preLoadClonedApp(LauncherActivity.this);
             }
         },100);
+
+        VirtualCore.get().waitForEngine();
+        long delta = System.currentTimeMillis() - time;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -55,7 +60,7 @@ public class LauncherActivity extends BaseActivity{
                 overridePendingTransition(android.R.anim.fade_in, -1);
                 finish();
             }
-        },1000);
+        },1000 - delta);
         if(!PreferencesUtils.isShortCutCreated() && !created) {
             PreferencesUtils.setShortCutCreated();
             createShortCut();

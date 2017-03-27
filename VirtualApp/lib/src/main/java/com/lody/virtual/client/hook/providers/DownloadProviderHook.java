@@ -16,6 +16,9 @@ public class DownloadProviderHook extends ExternalProviderHook {
 	}
 
 	@Override
+    protected void processArgs(Method method, Object... args) {
+    }
+    @Override
 	public Uri insert(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
 		try {
 			return super.insert(method, args);

@@ -1,6 +1,10 @@
 package com.lody.virtual.server;
 
+import android.content.ContentProvider;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -10,13 +14,12 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.stub.DaemonService;
 import com.lody.virtual.helper.compat.BundleCompat;
-import com.lody.virtual.helper.component.BaseContentProvider;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.server.accounts.VAccountManagerService;
 import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.am.VActivityManagerService;
-import com.lody.virtual.server.job.JobSchedulerService;
 import com.lody.virtual.server.interfaces.IServiceFetcher;
+import com.lody.virtual.server.job.VJobSchedulerService;
 import com.lody.virtual.server.notification.VNotificationManagerService;
 import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
@@ -25,7 +28,7 @@ import com.lody.virtual.server.pm.VUserManagerService;
 /**
  * @author Lody
  */
-public final class BinderProvider extends BaseContentProvider {
+public final class BinderProvider extends ContentProvider {
 
 	private final ServiceFetcher mServiceFetcher = new ServiceFetcher();
 	private static boolean isCreated = false;
@@ -47,16 +50,15 @@ public final class BinderProvider extends BaseContentProvider {
 			VAppManagerService.systemReady();
 			addService(ServiceManagerNative.APP, VAppManagerService.get());
             BroadcastSystem.attach(VActivityManagerService.get(), VAppManagerService.get());
-			VAppManagerService.get().preloadAllApps();
-			VAccountManagerService.systemReady();
-			addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
+			VAppManagerService.get().scanApps();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				JobSchedulerService.systemReady(context);
-				addService(ServiceManagerNative.JOB, JobSchedulerService.getStub());
+            addService(ServiceManagerNative.JOB, VJobSchedulerService.get());
 			}
             VNotificationManagerService.systemReady(context);
             addService(ServiceManagerNative.NOTIFICATION, VNotificationManagerService.get());
 			//VAppManagerService.get().preloadAllApps();
+			VAccountManagerService.systemReady();
+			addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
 			isCreated = true;
 		} else {
 			VLog.e("BinderProvider", "onCreate after isCreated. Skip it");
@@ -70,11 +72,38 @@ public final class BinderProvider extends BaseContentProvider {
 
 	@Override
 	public Bundle call(String method, String arg, Bundle extras) {
+        if ("@".equals(method)) {
 		Bundle bundle = new Bundle();
 		BundleCompat.putBinder(bundle, "_VA_|_binder_", mServiceFetcher);
-		VLog.d("BinderProvider", "call arg " + arg);
 		return bundle;
 	}
+        return null;
+    }
+
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        return null;
+    }
+
+    @Override
+    public String getType(Uri uri) {
+        return null;
+    }
+
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        return null;
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        return 0;
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        return 0;
+    }
 
 	private class ServiceFetcher extends IServiceFetcher.Stub {
 		@Override

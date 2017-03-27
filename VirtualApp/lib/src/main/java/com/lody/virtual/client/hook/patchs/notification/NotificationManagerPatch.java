@@ -36,7 +36,12 @@ public class NotificationManagerPatch extends PatchDelegate<HookDelegate<IInterf
 		addHook(new StaticHook("unregisterListener"));
 		addHook(new StaticHook("getAppActiveNotifications"));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            addHook(new ReplaceCallingPkgHook("removeAutomaticZenRules"));
+            addHook(new ReplaceCallingPkgHook("getImportance"));
             addHook(new ReplaceCallingPkgHook("areNotificationsEnabled"));
+            addHook(new ReplaceCallingPkgHook("setNotificationPolicy"));
+            addHook(new ReplaceCallingPkgHook("getNotificationPolicy"));
+            addHook(new ReplaceCallingPkgHook("isNotificationPolicyAccessGrantedForPackage"));
         }
         if ("samsung".equalsIgnoreCase(Build.BRAND) || "samsung".equalsIgnoreCase(Build.MANUFACTURER)) {
 			addHook(new ReplaceCallingPkgHook("removeEdgeNotification"));

@@ -1,26 +1,21 @@
 package com.lody.virtual.server.pm;
 
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageParser;
-import android.net.Uri;
 import android.os.Build;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
-import android.util.Pair;
 
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.env.Constants;
+import com.lody.virtual.client.hook.secondary.GmsSupport;
+import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.helper.collection.IntArray;
 import com.lody.virtual.helper.compat.NativeLibraryHelperCompat;
-import com.lody.virtual.helper.compat.PackageParserCompat;
-import com.lody.virtual.remote.AppSetting;
-import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.FileUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VEnvironment;
 import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.remote.InstallResult;
+import com.lody.virtual.remote.InstalledAppInfo;
 import com.lody.virtual.server.IAppManager;
 import com.lody.virtual.server.accounts.VAccountManagerService;
 import com.lody.virtual.server.am.BroadcastSystem;
@@ -28,10 +23,15 @@ import com.lody.virtual.server.am.UidSystem;
 import com.lody.virtual.server.am.VActivityManagerService;
 import com.lody.virtual.server.interfaces.IAppObserver;
 import com.lody.virtual.server.interfaces.IAppRequestListener;
+import com.lody.virtual.server.pm.parser.PackageParserEx;
+import com.lody.virtual.server.pm.parser.VPackage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -39,304 +39,401 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class VAppManagerService extends IAppManager.Stub {
 
-	private static final String TAG = VAppManagerService.class.getSimpleName();
-    private static final AtomicReference<VAppManagerService> gService = new AtomicReference<>();
+    private static final String TAG = VAppManagerService.class.getSimpleName();
+    private static final AtomicReference<VAppManagerService> sService = new AtomicReference<>();
     private final UidSystem mUidSystem = new UidSystem();
-	private boolean isBooting;
-	private RemoteCallbackList<IAppObserver> mRemoteCallbackList = new RemoteCallbackList<IAppObserver>();
+    private final PackagePersistenceLayer mPersistenceLayer = new PackagePersistenceLayer(this);
+    private final Set<String> mVisibleOutsidePackages = new HashSet<>();
+    private boolean isBooting;
+    private RemoteCallbackList<IAppObserver> mRemoteCallbackList = new RemoteCallbackList<IAppObserver>();
 
     private IAppRequestListener listener;
 
-	public static VAppManagerService get() {
-		return gService.get();
-	}
+    public static VAppManagerService get() {
+        return sService.get();
+    }
 
-	public static void systemReady() {
+    public static void systemReady() {
         VEnvironment.systemReady();
-		VAppManagerService instance = new VAppManagerService();
-		instance.mUidSystem.initUidList();
-		gService.set(instance);
-	}
+        VAppManagerService instance = new VAppManagerService();
+        instance.mUidSystem.initUidList();
+        sService.set(instance);
+    }
 
     public boolean isBooting() {
         return isBooting;
     }
 
-	public void preloadAllApps() {
-		isBooting = true;
-		for (File appDir : VEnvironment.getDataAppDirectory().listFiles()) {
-			String pkgName = appDir.getName();
-			if ("android".equals(pkgName)) {
-				continue;
-			}
-			File storeFile = new File(appDir, "base.apk");
-			int flags = 0;
-			VLog.d(TAG, "preloadAllApps " + appDir + "/base.apk");
-			if (!storeFile.exists()) {
-				ApplicationInfo appInfo = null;
-				try {
-					appInfo = VirtualCore.get().getUnHookPackageManager()
-							.getApplicationInfo(pkgName, 0);
-				} catch (PackageManager.NameNotFoundException e) {
-					// Ignore
-				}
-				if (appInfo == null || appInfo.publicSourceDir == null) {
-					FileUtils.deleteDir(appDir);
-                    for (int userId : VUserManagerService.get().getUserIds()) {
-                        FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(userId, pkgName));
-                    }
-					continue;
-				}
-				storeFile = new File(appInfo.publicSourceDir);
-				flags |= InstallStrategy.DEPEND_SYSTEM_IF_EXIST;
-			}
-			InstallResult res = install(storeFile.getPath(), flags, true);
-			if (!res.isSuccess) {
-				VLog.e(TAG, "Unable to install app %s: %s.", pkgName, res.error);
-				FileUtils.deleteDir(appDir);
-			}
-		}
-		isBooting = false;
-	}
+    @Override
+    public void scanApps() {
+        if (isBooting) {
+            return;
+        }
+        synchronized (this) {
+            isBooting = true;
+            mPersistenceLayer.read();
+            if (StubManifest.ENABLE_GMS && !GmsSupport.isGoogleFrameworkInstalled()) {
+                GmsSupport.installGms(0);
+            }
+            isBooting = false;
+        }
+    }
 
-	@Override
-	public InstallResult installApp(String apkPath, int flags) {
-		return install(apkPath, flags, false);
-	}
+    private void cleanUpResidualFiles(PackageSetting ps) {
+        File dataAppDir = VEnvironment.getDataAppPackageDirectory(ps.packageName);
+        FileUtils.deleteDir(dataAppDir);
+        for (int userId : VUserManagerService.get().getUserIds()) {
+            FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(userId, ps.packageName));
+        }
+    }
 
-	private synchronized InstallResult install(String apkPath, int flags, boolean onlyScan) {
-		if (apkPath == null) {
-			return InstallResult.makeFailure("Not given the apk path.");
-		}
-		File apk = new File(apkPath);
-		if (!apk.exists() || !apk.isFile()) {
-			return InstallResult.makeFailure("APK File is not exist.");
-		}
-		PackageParser.Package pkg = null;
-		PackageParser parser = null;
-		try {
-			Pair<PackageParser, PackageParser.Package> parseResult = PackageParserCompat.parsePackage(apk, 0);
-			if (parseResult != null) {
-				parser = parseResult.first;
-				pkg = parseResult.second;
-			}
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		if (parser == null || pkg == null || pkg.packageName == null) {
-			return InstallResult.makeFailure("Unable to parse the package.");
-		}
-		InstallResult res = new InstallResult();
-		res.packageName = pkg.packageName;
+
+    synchronized void loadPackage(PackageSetting setting) {
+        if (!loadPackageInnerLocked(setting)) {
+            cleanUpResidualFiles(setting);
+        }
+    }
+
+    private boolean loadPackageInnerLocked(PackageSetting ps) {
+        if (ps.dependSystem) {
+            if (!VirtualCore.get().isOutsideInstalled(ps.packageName)) {
+                return false;
+            }
+        }
+        File cacheFile = VEnvironment.getPackageCacheFile(ps.packageName);
+        VPackage pkg = null;
+        try {
+            pkg = PackageParserEx.readPackageCache(ps.packageName);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        if (pkg == null || pkg.packageName == null) {
+            return false;
+        }
+        chmodPackageDictionary(cacheFile);
+        PackageCacheManager.put(pkg, ps);
+        BroadcastSystem.get().startApp(pkg);
+        return true;
+    }
+
+    @Override
+    public boolean isOutsidePackageVisible(String pkg) {
+        return pkg != null && mVisibleOutsidePackages.contains(pkg);
+    }
+
+    @Override
+    public void addVisibleOutsidePackage(String pkg) {
+        if (pkg != null) {
+            mVisibleOutsidePackages.add(pkg);
+        }
+    }
+
+    @Override
+    public void removeVisibleOutsidePackage(String pkg) {
+        if (pkg != null) {
+            mVisibleOutsidePackages.remove(pkg);
+        }
+    }
+
+    @Override
+    public InstallResult installPackage(String path, int flags) {
+        return installPackage(path, flags, true);
+    }
+
+    public synchronized InstallResult installPackage(String path, int flags, boolean notify) {
+        long installTime = System.currentTimeMillis();
+        if (path == null) {
+            return InstallResult.makeFailure("path = NULL");
+        }
+        File packageFile = new File(path);
+        if (!packageFile.exists() || !packageFile.isFile()) {
+            return InstallResult.makeFailure("Package File is not exist.");
+        }
+        VPackage pkg = null;
+        try {
+            pkg = PackageParserEx.parsePackage(packageFile);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        if (pkg == null || pkg.packageName == null) {
+            return InstallResult.makeFailure("Unable to parse the package.");
+        }
+        InstallResult res = new InstallResult();
+        res.packageName = pkg.packageName;
         // PackageCache holds all packages, try to check if we need to update.
-		PackageParser.Package existOne = PackageCache.get(pkg.packageName);
-        AppSetting existSetting = findAppInfo(pkg.packageName);
-		if (existOne != null) {
-			if ((flags & InstallStrategy.IGNORE_NEW_VERSION) != 0) {
-				res.isUpdate = true;
-				res.isSuccess = true;
-				return res;
-			}
-			if (!canUpdate(existOne, pkg, flags)) {
+        VPackage existOne = PackageCacheManager.get(pkg.packageName);
+        PackageSetting existSetting = existOne != null ? (PackageSetting) existOne.mExtras : null;
+        if (existOne != null) {
+            if ((flags & InstallStrategy.IGNORE_NEW_VERSION) != 0) {
+                res.isUpdate = true;
+                res.isSuccess = true;
+                return res;
+            }
+            if (!canUpdate(existOne, pkg, flags)) {
                 return InstallResult.makeFailure("Not allowed to update the package.");
-			}
-			res.isUpdate = true;
-		}
-		File appDir = VEnvironment.getDataAppPackageDirectory(pkg.packageName);
+            }
+            res.isUpdate = true;
+        }
+        File appDir = VEnvironment.getDataAppPackageDirectory(pkg.packageName);
 
 
-		File libDir = new File(appDir, "lib");
+        File libDir = new File(appDir, "lib");
         if (res.isUpdate) {
             FileUtils.deleteDir(libDir);
             VEnvironment.getOdexFile(pkg.packageName).delete();
             VActivityManagerService.get().killAppByPkg(pkg.packageName, VUserHandle.USER_ALL);
         }
-		if (!libDir.exists() && !libDir.mkdirs()) {
-			return InstallResult.makeFailure("Unable to create lib dir.");
-		}
-		boolean dependSystem = (flags & InstallStrategy.DEPEND_SYSTEM_IF_EXIST) != 0
-				&& VirtualCore.get().isOutsideInstalled(pkg.packageName);
+        if (!libDir.exists() && !libDir.mkdirs()) {
+            return InstallResult.makeFailure("Unable to create lib dir.");
+        }
+        boolean dependSystem = (flags & InstallStrategy.DEPEND_SYSTEM_IF_EXIST) != 0
+                && VirtualCore.get().isOutsideInstalled(pkg.packageName);
 
         if (existSetting != null && existSetting.dependSystem) {
             dependSystem = false;
         }
 
-		if (!onlyScan) {
-			NativeLibraryHelperCompat.copyNativeBinaries(new File(apkPath), libDir);
-			if (!dependSystem) {
-				// /data/app/com.xxx.xxx-1/base.apk
-				File storeFile = new File(appDir, "base.apk");
-				File parentFolder = storeFile.getParentFile();
-				if (!parentFolder.exists() && !parentFolder.mkdirs()) {
-					VLog.w(TAG, "Warning: unable to create folder : " + storeFile.getPath());
-				} else if (storeFile.exists() && !storeFile.delete()) {
-					VLog.w(TAG, "Warning: unable to delete file : " + storeFile.getPath());
-				}
-				FileUtils.copyFile(apk, storeFile);
-				apk = storeFile;
-			}
-		}
-		if (existOne != null) {
-			PackageCache.remove(pkg.packageName);
-		}
+        NativeLibraryHelperCompat.copyNativeBinaries(new File(path), libDir);
         if (!dependSystem) {
+            File privatePackageFile = new File(appDir, "base.apk");
+            File parentFolder = privatePackageFile.getParentFile();
+            if (!parentFolder.exists() && !parentFolder.mkdirs()) {
+                VLog.w(TAG, "Warning: unable to create folder : " + privatePackageFile.getPath());
+            } else if (privatePackageFile.exists() && !privatePackageFile.delete()) {
+                VLog.w(TAG, "Warning: unable to delete file : " + privatePackageFile.getPath());
+            }
             try {
-                linkApkResForNotification(pkg.packageName, apk);
-            } catch (Exception e) {
-                e.printStackTrace();
+                FileUtils.copyFile(packageFile, privatePackageFile);
+            } catch (IOException e) {
+                privatePackageFile.delete();
+                return InstallResult.makeFailure("Unable to copy the package file.");
+            }
+            packageFile = privatePackageFile;
+        }
+        if (existOne != null) {
+            PackageCacheManager.remove(pkg.packageName);
+        }
+        chmodPackageDictionary(packageFile);
+        PackageSetting ps;
+        if (existSetting != null) {
+            ps = existSetting;
+        } else {
+            ps = new PackageSetting();
+        }
+        ps.dependSystem = dependSystem;
+        ps.apkPath = packageFile.getPath();
+        ps.libPath = libDir.getPath();
+        ps.packageName = pkg.packageName;
+        ps.appId = VUserHandle.getAppId(mUidSystem.getOrCreateUid(pkg));
+        if (res.isUpdate) {
+            ps.lastUpdateTime = installTime;
+        } else {
+            ps.firstInstallTime = installTime;
+            ps.lastUpdateTime = installTime;
+            for (int userId : VUserManagerService.get().getUserIds()) {
+                boolean installed = userId == 0;
+                ps.setUserState(userId, false/*launched*/, false/*hidden*/, installed);
             }
         }
-		AppSetting appSetting = new AppSetting();
-		appSetting.parser = parser;
-		appSetting.dependSystem = dependSystem;
-		appSetting.apkPath = apk.getPath();
-		appSetting.libPath = libDir.getPath();
-		appSetting.packageName = pkg.packageName;
-		appSetting.appId = VUserHandle.getAppId(mUidSystem.getOrCreateUid(pkg));
-
-		PackageCache.put(pkg, appSetting);
+        PackageParserEx.savePackageCache(pkg);
+        PackageCacheManager.put(pkg, ps);
+        mPersistenceLayer.save();
         BroadcastSystem.get().startApp(pkg);
-		if (!onlyScan) {
-			notifyAppInstalled(appSetting);
-		}
-		res.isSuccess = true;
-		return res;
-	}
+        if (notify) {
+            notifyAppInstalled(ps);
+        }
+        res.isSuccess = true;
+        return res;
+    }
 
-    private void linkApkResForNotification(String packageName, File apkFile) throws Exception {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (FileUtils.isSymlink(apkFile)) {
-                return;
+
+    @Override
+    public synchronized boolean installPackageAsUser(int userId, String packageName) {
+        if (VUserManagerService.get().exists(userId)) {
+            PackageSetting setting = PackageCacheManager.getSetting(packageName);
+            if (setting != null) {
+                if (!setting.isInstalled(userId)) {
+                    setting.setInstalled(userId, true);
+                    mPersistenceLayer.save();
+                    return true;
+                }
             }
-            // chmod
-            // /data/data/io.virtualapp/virtual
-            // /data/data/io.virtualapp/virtual/data
-            // /data/data/io.virtualapp/virtual/data/app
-            // /data/data/io.virtualapp/virtual/data/app/com.example.notifications/base.apk
-            FileUtils.chmod(apkFile.getParentFile().getAbsolutePath(), FileUtils.FileMode.MODE_755);
-            FileUtils.chmod(apkFile.getAbsolutePath(), FileUtils.FileMode.MODE_755);
+        }
+        return false;
+    }
+
+    private void chmodPackageDictionary(File packageFile) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (FileUtils.isSymlink(packageFile)) {
+                    return;
+                }
+                FileUtils.chmod(packageFile.getParentFile().getAbsolutePath(), FileUtils.FileMode.MODE_755);
+                FileUtils.chmod(packageFile.getAbsolutePath(), FileUtils.FileMode.MODE_755);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-	private boolean canUpdate(PackageParser.Package existOne, PackageParser.Package newOne, int flags) {
-		if ((flags & InstallStrategy.COMPARE_VERSION) != 0) {
-			if (existOne.mVersionCode < newOne.mVersionCode) {
-				return true;
-			}
-		}
-		if ((flags & InstallStrategy.TERMINATE_IF_EXIST) != 0) {
-			return false;
-		}
-		if ((flags & InstallStrategy.UPDATE_IF_EXIST) != 0) {
-			return true;
-		}
-		return false;
-	}
+    private boolean canUpdate(VPackage existOne, VPackage newOne, int flags) {
+        if ((flags & InstallStrategy.COMPARE_VERSION) != 0) {
+            if (existOne.mVersionCode < newOne.mVersionCode) {
+                return true;
+            }
+        }
+        if ((flags & InstallStrategy.TERMINATE_IF_EXIST) != 0) {
+            return false;
+        }
+        if ((flags & InstallStrategy.UPDATE_IF_EXIST) != 0) {
+            return true;
+        }
+        return false;
+    }
 
-	public boolean 	uninstallApp(String pkg) {
-		synchronized (PackageCache.sPackageCaches) {
-			AppSetting setting = findAppInfo(pkg);
-			if (setting != null) {
-				try {
-                    BroadcastSystem.get().stopApp(pkg);
-					VActivityManagerService.get().killAppByPkg(pkg, VUserHandle.USER_ALL);
-                    VEnvironment.getPackageResourcePath(pkg).delete();
-					FileUtils.deleteDir(VEnvironment.getDataAppPackageDirectory(pkg));
-                    VEnvironment.getOdexFile(pkg).delete();
-					for (int userId : VUserManagerService.get().getUserIds()) {
-						FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(userId, pkg));
-					}
-					PackageCache.remove(pkg);
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					notifyAppUninstalled(setting);
-				}
-				return true;
-			}
-		}
-		return false;
-	}
 
-	public List<AppSetting> getAllApps() {
-		List<AppSetting> settings = new ArrayList<>(getAppCount());
-		for (PackageParser.Package p : PackageCache.sPackageCaches.values()) {
-			settings.add((AppSetting) p.mExtras);
-		}
-		return settings;
-	}
+    @Override
+    public boolean uninstallPackage(String packageName, int userId) {
+        if (!VUserManagerService.get().exists(userId)) {
+            return false;
+        }
+        synchronized (PackageCacheManager.PACKAGE_CACHE) {
+            PackageSetting setting = PackageCacheManager.getSetting(packageName);
+            if (setting != null) {
+                if (userId == 0) {
+                    try {
+                        BroadcastSystem.get().stopApp(packageName);
+                        VActivityManagerService.get().killAppByPkg(packageName, VUserHandle.USER_ALL);
+                        VEnvironment.getPackageResourcePath(packageName).delete();
+                        FileUtils.deleteDir(VEnvironment.getDataAppPackageDirectory(packageName));
+                        VEnvironment.getOdexFile(packageName).delete();
+                        for (int id : VUserManagerService.get().getUserIds()) {
+                            FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(id, packageName));
+                        }
+                        PackageCacheManager.remove(packageName);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        notifyAppUninstalled(setting);
+                    }
+                    return true;
+                } else {
+                    setting.setInstalled(userId, false);
+                    mPersistenceLayer.save();
+                    FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(userId, packageName));
+                }
+            }
+        }
+        return false;
+    }
 
-	public int getAppCount() {
-		return PackageCache.sPackageCaches.size();
-	}
+    @Override
+    public int[] getPackageInstalledUsers(String packageName) {
+        PackageSetting ps = PackageCacheManager.getSetting(packageName);
+        if (ps != null) {
+            IntArray installedUsers = new IntArray(5);
+            int[] userIds = VUserManagerService.get().getUserIds();
+            for (int userId : userIds) {
+                if (ps.readUserState(userId).installed) {
+                    installedUsers.add(userId);
+                }
+            }
+            return installedUsers.getAll();
+        }
+        return new int[0];
+    }
 
-	public boolean isAppInstalled(String pkg) {
-		return pkg != null && !"android".equals(pkg) && PackageCache.sPackageCaches.get(pkg) != null;
-	}
+    @Override
+    public List<InstalledAppInfo> getInstalledApps(int flags) {
+        List<InstalledAppInfo> infoList = new ArrayList<>(getInstalledAppCount());
+        for (VPackage p : PackageCacheManager.PACKAGE_CACHE.values()) {
+            PackageSetting setting = (PackageSetting) p.mExtras;
+            infoList.add(setting.getAppInfo(flags));
+        }
+        return infoList;
+    }
 
-	private void notifyAppInstalled(AppSetting setting) {
-		int N = mRemoteCallbackList.beginBroadcast();
-		while (N-- > 0) {
-			try {
-				mRemoteCallbackList.getBroadcastItem(N).onNewApp(setting.packageName);
-			} catch (RemoteException e) {
-				// Ignore
-			}
-		}
-		mRemoteCallbackList.finishBroadcast();
-		Intent virtualIntent = new Intent(Constants.ACTION_PACKAGE_ADDED);
-		Uri uri = Uri.fromParts("package", setting.packageName, null);
-		virtualIntent.setData(uri);
-		virtualIntent.putExtra(Intent.EXTRA_REPLACING, false);
-		for (int userId : VUserManagerService.get().getUserIds()) {
-			Intent intent = new Intent(virtualIntent);
-			intent.putExtra(Intent.EXTRA_UID, VUserHandle.getUid(userId, setting.appId));
-			VirtualCore.get().getContext().sendBroadcast(intent);
-			VLog.logbug(TAG, "Package added broadcast: " + intent.toString());
-		}
-		VAccountManagerService.get().refreshAuthenticatorCache(null);
-	}
+    @Override
+    public List<InstalledAppInfo> getInstalledAppsAsUser(int userId, int flags) {
+        List<InstalledAppInfo> infoList = new ArrayList<>(getInstalledAppCount());
+        for (VPackage p : PackageCacheManager.PACKAGE_CACHE.values()) {
+            PackageSetting setting = (PackageSetting) p.mExtras;
+            boolean visible = setting.isInstalled(userId);
+            if ((flags & VirtualCore.GET_HIDDEN_APP) == 0 && setting.isHidden(userId)) {
+                visible = false;
+            }
+            if (visible) {
+                infoList.add(setting.getAppInfo(flags));
+            }
+        }
+        return infoList;
+    }
 
-	private void notifyAppUninstalled(AppSetting setting) {
-		int N = mRemoteCallbackList.beginBroadcast();
-		while (N-- > 0) {
-			try {
-				mRemoteCallbackList.getBroadcastItem(N).onRemoveApp(setting.packageName);
-			} catch (RemoteException e) {
-				// Ignore
-			}
-		}
-		mRemoteCallbackList.finishBroadcast();
-		Intent virtualIntent = new Intent(Constants.ACTION_PACKAGE_REMOVED);
-		Uri uri = Uri.fromParts("package", setting.packageName, null);
-		virtualIntent.setData(uri);
-		virtualIntent.putExtra(Intent.EXTRA_REPLACING, false);
-		virtualIntent.putExtra(Intent.EXTRA_DATA_REMOVED, true);
-		for (int userId : VUserManagerService.get().getUserIds()) {
-			Intent intent = new Intent(virtualIntent);
-			intent.putExtra(Intent.EXTRA_UID, VUserHandle.getUid(userId, setting.appId));
-			VirtualCore.get().getContext().sendBroadcast(intent);
-		}
-		VAccountManagerService.get().refreshAuthenticatorCache(null);
-	}
+    @Override
+    public int getInstalledAppCount() {
+        return PackageCacheManager.PACKAGE_CACHE.size();
+    }
 
-	@Override
-	public void registerObserver(IAppObserver observer) {
-		try {
-			mRemoteCallbackList.register(observer);
-		} catch (Throwable e) {
-			// Ignore
-		}
-	}
+    @Override
+    public boolean isAppInstalled(String packageName) {
+        return packageName != null && PackageCacheManager.PACKAGE_CACHE.containsKey(packageName);
+    }
 
-	@Override
-	public void unregisterObserver(IAppObserver observer) {
-		try {
-			mRemoteCallbackList.unregister(observer);
-		} catch (Throwable e) {
-			// Ignore
-		}
-	}
+    @Override
+    public boolean isAppInstalledAsUser(int userId, String packageName) {
+        if (packageName == null || !VUserManagerService.get().exists(userId)) {
+            return false;
+        }
+        PackageSetting setting = PackageCacheManager.getSetting(packageName);
+        if (setting == null) {
+            return false;
+        }
+        return setting.isInstalled(userId);
+    }
+
+    private void notifyAppInstalled(PackageSetting setting) {
+        int N = mRemoteCallbackList.beginBroadcast();
+        while (N-- > 0) {
+            try {
+                mRemoteCallbackList.getBroadcastItem(N).onNewApp(setting.packageName);
+            } catch (RemoteException e) {
+                // Ignore
+            }
+        }
+        mRemoteCallbackList.finishBroadcast();
+        VAccountManagerService.get().refreshAuthenticatorCache(null);
+    }
+
+    private void notifyAppUninstalled(PackageSetting setting) {
+        int N = mRemoteCallbackList.beginBroadcast();
+        while (N-- > 0) {
+            try {
+                mRemoteCallbackList.getBroadcastItem(N).onRemoveApp(setting.packageName);
+            } catch (RemoteException e) {
+                // Ignore
+            }
+        }
+        mRemoteCallbackList.finishBroadcast();
+        VAccountManagerService.get().refreshAuthenticatorCache(null);
+    }
+
+    @Override
+    public void registerObserver(IAppObserver observer) {
+        try {
+            mRemoteCallbackList.register(observer);
+        } catch (Throwable e) {
+            // Ignore
+        }
+    }
+
+    @Override
+    public void unregisterObserver(IAppObserver observer) {
+        try {
+            mRemoteCallbackList.unregister(observer);
+        } catch (Throwable e) {
+            // Ignore
+        }
+    }
 
     @Override
     public IAppRequestListener getAppRequestListener() {
@@ -366,20 +463,46 @@ public class VAppManagerService extends IAppManager.Stub {
         this.listener = null;
     }
 
-	public AppSetting findAppInfo(String pkg) {
-		synchronized (PackageCache.class) {
-			if (pkg != null) {
-				PackageParser.Package p = PackageCache.get(pkg);
-				if (p != null) {
-					return (AppSetting) p.mExtras;
-				}
-			}
-			return null;
-		}
-	}
+    @Override
+    public InstalledAppInfo getInstalledAppInfo(String packageName, int flags) {
+        synchronized (PackageCacheManager.class) {
+            if (packageName != null) {
+                PackageSetting setting = PackageCacheManager.getSetting(packageName);
+                if (setting != null) {
+                    return setting.getAppInfo(flags);
+                }
+            }
+            return null;
+        }
+    }
 
-	public int getAppId(String pkg) {
-		AppSetting setting = findAppInfo(pkg);
-		return setting != null ? setting.appId : -1;
-	}
+    public boolean isPackageLaunched(int userId, String packageName) {
+        PackageSetting ps = PackageCacheManager.getSetting(packageName);
+        return ps != null && ps.isLaunched(userId);
+    }
+
+    public void setPackageHidden(int userId, String packageName, boolean hidden) {
+        PackageSetting ps = PackageCacheManager.getSetting(packageName);
+        if (ps != null && VUserManagerService.get().exists(userId)) {
+            ps.setHidden(userId, hidden);
+            mPersistenceLayer.save();
+        }
+    }
+
+    public int getAppId(String packageName) {
+        PackageSetting setting = PackageCacheManager.getSetting(packageName);
+        return setting != null ? setting.appId : -1;
+    }
+
+
+    void restoreFactoryState() {
+        VLog.w(TAG, "Warning: Restore the factory state...");
+        VEnvironment.getDalvikCacheDirectory().delete();
+        VEnvironment.getUserSystemDirectory().delete();
+        VEnvironment.getDataAppDirectory().delete();
+    }
+
+    public void savePersistenceData() {
+        mPersistenceLayer.save();
+    }
 }

@@ -17,6 +17,7 @@ import com.lody.virtual.client.hook.base.ReplaceLastUidHook;
 import com.lody.virtual.client.hook.base.ResultStaticHook;
 import com.lody.virtual.client.hook.base.StaticHook;
 import com.lody.virtual.client.ipc.VActivityManager;
+import com.lody.virtual.helper.compat.ParceledListSliceCompat;
 import com.lody.virtual.remote.AppTaskInfo;
 
 import java.lang.reflect.Method;
@@ -37,9 +38,10 @@ import mirror.android.util.Singleton;
 @Patch({StartActivity.class, StartActivityAsCaller.class,
 		StartActivityAndWait.class, StartActivityWithConfig.class, StartActivityIntentSender.class,
 		StartNextMatchingActivity.class, StartVoiceActivity.class, StartActivities.class,
-		GetIntentSender.class, RegisterReceiver.class, GetContentProvider.class,RefContentProvider.class,
+		RegisterReceiver.class, GetContentProvider.class,RefContentProvider.class,
 		RemoveContentProvider.class,
 		GetContentProviderExternal.class,
+        GetIntentSender.class, GetIntentForIntentSender.class, GetPackageForIntentSender.class,
 
 		GetActivityClassForToken.class, GetTasks.class, GetRunningAppProcesses.class,
 
@@ -52,7 +54,7 @@ import mirror.android.util.Singleton;
 		BroadcastIntent.class, GetCallingPackage.class, GrantUriPermissionFromOwner.class,
 		CheckGrantUriPermission.class, GetPersistedUriPermissions.class, KillApplicationProcess.class,
 		ForceStopPackage.class, AddPackageDependency.class, UpdateDeviceOwner.class,
-		CrashApplication.class, GetPackageForToken.class, GetPackageForIntentSender.class,
+        CrashApplication.class, GetPackageForToken.class,
 
 		SetPackageAskScreenCompat.class, GetPackageAskScreenCompat.class,
 		CheckPermission.class, PublishContentProviders.class, GetCurrentUser.class,
@@ -102,7 +104,7 @@ public class ActivityManagerPatch extends PatchDelegate<HookDelegate<IInterface>
 					//noinspection unchecked
 					Object _infos = method.invoke(who, args);
 					List<ActivityManager.RecentTaskInfo> infos =
-							ParceledListSlice.TYPE != null && ParceledListSlice.TYPE.isInstance(_infos)
+                            ParceledListSliceCompat.isReturnParceledListSlice(method)
 									? ParceledListSlice.getList.call(_infos)
 									: (List)_infos;
 					for (ActivityManager.RecentTaskInfo info : infos) {
@@ -123,6 +125,10 @@ public class ActivityManagerPatch extends PatchDelegate<HookDelegate<IInterface>
 		}
 	}
 
+    @Override
+    public boolean isEnvBad() {
+        return ActivityManagerNative.getDefault.call() != getHookDelegate().getProxyInterface();
+    }
 	private class isUserRunning extends Hook {
 		@Override
 		public String getName() {
@@ -136,8 +142,4 @@ public class ActivityManagerPatch extends PatchDelegate<HookDelegate<IInterface>
 		}
 	}
 
-	@Override
-	public boolean isEnvBad() {
-		return ActivityManagerNative.getDefault.call() != getHookDelegate().getProxyInterface();
-	}
 }

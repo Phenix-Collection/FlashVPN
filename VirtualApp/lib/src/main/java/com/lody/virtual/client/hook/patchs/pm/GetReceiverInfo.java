@@ -1,6 +1,7 @@
 package com.lody.virtual.client.hook.patchs.pm;
 
 import android.content.ComponentName;
+import android.content.pm.ActivityInfo;
 
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VPackageManager;
@@ -34,7 +35,14 @@ import static android.content.pm.PackageManager.GET_DISABLED_COMPONENTS;
 		if ((flags & GET_DISABLED_COMPONENTS) == 0) {
 			flags |= GET_DISABLED_COMPONENTS;
 		}
-		return VPackageManager.get().getReceiverInfo(componentName, flags, 0);
+        ActivityInfo info = VPackageManager.get().getReceiverInfo(componentName, flags, 0);
+        if (info == null) {
+            info = (ActivityInfo) method.invoke(who, args);
+            if (info == null || !isVisiblePackage(info.applicationInfo)) {
+                return null;
+            }
+        }
+        return info;
 	}
 
 	@Override

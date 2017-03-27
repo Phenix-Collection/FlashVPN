@@ -55,6 +55,8 @@ import java.lang.reflect.Method;
         Intent newIntent = handleIntent(intent);
         if (newIntent != null) {
             args[1] = newIntent;
+        } else {
+            return 0;
         }
         if (args[7] instanceof String || args[7] instanceof String[]) {
             // clear the permission

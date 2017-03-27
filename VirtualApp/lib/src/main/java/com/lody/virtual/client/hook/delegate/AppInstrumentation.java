@@ -54,12 +54,13 @@ public final class AppInstrumentation extends InstrumentationDelegate implements
 
 	@Override
 	public void inject() throws Throwable {
+        base = ActivityThread.mInstrumentation.get(VirtualCore.mainThread());
 		ActivityThread.mInstrumentation.set(VirtualCore.mainThread(), this);
 	}
 
 	@Override
 	public boolean isEnvBad() {
-		return ActivityThread.mInstrumentation.get(VirtualCore.mainThread()) != this;
+        return !(ActivityThread.mInstrumentation.get(VirtualCore.mainThread()) instanceof AppInstrumentation);
 	}
 
 	@Override

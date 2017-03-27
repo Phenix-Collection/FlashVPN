@@ -46,8 +46,8 @@ import java.lang.reflect.Method;
 //        int user = (Build.VERSION.SDK_INT>=17?((int)args[args.length-1]):0);
         String tag = (String) args[tagIndex];
         //先处理id，再处理tag
-        id = VNotificationManager.get().dealNotificationId(id, pkg, tag, getVUserId());
-        tag= VNotificationManager.get().dealNotificationTag(id, pkg, tag, getVUserId());
+        id = VNotificationManager.get().dealNotificationId(id, pkg, tag, getAppUserId());
+        tag= VNotificationManager.get().dealNotificationTag(id, pkg, tag, getAppUserId());
         args[idIndex] = id;
         args[tagIndex] = tag;
         //tag和id确定一个通知栏是否重复
@@ -55,7 +55,7 @@ import java.lang.reflect.Method;
         if (!VNotificationManager.get().dealNotification(id, notification, pkg)) {
             return 0;
         }
-        VNotificationManager.get().addNotification(id, tag, pkg, getVUserId());
+        VNotificationManager.get().addNotification(id, tag, pkg, getAppUserId());
         args[0] = getHostPkg();
         if (Build.VERSION.SDK_INT >= 18 && args[1] instanceof String) {
             args[1] = getHostPkg();

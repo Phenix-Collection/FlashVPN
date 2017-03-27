@@ -1,6 +1,7 @@
 package com.lody.virtual.helper.utils;
 
 import android.os.Build;
+import android.os.Parcel;
 import android.system.Os;
 import android.text.TextUtils;
 
@@ -26,25 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Lody
  */
 public class FileUtils {
-    public interface FileMode {
-        int MODE_ISUID = 04000;
-        int MODE_ISGID = 02000;
-        int MODE_ISVTX = 01000;
-        int MODE_IRUSR = 00400;
-        int MODE_IWUSR = 00200;
-        int MODE_IXUSR = 00100;
-        int MODE_IRGRP = 00040;
-        int MODE_IWGRP = 00020;
-        int MODE_IXGRP = 00010;
-        int MODE_IROTH = 00004;
-        int MODE_IWOTH = 00002;
-        int MODE_IXOTH = 00001;
-
-        int MODE_755 = MODE_IRUSR | MODE_IWUSR | MODE_IXUSR
-                | MODE_IRGRP | MODE_IXGRP
-                | MODE_IROTH | MODE_IXOTH;
-    }
-
     /**
      * @param path
      * @param mode {@link FileMode}
@@ -56,7 +38,7 @@ public class FileUtils {
                 Os.chmod(path, mode);
                 return;
             } catch (Exception e) {
-                VLog.w("chmod", path + " " + String.format("%o", mode), e);
+                e.printStackTrace();
             }
         }
 
@@ -88,6 +70,12 @@ public class FileUtils {
             canon = new File(canonDir, file.getName());
         }
         return !canon.getCanonicalFile().equals(canon.getAbsoluteFile());
+    }
+
+    public static void writeParcelToFile(Parcel p, File file) throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(p.marshall());
+        fos.close();
     }
 
     public static byte[] toByteArray(InputStream inStream) throws IOException {
@@ -150,7 +138,7 @@ public class FileUtils {
         }
     }
 
-    public static void copyFile(File source, File target) {
+    public static void copyFile(File source, File target) throws IOException {
 
         FileInputStream inputStream = null;
         FileOutputStream outputStream = null;
@@ -170,8 +158,6 @@ public class FileUtils {
                 buffer.position(0);
                 oChannel.write(buffer);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             closeQuietly(inputStream);
             closeQuietly(outputStream);
@@ -186,7 +172,6 @@ public class FileUtils {
             }
         }
     }
-
 
     public static int peekInt(byte[] bytes, int value, ByteOrder endian) {
         int v2;
@@ -240,6 +225,26 @@ public class FileUtils {
         }
         return res.toString();
     }
+
+    public interface FileMode {
+        int MODE_ISUID = 04000;
+        int MODE_ISGID = 02000;
+        int MODE_ISVTX = 01000;
+        int MODE_IRUSR = 00400;
+        int MODE_IWUSR = 00200;
+        int MODE_IXUSR = 00100;
+        int MODE_IRGRP = 00040;
+        int MODE_IWGRP = 00020;
+        int MODE_IXGRP = 00010;
+        int MODE_IROTH = 00004;
+        int MODE_IWOTH = 00002;
+        int MODE_IXOTH = 00001;
+
+        int MODE_755 = MODE_IRUSR | MODE_IWUSR | MODE_IXUSR
+                | MODE_IRGRP | MODE_IXGRP
+                | MODE_IROTH | MODE_IXOTH;
+    }
+
     /**
      * Lock the specified fle
      */

@@ -4,7 +4,6 @@ import android.content.pm.PackageInfo;
 
 import com.lody.virtual.client.hook.base.Hook;
 import com.lody.virtual.client.ipc.VPackageManager;
-import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.os.VUserHandle;
 
 import java.lang.reflect.Method;
@@ -12,12 +11,10 @@ import java.lang.reflect.Method;
  * @author Lody
  *
  *
- *         适配插件的包信息获取.
- *
- *         原型: public PackageInfo getPackageInfo(String packageName, int flags,
+ *         public PackageInfo getPackageInfo(String packageName, int flags,
  *         int userId)
  */
-public final class GetPackageInfo extends Hook {
+final class GetPackageInfo extends Hook {
 
 	@Override
 	public String getName() {
@@ -40,7 +37,7 @@ public final class GetPackageInfo extends Hook {
 		}
 		packageInfo = (PackageInfo) method.invoke(who, args);
 		if (packageInfo != null) {
-			if (getHostPkg().equals(packageInfo.packageName) || ComponentUtils.isSystemApp(packageInfo)) {
+			if (isVisiblePackage(packageInfo.applicationInfo)) {
 				return packageInfo;
 			}
 		}

@@ -91,7 +91,7 @@ public class AppManager {
 
     public static boolean installApp(Context context, AppModel appModel) {
         MLogs.d(TAG, "apkPath = " + appModel.getApkPath());
-        InstallResult result = VirtualCore.get().installApp(appModel.getApkPath(), InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
+        InstallResult result = VirtualCore.get().installPackage(appModel.getApkPath(), InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
         if (result.isSuccess && PreferencesUtils.getBoolean(context, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
             CommonUtils.createShortCut(context, appModel);
         }
@@ -100,7 +100,7 @@ public class AppManager {
 
     public static boolean uninstallApp(String packageName) {
         MLogs.d(TAG, "packageName = " + packageName);
-        return VirtualCore.get().uninstallApp(packageName);
+        return VirtualCore.get().uninstallPackage(packageName, 0);
     }
 
 //    public static Collection<ProcessRecord> getProcessList(){

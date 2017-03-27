@@ -35,13 +35,14 @@ import com.lody.virtual.client.hook.secondary.ProxyServiceFactory;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.StubManifest;
-import com.lody.virtual.remote.PendingResultData;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VEnvironment;
 import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.remote.PendingResultData;
 import com.lody.virtual.server.secondary.FakeIdentityBinder;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +50,6 @@ import java.util.Map;
 import mirror.android.app.ActivityThread;
 import mirror.android.app.ActivityThreadNMR1;
 import mirror.android.app.ContextImpl;
-import mirror.android.app.ContextImplICS;
-import mirror.android.app.ContextImplKitkat;
 import mirror.android.app.IActivityManager;
 import mirror.android.app.LoadedApk;
 import mirror.android.content.res.CompatibilityInfo;
@@ -61,6 +60,7 @@ import mirror.android.view.RenderScript;
 import mirror.android.view.ThreadedRenderer;
 import mirror.com.android.internal.content.ReferrerIntent;
 import mirror.dalvik.system.VMRuntime;
+import mirror.java.lang.ThreadGroupN;
 
 import static com.lody.virtual.os.VUserHandle.getUserId;
 
@@ -100,6 +100,9 @@ public final class VClientImpl extends IVClient.Stub {
 
 	public String getCurrentPackage() {
 		return mBoundApplication != null ? mBoundApplication.appInfo.packageName : null;
+    }
+    public ApplicationInfo getCurrentApplicationInfo() {
+        return mInitialApplication != null ? mInitialApplication.getApplicationInfo() : null;
 	}
 
 	public int getVUid() {
@@ -264,23 +267,6 @@ public final class VClientImpl extends IVClient.Stub {
 		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			if (RenderScript.setupDiskCache != null) {
 				RenderScript.setupDiskCache.call(codeCacheDir);
-			}
-		}
-		File filesDir = new File(data.appInfo.dataDir, "files");
-		File cacheDir = new File(data.appInfo.dataDir, "cache");
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-			if (ContextImplICS.mExternalFilesDir != null) {
-				ContextImplICS.mExternalFilesDir.set(context, filesDir);
-			}
-			if (ContextImplICS.mExternalCacheDir != null) {
-				ContextImplICS.mExternalCacheDir.set(context, cacheDir);
-			}
-		} else {
-			if (ContextImplKitkat.mExternalCacheDirs != null) {
-				ContextImplKitkat.mExternalCacheDirs.set(context, new File[] {cacheDir});
-			}
-			if (ContextImplKitkat.mExternalFilesDirs != null) {
-				ContextImplKitkat.mExternalFilesDirs.set(context, new File[] {filesDir});
 			}
 		}
 		Object boundApp = fixBoundApp(mBoundApplication);

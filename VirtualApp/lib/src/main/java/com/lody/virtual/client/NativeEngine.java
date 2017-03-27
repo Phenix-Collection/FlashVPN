@@ -1,6 +1,7 @@
 package com.lody.virtual.client;
 
 import android.hardware.Camera;
+import android.media.AudioRecord;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Process;
@@ -8,9 +9,9 @@ import android.os.Process;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.VirtualRuntime;
 import com.lody.virtual.client.ipc.VActivityManager;
-import com.lody.virtual.remote.AppSetting;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.remote.InstalledAppInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +30,11 @@ public class NativeEngine {
 
 	private static final String TAG = NativeEngine.class.getSimpleName();
 
-	private static Map<String, AppSetting> sDexOverrideMap;
+    private static Map<String, InstalledAppInfo> sDexOverrideMap;
     private static Method gOpenDexFileNative;
     private static Method gCameraNativeSetup;
     private static int gCameraMethodType;
+    private static Method gAudioRecordNativeCheckPermission;
 
     static {
         try {
@@ -95,12 +97,19 @@ public class NativeEngine {
         if (gCameraNativeSetup != null) {
             gCameraNativeSetup.setAccessible(true);
         }
+        for (Method mth : AudioRecord.class.getDeclaredMethods()) {
+            if (mth.getName().equals("native_check_permission") && mth.getParameterTypes().length == 1 && mth.getParameterTypes()[0] == String.class) {
+                gAudioRecordNativeCheckPermission = mth;
+                mth.setAccessible(true);
+                break;
+            }
+        }
     }
 
 	public static void startDexOverride() {
-		List<AppSetting> appSettings = VirtualCore.get().getAllApps();
-		sDexOverrideMap = new HashMap<>(appSettings.size());
-		for (AppSetting info : appSettings) {
+        List<InstalledAppInfo> installedAppInfos = VirtualCore.get().getInstalledApps(0);
+        sDexOverrideMap = new HashMap<>(installedAppInfos.size());
+        for (InstalledAppInfo info : installedAppInfos) {
 			try {
 				sDexOverrideMap.put(new File(info.apkPath).getCanonicalPath(), info);
 			} catch (IOException e) {
@@ -144,7 +153,7 @@ public class NativeEngine {
 	}
 
 	public static void hookNative() {
-        Method[] methods = {gOpenDexFileNative, gCameraNativeSetup};
+        Method[] methods = {gOpenDexFileNative, gCameraNativeSetup, gAudioRecordNativeCheckPermission};
 		try {
             nativeHookNative(methods, VirtualCore.get().getHostPkg(), VirtualRuntime.isArt(), Build.VERSION.SDK_INT, gCameraMethodType);
 		} catch (Throwable e) {
@@ -181,7 +190,7 @@ public class NativeEngine {
 		VLog.d(TAG, "DexOrJarPath = %s, OutputPath = %s.", dexOrJarPath, outputPath);
 		try {
 			String canonical = new File(dexOrJarPath).getCanonicalPath();
-			AppSetting info = sDexOverrideMap.get(canonical);
+            InstalledAppInfo info = sDexOverrideMap.get(canonical);
 			if (info != null && !info.dependSystem) {
 				outputPath = info.getOdexFile().getPath();
 				params[1] = outputPath;

@@ -16,6 +16,7 @@ typedef jint (*Native_cameraNativeSetupFunc_T2)(JNIEnv *, jobject, jobject, jint
 
 typedef jint (*Native_getCallingUid)(JNIEnv *, jclass);
 
+typedef jint (*Native_audioRecordNativeCheckPermission)(JNIEnv *, jobject, jstring);
 
 static struct {
 
@@ -52,6 +53,8 @@ static struct {
         Native_openDexNativeFunc_N afterN;
     } orig_native_openDexNativeFunc;
 
+    Native_audioRecordNativeCheckPermission orig_native_audioRecordNativeCheckPermission;
+
 } gOffset;
 
 
@@ -76,6 +79,21 @@ jint getCallingUid(JNIEnv *env, jclass jclazz) {
     return uid;
 }
 
+static jint
+new_native_audioRecordNativeCheckPermission(JNIEnv *env, jobject thiz, jstring _packagename) {
+    jstring host = env->NewStringUTF(gOffset.hostPackageName);
+    return gOffset.orig_native_audioRecordNativeCheckPermission(env, thiz, host);
+}
+
+void replaceAudioRecordNativeCheckPermission(JNIEnv *env, jobject javaMethod, jboolean isArt, int api) {
+    if (!javaMethod || !isArt) {
+        return;
+    }
+   jmethodID methodStruct = env->FromReflectedMethod(javaMethod);
+    void **funPtr = (void **) (reinterpret_cast<size_t>(methodStruct) + gOffset.nativeOffset);
+    gOffset.orig_native_audioRecordNativeCheckPermission = (Native_audioRecordNativeCheckPermission) (*funPtr);
+    *funPtr = (void *)new_native_audioRecordNativeCheckPermission;
+}
 
 static JNINativeMethod gMarkMethods[] = {
         NATIVE_METHOD((void *) mark, "nativeMark", "()V"),
@@ -366,6 +384,9 @@ void patchAndroidVM(jobjectArray javaMethods, jstring packageName, jboolean isAr
                              apiLevel);
     replaceCameraNativeSetupMethod(env, env->GetObjectArrayElement(javaMethods, CAMERA_SETUP),
                                    isArt, apiLevel);
+    replaceAudioRecordNativeCheckPermission(env, env->GetObjectArrayElement(javaMethods,
+                                                                  VIVO_AUDIORECORD_NATIVE_CHECK_PERMISSION),
+                                            isArt, apiLevel);
 }
 
 void *getVMHandle() {
