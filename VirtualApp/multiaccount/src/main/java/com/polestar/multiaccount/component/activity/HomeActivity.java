@@ -317,6 +317,10 @@ public class HomeActivity extends BaseActivity {
             String pkg = cloningPackage;
             cloningPackage = null;
             MLogs.d("Cloning package: " + pkg);
+            if (!PreferencesUtils.hasShownLongClickGuide(this)) {
+                MLogs.d("Not show long click guide.");
+                return;
+            }
             if (PreferencesUtils.isRated()) {
                 return;
             }
