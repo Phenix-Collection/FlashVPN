@@ -175,6 +175,7 @@ public class MApp extends Application {
             @Override
             public void keyLog(Context context, String tag, String log) {
                 MLogs.logBug(tag,log);
+                MTAManager.keyLog(MApp.gDefault, tag, log);
             }
 
             @Override

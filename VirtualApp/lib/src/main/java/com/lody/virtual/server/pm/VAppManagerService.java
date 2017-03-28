@@ -1,5 +1,7 @@
 package com.lody.virtual.server.pm;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -71,11 +73,52 @@ public class VAppManagerService extends IAppManager.Stub {
         }
         synchronized (this) {
             isBooting = true;
-            mPersistenceLayer.read();
+            File file = VEnvironment.getPackageListFile();
+            if (!file.exists()) {
+                VLog.logbug(TAG, "not found package list file. Recover!");
+                recover();
+            } else {
+                mPersistenceLayer.read();
+            }
             if (StubManifest.ENABLE_GMS && !GmsSupport.isGoogleFrameworkInstalled()) {
                 GmsSupport.installGms(0);
             }
             isBooting = false;
+        }
+    }
+
+    private void recover() {
+        for (File appDir : VEnvironment.getDataAppDirectory().listFiles()) {
+            String pkgName = appDir.getName();
+            if ("android".equals(pkgName)) {
+                continue;
+            }
+            File storeFile = new File(appDir, "base.apk");
+            int flags = 0;
+            VLog.d(TAG, "recover " + appDir + "/base.apk");
+            if (!storeFile.exists()) {
+                ApplicationInfo appInfo = null;
+                try {
+                    appInfo = VirtualCore.get().getUnHookPackageManager()
+                            .getApplicationInfo(pkgName, 0);
+                } catch (PackageManager.NameNotFoundException e) {
+                    // Ignore
+                }
+                if (appInfo == null || appInfo.publicSourceDir == null) {
+                    FileUtils.deleteDir(appDir);
+                    for (int userId : VUserManagerService.get().getUserIds()) {
+                        FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(userId, pkgName));
+                    }
+                    continue;
+                }
+                storeFile = new File(appInfo.publicSourceDir);
+                flags |= InstallStrategy.DEPEND_SYSTEM_IF_EXIST;
+            }
+            InstallResult res = installPackage(storeFile.getPath(), flags, false);
+            if (!res.isSuccess) {
+                VLog.e(TAG, "Unable to install app %s: %s.", pkgName, res.error);
+                FileUtils.deleteDir(appDir);
+            }
         }
     }
 
@@ -496,7 +539,8 @@ public class VAppManagerService extends IAppManager.Stub {
 
 
     void restoreFactoryState() {
-        VLog.w(TAG, "Warning: Restore the factory state...");
+        VLog.logbug(TAG, "Warning: Restore the factory state...");
+        VLog.keyLog(VirtualCore.get().getContext(), TAG, "Factory Reset");
         VEnvironment.getDalvikCacheDirectory().delete();
         VEnvironment.getUserSystemDirectory().delete();
         VEnvironment.getDataAppDirectory().delete();
