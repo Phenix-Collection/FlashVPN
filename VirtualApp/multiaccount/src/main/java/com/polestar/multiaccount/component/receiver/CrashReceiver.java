@@ -20,24 +20,17 @@ public class CrashReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-            MLogs.e("CrashReceiver onReceive");
             if (intent == null || intent.getAction() == null) {
                 return;
             }
             if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")) {
                 String pName = intent.getStringExtra("package");
-                Throwable ex = (Throwable) intent.getSerializableExtra("exception");
-                MTAManager.reportCrash(context, pName);
-                if (ex != null) {
-                    MLogs.logBug("report crash and app exited. " + pName);
-                    // bugly:若是导致app退出的崩溃，特殊上报，并标签
-                    CrashReport.startCrashReport();
-                    CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);
-                    CrashReport.postCatchedException(ex);
-                    //MTA
-                    StatService.reportException(context, ex);
+                boolean forground = intent.getBooleanExtra("forground", false);
+                MLogs.logBug("CrashReceiver onReceive crash: " + pName + " forground: " + forground);
+                MTAManager.reportCrash(context, pName,forground);
+                if(forground) {
+                    ToastUtils.ToastDefultLong(context, context.getString(R.string.crash_hint));
                 }
-                ToastUtils.ToastDefultLong(context, context.getString(R.string.crash_hint));
             }
     }
 }

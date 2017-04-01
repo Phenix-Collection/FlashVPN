@@ -35,13 +35,16 @@ import java.lang.reflect.Method;
     @Override
     public Object call(Object who, Method method, Object... args) throws Throwable {
         Intent intent = (Intent) args[1];
-        VLog.d(TAG, "enter call for : " + intent.toString());
+        VLog.logbug(TAG, "enter call for : " + intent.toString());
         if (intent == null || intent.getAction() == null) {
 //                || intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")
 //                || intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")
 //                || intent.getAction().equals("com.facebook.GET_UNIQUE_ID")
 //                || intent.getAction().equals("com.facebook.GET_PHONE_ID")) {
             return 0;
+        }
+        if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")) {
+            return method.invoke(who, args);
         }
         if (!filterFBOnce && intent.getAction().equals("com.facebook.zero.ACTION_ZERO_REFRESH_TOKEN")) {
             VLog.logbug(TAG, "filter fb onece");

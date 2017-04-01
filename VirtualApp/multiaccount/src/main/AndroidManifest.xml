@@ -107,7 +107,7 @@
         <meta-data android:name="CHANNEL_TID" android:value="${CHANNEL_TID_VALUE}"/>
 
 
-        <receiver android:name="com.polestar.multiaccount.component.receiver.CrashReceiver">
+        <receiver android:name="com.polestar.multiaccount.component.receiver.CrashReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="appclone.intent.action.SHOW_CRASH_DIALOG"/>
             </intent-filter>

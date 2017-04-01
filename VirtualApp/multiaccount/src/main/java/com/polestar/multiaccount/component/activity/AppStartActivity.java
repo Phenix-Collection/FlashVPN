@@ -90,6 +90,12 @@ public class AppStartActivity extends BaseActivity {
                     MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from);
                     // Todo: if app is already launched, just switch it to front, no need re-launch
                     AppManager.launchApp(appModel.getPackageName());
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 10000);
 //                            finish();
                 }
             }, delay);

@@ -102,9 +102,11 @@ public class MTAManager {
         StatService.trackCustomKVEvent(context, "home_shortcut", prop);
     }
 
-    public static void reportCrash(Context context, String packageName) {
+    public static void reportCrash(Context context, String packageName, boolean forground) {
         Properties prop = new Properties();
+        if(packageName == null) packageName = "null";
         prop.setProperty("package", packageName);
+        prop.setProperty("forground", forground?"true":"false");
         StatService.trackCustomKVEvent(context, "app_crash", prop);
     }
 

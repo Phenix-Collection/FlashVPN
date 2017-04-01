@@ -53,6 +53,10 @@ public class AppConstants {
 
     public class CrashTag {
         public static final int MAPP_CRASH = 33117;
+        public static final int CLONE_CRASH = 32459;
+        public static final int SERVER_CRASH = 41781;
+        public static final int FG_CRASH = 41784;
+
     }
 
 }

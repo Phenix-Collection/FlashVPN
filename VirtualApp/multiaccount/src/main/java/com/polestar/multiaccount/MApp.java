@@ -24,7 +24,6 @@ import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.ImageLoaderUtil;
-import com.polestar.multiaccount.utils.LocalExceptionCollectUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.RemoteConfig;
@@ -94,6 +93,8 @@ public class MApp extends Application {
                 // package value");
                 sdk.init(map, gDefault);
 
+                FirebaseApp.initializeApp(gDefault);
+                RemoteConfig.init();
                 ImageLoaderUtil.init(gDefault);
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
@@ -139,7 +140,8 @@ public class MApp extends Application {
 
                     }
                 });
-
+                FirebaseApp.initializeApp(gDefault);
+                RemoteConfig.init();
                 MComponentDelegate delegate = new MComponentDelegate();
                 delegate.init();
                 VirtualCore.get().setComponentDelegate(delegate);
@@ -159,8 +161,6 @@ public class MApp extends Application {
             setDefaultUncaughtExceptionHandler(this);
             initBugly(this);
             MTAManager.init(this);
-            FirebaseApp.initializeApp(this);
-            RemoteConfig.init();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -197,56 +197,44 @@ public class MApp extends Application {
         @Override
         public void uncaughtException(Thread thread, Throwable ex) {
             MLogs.logBug("uncaughtException");
-            MLogs.e(ex);
+
+            String pkg;
             CrashReport.startCrashReport();
-            Context innerContext = VClientImpl.get().getCurrentApplication();
             //1. innerContext = null, internal error in Pb
-            if (innerContext == null) {
-                MLogs.logBug("MApp internal exception, exit.");
+            if (VirtualCore.get() != null
+                    && (VirtualCore.get().isMainProcess() )) {
+                MLogs.logBug("Super Clone main app exception, exit.");
+                pkg = "main";
                 CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);
-                CrashReport.postCatchedException(ex);
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            } else if(VirtualCore.get()!= null && VirtualCore.get().isServerProcess()){
+                MLogs.logBug("Server process crash!");
+                pkg = "server";
+                CrashReport.setUserSceneTag(context, AppConstants.CrashTag.SERVER_CRASH);
             } else {
-                LocalExceptionCollectUtils.saveExceptionToLocalFile(context, ex);
-
-                //2. innerContext != null, error in third App, bugly and MTA will report.
-                MLogs.e("cur process id:" + android.os.Process.myPid());
-                MLogs.e("cur thread name:" + Thread.currentThread().getName());
-                ActivityManager.RunningAppProcessInfo info = CommonUtils.getForegroundProcess(context);
-                if (info != null) {
-                    MLogs.e("foreground process: " + info.pid);
-                    MLogs.e("foreground process: " + info.processName);
-                }
-
-                //2.1 crash and app exit
-
-                if (info != null && android.os.Process.myPid() == info.pid) {
-                    // Toast
-                    Intent crash = new Intent("appclone.intent.action.SHOW_CRASH_DIALOG");
-                    MLogs.logBug("inner packagename: " + innerContext.getPackageName());
-                    crash.putExtra("package", innerContext.getPackageName());
-                    crash.putExtra("exception", ex);
-                    sendBroadcast(crash);
-                } else {
-                    //2.2 crash but app not exit
-                    MLogs.logBug("report crash, but app not exit.");
-                    CrashReport.postCatchedException(ex);
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                MLogs.logBug("Client process crash!");
+                pkg = VClientImpl.get() == null? null: VClientImpl.get().getCurrentPackage();
+                CrashReport.setUserSceneTag(context, AppConstants.CrashTag.CLONE_CRASH);
             }
-//            if (orig != null) {
-//                orig.uncaughtException(thread, ex);
-//            } else {
-//
-//            }
+            MLogs.logBug(MLogs.getStackTraceString(ex));
+
+            ActivityManager.RunningAppProcessInfo info = CommonUtils.getForegroundProcess(context);
+            boolean forground = false;
+            if (info != null && android.os.Process.myPid() == info.pid) {
+                MLogs.logBug("forground crash");
+                forground = true;
+                CrashReport.setUserSceneTag(context, AppConstants.CrashTag.FG_CRASH);
+            }
+            Intent crash = new Intent("appclone.intent.action.SHOW_CRASH_DIALOG");
+            crash.putExtra("package", pkg);
+            crash.putExtra("forground", forground);
+            crash.putExtra("exception", ex);
+            sendBroadcast(crash);
+            CrashReport.postCatchedException(ex);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
         }
