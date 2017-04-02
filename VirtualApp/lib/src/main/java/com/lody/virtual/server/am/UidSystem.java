@@ -1,5 +1,8 @@
 package com.lody.virtual.server.am;
 
+import android.content.pm.PackageInfo;
+
+import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.helper.utils.FileUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VEnvironment;
@@ -25,7 +28,8 @@ public class UidSystem {
     private static final String TAG = UidSystem.class.getSimpleName();
 
     private final HashMap<String, Integer> mSharedUserIdMap = new HashMap<>();
-    private int mFreeUid = FIRST_APPLICATION_UID;
+    private static final int FREE_UID_START = FIRST_APPLICATION_UID + 5000;
+    private int mFreeUid = FREE_UID_START;
 
 
     public void initUidList() {
@@ -44,6 +48,9 @@ public class UidSystem {
         try {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(uidFile));
             mFreeUid = is.readInt();
+            if (mFreeUid < FREE_UID_START) {
+                mFreeUid = FREE_UID_START;
+            }
             //noinspection unchecked
             Map<String, Integer> map = (HashMap<String, Integer>) is.readObject();
             mSharedUserIdMap.putAll(map);
@@ -86,7 +93,15 @@ public class UidSystem {
         if (uid != null) {
             return uid;
         }
-        int newUid = ++mFreeUid;
+        int newUid;
+        try {
+            PackageInfo pi = VirtualCore.getPM().getPackageInfo(pkg.packageName, 0);
+            newUid = pi.applicationInfo.uid;
+        } catch (Exception ex) {
+            newUid = ++mFreeUid;
+            VLog.logbug(TAG, "Not found package infor for "+ pkg.packageName);
+            VLog.logbug(TAG, VLog.getStackTraceString(ex));
+        }
         mSharedUserIdMap.put(sharedUserId, newUid);
         save();
         return newUid;
