@@ -90,7 +90,7 @@ public class VAppManagerService extends IAppManager.Stub {
     private void recover() {
         for (File appDir : VEnvironment.getDataAppDirectory().listFiles()) {
             String pkgName = appDir.getName();
-            if ("android".equals(pkgName)) {
+            if ("android".equals(pkgName) || "system".equals(pkgName)) {
                 continue;
             }
             File storeFile = new File(appDir, "base.apk");
@@ -138,6 +138,7 @@ public class VAppManagerService extends IAppManager.Stub {
     }
 
     private boolean loadPackageInnerLocked(PackageSetting ps) {
+        VLog.logbug(TAG, "Load package: " + ps.packageName + " id " + ps.appId);
         if (ps.dependSystem) {
             if (!VirtualCore.get().isOutsideInstalled(ps.packageName)) {
                 return false;
@@ -201,6 +202,7 @@ public class VAppManagerService extends IAppManager.Stub {
         if (pkg == null || pkg.packageName == null) {
             return InstallResult.makeFailure("Unable to parse the package.");
         }
+        VLog.logbug(TAG, "install package: " + pkg.packageName + " path: " + path);
         InstallResult res = new InstallResult();
         res.packageName = pkg.packageName;
         // PackageCache holds all packages, try to check if we need to update.
