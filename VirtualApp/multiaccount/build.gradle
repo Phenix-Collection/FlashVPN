@@ -9,7 +9,7 @@ def releaseTime() {
 }
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.2"
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
@@ -50,6 +50,7 @@ android {
             jniDebuggable false
         }
         release {
+            shrinkResources true
             signingConfig signingConfigs.myConfig
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'lib-proguard.txt'
@@ -75,7 +76,6 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
     compile 'com.tencent.bugly:crashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.1.5
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
@@ -93,21 +93,26 @@ dependencies {
     releaseCompile 'com.github.moduth:blockcanary-no-op:1.0.2'
     compile 'com.android.support:design:25.+'
     compile 'org.greenrobot:greendao:3.0.1'
-    compile 'com.google.code.gson:gson:2.3.1'
+    //compile 'com.google.code.gson:gson:2.3.1'
     //firebase messaging/notifications
     compile 'com.google.firebase:firebase-core:9.8.0'
     compile 'com.google.firebase:firebase-config:9.8.0'
     // MTA
     compile files('libs/mid-sdk-3.5.jar')
     compile files('libs/mta-sdk-2.2.0.jar')
-
+    //Avazu
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile(name: 'avazu_common', ext: 'aar')
+    compile(name: 'avazu_appwall', ext: 'aar')
+    //    compile files('libs/avazu_common.aar')
+    //    compile files('libs/avazu_appwall.aar')
+    //    compile files('libs/mta-sdk-2.2.0.jar')
     compile 'com.google.android.gms:play-services-ads:9.8.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
-    compile 'com.google.code.gson:gson:2.3.1'
+    //compile 'com.google.code.gson:gson:2.3.1'
     //ad
     compile 'com.google.firebase:firebase-ads:9.8.0'
     compile 'com.facebook.android:audience-network-sdk:4.+'
-
     compile project(':lib')
 }
 apply plugin: 'com.google.gms.google-services'

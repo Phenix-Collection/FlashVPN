@@ -24,6 +24,7 @@ import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.MobVistaSDK;
 import com.mobvista.msdk.out.MobVistaSDKFactory;
 import com.mobvista.msdk.out.MvWallHandler;
+import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -51,6 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import nativesdk.ad.adsdk.AdSdk;
 
 public class HomeActivity extends BaseActivity {
 
@@ -269,6 +272,13 @@ public class HomeActivity extends BaseActivity {
         super.onResume();
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
         preloadAppWall();
+        AdSdk.preloadMarketData(this.getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AdUtils.uploadWallImpression();
+            }
+        }, 2000);
         if (showAppWall) {
             giftIconView.setVisibility(View.GONE);
             wallButtonLayout.setVisibility(View.GONE);

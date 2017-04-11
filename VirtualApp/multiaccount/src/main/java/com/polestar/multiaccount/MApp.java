@@ -40,6 +40,8 @@ import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.MobVistaSDK;
 import com.mobvista.msdk.out.MobVistaSDKFactory;
 
+import nativesdk.ad.adsdk.AdSdk;
+
 public class MApp extends Application {
 
     private static MApp gDefault;
@@ -98,6 +100,8 @@ public class MApp extends Application {
                 ImageLoaderUtil.init(gDefault);
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
+               //
+                AdSdk.initialize(MApp.getApp(), "27681");
             }
 
             @Override
@@ -145,6 +149,7 @@ public class MApp extends Application {
                 MComponentDelegate delegate = new MComponentDelegate();
                 delegate.init();
                 VirtualCore.get().setComponentDelegate(delegate);
+                AdSdk.initialize(MApp.getApp(), "27681");
                 virtualCore.addVisibleOutsidePackage("com.tencent.mobileqq");
                 virtualCore.addVisibleOutsidePackage("com.tencent.mobileqqi");
                 virtualCore.addVisibleOutsidePackage("com.tencent.minihd.qq");

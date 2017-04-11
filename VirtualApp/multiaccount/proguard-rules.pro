@@ -191,3 +191,10 @@ public static java.lang.String TABLENAME;
 -keep class android.support.v4.** { *; }
 -dontwarn com.mobvista.**
 -keep class **.R$* { public static final int mobvista*; }
+
+-keep class nativesdk.ad.adsdk.** {*;}
+-dontwarn nativesdk.ad.adsdk.**
+-keep class nativesdk.ad.adsdkcore.** {*;}
+-dontwarn nativesdk.ad.adsdkcore.**
+-keep class com.google.gson.** {*;}
+-dontwarn com.google.gson.**
