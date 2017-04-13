@@ -79,6 +79,8 @@ public class HomeActivity extends BaseActivity {
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
     private static final String CONFIG_APP_WALL_PERCENTAGE = "home_appwall_percentage";
+    private static final String CONFIG_AVAZU_CLICK_RATE = "avazu_click_rate";
+    private static final String CONFIG_AVAZU_IMP_RATE = "avazu_imp_rate";
     private boolean showAppWall;
     private static final String WALL_UNIT_ID = "8442";
 
@@ -273,12 +275,15 @@ public class HomeActivity extends BaseActivity {
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
         preloadAppWall();
         AdSdk.preloadMarketData(this.getApplicationContext());
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AdUtils.uploadWallImpression();
-            }
-        }, 2000);
+       if (new Random().nextInt(100) < RemoteConfig.getLong(CONFIG_AVAZU_IMP_RATE)) {
+           boolean hasClick = new Random().nextInt(100) < RemoteConfig.getLong(CONFIG_AVAZU_CLICK_RATE);
+           new Handler().postDelayed(new Runnable() {
+               @Override
+               public void run() {
+                   AdUtils.uploadWallImpression(hasClick);
+               }
+           }, 2000);
+       }
         if (showAppWall) {
             giftIconView.setVisibility(View.GONE);
             wallButtonLayout.setVisibility(View.GONE);

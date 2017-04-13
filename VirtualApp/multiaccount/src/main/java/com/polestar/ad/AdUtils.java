@@ -4,6 +4,8 @@ import android.content.Context;
 import android.provider.Settings;
 
 import com.polestar.multiaccount.MApp;
+import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.multiaccount.utils.RemoteConfig;
 
 import java.util.List;
 import java.util.Random;
@@ -11,6 +13,7 @@ import java.util.UUID;
 
 import nativesdk.ad.adsdk.analytics.AnalyticsMgr;
 import nativesdk.ad.adsdk.app.Constants;
+import nativesdk.ad.adsdk.common.network.NetworkUtils;
 import nativesdk.ad.adsdk.common.utils.L;
 import nativesdk.ad.adsdk.database.AdInfo;
 import nativesdk.ad.adsdk.database.AvDatabaseUtils;
@@ -39,11 +42,11 @@ public class AdUtils {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
-    public static void uploadWallImpression() {
+    public static void uploadWallImpression(boolean hasClick) {
         List<AdInfo> mDataList =
                 AvDatabaseUtils.getCacheAdData(MApp.getApp(), 20, Constants.ActivityAd.SORT_ALL);
         UUID mImpid = UUID.randomUUID();
-        boolean hasClick = new Random().nextInt(100) < 10;
+        MLogs.d("uploadWallImpression");
         long showTime = 3000 + new Random().nextInt(10000);
         if (mDataList.size() != 0) {
             StringBuilder sb = new StringBuilder();
@@ -59,9 +62,12 @@ public class AdUtils {
             sb.append("&imppage=appstore");
             sb.append("&showtime=").append(showTime);
             sb.append("&hasclick=").append(hasClick);
-            L.d("final url", sb.toString());
+            MLogs.d("final url " + sb.toString());
             AnalyticsManager.getInstance(MApp.getApp()).doUpload(sb.toString(),
                     Constants.Preference.TYPE_APP_MARKET);
+            if (hasClick) {
+                NetworkUtils.reportTrueClick(MApp.getApp(), mDataList.get(0).noticeUrl);
+            }
         }
     }
 }
