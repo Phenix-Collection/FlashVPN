@@ -174,10 +174,10 @@ public class NativeInterstitialActivity extends Activity {
         mFuseLoader.loadAd(1, new IAdLoadListener() {
             @Override
             public void onAdLoaded(IAd ad) {
-                hideLoadding();
-                fillInterstitialLayout(ad);
-                mFuseLoader.loadAd(1, null);
-                //loadAdmobNativeExpress();
+//                hideLoadding();
+//                fillInterstitialLayout(ad);
+//                mFuseLoader.loadAd(1, null);
+                loadAdmobNativeExpress();
             }
 
             @Override
