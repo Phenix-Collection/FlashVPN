@@ -85,7 +85,7 @@ public class FBNativeAdapter extends Ad implements IAdLoader {
 
     @Override
     public double getStarRating() {
-        return mRawAd == null ? null : mRawAd.getAdStarRating().getValue();
+        return (mRawAd == null || mRawAd.getAdStarRating() == null) ? 0 : mRawAd.getAdStarRating().getValue();
     }
 
     @Override

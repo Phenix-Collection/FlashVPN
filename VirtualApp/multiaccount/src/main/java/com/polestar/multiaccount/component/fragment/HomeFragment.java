@@ -66,6 +66,7 @@ import com.polestar.multiaccount.widgets.LeftRightDialog;
 import com.polestar.multiaccount.widgets.CustomFloatView;
 import com.polestar.multiaccount.widgets.GridAppCell;
 import com.polestar.multiaccount.widgets.HeaderGridView;
+import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 import com.polestar.multiaccount.widgets.TutorialGuides;
 import com.polestar.multiaccount.widgets.TutorialGuidesUtils;
 import com.polestar.multiaccount.widgets.dragdrop.DragController;
@@ -440,6 +441,8 @@ public class HomeFragment extends BaseFragment {
             subtitleView.setText(ad.getBody());
             TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
             ctaView.setText(ad.getCallToActionText());
+            StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(R.id.star_rating_layout);
+            starLevelLayout.setRating((int)ad.getStarRating());
 
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);

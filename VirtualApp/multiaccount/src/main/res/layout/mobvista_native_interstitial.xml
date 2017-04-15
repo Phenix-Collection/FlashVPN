@@ -21,13 +21,14 @@
             android:src="@drawable/mobvista_close" />
     </RelativeLayout>
 
+
     <LinearLayout
         android:id="@+id/mobvista_interstitial_ll_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
+        android:layout_centerInParent="true"
         android:background="#ffffff"
         android:orientation="vertical" >
 
@@ -38,7 +39,32 @@
             <com.polestar.imageloader.widget.BasicLazyLoadImageView
                 android:id="@+id/mobvista_interstitial_iv_image"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="180dp"
+                android:scaleType="fitXY" />
+            <TextView
+                android:id="@+id/ad_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|left"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:background="@color/native_ad_transparent_black"
+                android:ellipsize="end"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:text="AD"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/native_ad_text_white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.polestar.imageloader.widget.BasicLazyLoadImageView
+                android:id="@+id/ad_choices_image"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="top|right"
                 android:scaleType="fitXY" />
 
             <RelativeLayout
@@ -120,5 +146,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
-
 </RelativeLayout>

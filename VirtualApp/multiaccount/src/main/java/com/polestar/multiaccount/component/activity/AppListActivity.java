@@ -51,6 +51,7 @@ import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.FixedGridView;
 import com.polestar.multiaccount.widgets.FixedListView;
+import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 import java.text.Collator;
 import java.util.List;
@@ -313,6 +314,8 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             subtitleView.setText(ad.getBody());
             TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
             ctaView.setText(ad.getCallToActionText());
+            StarLevelLayoutView starLevelLayoutView = (StarLevelLayoutView) adView.findViewById(R.id.star_rating_layout);
+            starLevelLayoutView.setRating((int)ad.getStarRating());
 
             adContainer.removeAllViews();
             adContainer.setVisibility(View.VISIBLE);

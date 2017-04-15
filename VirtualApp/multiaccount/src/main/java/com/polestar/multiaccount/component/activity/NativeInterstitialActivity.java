@@ -13,18 +13,20 @@ import com.mobvista.msdk.out.MobVistaSDKFactory;
 import com.mobvista.msdk.out.MvNativeHandler;
 import com.mobvista.msdk.out.MvNativeHandler.NativeAdListener;
 import com.mobvista.msdk.out.MvNativeHandler.Template;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.R;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -43,6 +45,7 @@ public class NativeInterstitialActivity extends Activity {
     public int BIG_IMG_REQUEST_AD_NUM = 1;
     private BasicLazyLoadImageView mIvIcon;
     private BasicLazyLoadImageView mIvImage;
+    private BasicLazyLoadImageView mChoiceImage;
     private TextView mTvAppName;
     private TextView mTvAppDesc;
     private TextView mTvCta;
@@ -51,6 +54,9 @@ public class NativeInterstitialActivity extends Activity {
     private StarLevelLayoutView mStarLayout;
     private ProgressBar mProgressBar;
     private LinearLayout mLl_Root;
+    private FuseAdLoader mFuseLoader;
+
+    private static final String CONFIG_SLOT_HOME_LUCKY = "slot_home_lucky";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +65,9 @@ public class NativeInterstitialActivity extends Activity {
         initView();
         showLoadding();
         setlistener();
-        loadNative();
+        //mvLoadNative();
+        mFuseLoader = FuseAdLoader.get(CONFIG_SLOT_HOME_LUCKY, this);
+        fuseLoadNative();
     }
 
     private void showLoadding() {
@@ -92,70 +100,49 @@ public class NativeInterstitialActivity extends Activity {
         mStarLayout = (StarLevelLayoutView) findViewById(R.id.mobvista_interstitial_star);
         mProgressBar = (ProgressBar) findViewById(R.id.mobvista_interstitial_progress);
         mLl_Root = (LinearLayout) findViewById(R.id.mobvista_interstitial_ll_root);
+        mChoiceImage = (BasicLazyLoadImageView) findViewById(R.id.ad_choices_image);
     }
-
-    public void loadNative() {
-        Map<String, Object> properties = MvNativeHandler.getNativeProperties(UNIT_ID);
-        nativeHandle = new MvNativeHandler(properties, this);
-        nativeHandle.addTemplate(new Template(MobVistaConstans.TEMPLATE_BIG_IMG, BIG_IMG_REQUEST_AD_NUM));
-        nativeHandle.setAdListener(new NativeAdListener() {
-
+    public void fuseLoadNative() {
+        mFuseLoader.loadAd(1, new IAdLoadListener() {
             @Override
-            public void onAdLoaded(List<Campaign> campaigns, int template) {
+            public void onAdLoaded(IAd ad) {
                 hideLoadding();
-                fillInterstitialLayout(campaigns);
-                preloadNative();
+                fillInterstitialLayout(ad);
+                mFuseLoader.loadAd(1, null);
             }
 
             @Override
-            public void onAdLoadError(String message) {
-                Log.e(TAG, "onAdLoadError:" + message);
-            }
-
-            @Override
-            public void onAdFramesLoaded(List<Frame> list) {
+            public void onAdListLoaded(List<IAd> ads) {
 
             }
 
             @Override
-            public void onAdClick(Campaign campaign) {
-                Log.e(TAG, "onAdClick");
+            public void onError(String error) {
+                MLogs.e("Lucky load native error " + error);
             }
         });
-        nativeHandle.load();
     }
 
-    protected void fillInterstitialLayout(List<Campaign> campaigns) {
-        if (campaigns != null && campaigns.size() > 0) {
-            Campaign campaign = campaigns.get(0);
-            if (!TextUtils.isEmpty(campaign.getIconUrl())) {
-                mIvIcon.setDefaultResource(0);
-                mIvIcon.requestDisplayURL(campaign.getIconUrl());
-            }
-            if (!TextUtils.isEmpty(campaign.getImageUrl())) {
-                mIvImage.setDefaultResource(0);
-                mIvImage.requestDisplayURL(campaign.getImageUrl());
-            }
-
-            mTvAppName.setText(campaign.getAppName() + "");
-            mTvAppDesc.setText(campaign.getAppDesc() + "");
-            mTvCta.setText(campaign.getAdCall());
-            int rating = (int) campaign.getRating();
-            mStarLayout.setRating(rating);
-            nativeHandle.registerView(mLl_Root, campaign);
+    protected void fillInterstitialLayout(IAd ad) {
+        if (!TextUtils.isEmpty(ad.getIconImageUrl())) {
+            mIvIcon.setDefaultResource(0);
+            mIvIcon.requestDisplayURL(ad.getIconImageUrl());
         }
+        if (!TextUtils.isEmpty(ad.getCoverImageUrl())) {
+            mIvImage.setDefaultResource(0);
+            mIvImage.requestDisplayURL(ad.getCoverImageUrl());
+        }
+        if (!TextUtils.isEmpty(ad.getPrivacyIconUrl())) {
+            mChoiceImage.setDefaultResource(0);
+            mChoiceImage.requestDisplayURL(ad.getPrivacyIconUrl());
+        }
+
+        mTvAppName.setText(ad.getTitle() + "");
+        mTvAppDesc.setText(ad.getBody() + "");
+        mTvCta.setText(ad.getCallToActionText());
+        int rating = (int) ad.getStarRating();
+        mStarLayout.setRating(rating);
+        ad.registerViewForInteraction(mLl_Root);
+        ad.registerPrivacyIconView(mChoiceImage);
     }
-
-    public void preloadNative() {
-        MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
-        Map<String, Object> preloadMap = new HashMap<String, Object>();
-        preloadMap.put(MobVistaConstans.PROPERTIES_LAYOUT_TYPE, MobVistaConstans.LAYOUT_NATIVE);
-        preloadMap.put(MobVistaConstans.PROPERTIES_UNIT_ID, UNIT_ID);
-        List<Template> list = new ArrayList<Template>();
-        list.add(new Template(MobVistaConstans.TEMPLATE_BIG_IMG, BIG_IMG_REQUEST_AD_NUM));
-        preloadMap.put(MobVistaConstans.NATIVE_INFO, MvNativeHandler.getTemplateString(list));
-        sdk.preload(preloadMap);
-
-    }
-
 }
