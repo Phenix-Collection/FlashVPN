@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.MobVistaSDK;
 import com.mobvista.msdk.out.Campaign;
@@ -13,12 +17,17 @@ import com.mobvista.msdk.out.MobVistaSDKFactory;
 import com.mobvista.msdk.out.MvNativeHandler;
 import com.mobvista.msdk.out.MvNativeHandler.NativeAdListener;
 import com.mobvista.msdk.out.MvNativeHandler.Template;
+import com.polestar.ad.AdConfig;
+import com.polestar.ad.AdConstants;
+import com.polestar.ad.AdLog;
+import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 import android.app.Activity;
@@ -55,6 +64,7 @@ public class NativeInterstitialActivity extends Activity {
     private ProgressBar mProgressBar;
     private LinearLayout mLl_Root;
     private FuseAdLoader mFuseLoader;
+    private NativeExpressAdView mAdmobExpressView;
 
     private static final String CONFIG_SLOT_HOME_LUCKY = "slot_home_lucky";
 
@@ -101,6 +111,64 @@ public class NativeInterstitialActivity extends Activity {
         mProgressBar = (ProgressBar) findViewById(R.id.mobvista_interstitial_progress);
         mLl_Root = (LinearLayout) findViewById(R.id.mobvista_interstitial_ll_root);
         mChoiceImage = (BasicLazyLoadImageView) findViewById(R.id.ad_choices_image);
+        initAdmobBannerView();
+    }
+
+    private void initAdmobBannerView() {
+        mAdmobExpressView = new NativeExpressAdView(this);
+        List<AdConfig> adConfigs = RemoteConfig.getAdConfigList(CONFIG_SLOT_HOME_LUCKY);
+        String adunit  = null;
+        if (adConfigs != null) {
+            for (AdConfig adConfig: adConfigs) {
+                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
+                    adunit = adConfig.key;
+                    break;
+                }
+            }
+        }
+        if (TextUtils.isEmpty(adunit)) {
+            mAdmobExpressView = null;
+            return;
+        }
+        mAdmobExpressView.setAdSize(new AdSize(360, 320));
+//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
+        mAdmobExpressView.setAdUnitId(adunit);
+        mAdmobExpressView.setVisibility(View.GONE);
+        mAdmobExpressView.setBackgroundColor(0);
+        mAdmobExpressView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                AdLog.d("onAdClosed");
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                AdLog.d("onAdFailedToLoad " + i);
+                mAdmobExpressView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                hideLoadding();
+                mLl_Root.removeAllViews();
+                mLl_Root.addView(mAdmobExpressView);
+                mAdmobExpressView.setVisibility(View.VISIBLE);
+                AdLog.d("on Banner AdLoaded ");
+            }
+        });
     }
     public void fuseLoadNative() {
         mFuseLoader.loadAd(1, new IAdLoadListener() {
@@ -109,6 +177,7 @@ public class NativeInterstitialActivity extends Activity {
                 hideLoadding();
                 fillInterstitialLayout(ad);
                 mFuseLoader.loadAd(1, null);
+                //loadAdmobNativeExpress();
             }
 
             @Override
@@ -119,10 +188,27 @@ public class NativeInterstitialActivity extends Activity {
             @Override
             public void onError(String error) {
                 MLogs.e("Lucky load native error " + error);
+                loadAdmobNativeExpress();
             }
         });
     }
-
+    private void loadAdmobNativeExpress(){
+        if (mAdmobExpressView == null) {
+            return;
+        }
+        MLogs.d("Home loadAdmobNativeExpress");
+        if (AdConstants.DEBUG) {
+            String android_id = AdUtils.getAndroidID(this);
+            String deviceId = AdUtils.MD5(android_id).toUpperCase();
+            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
+            boolean isTestDevice = request.isTestDevice(this);
+            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
+            AdLog.d( "Admob unit id "+ mAdmobExpressView.getAdUnitId());
+            mAdmobExpressView.loadAd(request );
+        } else {
+            mAdmobExpressView.loadAd(new AdRequest.Builder().build());
+        }
+    }
     protected void fillInterstitialLayout(IAd ad) {
         if (!TextUtils.isEmpty(ad.getIconImageUrl())) {
             mIvIcon.setDefaultResource(0);
