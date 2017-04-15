@@ -26,11 +26,15 @@ public class VAccountManager {
 
 	public IAccountManager getRemote() {
 		if (mRemote == null) {
-			IAccountManager remote = IAccountManager.Stub
-					.asInterface(ServiceManagerNative.getService(ServiceManagerNative.ACCOUNT));
+			Object remote = getStubInterface();
 			mRemote = LocalProxyUtils.genProxy(IAccountManager.class, remote);
 		}
 		return mRemote;
+	}
+
+	private Object getStubInterface() {
+		return IAccountManager.Stub
+				.asInterface(ServiceManagerNative.getService(ServiceManagerNative.ACCOUNT));
 	}
 
 	public AuthenticatorDescription[] getAuthenticatorTypes() {

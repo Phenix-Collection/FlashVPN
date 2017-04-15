@@ -14,7 +14,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.lody.virtual.client.env.VirtualRuntime;
-import com.lody.virtual.remote.ReceiverInfo;
 import com.lody.virtual.server.IPackageManager;
 
 import java.util.List;
@@ -32,29 +31,22 @@ public class VPackageManager {
 		return sMgr;
 	}
 
-	public synchronized IPackageManager getInterface() {
+	public IPackageManager getInterface() {
 		if (mRemote == null) {
 			synchronized (VPackageManager.class) {
 				if (mRemote == null) {
-					final IBinder pmBinder = ServiceManagerNative.getService(ServiceManagerNative.PACKAGE);
-					Object remote = IPackageManager.Stub.asInterface(pmBinder);
+					Object remote = getRemoteInterface();
 					mRemote = LocalProxyUtils.genProxy(IPackageManager.class, remote);
-				}
-				if (mRemote == null) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} finally {
-						final IBinder pmBinder = ServiceManagerNative.getService(ServiceManagerNative.PACKAGE);
-						Object remote = IPackageManager.Stub.asInterface(pmBinder);
-						mRemote = LocalProxyUtils.genProxy(IPackageManager.class, remote);
-					}
 				}
 			}
 		}
 		return mRemote;
 	}
+
+	private Object getRemoteInterface() {
+        final IBinder pmBinder = ServiceManagerNative.getService(ServiceManagerNative.PACKAGE);
+        return IPackageManager.Stub.asInterface(pmBinder);
+    }
 
 	public int checkPermission(String permName, String pkgName, int userId) {
 		try {

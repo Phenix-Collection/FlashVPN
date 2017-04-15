@@ -2,7 +2,6 @@ package com.lody.virtual.helper;
 
 import android.os.Parcel;
 
-import com.lody.virtual.os.VEnvironment;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,7 +53,7 @@ public abstract class PersistenceLayer {
     }
 
     public void read() {
-        File file = VEnvironment.getPackageListFile();
+        File file = mPersistenceFile;
         Parcel p = Parcel.obtain();
         try {
             FileInputStream fis = new FileInputStream(file);

@@ -2,13 +2,16 @@ package com.lody.virtual.client.env;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 import mirror.android.webkit.IWebViewUpdateService;
 import mirror.android.webkit.WebViewFactory;
@@ -24,10 +27,33 @@ public final class SpecialComponentList {
     private static final HashSet<String> WHITE_PERMISSION = new HashSet<>(3);
     private static final HashSet<String> INSTRUMENTATION_CONFLICTING = new HashSet<>(2);
     private static final HashSet<String> SPEC_SYSTEM_APP_LIST = new HashSet<>(3);
+    private static final Set<String> SYSTEM_BROADCAST_ACTION = new HashSet<>(7);
     private static String PROTECT_ACTION_PREFIX = "_VA_protected_";
 
     private static final HashSet<String> IO_REDIRECT_BLACK_LIST = new HashSet<>(1);
     static {
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_ON);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_OFF);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_NEW_OUTGOING_CALL);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_TICK);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_CHANGED);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIMEZONE_CHANGED);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_CHANGED);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_LOW);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_OKAY);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_CONNECTED);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_DISCONNECTED);
+        SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_RECEIVED");
+        SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_DELIVER");
+        SYSTEM_BROADCAST_ACTION.add("android.net.wifi.STATE_CHANGE");
+        SYSTEM_BROADCAST_ACTION.add("android.net.wifi.SCAN_RESULTS");
+        SYSTEM_BROADCAST_ACTION.add("android.net.wifi.WIFI_STATE_CHANGED");
+        SYSTEM_BROADCAST_ACTION.add("android.net.conn.CONNECTIVITY_CHANGE");
+        SYSTEM_BROADCAST_ACTION.add("android.intent.action.ANY_DATA_STATE");
+        SYSTEM_BROADCAST_ACTION.add("android.intent.action.SIM_STATE_CHANGED");
+        SYSTEM_BROADCAST_ACTION.add("android.location.PROVIDERS_CHANGED");
+        SYSTEM_BROADCAST_ACTION.add("android.location.MODE_CHANGED");
+		
         IO_REDIRECT_BLACK_LIST.add("com.snapchat.android");
 
         ACTION_BLACK_LIST.add("android.appwidget.action.APPWIDGET_UPDATE");
@@ -93,6 +119,26 @@ public final class SpecialComponentList {
         ACTION_BLACK_LIST.add(action);
     }
 
+    public static void protectIntentFilter(IntentFilter filter) {
+        if (filter != null) {
+            List<String> actions = mirror.android.content.IntentFilter.mActions.get(filter);
+            ListIterator<String> iterator = actions.listIterator();
+            while (iterator.hasNext()) {
+                String action = iterator.next();
+                if (SpecialComponentList.isActionInBlackList(action)) {
+                    iterator.remove();
+                    continue;
+                }
+                if (SYSTEM_BROADCAST_ACTION.contains(action)) {
+                    continue;
+                }
+                String newAction = SpecialComponentList.protectAction(action);
+                if (newAction != null) {
+                    iterator.set(newAction);
+                }
+            }
+        }
+    }
     public static void protectIntent(Intent intent) {
         String protectAction = protectAction(intent.getAction());
         if (protectAction != null) {

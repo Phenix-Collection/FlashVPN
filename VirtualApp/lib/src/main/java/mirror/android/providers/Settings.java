@@ -3,6 +3,7 @@ package mirror.android.providers;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.os.IInterface;
 
 import mirror.RefClass;
 import mirror.RefObject;
@@ -25,6 +26,14 @@ public class Settings {
         public static RefObject<Object> mContentProvider;
     }
 
+    public static class NameValueCacheOreo {
+        public static Class<?> TYPE = RefClass.load(NameValueCacheOreo.class, "android.provider.Settings$NameValueCache");
+        public static RefObject<Object> mProviderHolder;
+    }
+    public static class ContentProviderHolder {
+        public static Class<?> TYPE = RefClass.load(ContentProviderHolder.class, "android.provider.Settings$ContentProviderHolder");
+        public static RefObject<IInterface> mContentProvider;
+    }
     public static class Secure {
         public static Class<?> TYPE = RefClass.load(Secure.class, android.provider.Settings.Secure.class);
         public static RefStaticObject<Object> sNameValueCache;

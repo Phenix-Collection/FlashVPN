@@ -38,6 +38,8 @@ import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.remote.InstalledAppInfo;
 import com.lody.virtual.server.IAppManager;
 import com.lody.virtual.server.interfaces.IAppRequestListener;
+import com.lody.virtual.server.interfaces.IPackageObserver;
+import com.lody.virtual.server.interfaces.IUiCallback;
 
 import java.io.IOException;
 import java.util.List;
@@ -171,9 +173,9 @@ public final class VirtualCore {
 			unHookPackageManager = context.getPackageManager();
 			hostPkgInfo = unHookPackageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_PROVIDERS);
 			detectProcessType();
-			PatchManager patchManager = PatchManager.getInstance();
-			patchManager.init();
-			patchManager.injectAll();
+            InvocationStubManager invocationStubManager = InvocationStubManager.getInstance();
+            invocationStubManager.init();
+            invocationStubManager.injectAll();
             ContextFixer.fixContext(context);
 			isStartUp = true;
 			if (initLock != null) {
@@ -232,8 +234,7 @@ public final class VirtualCore {
 		if (mService == null) {
 			synchronized (this) {
 				if (mService == null) {
-					IAppManager remote = IAppManager.Stub
-							.asInterface(ServiceManagerNative.getService(ServiceManagerNative.APP));
+                    Object remote = getStubInterface();
 					mService = LocalProxyUtils.genProxy(IAppManager.class, remote);
 				}
 			}
@@ -241,6 +242,10 @@ public final class VirtualCore {
 		return mService;
 	}
 
+    private Object getStubInterface() {
+        return IAppManager.Stub
+                .asInterface(ServiceManagerNative.getService(ServiceManagerNative.APP));
+    }
 	/**
 	 * @return If the current process is used to VA.
 	 */
@@ -293,7 +298,7 @@ public final class VirtualCore {
      */
 	public void preOpt(String pkg) throws IOException {
         InstalledAppInfo info = getInstalledAppInfo(pkg, 0);
-		if (info != null && !info.dependSystem) {
+        if (info != null && !info.dependSystem && !info.artFlyMode) {
 			DexFile.loadDex(info.apkPath, info.getOdexFile().getPath(), 0).close();
 		}
 	}
@@ -351,6 +356,11 @@ public final class VirtualCore {
 		}
 	}
 
+    public boolean isPackageLaunchable(String packageName) {
+        InstalledAppInfo info = getInstalledAppInfo(packageName, 0);
+        return info != null
+                && getLaunchIntent(packageName, info.getInstalledUsers()[0]) != null;
+    }
 
 	public Intent getLaunchIntent(String packageName, int userId) {
 		VPackageManager pm = VPackageManager.get();
@@ -472,16 +482,13 @@ public final class VirtualCore {
         return true;
     }
 
-	public void setLoadingPage(Intent intent, Activity activity) {
-		if (activity != null) {
-			setLoadingPage(intent, mirror.android.app.Activity.mToken.get(activity));
+    public abstract static class UiCallback extends IUiCallback.Stub {
 		}
-	}
 
-	public void setLoadingPage(Intent intent, IBinder token) {
-		if (token != null) {
+    public void setUiCallback(Intent intent, IUiCallback callback) {
+        if (callback != null) {
 			Bundle bundle = new Bundle();
-			BundleCompat.putBinder(bundle, "_VA_|_loading_token_", token);
+            BundleCompat.putBinder(bundle, "_VA_|_ui_callback_", callback.asBinder());
 			intent.putExtra("_VA_|_sender_", bundle);
 		}
 	}
@@ -506,11 +513,18 @@ public final class VirtualCore {
 		return isStartUp;
 	}
 
-    public boolean uninstallPackage(String pkgName, int userId) {
+    public boolean uninstallPackageAsUser(String pkgName, int userId) {
 		try {
-            return getService().uninstallPackage(pkgName, userId);
+            return getService().uninstallPackageAsUser(pkgName, userId);
 		} catch (RemoteException e) {
+        }
+        return false;
+    }
 			// Ignore
+    public boolean uninstallPackage(String pkgName) {
+        try {
+            return getService().uninstallPackage(pkgName);
+        } catch (RemoteException e) {
 		}
 		return false;
 	}
@@ -678,6 +692,21 @@ public final class VirtualCore {
         }
     }
 
+    public abstract static class PackageObserver extends IPackageObserver.Stub {}
+    public void registerObserver(IPackageObserver observer) {
+        try {
+            getService().registerObserver(observer);
+        } catch (RemoteException e) {
+            VirtualRuntime.crash(e);
+        }
+    }
+    public void unregisterObserver(IPackageObserver observer) {
+        try {
+            getService().unregisterObserver(observer);
+        } catch (RemoteException e) {
+            VirtualRuntime.crash(e);
+        }
+    }
 	public boolean isOutsideInstalled(String packageName) {
 		try {
 			return unHookPackageManager.getApplicationInfo(packageName, 0) != null;

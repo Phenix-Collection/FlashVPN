@@ -7,13 +7,11 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageParser;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
-import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.RemoteException;
@@ -21,11 +19,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.env.Constants;
 import com.lody.virtual.client.fixer.ComponentFixer;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.compat.ObjectsCompat;
-import com.lody.virtual.helper.compat.PackageParserCompat;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.VParceledListSlice;
 import com.lody.virtual.server.IPackageManager;
@@ -419,7 +415,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
                 if (ri != null) {
                     return ri;
                 }
-                return mResolveInfo;
+                return query.get(0);
             }
         }
         return null;
@@ -464,7 +460,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 			if (pkg != null) {
                 return mActivities.queryIntentForPackage(intent, resolvedType, flags, pkg.activities, userId);
 			}
-			return new ArrayList<ResolveInfo>();
+            return Collections.emptyList();
 		}
 	}
 
@@ -502,7 +498,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 			if (pkg != null) {
                 return mReceivers.queryIntentForPackage(intent, resolvedType, flags, pkg.receivers, userId);
 			}
-			return new ArrayList<>(0);
+            return Collections.emptyList();
 		}
 	}
 
@@ -555,7 +551,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 			if (pkg != null) {
                 return mServices.queryIntentForPackage(intent, resolvedType, flags, pkg.services, userId);
 			}
-			return new ArrayList<>(0);
+            return Collections.emptyList();
 		}
 	}
 
@@ -593,7 +589,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
 			if (pkg != null) {
                 return mProviders.queryIntentForPackage(intent, resolvedType, flags, pkg.providers, userId);
 			}
-			return new ArrayList<>();
+            return Collections.emptyList();
 		}
 	}
 
@@ -700,10 +696,12 @@ public class VPackageManagerService extends IPackageManager.Stub {
 			if (provider != null) {
                 PackageSetting ps = (PackageSetting) provider.owner.mExtras;
                 ProviderInfo providerInfo = PackageParserEx.generateProviderInfo(provider, flags, ps.readUserState(userId), userId);
+                if (providerInfo != null) {
                 VPackage p = mPackages.get(providerInfo.packageName);
                 PackageSetting settings = (PackageSetting) p.mExtras;
 				ComponentFixer.fixComponentInfo(settings, providerInfo, userId);
 				return providerInfo;
+                }
 			}
 		}
 		return null;

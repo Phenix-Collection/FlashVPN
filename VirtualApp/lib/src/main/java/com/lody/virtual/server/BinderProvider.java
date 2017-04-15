@@ -24,6 +24,7 @@ import com.lody.virtual.server.notification.VNotificationManagerService;
 import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
 import com.lody.virtual.server.pm.VUserManagerService;
+import com.lody.virtual.server.vs.VirtualStorageService;
 
 /**
  * @author Lody
@@ -31,7 +32,6 @@ import com.lody.virtual.server.pm.VUserManagerService;
 public final class BinderProvider extends ContentProvider {
 
 	private final ServiceFetcher mServiceFetcher = new ServiceFetcher();
-	private static boolean isCreated = false;
 
 	@Override
 	public boolean onCreate() {
@@ -41,28 +41,25 @@ public final class BinderProvider extends ContentProvider {
 		if (!VirtualCore.get().isStartup()) {
 			return true;
 		}
-		if(!isCreated) {
-			VPackageManagerService.systemReady();
-			addService(ServiceManagerNative.PACKAGE, VPackageManagerService.get());
-			VActivityManagerService.systemReady(context);
-			addService(ServiceManagerNative.ACTIVITY, VActivityManagerService.get());
-			addService(ServiceManagerNative.USER, VUserManagerService.get());
-			VAppManagerService.systemReady();
-			addService(ServiceManagerNative.APP, VAppManagerService.get());
-            BroadcastSystem.attach(VActivityManagerService.get(), VAppManagerService.get());
-			VAppManagerService.get().scanApps();
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            addService(ServiceManagerNative.JOB, VJobSchedulerService.get());
-			}
-            VNotificationManagerService.systemReady(context);
-            addService(ServiceManagerNative.NOTIFICATION, VNotificationManagerService.get());
-			//VAppManagerService.get().preloadAllApps();
-			VAccountManagerService.systemReady();
-			addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
-			isCreated = true;
-		} else {
-			VLog.e("BinderProvider", "onCreate after isCreated. Skip it");
+		VPackageManagerService.systemReady();
+		addService(ServiceManagerNative.PACKAGE, VPackageManagerService.get());
+		VActivityManagerService.systemReady(context);
+		addService(ServiceManagerNative.ACTIVITY, VActivityManagerService.get());
+		addService(ServiceManagerNative.USER, VUserManagerService.get());
+		VAppManagerService.systemReady();
+		addService(ServiceManagerNative.APP, VAppManagerService.get());
+		BroadcastSystem.attach(VActivityManagerService.get(), VAppManagerService.get());
+		VAppManagerService.get().scanApps();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		addService(ServiceManagerNative.JOB, VJobSchedulerService.get());
 		}
+		VNotificationManagerService.systemReady(context);
+		addService(ServiceManagerNative.NOTIFICATION, VNotificationManagerService.get());
+		//VAppManagerService.get().preloadAllApps();
+		VAccountManagerService.systemReady();
+		addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
+        addService(ServiceManagerNative.VS, VirtualStorageService.get());
+		VLog.d("BinderProvider", "Service initialized!");
 		return true;
 	}
 

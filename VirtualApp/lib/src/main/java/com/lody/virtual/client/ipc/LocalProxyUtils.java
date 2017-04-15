@@ -19,6 +19,9 @@ public class LocalProxyUtils {
      * @return proxy object
      */
     public static <T> T genProxy(Class<T> interfaceClass, final Object base) {
+        if (true) {
+            return (T) base;
+        }
         //noinspection unchecked
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{ interfaceClass }, new InvocationHandler() {
             @Override

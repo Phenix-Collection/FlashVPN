@@ -27,6 +27,7 @@ import java.util.ListIterator;
 
 import mirror.android.app.ActivityManagerNative;
 import mirror.android.app.ActivityThread;
+import mirror.android.app.IActivityManager;
 import mirror.android.app.IApplicationThread;
 import mirror.com.android.internal.R_Hide;
 
@@ -77,11 +78,16 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 	}
 
 	private void deliverNewIntentLocked(ActivityRecord sourceRecord, ActivityRecord targetRecord, Intent intent) {
+        if (targetRecord == null) {
+            return;
+        }
 		String creator = sourceRecord != null ? sourceRecord.component.getPackageName() : "android";
 		try {
 			targetRecord.process.client.scheduleNewIntent(creator, targetRecord.token, intent);
 		} catch (RemoteException e) {
 			e.printStackTrace();
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
 		}
 	}
 
@@ -201,6 +207,66 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		}
 	}
 
+    int startActivitiesLocked(int userId, Intent[] intents, ActivityInfo[] infos, String[] resolvedTypes, IBinder token, Bundle options) {
+        optimizeTasksLocked();
+        ReuseTarget reuseTarget = ReuseTarget.CURRENT;
+        Intent intent = intents[0];
+        ActivityInfo info = infos[0];
+        ActivityRecord resultTo = findActivityByToken(userId, token);
+        if (resultTo != null && resultTo.launchMode == LAUNCH_SINGLE_INSTANCE) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        if (containFlags(intent, Intent.FLAG_ACTIVITY_CLEAR_TOP)) {
+            removeFlags(intent, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        }
+        if (containFlags(intent, Intent.FLAG_ACTIVITY_CLEAR_TASK) && !containFlags(intent, Intent.FLAG_ACTIVITY_NEW_TASK)) {
+            removeFlags(intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            switch (info.documentLaunchMode) {
+                case ActivityInfo.DOCUMENT_LAUNCH_INTO_EXISTING:
+                    reuseTarget = ReuseTarget.DOCUMENT;
+                    break;
+                case ActivityInfo.DOCUMENT_LAUNCH_ALWAYS:
+                    reuseTarget = ReuseTarget.MULTIPLE;
+                    break;
+            }
+        }
+        if (containFlags(intent, Intent.FLAG_ACTIVITY_NEW_TASK)) {
+            reuseTarget = containFlags(intent, Intent.FLAG_ACTIVITY_MULTIPLE_TASK) ? ReuseTarget.MULTIPLE : ReuseTarget.AFFINITY;
+        } else if (info.launchMode == LAUNCH_SINGLE_TASK) {
+            reuseTarget = containFlags(intent, Intent.FLAG_ACTIVITY_MULTIPLE_TASK) ? ReuseTarget.MULTIPLE : ReuseTarget.AFFINITY;
+        }
+        if (resultTo == null && reuseTarget == ReuseTarget.CURRENT) {
+            reuseTarget = ReuseTarget.AFFINITY;
+        }
+        String affinity = ComponentUtils.getTaskAffinity(info);
+        TaskRecord reuseTask = null;
+        if (reuseTarget == ReuseTarget.AFFINITY) {
+            reuseTask = findTaskByAffinityLocked(userId, affinity);
+        } else if (reuseTarget == ReuseTarget.CURRENT) {
+            reuseTask = resultTo.task;
+        } else if (reuseTarget == ReuseTarget.DOCUMENT) {
+            reuseTask = findTaskByIntentLocked(userId, intent);
+        }
+        Intent[] destIntents = startActivitiesProcess(userId, intents, infos, resultTo);
+        if (reuseTask == null) {
+            realStartActivitiesLocked(null, destIntents, resolvedTypes, options);
+        } else {
+            ActivityRecord top = topActivityInTask(reuseTask);
+            if (top != null) {
+                realStartActivitiesLocked(top.token, destIntents, resolvedTypes, options);
+            }
+        }
+        return 0;
+    }
+    private Intent[] startActivitiesProcess(int userId, Intent[] intents, ActivityInfo[] infos, ActivityRecord resultTo) {
+        Intent[] destIntents = new Intent[intents.length];
+        for (int i = 0; i < intents.length; i++) {
+            destIntents[i] = startActivityProcess(userId, resultTo, intents[i], infos[i]);
+        }
+        return destIntents;
+    }
 	int startActivityLocked(int userId, Intent intent, ActivityInfo info, IBinder resultTo, Bundle options,
 			String resultWho, int requestCode) {
 
@@ -398,6 +464,28 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 			}
 		}
 		return false;
+    }
+    private void realStartActivitiesLocked(IBinder resultTo, Intent[] intents, String[] resolvedTypes, Bundle options) {
+        Class<?>[] types = IActivityManager.startActivities.paramList();
+        Object[] args = new Object[types.length];
+        if (types[0] == IApplicationThread.TYPE) {
+            args[0] = ActivityThread.getApplicationThread.call(VirtualCore.mainThread());
+        }
+        int pkgIndex = ArrayUtils.protoIndexOf(types, String.class);
+        int intentsIndex = ArrayUtils.protoIndexOf(types, Intent[].class);
+        int resultToIndex = ArrayUtils.protoIndexOf(types, IBinder.class, 2);
+        int optionsIndex = ArrayUtils.protoIndexOf(types, Bundle.class);
+        int resolvedTypesIndex = intentsIndex + 1;
+        if (pkgIndex != -1) {
+            args[pkgIndex] = VirtualCore.get().getHostPkg();
+        }
+        args[intentsIndex] = intents;
+        args[resultToIndex] = resultTo;
+        args[resolvedTypesIndex] = resolvedTypes;
+        args[optionsIndex] = options;
+        ClassUtils.fixArgs(types, args);
+        IActivityManager.startActivities.call(ActivityManagerNative.getDefault.call(),
+                (Object[]) args);
 	}
 
 	private void realStartActivityLocked(IBinder resultTo, Intent intent, String resultWho, int requestCode,
@@ -474,9 +562,6 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 			component = ComponentUtils.toComponentName(info);
 		}
 		targetIntent.setType(component.flattenToString());
-        if ((info.flags & FLAG_NO_HISTORY) != 0 || containFlags(intent, Intent.FLAG_ACTIVITY_NO_HISTORY)) {
-            targetIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        }
 		StubActivityRecord saveInstance = new StubActivityRecord(intent, info,
 				sourceRecord != null ? sourceRecord.component : null, userId);
 		saveInstance.saveToIntent(targetIntent);

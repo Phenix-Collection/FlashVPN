@@ -37,6 +37,7 @@ import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.collection.ArrayMap;
 import com.lody.virtual.helper.collection.SparseArray;
 import com.lody.virtual.helper.compat.ActivityManagerCompat;
+import com.lody.virtual.helper.compat.ApplicationThreadCompat;
 import com.lody.virtual.helper.compat.BundleCompat;
 import com.lody.virtual.helper.compat.IApplicationThreadCompat;
 import com.lody.virtual.helper.utils.ComponentUtils;
@@ -62,7 +63,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicReference;
 
-import mirror.android.app.ApplicationThreadNative;
 
 import static android.os.Process.killProcess;
 import static com.lody.virtual.os.VUserHandle.getUserId;
@@ -126,6 +126,20 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	public int startActivity(Intent intent, ActivityInfo info, IBinder resultTo, Bundle options, String resultWho, int requestCode, int userId) {
 		synchronized (this) {
 			return mMainStack.startActivityLocked(userId, intent, info, resultTo, options, resultWho, requestCode);
+        }
+    }
+    @Override
+    public int startActivities(Intent[] intents, String[] resolvedTypes, IBinder token, Bundle options, int userId) {
+        synchronized (this) {
+            ActivityInfo[] infos = new ActivityInfo[intents.length];
+            for (int i = 0; i < intents.length; i++) {
+                ActivityInfo ai = VirtualCore.get().resolveActivityInfo(intents[i], userId);
+                if (ai == null) {
+                    return ActivityManagerCompat.START_INTENT_NOT_RESOLVED;
+                }
+                infos[i] = ai;
+            }
+            return mMainStack.startActivitiesLocked(userId, intents, infos, resolvedTypes, token, options);
 		}
 	}
 
@@ -637,7 +651,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		}
 		IInterface thread = null;
 		try {
-			thread = ApplicationThreadNative.asInterface.call(client.getAppThread());
+            thread = ApplicationThreadCompat.asInterface(client.getAppThread());
 		} catch (RemoteException e) {
 			// process has dead
 		}
@@ -967,7 +981,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 										   BroadcastReceiver resultReceiver, Handler scheduler, int initialCode,
 										   String initialData, Bundle initialExtras) {
 		Context context = VirtualCore.get().getContext();
+        if (user != null) {
 		intent.putExtra("_VA_|_user_id_", user.getIdentifier());
+        }
 		// TODO: checkPermission
 		context.sendOrderedBroadcast(intent, null/* permission */, resultReceiver, scheduler, initialCode, initialData,
 				initialExtras);
@@ -1006,6 +1022,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		int userId = intent.getIntExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_ALL);
 		ComponentName component = intent.getParcelableExtra(Constants.VA_INTENT_KEY_COMPONENT);
 		Intent realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
+        if (realIntent == null) {
+            return false;
+        }
 		if (component != null) {
 			if (!ComponentUtils.toComponentName(info).equals(component)) {
 				return false;
@@ -1094,9 +1113,4 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		BroadcastSystem.get().broadcastFinish(res);
 	}
 
-	@Override
-	public Intent dispatchStickyBroadcast(IntentFilter filter) {
-		int vuid = VBinder.getCallingUid();
-		return BroadcastSystem.get().dispatchStickyBroadcast(vuid, filter);
-	}
 }

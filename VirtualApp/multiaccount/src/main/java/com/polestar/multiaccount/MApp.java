@@ -83,6 +83,7 @@ public class MApp extends Application {
 
             @Override
             public void onMainProcess() {
+                MLogs.d("Main process create");
                 MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
                 // test appId and appKey
                 String appId = "33047";
@@ -106,6 +107,7 @@ public class MApp extends Application {
 
             @Override
             public void onVirtualProcess() {
+                MLogs.d("Virtual process create");
                 MComponentDelegate delegate = new MComponentDelegate();
                 delegate.init();
                 virtualCore.setComponentDelegate(delegate);
@@ -116,6 +118,7 @@ public class MApp extends Application {
 
             @Override
             public void onServerProcess() {
+                MLogs.d("Server process create");
                 VirtualCore.get().setAppRequestListener(new VirtualCore.AppRequestListener() {
                     @Override
                     public void onRequestInstall(String path) {
@@ -146,10 +149,13 @@ public class MApp extends Application {
                 });
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
+                MLogs.d("Server process app onCreate 0");
                 MComponentDelegate delegate = new MComponentDelegate();
                 delegate.init();
+                MLogs.d("Server process app onCreate 1");
                 VirtualCore.get().setComponentDelegate(delegate);
                 AdSdk.initialize(MApp.getApp(), "27681");
+                MLogs.d("Server process app onCreate 2");
                 virtualCore.addVisibleOutsidePackage("com.tencent.mobileqq");
                 virtualCore.addVisibleOutsidePackage("com.tencent.mobileqqi");
                 virtualCore.addVisibleOutsidePackage("com.tencent.minihd.qq");
@@ -158,6 +164,7 @@ public class MApp extends Application {
                 virtualCore.addVisibleOutsidePackage("com.whatsapp");
                 virtualCore.addVisibleOutsidePackage("com.tencent.mm");
                 virtualCore.addVisibleOutsidePackage("com.immomo.momo");
+                MLogs.d("Server process app onCreate done");
             }
         });
 

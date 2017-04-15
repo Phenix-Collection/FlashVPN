@@ -100,7 +100,7 @@ public class AppManager {
 
     public static boolean uninstallApp(String packageName) {
         MLogs.d(TAG, "packageName = " + packageName);
-        return VirtualCore.get().uninstallPackage(packageName, 0);
+        return VirtualCore.get().uninstallPackage(packageName);
     }
 
 //    public static Collection<ProcessRecord> getProcessList(){

@@ -87,6 +87,9 @@ public class VEnvironment {
     public static File getPackageListFile() {
         return new File(getSystemSecureDirectory(), "packages.ini");
     }
+    public static File getVSConfigFile() {
+        return new File(getSystemSecureDirectory(), "vss.ini");
+    }
 
     public static File getBakPackageListFile() {
         return new File(getSystemSecureDirectory(), "packages.ini.bak");

@@ -9,9 +9,9 @@ import java.lang.reflect.Method;
  * @author Lody
  */
 
-public class DownloadProviderHook extends ExternalProviderHook {
+class DownloadProviderHook extends ExternalProviderHook {
 
-	public DownloadProviderHook(Object base) {
+	DownloadProviderHook(Object base) {
 		super(base);
 	}
 

@@ -93,8 +93,9 @@ public class ComponentUtils {
 		if (applicationInfo == null) {
 			return false;
 		}
-        return ((ApplicationInfo.FLAG_SYSTEM & applicationInfo.flags) != 0
-                || SpecialComponentList.isSpecSystemPackage(applicationInfo.packageName));
+        return !GmsSupport.isGmsFamilyPackage(applicationInfo.packageName)
+            && ((ApplicationInfo.FLAG_SYSTEM & applicationInfo.flags) != 0
+            || SpecialComponentList.isSpecSystemPackage(applicationInfo.packageName));
 	}
 
 	public static boolean isStubComponent(Intent intent) {
