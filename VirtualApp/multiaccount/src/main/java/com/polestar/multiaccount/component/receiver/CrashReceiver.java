@@ -24,13 +24,18 @@ public class CrashReceiver extends BroadcastReceiver {
                 return;
             }
             if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")) {
-                String pName = intent.getStringExtra("package");
-                boolean forground = intent.getBooleanExtra("forground", false);
-                MLogs.logBug("CrashReceiver onReceive crash: " + pName + " forground: " + forground);
-                MTAManager.reportCrash(context, pName,forground);
-                if(forground) {
-                    ToastUtils.ToastDefultLong(context, context.getString(R.string.crash_hint));
+                try {
+                    String pName = intent.getStringExtra("package");
+                    boolean forground = intent.getBooleanExtra("forground", false);
+                    MLogs.logBug("CrashReceiver onReceive crash: " + pName + " forground: " + forground);
+                    MTAManager.reportCrash(context, pName,forground);
+                    if(forground) {
+                        ToastUtils.ToastDefultLong(context, context.getString(R.string.crash_hint));
+                    }
+                } catch (Exception e) {
+                    MLogs.logBug("Error in CrashReceiver " + MLogs.getStackTraceString(e));
                 }
+
             }
     }
 }
