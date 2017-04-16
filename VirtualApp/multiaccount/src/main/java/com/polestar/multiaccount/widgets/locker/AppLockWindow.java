@@ -66,6 +66,8 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
     private AppLockPasswordLogic mAppLockPasswordLogic = null;
 
+    private final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
+
     public AppLockWindow(String pkgName, Handler handler) {
         MLogs.d("AppLockWindow initialize for : " + pkgName);
         mPkgName = pkgName;
@@ -149,7 +151,21 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
     private void initAdmobBannerView() {
         mAdmobExpressView = new NativeExpressAdView(VirtualCore.get().getContext());
-        mAdmobExpressView.setAdSize(new AdSize(360, 250));
+        List<AdConfig> adConfigs = RemoteConfig.getAdConfigList(CONFIG_SLOT_APP_LOCK);
+        String adunit  = null;
+        if (adConfigs != null) {
+            for (AdConfig adConfig: adConfigs) {
+                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
+                    adunit = adConfig.key;
+                    break;
+                }
+            }
+        }
+        if (TextUtils.isEmpty(adunit)) {
+            mAdmobExpressView = null;
+            return;
+        }
+        mAdmobExpressView.setAdSize(new AdSize(360, 280));
         mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/7955343852");
         //mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/7540311850");
        // mAdmobExpressView.setVisibility(View.GONE);
