@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -47,7 +48,7 @@ public class FloatWindow {
     private boolean mIsLongClicked;
     private final int LONG_CLICK_INTERVAL = 500;
     private final int TOUCH_OFFSET_THRESHOLD = 10;
-    private Handler mLongClickHandler = new Handler();
+    private Handler mLongClickHandler = new Handler(Looper.getMainLooper());
     private Runnable mLongClickRunnable = new Runnable() {
         @Override
         public void run() {

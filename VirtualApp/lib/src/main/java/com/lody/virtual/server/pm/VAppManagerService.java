@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static mirror.android.app.ActivityThread.ActivityClientRecord.activity;
+
 /**
  * @author Lody
  */
@@ -550,5 +552,14 @@ public class VAppManagerService extends IAppManager.Stub {
 
     public void savePersistenceData() {
         mPersistenceLayer.save();
+    }
+
+    public void notifyActivityBeforeResume(String pkg){
+        VLog.d(TAG, "notifyActivityBeforeResume " + pkg);
+        VirtualCore.get().getComponentDelegate().beforeActivityResume(pkg);
+    }
+    public void  notifyActivityBeforePause(String pkg){
+        VLog.d(TAG, "notifyActivityBeforePause " + pkg);
+        VirtualCore.get().getComponentDelegate().beforeActivityPause(pkg);
     }
 }

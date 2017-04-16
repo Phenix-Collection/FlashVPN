@@ -738,4 +738,21 @@ public final class VirtualCore {
         public void onChildProcess() {
         }
     }
+
+	public void notifyActivityBeforeResume(String pkg){
+		try {
+			getService().notifyActivityBeforeResume(pkg);
+		}catch (Exception e){
+
+		}
+
+	}
+	public void notifyActivityBeforePause(String pkg){
+		try {
+			getService().notifyActivityBeforePause(pkg);
+		}catch (Exception e){
+
+		}
+
+	}
 }

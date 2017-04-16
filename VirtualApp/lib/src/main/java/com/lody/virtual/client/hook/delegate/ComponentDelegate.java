@@ -15,12 +15,12 @@ public interface ComponentDelegate {
         }
 
         @Override
-        public void beforeActivityResume(Activity activity) {
+        public void beforeActivityResume(String pkg) {
             // Empty
         }
 
         @Override
-        public void beforeActivityPause(Activity activity) {
+        public void beforeActivityPause(String pkg) {
             // Empty
         }
 
@@ -42,9 +42,9 @@ public interface ComponentDelegate {
 
     void beforeActivityCreate(Activity activity);
 
-    void beforeActivityResume(Activity activity);
+    void beforeActivityResume(String pkg);
 
-    void beforeActivityPause(Activity activity);
+    void beforeActivityPause(String pkg);
 
     void beforeActivityDestroy(Activity activity);
 

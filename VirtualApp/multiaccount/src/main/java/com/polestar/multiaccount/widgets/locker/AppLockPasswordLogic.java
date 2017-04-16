@@ -2,6 +2,7 @@ package com.polestar.multiaccount.widgets.locker;
 
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -62,7 +63,7 @@ public class AppLockPasswordLogic {
         params.height = (screenWidth * 3) / 4;
         mLockPatternView.setLayoutParams(params);
 
-        mHandler = new Handler() {
+        mHandler = new Handler(Looper.getMainLooper()) {
 
             @Override
             public void handleMessage(Message msg) {

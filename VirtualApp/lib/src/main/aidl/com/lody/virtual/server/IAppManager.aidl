@@ -31,4 +31,6 @@ interface IAppManager {
     void clearAppRequestListener();
     IAppRequestListener getAppRequestListener();
 
+    void notifyActivityBeforeResume(String pkg);
+    void notifyActivityBeforePause(String pkg);
 }

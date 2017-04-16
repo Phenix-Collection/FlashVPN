@@ -70,8 +70,7 @@ public class AppLockMonitor {
     }
 
 
-    public void onActivityResume(Activity activity) {
-        String pkg = activity.getPackageName();
+    public void onActivityResume(String pkg) {
         MLogs.d(TAG, "onActivityResume " + pkg);
         AppModel model = modelHashMap.get(pkg);
         if (model == null || pkg == null) {
@@ -88,15 +87,21 @@ public class AppLockMonitor {
                     appLockWindow = new AppLockWindow(pkg, mHandler);
                     mAppLockWindows.add(pkg,appLockWindow);
                 }
-                appLockWindow.show();
+                final AppLockWindow lockWindow = appLockWindow;
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        lockWindow.show();
+                    }
+                });
+
             }
         }
         mHandler.removeMessages(MSG_DELAY_LOCK_APP, pkg);
         //mUnlockedForegroudPkg = pkg;
     }
 
-    public void onActivityPause(Activity activity) {
-        String pkg = activity.getPackageName();
+    public void onActivityPause(String pkg) {
         MLogs.d(TAG, "onActivityPause " + pkg);
         AppLockWindow window = mAppLockWindows.get(pkg);
         if (window != null){
