@@ -88,12 +88,14 @@ public class AppLockMonitor {
                     mAppLockWindows.add(pkg,appLockWindow);
                 }
                 final AppLockWindow lockWindow = appLockWindow;
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                MLogs.d(TAG, "Do lock app 2" + pkg);
+                mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        MLogs.d(TAG, "To show lock window");
                         lockWindow.show();
                     }
-                });
+                }, 0);
 
             }
         }

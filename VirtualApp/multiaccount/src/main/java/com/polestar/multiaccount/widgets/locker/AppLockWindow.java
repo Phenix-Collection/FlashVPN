@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -55,12 +56,18 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     private TextView mForgotPasswordTv;
     private NativeExpressAdView mAdmobExpressView;
     private LinearLayout mAdInfoContainer;
+    private ImageView mToolbarIcon;
+    private TextView mToolbarText;
+
+    private FeedbackImageView mCenterIcon;
+    private TextView mCenterAppText;
 
     private boolean mIsShowing;
 
     private AppLockPasswordLogic mAppLockPasswordLogic = null;
 
     public AppLockWindow(String pkgName, Handler handler) {
+        MLogs.d("AppLockWindow initialize for : " + pkgName);
         mPkgName = pkgName;
         mHandler = handler;
 
@@ -101,13 +108,17 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         });
         mAppLockPasswordLogic.onFinishInflate();
 
+        mToolbarIcon = (ImageView) mContentView.findViewById(R.id.lock_bar_icon);
+        mToolbarText = (TextView) mContentView.findViewById(R.id.lock_bar_text);
+
         initToolbar();
         initAdmobBannerView();
-        loadAdmobNativeExpress();
+  //      loadAdmobNativeExpress();
+        MLogs.d("AppLockWindow initialized 0");
         mAdInfoContainer = (LinearLayout)mContentView.findViewById(R.id.layout_appinfo_container);
 
-        FeedbackImageView icon = (FeedbackImageView) mContentView.findViewById(R.id.window_applock_icon);
-        TextView appName = (TextView) mContentView.findViewById(R.id.window_applock_name);
+        mCenterIcon = (FeedbackImageView) mContentView.findViewById(R.id.window_applock_icon);
+        mCenterAppText = (TextView) mContentView.findViewById(R.id.window_applock_name);
         PackageManager pm = MApp.getApp().getPackageManager();
         ApplicationInfo ai = null;
         try {
@@ -118,13 +129,14 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         if ( ai != null) {
             Drawable drawable = pm.getApplicationIcon(ai);
             if (drawable != null) {
-                icon.setImageBitmap( BitmapUtils.createCustomIcon(MApp.getApp(), drawable));
+                mCenterIcon.setImageBitmap( BitmapUtils.createCustomIcon(MApp.getApp(), drawable));
             }
             CharSequence title = pm.getApplicationLabel(ai);
             if (title != null) {
-                appName.setText(String.format(ResourcesUtil.getString(R.string.applock_window_title),title));
+                mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.applock_window_title),title));
             }
         }
+        MLogs.d("AppLockWindow initialized 1");
         mForgotPasswordTv = (TextView)mContentView.findViewById(R.id.forgot_password_tv);
         mForgotPasswordTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,11 +144,12 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 forgotPassword();
             }
         });
+        MLogs.d("AppLockWindow initialized");
     }
 
     private void initAdmobBannerView() {
         mAdmobExpressView = new NativeExpressAdView(VirtualCore.get().getContext());
-        mAdmobExpressView.setAdSize(new AdSize(320, 280));
+        mAdmobExpressView.setAdSize(new AdSize(360, 250));
         mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/7955343852");
         //mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/7540311850");
        // mAdmobExpressView.setVisibility(View.GONE);
@@ -171,17 +184,22 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 mAdInfoContainer.removeAllViews();
                 mAdInfoContainer.addView(mAdmobExpressView);
                 mAdmobExpressView.setVisibility(View.VISIBLE);
+                updateTitleBar();
                 AdLog.d("LockWindow on Banner AdLoaded ");
             }
         });
         mAdmobExpressView.setBackgroundColor(0);
     }
 
+    private void updateTitleBar() {
+        mToolbarIcon.setImageDrawable(mCenterIcon.getDrawable());
+        mToolbarText.setText(mCenterAppText.getText());
+    }
     private void loadAdmobNativeExpress(){
         if (mAdmobExpressView == null) {
             return;
         }
-        MLogs.d("Home loadAdmobNativeExpress");
+        MLogs.d("Lock loadAdmobNativeExpress");
         if (AdConstants.DEBUG) {
             String android_id = AdUtils.getAndroidID( VirtualCore.get().getContext());
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
@@ -193,6 +211,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         } else {
             mAdmobExpressView.loadAd(new AdRequest.Builder().build());
         }
+        MLogs.d("X Lock loadAdmobNativeExpress");
     }
 
     private void initToolbar() {
@@ -221,6 +240,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
     public void show() {
         if (!mIsShowing) {
+            MLogs.d("LockWindow show");
             mAppLockPasswordLogic.onShow();
             mWindow.show();
             MTAManager.showLockWindow(mContentView.getContext(), mPkgName);

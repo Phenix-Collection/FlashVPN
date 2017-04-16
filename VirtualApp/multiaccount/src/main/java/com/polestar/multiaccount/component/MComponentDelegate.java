@@ -45,7 +45,7 @@ public class MComponentDelegate implements ComponentDelegate {
 
     @Override
     public void beforeActivityPause(String pkg) {
-        MLogs.d("beforeActivityResume " + pkg);
+        MLogs.d("beforeActivityPause " + pkg);
         if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
             AppLockMonitor.getInstance().onActivityPause(pkg);
         }

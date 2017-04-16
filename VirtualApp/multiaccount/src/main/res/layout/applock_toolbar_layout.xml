@@ -9,9 +9,11 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@mipmap/ic_launcher"
+        android:id="@+id/lock_bar_icon"
         android:layout_gravity="center"
         android:layout_marginLeft="6dp"/>
     <TextView
+        android:id="@+id/lock_bar_text"
         android:layout_gravity="bottom"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="2dp"
