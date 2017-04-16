@@ -369,7 +369,7 @@ public class LockSecureQuestionActivity extends BaseActivity implements View.OnC
                 // 判断是否进入验证过程
                 String answerMd5 = MD5Utils.getStringMd5(strAnswer);
                 if (!isSettingQuestion) {
-                    if (PreferencesUtils.getSafeAnswer(mContext).equals(answerMd5)) {
+                    if (answerMd5.equals(PreferencesUtils.getSafeAnswer(mContext))) {
                         setResult(Activity.RESULT_OK);
                         PreferencesUtils.setSafeQuestionId(mContext,mQuestionId);
                         PreferencesUtils.setCustomizedQuestion(mContext,strQuestion);
