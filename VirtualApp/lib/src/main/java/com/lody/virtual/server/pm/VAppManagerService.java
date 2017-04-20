@@ -84,7 +84,10 @@ public class VAppManagerService extends IAppManager.Stub {
                 VLog.logbug(TAG, "not found package list file. Recover!");
                 recover();
             } else {
-                mPersistenceLayer.read();
+                if(!mPersistenceLayer.read()) {
+                    VLog.logbug(TAG, "Failed to parse package list file. Recover!");
+                    recover();
+                }
             }
             if (StubManifest.ENABLE_GMS && !GmsSupport.isGoogleFrameworkInstalled()) {
                 GmsSupport.installGms(0);

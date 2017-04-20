@@ -52,9 +52,10 @@ public abstract class PersistenceLayer {
         }
     }
 
-    public void read() {
+    public boolean read() {
         File file = mPersistenceFile;
         Parcel p = Parcel.obtain();
+        boolean ret;
         try {
             FileInputStream fis = new FileInputStream(file);
             byte[] bytes = new byte[(int) file.length()];
@@ -77,10 +78,13 @@ public abstract class PersistenceLayer {
                 }
             }
             readPersistenceData(p);
+            ret = true;
         } catch (Exception e) {
             e.printStackTrace();
+            ret = false;
         } finally {
             p.recycle();
         }
+        return ret;
     }
 }
