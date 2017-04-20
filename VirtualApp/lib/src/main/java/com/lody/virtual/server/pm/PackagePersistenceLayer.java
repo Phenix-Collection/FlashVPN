@@ -3,6 +3,7 @@ package com.lody.virtual.server.pm;
 import android.os.Parcel;
 
 import com.lody.virtual.helper.PersistenceLayer;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VEnvironment;
 import com.lody.virtual.server.pm.parser.VPackage;
 
@@ -16,6 +17,7 @@ class PackagePersistenceLayer extends PersistenceLayer {
 
     private static final char[] MAGIC = {'v', 'p', 'k', 'g'};
     private static final int CURRENT_VERSION = 3;
+    private static final String TAG = "PersistenceLayer";
 
     private VAppManagerService mService;
 
@@ -60,12 +62,14 @@ class PackagePersistenceLayer extends PersistenceLayer {
             if (!"android".equals(setting.packageName)) {
                 mService.loadPackage(setting);
             }
+            VLog.d(TAG, "read package: " + setting.packageName);
         }
     }
 
     @Override
     public boolean onVersionConflict(int fileVersion, int currentVersion) {
-        return false;
+        VLog.logbug(TAG, "Version conflict: " + fileVersion + " current: " + currentVersion);
+        return true;
     }
 
     @Override
