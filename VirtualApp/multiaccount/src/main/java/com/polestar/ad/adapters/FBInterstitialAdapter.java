@@ -92,6 +92,11 @@ public class FBInterstitialAdapter extends Ad implements InterstitialAdListener,
     }
 
     @Override
+    public void onLoggingImpression(com.facebook.ads.Ad ad) {
+
+    }
+
+    @Override
     public Object getAdObject() {
         return interstitialAd;
     }
