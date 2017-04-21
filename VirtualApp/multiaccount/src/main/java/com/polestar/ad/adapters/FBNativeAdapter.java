@@ -40,6 +40,11 @@ public class FBNativeAdapter extends Ad implements IAdLoader {
         mListener = listener;
         mRawAd.setAdListener(new AdListener() {
             @Override
+            public void onLoggingImpression(com.facebook.ads.Ad ad) {
+
+            }
+
+            @Override
             public void onError(com.facebook.ads.Ad ad, AdError adError) {
                 mListener.onError(adError.getErrorMessage());
             }
