@@ -47,12 +47,17 @@ public class AppStartActivity extends BaseActivity {
 
     private  AppModel appModel;
     private String from;
+    private boolean needDoUpGrade;
 
 
     public static void startAppStartActivity(Activity activity, String packageName) {
-        if (  VirtualCore.get().isAppRunning(packageName, VUserHandle.myUserId())) {
-            AppManager.launchApp(packageName);
-            return;
+        if (AppManager.needUpgrade(packageName)) {
+            VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
+        } else {
+            if (VirtualCore.get().isAppRunning(packageName, VUserHandle.myUserId())) {
+                AppManager.launchApp(packageName);
+                return;
+            }
         }
         Intent intent = new Intent(activity, AppStartActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -83,12 +88,16 @@ public class AppStartActivity extends BaseActivity {
             ToastUtils.ToastDefult(this, getString(R.string.toast_shortcut_invalid));
             finish();
         } else {
+            needDoUpGrade = AppManager.needUpgrade(appModel.getPackageName());
             int delay = 500;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from);
                     // Todo: if app is already launched, just switch it to front, no need re-launch
+                    if (needDoUpGrade) {
+                        AppManager.upgradeApp(appModel.getPackageName());
+                    }
                     AppManager.launchApp(appModel.getPackageName());
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -135,7 +144,11 @@ public class AppStartActivity extends BaseActivity {
                 PreferencesUtils.setStarted(appModel.getName());
                 mFirstStartTips.setVisibility(View.VISIBLE);
                 mFirstStartTips.setText(getString(R.string.first_start_tips));
+            }else if(needDoUpGrade) {
+                mFirstStartTips.setVisibility(View.VISIBLE);
+                mFirstStartTips.setText(getString(R.string.upgrade_start_tips));
             }
+
 
             ScaleAnimation sa = new ScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             sa.setDuration(1000);

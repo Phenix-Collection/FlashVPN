@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.multiaccount.db.DbManager;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.MLogs;
 
@@ -17,22 +19,30 @@ public class PackageChangeReceiver extends BroadcastReceiver{
         if (intent == null || intent.getAction() == null) {
             return;
         }
+        String packageName = intent.getDataString();
+        if (packageName != null && packageName.startsWith("package:")) {
+            packageName = packageName.replaceFirst("package:", "");
+        }
+        boolean replacing = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
+        MLogs.e("PackageChange: " + intent.getAction() + " packageName = " + packageName + " replacing: " + replacing);
         if (intent.getAction().equals("android.intent.action.PACKAGE_REMOVED")) {
-            String packageName = intent.getDataString();
-            MLogs.e("app uninstall: packageName = " + packageName);
-            if (packageName != null && packageName.startsWith("package:")) {
-                packageName = packageName.replaceFirst("package:", "");
-            }
             DbManager.notifyChanged();
-            boolean replacing = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
             if (!replacing) {
                 CloneHelper.getInstance(context).unInstallApp(context, packageName);
             }
         }
         if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
-            String packageName = intent.getDataString();
             DbManager.notifyChanged();
-            MLogs.e("app install: packageName = " + packageName);
+            final String pkg = packageName;
+            if( replacing && VirtualCore.get().isAppInstalled(packageName)) {
+                MLogs.d("app install: replacing upgrade ");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppManager.upgradeApp(pkg);
+                    }
+                }).start();
+            }
         }
     }
 }

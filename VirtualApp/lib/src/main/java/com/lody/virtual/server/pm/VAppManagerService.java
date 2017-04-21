@@ -193,6 +193,11 @@ public class VAppManagerService extends IAppManager.Stub {
         return installPackage(path, flags, true);
     }
 
+    @Override
+    public InstallResult upgradePackage(String path, int flags) {
+        return installPackage(path, flags, false);
+    }
+
     public synchronized InstallResult installPackage(String path, int flags, boolean notify) {
         long installTime = System.currentTimeMillis();
         if (path == null) {

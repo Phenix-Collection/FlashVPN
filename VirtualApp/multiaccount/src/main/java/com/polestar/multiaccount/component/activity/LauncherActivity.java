@@ -51,7 +51,7 @@ public class LauncherActivity extends BaseActivity{
             }
         },100);
 
-        VirtualCore.get().waitForEngine();
+        //VirtualCore.get().waitForEngine();
         long delta = System.currentTimeMillis() - time;
         handler.postDelayed(new Runnable() {
             @Override
@@ -60,7 +60,7 @@ public class LauncherActivity extends BaseActivity{
                 overridePendingTransition(android.R.anim.fade_in, -1);
                 finish();
             }
-        },1000 - delta);
+        },2000 - delta);
         if(!PreferencesUtils.isShortCutCreated() && !created) {
             PreferencesUtils.setShortCutCreated();
             createShortCut();

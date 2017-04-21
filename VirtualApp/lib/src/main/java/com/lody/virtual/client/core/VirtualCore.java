@@ -324,6 +324,14 @@ public final class VirtualCore {
         }
     }
 
+	public InstallResult upgradePackage(String apkPath, int flags) {
+		try {
+			return getService().upgradePackage(apkPath, flags);
+		} catch (RemoteException e) {
+			return VirtualRuntime.crash(e);
+		}
+	}
+
     public void addVisibleOutsidePackage(String pkg) {
         try {
             getService().addVisibleOutsidePackage(pkg);

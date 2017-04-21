@@ -2,12 +2,17 @@ package com.polestar.multiaccount.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VActivityManager;
+import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.remote.InstalledAppInfo;
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
@@ -52,9 +57,39 @@ public class AppManager {
         }
     }
 
-    public static void launchApp(String packageName) {
+    public static boolean needUpgrade(String packageName) {
         try {
-            MLogs.d(TAG, "packageName = " + packageName);
+            PackageInfo vinfo = VPackageManager.get().getPackageInfo(packageName, 0 ,0);
+            PackageInfo info = VirtualCore.get().getUnHookPackageManager().getPackageInfo(packageName,0);
+            if (vinfo == null || info == null) {
+                return false;
+            }
+            return vinfo.versionCode != info.versionCode;
+        }catch (Exception e) {
+            MLogs.e(e);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void upgradeApp(String packageName) {
+        try {
+            PackageInfo info = VirtualCore.get().getUnHookPackageManager().getPackageInfo(packageName, 0);
+            InstallResult result = VirtualCore.get().upgradePackage(info.applicationInfo.sourceDir,
+                    InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
+            MLogs.logBug("package upgrade result: " + result.toString());
+        }catch (Exception e) {
+            MLogs.e(e);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    public static void launchApp(String packageName) {
+        //Check app version and trying to upgrade if necessary
+        try {
+            MLogs.d(TAG, "launchApp packageName = " + packageName);
             Intent intent = VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId());
             VActivityManager.get().startActivity(intent, VUserHandle.myUserId());
         } catch (Exception e) {
@@ -116,25 +151,5 @@ public class AppManager {
         MLogs.d(TAG, "packageName = " + packageName + ", enable = " + enable);
         //VirtualCore.get().getService().setAppNotificationFlag(packageName, enable);
     }
-
-//    public static void appOnCreate(Application application) {
-//        VirtualCore.get().applicationOnCreate(application);
-//    }
-
-//    public static Context getOuterContext() {
-//        return VirtualCore.get().getOutterContext();
-//    }
-
-    public static Context getInnerContext() {
-        return VirtualCore.get().getContext();
-    }
-
-    public static boolean isMainProcess() {
-        return VirtualCore.get().isMainProcess();
-    }
-
-//    public static void setInitCallback(IinitCallback callback) {
-//        VirtualCore.get().setInitCallback(callback);
-//    }
 
 }

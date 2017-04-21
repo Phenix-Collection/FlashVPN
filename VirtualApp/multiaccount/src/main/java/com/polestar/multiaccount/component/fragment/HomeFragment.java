@@ -719,6 +719,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onUnstalled(List<AppModel> clonedApp) {
+                MLogs.d("onUninstalled");
                 appInfos = clonedApp;
                 if(pkgGridAdapter != null){
                     pkgGridAdapter.notifyDataSetChanged();
