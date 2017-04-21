@@ -28,12 +28,12 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
 
     @Override
     public void onActivityStarted(Activity activity) {
-        MLogs.e("onActivityStarted");
+        MLogs.e("onActivityStarted "  + activity.getComponentName());
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        MLogs.e("onActivityResumed");
+        MLogs.e("onActivityResumed " +  activity.getComponentName());
         isForground = true;
         //MTA
         MTAManager.onResume(activity);
@@ -41,7 +41,7 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
 
     @Override
     public void onActivityPaused(Activity activity) {
-        MLogs.e("onActivityPaused");
+        MLogs.e("onActivityPaused " + activity.getComponentName());
         isForground = false;
         //MTA
         MTAManager.onPause(activity);
@@ -49,7 +49,7 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
 
     @Override
     public void onActivityStopped(Activity activity) {
-		MLogs.e("onActivityStopped");
+		MLogs.e("onActivityStopped "  + activity.getComponentName());
         if(!isForground ){
         }
     }
