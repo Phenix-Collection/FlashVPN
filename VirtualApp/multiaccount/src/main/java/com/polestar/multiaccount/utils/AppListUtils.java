@@ -44,7 +44,12 @@ public class AppListUtils implements DataObserver {
 
     public AppListUtils(Context context) {
         mContext = context;
-        update();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        }).start();
     }
 
     private void update() {
@@ -54,6 +59,7 @@ public class AppListUtils implements DataObserver {
             getPopularApps(mPopularModels);
             getIntalledApps(mInstalledModels);
         }
+        MLogs.e("update app list done");
     }
 
     public List<AppModel> getPopularModels() {
