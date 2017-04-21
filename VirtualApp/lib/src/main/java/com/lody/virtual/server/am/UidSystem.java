@@ -95,7 +95,7 @@ public class UidSystem {
         }
         int newUid;
         try {
-            PackageInfo pi = VirtualCore.getPM().getPackageInfo(pkg.packageName, 0);
+            PackageInfo pi = VirtualCore.get().getUnHookPackageManager().getPackageInfo(pkg.packageName, 0);
             newUid = pi.applicationInfo.uid;
         } catch (Exception ex) {
             newUid = ++mFreeUid;
