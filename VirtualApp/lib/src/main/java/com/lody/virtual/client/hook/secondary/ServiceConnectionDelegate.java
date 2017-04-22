@@ -22,7 +22,7 @@ public class ServiceConnectionDelegate extends IServiceConnection.Stub {
         this.mConn = mConn;
     }
 
-    public static ServiceConnectionDelegate getDelegate(IServiceConnection conn) {
+    public synchronized static ServiceConnectionDelegate getDelegate(IServiceConnection conn) {
         if(conn instanceof ServiceConnectionDelegate){
             return (ServiceConnectionDelegate)conn;
         }
@@ -35,7 +35,7 @@ public class ServiceConnectionDelegate extends IServiceConnection.Stub {
         return delegate;
     }
 
-    public static ServiceConnectionDelegate removeDelegate(IServiceConnection conn) {
+    public synchronized static ServiceConnectionDelegate removeDelegate(IServiceConnection conn) {
         return DELEGATE_MAP.remove(conn.asBinder());
     }
 
