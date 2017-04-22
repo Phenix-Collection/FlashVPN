@@ -304,7 +304,7 @@ public class MApp extends Application {
         MLogs.e("versioncode: " + CommonUtils.getCurrentVersionCode(context) + ", versionName:" + CommonUtils.getCurrentVersionName(context));
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
         strategy.setAppChannel(channel);
-        CrashReport.initCrashReport(context, "900060178", true, strategy);
+        CrashReport.initCrashReport(context, "900060178", !AppConstants.IS_RELEASE_VERSION, strategy);
         // close auto report, manual control
         CrashReport.closeCrashReport();
     }
