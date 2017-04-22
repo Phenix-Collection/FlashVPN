@@ -68,7 +68,7 @@ public class BroadcastSystem {
 
     public static void attach(VActivityManagerService ams, VAppManagerService app) {
         if (gDefault != null) {
-            throw new IllegalStateException();
+            VLog.logbug(TAG, VLog.getStackTraceString(new IllegalStateException("gDefault reinit")));
         }
         gDefault = new BroadcastSystem(VirtualCore.get().getContext(), ams, app);
     }
