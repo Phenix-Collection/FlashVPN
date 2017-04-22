@@ -33,6 +33,7 @@ namespace GodinHook {
      * 执行冻结工作的进程
      */
     static void unFreeze(pid_t pid);
+    static void unFreezeNoWait(pid_t pid);
   private:
 
     /**

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <Helper.h>
 #include "thread_helper.h"
 
 
@@ -203,6 +204,7 @@ void GodinHook::NativeHook::hookAllRegistered()
 {
   pid_t pid;
   int i;
+    LOGD("E hookALL %d", pid);
   pid = ThreadHealper::freezzAndRepairThread(NULL, ACTION_ENABLE);
   HookInfo ** infos = NativeHook::getAllHookInfo();
   for (i = 0; i < getHookedCount(); ++i) {
@@ -210,7 +212,10 @@ void GodinHook::NativeHook::hookAllRegistered()
          Hook(infos[i]);
         }
     }
-  ThreadHealper::unFreeze(pid);
+  //ThreadHealper::unFreeze(pid);
+    LOGD("hookALL %d 2", pid);
+    ThreadHealper::unFreezeNoWait(pid);
+    LOGD("X hookALL %d", pid);
 }
 
 void GodinHook::NativeHook::unHookAll()

@@ -51,6 +51,19 @@ pid_t GodinHook::ThreadHealper::freezzAndRepairThread(GodinHook::HookInfo *info,
   return pid;
 }
 
+void GodinHook::ThreadHealper::unFreezeNoWait(pid_t pid)
+{
+    if(pid < 0)
+        return;
+
+    /// 向执行冻结工作的进程发送信号，使其继续执行
+    kill(pid,SIGCONT);
+
+    /// 等待子进程退出
+    //waitpid(pid,NULL,0);
+
+}
+
 void GodinHook::ThreadHealper::unFreeze(pid_t pid)
 {
   if(pid < 0)
