@@ -2,6 +2,8 @@ package com.lody.virtual.client.hook.providers;
 
 import android.net.Uri;
 
+import com.lody.virtual.helper.utils.VLog;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -23,7 +25,8 @@ class DownloadProviderHook extends ExternalProviderHook {
 		try {
 			return super.insert(method, args);
 		}catch (Exception e) {
-			return null;
+			VLog.logbug("DownloadProviderHook", VLog.getStackTraceString(e));
+			return new Uri.Builder().appendPath("0").build();
 		}
 	}
 }
