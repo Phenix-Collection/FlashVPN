@@ -288,7 +288,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	private ServiceRecord findRecordLocked(IServiceConnection connection) {
 		synchronized (mHistory) {
 			for (ServiceRecord r : mHistory) {
-				if (r.containConnection(connection)) {
+				if (r!= null && r.containConnection(connection)) {
 					return r;
 				}
 			}
