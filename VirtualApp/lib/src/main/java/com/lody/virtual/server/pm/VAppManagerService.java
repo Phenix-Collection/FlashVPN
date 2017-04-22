@@ -199,6 +199,7 @@ public class VAppManagerService extends IAppManager.Stub {
     }
 
     public synchronized InstallResult installPackage(String path, int flags, boolean notify) {
+        VLog.d(TAG, "install: " + path + " flags: " + flags + " notify: " + notify);
         long installTime = System.currentTimeMillis();
         if (path == null) {
             return InstallResult.makeFailure("path = NULL");
@@ -249,9 +250,10 @@ public class VAppManagerService extends IAppManager.Stub {
         boolean dependSystem = (flags & InstallStrategy.DEPEND_SYSTEM_IF_EXIST) != 0
                 && VirtualCore.get().isOutsideInstalled(pkg.packageName);
 
-        if (existSetting != null && existSetting.dependSystem) {
+        if (existSetting != null && !existSetting.dependSystem) {
             dependSystem = false;
         }
+        VLog.d(TAG, "dependSystem " + dependSystem + " set : " + ((flags & InstallStrategy.DEPEND_SYSTEM_IF_EXIST) != 0));
 
         NativeLibraryHelperCompat.copyNativeBinaries(new File(path), libDir);
         if (!dependSystem) {
