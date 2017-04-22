@@ -62,6 +62,16 @@ public class AppLockMonitor {
         }
     }
 
+    public void reloadSetting() {
+        MLogs.d("reloadSetting");
+        modelHashMap.clear();
+        DbManager.resetSession();
+        List<AppModel> list = DbManager.queryAppList(MApp.getApp());
+        for (AppModel model: list) {
+            modelHashMap.put(model.getPackageName(), model);
+        }
+    }
+
     public static synchronized AppLockMonitor getInstance(){
         if (sInstance == null) {
             sInstance = new AppLockMonitor();

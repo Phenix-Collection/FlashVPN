@@ -33,6 +33,7 @@ import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.compat.BundleCompat;
 import com.lody.virtual.helper.utils.BitmapUtils;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.remote.InstalledAppInfo;
@@ -789,6 +790,15 @@ public final class VirtualCore {
 			getService().notifyActivityBeforePause(pkg);
 		}catch (Exception e){
 
+		}
+
+	}
+
+	public void reloadLockerSetting(){
+		try {
+			getService().reloadLockerSetting();
+		}catch (Exception e){
+			VLog.logbug(VLog.VTAG, VLog.getStackTraceString(e));
 		}
 
 	}

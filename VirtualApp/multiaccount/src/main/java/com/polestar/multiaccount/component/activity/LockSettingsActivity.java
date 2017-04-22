@@ -92,12 +92,12 @@ public class LockSettingsActivity extends BaseActivity {
                                 if(status) {
                                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
                                     MTAManager.lockerEnable(LockSettingsActivity.this, "enable",model.getPackageName());
-                                    VirtualCore.get().killApp(model.getPackageName(), VUserHandle.myUserId());
                                 } else {
                                     model.setLockerState(AppConstants.AppLockState.DISABLED);
                                     MTAManager.lockerEnable(LockSettingsActivity.this, "disable", model.getPackageName());
                                 }
                                 DbManager.updateAppModel(mContext, model);
+                                MLogs.d("lock state changed: " + model.getPackageName());
                             }
                         });
                         mAppsAdapter.setIsCheckedCallback(new BasicPackageSwitchAdapter.IsCheckedCallback() {
@@ -194,5 +194,8 @@ public class LockSettingsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (isSettingChanged) {
+            VirtualCore.get().reloadLockerSetting();
+        }
     }
 }

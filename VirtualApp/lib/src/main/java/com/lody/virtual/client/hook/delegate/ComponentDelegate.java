@@ -38,6 +38,11 @@ public interface ComponentDelegate {
         public boolean isNotificationEnabled(String pkg) {
             return false;
         }
+
+        @Override
+        public void reloadLockerSetting() {
+
+        }
     };
 
     void beforeActivityCreate(Activity activity);
@@ -51,4 +56,6 @@ public interface ComponentDelegate {
     void onSendBroadcast(Intent intent);
 
     boolean isNotificationEnabled(String pkg);
+
+    void reloadLockerSetting();
 }

@@ -38,17 +38,17 @@ public class MComponentDelegate implements ComponentDelegate {
     @Override
     public void beforeActivityResume(String pkg) {
         MLogs.d("beforeActivityResume " + pkg);
-        if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
+        //if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
             AppLockMonitor.getInstance().onActivityResume(pkg);
-        }
+        //}
     }
 
     @Override
     public void beforeActivityPause(String pkg) {
         MLogs.d("beforeActivityPause " + pkg);
-        if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
+       // if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
             AppLockMonitor.getInstance().onActivityPause(pkg);
-        }
+       // }
     }
 
     @Override
@@ -65,5 +65,10 @@ public class MComponentDelegate implements ComponentDelegate {
     public boolean isNotificationEnabled(String pkg) {
         MLogs.d("isNotificationEnabled pkg: " + pkg + " " + pkgs.contains(pkg) );
         return pkgs.contains(pkg);
+    }
+
+    @Override
+    public void reloadLockerSetting() {
+        AppLockMonitor.getInstance().reloadSetting();
     }
 }
