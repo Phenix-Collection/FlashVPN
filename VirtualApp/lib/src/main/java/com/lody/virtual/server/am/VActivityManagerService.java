@@ -1065,8 +1065,13 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			ProcessRecord r = findProcessLocked(info.processName, vuid);
 			if (BROADCAST_NOT_STARTED_PKG && r == null
 					) {
-				VLog.d(TAG, "startProcess for " + intent.toString());
-				r = startProcessIfNeedLocked(info.processName, getUserId(vuid), info.packageName);
+				int userId = getUserId(vuid);
+				VLog.d(TAG, "startProcess for " + intent.toString() + " userId " + userId);
+				if (userId != 0) {
+					VLog.logbug(TAG, VLog.getStackTraceString(new Exception("userId = " + userId)));
+					userId = 0;
+				}
+				r = startProcessIfNeedLocked(info.processName, userId, info.packageName);
 			}
 			if (r != null && r.appThread != null) {
 				VLog.logbug(TAG, "performReceive " + intent.toString());
