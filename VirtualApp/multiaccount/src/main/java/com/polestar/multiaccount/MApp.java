@@ -102,6 +102,7 @@ public class MApp extends Application {
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                //
+                initBugly(gDefault);
                 AdSdk.initialize(MApp.getApp(), "27681");
             }
 
@@ -171,7 +172,6 @@ public class MApp extends Application {
         try {
             // init exception handler and bugly before attatchBaseContext and appOnCreate
             setDefaultUncaughtExceptionHandler(this);
-            initBugly(this);
             MTAManager.init(this);
         }catch (Exception e){
             e.printStackTrace();
