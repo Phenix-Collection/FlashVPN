@@ -35,7 +35,7 @@ public class CrashReceiver extends BroadcastReceiver {
                     Throwable ex = (Throwable) intent.getSerializableExtra("exception");
                     CrashReport.postCatchedException(ex);
                     if(forground) {
-                        ToastUtils.ToastDefultLong(context, context.getString(R.string.crash_hint));
+                        //ToastUtils.ToastDefultLong(context, context.getString(R.string.crash_hint));
                     }
                 } catch (Exception e) {
                     MLogs.logBug("Error in CrashReceiver " + MLogs.getStackTraceString(e));
