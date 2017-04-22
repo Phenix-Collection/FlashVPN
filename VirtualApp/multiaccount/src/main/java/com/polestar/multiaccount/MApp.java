@@ -102,7 +102,6 @@ public class MApp extends Application {
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                //
-                initBugly(gDefault);
                 AdSdk.initialize(MApp.getApp(), "27681");
             }
 
@@ -172,6 +171,7 @@ public class MApp extends Application {
         try {
             // init exception handler and bugly before attatchBaseContext and appOnCreate
             setDefaultUncaughtExceptionHandler(this);
+            initBugly(gDefault);
             MTAManager.init(this);
         }catch (Exception e){
             e.printStackTrace();
@@ -304,7 +304,7 @@ public class MApp extends Application {
         MLogs.e("versioncode: " + CommonUtils.getCurrentVersionCode(context) + ", versionName:" + CommonUtils.getCurrentVersionName(context));
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
         strategy.setAppChannel(channel);
-        CrashReport.initCrashReport(context, "900060178", !AppConstants.IS_RELEASE_VERSION, strategy);
+        CrashReport.initCrashReport(context, "900060178", true, strategy);
         // close auto report, manual control
         CrashReport.closeCrashReport();
     }
