@@ -1,8 +1,10 @@
 find lib/src/main -iname *.java > lib-src.txt
-find lib/src/aidl -iname *.java > lib-aidl.txt
+find lib/src/aidl -iname *.aidl > lib-aidl.txt
 
-%s/\.\//-keep class /g 
+%s/^/-keep class /g 
+#%s/\.\//-keep class /g 
 %s/\/[A-Z].*\.java$/.** {*;}/g
+#%s/\/[A-Z].*\.aidl$/.** {*;}/g
 %s/\//./g
 sort
 
