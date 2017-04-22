@@ -113,7 +113,7 @@ public class ComponentUtils {
 		newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
 		if (component != null) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                if (!(intent.getSelector() != null && pkg != null)) {
+                if (intent.getSelector() == null && pkg != null) {
                     intent.setPackage(component.getPackageName());
                 }
             }
