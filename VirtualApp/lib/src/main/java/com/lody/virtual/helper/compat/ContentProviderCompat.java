@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.SystemClock;
 
+import com.lody.virtual.helper.utils.VLog;
+
 /**
  * @author Lody
  */
@@ -22,8 +24,8 @@ public class ContentProviderCompat {
         Bundle res = null;
         try {
             res = client.call(method, arg, extras);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            VLog.logbug("ContentProviderCompat", VLog.getStackTraceString(e));
         } finally {
             releaseQuietly(client);
         }
@@ -42,8 +44,8 @@ public class ContentProviderCompat {
         ContentProviderClient client = acquireContentProviderClient(context, uri);
         if (client == null) {
             int retry = 0;
-            while (retry < 5 && client == null) {
-                SystemClock.sleep(100);
+            while (retry < 10 && client == null) {
+                SystemClock.sleep(150);
                 retry++;
                 client = acquireContentProviderClient(context, uri);
             }
