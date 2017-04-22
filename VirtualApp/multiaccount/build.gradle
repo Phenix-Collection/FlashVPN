@@ -87,10 +87,7 @@ dependencies {
     compile 'com.android.support:percent:25.+'
     //Promise Support
     compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
-    //Preference mark Support
-    compile 'com.jonathanfinerty.once:once:1.0.3'
-    debugCompile 'com.github.moduth:blockcanary:1.0.2'
-    releaseCompile 'com.github.moduth:blockcanary-no-op:1.0.2'
+
     compile 'com.android.support:design:25.+'
     compile 'org.greenrobot:greendao:3.0.1'
     //compile 'com.google.code.gson:gson:2.3.1'
