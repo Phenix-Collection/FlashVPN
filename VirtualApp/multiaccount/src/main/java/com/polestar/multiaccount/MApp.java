@@ -211,21 +211,25 @@ public class MApp extends Application {
             MLogs.logBug("uncaughtException");
 
             String pkg;
-            CrashReport.startCrashReport();
+            int tag;
+            //CrashReport.startCrashReport();
             //1. innerContext = null, internal error in Pb
             if (VirtualCore.get() != null
                     && (VirtualCore.get().isMainProcess() )) {
                 MLogs.logBug("Super Clone main app exception, exit.");
                 pkg = "main";
-                CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);
+                tag = AppConstants.CrashTag.MAPP_CRASH;
+                //CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);
             } else if(VirtualCore.get()!= null && VirtualCore.get().isServerProcess()){
                 MLogs.logBug("Server process crash!");
                 pkg = "server";
-                CrashReport.setUserSceneTag(context, AppConstants.CrashTag.SERVER_CRASH);
+                tag = AppConstants.CrashTag.SERVER_CRASH;
+                //CrashReport.setUserSceneTag(context, AppConstants.CrashTag.SERVER_CRASH);
             } else {
                 MLogs.logBug("Client process crash!");
                 pkg = VClientImpl.get() == null? null: VClientImpl.get().getCurrentPackage();
-                CrashReport.setUserSceneTag(context, AppConstants.CrashTag.CLONE_CRASH);
+                tag = AppConstants.CrashTag.CLONE_CRASH;
+                //CrashReport.setUserSceneTag(context, AppConstants.CrashTag.CLONE_CRASH);
             }
             MLogs.logBug(MLogs.getStackTraceString(ex));
 
@@ -234,14 +238,15 @@ public class MApp extends Application {
             if (info != null && android.os.Process.myPid() == info.pid) {
                 MLogs.logBug("forground crash");
                 forground = true;
-                CrashReport.setUserSceneTag(context, AppConstants.CrashTag.FG_CRASH);
+                //CrashReport.setUserSceneTag(context, AppConstants.CrashTag.FG_CRASH);
             }
             Intent crash = new Intent("appclone.intent.action.SHOW_CRASH_DIALOG");
             crash.putExtra("package", pkg);
             crash.putExtra("forground", forground);
             crash.putExtra("exception", ex);
+            crash.putExtra("tag", tag);
             sendBroadcast(crash);
-            CrashReport.postCatchedException(ex);
+            //CrashReport.postCatchedException(ex);
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {

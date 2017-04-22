@@ -27,8 +27,13 @@ public class CrashReceiver extends BroadcastReceiver {
                 try {
                     String pName = intent.getStringExtra("package");
                     boolean forground = intent.getBooleanExtra("forground", false);
+                    int tag = intent.getIntExtra("tag", 0);
                     MLogs.logBug("CrashReceiver onReceive crash: " + pName + " forground: " + forground);
                     MTAManager.reportCrash(context, pName,forground);
+                    CrashReport.startCrashReport();
+                    CrashReport.setUserSceneTag(context, tag);
+                    Throwable ex = (Throwable) intent.getSerializableExtra("exception");
+                    CrashReport.postCatchedException(ex);
                     if(forground) {
                         ToastUtils.ToastDefultLong(context, context.getString(R.string.crash_hint));
                     }
