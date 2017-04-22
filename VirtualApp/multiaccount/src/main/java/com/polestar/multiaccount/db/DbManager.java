@@ -43,6 +43,10 @@ public class DbManager {
         return daoSession;
     }
 
+    public static void resetSession() {
+        daoSession = null;
+    }
+
     public static List<AppModel> queryAppList(Context context) {
         AppModelDao appModelDao = getDaoSession(context).getAppModelDao();
         return appModelDao.queryBuilder().orderAsc(AppModelDao.Properties.Index).list();
