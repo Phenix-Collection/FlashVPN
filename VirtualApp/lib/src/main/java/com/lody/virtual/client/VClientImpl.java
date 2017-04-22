@@ -92,6 +92,9 @@ public final class VClientImpl extends IVClient.Stub {
 	private AppBindData mBoundApplication;
 	private Application mInitialApplication;
 
+	private final WatchDog mBindAppWatchDog = new WatchDog();
+	private final static int WATCH_BIND_APP = 0;
+
     public static VClientImpl get() {
         return gClient;
     }
@@ -199,6 +202,7 @@ public final class VClientImpl extends IVClient.Stub {
 
 	private void bindApplicationNoCheck(String packageName, String processName, ConditionVariable lock) {
 		VLog.d(TAG, "bindApplicationNoCheck " + packageName + " proc: " + processName);
+		mBindAppWatchDog.watch(WATCH_BIND_APP, 75*1000);
 		mTempLock = lock;
 		if (isBound()) {
 			mTempLock  = null;
@@ -232,6 +236,7 @@ public final class VClientImpl extends IVClient.Stub {
 		data.processName = processName;
 		data.providers = VPackageManager.get().queryContentProviders(processName, getVUid(), PackageManager.GET_META_DATA);
 		mBoundApplication = data;
+		VLog.d(TAG, "bindApplicationNoCheck step 1" + packageName + " proc: " + processName);
 		VirtualRuntime.setupRuntime(data.processName, data.appInfo);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -253,12 +258,15 @@ public final class VClientImpl extends IVClient.Stub {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && targetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
             mirror.android.os.Message.updateCheckRecycle.call(targetSdkVersion);
         }
+		VLog.d(TAG, "bindApplicationNoCheck step 2" + packageName + " proc: " + processName);
         if (StubManifest.ENABLE_IO_REDIRECT && SpecialComponentList.needIORedirect(packageName)) {
             startIOUniformer();
         }
+		VLog.d(TAG, "bindApplicationNoCheck step 3 " + packageName + " proc: " + processName);
 		NativeEngine.hookNative();
 		Object mainThread = VirtualCore.mainThread();
 		NativeEngine.startDexOverride();
+		VLog.d(TAG, "bindApplicationNoCheck step 4 " + packageName + " proc: " + processName);
 		Context context = createPackageContext(data.appInfo.packageName);
 		System.setProperty("java.io.tmpdir", context.getCacheDir().getAbsolutePath());
 		File codeCacheDir;
@@ -305,23 +313,28 @@ public final class VClientImpl extends IVClient.Stub {
 			VLog.logbug("VClientImpl", "bindApplicationNoCheck:" + packageName + ":"+processName + ":data.info null");
 			//should return here
 		}
+		VLog.d(TAG, "bindApplicationNoCheck step 4.1 " + packageName + " proc: " + processName);
         mInitialApplication = LoadedApk.makeApplication.call(data.info, false, null);
+		VLog.d(TAG, "bindApplicationNoCheck step 4.2 " + packageName + " proc: " + processName);
 		if(mInitialApplication == null) {
 			VLog.logbug(TAG, "mInitialApplication is null");
 			if (data.info != null) {
 				mInitialApplication = LoadedApk.makeApplication.call(data.info, false, null);
 			}
 		}
+		VLog.d(TAG, "bindApplicationNoCheck step 4.3 " + packageName + " proc: " + processName);
         mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, mInitialApplication);
         ContextFixer.fixContext(mInitialApplication);
 		List<ProviderInfo> providers = VPackageManager.get().queryContentProviders(data.processName, vuid, PackageManager.GET_META_DATA);
 		if (providers != null) {
             installContentProviders(mInitialApplication, providers);
 		}
+		VLog.d(TAG, "bindApplicationNoCheck step 4.4 " + packageName + " proc: " + processName);
 		if (lock != null) {
 			lock.open();
 			mTempLock = null;
 		}
+		VLog.d(TAG, "bindApplicationNoCheck step 5 " + packageName + " proc: " + processName);
 		try {
             mInstrumentation.callApplicationOnCreate(mInitialApplication);
             InvocationStubManager.getInstance().checkEnv(HCallbackStub.class);
@@ -339,11 +352,13 @@ public final class VClientImpl extends IVClient.Stub {
 			}
 		}
 		VLog.d(TAG, "bindApplicationNoCheck OK " + packageName + " proc: " + processName);
+		mBindAppWatchDog.feed(WATCH_BIND_APP);
 		VActivityManager.get().appDoneExecuting();
 	}
 
 	@SuppressLint("SdCardPath")
 	private void startIOUniformer() {
+		VLog.d(TAG, "E startIOUniformer");
 		ApplicationInfo info = mBoundApplication.appInfo;
         int userId = VUserHandle.myUserId();
         NativeEngine.redirectDirectory("/data/data/" + info.packageName, info.dataDir);
@@ -370,7 +385,9 @@ public final class VClientImpl extends IVClient.Stub {
                 }
             }
         }
+		VLog.d(TAG, "startIOUniformer before hook");
 		NativeEngine.hook();
+		VLog.d(TAG, "X startIOUniformer");
 	}
 
     @SuppressLint("SdCardPath")

@@ -44,15 +44,13 @@ public class NativeEngine {
             // ignore
         }
 
-
-
-
 	public static void startDexOverride() {
         List<InstalledAppInfo> installedAppInfos = VirtualCore.get().getInstalledApps(0);
         sDexOverrideMap = new HashMap<>(installedAppInfos.size());
         for (InstalledAppInfo info : installedAppInfos) {
 			try {
-				sDexOverrideMap.put(new File(info.apkPath).getCanonicalPath(), info);
+				String canonical = new File(info.apkPath).getCanonicalPath();
+				sDexOverrideMap.put(canonical, info);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -158,6 +156,7 @@ public class NativeEngine {
 		VLog.d(TAG, "DexOrJarPath = %s, OutputPath = %s.", dexOrJarPath, outputPath);
 		try {
 			String canonical = new File(dexOrJarPath).getCanonicalPath();
+			VLog.d(TAG, "canonical DexOrJarPath = %s", canonical);
             InstalledAppInfo info = sDexOverrideMap.get(canonical);
 			if (info != null && !info.dependSystem) {
 				outputPath = info.getOdexFile().getPath();
