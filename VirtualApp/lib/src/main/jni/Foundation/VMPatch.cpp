@@ -239,19 +239,20 @@ new_bridge_cameraNativeSetupFunc(const void **args, void *pResult, const void *m
     JNIEnv *env = NULL;
     gVm->GetEnv((void **) &env, JNI_VERSION_1_6);
     gVm->AttachCurrentThread(&env, NULL);
+    LOGE("PLIB cameraNativeSetupFunc methodType %d", gOffset.cameraMethodType);
     // args[0] = this
     switch (gOffset.cameraMethodType) {
         case 1:
-            args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
+            args[3] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
             break;
         case 2:
-            args[5] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
+            args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
             break;
         case 3:
-            args[5] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
+            args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
             break;
         case 4:
-            args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
+            args[3] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
             break;
     }
     gOffset.orig_cameraNativeSetup_dvm(args, pResult, method, self);
