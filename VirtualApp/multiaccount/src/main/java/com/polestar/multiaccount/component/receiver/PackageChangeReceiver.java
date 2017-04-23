@@ -34,7 +34,8 @@ public class PackageChangeReceiver extends BroadcastReceiver{
         if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
             DbManager.notifyChanged();
             final String pkg = packageName;
-            if( replacing && VirtualCore.get().isAppInstalled(packageName)) {
+            boolean installed = VirtualCore.get() != null && VirtualCore.get().isAppInstalled(packageName);
+            if( replacing && installed) {
                 MLogs.d("app install: replacing upgrade ");
                 new Thread(new Runnable() {
                     @Override
