@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
@@ -32,10 +33,12 @@ public class AppLockMonitor {
     public final static int MSG_PACKAGE_UNLOCKED = 1;
     private final static String TAG = "AppLockMonitor";
 
+    private FuseAdLoader mAdLoader;
+    private boolean hasLock;
+
     private AppLockWindowManager mAppLockWindows = AppLockWindowManager.getInstance();
 
     private AppLockMonitor() {
-        initSetting();
         mHandler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
@@ -52,14 +55,34 @@ public class AppLockMonitor {
                 }
             }
         };
+        initSetting();
     }
 
+    private void preloadAd() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (hasLock) {
+                    mAdLoader.loadAd(1, null);
+                }
+            }
+        });
+    }
     private void initSetting() {
         MLogs.d("initSetting");
         List<AppModel> list = DbManager.queryAppList(MApp.getApp());
         for (AppModel model: list) {
             modelHashMap.put(model.getPackageName(), model);
+            if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
+                hasLock = true;
+            }
         }
+        mAdLoader = FuseAdLoader.get(AppLockWindow.CONFIG_SLOT_APP_LOCK, MApp.getApp());
+        preloadAd();
+    }
+
+    public FuseAdLoader getAdLoader(){
+        return mAdLoader;
     }
 
     public void reloadSetting() {
@@ -69,7 +92,11 @@ public class AppLockMonitor {
         List<AppModel> list = DbManager.queryAppList(MApp.getApp());
         for (AppModel model: list) {
             modelHashMap.put(model.getPackageName(), model);
+            if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
+                hasLock = true;
+            }
         }
+        preloadAd();
     }
 
     public static synchronized AppLockMonitor getInstance(){

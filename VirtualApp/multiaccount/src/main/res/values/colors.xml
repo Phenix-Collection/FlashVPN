@@ -5,6 +5,7 @@
     <color name="colorPrimaryTranslucent">#00000000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
+    <color name="transparent_white">#beffffff</color>
     <color name="black">#000000</color>
     <color name="gray">#A9A5A3</color>
     <color name="gray_drawer">#d64d4b49</color>

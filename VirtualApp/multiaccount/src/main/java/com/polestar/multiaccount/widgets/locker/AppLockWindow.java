@@ -22,6 +22,10 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.AppLockMonitor;
@@ -36,6 +40,7 @@ import com.polestar.multiaccount.utils.ResourcesUtil;
 import com.polestar.multiaccount.widgets.FeedbackImageView;
 import com.polestar.multiaccount.widgets.FloatWindow;
 import com.polestar.multiaccount.widgets.PopupMenu;
+import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 import java.util.List;
 
@@ -66,7 +71,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
     private AppLockPasswordLogic mAppLockPasswordLogic = null;
 
-    private final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
+    public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
 
     public AppLockWindow(String pkgName, Handler handler) {
         MLogs.d("AppLockWindow initialize for : " + pkgName);
@@ -182,6 +187,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 super.onAdFailedToLoad(i);
                 AdLog.d("onAdFailedToLoad " + i);
                 mAdmobExpressView.setVisibility(View.GONE);
+                AppLockMonitor.getInstance().getAdLoader().loadAd(1, null);
             }
 
             @Override
@@ -201,6 +207,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 mAdInfoContainer.addView(mAdmobExpressView);
                 mAdmobExpressView.setVisibility(View.VISIBLE);
                 updateTitleBar();
+                AppLockMonitor.getInstance().getAdLoader().loadAd(1, null);
                 AdLog.d("LockWindow on Banner AdLoaded ");
             }
         });
@@ -209,8 +216,67 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
     private void updateTitleBar() {
         mToolbarIcon.setImageDrawable(mCenterIcon.getDrawable());
+        mToolbarIcon.setBackground(null);
         mToolbarText.setText(mCenterAppText.getText());
     }
+
+    private void inflatNativeAd(IAd ad) {
+        View adView = LayoutInflater.from(mContentView.getContext()).inflate(R.layout.lock_window_native_ad, null);
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        adView.setLayoutParams(params);
+        if (ad != null && adView != null) {
+            BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
+            coverView.setDefaultResource(0);
+            coverView.requestDisplayURL(ad.getCoverImageUrl());
+            BasicLazyLoadImageView iconView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_icon_image);
+            iconView.setDefaultResource(0);
+            iconView.requestDisplayURL(ad.getIconImageUrl());
+            TextView titleView = (TextView) adView.findViewById(R.id.ad_title);
+            titleView.setText(ad.getTitle());
+            TextView subtitleView = (TextView) adView.findViewById(R.id.ad_subtitle_text);
+            subtitleView.setText(ad.getBody());
+            TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
+            ctaView.setText(ad.getCallToActionText());
+            StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(R.id.star_rating_layout);
+            starLevelLayout.setRating((int)ad.getStarRating());
+
+            mAdInfoContainer.removeAllViews();
+            mAdInfoContainer.addView(adView);
+            ad.registerViewForInteraction(mAdInfoContainer);
+            if (ad.getPrivacyIconUrl() != null) {
+                BasicLazyLoadImageView choiceIconImage = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_choices_image);
+                choiceIconImage.setDefaultResource(0);
+                choiceIconImage.requestDisplayURL(ad.getPrivacyIconUrl());
+                ad.registerPrivacyIconView(choiceIconImage);
+            }
+            updateTitleBar();
+        }
+    }
+    private void loadNative(){
+        final FuseAdLoader adLoader = AppLockMonitor.getInstance().getAdLoader();
+        if (adLoader != null) {
+            adLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAd ad) {
+                    inflatNativeAd(ad);
+                    adLoader.loadAd(1, null);
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAd> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+                    MLogs.d("Lock window load ad error: " + error);
+                    loadAdmobNativeExpress();
+                    adLoader.loadAd(1, null);
+                }
+            });
+        }
+    }
+
     private void loadAdmobNativeExpress(){
         if (mAdmobExpressView == null) {
             return;
@@ -260,7 +326,8 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
             mAppLockPasswordLogic.onShow();
             mWindow.show();
             MTAManager.showLockWindow(mContentView.getContext(), mPkgName);
-            loadAdmobNativeExpress();
+            loadNative();
+            //loadAdmobNativeExpress();
             mIsShowing = true;
         }
     }
