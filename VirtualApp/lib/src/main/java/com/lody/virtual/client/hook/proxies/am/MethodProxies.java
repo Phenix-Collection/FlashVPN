@@ -54,12 +54,14 @@ import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.os.VUserInfo;
 import com.lody.virtual.remote.AppTaskInfo;
+import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.interfaces.IAppRequestListener;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -1167,10 +1169,32 @@ class MethodProxies {
             return "registerReceiver";
         }
 
+//        private boolean  isSticky(IntentFilter filter) {
+//            Iterator<String> iterator = filter.actionsIterator();
+//            while (iterator.hasNext()) {
+//                String action = iterator.next();
+//                if (BroadcastSystem.)
+//                SystemBroadcastReceiver receiver = mSystemReceivers.get(action);
+//                if (receiver != null && receiver.sticky && receiver.stickyIntent != null) {
+//                    Intent intent = new Intent(receiver.stickyIntent);
+//                    SpecialComponentList.protectIntent(intent);
+//                    intent.putExtra("_VA_|_uid_", vuid);
+//                    mContext.sendBroadcast(intent);
+//                    if (!iterator.hasNext()) {
+//                        return receiver.stickyIntent;
+//                    }
+//                }
+//            }
+//            return null;
+//        }
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
             args[IDX_RequiredPermission] = null;
+            if (args.length > IDX_IIntentReceiver && args[IDX_IIntentReceiver] == null) {
+                VLog.logbug(TAG, "null receiver: " );
+                return method.invoke(who,args);
+            }
             IntentFilter filter = (IntentFilter) args[IDX_IntentFilter];
             SpecialComponentList.protectIntentFilter(filter);
             if (args.length > IDX_IIntentReceiver && IIntentReceiver.class.isInstance(args[IDX_IIntentReceiver])) {
