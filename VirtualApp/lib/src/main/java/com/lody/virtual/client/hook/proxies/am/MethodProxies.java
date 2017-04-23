@@ -403,6 +403,14 @@ class MethodProxies {
             IBinder resultTo = resultToIndex >= 0 ? (IBinder) args[resultToIndex] : null;
             int userId = VUserHandle.myUserId();
 
+            //Work around fb ad icon click
+            VLog.d("StartActivity", "intent: " + intent.toString());
+            if(VirtualCore.get().isServerProcess() &&
+                    Intent.ACTION_VIEW.equals(intent.getAction()) &&
+                    intent.getDataString() != null &&
+                    intent.getDataString().contains("https://m.facebook.com/")) {
+                return method.invoke(who, args);
+            }
             if (ComponentUtils.isStubComponent(intent)) {
                 return method.invoke(who, args);
             }
