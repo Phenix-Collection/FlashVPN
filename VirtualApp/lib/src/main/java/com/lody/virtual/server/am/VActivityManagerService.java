@@ -271,7 +271,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	}
 
 	private void addRecord(ServiceRecord r) {
-		mHistory.add(r);
+		synchronized (mHistory) {
+			mHistory.add(r);
+		}
 	}
 
 	private ServiceRecord findRecordLocked(int userId, ServiceInfo serviceInfo) {
@@ -364,7 +366,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 					e.printStackTrace();
 				}
 				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-					mHistory.remove(r);
+					synchronized (mHistory) {
+						mHistory.remove(r);
+					}
 				}
 			}
 			return 1;
@@ -398,7 +402,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 					e.printStackTrace();
 				}
 				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-					mHistory.remove(r);
+					synchronized (mHistory) {
+						mHistory.remove(r);
+					}
 				}
 				return true;
 			}
@@ -484,7 +490,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 					e.printStackTrace();
 				}
 				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-					mHistory.remove(r);
+					synchronized (mHistory) {
+						mHistory.remove(r);
+					}
 				}
 			}
 			return true;
@@ -519,7 +527,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				return;
 			}
 			if (ActivityManagerCompat.SERVICE_DONE_EXECUTING_STOP == type) {
-				mHistory.remove(r);
+				synchronized (mHistory) {
+					mHistory.remove(r);
+				}
 			}
 		}
 	}
