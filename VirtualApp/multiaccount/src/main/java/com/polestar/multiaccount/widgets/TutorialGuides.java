@@ -247,8 +247,12 @@ public class TutorialGuides implements PopupWindow.OnDismissListener {
                 @Override
                 public void run() {
                     dismissed = false;
-                    mPopupWindow.showAtLocation(mRootView, Gravity.NO_GRAVITY, mRootView.getWidth(), mRootView.getHeight());
-                    MLogs.d("show at location");
+                    try {
+                        mPopupWindow.showAtLocation(mRootView, Gravity.NO_GRAVITY, mRootView.getWidth(), mRootView.getHeight());
+                        MLogs.d("show at location");
+                    }catch (Exception e) {
+                        MLogs.logBug(MLogs.getStackTraceString(e));
+                    }
                 }
             });
         }catch (Exception ex){
