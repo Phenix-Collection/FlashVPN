@@ -1071,8 +1071,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 
 	private boolean handleStaticBroadcastAsUser(int vuid, ActivityInfo info, Intent intent,
 												PendingResultData result) {
+		ProcessRecord r;
 		synchronized (this) {
-			ProcessRecord r = findProcessLocked(info.processName, vuid);
+			r = findProcessLocked(info.processName, vuid);
 			if (BROADCAST_NOT_STARTED_PKG && r == null
 					) {
 				int userId = getUserId(vuid);
@@ -1083,19 +1084,19 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				}
 				r = startProcessIfNeedLocked(info.processName, userId, info.packageName);
 			}
-			if (r != null && r.appThread != null) {
-				VLog.logbug(TAG, "performReceive " + intent.toString());
-				if (Intent.ACTION_PACKAGE_ADDED.equals(intent.getAction()) && intent.getExtras() == null) {
-					intent.putExtra("FIX", "FIX");
-					VLog.logbug(TAG,"package added intent extra is null! ActivityInfo " + info);
-				}
-				performScheduleReceiver(r.client, vuid, info, intent,
-						result);
-				return true;
-			} else {
-				VLog.logbug(TAG, "Not schedule receiver for not started process: " + intent.toString());
-				return false;
+		}
+		if (r != null && r.appThread != null) {
+			VLog.logbug(TAG, "performReceive " + intent.toString());
+			if (Intent.ACTION_PACKAGE_ADDED.equals(intent.getAction()) && intent.getExtras() == null) {
+				intent.putExtra("FIX", "FIX");
+				VLog.logbug(TAG,"package added intent extra is null! ActivityInfo " + info);
 			}
+			performScheduleReceiver(r.client, vuid, info, intent,
+					result);
+			return true;
+		} else {
+			VLog.logbug(TAG, "Not schedule receiver for not started process: " + intent.toString());
+			return false;
 		}
 	}
 
