@@ -9,6 +9,7 @@ import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.InstalledAppInfo;
@@ -32,9 +33,13 @@ public class AppManager {
                 uninstalledApp.add(model);
                 continue;
             }
-            if (! VirtualCore.get().isAppInstalled(model.getPackageName())){
-                uninstalledApp.add(model);
-                continue;
+            try {
+                if (!VirtualCore.get().isAppInstalled(model.getPackageName())) {
+                    uninstalledApp.add(model);
+                    continue;
+                }
+            }catch (Exception e) {
+                MLogs.logBug(MLogs.getStackTraceString(e));
             }
             if (model.getCustomIcon() == null) {
                 model.setCustomIcon(BitmapUtils.createCustomIcon(context, model.initDrawable(context)));
