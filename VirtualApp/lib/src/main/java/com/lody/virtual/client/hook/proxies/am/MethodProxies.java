@@ -302,7 +302,7 @@ class MethodProxies {
                     }
                     Intent targetIntent = redirectIntentSender(type, creator, intent, token);
                     if (targetIntent != null) {
-                        args[5] = new Intent[]{targetIntent};
+                        intents[intents.length - 1] = targetIntent;
                     }
                 }
             }
