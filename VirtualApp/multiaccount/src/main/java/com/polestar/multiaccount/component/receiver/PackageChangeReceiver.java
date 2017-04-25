@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
@@ -34,7 +35,12 @@ public class PackageChangeReceiver extends BroadcastReceiver{
         if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
             DbManager.notifyChanged();
             final String pkg = packageName;
-            boolean installed = VirtualCore.get() != null && VirtualCore.get().isAppInstalled(packageName);
+            boolean installed = false;
+            try{
+                installed = VirtualCore.get() != null && VirtualCore.get().isAppInstalled(packageName);
+            }catch (Exception e) {
+                MLogs.logBug(VLog.getStackTraceString(e));
+            }
             if( replacing && installed) {
                 MLogs.d("app install: replacing upgrade ");
                 new Thread(new Runnable() {
