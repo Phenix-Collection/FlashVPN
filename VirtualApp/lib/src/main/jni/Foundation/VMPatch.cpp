@@ -10,21 +10,13 @@ typedef jobject (*Native_openDexNativeFunc)(JNIEnv *, jclass, jstring, jstring, 
 typedef jobject (*Native_openDexNativeFunc_N)(JNIEnv *, jclass, jstring, jstring, jint, jobject,
                                               jobject);
 
+typedef jint (*Native_cameraNativeSetupFunc_T1)(JNIEnv *, jobject, jobject, jint, jint, jstring);
 
-typedef jint (*Native_cameraNativeSetupFunc_T1)(JNIEnv *, jobject, jobject, jint, jstring);
-
-typedef jint (*Native_cameraNativeSetupFunc_T2)(JNIEnv *, jobject, jobject, jint, jint, jstring);
-
-typedef jint (*Native_cameraNativeSetupFunc_T3)(JNIEnv *, jobject, jobject, jint, jint, jstring,
-                                                jboolean);
-
-typedef jint (*Native_cameraNativeSetupFunc_T4)(JNIEnv *, jobject, jobject, jint, jstring,
-                                                jboolean);
+typedef jint (*Native_cameraNativeSetupFunc_T2)(JNIEnv *, jobject, jobject, jint, jstring);
 
 typedef jint (*Native_getCallingUid)(JNIEnv *, jclass);
 
 typedef jint (*Native_audioRecordNativeCheckPermission)(JNIEnv *, jobject, jstring);
-
 
 static struct {
 
@@ -53,8 +45,6 @@ static struct {
     union {
         Native_cameraNativeSetupFunc_T1 t1;
         Native_cameraNativeSetupFunc_T2 t2;
-        Native_cameraNativeSetupFunc_T3 t3;
-        Native_cameraNativeSetupFunc_T4 t4;
     } orig_native_cameraNativeSetupFunc;
 
     Bridge_DalvikBridgeFunc orig_openDexFile_dvm;
@@ -68,8 +58,8 @@ static struct {
 } gOffset;
 
 
-extern JavaVM *gVm;
-extern jclass gClass;
+extern JavaVM *g_vm;
+extern jclass g_jclass;
 
 
 void mark() {
@@ -85,10 +75,25 @@ jint getCallingUid(JNIEnv *env, jclass jclazz) {
         int (*func_self)(void) = (int (*)(void)) gOffset.sym_IPCThreadState_self;
         uid = org_getCallingUid(func_self());
     }
-    uid = env->CallStaticIntMethod(gClass, gOffset.method_onGetCallingUid, uid);
+    uid = env->CallStaticIntMethod(g_jclass, gOffset.method_onGetCallingUid, uid);
     return uid;
 }
 
+static jint
+new_native_audioRecordNativeCheckPermission(JNIEnv *env, jobject thiz, jstring _packagename) {
+    jstring host = env->NewStringUTF(gOffset.hostPackageName);
+    return gOffset.orig_native_audioRecordNativeCheckPermission(env, thiz, host);
+}
+
+void replaceAudioRecordNativeCheckPermission(JNIEnv *env, jobject javaMethod, jboolean isArt, int api) {
+    if (!javaMethod || !isArt) {
+        return;
+    }
+   jmethodID methodStruct = env->FromReflectedMethod(javaMethod);
+    void **funPtr = (void **) (reinterpret_cast<size_t>(methodStruct) + gOffset.nativeOffset);
+    gOffset.orig_native_audioRecordNativeCheckPermission = (Native_audioRecordNativeCheckPermission) (*funPtr);
+    *funPtr = (void *)new_native_audioRecordNativeCheckPermission;
+}
 
 static JNINativeMethod gMarkMethods[] = {
         NATIVE_METHOD((void *) mark, "nativeMark", "()V"),
@@ -110,7 +115,7 @@ static jobject new_native_openDexNativeFunc(JNIEnv *env, jclass jclazz, jstring 
     if (javaOutputName) {
         env->SetObjectArrayElement(array, 1, javaOutputName);
     }
-    env->CallStaticVoidMethod(gClass, gOffset.method_onOpenDexFileNative, array);
+    env->CallStaticVoidMethod(g_jclass, gOffset.method_onOpenDexFileNative, array);
 
     jstring newSource = (jstring) env->GetObjectArrayElement(array, 0);
     jstring newOutput = (jstring) env->GetObjectArrayElement(array, 1);
@@ -131,7 +136,7 @@ static jobject new_native_openDexNativeFunc_N(JNIEnv *env, jclass jclazz, jstrin
     if (javaOutputName) {
         env->SetObjectArrayElement(array, 1, javaOutputName);
     }
-    env->CallStaticVoidMethod(gClass, gOffset.method_onOpenDexFileNative, array);
+    env->CallStaticVoidMethod(g_jclass, gOffset.method_onOpenDexFileNative, array);
 
     jstring newSource = (jstring) env->GetObjectArrayElement(array, 0);
     jstring newOutput = (jstring) env->GetObjectArrayElement(array, 1);
@@ -144,8 +149,8 @@ static jobject new_native_openDexNativeFunc_N(JNIEnv *env, jclass jclazz, jstrin
 static void
 new_bridge_openDexNativeFunc(const void **args, void *pResult, const void *method, void *self) {
     JNIEnv *env = NULL;
-    gVm->GetEnv((void **) &env, JNI_VERSION_1_6);
-    gVm->AttachCurrentThread(&env, NULL);
+    g_vm->GetEnv((void **) &env, JNI_VERSION_1_6);
+    g_vm->AttachCurrentThread(&env, NULL);
 
     typedef char *(*GetCstrFromString)(void *);
     typedef void *(*GetStringFromCstr)(const char *);
@@ -165,7 +170,7 @@ new_bridge_openDexNativeFunc(const void **args, void *pResult, const void *metho
         env->SetObjectArrayElement(array, 1, orgOutput);
     }
 
-    env->CallStaticVoidMethod(gClass, gOffset.method_onOpenDexFileNative, array);
+    env->CallStaticVoidMethod(g_jclass, gOffset.method_onOpenDexFileNative, array);
 
     jstring newSource = (jstring) env->GetObjectArrayElement(array, 0);
     jstring newOutput = (jstring) env->GetObjectArrayElement(array, 1);
@@ -186,74 +191,39 @@ new_bridge_openDexNativeFunc(const void **args, void *pResult, const void *metho
     gOffset.orig_openDexFile_dvm(args, pResult, method, self);
 }
 
+
 static jint new_native_cameraNativeSetupFunc_T1(JNIEnv *env, jobject thiz, jobject camera_this,
-                                                jint cameraId, jstring packageName) {
-
-    jstring host = env->NewStringUTF(gOffset.hostPackageName);
-
-    return gOffset.orig_native_cameraNativeSetupFunc.t1(env, thiz, camera_this,
-                                                        cameraId,
-                                                        host);
-}
-
-static jint new_native_cameraNativeSetupFunc_T2(JNIEnv *env, jobject thiz, jobject camera_this,
                                                 jint cameraId, jint halVersion,
                                                 jstring packageName) {
 
     jstring host = env->NewStringUTF(gOffset.hostPackageName);
 
-    return gOffset.orig_native_cameraNativeSetupFunc.t2(env, thiz, camera_this, cameraId,
-                                                        halVersion, host);
+    return gOffset.orig_native_cameraNativeSetupFunc.t1(env, thiz, camera_this, cameraId,
+                                                            halVersion, host);
 }
 
-static jint new_native_cameraNativeSetupFunc_T3(JNIEnv *env, jobject thiz, jobject camera_this,
-                                                jint cameraId, jint halVersion,
-                                                jstring packageName, jboolean option) {
+static jint new_native_cameraNativeSetupFunc_T2(JNIEnv *env, jobject thiz, jobject camera_this,
+                                                jint cameraId, jstring packageName) {
 
     jstring host = env->NewStringUTF(gOffset.hostPackageName);
 
-    return gOffset.orig_native_cameraNativeSetupFunc.t3(env, thiz, camera_this, cameraId,
-                                                        halVersion, host, option);
-}
-
-static jint new_native_cameraNativeSetupFunc_T4(JNIEnv *env, jobject thiz, jobject camera_this,
-                                                jint cameraId,
-                                                jstring packageName, jboolean option) {
-
-    jstring host = env->NewStringUTF(gOffset.hostPackageName);
-
-    return gOffset.orig_native_cameraNativeSetupFunc.t4(env, thiz, camera_this, cameraId, host,
-                                                        option);
-}
-
-
-static jint
-new_native_audioRecordNativeCheckPermission(JNIEnv *env, jobject thiz, jstring _packagename) {
-    jstring host = env->NewStringUTF(gOffset.hostPackageName);
-    return gOffset.orig_native_audioRecordNativeCheckPermission(env, thiz, host);
+    return gOffset.orig_native_cameraNativeSetupFunc.t2(env, thiz, camera_this,
+                                                                       cameraId,
+                                                                       host);
 }
 
 
 static void
 new_bridge_cameraNativeSetupFunc(const void **args, void *pResult, const void *method, void *self) {
     JNIEnv *env = NULL;
-    gVm->GetEnv((void **) &env, JNI_VERSION_1_6);
-    gVm->AttachCurrentThread(&env, NULL);
-    LOGE("PLIB cameraNativeSetupFunc methodType %d", gOffset.cameraMethodType);
+    g_vm->GetEnv((void **) &env, JNI_VERSION_1_6);
+    g_vm->AttachCurrentThread(&env, NULL);
     // args[0] = this
-    switch (gOffset.cameraMethodType) {
-        case 1:
-            args[3] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
-            break;
-        case 2:
-            args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
-            break;
-        case 3:
-            args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
-            break;
-        case 4:
-            args[3] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
-            break;
+    LOGE("PLIB_NATIVE method type %d", gOffset.cameraMethodType);
+    if (gOffset.cameraMethodType == 1) {
+        args[3] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
+    } else if (gOffset.cameraMethodType == 2) {
+        args[4] = gOffset.GetStringFromCstr(gOffset.hostPackageName);
     }
     gOffset.orig_cameraNativeSetup_dvm(args, pResult, method, self);
 }
@@ -261,7 +231,7 @@ new_bridge_cameraNativeSetupFunc(const void **args, void *pResult, const void *m
 
 void measureNativeOffset(JNIEnv *env, bool isArt) {
 
-    jmethodID mtd_nativeHook = env->GetStaticMethodID(gClass, gMarkMethods[0].name,
+    jmethodID mtd_nativeHook = env->GetStaticMethodID(g_jclass, gMarkMethods[0].name,
                                                       gMarkMethods[0].signature);
 
     size_t startAddress = (size_t) mtd_nativeHook;
@@ -345,38 +315,16 @@ replaceCameraNativeSetupMethod(JNIEnv *env, jobject javaMethod, jboolean isArt, 
         gOffset.orig_cameraNativeSetup_dvm = (Bridge_DalvikBridgeFunc) (*jniFuncPtr);
         *jniFuncPtr = (void *) new_bridge_cameraNativeSetupFunc;
     } else {
-        switch (gOffset.cameraMethodType) {
-            case 1:
-                gOffset.orig_native_cameraNativeSetupFunc.t1 = (Native_cameraNativeSetupFunc_T1) (*jniFuncPtr);
-                *jniFuncPtr = (void *) new_native_cameraNativeSetupFunc_T1;
-                break;
-            case 2:
-                gOffset.orig_native_cameraNativeSetupFunc.t2 = (Native_cameraNativeSetupFunc_T2) (*jniFuncPtr);
-                *jniFuncPtr = (void *) new_native_cameraNativeSetupFunc_T2;
-                break;
-            case 3:
-                gOffset.orig_native_cameraNativeSetupFunc.t3 = (Native_cameraNativeSetupFunc_T3) (*jniFuncPtr);
-                *jniFuncPtr = (void *) new_native_cameraNativeSetupFunc_T3;
-                break;
-            case 4:
-                gOffset.orig_native_cameraNativeSetupFunc.t4 = (Native_cameraNativeSetupFunc_T4) (*jniFuncPtr);
-                *jniFuncPtr = (void *) new_native_cameraNativeSetupFunc_T4;
-                break;
+        if (apiLevel >= ANDROID_L) {
+            gOffset.orig_native_cameraNativeSetupFunc.t1 = (Native_cameraNativeSetupFunc_T1) (*jniFuncPtr);
+            *jniFuncPtr = (void *) new_native_cameraNativeSetupFunc_T1;
+        }
+        if (ANDROID_JBMR2 <= apiLevel && apiLevel < ANDROID_L) {
+            gOffset.orig_native_cameraNativeSetupFunc.t2 = (Native_cameraNativeSetupFunc_T2) (*jniFuncPtr);
+            *jniFuncPtr = (void *) new_native_cameraNativeSetupFunc_T2;
         }
     }
 
-}
-
-
-void
-replaceAudioRecordNativeCheckPermission(JNIEnv *env, jobject javaMethod, jboolean isArt, int api) {
-    if (!javaMethod || !isArt) {
-        return;
-    }
-    jmethodID methodStruct = env->FromReflectedMethod(javaMethod);
-    void **funPtr = (void **) (reinterpret_cast<size_t>(methodStruct) + gOffset.nativeOffset);
-    gOffset.orig_native_audioRecordNativeCheckPermission = (Native_audioRecordNativeCheckPermission) (*funPtr);
-    *funPtr = (void *) new_native_audioRecordNativeCheckPermission;
 }
 
 
@@ -390,10 +338,10 @@ void patchAndroidVM(jobjectArray javaMethods, jstring packageName, jboolean isAr
                     jint cameraMethodType) {
 
     JNIEnv *env = NULL;
-    gVm->GetEnv((void **) &env, JNI_VERSION_1_6);
-    gVm->AttachCurrentThread(&env, NULL);
+    g_vm->GetEnv((void **) &env, JNI_VERSION_1_6);
+    g_vm->AttachCurrentThread(&env, NULL);
 
-    if (env->RegisterNatives(gClass, gMarkMethods, NELEM(gMarkMethods)) < 0) {
+    if (env->RegisterNatives(g_jclass, gMarkMethods, NELEM(gMarkMethods)) < 0) {
         return;
     }
     gOffset.isArt = isArt;
@@ -402,8 +350,8 @@ void patchAndroidVM(jobjectArray javaMethods, jstring packageName, jboolean isAr
     gOffset.apiLevel = apiLevel;
     void *soInfo = getVMHandle();
     gOffset.binder_class = env->FindClass("android/os/Binder");
-    gOffset.method_onGetCallingUid = env->GetStaticMethodID(gClass, "onGetCallingUid", "(I)I");
-    gOffset.method_onOpenDexFileNative = env->GetStaticMethodID(gClass, "onOpenDexFileNative",
+    gOffset.method_onGetCallingUid = env->GetStaticMethodID(g_jclass, "onGetCallingUid", "(I)I");
+    gOffset.method_onOpenDexFileNative = env->GetStaticMethodID(g_jclass, "onOpenDexFileNative",
                                                                 "([Ljava/lang/String;)V");
 
     if (isArt) {
@@ -437,7 +385,7 @@ void patchAndroidVM(jobjectArray javaMethods, jstring packageName, jboolean isAr
     replaceCameraNativeSetupMethod(env, env->GetObjectArrayElement(javaMethods, CAMERA_SETUP),
                                    isArt, apiLevel);
     replaceAudioRecordNativeCheckPermission(env, env->GetObjectArrayElement(javaMethods,
-                                                                            VIVO_AUDIORECORD_NATIVE_CHECK_PERMISSION),
+                                                                  VIVO_AUDIORECORD_NATIVE_CHECK_PERMISSION),
                                             isArt, apiLevel);
 }
 

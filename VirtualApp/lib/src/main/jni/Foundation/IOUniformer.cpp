@@ -1,33 +1,28 @@
 //
 // VirtualApp Native Project
 //
-#include <util.h>
+#include <InlineHook/util.h>
 #include "IOUniformer.h"
-#include "native_hook.h"
 
-static list<std::string> ReadOnlyPathMap;
+static std::list<std::string> ReadOnlyPathMap;
 static std::map<std::string/*orig_path*/, std::string/*new_path*/> IORedirectMap;
 static std::map<std::string/*orig_path*/, std::string/*new_path*/> RootIORedirectMap;
 
 
-/**
- *
- * NOTICE:
- *   We use MSHook to hook symbol on x86 & X64.
- *   But on ARM, we use GodinHook to instead of it.
- */
 static inline void
-hook_template(void *handle, const char *symbol, void *new_func, void **old_func) {
+hook_template(const char *lib_so, const char *symbol, void *new_func, void **old_func) {
+    void *handle = dlopen(lib_so, RTLD_GLOBAL | RTLD_LAZY);
+    if (handle == NULL) {
+        LOGW("Error: unable to find the SO : %s.", lib_so);
+        return;
+    }
     void *addr = dlsym(handle, symbol);
     if (addr == NULL) {
         LOGW("Error: unable to find the Symbol : %s.", symbol);
         return;
     }
-#if defined(__i386__) || defined(__x86_64__)
     inlineHookDirect((unsigned int) (addr), new_func, old_func);
-#else
-    GodinHook::NativeHook::registeredHook((size_t) addr, (size_t) new_func, (size_t **) old_func);
-#endif
+    dlclose(handle);
 }
 
 
@@ -58,6 +53,9 @@ static void add_pair(const char *_orig_path, const char *_new_path) {
 
 
 const char *match_redirected_path(const char *_path) {
+    if (_path == NULL) {
+        return NULL;
+    }
     std::string path(_path);
     if (path.length() <= 1) {
         return _path;
@@ -81,7 +79,7 @@ const char *match_redirected_path(const char *_path) {
 
 
 void IOUniformer::redirect(const char *orig_path, const char *new_path) {
-    LOGI("Start Java_nativeRedirect : from %s to %s", orig_path, new_path);
+    LOGI("Start redirect : from %s to %s", orig_path, new_path);
     add_pair(orig_path, new_path);
 }
 
@@ -96,7 +94,7 @@ void IOUniformer::readOnly(const char *_path) {
 
 bool isReadOnlyPath(const char *_path) {
     std::string path(_path);
-    list<std::string>::iterator it;
+    std::list<std::string>::iterator it;
     for (it = ReadOnlyPathMap.begin(); it != ReadOnlyPathMap.end(); ++it) {
         if (startWith(path, *it)) {
             return true;
@@ -141,6 +139,12 @@ const char *IOUniformer::restore(const char *_path) {
 
 __BEGIN_DECLS
 
+
+
+//size_t	 fwrite(const void *, size_t, size_t, FILE *);
+HOOK_DEF(size_t, fwrite, const void *data, size_t start, size_t len, FILE *file) {
+    return orig_fwrite(data, start, len, file);
+}
 
 
 // int faccessat(int dirfd, const char *pathname, int mode, int flags);
@@ -469,7 +473,9 @@ HOOK_DEF(int, chdir, const char *pathname) {
 
 // int __getcwd(char *buf, size_t size);
 HOOK_DEF(int, __getcwd, char *buf, size_t size) {
-    int ret = syscall(__NR_getcwd, buf, size);
+    const char *redirect_path = match_redirected_path(buf);
+    int ret = syscall(__NR_getcwd, redirect_path, static_cast<size_t>(strlen(redirect_path)));
+    FREE(redirect_path, buf);
     return ret;
 }
 
@@ -568,13 +574,13 @@ HOOK_DEF(void*, dlsym, void *handle, char *symbol) {
 // int kill(pid_t pid, int sig);
 HOOK_DEF(int, kill, pid_t pid, int sig) {
     LOGD(">>>>> kill >>> pid: %d, sig: %d.", pid, sig);
-    extern JavaVM *gVm;
-    extern jclass gClass;
+    extern JavaVM *g_vm;
+    extern jclass g_jclass;
     JNIEnv *env = NULL;
-    gVm->GetEnv((void **) &env, JNI_VERSION_1_4);
-    gVm->AttachCurrentThread(&env, NULL);
-    jmethodID method = env->GetStaticMethodID(gClass, "onKillProcess", "(II)V");
-    env->CallStaticVoidMethod(gClass, method, pid, sig);
+    g_vm->GetEnv((void **) &env, JNI_VERSION_1_4);
+    g_vm->AttachCurrentThread(&env, NULL);
+    jmethodID method = env->GetStaticMethodID(g_jclass, "onKillProcess", "(II)V");
+    env->CallStaticVoidMethod(g_jclass, method, pid, sig);
     int ret = syscall(__NR_kill, pid, sig);
     return ret;
 }
@@ -607,55 +613,64 @@ void hook_dlopen(int api_level) {
             inlineHookDirect((unsigned int) symbol, (void *) new_dlopen, (void **) &orig_dlopen);
         }
     }
-    if (!symbol) {
-        HOOK_SYMBOL(RTLD_DEFAULT, dlopen);
-    }
+
 }
 
 
-
-void IOUniformer::startUniformer(int api_level, int preview_api_level) {
-    HOOK_SYMBOL(RTLD_DEFAULT, kill);
-    HOOK_SYMBOL(RTLD_DEFAULT, __getcwd);
-    HOOK_SYMBOL(RTLD_DEFAULT, truncate);
-    HOOK_SYMBOL(RTLD_DEFAULT, __statfs64);
-    HOOK_SYMBOL(RTLD_DEFAULT, execve);
-    HOOK_SYMBOL(RTLD_DEFAULT, __open);
-    if ((api_level < 25) || (api_level == 25 && preview_api_level == 0)) {
-        HOOK_SYMBOL(RTLD_DEFAULT, utimes);
-        HOOK_SYMBOL(RTLD_DEFAULT, mkdir);
-        HOOK_SYMBOL(RTLD_DEFAULT, chmod);
-        HOOK_SYMBOL(RTLD_DEFAULT, lstat);
-        HOOK_SYMBOL(RTLD_DEFAULT, link);
-        HOOK_SYMBOL(RTLD_DEFAULT, symlink);
-        HOOK_SYMBOL(RTLD_DEFAULT, mknod);
-        HOOK_SYMBOL(RTLD_DEFAULT, rmdir);
-        HOOK_SYMBOL(RTLD_DEFAULT, chown);
-        HOOK_SYMBOL(RTLD_DEFAULT, rename);
-        HOOK_SYMBOL(RTLD_DEFAULT, stat);
-        HOOK_SYMBOL(RTLD_DEFAULT, chdir);
-        HOOK_SYMBOL(RTLD_DEFAULT, access);
-        HOOK_SYMBOL(RTLD_DEFAULT, readlink);
-        HOOK_SYMBOL(RTLD_DEFAULT, unlink);
+extern "C" size_t strlen(const char *str) {
+    if (str == NULL) return 0;
+    size_t len = 0;
+    for (; *str++ != '\0';) {
+        len++;
     }
-    HOOK_SYMBOL(RTLD_DEFAULT, fstatat);
-    HOOK_SYMBOL(RTLD_DEFAULT, fchmodat);
-    HOOK_SYMBOL(RTLD_DEFAULT, symlinkat);
-    HOOK_SYMBOL(RTLD_DEFAULT, readlinkat);
-    HOOK_SYMBOL(RTLD_DEFAULT, unlinkat);
-    HOOK_SYMBOL(RTLD_DEFAULT, linkat);
-    HOOK_SYMBOL(RTLD_DEFAULT, utimensat);
-    HOOK_SYMBOL(RTLD_DEFAULT, __openat);
-    HOOK_SYMBOL(RTLD_DEFAULT, faccessat);
-    HOOK_SYMBOL(RTLD_DEFAULT, mkdirat);
-    HOOK_SYMBOL(RTLD_DEFAULT, renameat);
-    HOOK_SYMBOL(RTLD_DEFAULT, fchownat);
-    HOOK_SYMBOL(RTLD_DEFAULT, mknodat);
-//    hook_dlopen(api_level);
+    return len;
+}
 
-#if defined(__i386__) || defined(__x86_64__)
-    // Do nothing
-#else
-    GodinHook::NativeHook::hookAllRegistered();
-#endif
+
+void IOUniformer::startUniformer(int api_level) {
+
+    HOOK_IO(__getcwd);
+    HOOK_IO(chdir);
+    HOOK_IO(truncate);
+    HOOK_IO(__statfs64);
+    HOOK_IO(lchown);
+    HOOK_IO(chroot);
+    HOOK_IO(truncate64);
+    HOOK_IO(kill);
+    HOOK_IO(execve);
+
+    if (api_level < ANDROID_L) {
+        HOOK_IO(link);
+        HOOK_IO(symlink);
+        HOOK_IO(readlink);
+        HOOK_IO(unlink);
+        HOOK_IO(rmdir);
+        HOOK_IO(rename);
+        HOOK_IO(mkdir);
+        HOOK_IO(stat);
+        HOOK_IO(lstat);
+        HOOK_IO(chown);
+        HOOK_IO(chmod);
+        HOOK_IO(access);
+        HOOK_IO(utimes);
+        HOOK_IO(__open);
+        HOOK_IO(mknod);
+    } else {
+        HOOK_IO(__openat);
+        HOOK_IO(linkat);
+        HOOK_IO(unlinkat);
+        HOOK_IO(symlinkat);
+        HOOK_IO(readlinkat);
+        HOOK_IO(renameat);
+        HOOK_IO(mkdirat);
+        HOOK_IO(mknodat);
+        HOOK_IO(utimensat);
+        HOOK_IO(fchownat);
+        HOOK_IO(fstatat);
+        HOOK_IO(fchmodat);
+        HOOK_IO(faccessat);
+    }
+    hook_dlopen(api_level);
+
+//    HOOK_IO(dlsym);
 }
