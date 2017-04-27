@@ -214,7 +214,7 @@ public class BroadcastSystem {
             IBinder token = (IBinder) msg.obj;
             BroadcastRecord r = mBroadcastRecords.remove(token);
             if (r != null) {
-                VLog.w(TAG, "Broadcast timeout, cancel to dispatch it.");
+                VLog.w(TAG, "Broadcast timeout, cancel to dispatch it. info: " + r.receiverInfo.toString());
                 r.pendingResult.finish();
             }
         }

@@ -358,6 +358,7 @@ public final class VClientImpl extends IVClient.Stub {
 
 	@SuppressLint("SdCardPath")
 	private void startIOUniformer() {
+		long time = System.currentTimeMillis();
 		VLog.d(TAG, "E startIOUniformer");
 		ApplicationInfo info = mBoundApplication.appInfo;
         int userId = VUserHandle.myUserId();
@@ -387,7 +388,8 @@ public final class VClientImpl extends IVClient.Stub {
         }
 		VLog.d(TAG, "startIOUniformer before hook");
 		NativeEngine.hook();
-		VLog.d(TAG, "X startIOUniformer");
+		long cost = (System.currentTimeMillis() - time);
+		VLog.d(TAG, "X startIOUniformer " + cost + " ms");
 	}
 
     @SuppressLint("SdCardPath")

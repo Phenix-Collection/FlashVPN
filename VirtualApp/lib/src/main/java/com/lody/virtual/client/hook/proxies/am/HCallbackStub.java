@@ -66,10 +66,12 @@ import mirror.android.app.IActivityManager;
                 mCalling = true;
                 try {
                     if (LAUNCH_ACTIVITY == msg.what) {
+                        VLog.d(TAG, "LAUNCH_ACTIVITY");
                         if (!handleLaunchActivity(msg)) {
                             return true;
                         }
                     } else if (CREATE_SERVICE == msg.what) {
+                        VLog.d(TAG, "CREATE_SERVICE");
                         if (!VClientImpl.get().isBound()) {
                             ServiceInfo info = Reflect.on(msg.obj).get("info");
                             VClientImpl.get().bindApplication(info.packageName, info.processName);
@@ -97,6 +99,7 @@ import mirror.android.app.IActivityManager;
                 return true;
             }
             Intent intent = saveInstance.intent;
+            VLog.d(TAG, "handleLaunchActivity " + intent.toString());
             ComponentName caller = saveInstance.caller;
             IBinder token = ActivityThread.ActivityClientRecord.token.get(r);
             ActivityInfo info = saveInstance.info;
