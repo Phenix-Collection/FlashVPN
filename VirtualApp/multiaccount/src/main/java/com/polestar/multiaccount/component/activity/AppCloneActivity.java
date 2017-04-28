@@ -107,7 +107,13 @@ public class AppCloneActivity extends BaseActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!AppManager.isAppInstalled(mPkgName)) {
+                    boolean installed = false;
+                    try{
+                        installed = AppManager.isAppInstalled(mPkgName);
+                    } catch (Exception e) {
+                        MLogs.logBug(MLogs.getStackTraceString(e));
+                    }
+                    if (!installed) {
                         L.d("To install app " + mPkgName);
                         isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel);
                         isInstallDone = true;
