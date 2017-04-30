@@ -15,7 +15,7 @@
 -->
 
 <resources>
-    <color name="mobvista_bg_main">#ffe5e0d7</color>
+    <color name="mobvista_bg_main">#eeeeee</color>
     <color name="mobvista_bg_main_view">#ff080c17</color>
     <color name="mobvista_black_grid">#ff330066</color>
     <color name="mobvista_green">#ff2bac5f</color>

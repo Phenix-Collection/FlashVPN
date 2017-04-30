@@ -29,20 +29,26 @@
     <RelativeLayout
         android:id="@+id/mobvista_rl_indicater"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="52dp" >
 
         <com.mobvista.msdk.appwall.viewpager.indicater.TabPageIndicator
             android:id="@+id/mobvista_indicator"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
-            android:background="#000000" />
+            android:background="#ffffff" />
+
+        <ImageView
+            android:id="@+id/mobvista_appwall_tab_shape"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/mobvista_wall_tab_shape" />
 
         <com.mobvista.msdk.appwall.viewpager.indicater.UnderlinePageIndicator
             android:id="@+id/mobvista_underline_indicator"
             android:layout_width="fill_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="2dp" />
-   
+            android:layout_height="2dp"
+            android:layout_above="@+id/mobvista_appwall_tab_shape" />
     </RelativeLayout>
 
     <com.mobvista.msdk.appwall.view.WallViewPager

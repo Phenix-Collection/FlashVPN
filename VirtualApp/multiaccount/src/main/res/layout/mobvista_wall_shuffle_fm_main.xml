@@ -67,6 +67,8 @@
                 android:id="@+id/tv_app_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:textColor="#282828"
                 android:textSize="21sp" />
@@ -101,20 +103,20 @@
             android:paddingRight="24dp"
             android:paddingTop="18dp" >
 
-            <TextView
+           <!--  <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Install Now?"
                 android:textColor="#282828"
-                android:textSize="20sp" />
+                android:textSize="20sp" /> -->
 
             <Button
                 android:id="@+id/tv_install"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="6dp"
                 android:background="@drawable/mobvista_wall_shuffle_shape_btn"
                 android:gravity="center"
                 android:text="Yes"

@@ -82,7 +82,6 @@ public class HomeActivity extends BaseActivity {
     private static final String CONFIG_AVAZU_CLICK_RATE = "avazu_click_rate";
     private static final String CONFIG_AVAZU_IMP_RATE = "avazu_imp_rate";
     private boolean showAppWall;
-    private static final String WALL_UNIT_ID = "8442";
 
     private String cloningPackage;
     private RelativeLayout iconAdLayout;
@@ -159,11 +158,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void preloadAppWall() {
-        MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
-        Map<String,Object> preloadMap = new HashMap<String,Object>();
-        preloadMap.put(MobVistaConstans.PROPERTIES_LAYOUT_TYPE, MobVistaConstans.LAYOUT_APPWALL);
-        preloadMap.put(MobVistaConstans.PROPERTIES_UNIT_ID, WALL_UNIT_ID);
-        sdk.preload(preloadMap);
+        AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
     }
 
     private MvWallHandler mvHandler;
@@ -173,12 +168,14 @@ public class HomeActivity extends BaseActivity {
         wallButtonLayout.setVisibility(View.VISIBLE);
         giftIconView.setVisibility(View.GONE);
         wallClickReported = false;
-        Map<String,Object> properties = MvWallHandler.getWallProperties(WALL_UNIT_ID);
+        Map<String,Object> properties = MvWallHandler.getWallProperties(AppConstants.WALL_UNIT_ID);
         properties.put(MobVistaConstans.PROPERTIES_WALL_STATUS_COLOR, R.color.theme_color2);
         properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT,  getString(R.string.appwall_title));
         properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_TYPEFACE,  MobVistaConstans.TITLE_TYPEFACE_DEFAULT_BOLD);
         properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_SIZE, DisplayUtils.dip2px(this,20));
         properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_BACKGROUND_COLOR, R.color.theme_color2);
+        properties.put(MobVistaConstans.PROPERTIES_WALL_NAVIGATION_COLOR, R.color.theme_color2);
+        properties.put(MobVistaConstans.PROPERTIES_WALL_TAB_BACKGROUND_ID, R.color.theme_color2);
         mvHandler = new MvWallHandler(properties, this, wallButtonLayout);//nat为点击事件的vg，请确保改vg的点击事件不被拦截
         wallButtonLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -204,12 +201,14 @@ public class HomeActivity extends BaseActivity {
             Class<?> aClass = Class
                     .forName("com.mobvista.msdk.shell.MVActivity");
             Intent intent = new Intent(this, aClass);
-            intent.putExtra(MobVistaConstans.PROPERTIES_UNIT_ID, WALL_UNIT_ID);
+            intent.putExtra(MobVistaConstans.PROPERTIES_UNIT_ID, AppConstants.WALL_UNIT_ID);
             intent.putExtra(MobVistaConstans.PROPERTIES_WALL_STATUS_COLOR, R.color.theme_color2);
             intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT,  getString(R.string.appwall_title));
             intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_TYPEFACE,  MobVistaConstans.TITLE_TYPEFACE_DEFAULT_BOLD);
             intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_SIZE, DisplayUtils.dip2px(this,20));
             intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_BACKGROUND_COLOR, R.color.theme_color2);
+            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_NAVIGATION_COLOR, R.color.theme_color2);
+            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TAB_BACKGROUND_ID, R.color.theme_color2);
             this.startActivity(intent);
         } catch (Exception e) {
             MLogs.e("MVActivity", e.toString());
@@ -228,17 +227,13 @@ public class HomeActivity extends BaseActivity {
                 public void onAdLoaded(IAd ad) {
                     isInterstitialAdLoaded = true;
                    // giftGifView.setGifResource(R.drawable.front_page_gift_icon);
-                    final Calendar c = Calendar.getInstance();
-                    String day = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
-                    MLogs.d("Week of day: "+ day);
+                    int iconId = new Random().nextInt(3);
                     int giftRes;
-                    switch (day) {
-                        case "1":
-                        case "7":
+                    switch (iconId) {
+                        case 0:
                             giftRes = R.drawable.ring_ad;
                             break;
-                        case "2":
-                        case "6":
+                        case 1:
                             giftRes = R.drawable.egg_ad;
                             break;
                         default:

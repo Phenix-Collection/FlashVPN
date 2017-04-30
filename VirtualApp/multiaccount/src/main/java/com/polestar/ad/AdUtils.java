@@ -3,11 +3,16 @@ package com.polestar.ad;
 import android.content.Context;
 import android.provider.Settings;
 
+import com.mobvista.msdk.MobVistaConstans;
+import com.mobvista.msdk.MobVistaSDK;
+import com.mobvista.msdk.out.MobVistaSDKFactory;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.RemoteConfig;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -24,6 +29,15 @@ import nativesdk.ad.adsdk.manager.AnalyticsManager;
  */
 
 public class AdUtils {
+
+    public static void preloadAppWall(String WALL_UNIT_ID) {
+        MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
+        Map<String,Object> preloadMap = new HashMap<String,Object>();
+        preloadMap.put(MobVistaConstans.PROPERTIES_LAYOUT_TYPE, MobVistaConstans.LAYOUT_APPWALL);
+        preloadMap.put(MobVistaConstans.PROPERTIES_UNIT_ID, WALL_UNIT_ID);
+        sdk.preload(preloadMap);
+    }
+
     public static String MD5(String md5) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");

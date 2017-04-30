@@ -59,4 +59,5 @@ public class AppConstants {
 
     }
 
+    public static final String WALL_UNIT_ID = "8442";
 }
