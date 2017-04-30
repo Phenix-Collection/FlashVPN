@@ -38,11 +38,7 @@ public class LauncherActivity extends BaseActivity{
         long time = System.currentTimeMillis();
         setContentView(R.layout.activity_mylauncher);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
-        if (RemoteConfig.getBoolean(RemoteConfig.CONFIG_USE_MV_HOME_NATIVE)) {
-            mvPreloadHomeNative();
-        } else {
-            FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this).loadAd(1, null);
-        }
+        FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this).loadAd(1, null);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

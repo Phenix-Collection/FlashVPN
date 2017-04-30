@@ -23,7 +23,6 @@ public class RemoteConfig {
 
     private static FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     private static String TAG = "RemoteConfig";
-    public static final String CONFIG_USE_MV_HOME_NATIVE = "config_mv_home_native";
 
     public static void init () {
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
