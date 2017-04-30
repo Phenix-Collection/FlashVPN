@@ -548,7 +548,9 @@ HOOK_DEF(void*, do_dlopen_V19, const char *filename, int flag, const void *extin
     const char *redirect_path = match_redirected_path(filename);
     void *ret = orig_do_dlopen_V19(redirect_path, flag, extinfo);
     onSoLoaded(filename, ret);
-    LOGD("do_dlopen : %s, return : %p.", redirect_path, ret);
+    if (redirect_path != null && ret != null) {
+        LOGD("do_dlopen : %s, return : %p.", redirect_path, ret);
+    }
     FREE(redirect_path, filename);
     return ret;
 }
