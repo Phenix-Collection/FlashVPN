@@ -38,6 +38,20 @@ public class AdUtils {
         sdk.preload(preloadMap);
     }
 
+    public static void initMVSDK(String id, String key, Context context) {
+        MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
+        // test appId and appKey
+        String appId = "33047";
+        String appKey = "e4a6e0bf98078d3fa81ca6d315c28123";
+        Map<String, String> map = sdk.getMVConfigurationMap(appId, appKey);
+
+        // if you modify applicationId, please add the following attributes,
+        // otherwise it will crash
+        // map.put(MobVistaConstans.PACKAGE_NAME_MANIFEST, "your AndroidManifest
+        // package value");
+        sdk.init(map, context);
+    }
+
     public static String MD5(String md5) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");

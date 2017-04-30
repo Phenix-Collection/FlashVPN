@@ -19,6 +19,7 @@ import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.AdConstants;
+import com.polestar.ad.AdUtils;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -84,17 +85,8 @@ public class MApp extends Application {
             @Override
             public void onMainProcess() {
                 MLogs.d("Main process create");
-                MobVistaSDK sdk = MobVistaSDKFactory.getMobVistaSDK();
-                // test appId and appKey
-                String appId = "33047";
-                String appKey = "e4a6e0bf98078d3fa81ca6d315c28123";
-                Map<String, String> map = sdk.getMVConfigurationMap(appId, appKey);
-
-                // if you modify applicationId, please add the following attributes,
-                // otherwise it will crash
-                // map.put(MobVistaConstans.PACKAGE_NAME_MANIFEST, "your AndroidManifest
-                // package value");
-                sdk.init(map, gDefault);
+                AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
+                AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
 
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
@@ -165,6 +157,8 @@ public class MApp extends Application {
                 virtualCore.addVisibleOutsidePackage("com.tencent.mm");
                 virtualCore.addVisibleOutsidePackage("com.immomo.momo");
                 MLogs.d("Server process app onCreate done");
+                AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
+                AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
             }
         });
 
