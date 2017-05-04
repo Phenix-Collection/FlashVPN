@@ -113,6 +113,15 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="com.polestar.multiaccount.component.receiver.ReferrerReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+
         <!-- firebase -->
         <!--<service android:name=".firebase.FirebaseInstanceIdService">-->
             <!--<intent-filter>-->

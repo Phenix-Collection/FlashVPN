@@ -358,4 +358,12 @@ public class PreferencesUtils {
                 || hasShownCloneGuide(MApp.getApp());
         //avoid create short cut for updated user
     }
+
+    public static void setInstallChannel(String channel) {
+        putString(MApp.getApp(), "install_channel", channel);
+    }
+
+    public static String getInstallChannel() {
+        return getString(MApp.getApp(), "install_channel", null);
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.polestar.multiaccount.component.receiver.ReferrerReceiver;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.tencent.bugly.crashreport.BuglyLog;
 import com.tencent.stat.MtaSDkException;
@@ -24,9 +25,10 @@ public class MTAManager {
 
         StatConfig.setDebugEnable(!AppConstants.IS_RELEASE_VERSION);
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
-        StatConfig.setInstallChannel(context, channel);
+        String referChannel = PreferencesUtils.getInstallChannel();
+        StatConfig.setInstallChannel(context, referChannel == null? channel : referChannel);
         StatConfig.setAutoExceptionCaught(true);
-        MLogs.e("MTA channel: " + channel);
+        MLogs.e("MTA channel: " + channel + " refer: " + referChannel);
 
         try {
             StatService.startStatService(context, APP_KEY,
@@ -174,6 +176,18 @@ public class MTAManager {
 
     public static void menuSettings(Context context) {
         StatService.trackCustomEvent(context, "menu_settings");
+    }
+
+    public static void reportReferrer(Context context, String utm_source, String utm_medium, String utm_campaign,
+                                      String utm_content, String utm_term, String gclid) {
+        Properties prop = new Properties();
+        prop.setProperty(ReferrerReceiver.UTM_CONTENT, utm_content == null? "" : utm_content);
+        prop.setProperty(ReferrerReceiver.GCLID, gclid == null? "" : gclid);
+        prop.setProperty(ReferrerReceiver.UTM_TERM, utm_term == null? "" : utm_term);
+        prop.setProperty(ReferrerReceiver.UTM_SOURCE, utm_source == null? "" : utm_source);
+        prop.setProperty(ReferrerReceiver.UTM_MEDIUM, utm_medium == null? "" : utm_medium);
+        prop.setProperty(ReferrerReceiver.UTM_CAMPAIGN, utm_campaign == null? "" : utm_campaign);
+        StatService.trackCustomKVEvent(context, "install_referrer", prop);
     }
 
     public static void onResume(Context context) {

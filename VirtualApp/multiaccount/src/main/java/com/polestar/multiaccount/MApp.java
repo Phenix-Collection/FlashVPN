@@ -27,6 +27,7 @@ import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.ImageLoaderUtil;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -40,6 +41,7 @@ import java.util.Map;
 import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.MobVistaSDK;
 import com.mobvista.msdk.out.MobVistaSDKFactory;
+import com.tencent.stat.StatConfig;
 
 import nativesdk.ad.adsdk.AdSdk;
 
@@ -294,12 +296,14 @@ public class MApp extends Application {
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         AppConstants.IS_RELEASE_VERSION = !channel.equals(AppConstants.DEVELOP_CHANNEL);
         MLogs.e("IS_RELEASE_VERSION: " + AppConstants.IS_RELEASE_VERSION);
-        MLogs.e("bugly channel: " + channel);
+
         MLogs.e("versioncode: " + CommonUtils.getCurrentVersionCode(context) + ", versionName:" + CommonUtils.getCurrentVersionName(context));
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
-        strategy.setAppChannel(channel);
+        String referChannel = PreferencesUtils.getInstallChannel();
+        strategy.setAppChannel(referChannel == null? channel : referChannel);
         CrashReport.initCrashReport(context, "900060178", !AppConstants.IS_RELEASE_VERSION, strategy);
         // close auto report, manual control
+        MLogs.e("bugly channel: " + channel + " referrer: "+ referChannel);
         CrashReport.closeCrashReport();
     }
 
