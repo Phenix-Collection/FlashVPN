@@ -539,7 +539,9 @@ HOOK_DEF(void*, dlopen, const char *filename, int flag) {
     const char *redirect_path = match_redirected_path(filename);
     void *ret = orig_dlopen(redirect_path, flag);
     onSoLoaded(filename, ret);
-    LOGD("dlopen : %s, return : %p.", redirect_path, ret);
+    if (redirect_path != NULL && ret != NULL){
+        LOGD("dlopen : %s, return : %p.", redirect_path, ret);
+    }
     FREE(redirect_path, filename);
     return ret;
 }
@@ -560,7 +562,9 @@ HOOK_DEF(void*, do_dlopen_V24, const char *name, int flags, const void *extinfo,
     const char *redirect_path = match_redirected_path(name);
     void *ret = orig_do_dlopen_V24(redirect_path, flags, extinfo, caller_addr);
     onSoLoaded(name, ret);
-    LOGD("do_dlopen : %s, return : %p.", redirect_path, ret);
+    if (redirect_path != NULL && ret != NULL) {
+        LOGD("do_dlopen : %s, return : %p.", redirect_path, ret);
+    }
     FREE(redirect_path, name);
     return ret;
 }
@@ -606,8 +610,10 @@ void hook_dlopen(int api_level) {
     } else if (api_level >= 19) {
         if (findSymbol("__dl__Z9do_dlopenPKciPK17android_dlextinfo", "linker",
                        (unsigned long *) &symbol) == 0) {
+#ifndef _NOT_HOOK_DL_OPEN_
             inlineHookDirect((unsigned int) symbol, (void *) new_do_dlopen_V19,
                              (void **) &orig_do_dlopen_V19);
+#endif
         }
     } else {
         if (findSymbol("__dl_dlopen", "linker",

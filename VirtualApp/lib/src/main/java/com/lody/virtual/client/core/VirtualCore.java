@@ -163,6 +163,7 @@ public final class VirtualCore {
 
 
 	public void startup(Context context) throws Throwable {
+		VLog.logbug(VLog.VTAG, "Super Clone core startup!");
 		if (!isStartUp) {
 			if (Looper.myLooper() != Looper.getMainLooper()) {
 				throw new IllegalStateException("VirtualCore.startup() must called in main thread.");
