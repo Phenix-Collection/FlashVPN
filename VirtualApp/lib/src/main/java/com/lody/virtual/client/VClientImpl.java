@@ -137,13 +137,7 @@ public final class VClientImpl extends IVClient.Stub {
 
 	@Override
 	public IBinder getAppThread() {
-		Binder appThread = ActivityThread.getApplicationThread.call(VirtualCore.mainThread());
-		return new FakeIdentityBinder(appThread) {
-			@Override
-			protected int getFakeUid() {
-				return Process.SYSTEM_UID;
-			}
-		};
+		return ActivityThread.getApplicationThread.call(VirtualCore.mainThread());
 	}
 
 	@Override
