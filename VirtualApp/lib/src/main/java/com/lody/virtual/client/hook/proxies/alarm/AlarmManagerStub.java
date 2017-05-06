@@ -7,6 +7,7 @@ import android.os.WorkSource;
 import com.lody.virtual.client.hook.base.MethodProxy;
 import com.lody.virtual.client.hook.base.BinderInvocationProxy;
 import com.lody.virtual.helper.utils.ArrayUtils;
+import com.lody.virtual.helper.utils.VLog;
 
 import java.lang.reflect.Method;
 
@@ -76,5 +77,16 @@ public class AlarmManagerStub extends BinderInvocationProxy {
             }
             return true;
         }
-    }
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			try {
+				return super.call(who, method, args);
+			} catch (Exception e) {
+				VLog.logbug("AlarmManager", "Set alarm failed");
+				VLog.logbug("AlarmManager", VLog.getStackTraceString(e));
+				return null;
+			}
+		}
+	}
 }
