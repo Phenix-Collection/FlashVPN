@@ -680,6 +680,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		synchronized (mHistory) {
 			ActivityRecord r = findActivityByToken(userId, token);
 			if (r != null) {
+				VLog.d(TAG, "getCallingPackage r.intent: " + r.intent);
 				if (r.caller == null) {
 					if (r.component != null && r.component.getClassName().equals("com.google.android.gms.games.ui.signin.SignInActivity")){
 						String pkg = r.intent.getStringExtra("com.google.android.gms.games.GAME_PACKAGE_NAME");
@@ -695,7 +696,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 
 					}
 				}
-				VLog.d(VLog.VTAG, "getCallingPackage caller " + r.caller);
+				VLog.d(TAG, "getCallingPackage caller " + r.caller);
 				return r.caller != null ? r.caller.getPackageName() : null;
 			}
 			return null;
