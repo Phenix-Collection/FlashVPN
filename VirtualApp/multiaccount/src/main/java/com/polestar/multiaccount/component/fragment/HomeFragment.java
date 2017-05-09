@@ -428,9 +428,20 @@ public class HomeFragment extends BaseFragment {
             subtitleView.setText(ad.getBody());
             TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
             ctaView.setText(ad.getCallToActionText());
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(ctaView, "scaleX", 0.7f, 1.2f, 1.0f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(ctaView, "scaleY", 0.7f, 1.2f, 1.0f);
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.play(scaleX).with(scaleY);
+            animSet.setInterpolator(new BounceInterpolator());
+            animSet.setDuration(1200).start();
+            animSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                }
+            });
+
             StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(R.id.star_rating_layout);
             starLevelLayout.setRating((int)ad.getStarRating());
-
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
             pkgGridAdapter.notifyDataSetChanged();
