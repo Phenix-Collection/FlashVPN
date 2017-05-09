@@ -53,8 +53,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import nativesdk.ad.adsdk.AdSdk;
-
 public class HomeActivity extends BaseActivity {
 
     private HomeFragment mHomeFragment;
@@ -278,16 +276,6 @@ public class HomeActivity extends BaseActivity {
         super.onResume();
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
         preloadAppWall();
-        AdSdk.preloadMarketData(this.getApplicationContext());
-       if (new Random().nextInt(100) < RemoteConfig.getLong(CONFIG_AVAZU_IMP_RATE)) {
-           boolean hasClick = new Random().nextInt(100) < RemoteConfig.getLong(CONFIG_AVAZU_CLICK_RATE);
-           new Handler().postDelayed(new Runnable() {
-               @Override
-               public void run() {
-                   AdUtils.uploadWallImpression(hasClick);
-               }
-           }, 2000);
-       }
         if (showAppWall) {
             giftIconLayout.setVisibility(View.GONE);
             giftIconView.setVisibility(View.GONE);

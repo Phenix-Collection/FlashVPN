@@ -99,10 +99,7 @@ dependencies {
     compile files('libs/mta-sdk-2.2.0.jar')
     //Avazu
     compile 'com.google.code.gson:gson:2.8.0'
-    compile(name: 'avazu_common', ext: 'aar')
-    compile(name: 'avazu_appwall', ext: 'aar')
-    //    compile files('libs/avazu_common.aar')
-    //    compile files('libs/avazu_appwall.aar')
+
     //    compile files('libs/mta-sdk-2.2.0.jar')
     compile 'com.google.android.gms:play-services-ads:9.8.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'

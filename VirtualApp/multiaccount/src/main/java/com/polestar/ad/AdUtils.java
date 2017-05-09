@@ -16,13 +16,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import nativesdk.ad.adsdk.analytics.AnalyticsMgr;
-import nativesdk.ad.adsdk.app.Constants;
-import nativesdk.ad.adsdk.common.network.NetworkUtils;
-import nativesdk.ad.adsdk.common.utils.L;
-import nativesdk.ad.adsdk.database.AdInfo;
-import nativesdk.ad.adsdk.database.AvDatabaseUtils;
-import nativesdk.ad.adsdk.manager.AnalyticsManager;
 
 /**
  * Created by guojia on 2016/12/11.
@@ -68,34 +61,5 @@ public class AdUtils {
 
     public static String getAndroidID(Context context) {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-    }
-
-    public static void uploadWallImpression(boolean hasClick) {
-        List<AdInfo> mDataList =
-                AvDatabaseUtils.getCacheAdData(MApp.getApp(), 20, Constants.ActivityAd.SORT_ALL);
-        UUID mImpid = UUID.randomUUID();
-        MLogs.d("uploadWallImpression");
-        long showTime = 3000 + new Random().nextInt(10000);
-        if (mDataList.size() != 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(mDataList.get(0).impurls);
-            sb.append("&adlist=");
-            for (int i = 0; i < mDataList.size(); i++) {
-                sb.append(mDataList.get(i).campaignid);
-                if (i != (mDataList.size() - 1)) {
-                    sb.append(",");
-                }
-            }
-            sb.append("&impid=").append(mImpid.toString());
-            sb.append("&imppage=appstore");
-            sb.append("&showtime=").append(showTime);
-            sb.append("&hasclick=").append(hasClick);
-            MLogs.d("final url " + sb.toString());
-            AnalyticsManager.getInstance(MApp.getApp()).doUpload(sb.toString(),
-                    Constants.Preference.TYPE_APP_MARKET);
-            if (hasClick) {
-                NetworkUtils.reportTrueClick(MApp.getApp(), mDataList.get(0).noticeUrl);
-            }
-        }
     }
 }

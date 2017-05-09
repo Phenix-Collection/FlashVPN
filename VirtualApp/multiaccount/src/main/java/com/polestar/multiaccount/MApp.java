@@ -36,14 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
 
-import com.mobvista.msdk.MobVistaConstans;
-import com.mobvista.msdk.MobVistaSDK;
-import com.mobvista.msdk.out.MobVistaSDKFactory;
-import com.tencent.stat.StatConfig;
-
-import nativesdk.ad.adsdk.AdSdk;
 
 public class MApp extends Application {
 
@@ -96,7 +89,6 @@ public class MApp extends Application {
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                //
-                AdSdk.initialize(MApp.getApp(), "27681");
             }
 
             @Override
@@ -148,7 +140,6 @@ public class MApp extends Application {
                 delegate.init();
                 MLogs.d("Server process app onCreate 1");
                 VirtualCore.get().setComponentDelegate(delegate);
-                AdSdk.initialize(MApp.getApp(), "27681");
                 MLogs.d("Server process app onCreate 2");
                 virtualCore.addVisibleOutsidePackage("com.tencent.mobileqq");
                 virtualCore.addVisibleOutsidePackage("com.tencent.mobileqqi");
