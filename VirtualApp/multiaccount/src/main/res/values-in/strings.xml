@@ -13,7 +13,6 @@
     <string name="app_starting_tips">%s mulai ...</string>
     <string name="first_start_tips">Ini akan memakan waktu sedikit lebih lama untuk start pertama.</string>
     <string name="clone_success">%s clone selesai. Nikmati sekarang!</string>
-    <string name="success_tip1">Account akses secara bersamaan</string>
 
     <!-- nav menu -->
     <string name="notifications">Pemberitahuan</string>
@@ -167,4 +166,6 @@
     </string-array>
     <string name="congratulations">Selamat!</string>
     <string name="notification_detail_setting">Aktifkan notifikasi untuk aplikasi</string>
+    <string name="create_shortcut">Buat Pintasan</string>
+    <string name="enable_notification">Aktifkan Pemberitahuan</string>
 </resources>

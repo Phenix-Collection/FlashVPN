@@ -13,7 +13,6 @@
     <string name="app_starting_tips">%s จะเริ่มต้น ...</string>
     <string name="first_start_tips">มันจะใช้เวลาอีกหน่อยสำหรับการเริ่มต้นครั้งแรก</string>
     <string name="clone_success">โคลนสำเร็จรูป สนุกกับมันในขณะนี้!</string>
-    <string name="success_tip1">บัญชีการเข้าถึงพร้อมกัน</string>
 
     <!-- nav menu -->
     <string name="notifications">การแจ้งเตือน</string>
@@ -167,4 +166,6 @@
     </string-array>
     <string name="congratulations">ยินดีด้วยครับ</string>
     <string name="notification_detail_setting">เปิดใช้งานการแจ้งเตือนสำหรับแอป</string>
+    <string name="create_shortcut">สร้างทางลัด</string>
+    <string name="enable_notification">เปิดใช้งานการแจ้งเตือน</string>
 </resources>

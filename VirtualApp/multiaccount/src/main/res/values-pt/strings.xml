@@ -13,7 +13,6 @@
     <string name="app_starting_tips">%s está começando ...</string>
     <string name="first_start_tips">Demorará um pouco mais para o primeiro início.</string>
     <string name="clone_success">%s É clonado. Aproveite agora!</string>
-    <string name="success_tip1">Acessar contas simultaneamente</string>
 
     <!-- nav menu -->
     <string name="notifications">Notificações</string>
@@ -167,4 +166,6 @@
     </string-array>
     <string name="congratulations">Parabéns!</string>
     <string name="notification_detail_setting">Ativar notificação para a aplicação</string>
+    <string name="create_shortcut">Criar Atalho</string>
+    <string name="enable_notification">Ativar notificação</string>
 </resources>

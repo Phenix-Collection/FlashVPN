@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context="com.polestar.multiaccount.component.activity.AppInstallActivity">
+    tools:context="com.polestar.multiaccount.component.activity.AppCloneActivity">
 
     <Button
         android:id="@+id/btn_start"
@@ -28,13 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <RelativeLayout
-                android:id="@+id/layout_cancel"
+                android:id="@+id/layout_title"
                 android:layout_width="wrap_content"
                 android:layout_height="56dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:background="@drawable/selector_install_cancel">
                 <TextView
+                    android:id="@+id/title_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="16dp"
@@ -42,14 +43,16 @@
                     android:layout_centerInParent="true"
                     android:text="@string/cancel"
                     android:textSize="20sp"
-                    android:textColor="#4A4A4A"/>
+                    android:textColor="@color/clone_text_color"/>
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/layout_install"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="135dp">
+                android:layout_below="@id/layout_title"
+                android:layout_marginTop="40dp">
                 <ImageView
                     android:id="@+id/img_success_bg"
                     android:layout_width="150dp"
@@ -87,8 +90,18 @@
                 android:layout_marginTop="16dp"
                 android:layout_centerHorizontal="true"
                 android:text="@string/app_name"
-                android:textColor="#4A4A4A"
+                android:textColor="@color/clone_text_color"
                 android:textSize="24sp"/>
+            <TextView
+                android:id="@+id/txt_installed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_install"
+                android:layout_marginTop="24dp"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textColor="@color/clone_text_color"
+                android:textSize="18sp"/>
             <TextView
                 android:id="@+id/txt_installing"
                 android:layout_width="wrap_content"
@@ -98,79 +111,140 @@
                 android:layout_centerHorizontal="true"
                 android:text="@string/cloning_tips"
                 android:gravity="center"
-                android:textColor="#4A4A4A"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/txt_installed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txt_app_name"
-                android:layout_marginTop="12dp"
-                android:layout_centerHorizontal="true"
-                android:text="@string/clone_success"
-                android:textColor="#4A4A4A"
+                android:textColor="@color/clone_text_color"
                 android:textSize="16sp"/>
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_installed"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
-            <TextView
-                android:id="@+id/txt_success"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/clone_setting_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:layout_centerHorizontal="true"
-                android:text="@string/clone_success"
-                android:textStyle="bold"
-                android:textColor="#4A4A4A"
-                android:textSize="24sp"/>
+                android:layout_marginTop="40dp"
+                android:layout_below="@+id/layout_title"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:visibility="gone">
 
-            <ImageView
-                android:id="@+id/img_install_success_phone"
-                android:layout_below="@id/txt_success"
-                android:layout_width="306dp"
-                android:layout_height="244dp"
-                android:layout_marginTop="16dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/install_success_phone"/>
+                <RelativeLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/clone_finish_icon">
+                    <ImageView
+                        android:id="@+id/img_app_icon_done"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_centerInParent="true" />
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/circle_install_success_bg"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/img_install_success_notification"
-                android:layout_below="@id/txt_success"
-                android:layout_width="314dp"
-                android:layout_height="62dp"
-                android:layout_marginTop="154dp"
-                android:layout_centerHorizontal="true"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/img_install_success_phone"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="32dp"
-                android:orientation="vertical">
-                <LinearLayout
+                <View
+                    android:id="@+id/line_divider1"
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent"
+                    android:background="@color/light_gray"
+                    android:layout_alignTop="@id/clone_finish_icon"
+                    android:layout_toRightOf="@id/clone_finish_icon"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"/>
+                <View
+                    android:id="@+id/line_divider2"
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent"
+                    android:background="@color/light_gray"
+                    android:layout_alignTop="@id/clone_finish_icon"
+                    android:layout_toRightOf="@id/clone_finish_icon"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"/>
+                <TextView
+                    android:id="@+id/text_notification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/yes"/>
-                    <TextView
-                        android:id="@+id/txt_tip1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="@string/success_tip1"
-                        android:textSize="16sp"
-                        android:textColor="#4A4A4A"/>
-                </LinearLayout>
-            </LinearLayout>
+                    android:layout_alignLeft="@id/line_divider1"
+                    android:layout_alignBottom="@id/line_divider1"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/clone_text_color"
+                    android:textSize="18sp"
+                    android:text="@string/enable_notification"/>
+
+                <com.polestar.multiaccount.widgets.BlueSwitch
+                    android:id="@+id/notification_swichbtn"
+                    android:layout_alignRight="@id/line_divider1"
+                    android:layout_alignBottom="@id/line_divider1"
+                    android:layout_marginBottom="7dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/line_divider2"
+                    android:layout_alignBottom="@id/line_divider2"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/clone_text_color"
+                    android:textSize="18sp"
+                    android:text="@string/enable_lock_settings_title"/>
+
+                <com.polestar.multiaccount.widgets.BlueSwitch
+                    android:id="@+id/locker_swichbtn"
+                    android:layout_alignRight="@id/line_divider2"
+                    android:layout_alignBottom="@id/line_divider2"
+                    android:layout_marginBottom="7dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/line_divider2"
+                    android:layout_alignBottom="@id/clone_finish_icon"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/clone_text_color"
+                    android:textSize="18sp"
+                    android:text="Create Shortcut"/>
+
+                <com.polestar.multiaccount.widgets.BlueSwitch
+                    android:id="@+id/shortcut_swichbtn"
+                    android:layout_alignRight="@id/line_divider2"
+                    android:layout_alignBottom="@id/clone_finish_icon"
+                    android:layout_marginBottom="7dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center_horizontal" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/sponsor_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_installed"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="15dp"
+                android:textSize="12sp"
+                android:textColor="@color/text_gray_light"
+                android:text="@string/sponsor_text"
+                android:visibility="gone"/>
+            <LinearLayout
+                android:id="@+id/ad_container"
+                android:layout_below="@id/sponsor_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="vertical"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
     </FrameLayout>
 </RelativeLayout>

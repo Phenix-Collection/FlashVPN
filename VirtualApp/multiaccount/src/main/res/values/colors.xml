@@ -39,6 +39,7 @@
     <color name="grid_bg">#e8e8e8</color>
     <color name="faq_title_color">#00aab8</color>
     <color name="faq_content_color">#4a4a4a</color>
+    <color name="clone_text_color">#4a4a4a</color>
 
     <color name="native_ad_text_white">#ffffff</color>
     <color name="native_ad_transparent_black">#64000000</color>

@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Super Clone</string>
-    <string name="app_alias_name">Super Clone</string>
+    <string name="app_name" translatable="false">Super Clone</string>
+    <string name="app_alias_name" translatable="false">Super Clone</string>
 
-    <string name="app_icon">app_icon</string>
+    <string name="app_icon" translatable="false">app_icon</string>
 
     <string name="appwall_title">Discover</string>
     <string name="feel_lucky">Feel Lucky</string>
@@ -20,7 +20,6 @@
     <string name="first_start_tips">It may take a little longer for the first start.</string>
     <string name="upgrade_start_tips">It may take a little longer as this app was just upgraded.</string>
     <string name="clone_success">%s is cloned. Enjoy it now!</string>
-    <string name="success_tip1">Access accounts simultaneously</string>
 
     <!-- nav menu -->
     <string name="notifications">Notifications</string>
@@ -53,6 +52,7 @@
     <!-- notification -->
     <string name="notification_decription">Enable or disable notifications from cloned application</string>
     <string name="notification_detail_setting">Enable notification for app</string>
+    <string name="enable_notification">Enable Notification</string>
 
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
 
@@ -70,6 +70,7 @@
 
     <!-- settings -->
     <string name="settings_shortcut_title">Shortcut</string>
+    <string name="create_shortcut">Create Shortcut</string>
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
     <string name="settings_privacy_locker_content">Click to set privacy locker for cloned apps</string>
     <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
@@ -93,7 +94,7 @@
     <!-- titles -->
     <string name="clone_apps_title">Clone Apps</string>
 
-    <string name="facebook_app_id">1700354860278115</string>
+    <string name="facebook_app_id" translatable="false">1700354860278115</string>
 
     <string name="crash_hint">Sorry, some error happen, and we will fix it in next version.</string>
 

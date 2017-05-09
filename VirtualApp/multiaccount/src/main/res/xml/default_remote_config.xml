@@ -101,4 +101,12 @@
         <key>avazu_click_rate</key>
         <value>5</value>
     </entry>
+    <entry>
+        <key>show_ad_after_clone</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>slot_ad_after_clone</key>
+        <value>fb:1700354860278115_1783453411968259:0;ab_native_banner:ca-app-pub-5490912237269284/1785458659:0</value>
+    </entry>
 </defaultsMap>

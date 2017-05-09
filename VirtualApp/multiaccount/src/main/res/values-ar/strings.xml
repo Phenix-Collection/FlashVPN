@@ -14,7 +14,6 @@
     <string name="app_starting_tips">تطبيق بدأت ...</string>
     <string name="first_start_tips">وسوف يستغرق وقتا أطول قليلا لبدء أول.</string>
     <string name="clone_success">نجاح استنساخ. يتمتع بها الآن!</string>
-    <string name="success_tip1">حسابات الوصول في وقت واحد</string>
 
     <!-- nav menu -->
     <string name="notifications">إخطارات</string>
@@ -166,4 +165,6 @@
     </string-array>
     <string name="congratulations">مبروك</string>
     <string name="notification_detail_setting">تفعيل التبليغ عن التطبيق</string>
+    <string name="create_shortcut">انشاء اختصار</string>
+    <string name="enable_notification">تفعيل الإشعارات</string>
 </resources>

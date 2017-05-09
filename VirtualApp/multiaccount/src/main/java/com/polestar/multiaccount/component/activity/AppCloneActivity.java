@@ -1,17 +1,18 @@
 package com.polestar.multiaccount.component.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -21,26 +22,48 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.NativeExpressAdView;
+import com.lody.virtual.client.core.VirtualCore;
 import com.nostra13.universalimageloader.utils.L;
-import com.polestar.multiaccount.MApp;
+import com.polestar.ad.AdConfig;
+import com.polestar.ad.AdConstants;
+import com.polestar.ad.AdLog;
+import com.polestar.ad.AdUtils;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
+import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
+import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.RemoteConfig;
+import com.polestar.multiaccount.utils.ToastUtils;
+import com.polestar.multiaccount.widgets.BlueSwitch;
+import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
+
+import mirror.android.widget.Toast;
 
 /**
  * Created by guojia on 2016/12/4.
@@ -57,12 +80,13 @@ public class AppCloneActivity extends BaseActivity {
     private TextView mTxtAppLabel;
     private ImageView mImgAppIcon;
     private ImageView mImgSuccessBg;
-    private ImageView mImgCloned;
-    private ImageView mImgSuccessNotification;
     private TextView mTxtInstalling;
     private TextView mTxtInstalled;
-    private RelativeLayout mLayoutInstalled;
     private ProgressBar mProgressBar;
+    private TextView mTitleText;
+    private BlueSwitch mShortcutSwitch;
+    private BlueSwitch mLockerSwitch;
+    private BlueSwitch mNotificationSwitch;
 
     private Timer mTimer = new Timer();
     private static final double INIT_PROGRESS_THRESHOLD = 50.0;
@@ -73,11 +97,23 @@ public class AppCloneActivity extends BaseActivity {
 
     private static final int MSG_ANIM_PROGRESS_FINISHED = 0;
     private static final int MSG_INSTALL_FINISHED = 1;
+    private static final String CONFIG_KEY_SHOW_AD_AFTER_CLONE = "show_ad_after_clone";
+    private static final String SLOT_AD_AFTER_CLONE = "slot_ad_after_clone";
 
+    private List<AdConfig> adConfigList;
     private AppModel appModel;
     private boolean isInstallSuccess;
     private boolean isInstallDone;
     private boolean isCanceled;
+    private NativeExpressAdView mAdmobExpressView;
+    private boolean admobReady;
+    private boolean fbReady;
+    private IAd nativeAd;
+    private boolean animateEnd;
+    private LinearLayout nativeAdContainer;
+    private FuseAdLoader mNativeAdLoader;
+
+    private RelativeLayout mCloneSettingLayout;
 
     private Handler mAnimateHandler = new Handler(){
         public void handleMessage(Message msg) {
@@ -145,26 +181,26 @@ public class AppCloneActivity extends BaseActivity {
 
         mBtnStart = (Button) findViewById(R.id.btn_start);
         mLayoutInstalling = (RelativeLayout) findViewById(R.id.layout_installing);
-        mLayoutCancel = (RelativeLayout) findViewById(R.id.layout_cancel);
+        mLayoutCancel = (RelativeLayout) findViewById(R.id.layout_title);
+        mTitleText = (TextView)mLayoutCancel.findViewById(R.id.title_text);
         mTxtAppLabel = (TextView) findViewById(R.id.txt_app_name);
         mImgAppIcon = (ImageView) findViewById(R.id.img_app_icon);
         mImgSuccessBg = (ImageView) findViewById(R.id.img_success_bg);
         mTxtInstalling = (TextView) findViewById(R.id.txt_installing);
         mTxtInstalled = (TextView) findViewById(R.id.txt_installed);
         mProgressBar = (ProgressBar) findViewById(R.id.circularProgressbar);
-        mLayoutInstalled = (RelativeLayout) findViewById(R.id.layout_installed);
-        mImgSuccessNotification = (ImageView) findViewById(R.id.img_install_success_notification);
+        nativeAdContainer = (LinearLayout) findViewById(R.id.ad_container);
 
-        mLayoutInstalled.setVisibility(View.INVISIBLE);
         mBtnStart.setVisibility(View.INVISIBLE);
 
         mTxtAppLabel.setText(mPkgLabel);
         appModel.setIcon(appModel.initDrawable(this));
         mImgAppIcon.setBackground(appModel.getIcon());
 
+        mCloneSettingLayout = (RelativeLayout) findViewById(R.id.clone_setting_layout);
+
         mTxtInstalling.setText(String.format(getString(R.string.cloning_tips), mPkgLabel));
-        mTxtInstalled.setText(String.format(getString(R.string.clone_success), mPkgLabel));
-        mTxtInstalled.setVisibility(View.INVISIBLE);
+
         mProgressBar.setSecondaryProgress(100);
         mProgressBar.setProgress(0);
         mLayoutCancel.setOnClickListener(new View.OnClickListener() {
@@ -174,6 +210,47 @@ public class AppCloneActivity extends BaseActivity {
                 finish();
             }
         });
+
+        mShortcutSwitch = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
+        mLockerSwitch = (BlueSwitch) findViewById(R.id.locker_swichbtn);
+        mNotificationSwitch = (BlueSwitch) findViewById(R.id.notification_swichbtn);
+        initSwitchStatus(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initSwitchStatus(false);
+    }
+
+    private void initSwitchStatus(boolean firstTime) {
+        mShortcutSwitch.setChecked(false);
+        if(firstTime) {
+            mLockerSwitch.setChecked(PreferencesUtils.isLockerEnabled(this));
+        } else {
+            mLockerSwitch.setChecked(appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
+        }
+        mLockerSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mLockerSwitch.isChecked() && !PreferencesUtils.isLockerEnabled(AppCloneActivity.this)) {
+                    mLockerSwitch.setChecked(false);
+                    ToastUtils.ToastBottow(AppCloneActivity.this, "Please enable locker function and set password at first!");
+                    LockSettingsActivity.start(AppCloneActivity.this,"clone");
+                }
+            }
+        });
+        mNotificationSwitch.setChecked(appModel.isNotificationEnable());
+    }
+
+    private void doSwitchStateChange() {
+        appModel.setNotificationEnable(mNotificationSwitch.isChecked());
+        appModel.setLockerState(mLockerSwitch.isChecked()? AppConstants.AppLockState.ENABLED_FOR_CLONE: AppConstants.AppLockState.DISABLED);
+        DbManager.updateAppModel(this, appModel);
+        if (mShortcutSwitch.isChecked()) {
+            CommonUtils.createShortCut(this, appModel);
+        }
+        VirtualCore.get().reloadLockerSetting();
     }
 
     public static void startAppCloneActivity(Activity activity, AppModel appModel) {
@@ -183,12 +260,199 @@ public class AppCloneActivity extends BaseActivity {
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
+    private void initAd(){
+        boolean showAd = RemoteConfig.getBoolean(CONFIG_KEY_SHOW_AD_AFTER_CLONE);
+        MLogs.d(CONFIG_KEY_SHOW_AD_AFTER_CLONE + showAd);
+        adConfigList = RemoteConfig.getAdConfigList(SLOT_AD_AFTER_CLONE);
+        if (showAd && adConfigList!= null && adConfigList.size() > 0) {
+            initAdmobBannerView();
+            loadAd();
+        }
+    }
+
+    private void initAdmobBannerView() {
+        mAdmobExpressView = new NativeExpressAdView(this);
+        String adunit  = null;
+        if (adConfigList != null) {
+            for (AdConfig adConfig: adConfigList) {
+                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
+                    adunit = adConfig.key;
+                    break;
+                }
+            }
+        }
+        if (TextUtils.isEmpty(adunit)) {
+            mAdmobExpressView = null;
+            return;
+        }
+        mAdmobExpressView.setAdSize(new AdSize(AdSize.FULL_WIDTH, AdSize.AUTO_HEIGHT));
+//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
+        mAdmobExpressView.setAdUnitId(adunit);
+        mAdmobExpressView.setVisibility(View.GONE);
+        mAdmobExpressView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                AdLog.d("onAdClosed");
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                AdLog.d("Clone admob onAdFailedToLoad " + i);
+                mAdmobExpressView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                AdLog.d("on Banner AdLoaded ");
+                admobReady = true;
+                showAdIfNeeded();
+            }
+        });
+    }
+
+    private void showAdIfNeeded(){
+        MLogs.d("Animate end: " + animateEnd + " fb: " + fbReady + " admob: " + admobReady);
+        TextView sponsor = (TextView) findViewById(R.id.sponsor_text);
+        if(animateEnd) {
+            if (fbReady) {
+                sponsor.setVisibility(View.VISIBLE);
+                MTAManager.appCloneAd(this, "FB");
+                inflateFbNativeAdView(nativeAd);
+            } else if(admobReady){
+                sponsor.setVisibility(View.VISIBLE);
+                showBannerAd();
+                MTAManager.appCloneAd(this, "Admob");
+            }
+        }
+
+    }
+
+    private void showBannerAd(){
+        MLogs.d("AppClone showBannerAd");
+        nativeAdContainer.removeAllViews();
+        mAdmobExpressView.setVisibility(View.VISIBLE);
+//        LinearLayout admobContainer = new LinearLayout(this);
+//        admobContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        admobContainer.setOrientation(LinearLayout.VERTICAL);
+//        admobContainer.addView(mAdmobExpressView);
+//        nativeAdContainer.addView(admobContainer);
+        nativeAdContainer.addView(mAdmobExpressView);
+        nativeAdContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void inflateFbNativeAdView(IAd ad) {
+        View adView = LayoutInflater.from(this).inflate(R.layout.after_clone_native_ad, null);
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        adView.setLayoutParams(params);
+        if (ad != null && adView != null) {
+            BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
+            coverView.setDefaultResource(0);
+            coverView.requestDisplayURL(ad.getCoverImageUrl());
+            BasicLazyLoadImageView iconView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_icon_image);
+            iconView.setDefaultResource(0);
+            iconView.requestDisplayURL(ad.getIconImageUrl());
+            TextView titleView = (TextView) adView.findViewById(R.id.ad_title);
+            titleView.setText(ad.getTitle());
+            TextView subtitleView = (TextView) adView.findViewById(R.id.ad_subtitle_text);
+            subtitleView.setText(ad.getBody());
+            TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
+            ctaView.setText(ad.getCallToActionText());
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(ctaView, "scaleX", 0.7f, 1.2f, 1.0f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(ctaView, "scaleY", 0.7f, 1.2f, 1.0f);
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.play(scaleX).with(scaleY);
+            animSet.setInterpolator(new BounceInterpolator());
+            animSet.setDuration(1200).start();
+            animSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                }
+            });
+
+            StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(R.id.star_rating_layout);
+            starLevelLayout.setRating((int)ad.getStarRating());
+            nativeAdContainer.removeAllViews();
+            nativeAdContainer.addView(adView);
+            ad.registerViewForInteraction(nativeAdContainer);
+            if (ad.getPrivacyIconUrl() != null) {
+                BasicLazyLoadImageView choiceIconImage = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_choices_image);
+                choiceIconImage.setDefaultResource(0);
+                choiceIconImage.requestDisplayURL(ad.getPrivacyIconUrl());
+                ad.registerPrivacyIconView(choiceIconImage);
+            }
+        }
+    }
+
+    private void loadAd() {
+        if (mNativeAdLoader == null) {
+            mNativeAdLoader = FuseAdLoader.get(SLOT_AD_AFTER_CLONE, this);
+            ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
+        }
+        if ( mNativeAdLoader.hasValidAdSource()) {
+            mNativeAdLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAd ad) {
+                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
+                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
+                        fbReady = true;
+                        nativeAd = ad;
+                        showAdIfNeeded();
+                    }
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAd> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+                    loadAdmobNativeExpress();
+                }
+            });
+        } else {
+            loadAdmobNativeExpress();
+        }
+    }
+
+    private void loadAdmobNativeExpress(){
+        if (mAdmobExpressView == null) {
+            return;
+        }
+        MLogs.d("AppClone loadAdmobNativeExpress");
+        if (AdConstants.DEBUG) {
+            String android_id = AdUtils.getAndroidID(this);
+            String deviceId = AdUtils.MD5(android_id).toUpperCase();
+            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
+            boolean isTestDevice = request.isTestDevice(this);
+            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
+            AdLog.d( "Admob unit id "+ mAdmobExpressView.getAdUnitId());
+            mAdmobExpressView.loadAd(request );
+        } else {
+            mAdmobExpressView.loadAd(new AdRequest.Builder().build());
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_install_layout);
         initData();
         initView();
+        initAd();
 
         final TimerTask task = new TimerTask() {
             double speed = INIT_PROGRESS_SPEED;
@@ -263,6 +527,7 @@ public class AppCloneActivity extends BaseActivity {
     @Override
     public void onDestroy(){
         cleanBeforeFinish();
+        doSwitchStateChange();
         super.onDestroy();
     }
 
@@ -285,21 +550,6 @@ public class AppCloneActivity extends BaseActivity {
         installingFadeOut.setDuration(ANIMATION_STEP * 2);
         installingFadeOut.setFillAfter(true);
 
-        ScaleAnimation clonedMarkScaleUp = new ScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        clonedMarkScaleUp.setDuration(ANIMATION_STEP);
-        clonedMarkScaleUp.setFillAfter(true);
-        clonedMarkScaleUp.setFillBefore(true);
-        TranslateAnimation startBtnMoveUp = new TranslateAnimation(0, 0, DisplayUtils.dip2px(this, 70), 0);
-        startBtnMoveUp.setDuration(ANIMATION_STEP);
-        startBtnMoveUp.setFillAfter(true);
-        startBtnMoveUp.setFillBefore(true);
-        final AnimationSet clonedMarkSet = new AnimationSet(true);
-        clonedMarkSet.addAnimation(clonedMarkScaleUp);
-        clonedMarkSet.addAnimation(successBgFadeIn);
-        final AnimationSet startBtnSet = new AnimationSet(true);
-        startBtnSet.addAnimation(startBtnMoveUp);
-        startBtnSet.addAnimation(successBgFadeIn);
-
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -308,39 +558,63 @@ public class AppCloneActivity extends BaseActivity {
                 finish();
             }
         });
-        mImgSuccessBg.setVisibility(View.VISIBLE);
+        //mImgSuccessBg.setVisibility(View.VISIBLE);
         appModel.setCustomIcon(BitmapUtils.createCustomIcon(AppCloneActivity.this, appModel.getIcon() ));
-        mImgAppIcon.setBackground(null);
-        mImgAppIcon.setImageBitmap(appModel.getCustomIcon());
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImgAppIcon, "scaleX", 0.7f, 1.3f, 1.1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImgAppIcon, "scaleY", 0.7f, 1.3f, 1.1f);
+        mImgAppIcon.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        //mLayoutCancel.startAnimation(installingFadeOut);
+
+        //mTxtInstalling.setVisibility(View.INVISIBLE);
+        mLayoutCancel.setVisibility(View.INVISIBLE);
+        mTxtInstalling.setVisibility(View.INVISIBLE);
+        mTxtAppLabel.setVisibility(View.INVISIBLE);
+        mTxtInstalled.setText(String.format(getString(R.string.clone_success), mPkgLabel));
+        showCloneSetting();
+    }
+
+    private void showCloneSetting() {
+        initSwitchStatus(true);
+        final AlphaAnimation successBgFadeIn = new AlphaAnimation(0, 1);
+        successBgFadeIn.setDuration(ANIMATION_STEP);
+        successBgFadeIn.setFillAfter(true);
+        successBgFadeIn.setFillBefore(true);
+        mCloneSettingLayout.setVisibility(View.VISIBLE);
+        mCloneSettingLayout.startAnimation(successBgFadeIn);
+        ImageView icon = (ImageView)mCloneSettingLayout.findViewById(R.id.img_app_icon_done);
+        icon.setBackground(null);
+        icon.setImageBitmap(appModel.getCustomIcon());
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(icon, "scaleX", 0.7f, 1.3f, 1.1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(icon, "scaleY", 0.7f, 1.3f, 1.1f);
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(scaleX).with(scaleY);
         animSet.setInterpolator(new BounceInterpolator());
         animSet.setDuration(800).start();
-        mProgressBar.startAnimation(progressFadeOut);
-        mImgSuccessBg.startAnimation(successBgFadeIn);
-        installingFadeOut.setAnimationListener(new Animation.AnimationListener() {
+        TranslateAnimation startBtnMoveUp = new TranslateAnimation(0, 0, DisplayUtils.dip2px(this, 70), 0);
+        startBtnMoveUp.setDuration(ANIMATION_STEP);
+        startBtnMoveUp.setFillAfter(true);
+        startBtnMoveUp.setFillBefore(true);
+        final AnimationSet startBtnSet = new AnimationSet(true);
+        startBtnSet.addAnimation(startBtnMoveUp);
+        startBtnSet.addAnimation(successBgFadeIn);
+        mBtnStart.startAnimation(startBtnSet);
+
+        successBgFadeIn.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
             }
-
             @Override
             public void onAnimationEnd(Animation animation) {
-                mTxtInstalled.startAnimation(successBgFadeIn);
-
-                mBtnStart.startAnimation(startBtnSet);
                 mBtnStart.setVisibility(View.VISIBLE);
+                animateEnd = true;
+                showAdIfNeeded();
             }
-
             @Override
             public void onAnimationRepeat(Animation animation) {
 
             }
         });
-        mLayoutCancel.startAnimation(installingFadeOut);
-        mTxtInstalling.startAnimation(installingFadeOut);
     }
 
     private void handleInstallFinished(){

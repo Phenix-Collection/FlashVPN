@@ -82,6 +82,12 @@ public class MTAManager {
         StatService.trackCustomKVEvent(context, "applist_clone", prop);
     }
 
+    public static void appCloneAd(Context context, String ad) {
+        Properties prop = new Properties();
+        prop.setProperty("AD", ad);
+        StatService.trackCustomKVEvent(context, "app_clone_ad", prop);
+    }
+
     public static void deleteClonedApp(Context context, String packageName) {
         Properties prop = new Properties();
         prop.setProperty("package", packageName);
