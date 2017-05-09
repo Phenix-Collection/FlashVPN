@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
@@ -18,9 +19,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.ToastUtils;
 
@@ -101,7 +104,9 @@ public class FeedbackActivity extends BaseActivity {
                 Intent data=new Intent(Intent.ACTION_SENDTO);
                 data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about SuperClone");
-                data.putExtra(Intent.EXTRA_TEXT, content);
+                String fullContent = content + "\n"  + "Additional Info: \n" + "Super Clone version: " + BuildConfig.VERSION_NAME
+                        + "\n" + "Model info: " + Build.FINGERPRINT + "\n";
+                data.putExtra(Intent.EXTRA_TEXT, fullContent);
                 try {
                     startActivity(data);
                 }catch (Exception e) {
