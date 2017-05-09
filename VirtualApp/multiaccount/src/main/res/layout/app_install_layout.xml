@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/layout_title"
-                android:layout_marginTop="40dp">
+                android:layout_marginTop="35dp">
                 <ImageView
                     android:id="@+id/img_success_bg"
                     android:layout_width="150dp"
@@ -118,7 +118,7 @@
                 android:id="@+id/clone_setting_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="35dp"
                 android:layout_below="@+id/layout_title"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
