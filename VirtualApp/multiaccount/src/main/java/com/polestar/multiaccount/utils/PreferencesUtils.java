@@ -325,12 +325,21 @@ public class PreferencesUtils {
         putLong(c, "last_rate_dialog", System.currentTimeMillis());
     }
 
+    public static void updateIconAdClickTime(Context c) {
+        putLong(c, "last_icon_ad_click", System.currentTimeMillis());
+    }
+
+
     public static long getRateDialogTime(Context c) {
         long last = getLong(c, "last_rate_dialog",-1);
         if (last == -1) {
             last = CommonUtils.getInstallTime(c, c.getPackageName());
         }
         return last;
+    }
+
+    public static long getLastIconAdClickTime(Context c) {
+        return getLong(c, "last_icon_ad_click",-1);
     }
 
     public static void setApplockGuideShowed() {

@@ -66,13 +66,45 @@
                     android:layout_alignParentTop="true"
                     android:onClick="onIconAdClick"
                     android:background="@drawable/selector_setting_theme2">
-                    <ImageView
-                        android:id="@+id/gift_icon"
-                        android:layout_width="23dp"
-                        android:layout_marginTop="17dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_height="23dp"/>
+                    <RelativeLayout
+                        android:id="@+id/gift_icon_layout"
+                        android:layout_width="28dp"
+                        android:layout_height="27dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_alignParentRight="true" >
+
+                        <!-- Click on the icon -->
+
+                        <ImageView
+                            android:id="@+id/gift_icon"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ad_taged_gift_icon" />
+
+                        <RelativeLayout
+                            android:id="@+id/gift_new_tip"
+                            android:layout_width="6dp"
+                            android:layout_height="6dp"
+                            android:layout_alignParentRight="true"
+                            android:visibility="invisible"
+                            android:gravity="right" >
+
+                            <ImageView
+                                android:id="@+id/newtip_iv"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/mobvista_wall_new_tip" />
+                        </RelativeLayout>
+
+                    </RelativeLayout>
                     <RelativeLayout
                         android:id="@+id/wall_button"
                         android:layout_width="28dp"

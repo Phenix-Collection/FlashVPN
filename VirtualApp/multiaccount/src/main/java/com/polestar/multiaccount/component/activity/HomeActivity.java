@@ -85,6 +85,7 @@ public class HomeActivity extends BaseActivity {
 
     private String cloningPackage;
     private RelativeLayout iconAdLayout;
+    private RelativeLayout giftIconLayout;
     private RelativeLayout wallButtonLayout;
     private IAd interstitialAd;
     @Override
@@ -110,7 +111,9 @@ public class HomeActivity extends BaseActivity {
         navigationLayout = findViewById(R.id.navigation_layout);
         appNameTv = (TextView) findViewById(R.id.app_name);
         giftIconView = (ImageView) findViewById(R.id.gift_icon);
+        giftIconLayout = (RelativeLayout) findViewById(R.id.gift_icon_layout);
         giftIconView.setVisibility(View.GONE);
+        giftIconLayout.setVisibility(View.GONE);
 
         iconAdLayout = (RelativeLayout)findViewById(R.id.icon_ad);
         wallButtonLayout = (RelativeLayout)findViewById(R.id.wall_button);
@@ -166,6 +169,7 @@ public class HomeActivity extends BaseActivity {
     public void loadMVWallHandler(){
         MLogs.d("loadMVWallHandler");
         wallButtonLayout.setVisibility(View.VISIBLE);
+        giftIconLayout.setVisibility(View.GONE);
         giftIconView.setVisibility(View.GONE);
         wallClickReported = false;
         Map<String,Object> properties = MvWallHandler.getWallProperties(AppConstants.WALL_UNIT_ID);
@@ -233,15 +237,20 @@ public class HomeActivity extends BaseActivity {
                         case 0:
                             giftRes = R.drawable.ring_ad;
                             break;
-                        case 1:
-                            giftRes = R.drawable.egg_ad;
-                            break;
                         default:
                             giftRes = R.drawable.ad_taged_gift_icon;
                             break;
                     }
                     giftIconView.setImageResource(giftRes);
                     giftIconView.setVisibility(View.VISIBLE);
+                    giftIconLayout.setVisibility(View.VISIBLE);
+                    long interval = System.currentTimeMillis() - PreferencesUtils.getLastIconAdClickTime(HomeActivity.this);
+                    RelativeLayout layout = (RelativeLayout)giftIconLayout.findViewById(R.id.gift_new_tip);
+                    if(interval > 24*60*60*1000) {
+                        layout.setVisibility(View.VISIBLE);
+                    } else {
+                        layout.setVisibility(View.INVISIBLE);
+                    }
                     ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIconView, "scaleX", 0.7f, 1.3f, 1.0f);
                     ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIconView, "scaleY", 0.7f, 1.3f, 1.0f);
                     AnimatorSet animSet = new AnimatorSet();
@@ -280,11 +289,13 @@ public class HomeActivity extends BaseActivity {
            }, 2000);
        }
         if (showAppWall) {
+            giftIconLayout.setVisibility(View.GONE);
             giftIconView.setVisibility(View.GONE);
             wallButtonLayout.setVisibility(View.GONE);
             loadMVWallHandler();
         } else{
             if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
+                giftIconLayout.setVisibility(View.GONE);
                 giftIconView.setVisibility(View.GONE);
                 wallButtonLayout.setVisibility(View.GONE);
                 loadAd();
@@ -392,6 +403,7 @@ public class HomeActivity extends BaseActivity {
 
     public void onIconAdClick(View view) {
         MLogs.d("onIconAdClick showAppWall: " + showAppWall);
+        PreferencesUtils.updateIconAdClickTime(this);
         if (showAppWall) {
             openWall();
             MTAManager.homeGiftClick(this, "mv_app_wall");
