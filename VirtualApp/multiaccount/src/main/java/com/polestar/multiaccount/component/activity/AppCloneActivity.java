@@ -285,7 +285,7 @@ public class AppCloneActivity extends BaseActivity {
             mAdmobExpressView = null;
             return;
         }
-        mAdmobExpressView.setAdSize(new AdSize(AdSize.FULL_WIDTH, AdSize.AUTO_HEIGHT));
+        mAdmobExpressView.setAdSize(new AdSize(360, 260));
 //        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
         mAdmobExpressView.setAdUnitId(adunit);
         mAdmobExpressView.setVisibility(View.GONE);
