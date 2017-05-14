@@ -274,7 +274,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 
 		Intent destIntent;
 		ActivityRecord sourceRecord = findActivityByToken(userId, resultTo);
-		VLog.d(TAG, "startActivityLocked sourceRecord " + sourceRecord + " resultTo " + resultTo);
+		VLog.d(TAG, "startActivityLocked sourceRecord " + sourceRecord + " resultTo " + resultTo + " info: " + info);
 		TaskRecord sourceTask = sourceRecord != null ? sourceRecord.task : null;
 
 		ReuseTarget reuseTarget = ReuseTarget.CURRENT;
@@ -357,6 +357,11 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		TaskRecord reuseTask = null;
 		switch (reuseTarget) {
 			case AFFINITY :
+				if (intent != null && intent.getAction()!= null && intent.getAction().equals("com.google.android.gms.games.SIGN_IN")) {
+					String pkg = intent.getStringExtra("com.google.android.gms.games.GAME_PACKAGE_NAME");
+					VLog.logbug(TAG, "GMS login: from " + pkg);
+					affinity = pkg;
+				}
 				reuseTask = findTaskByAffinityLocked(userId, affinity);
 				break;
 			case DOCUMENT :
@@ -413,6 +418,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 	private Intent startActivityInNewTaskLocked(int userId, Intent intent, ActivityInfo info, Bundle options) {
 		Intent destIntent = startActivityProcess(userId, null, intent, info);
 		if (destIntent != null) {
+			VLog.d(TAG, "startActivityInNewTaskLocked intent: " + intent + " destIntent: " + destIntent);
 			destIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			destIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 			destIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);

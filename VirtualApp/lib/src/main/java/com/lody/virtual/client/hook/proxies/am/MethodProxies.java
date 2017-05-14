@@ -396,6 +396,8 @@ class MethodProxies {
             if (intentIndex < 0) {
                 return ActivityManagerCompat.START_INTENT_NOT_RESOLVED;
             }
+            int callerIndex = ArrayUtils.indexOfObject(args, IBinder.class, 1);
+            IBinder caller = callerIndex >= 0 ? (IBinder) args[callerIndex] : null;;
             int resultToIndex = ArrayUtils.indexOfObject(args, IBinder.class, 2);
             String resolvedType = (String) args[intentIndex + 1];
             Intent intent = (Intent) args[intentIndex];

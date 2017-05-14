@@ -697,6 +697,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		app.client = client;
 		app.appThread = thread;
 		app.pid = pid;
+		VLog.logbug(TAG, "attachClient for " + app.processName + " pid: " + app.pid);
 		synchronized (mProcessNames) {
 			mProcessNames.put(app.processName, app.vuid, app);
 			mPidsSelfLocked.put(app.pid, app);
@@ -749,6 +750,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		if (app != null && app.client.asBinder().isBinderAlive()) {
 			return app;
 		}
+		VLog.logbug(TAG, "startProcessIfNeedLocked No process record found for : " + processName);
         int vpid = queryFreeStubProcessLocked();
 		if (vpid == -1) {
 			return null;
@@ -1075,7 +1077,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		synchronized (this) {
 			r = findProcessLocked(info.processName, vuid);
 			if (BROADCAST_NOT_STARTED_PKG && r == null
-					&& VirtualCore.get().getComponentDelegate().isNotificationEnabled(info.packageName)) {
+					) {
 				int userId = getUserId(vuid);
 				VLog.d(TAG, "startProcess for " + intent.toString() + " userId " + userId);
 				if (userId != 0) {
