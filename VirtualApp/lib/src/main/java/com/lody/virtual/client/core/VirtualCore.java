@@ -795,9 +795,9 @@ public final class VirtualCore {
 
 	}
 
-	public void reloadLockerSetting(){
+	public void reloadLockerSetting(String key){
 		try {
-			getService().reloadLockerSetting();
+			getService().reloadLockerSetting(key);
 		}catch (Exception e){
 			VLog.logbug(VLog.VTAG, VLog.getStackTraceString(e));
 		}

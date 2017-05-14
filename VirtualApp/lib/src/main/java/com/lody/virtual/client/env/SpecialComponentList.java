@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 
+import com.lody.virtual.client.hook.secondary.GmsSupport;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,18 +33,24 @@ public final class SpecialComponentList {
     private static String PROTECT_ACTION_PREFIX = "_VA_protected_";
 
     private static final HashSet<String> IO_REDIRECT_BLACK_LIST = new HashSet<>(1);
+
+    private static final HashSet<String> BROADCAST_START_WHITE_LIST = new HashSet<>();
     static {
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_ON);
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_OFF);
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_ON);
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_OFF);
+
         SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_NEW_OUTGOING_CALL);
         //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_TICK);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BOOT_COMPLETED);
         //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_CHANGED);
         SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIMEZONE_CHANGED);
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_CHANGED);
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_LOW);
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_OKAY);
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_CONNECTED);
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_DISCONNECTED);
+
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_CHANGED);
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_LOW);
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_OKAY);
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_CONNECTED);
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_DISCONNECTED);
+
         SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_RECEIVED");
         //SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_DELIVER");
         SYSTEM_BROADCAST_ACTION.add("android.net.wifi.STATE_CHANGE");
@@ -84,6 +92,11 @@ public final class SpecialComponentList {
                 e.printStackTrace();
             }
         }
+
+        BROADCAST_START_WHITE_LIST.add("com.facebook.orca");
+        BROADCAST_START_WHITE_LIST.add("com.facebook.katana");
+        BROADCAST_START_WHITE_LIST.add("com.tencent.mm");
+        BROADCAST_START_WHITE_LIST.add("com.whatsapp");
     }
 
     public static boolean needIORedirect(String pkg) {
@@ -93,6 +106,15 @@ public final class SpecialComponentList {
         return  true;
     }
 
+    public static boolean canStartFromBroadcast(String pkg) {
+        if (GmsSupport.isGmsFamilyPackage(pkg)) {
+            return true;
+        }
+        if (BROADCAST_START_WHITE_LIST.contains(pkg)) {
+            return true;
+        }
+        return false;
+    }
     public static boolean isSpecSystemPackage(String pkg) {
         return SPEC_SYSTEM_APP_LIST.contains(pkg);
     }
@@ -129,7 +151,7 @@ public final class SpecialComponentList {
                     iterator.remove();
                     continue;
                 }
-                if (SYSTEM_BROADCAST_ACTION.contains(action)) {
+                if (SYSTEM_BROADCAST_ACTION.contains(action) && !Intent.ACTION_BOOT_COMPLETED.equals(action)){
                     continue;
                 }
                 String newAction = SpecialComponentList.protectAction(action);

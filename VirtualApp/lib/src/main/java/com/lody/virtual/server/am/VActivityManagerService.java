@@ -1007,6 +1007,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		if (user != null) {
 			intent.putExtra("_VA_|_user_id_", user.getIdentifier());
 		}
+		VLog.logbug(TAG, "sendBroadcast: " + intent);
 		context.sendBroadcast(intent);
 	}
 
@@ -1034,9 +1035,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		int userId = intent.getIntExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_ALL);
 		ComponentName component = intent.getParcelableExtra(Constants.VA_INTENT_KEY_COMPONENT);
 		Intent realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
-        if (realIntent == null) {
-            return false;
-        }
+//        if (realIntent == null) {
+//            return false;
+//        }
 		if (component != null) {
 			if (!ComponentUtils.toComponentName(info).equals(component)) {
 				return false;
@@ -1044,16 +1045,20 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		}
 		if (userId < 0) {
             VLog.w(TAG, "Sent a broadcast without userId " + realIntent);
-            return false;
+            //return false;
         }
 		String pkg = intent.getStringExtra(Constants.VA_INTENT_KEY_PACKAGE);
 		if (pkg != null && !pkg.equals(info.packageName)) {
 			return false;
 		}
+//		if (realIntent == null) {
+//			return false;
+//		}
+		VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent + " activityInfo: " + info.name);
 		if (realIntent == null) {
-			return false;
+			//In case of broadcast from system
+			realIntent = intent;
 		}
-		VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent.toString() + " activityInfo: " + info.name);
         int vuid = VUserHandle.getUid(userId, appId);
         return handleUserBroadcast(vuid, info, component, realIntent, result);
     }
@@ -1077,7 +1082,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		synchronized (this) {
 			r = findProcessLocked(info.processName, vuid);
 			if (BROADCAST_NOT_STARTED_PKG && r == null
-					) {
+					&& SpecialComponentList.canStartFromBroadcast(info.packageName)) {
 				int userId = getUserId(vuid);
 				VLog.d(TAG, "startProcess for " + intent.toString() + " userId " + userId);
 				if (userId != 0) {
