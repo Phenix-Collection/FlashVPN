@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.utils.LockPatternUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.widgets.locker.AppLockWindow;
@@ -85,7 +87,7 @@ public class AppLockMonitor {
         return mAdLoader;
     }
 
-    public void reloadSetting() {
+    public void reloadSetting(String newKey) {
         MLogs.d("reloadSetting");
         modelHashMap.clear();
         DbManager.resetSession();
@@ -97,6 +99,9 @@ public class AppLockMonitor {
             }
         }
         preloadAd();
+        if (!TextUtils.isEmpty(newKey)) {
+            LockPatternUtils.setTempKey(newKey);
+        }
     }
 
     public static synchronized AppLockMonitor getInstance(){

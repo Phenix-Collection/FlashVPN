@@ -77,6 +77,7 @@ public class VAppManagerService extends IAppManager.Stub {
         if (mBooting) {
             return;
         }
+        VLog.logbug(TAG, "=======scanApps========");
         synchronized (this) {
             mBooting = true;
             File file = VEnvironment.getPackageListFile();
@@ -94,6 +95,8 @@ public class VAppManagerService extends IAppManager.Stub {
             }
             mBooting = false;
         }
+        VLog.d(TAG, "=======after scanApps========");
+        sendBootCompleted();
     }
 
     private void recover() {
@@ -512,6 +515,12 @@ public class VAppManagerService extends IAppManager.Stub {
         VAccountManagerService.get().refreshAuthenticatorCache(null);
     }
 
+    private void sendBootCompleted() {
+        Intent intent = new Intent(Intent.ACTION_BOOT_COMPLETED);
+        VLog.logbug(TAG, "sendBootCompleted intent");
+        VActivityManagerService.get().sendBroadcastAsUser(intent, VUserHandle.ALL);
+    }
+
     private void sendInstalledBroadcast(String packageName) {
         Intent intent = new Intent(Intent.ACTION_PACKAGE_ADDED);
         intent.setData(Uri.parse("package:" + packageName));
@@ -620,8 +629,8 @@ public class VAppManagerService extends IAppManager.Stub {
         VLog.d(TAG, "notifyActivityBeforePause " + pkg);
         VirtualCore.get().getComponentDelegate().beforeActivityPause(pkg);
     }
-    public void  reloadLockerSetting(){
+    public void  reloadLockerSetting(String key){
         VLog.d(TAG, "reloadLockerSetting ");
-        VirtualCore.get().getComponentDelegate().reloadLockerSetting();
+        VirtualCore.get().getComponentDelegate().reloadLockerSetting(key);
     }
 }

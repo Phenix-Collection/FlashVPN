@@ -35,5 +35,5 @@ interface IAppManager {
 
     void notifyActivityBeforeResume(String pkg);
     void notifyActivityBeforePause(String pkg);
-    void reloadLockerSetting();
+    void reloadLockerSetting(String key);
 }

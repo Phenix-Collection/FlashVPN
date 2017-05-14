@@ -40,7 +40,7 @@ public interface ComponentDelegate {
         }
 
         @Override
-        public void reloadLockerSetting() {
+        public void reloadLockerSetting(String key) {
 
         }
     };
@@ -57,5 +57,5 @@ public interface ComponentDelegate {
 
     boolean isNotificationEnabled(String pkg);
 
-    void reloadLockerSetting();
+    void reloadLockerSetting(String newKey);
 }

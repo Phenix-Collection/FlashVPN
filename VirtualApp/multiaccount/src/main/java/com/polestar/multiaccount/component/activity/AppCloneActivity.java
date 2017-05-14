@@ -250,7 +250,7 @@ public class AppCloneActivity extends BaseActivity {
         if (mShortcutSwitch.isChecked()) {
             CommonUtils.createShortCut(this, appModel);
         }
-        VirtualCore.get().reloadLockerSetting();
+        VirtualCore.get().reloadLockerSetting(null);
     }
 
     public static void startAppCloneActivity(Activity activity, AppModel appModel) {

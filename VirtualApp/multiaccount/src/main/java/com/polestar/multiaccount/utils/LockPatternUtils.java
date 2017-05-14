@@ -7,6 +7,7 @@ package com.polestar.multiaccount.utils;
 
 import android.text.TextUtils;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.widgets.locker.LockPatternView;
 
@@ -29,6 +30,7 @@ import java.util.List;
 public class LockPatternUtils {
     private static final String LOG_TAG = "LockPattern";
 
+    private static String tempKey = null;
     /**
      * 將手勢轉為 Pattern Password
      */
@@ -73,6 +75,8 @@ public class LockPatternUtils {
         String encodedPatternPassword = patternPasswordToEncodedPatternPassword(patternPassword);
 
         LockPatternPref.getIns().setEncodedPatternPassword(encodedPatternPassword);
+
+        VirtualCore.get().reloadLockerSetting(encodedPatternPassword);
     }
 
 //    /**
@@ -94,7 +98,7 @@ public class LockPatternUtils {
             return false;
         }
 
-        String savedEncodedPatternPassword = LockPatternPref.getIns().getEncodedPatternPassword();
+        String savedEncodedPatternPassword = tempKey == null? LockPatternPref.getIns().getEncodedPatternPassword() : tempKey;
         if (TextUtils.isEmpty(savedEncodedPatternPassword)) {
             return false;
         }
@@ -153,4 +157,7 @@ public class LockPatternUtils {
         return patternWidth + paddingBottom;
     }
 
+    public static void setTempKey(String key) {
+        tempKey = key;
+    }
 }
