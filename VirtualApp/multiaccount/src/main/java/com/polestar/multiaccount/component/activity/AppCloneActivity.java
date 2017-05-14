@@ -114,6 +114,7 @@ public class AppCloneActivity extends BaseActivity {
     private FuseAdLoader mNativeAdLoader;
 
     private RelativeLayout mCloneSettingLayout;
+    private boolean isDBUpdated ;
 
     private Handler mAnimateHandler = new Handler(){
         public void handleMessage(Message msg) {
@@ -159,6 +160,7 @@ public class AppCloneActivity extends BaseActivity {
                                 public void run() {
                                     CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
                                     AppManager.setAppNotificationFlag(mPkgName, true);
+                                    isDBUpdated = true;
                                 }
                             });
                             MTAManager.applistClone(AppCloneActivity.this, appModel.getPackageName());
@@ -225,11 +227,12 @@ public class AppCloneActivity extends BaseActivity {
 
     private void initSwitchStatus(boolean firstTime) {
         mShortcutSwitch.setChecked(false);
-        if(firstTime) {
-            mLockerSwitch.setChecked(PreferencesUtils.isLockerEnabled(this));
-        } else {
-            mLockerSwitch.setChecked(appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
-        }
+//        if(firstTime) {
+//            mLockerSwitch.setChecked(PreferencesUtils.isLockerEnabled(this));
+//        } else {
+//            mLockerSwitch.setChecked(appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
+//        }
+        mLockerSwitch.setChecked(appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
         mLockerSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -244,13 +247,15 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     private void doSwitchStateChange() {
-        appModel.setNotificationEnable(mNotificationSwitch.isChecked());
-        appModel.setLockerState(mLockerSwitch.isChecked()? AppConstants.AppLockState.ENABLED_FOR_CLONE: AppConstants.AppLockState.DISABLED);
-        DbManager.updateAppModel(this, appModel);
-        if (mShortcutSwitch.isChecked()) {
-            CommonUtils.createShortCut(this, appModel);
+        if (appModel != null && isDBUpdated) {
+            appModel.setNotificationEnable(mNotificationSwitch.isChecked());
+            appModel.setLockerState(mLockerSwitch.isChecked() ? AppConstants.AppLockState.ENABLED_FOR_CLONE : AppConstants.AppLockState.DISABLED);
+            DbManager.updateAppModel(this, appModel);
+            if (mShortcutSwitch.isChecked()) {
+                CommonUtils.createShortCut(this, appModel);
+            }
+            VirtualCore.get().reloadLockerSetting(null);
         }
-        VirtualCore.get().reloadLockerSetting(null);
     }
 
     public static void startAppCloneActivity(Activity activity, AppModel appModel) {
