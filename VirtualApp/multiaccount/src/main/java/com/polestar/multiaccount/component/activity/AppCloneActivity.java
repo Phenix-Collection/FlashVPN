@@ -255,6 +255,7 @@ public class AppCloneActivity extends BaseActivity {
                 CommonUtils.createShortCut(this, appModel);
             }
             VirtualCore.get().reloadLockerSetting(null);
+            MTAManager.settingAfterClone(this, mNotificationSwitch.isChecked(), mLockerSwitch.isChecked(), mShortcutSwitch.isChecked());
         }
     }
 
