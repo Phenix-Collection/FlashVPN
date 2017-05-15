@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import mirror.android.net.IConnectivityManager;
 
 import static android.os.Build.VERSION_CODES.KITKAT;
+import static android.os.Build.VERSION_CODES.N_MR1;
 
 /**
  * @author legency
@@ -31,6 +32,9 @@ public class ConnectivityStub extends BinderInvocationProxy {
         addMethodProxy(new ReportInetCondition());
         if (Build.VERSION.SDK_INT >= KITKAT) {
             addMethodProxy(new CheckMobileProvisioning());
+        }
+        if (Build.VERSION.SDK_INT >= N_MR1) {
+            addMethodProxy(new IsTetheringSupported());
         }
     }
 
@@ -57,6 +61,19 @@ public class ConnectivityStub extends BinderInvocationProxy {
         public Object call(Object who, Method method, Object... args) throws Throwable {
             VLog.logbug("ConnectivityPatch", "CheckMobileProvisioning hooked");
             return -1;
+        }
+    }
+
+    private static class IsTetheringSupported extends MethodProxy {
+        @Override
+        public String getMethodName() {
+            return " isTetheringSupported";
+        }
+
+        @Override
+        public Object call(Object who, Method method, Object... args) throws Throwable {
+            VLog.logbug("ConnectivityPatch", "isTetheringSupported hooked");
+            return false;
         }
     }
 }
