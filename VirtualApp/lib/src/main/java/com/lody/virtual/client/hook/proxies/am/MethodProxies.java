@@ -845,6 +845,12 @@ class MethodProxies {
             String resolvedType = (String) args[2];
             if(service!=null) {
                 VLog.d("StartService", "intent: " + service.toString());
+                if (service.getComponent() != null) {
+                    VLog.d("StartService", " " + service.getComponent().getClassName() );
+                }
+                if (service.getComponent() != null && service.getComponent().getClassName().equals("com.qihoo.ls.SoService")){
+                    return  null;
+                }
             }
             if (service.getComponent() != null
                     && (!service.getComponent().getClassName().equals(StubPendingService.class.getName()))
