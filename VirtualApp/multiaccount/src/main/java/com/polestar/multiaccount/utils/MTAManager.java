@@ -126,9 +126,10 @@ public class MTAManager {
         StatService.trackCustomKVEvent(context, "locker_enable", prop);
     }
 
-    public static void settingAfterClone(Context context, boolean notification, boolean locker, boolean shortCut){
+    public static void settingAfterClone(Context context, String pkg, boolean notification, boolean locker, boolean shortCut){
         Properties prop = new Properties();
         prop.setProperty("notification", String.valueOf(notification));
+        prop.setProperty("package", pkg);
         prop.setProperty("locker", String.valueOf(locker));
         prop.setProperty("shortcut", String.valueOf(shortCut));
         StatService.trackCustomKVEvent(context, "setting_after_clone", prop);
