@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.lody.virtual.helper.utils.VLog;
+
 
 /**
  * @author Lody
@@ -45,7 +47,11 @@ public class DaemonService extends Service {
 		Intent alarmIntent = new Intent();
 		alarmIntent.setAction(WAKE_ACTION);
 		PendingIntent operation = PendingIntent.getBroadcast(this, 1111, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, operation);
+		try {
+			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, operation);
+		}catch (Exception e) {
+			VLog.logbug("Alarm", VLog.getStackTraceString(e));
+		}
 
 	}
 
