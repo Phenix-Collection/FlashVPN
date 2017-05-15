@@ -47,7 +47,11 @@ public class ContentProviderCompat {
             while (retry < 10 && client == null) {
                 SystemClock.sleep(150);
                 retry++;
-                client = acquireContentProviderClient(context, uri);
+                try {
+                    client = acquireContentProviderClient(context, uri);
+                }catch (Exception e) {
+                    VLog.logbug("ProviderCall", VLog.getStackTraceString(e));
+                }
             }
         }
         return client;
