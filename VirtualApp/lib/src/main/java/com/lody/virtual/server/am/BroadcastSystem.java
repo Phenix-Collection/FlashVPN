@@ -139,7 +139,7 @@ public class BroadcastSystem {
             receivers.add(r);
             for (VPackage.ActivityIntentInfo ci : receiver.intents)  {
 				IntentFilter cloneFilter = new IntentFilter(ci.filter);
-                SpecialComponentList.protectIntentFilter(cloneFilter);
+                SpecialComponentList.protectIntentFilter(cloneFilter, ci.activity.getComponentName().getPackageName());
                 r = new StaticBroadcastReceiver(setting.appId, info, cloneFilter);
 				mContext.registerReceiver(r, cloneFilter, null, mScheduler);
 				receivers.add(r);

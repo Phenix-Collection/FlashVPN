@@ -141,13 +141,18 @@ public final class SpecialComponentList {
         ACTION_BLACK_LIST.add(action);
     }
 
-    public static void protectIntentFilter(IntentFilter filter) {
+    public static void protectIntentFilter(IntentFilter filter, String pkg) {
         if (filter != null) {
             List<String> actions = mirror.android.content.IntentFilter.mActions.get(filter);
             ListIterator<String> iterator = actions.listIterator();
             while (iterator.hasNext()) {
                 String action = iterator.next();
                 if (SpecialComponentList.isActionInBlackList(action)) {
+                    iterator.remove();
+                    continue;
+                }
+                if ("com.google.android.gms".equals(pkg)
+                        && "android.provider.Telephony.SMS_RECEIVED".equals(action)){
                     iterator.remove();
                     continue;
                 }

@@ -1205,14 +1205,14 @@ class MethodProxies {
 //        }
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
-            MethodParameterUtils.replaceFirstAppPkg(args);
+            String origPkg = MethodParameterUtils.replaceFirstAppPkg(args);
             args[IDX_RequiredPermission] = null;
             if (args.length > IDX_IIntentReceiver && args[IDX_IIntentReceiver] == null) {
                 VLog.logbug(TAG, "null receiver: " );
                 return method.invoke(who,args);
             }
             IntentFilter filter = (IntentFilter) args[IDX_IntentFilter];
-            SpecialComponentList.protectIntentFilter(filter);
+            SpecialComponentList.protectIntentFilter(filter, origPkg);
             if (args.length > IDX_IIntentReceiver && IIntentReceiver.class.isInstance(args[IDX_IIntentReceiver])) {
                 final IInterface old = (IInterface) args[IDX_IIntentReceiver];
                 if (!IIntentReceiverProxy.class.isInstance(old)) {
