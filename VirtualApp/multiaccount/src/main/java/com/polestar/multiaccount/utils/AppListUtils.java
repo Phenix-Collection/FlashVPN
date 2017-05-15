@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
+import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
@@ -59,6 +60,8 @@ public class AppListUtils implements DataObserver {
             getPopularApps(mPopularModels);
             getIntalledApps(mInstalledModels);
         }
+        //TO START server process
+        ServiceManagerNative.getService(ServiceManagerNative.APP);
         MLogs.e("update app list done");
     }
 
