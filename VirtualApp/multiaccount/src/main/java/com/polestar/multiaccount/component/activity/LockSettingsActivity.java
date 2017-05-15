@@ -35,7 +35,6 @@ import java.util.List;
 public class LockSettingsActivity extends BaseActivity {
 
     public static final String EXTRA_KEY_FROM = "from";
-    public static final String FROM_HOME_ICON = "home_icon";
     public static final int REQUEST_SET_PASSWORD = 0;
     private Context mContext;
 
@@ -45,6 +44,7 @@ public class LockSettingsActivity extends BaseActivity {
     private BasicPackageSwitchAdapter mAppsAdapter;
     private ListView mCloneAppsListView;
     private boolean isSettingChanged = false;
+    private String from;
 
     public static void start(Activity activity, String from) {
         Intent intent = new Intent(activity, LockSettingsActivity.class);
@@ -64,6 +64,7 @@ public class LockSettingsActivity extends BaseActivity {
     }
 
     private void initData() {
+        from = getIntent().getStringExtra(LockSettingsActivity.EXTRA_KEY_FROM);
         CloneHelper.getInstance(this).loadClonedApps(this, new CloneHelper.OnClonedAppChangListener() {
             @Override
             public void onInstalled(List<AppModel> clonedApp) {
@@ -91,10 +92,10 @@ public class LockSettingsActivity extends BaseActivity {
                                 isSettingChanged = true;
                                 if(status) {
                                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
-                                    MTAManager.lockerEnable(LockSettingsActivity.this, "enable",model.getPackageName());
+                                    MTAManager.lockerEnable(LockSettingsActivity.this, "enable",model.getPackageName(), from);
                                 } else {
                                     model.setLockerState(AppConstants.AppLockState.DISABLED);
-                                    MTAManager.lockerEnable(LockSettingsActivity.this, "disable", model.getPackageName());
+                                    MTAManager.lockerEnable(LockSettingsActivity.this, "disable", model.getPackageName(), from);
                                 }
                                 DbManager.updateAppModel(mContext, model);
                                 MLogs.d("lock state changed: " + model.getPackageName());
@@ -144,20 +145,20 @@ public class LockSettingsActivity extends BaseActivity {
                 LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
                 ToastUtils.ToastDefult(this, getString(R.string.no_password_set));
                 if(report) {
-                    MTAManager.lockerEnable(this, "no_password", "none");
+                    MTAManager.lockerEnable(this, "no_password", "none", from);
                 }
             } else {
                 detailedSettingLayout.setVisibility(View.VISIBLE);
                 PreferencesUtils.setLockerEnabled(this, true);
                 if(report) {
-                    MTAManager.lockerEnable(this, "enable", "none");
+                    MTAManager.lockerEnable(this, "enable", "none", from);
                 }
             }
         }else{
             detailedSettingLayout.setVisibility(View.GONE);
             PreferencesUtils.setLockerEnabled(this, false);
             if(report) {
-                MTAManager.lockerEnable(this, "disable", "none");
+                MTAManager.lockerEnable(this, "disable", "none", from);
             }
         }
     }
