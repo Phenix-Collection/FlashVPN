@@ -60,7 +60,12 @@ public class ContentProviderCompat {
             while (retry < 5 && client == null) {
                 SystemClock.sleep(100);
                 retry++;
-                client = acquireContentProviderClient(context, name);
+                try {
+                    client = acquireContentProviderClient(context, name);
+                }catch (Exception e) {
+                    VLog.logbug("ProviderCall", VLog.getStackTraceString(e));
+                }
+
             }
         }
         return client;
