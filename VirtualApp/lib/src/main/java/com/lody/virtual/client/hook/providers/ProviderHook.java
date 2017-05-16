@@ -164,11 +164,12 @@ public class ProviderHook implements InvocationHandler {
             if (e instanceof InvocationTargetException) {
                 if (e.getCause() instanceof SecurityException) {
                     VLog.d("ProviderHook", "call: with SecurityException" );
-                    return null;
+                   // return null;
                 }
-                throw e.getCause();
+                //throw e.getCause();
             }
-            throw e;
+            //throw e;
+            return null;
         }
     }
 
