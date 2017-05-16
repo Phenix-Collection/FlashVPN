@@ -362,7 +362,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 					VLog.logbug(TAG, "GMS login: from " + pkg);
 					affinity = pkg;
 				}
-				reuseTask = findTaskByAffinityLocked(userId, affinity);
+				reuseTask = affinity == null? null : findTaskByAffinityLocked(userId, affinity);
 				break;
 			case DOCUMENT :
 				reuseTask = findTaskByIntentLocked(userId, intent);
