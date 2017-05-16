@@ -746,8 +746,12 @@ class MethodProxies {
         @Override
         public Object afterCall(Object who, Method method, Object[] args, Object result) throws Throwable {
             Intent intent = (Intent) super.afterCall(who, method, args, result);
-            if (intent != null && intent.hasExtra("_VA_|_intent_")) {
-                return intent.getParcelableExtra("_VA_|_intent_");
+            try {
+                if (intent != null && intent.hasExtra("_VA_|_intent_")) {
+                    return intent.getParcelableExtra("_VA_|_intent_");
+                }
+            }catch (Exception e){
+                VLog.logbug("getIntentForIntentSender", VLog.getStackTraceString(e));
             }
             return intent;
         }
@@ -859,7 +863,13 @@ class MethodProxies {
                 return method.invoke(who, args);
             }
             int userId = VUserHandle.myUserId();
-            if (service.hasExtra("_VA_|_from_inner_") && service.getBooleanExtra("_VA_|_from_inner_", false)) {
+            boolean fromInner = false;
+            try{
+                fromInner = service.getBooleanExtra("_VA_|_from_inner_", false);
+            }catch (Exception e){
+                VLog.logbug("StartService", VLog.getStackTraceString(e));
+            }
+            if (fromInner) {
                 service = service.getParcelableExtra("_VA_|_intent_");
                 userId = service.getIntExtra("_VA_|_user_id_", userId);
             } else {
@@ -1260,8 +1270,12 @@ class MethodProxies {
                 if (!accept(intent)) {
                     return;
                 }
-                if (intent.hasExtra("_VA_|_intent_")) {
-                    intent = intent.getParcelableExtra("_VA_|_intent_");
+                try {
+                    if (intent.hasExtra("_VA_|_intent_")) {
+                        intent = intent.getParcelableExtra("_VA_|_intent_");
+                    }
+                }catch (Exception e ) {
+                    VLog.logbug(TAG, VLog.getStackTraceString(e));
                 }
                 SpecialComponentList.unprotectIntent(intent);
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
