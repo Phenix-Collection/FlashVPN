@@ -1195,33 +1195,35 @@ class MethodProxies {
             return "registerReceiver";
         }
 
-//        private boolean  isSticky(IntentFilter filter) {
-//            Iterator<String> iterator = filter.actionsIterator();
-//            while (iterator.hasNext()) {
-//                String action = iterator.next();
-//                if (BroadcastSystem.)
-//                SystemBroadcastReceiver receiver = mSystemReceivers.get(action);
-//                if (receiver != null && receiver.sticky && receiver.stickyIntent != null) {
-//                    Intent intent = new Intent(receiver.stickyIntent);
-//                    SpecialComponentList.protectIntent(intent);
-//                    intent.putExtra("_VA_|_uid_", vuid);
-//                    mContext.sendBroadcast(intent);
-//                    if (!iterator.hasNext()) {
-//                        return receiver.stickyIntent;
-//                    }
-//                }
-//            }
-//            return null;
-//        }
+        private boolean  isSticky(IntentFilter filter) {
+            if (filter != null) {
+                Iterator<String> iterator = filter.actionsIterator();
+                while (iterator.hasNext()) {
+                    String action = iterator.next();
+                    if (SpecialComponentList.isSticky(action)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             String origPkg = MethodParameterUtils.replaceFirstAppPkg(args);
+            Object directRet = null;
             args[IDX_RequiredPermission] = null;
             if (args.length > IDX_IIntentReceiver && args[IDX_IIntentReceiver] == null) {
                 VLog.logbug(TAG, "null receiver: " );
                 return method.invoke(who,args);
             }
             IntentFilter filter = (IntentFilter) args[IDX_IntentFilter];
+            if (isSticky(filter)) {
+                Object origReceiver = args[IDX_IIntentReceiver];
+                args[IDX_IIntentReceiver] = null;
+                directRet = method.invoke(who,args);
+                args[IDX_IIntentReceiver] = origReceiver;
+            }
             SpecialComponentList.protectIntentFilter(filter, origPkg);
             if (args.length > IDX_IIntentReceiver && IIntentReceiver.class.isInstance(args[IDX_IIntentReceiver])) {
                 final IInterface old = (IInterface) args[IDX_IIntentReceiver];
@@ -1248,7 +1250,11 @@ class MethodProxies {
                     }
                 }
             }
-            return method.invoke(who, args);
+            if (directRet != null) {
+                return directRet;
+            } else {
+                return method.invoke(who, args);
+            }
         }
 
 
