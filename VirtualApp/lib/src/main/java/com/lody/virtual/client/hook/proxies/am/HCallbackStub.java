@@ -78,9 +78,13 @@ import mirror.android.app.IActivityManager;
                         }
                     }
                     if (otherCallback != null) {
-                        boolean desired = otherCallback.handleMessage(msg);
-                        mCalling = false;
-                        return desired;
+                        try {
+                            boolean desired = otherCallback.handleMessage(msg);
+                            mCalling = false;
+                            return desired;
+                        } catch (Exception e) {
+                            VLog.logbug(TAG, VLog.getStackTraceString(e));
+                        }
                     } else {
                         mCalling = false;
                     }
