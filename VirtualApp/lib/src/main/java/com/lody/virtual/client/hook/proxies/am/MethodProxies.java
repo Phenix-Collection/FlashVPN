@@ -1594,6 +1594,10 @@ class MethodProxies {
             if (intent == null || intent.getAction() == null) {
                 return 0;
             }
+            //FB will send it when first user login
+            if ("com.facebook.zero.ACTION_ZERO_REFRESH_TOKEN".equals(intent.getAction())) {
+                return  0;
+            }
             if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")) {
                 return method.invoke(who, args);
             }
