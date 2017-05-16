@@ -67,7 +67,7 @@ public class ConnectivityStub extends BinderInvocationProxy {
     private static class IsTetheringSupported extends MethodProxy {
         @Override
         public String getMethodName() {
-            return " isTetheringSupported";
+            return "isTetheringSupported";
         }
 
         @Override
