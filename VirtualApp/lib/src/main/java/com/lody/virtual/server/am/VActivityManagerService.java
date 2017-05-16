@@ -805,7 +805,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			boolean using = false;
 			while (N-- > 0) {
 				ProcessRecord r = mPidsSelfLocked.valueAt(N);
-				if (r.vpid == vpid) {
+				if (r!= null && r.vpid == vpid) {
 					using = true;
 					break;
 				}
