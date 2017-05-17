@@ -82,7 +82,7 @@ import mirror.android.app.IActivityManager;
                             boolean desired = otherCallback.handleMessage(msg);
                             mCalling = false;
                             return desired;
-                        } catch (Exception e) {
+                        } catch (Throwable e) {
                             VLog.logbug(TAG, VLog.getStackTraceString(e));
                         }
                     } else {
