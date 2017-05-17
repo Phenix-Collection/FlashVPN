@@ -3,6 +3,7 @@ package com.lody.virtual.client;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Instrumentation;
+import android.appwidget.AppWidgetProvider;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentProviderClient;
@@ -572,13 +573,15 @@ public final class VClientImpl extends IVClient.Stub {
             Context receiverContext = ContextImpl.getReceiverRestrictedContext.call(context);
             String className = data.component.getClassName();
             BroadcastReceiver receiver = (BroadcastReceiver) context.getClassLoader().loadClass(className).newInstance();
-            mirror.android.content.BroadcastReceiver.setPendingResult.call(receiver, result);
-            data.intent.setExtrasClassLoader(context.getClassLoader());
-            receiver.onReceive(receiverContext, data.intent);
+			if (! (receiver instanceof AppWidgetProvider)) {
+				mirror.android.content.BroadcastReceiver.setPendingResult.call(receiver, result);
+				data.intent.setExtrasClassLoader(context.getClassLoader());
+				receiver.onReceive(receiverContext, data.intent);
+			}
             if (mirror.android.content.BroadcastReceiver.getPendingResult.call(receiver) != null) {
                 result.finish();
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             Exception exc = new RuntimeException(
                     "Unable to start receiver " + data.component
