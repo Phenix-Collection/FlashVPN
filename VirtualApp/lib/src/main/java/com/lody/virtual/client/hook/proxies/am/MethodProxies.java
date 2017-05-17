@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.RemoteException;
+import android.system.Os;
 import android.text.TextUtils;
 import android.util.TypedValue;
 
@@ -70,6 +71,8 @@ import mirror.android.app.LoadedApk;
 import mirror.android.content.ContentProviderHolderOreo;
 import mirror.android.content.IIntentReceiverJB;
 import mirror.android.content.pm.UserInfo;
+
+import static android.os.Build.VERSION_CODES.N;
 
 /**
  * @author Lody
@@ -1596,6 +1599,10 @@ class MethodProxies {
             }
             //FB will send it when first user login
             if ("com.facebook.zero.ACTION_ZERO_REFRESH_TOKEN".equals(intent.getAction())) {
+                return  0;
+            }
+            if (Build.VERSION.SDK_INT >= N &&
+                    "com.google.android.gms.walletp2p.phenotype.ACTION_PHENOTYPE_REGISTER".equals(intent.getAction())) {
                 return  0;
             }
             if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")) {
