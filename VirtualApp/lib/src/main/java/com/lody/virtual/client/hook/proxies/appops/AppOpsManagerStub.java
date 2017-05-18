@@ -39,10 +39,30 @@ public class AppOpsManagerStub extends BinderInvocationProxy {
 		addMethodProxy(new BaseMethodProxy("setMode", 1, 2));
 		addMethodProxy(new BaseMethodProxy("checkAudioOperation", 2, 3));
 		addMethodProxy(new BaseMethodProxy("setAudioRestriction", 2, -1));
-		addMethodProxy(new BaseMethodProxy("noteProxyOperation", 2, 3));
+		addMethodProxy(new NoteProxyOperationProxy());
 		addMethodProxy(new ReplaceLastPkgMethodProxy("resetAllModes"));
 	}
 
+	private class NoteProxyOperationProxy extends StaticMethodProxy {
+
+		public NoteProxyOperationProxy () {
+			super("noteProxyOperation");
+		}
+
+		@Override
+		public boolean beforeCall(Object who, Method method, Object... args) {
+			if (args[3] instanceof String) {
+				args[3] = getHostPkg();
+			}
+			if (args[2] instanceof Integer) {
+				args[2] = getRealUid();
+			}
+			if (args[1] instanceof String) {
+				args[1] = getHostPkg();
+			}
+			return true;
+		}
+	}
 	private class BaseMethodProxy extends StaticMethodProxy {
 		final int pkgIndex;
 		final int uidIndex;
