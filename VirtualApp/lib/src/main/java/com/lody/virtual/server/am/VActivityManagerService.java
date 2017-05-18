@@ -869,6 +869,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			int N = map.size();
 			while (N-- > 0) {
 				SparseArray<ProcessRecord> uids = map.valueAt(N);
+				if (uids == null) {
+					continue;
+				}
 				for (int i = 0; i < uids.size(); i++) {
 					ProcessRecord r = uids.valueAt(i);
 					if (userId != VUserHandle.USER_ALL) {
