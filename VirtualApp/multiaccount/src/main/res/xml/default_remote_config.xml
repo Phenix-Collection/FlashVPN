@@ -6,12 +6,12 @@
     </entry>
     <entry>
         <key>quit_rating_interval</key>
-        <value>72</value>
+        <value>168</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
         <key>quit_rating_cloned_app_gate</key>
-        <value>3</value>
+        <value>5</value>
     </entry>
 
     <entry>
@@ -43,7 +43,7 @@
     <entry>
         <key>slot_home_header_native</key>
         <value>
-            fb:1700354860278115_1739555343024733:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0;
+            fb:1700354860278115_1739555343024733:0;fb:1700354860278115_1781625715484362:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0
         </value>
     </entry>
     <entry>
@@ -61,7 +61,7 @@
     <entry>
         <key>clone_rate_package</key>
         <!--off to close; * for all; package:package: -->
-        <value>com.whatsapp:com.facebook.orca</value>
+        <value>off</value>
     </entry>
     <entry>
         <key>clone_rate_interval</key>
@@ -87,7 +87,7 @@
     </entry>
     <entry>
         <key>home_show_lucky_rate</key>
-        <value>0</value>
+        <value>100</value>
     </entry>
     <entry>
         <key>home_show_lucky_gate</key>
