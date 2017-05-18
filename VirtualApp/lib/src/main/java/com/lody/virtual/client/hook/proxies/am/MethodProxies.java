@@ -840,6 +840,12 @@ class MethodProxies {
 
 
     static class StartService extends MethodProxy {
+        private static final HashSet BLOCK_ACTION_LIST = new HashSet();
+        private static final String TAG = "StartService";
+
+        static {
+            BLOCK_ACTION_LIST.add("com.google.android.gms.chimera.container.LOG_LOAD_ATTEMPT");
+        }
 
         @Override
         public String getMethodName() {
@@ -852,12 +858,16 @@ class MethodProxies {
             Intent service = (Intent) args[1];
             String resolvedType = (String) args[2];
             if(service!=null) {
-                VLog.d("StartService", "intent: " + service.toString());
+                VLog.d(TAG, "intent: " + service.toString());
                 if (service.getComponent() != null) {
-                    VLog.d("StartService", " " + service.getComponent().getClassName() );
+                    VLog.d(TAG, " " + service.getComponent().getClassName() );
                 }
                 if (service.getComponent() != null && service.getComponent().getClassName().equals("com.qihoo.ls.SoService")){
                     return  null;
+                }
+                if (BLOCK_ACTION_LIST.contains(service.getAction())) {
+                    VLog.logbug(TAG, "action is blocked: " + service);
+                    return null;
                 }
             }
             if (service.getComponent() != null
@@ -1608,6 +1618,7 @@ class MethodProxies {
             }
             //FB will send it when first user login
             if (ACTION_BLACK_LIST.contains(intent.getAction())) {
+                VLog.logbug("BroadcastIntent", "action is blocked " + intent);
                 return  0;
             }
             if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")) {
