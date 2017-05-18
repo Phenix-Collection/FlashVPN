@@ -62,6 +62,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -1585,6 +1586,14 @@ class MethodProxies {
 
     static class BroadcastIntent extends MethodProxy {
 
+        private static final HashSet ACTION_BLACK_LIST = new HashSet<String>();
+
+        static {
+            ACTION_BLACK_LIST.add("com.google.android.gms.walletp2p.phenotype.ACTION_PHENOTYPE_REGISTER");
+            ACTION_BLACK_LIST.add("com.facebook.zero.ACTION_ZERO_REFRESH_TOKEN");
+            ACTION_BLACK_LIST.add("com.google.android.gms.magictether.SCANNED_DEVICE");
+        }
+
         @Override
         public String getMethodName() {
             return "broadcastIntent";
@@ -1598,11 +1607,7 @@ class MethodProxies {
                 return 0;
             }
             //FB will send it when first user login
-            if ("com.facebook.zero.ACTION_ZERO_REFRESH_TOKEN".equals(intent.getAction())) {
-                return  0;
-            }
-            if (Build.VERSION.SDK_INT >= N &&
-                    "com.google.android.gms.walletp2p.phenotype.ACTION_PHENOTYPE_REGISTER".equals(intent.getAction())) {
+            if (ACTION_BLACK_LIST.contains(intent.getAction())) {
                 return  0;
             }
             if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")) {
