@@ -12,6 +12,7 @@ import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.interfaces.IInjector;
 import com.lody.virtual.client.ipc.VActivityManager;
+import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.helper.utils.VLog;
@@ -20,6 +21,8 @@ import com.lody.virtual.remote.StubActivityRecord;
 import mirror.android.app.ActivityManagerNative;
 import mirror.android.app.ActivityThread;
 import mirror.android.app.IActivityManager;
+import mirror.android.app.LoadedApk;
+import mirror.android.content.res.CompatibilityInfo;
 
 /**
      * @author Lody
@@ -71,10 +74,20 @@ import mirror.android.app.IActivityManager;
                             return true;
                         }
                     } else if (CREATE_SERVICE == msg.what) {
-                        VLog.d(TAG, "CREATE_SERVICE");
+                        Intent intent = ActivityThread.CreateServiceData.intent.get(msg.obj);
+                        ServiceInfo info = Reflect.on(msg.obj).get("info");
+                        info.applicationInfo = VPackageManager.get().getApplicationInfo(info.packageName, 0 ,0);
+                        VLog.d(TAG, "CREATE_SERVICE " + intent + " comp: " + info);
+                       // VLog.d(TAG, "CREATE_SERVICE " + intent + " codepath: " + info.applicationInfo.);
                         if (!VClientImpl.get().isBound()) {
-                            ServiceInfo info = Reflect.on(msg.obj).get("info");
+
+//                            Object packageInfo = ActivityThread.getPackageInfoNoCheck.call(VirtualCore.mainThread(), info.applicationInfo,
+//                                    CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO.get());
+
                             VClientImpl.get().bindApplication(info.packageName, info.processName);
+//                            mCalling = false;
+//                            getH().sendMessageAtFrontOfQueue(Message.obtain(msg));
+//                            return true;
                         }
                     }
                     if (otherCallback != null) {
@@ -141,7 +154,7 @@ import mirror.android.app.IActivityManager;
             Handler.Callback callback = getHCallback();
             boolean envBad = callback != this;
             if (callback != null && envBad) {
-                VLog.d(TAG, "HCallback has bad, other callback = " + callback);
+                VLog.logbug(TAG, "HCallback has bad, other callback = " + callback);
             }
             return envBad;
         }

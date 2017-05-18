@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ProviderInfo;
+import android.content.pm.ServiceInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import mirror.MethodReflectParams;
 import mirror.RefStaticMethod;
 import mirror.RefStaticObject;
 import mirror.RefStaticInt;
+import mirror.android.content.res.CompatibilityInfo;
 
 public class ActivityThread {
     public static Class<?> TYPE = RefClass.load(ActivityThread.class, "android.app.ActivityThread");
@@ -48,6 +50,14 @@ public class ActivityThread {
     public static RefMethod<Void> sendActivityResult;
     public static RefMethod<Binder> getApplicationThread;
     public static RefMethod<Object> getPackageInfoNoCheck;
+
+    public static class CreateServiceData {
+        public static Class<?> TYPE = RefClass.load(CreateServiceData.class, "android.app.ActivityThread$CreateServiceData");
+        public static RefObject<IBinder> token;
+        public static RefObject<ServiceInfo> info;
+        public static RefObject<Intent> intent;
+        public static RefObject<Object> compatInfo;
+    }
 
     public static class ActivityClientRecord {
         public static Class<?> TYPE = RefClass.load(ActivityClientRecord.class, "android.app.ActivityThread$ActivityClientRecord");

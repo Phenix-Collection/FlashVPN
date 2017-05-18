@@ -19,6 +19,7 @@ import mirror.MethodParams;
 public class LoadedApk {
     public static Class Class = RefClass.load(LoadedApk.class, "android.app.LoadedApk");
     public static RefObject<ApplicationInfo> mApplicationInfo;
+    public static RefObject<ClassLoader> mClassLoader;
     @MethodParams({boolean.class, Instrumentation.class})
     public static RefMethod<Application> makeApplication;
 
