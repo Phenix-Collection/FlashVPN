@@ -1,12 +1,14 @@
 package com.lody.virtual.client.hook.proxies.appops;
 
 import android.annotation.TargetApi;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.os.Build;
 
 import com.lody.virtual.client.hook.base.BinderInvocationProxy;
 import com.lody.virtual.client.hook.base.ReplaceLastPkgMethodProxy;
 import com.lody.virtual.client.hook.base.StaticMethodProxy;
+import com.lody.virtual.helper.utils.VLog;
 
 import java.lang.reflect.Method;
 
@@ -47,6 +49,18 @@ public class AppOpsManagerStub extends BinderInvocationProxy {
 
 		public NoteProxyOperationProxy () {
 			super("noteProxyOperation");
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			if (args[0] instanceof Integer && Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+				int code = (int) args[0];
+				if (code == 14) {
+					VLog.logbug("AppOps", "return allowed for read sms");
+					return AppOpsManager.MODE_ALLOWED;
+				}
+			}
+			return super.call(who, method, args);
 		}
 
 		@Override
