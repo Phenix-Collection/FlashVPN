@@ -829,7 +829,7 @@ class MethodProxies {
             }
             if (service != null && BLOCK_ACTION_LIST.contains(service.getAction())) {
                 VLog.logbug(TAG, "action is blocked: " + service.getAction());
-                return false;
+                return 0;
             }
             if (userId == VUserHandle.USER_NULL) {
                 VLog.logbug(TAG, "userid is " + userId);
@@ -840,7 +840,7 @@ class MethodProxies {
             if (serviceInfo != null) {
                 if(BLOCK_COMPONENT_LIST.contains(serviceInfo.name)) {
                     VLog.logbug(TAG, "component is blocked: " + serviceInfo.name);
-                    return false;
+                    return 0;
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     service.setComponent(new ComponentName(serviceInfo.packageName, serviceInfo.name));
