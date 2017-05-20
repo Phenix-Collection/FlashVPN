@@ -242,6 +242,16 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			try {
 				return r.client.acquireProviderClient(info);
 			} catch (RemoteException e) {
+				for (int retry =0; retry < 5; retry ++) {
+					VLog.logbug(TAG, "retry " + retry + " for acquireProviderClient " + info.authority);
+					try {
+						Thread.sleep(250);
+						r.client.acquireProviderClient(info);
+					} catch (Throwable th) {
+						th.printStackTrace();
+					}
+				}
+			} catch ( Throwable e) {
 				e.printStackTrace();
 			}
 		}
