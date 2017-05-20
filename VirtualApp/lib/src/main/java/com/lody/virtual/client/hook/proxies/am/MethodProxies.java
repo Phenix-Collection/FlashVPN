@@ -799,6 +799,16 @@ class MethodProxies {
 
 
     static class BindService extends MethodProxy {
+        private static final HashSet BLOCK_ACTION_LIST = new HashSet();
+        private static final HashSet BLOCK_COMPONENT_LIST = new HashSet();
+        private static final String TAG = "BindService";
+        static {
+            BLOCK_ACTION_LIST.add("com.android.vending.contentfilters.IContentFiltersService.BIND");
+        }
+
+        static {
+            BLOCK_COMPONENT_LIST.add("com.google.android.finsky.contentfilter.impl.ContentFiltersService");
+        }
 
         @Override
         public String getMethodName() {
@@ -817,11 +827,21 @@ class MethodProxies {
             if (isServerProcess()) {
                 userId = service.getIntExtra("_VA_|_user_id_", VUserHandle.USER_NULL);
             }
+            if (service != null && BLOCK_ACTION_LIST.contains(service.getAction())) {
+                VLog.logbug(TAG, "action is blocked: " + service.getAction());
+                return false;
+            }
             if (userId == VUserHandle.USER_NULL) {
+                VLog.logbug(TAG, "userid is " + userId);
                 return method.invoke(who, args);
             }
+            VLog.d(TAG, "for intent: " + service);
             ServiceInfo serviceInfo = VirtualCore.get().resolveServiceInfo(service, userId);
             if (serviceInfo != null) {
+                if(BLOCK_COMPONENT_LIST.contains(serviceInfo.name)) {
+                    VLog.logbug(TAG, "component is blocked: " + serviceInfo.name);
+                    return false;
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     service.setComponent(new ComponentName(serviceInfo.packageName, serviceInfo.name));
                 }
@@ -841,10 +861,18 @@ class MethodProxies {
 
     static class StartService extends MethodProxy {
         private static final HashSet BLOCK_ACTION_LIST = new HashSet();
+        private static final HashSet BLOCK_COMPONENT_LIST = new HashSet();
         private static final String TAG = "StartService";
 
         static {
             BLOCK_ACTION_LIST.add("com.google.android.gms.chimera.container.LOG_LOAD_ATTEMPT");
+            BLOCK_ACTION_LIST.add("com.android.vending.contentfilters.IContentFiltersService.BIND");
+            BLOCK_ACTION_LIST.add("com.google.android.chimera.FileApkManager.DELETE_UNUSED_FILEAPKS");
+        }
+
+        static {
+            BLOCK_COMPONENT_LIST.add("com.google.android.finsky.contentfilter.impl.ContentFiltersService");
+            //BLOCK_COMPONENT_LIST.add("com.google.android.finsky.wear.WearSupportService");
         }
 
         @Override
@@ -894,6 +922,10 @@ class MethodProxies {
             service.setDataAndType(service.getData(), resolvedType);
             ServiceInfo serviceInfo = VirtualCore.get().resolveServiceInfo(service, VUserHandle.myUserId());
             if (serviceInfo != null) {
+                if (BLOCK_COMPONENT_LIST.contains(serviceInfo.name)){
+                    VLog.logbug(TAG, "Blocked component: " + serviceInfo.name);
+                    return null;
+                }
                 return VActivityManager.get().startService(appThread, service, resolvedType, userId);
             }
             return method.invoke(who, args);
