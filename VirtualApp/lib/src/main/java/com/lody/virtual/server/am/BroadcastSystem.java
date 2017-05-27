@@ -237,7 +237,7 @@ public class BroadcastSystem {
 		}
 
 		@Override
-		public void onReceive(Context context, Intent intent) {
+		public void onReceive(Context context, final Intent intent) {
 			VLog.logbug("StaticBroadcastReceiver", "E onReceive " + intent.toString());
 			if (mApp.isBooting()) {
 				return;
@@ -245,9 +245,12 @@ public class BroadcastSystem {
             if ((intent.getFlags() & FLAG_RECEIVER_REGISTERED_ONLY) != 0 || isInitialStickyBroadcast()) {
                 return;
             }
-            PendingResult result = goAsync();
-                if (!mAMS.handleStaticBroadcast(appId, info, intent, new PendingResultData(result))) {
-                    result.finish();
+            final PendingResult result = goAsync();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mAMS.handleStaticBroadcast(appId, info, intent, new PendingResultData(result))) {
+                        result.finish();
 //					if (mOrderedHint) {
 //						am.finishReceiver(mToken, mResultCode, mResultData, mResultExtras,
 //								mAbortBroadcast, mFlags);
@@ -256,7 +259,10 @@ public class BroadcastSystem {
 //						// but we still need to tell the activity manager we are done.
 //						am.finishReceiver(mToken, 0, null, null, false, mFlags);
 //					}
-            }
+                    }
+                }
+            }).start();
+
 			VLog.d("StaticBroadcastReceiver", "X onReceive " + intent.toString());
 		}
 	}
