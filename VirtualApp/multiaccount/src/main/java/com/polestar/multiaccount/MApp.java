@@ -88,6 +88,7 @@ public class MApp extends Application {
                 ImageLoaderUtil.init(gDefault);
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
+                MTAManager.init(gDefault);
                //
             }
 
@@ -159,7 +160,6 @@ public class MApp extends Application {
             // init exception handler and bugly before attatchBaseContext and appOnCreate
             setDefaultUncaughtExceptionHandler(this);
             initBugly(gDefault);
-            MTAManager.init(this);
         }catch (Exception e){
             e.printStackTrace();
         }

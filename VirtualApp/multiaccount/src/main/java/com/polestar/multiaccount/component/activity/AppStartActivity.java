@@ -93,7 +93,7 @@ public class AppStartActivity extends BaseActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from);
+                    MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from, appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
                     // Todo: if app is already launched, just switch it to front, no need re-launch
                     if (needDoUpGrade) {
                         AppManager.upgradeApp(appModel.getPackageName());

@@ -83,7 +83,7 @@ public class VLog {
 	}
 	public static void logbug(String tag, String msg) {
 		if (sKeyLogger != null) {
-			sKeyLogger.logBug(tag, msg);
+			sKeyLogger.logBug(VTAG + tag, msg);
 		} else {
 			Log.e(VTAG + tag, msg);
 		}

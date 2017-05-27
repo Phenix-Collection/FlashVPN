@@ -325,7 +325,6 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
             MLogs.d("LockWindow show");
             mAppLockPasswordLogic.onShow();
             mWindow.show();
-            MTAManager.showLockWindow(mContentView.getContext(), mPkgName);
             loadNative();
             //loadAdmobNativeExpress();
             mIsShowing = true;

@@ -94,9 +94,10 @@ public class MTAManager {
         StatService.trackCustomKVEvent(context, "home_delete", prop);
     }
 
-    public static void launchApp(Context context, String packageName, String from) {
+    public static void launchApp(Context context, String packageName, String from, boolean hasLocker) {
         Properties prop = new Properties();
         prop.setProperty("package", packageName);
+        prop.setProperty("locker", ""+hasLocker);
         if (from.equals(AppConstants.VALUE_FROM_HOME)) {
             StatService.trackCustomKVEvent(context, "home_launch", prop);
         } else if (from.equals(AppConstants.VALUE_FROM_SHORTCUT)) {
