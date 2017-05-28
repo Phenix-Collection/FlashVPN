@@ -1,6 +1,7 @@
 package com.polestar.multiaccount.component;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -141,14 +142,16 @@ public class AppLockMonitor {
 
             }
         }
-        mHandler.removeMessages(MSG_DELAY_LOCK_APP, pkg);
+        //Remove the same object with send
+        mHandler.removeMessages(MSG_DELAY_LOCK_APP, model.getPackageName());
         //mUnlockedForegroudPkg = pkg;
     }
 
     public void onActivityPause(String pkg) {
         MLogs.d(TAG, "onActivityPause " + pkg);
         AppLockWindow window = mAppLockWindows.get(pkg);
-        if (window != null){
+        AppModel model = modelHashMap.get(pkg);
+        if (window != null) {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -156,7 +159,7 @@ public class AppLockMonitor {
                 }
             }, 300);
         }
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, pkg),
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, model.getPackageName()),
                 RELOCK_DELAY);
     }
 }
