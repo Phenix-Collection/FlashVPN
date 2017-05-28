@@ -56,6 +56,9 @@ public class ProxyServiceFactory {
 							@Override
 							public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 								try {
+									if (method.getName().equals("isBillingSupported")) {
+										return true;
+									}
 									return method.invoke(base, args);
 								} catch (InvocationTargetException e) {
 									if (e.getCause() != null) {
