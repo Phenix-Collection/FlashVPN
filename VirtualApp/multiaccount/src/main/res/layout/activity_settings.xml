@@ -166,6 +166,7 @@
             android:background="#cccccc" />
 
         <TextView
+            android:id="@+id/follow_us_txt"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@android:color/white"

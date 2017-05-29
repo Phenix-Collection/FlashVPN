@@ -31,8 +31,6 @@ public class AppConstants {
 
     public static final String POPULAR_FILE_NAME = "popular_apps.txt";
 
-    public static final String URL_FACEBOOK = "https://www.facebook.com/polestar.applab";
-
     public class PreferencesKey {
         public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";
         public static final String SHOWN_LONG_CLICK_GUIDE = "show_guide_for_long_press";

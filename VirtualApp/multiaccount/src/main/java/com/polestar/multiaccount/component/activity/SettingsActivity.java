@@ -13,6 +13,7 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.BlueSwitch;
 
 /**
@@ -21,6 +22,9 @@ import com.polestar.multiaccount.widgets.BlueSwitch;
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
     private TextView versionTv;
+    private TextView followTv;
+    private String fbUrl;
+
     private final static int REQUEST_UNLOCK_SETTINGS = 1;
 
     @Override
@@ -33,7 +37,12 @@ public class SettingsActivity extends BaseActivity {
     private void initView() {
         setTitle(getString(R.string.settings));
         versionTv = (TextView)findViewById(R.id.version_info);
+        followTv = (TextView)findViewById(R.id.follow_us_txt);
         versionTv.setText(getString(R.string.settings_right) + "\n" + "Version: " + BuildConfig.VERSION_NAME);
+        fbUrl = RemoteConfig.getString("fb_follow_page");
+        if (fbUrl == null || fbUrl.equals("off")) {
+            followTv.setVisibility(View.INVISIBLE);
+        }
         shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
         shortCutSwich.setChecked(PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,false));
         shortCutSwich.setOnClickListener(new View.OnClickListener() {
@@ -75,17 +84,17 @@ public class SettingsActivity extends BaseActivity {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo("com.facebook.katana", 0);
             if (packageInfo != null && packageInfo.versionCode >= 3002850) {
-                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("fb://facewebmodal/f?href=" + AppConstants.URL_FACEBOOK));
+                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("fb://facewebmodal/f?href=" + fbUrl));
 //                intent.putExtra("START_OUTTER_APP_FLAG",true);
                 startActivity(intent);
             }else{
-                Intent intent = new Intent("android.intent.action.VIEW",Uri.parse(AppConstants.URL_FACEBOOK));
+                Intent intent = new Intent("android.intent.action.VIEW",Uri.parse(fbUrl));
 //                intent.putExtra("START_OUTTER_APP_FLAG",true);
                 startActivity(intent);
             }
         } catch (Exception localException1) {
             try {
-                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(AppConstants.URL_FACEBOOK));
+                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(fbUrl));
 //                intent.putExtra("START_OUTTER_APP_FLAG",true);
                 startActivity(intent);
             } catch (Exception localException2) {
