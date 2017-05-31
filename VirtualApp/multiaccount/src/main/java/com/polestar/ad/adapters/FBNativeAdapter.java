@@ -175,7 +175,7 @@ public class FBNativeAdapter extends Ad implements IAdLoader {
             if (iconView instanceof BasicLazyLoadImageView) {
                 BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) iconView;
                 lazyLoadImageView.setDefaultResource(0);
-                lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+                lazyLoadImageView.requestDisplayURL(getIconImageUrl());
             }
             TextView titleView = (TextView) adView.findViewById(viewBinder.titleId);
             titleView.setText(getTitle());
@@ -185,7 +185,7 @@ public class FBNativeAdapter extends Ad implements IAdLoader {
             ctaView.setText(getCallToActionText());
 
             StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(viewBinder.starLevelLayoutId);
-            if (starLevelLayout != null) {
+            if (starLevelLayout != null && getStarRating()!= 0) {
                 starLevelLayout.setRating((int) getStarRating());
             }
             registerViewForInteraction(adView);
@@ -194,7 +194,7 @@ public class FBNativeAdapter extends Ad implements IAdLoader {
                 if (choiceIconImage instanceof BasicLazyLoadImageView) {
                     BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) choiceIconImage;
                     lazyLoadImageView.setDefaultResource(0);
-                    lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+                    lazyLoadImageView.requestDisplayURL(getPrivacyIconUrl());
                 }
                 registerPrivacyIconView(choiceIconImage);
             }
