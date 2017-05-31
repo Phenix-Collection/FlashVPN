@@ -184,9 +184,11 @@ public class FBNativeAdapter extends Ad implements IAdLoader {
             TextView ctaView = (TextView) adView.findViewById(viewBinder.callToActionId);
             ctaView.setText(getCallToActionText());
 
-            StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(viewBinder.starLevelLayoutId);
-            if (starLevelLayout != null && getStarRating()!= 0) {
-                starLevelLayout.setRating((int) getStarRating());
+            if (viewBinder.starLevelLayoutId != -1) {
+                StarLevelLayoutView starLevelLayout = (StarLevelLayoutView) adView.findViewById(viewBinder.starLevelLayoutId);
+                if (starLevelLayout != null && getStarRating() != 0) {
+                    starLevelLayout.setRating((int) getStarRating());
+                }
             }
             registerViewForInteraction(adView);
             if (getPrivacyIconUrl() != null) {
