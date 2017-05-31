@@ -54,6 +54,7 @@ public class FuseAdLoader implements IAdLoader {
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
 
     }
 
@@ -194,6 +195,8 @@ public class FuseAdLoader implements IAdLoader {
         switch (config.source) {
             case AdConstants.NativeAdType.AD_SOURCE_ADMOB:
                 return new AdmobNativeAdapter(mContext, config.key);
+            case AdConstants.NativeAdType.AD_SOURCE_MOPUB:
+                return new MopubNativeAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT:
                 AdmobNativeAdapter adapter = new AdmobNativeAdapter(mContext, config.key);
                 adapter.setFilter(AdConstants.AdMob.FILTER_ONLY_CONTENT);

@@ -2,6 +2,8 @@ package com.polestar.ad.adapters;
 
 import android.view.View;
 
+import com.polestar.ad.AdViewBinder;
+
 /**
  * Created by guojia on 2016/10/31.
  */
@@ -42,4 +44,8 @@ public interface IAd {
     long getLoadedTime();
 
     void show();
+
+    void destroy();
+
+    View getAdView(AdViewBinder viewBinder);
 }

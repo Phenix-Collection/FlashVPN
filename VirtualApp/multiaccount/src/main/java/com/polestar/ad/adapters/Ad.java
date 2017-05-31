@@ -3,6 +3,8 @@ package com.polestar.ad.adapters;
 
 import android.view.View;
 
+import com.polestar.ad.AdViewBinder;
+
 /**
  * Created by guojia on 2016/10/31.
  */
@@ -96,5 +98,15 @@ public abstract class Ad implements IAd {
     @Override
     public void show() {
 
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+
+    @Override
+    public View getAdView(AdViewBinder viewBinder) {
+        return null;
     }
 }

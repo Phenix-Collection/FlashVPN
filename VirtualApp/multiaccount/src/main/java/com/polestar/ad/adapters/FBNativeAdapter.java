@@ -1,16 +1,29 @@
 package com.polestar.ad.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSettings;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
+import com.polestar.ad.AdViewBinder;
+import com.polestar.imageloader.widget.BasicLazyLoadImageView;
+import com.polestar.multiaccount.R;
+import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 
 /**
@@ -144,5 +157,48 @@ public class FBNativeAdapter extends Ad implements IAdLoader {
     @Override
     public String getPrivacyIconUrl() {
         return mRawAd == null? null : mRawAd.getAdChoicesIcon().getUrl().toString();
+    }
+
+    @Override
+    public View getAdView(AdViewBinder viewBinder) {
+        View adView = LayoutInflater.from(mContext).inflate(viewBinder.layoutId, null);
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        adView.setLayoutParams(params);
+        if (adView != null) {
+            ImageView coverView = (ImageView) adView.findViewById(viewBinder.mainImageId);
+            if (coverView instanceof BasicLazyLoadImageView) {
+                BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
+                lazyLoadImageView.setDefaultResource(0);
+                lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+            }
+            ImageView iconView = (ImageView) adView.findViewById(viewBinder.iconImageId);
+            if (iconView instanceof BasicLazyLoadImageView) {
+                BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) iconView;
+                lazyLoadImageView.setDefaultResource(0);
+                lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+            }
+            TextView titleView = (TextView) adView.findViewById(viewBinder.titleId);
+            titleView.setText(getTitle());
+            TextView subtitleView = (TextView) adView.findViewById(viewBinder.textId);
+            subtitleView.setText(getBody());
+            TextView ctaView = (TextView) adView.findViewById(viewBinder.callToActionId);
+            ctaView.setText(getCallToActionText());
+
+            StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(viewBinder.starLevelLayoutId);
+            if (starLevelLayout != null) {
+                starLevelLayout.setRating((int) getStarRating());
+            }
+            registerViewForInteraction(adView);
+            if (getPrivacyIconUrl() != null) {
+                ImageView choiceIconImage = (ImageView) adView.findViewById(viewBinder.privacyInformationIconImageId);
+                if (choiceIconImage instanceof BasicLazyLoadImageView) {
+                    BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) choiceIconImage;
+                    lazyLoadImageView.setDefaultResource(0);
+                    lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+                }
+                registerPrivacyIconView(choiceIconImage);
+            }
+        }
+        return  adView;
     }
 }

@@ -30,10 +30,12 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.mopub.nativeads.MoPubNative;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -115,7 +117,11 @@ public class HomeFragment extends BaseFragment {
             switch (msg.what) {
                 case NATIVE_AD_READY:
                     IAd ad = (IAd) msg.obj;
-                    inflateFbNativeAdView(ad);
+                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_MOPUB)) {
+                        inflateMopubAd(ad);
+                    } else {
+                        inflateFbNativeAdView(ad);
+                    }
                     break;
                 case BANNER_AD_READY:
                     showBannerAd();
@@ -123,6 +129,22 @@ public class HomeFragment extends BaseFragment {
             }
         }
     };
+
+    public void inflateMopubAd(IAd ad) {
+        final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
+                .titleId(R.id.ad_title)
+                .textId(R.id.ad_subtitle_text)
+                .mainImageId(R.id.ad_cover_image)
+                .iconImageId(R.id.ad_icon_image)
+                .callToActionId(R.id.ad_cta_text)
+                .privacyInformationIconImageId(R.id.ad_choices_image)
+                .build();
+        View adView = ad.getAdView(viewBinder);
+        nativeAdContainer.removeAllViews();
+        nativeAdContainer.addView(adView);
+        pkgGridAdapter.notifyDataSetChanged();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -570,7 +592,9 @@ public class HomeFragment extends BaseFragment {
             mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity());
             ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
+        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (burstLoad) {
+            adLoadStartTime = System.currentTimeMillis();
             loadAdmobNativeExpress();
         }
         if ( mNativeAdLoader.hasValidAdSource()) {
@@ -578,7 +602,8 @@ public class HomeFragment extends BaseFragment {
                 @Override
                 public void onAdLoaded(IAd ad) {
                     if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
-                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
+                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)
+                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_MOPUB)) {
                         adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
                     }
                     dismissLongClickGuide();

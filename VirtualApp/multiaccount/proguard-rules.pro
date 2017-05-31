@@ -198,3 +198,11 @@ public static java.lang.String TABLENAME;
 -dontwarn nativesdk.ad.adsdkcore.**
 -keep class com.google.gson.** {*;}
 -dontwarn com.google.gson.**
+
+-keepclassmembers class com.mopub.** { public *; }
+-keep public class com.mopub.**
+-keep public class android.webkit.JavascriptInterface {}
+-keep class * extends com.mopub.mobileads.CustomEventBanner {}
+-keepclassmembers class com.mopub.mobileads.CustomEventBannerAdapter {!private !public !protected *;}
+-keep class * extends com.mopub.mobileads.CustomEventInterstitial {}
+-keep class * extends com.mopub.mobileads.CustomEventNative {}
