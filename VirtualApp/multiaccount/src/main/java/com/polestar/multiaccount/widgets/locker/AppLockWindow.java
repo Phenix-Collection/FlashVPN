@@ -22,6 +22,7 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -221,39 +222,25 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     }
 
     private void inflatNativeAd(IAd ad) {
-        View adView = LayoutInflater.from(mContentView.getContext()).inflate(R.layout.lock_window_native_ad, null);
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        adView.setLayoutParams(params);
-        if (ad != null && adView != null) {
-            BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
-            coverView.setDefaultResource(0);
-            coverView.requestDisplayURL(ad.getCoverImageUrl());
-            BasicLazyLoadImageView iconView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_icon_image);
-            iconView.setDefaultResource(0);
-            iconView.requestDisplayURL(ad.getIconImageUrl());
-            TextView titleView = (TextView) adView.findViewById(R.id.ad_title);
-            titleView.setText(ad.getTitle());
-            TextView subtitleView = (TextView) adView.findViewById(R.id.ad_subtitle_text);
-            subtitleView.setText(ad.getBody());
-            TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
-            ctaView.setText(ad.getCallToActionText());
-            StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(R.id.star_rating_layout);
-            starLevelLayout.setRating((int)ad.getStarRating());
-
+        final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad)
+                .titleId(R.id.ad_title)
+                .textId(R.id.ad_subtitle_text)
+                .mainImageId(R.id.ad_cover_image)
+                .iconImageId(R.id.ad_icon_image)
+                .callToActionId(R.id.ad_cta_text)
+                .privacyInformationIconImageId(R.id.ad_choices_image)
+                .build();
+        View adView = ad.getAdView(viewBinder);
+        if (adView != null) {
             mAdInfoContainer.removeAllViews();
             mAdInfoContainer.addView(adView);
-            ad.registerViewForInteraction(mAdInfoContainer);
-            if (ad.getPrivacyIconUrl() != null) {
-                BasicLazyLoadImageView choiceIconImage = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_choices_image);
-                choiceIconImage.setDefaultResource(0);
-                choiceIconImage.requestDisplayURL(ad.getPrivacyIconUrl());
-                ad.registerPrivacyIconView(choiceIconImage);
-            }
             updateTitleBar();
         }
     }
     private void loadNative(){
         final FuseAdLoader adLoader = AppLockMonitor.getInstance().getAdLoader();
+//        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+//        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (adLoader != null) {
             adLoader.loadAd(1, new IAdLoadListener() {
                 @Override

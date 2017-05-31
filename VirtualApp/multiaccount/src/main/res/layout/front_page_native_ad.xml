@@ -86,17 +86,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:lines="1"
+                    android:lines="2"
                     android:text="this is sub"
                     android:textColor="@color/native_ad_text_white"
-                    android:textSize="8sp" />
-
-                <com.polestar.multiaccount.widgets.StarLevelLayoutView
-                    android:id="@+id/star_rating_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginTop="3dp" />
+                    android:textSize="10sp" />
 
             </LinearLayout>
 

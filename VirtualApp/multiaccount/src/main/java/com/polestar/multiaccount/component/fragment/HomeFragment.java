@@ -89,6 +89,7 @@ public class HomeFragment extends BaseFragment {
     private DragLayer mDragLayer;
     private LinearLayout nativeAdContainer;
 
+    private  IAd nativeAd;
 
     private FuseAdLoader mNativeAdLoader;
     private NativeExpressAdView mAdmobExpressView;
@@ -117,11 +118,7 @@ public class HomeFragment extends BaseFragment {
             switch (msg.what) {
                 case NATIVE_AD_READY:
                     IAd ad = (IAd) msg.obj;
-                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_MOPUB)) {
-                        inflateMopubAd(ad);
-                    } else {
-                        inflateFbNativeAdView(ad);
-                    }
+                    inflateNativeAd(ad);
                     break;
                 case BANNER_AD_READY:
                     showBannerAd();
@@ -130,7 +127,7 @@ public class HomeFragment extends BaseFragment {
         }
     };
 
-    public void inflateMopubAd(IAd ad) {
+    public void inflateNativeAd(IAd ad) {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
@@ -143,6 +140,19 @@ public class HomeFragment extends BaseFragment {
         nativeAdContainer.removeAllViews();
         nativeAdContainer.addView(adView);
         pkgGridAdapter.notifyDataSetChanged();
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(adView, "scaleX", 0.7f, 1.0f, 1.0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(adView, "scaleY", 0.7f, 1.0f, 1.0f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleX).with(scaleY);
+        animSet.setInterpolator(new BounceInterpolator());
+        animSet.setDuration(800).start();
+        animSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+        });
+        dismissLongClickGuide();
     }
 
     @Nullable
@@ -433,50 +443,6 @@ public class HomeFragment extends BaseFragment {
         dismissLongClickGuide();
     }
 
-    private void inflateFbNativeAdView(IAd ad) {
-        View adView = LayoutInflater.from(mActivity).inflate(R.layout.front_page_native_ad, null);
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        adView.setLayoutParams(params);
-        if (ad != null && adView != null) {
-            BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
-            coverView.setDefaultResource(0);
-            coverView.requestDisplayURL(ad.getCoverImageUrl());
-            BasicLazyLoadImageView iconView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_icon_image);
-            iconView.setDefaultResource(0);
-            iconView.requestDisplayURL(ad.getIconImageUrl());
-            TextView titleView = (TextView) adView.findViewById(R.id.ad_title);
-            titleView.setText(ad.getTitle());
-            TextView subtitleView = (TextView) adView.findViewById(R.id.ad_subtitle_text);
-            subtitleView.setText(ad.getBody());
-            TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
-            ctaView.setText(ad.getCallToActionText());
-            ObjectAnimator scaleX = ObjectAnimator.ofFloat(ctaView, "scaleX", 0.7f, 1.2f, 1.0f);
-            ObjectAnimator scaleY = ObjectAnimator.ofFloat(ctaView, "scaleY", 0.7f, 1.2f, 1.0f);
-            AnimatorSet animSet = new AnimatorSet();
-            animSet.play(scaleX).with(scaleY);
-            animSet.setInterpolator(new BounceInterpolator());
-            animSet.setDuration(1200).start();
-            animSet.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                }
-            });
-
-            StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(R.id.star_rating_layout);
-            starLevelLayout.setRating((int)ad.getStarRating());
-            nativeAdContainer.removeAllViews();
-            nativeAdContainer.addView(adView);
-            pkgGridAdapter.notifyDataSetChanged();
-            ad.registerViewForInteraction(nativeAdContainer);
-            if (ad.getPrivacyIconUrl() != null) {
-                BasicLazyLoadImageView choiceIconImage = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_choices_image);
-                choiceIconImage.setDefaultResource(0);
-                choiceIconImage.requestDisplayURL(ad.getPrivacyIconUrl());
-                ad.registerPrivacyIconView(choiceIconImage);
-            }
-        }
-    }
-
     private TutorialGuides.Builder mTutorialBuilder;
 
     private int getLockRecommandAppIdx() {
@@ -590,9 +556,10 @@ public class HomeFragment extends BaseFragment {
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity());
-            ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
-        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
+//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
+
         if (burstLoad) {
             adLoadStartTime = System.currentTimeMillis();
             loadAdmobNativeExpress();
@@ -601,12 +568,8 @@ public class HomeFragment extends BaseFragment {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
-                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
-                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)
-                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_MOPUB)) {
-                        adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
-                    }
-                    dismissLongClickGuide();
+                    adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
+                    nativeAd = ad;
                 }
 
                 @Override
@@ -803,6 +766,14 @@ public class HomeFragment extends BaseFragment {
             Intent i = new Intent(mActivity, AppListActivity.class);
             mActivity.startActivityForResult(i, AppConstants.REQUEST_SELECT_APP);
             mActivity.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (nativeAd != null) {
+            nativeAd.destroy();
         }
     }
 }

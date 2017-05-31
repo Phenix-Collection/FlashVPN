@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,6 +31,7 @@ import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdControlInfo;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -53,9 +53,7 @@ import com.polestar.multiaccount.widgets.FixedGridView;
 import com.polestar.multiaccount.widgets.FixedListView;
 import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
-import java.text.Collator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -87,6 +85,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private long adLoadStartTime = 0;
     private static final int NATIVE_AD_READY = 0;
     private static final int BANNER_AD_READY = 1;
+    private IAd nativeAd;
     private Handler adHandler = new Handler(Looper.getMainLooper()){
         private boolean adShowed = false;
         @Override
@@ -98,7 +97,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             switch (msg.what) {
                 case NATIVE_AD_READY:
                     IAd ad = (IAd) msg.obj;
-                    inflateFbNativeAdView(ad);
+                    inflateNativeAdView(ad);
                     break;
                 case BANNER_AD_READY:
                     showBannerAd();
@@ -144,6 +143,9 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     protected void onDestroy() {
         super.onDestroy();
         AppListUtils.getInstance(this).unregisterObserver(this);
+        if (nativeAd != null) {
+            nativeAd.destroy();
+        }
     }
 
     private void initView() {
@@ -262,6 +264,8 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_APPLIST_NATIVE, this);
         }
+//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (burstLoad) {
             loadAdmobNativeExpress();
         }
@@ -270,10 +274,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
-                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
-                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
-                        adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
-                    }
+                    adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
                 }
 
                 @Override
@@ -297,37 +298,21 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         }
     }
 
-    private void inflateFbNativeAdView(IAd ad) {
-        View adView = LayoutInflater.from(this).inflate(R.layout.native_ad_applist, null);
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        adView.setLayoutParams(params);
-        if (ad != null && adView != null) {
-            BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
-            coverView.setDefaultResource(0);
-            coverView.requestDisplayURL(ad.getCoverImageUrl());
-            BasicLazyLoadImageView iconView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_icon_image);
-            iconView.setDefaultResource(0);
-            iconView.requestDisplayURL(ad.getIconImageUrl());
-            TextView titleView = (TextView) adView.findViewById(R.id.ad_title);
-            titleView.setText(ad.getTitle());
-            TextView subtitleView = (TextView) adView.findViewById(R.id.ad_subtitle_text);
-            subtitleView.setText(ad.getBody());
-            TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
-            ctaView.setText(ad.getCallToActionText());
-            StarLevelLayoutView starLevelLayoutView = (StarLevelLayoutView) adView.findViewById(R.id.star_rating_layout);
-            starLevelLayoutView.setRating((int)ad.getStarRating());
-
+    private void inflateNativeAdView(IAd ad) {
+        final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.native_ad_applist)
+                .titleId(R.id.ad_title)
+                .textId(R.id.ad_subtitle_text)
+                .mainImageId(R.id.ad_cover_image)
+                .iconImageId(R.id.ad_icon_image)
+                .callToActionId(R.id.ad_cta_text)
+                .privacyInformationIconImageId(R.id.ad_choices_image)
+                .build();
+        View adView = ad.getAdView(viewBinder);
+        if (adView != null) {
             adContainer.removeAllViews();
+            adContainer.addView(adView);
             adContainer.setVisibility(View.VISIBLE);
             sponsorText.setVisibility(View.VISIBLE);
-            adContainer.addView(adView);
-            ad.registerViewForInteraction(adContainer);
-            if (ad.getPrivacyIconUrl() != null) {
-                BasicLazyLoadImageView choiceIconImage = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_choices_image);
-                choiceIconImage.setDefaultResource(0);
-                choiceIconImage.requestDisplayURL(ad.getPrivacyIconUrl());
-                ad.registerPrivacyIconView(choiceIconImage);
-            }
         }
     }
 

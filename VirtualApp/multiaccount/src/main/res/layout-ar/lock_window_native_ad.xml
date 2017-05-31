@@ -38,88 +38,83 @@
             android:layout_gravity="top|right"
             android:scaleType="fitXY" />
 
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_gravity="bottom"
+        android:background="@color/native_ad_transparent_black"
+        android:orientation="horizontal">
+
+        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+            android:id="@+id/ad_icon_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop" />
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@color/native_ad_transparent_black"
-            android:orientation="horizontal">
+            android:layout_width="212dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-            <com.polestar.imageloader.widget.BasicLazyLoadImageView
-                android:id="@+id/ad_icon_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:scaleType="centerCrop" />
-
-            <LinearLayout
-                android:layout_width="212dp"
-                android:layout_height="45dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="4dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/ad_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="this is title"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/native_ad_text_white"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/ad_subtitle_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="this is sub"
-                    android:textColor="@color/native_ad_text_white"
-                    android:textSize="8sp" />
-
-                <com.polestar.multiaccount.widgets.StarLevelLayoutView
-                    android:id="@+id/star_rating_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginTop="3dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/ad_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="this is title"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/native_ad_text_white"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/ad_cta_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="left|center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/native_cta_text_btn"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text="install"
-                    android:textColor="@color/native_ad_text_white"
-                    android:textSize="16sp" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/ad_subtitle_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="2"
+                android:text="this is sub"
+                android:textColor="@color/native_ad_text_white"
+                android:textSize="10sp" />
+
+
         </LinearLayout>
 
-    </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ad_cta_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginBottom="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/native_cta_text_btn"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="install"
+                android:textColor="@color/native_ad_text_white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

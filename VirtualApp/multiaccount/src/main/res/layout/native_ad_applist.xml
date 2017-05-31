@@ -20,7 +20,7 @@
             android:scaleType="centerCrop" />
 
         <LinearLayout
-            android:layout_width="212dp"
+            android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="2dp"
@@ -46,12 +46,7 @@
                 android:text="this is sub"
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp"
-                android:lines="1" />
-            <com.polestar.multiaccount.widgets.StarLevelLayoutView
-                android:id="@+id/star_rating_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left" />
+                android:lines="2" />
 
         </LinearLayout>
 

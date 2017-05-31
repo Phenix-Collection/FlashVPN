@@ -12,13 +12,11 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,6 +35,7 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -62,8 +61,6 @@ import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import mirror.android.widget.Toast;
 
 /**
  * Created by guojia on 2016/12/4.
@@ -335,8 +332,8 @@ public class AppCloneActivity extends BaseActivity {
         if(animateEnd) {
             if (fbReady) {
                 sponsor.setVisibility(View.VISIBLE);
-                MTAManager.appCloneAd(this, "FB");
-                inflateFbNativeAdView(nativeAd);
+                MTAManager.appCloneAd(this, nativeAd.getAdType());
+                inflateNativeAdView(nativeAd);
             } else if(admobReady){
                 sponsor.setVisibility(View.VISIBLE);
                 showBannerAd();
@@ -359,64 +356,35 @@ public class AppCloneActivity extends BaseActivity {
         nativeAdContainer.setVisibility(View.VISIBLE);
     }
 
-    private void inflateFbNativeAdView(IAd ad) {
-        View adView = LayoutInflater.from(this).inflate(R.layout.after_clone_native_ad, null);
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        adView.setLayoutParams(params);
-        if (ad != null && adView != null) {
-            BasicLazyLoadImageView coverView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_cover_image);
-            coverView.setDefaultResource(0);
-            coverView.requestDisplayURL(ad.getCoverImageUrl());
-            BasicLazyLoadImageView iconView = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_icon_image);
-            iconView.setDefaultResource(0);
-            iconView.requestDisplayURL(ad.getIconImageUrl());
-            TextView titleView = (TextView) adView.findViewById(R.id.ad_title);
-            titleView.setText(ad.getTitle());
-            TextView subtitleView = (TextView) adView.findViewById(R.id.ad_subtitle_text);
-            subtitleView.setText(ad.getBody());
-            TextView ctaView = (TextView) adView.findViewById(R.id.ad_cta_text);
-            ctaView.setText(ad.getCallToActionText());
-            ObjectAnimator scaleX = ObjectAnimator.ofFloat(ctaView, "scaleX", 0.7f, 1.2f, 1.0f);
-            ObjectAnimator scaleY = ObjectAnimator.ofFloat(ctaView, "scaleY", 0.7f, 1.2f, 1.0f);
-            AnimatorSet animSet = new AnimatorSet();
-            animSet.play(scaleX).with(scaleY);
-            animSet.setInterpolator(new BounceInterpolator());
-            animSet.setDuration(1200).start();
-            animSet.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                }
-            });
-
-            StarLevelLayoutView starLevelLayout = (StarLevelLayoutView)adView.findViewById(R.id.star_rating_layout);
-            starLevelLayout.setRating((int)ad.getStarRating());
+    private void inflateNativeAdView(IAd ad) {
+        final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.after_clone_native_ad)
+                .titleId(R.id.ad_title)
+                .textId(R.id.ad_subtitle_text)
+                .mainImageId(R.id.ad_cover_image)
+                .iconImageId(R.id.ad_icon_image)
+                .callToActionId(R.id.ad_cta_text)
+                .privacyInformationIconImageId(R.id.ad_choices_image)
+                .build();
+        View adView = ad.getAdView(viewBinder);
+        if (adView != null) {
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
-            ad.registerViewForInteraction(nativeAdContainer);
-            if (ad.getPrivacyIconUrl() != null) {
-                BasicLazyLoadImageView choiceIconImage = (BasicLazyLoadImageView) adView.findViewById(R.id.ad_choices_image);
-                choiceIconImage.setDefaultResource(0);
-                choiceIconImage.requestDisplayURL(ad.getPrivacyIconUrl());
-                ad.registerPrivacyIconView(choiceIconImage);
-            }
         }
     }
 
     private void loadAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_AD_AFTER_CLONE, this);
-            ///mNativeAdLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1700354860278115_1702636763383258", -1);
         }
+        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
-                    if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK)
-                            || ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_VK)) {
-                        fbReady = true;
-                        nativeAd = ad;
-                        showAdIfNeeded();
-                    }
+                    fbReady = true;
+                    nativeAd = ad;
+                    showAdIfNeeded();
                 }
 
                 @Override
@@ -535,6 +503,9 @@ public class AppCloneActivity extends BaseActivity {
         cleanBeforeFinish();
         doSwitchStateChange();
         super.onDestroy();
+        if(nativeAd != null) {
+            nativeAd.destroy();
+        }
     }
 
     private void cleanBeforeFinish(){
