@@ -30,7 +30,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
-import com.mopub.nativeads.MoPubNative;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
@@ -39,7 +38,6 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
 import com.polestar.multiaccount.component.activity.AppListActivity;
@@ -62,13 +60,13 @@ import com.polestar.multiaccount.widgets.LeftRightDialog;
 import com.polestar.multiaccount.widgets.CustomFloatView;
 import com.polestar.multiaccount.widgets.GridAppCell;
 import com.polestar.multiaccount.widgets.HeaderGridView;
-import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 import com.polestar.multiaccount.widgets.TutorialGuides;
 import com.polestar.multiaccount.widgets.TutorialGuidesUtils;
 import com.polestar.multiaccount.widgets.dragdrop.DragController;
 import com.polestar.multiaccount.widgets.dragdrop.DragImageView;
 import com.polestar.multiaccount.widgets.dragdrop.DragLayer;
 import com.polestar.multiaccount.widgets.dragdrop.DragSource;
+import com.polestar.multiaccount.widgets.dragdrop.DropableLinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +104,12 @@ public class HomeFragment extends BaseFragment {
     private static final int BANNER_AD_READY = 1;
     private boolean showLucky;
     public static String UNIT_ID = "8439";
+
+    private LinearLayout bottomArea;
+    private DropableLinearLayout createShortcutArea;
+    private DropableLinearLayout deleteArea;
+    private LinearLayout createDropButton;
+    private LinearLayout deleteDropButton;
 
     private Handler adHandler = new Handler(Looper.getMainLooper()){
         private boolean adShowed = false;
@@ -183,39 +187,49 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void onDragStart(DragSource source, Object info, int dragAction) {
             MLogs.d("onDragStart");
-            floatView.animToExpand();
-            mDragController.addDropTarget(floatView);
+//            floatView.animToExpand();
+//            mDragController.addDropTarget(floatView);
+            floatView.setVisibility(View.GONE);
+            bottomArea.setVisibility(View.VISIBLE);
+            AnimatorHelper.verticalShowFromBottom(bottomArea);
+            mDragController.addDropTarget(createShortcutArea);
+            createShortcutArea.clearState();
+            createDropButton.setBackgroundColor(0);
+            deleteDropButton.setBackgroundColor(0);
+            mDragController.addDropTarget(deleteArea);
+            deleteArea.clearState();
         }
 
         @Override
         public void onDragEnd(DragSource source, Object info, int action) {
-            MLogs.d("onDragEnd + " + floatView.getSelectedState());
-            switch (floatView.getSelectedState()) {
-                case CustomFloatView.SELECT_BTN_LEFT:
-                    MTAManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
-                    CommonUtils.createShortCut(mActivity,((AppModel) info));
-                    floatView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
-                            //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
-                        }
-                    },CustomFloatView.ANIM_DURATION / 2);
-                    break;
-                case CustomFloatView.SELECT_BTN_RIGHT:
-                    pkgGridAdapter.notifyDataSetChanged();
-                    floatView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showDeleteDialog((AppModel) info);
-                        }
-                    },CustomFloatView.ANIM_DURATION / 2);
-                    break;
-                default:
-                    break;
+            MLogs.d("onDragEnd + " );
+            if (createShortcutArea.isSelected()) {
+                MTAManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
+                CommonUtils.createShortCut(mActivity,((AppModel) info));
+                floatView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
+                        //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+                    }
+                },CustomFloatView.ANIM_DURATION / 2);
+            } else if (deleteArea.isSelected()) {
+                pkgGridAdapter.notifyDataSetChanged();
+                floatView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showDeleteDialog((AppModel) info);
+                    }
+                },CustomFloatView.ANIM_DURATION / 2);
             }
-            floatView.animToIdel();
-            mDragController.removeDropTarget(floatView);
+            //            floatView.animToIdel();
+//            mDragController.removeDropTarget(floatView);
+            AnimatorHelper.hideToBottom(bottomArea);
+            bottomArea.setVisibility(View.GONE);
+            AnimatorHelper.verticalShowFromBottom(floatView);
+            floatView.setVisibility(View.VISIBLE);
+            mDragController.removeDropTarget(createShortcutArea);
+            mDragController.removeDropTarget(deleteArea);
         }
     };
 
@@ -305,6 +319,34 @@ public class HomeFragment extends BaseFragment {
         pkgGridAdapter = new PackageGridAdapter();
 //        pkgGridView.setLayoutAnimation(getGridLayoutAnimController());
         pkgGridView.setAdapter(pkgGridAdapter);
+
+        bottomArea = (LinearLayout)contentView.findViewById(R.id.bottom_area);
+        createShortcutArea = (DropableLinearLayout) contentView.findViewById(R.id.create_shortcut_area);
+        createDropButton = (LinearLayout) contentView.findViewById(R.id.shortcut_drop_button);
+        deleteDropButton = (LinearLayout) contentView.findViewById(R.id.delete_drop_button);
+        createShortcutArea.setOnEnterListener(new DropableLinearLayout.IDragListener() {
+            @Override
+            public void onEnter() {
+                createDropButton.setBackgroundResource(R.drawable.shape_create_shortcut);
+            }
+
+            @Override
+            public void onExit() {
+                createDropButton.setBackgroundColor(0);
+            }
+        });
+        deleteArea = (DropableLinearLayout) contentView.findViewById(R.id.delete_app_area);
+        deleteArea.setOnEnterListener(new DropableLinearLayout.IDragListener() {
+            @Override
+            public void onEnter() {
+                deleteDropButton.setBackgroundResource(R.drawable.shape_delete);
+            }
+
+            @Override
+            public void onExit() {
+                deleteDropButton.setBackgroundColor(0);
+            }
+        });
 
 
         floatView = (CustomFloatView) contentView.findViewById(R.id.addApp_btn);
@@ -489,7 +531,6 @@ public class HomeFragment extends BaseFragment {
             String text = getString(R.string.start_tips);
             mTutorialBuilder = new TutorialGuides.Builder(mActivity);
 
-            RectF rectF = TutorialGuidesUtils.getRectFInWindow(floatView);
             mTutorialBuilder.anchorView(floatView);
             mTutorialBuilder.defaultMaxWidth(true);
             mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
@@ -720,16 +761,12 @@ public class HomeFragment extends BaseFragment {
         DbManager.notifyChanged();
         pkgGridAdapter.notifyDataSetChanged();
         //adapter.deleteComplete();
-        showFullScreenAd();
     }
 
     private void startAppLaunchActivity(String packageName){
         if(mActivity instanceof  HomeActivity){
             ((HomeActivity)mActivity).startAppLaunchActivity(packageName);
         }
-    }
-
-    private void showFullScreenAd(){
     }
 
     public void showFromBottom(){
