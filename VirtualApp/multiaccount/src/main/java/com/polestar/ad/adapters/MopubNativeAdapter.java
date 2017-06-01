@@ -35,7 +35,7 @@ public class MopubNativeAdapter extends Ad implements IAdLoader {
         this.adUnit = adUnit;
         if (AdConstants.DEBUG) {
             AdLog.d( "Mopub test mode");
-            //this.adUnit = "11a17b188668469fb0412708c3d16813";
+            this.adUnit = "11a17b188668469fb0412708c3d16813";
         }
         final EnumSet<RequestParameters.NativeAdAsset> desiredAssets = EnumSet.of(
                 RequestParameters.NativeAdAsset.TITLE,
