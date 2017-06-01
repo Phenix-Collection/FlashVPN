@@ -26,12 +26,12 @@
     <entry>
         <key>slot_home_lucky</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb:1700354860278115_1753636118283322:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
+        <value>mp:e910f1133e0a4e289d71166f5d1ca724:0;fb:1700354860278115_1753636118283322:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
     </entry>
     <entry>
         <key>slot_app_lock</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb:1700354860278115_1775329706113963:0;ab_native_banner:ca-app-pub-5490912237269284/7955343852:0</value>
+        <value>mp:e5cfa7539cc94b8285a326dadb3bde0c:0;fb:1700354860278115_1775329706113963:0;ab_native_banner:ca-app-pub-5490912237269284/7955343852:0</value>
     </entry>
     <entry>
         <key>slot_home_gift_interstitial_1026</key>
@@ -42,9 +42,7 @@
     </entry>
     <entry>
         <key>slot_home_header_native</key>
-        <value>
-            mp:ea31e844abf44e3690e934daad125451:0;fb:1700354860278115_1739555343024733:0;fb:1700354860278115_1781625715484362:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0
-        </value>
+        <value>mp:ea31e844abf44e3690e934daad125451:0;fb:1700354860278115_1739555343024733:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0</value>
     </entry>
     <entry>
         <key>home_show_header_ad</key>
@@ -56,7 +54,7 @@
     </entry>
     <entry>
         <key>slot_applist_native</key>
-        <value>fb:1700354860278115_1727890784191189:0;ab_native_banner:ca-app-pub-5490912237269284/7040042657:0</value>
+        <value>mp:3e456ebc156d40eea40b1df12843eb55:0;fb:1700354860278115_1727890784191189:0;ab_native_banner:ca-app-pub-5490912237269284/7040042657:0</value>
     </entry>
     <entry>
         <key>clone_rate_package</key>
@@ -107,7 +105,7 @@
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
-        <value>fb:1700354860278115_1783453411968259:0;ab_native_banner:ca-app-pub-5490912237269284/1785458659:0</value>
+        <value>mp:4a335084891b4a90a1cf695183336dde:0;fb:1700354860278115_1783453411968259:0;ab_native_banner:ca-app-pub-5490912237269284/1785458659:0</value>
     </entry>
     <entry>
         <key>fb_follow_page</key>

@@ -21,6 +21,7 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -65,6 +66,7 @@ public class NativeInterstitialActivity extends Activity {
     private LinearLayout mLl_Root;
     private FuseAdLoader mFuseLoader;
     private NativeExpressAdView mAdmobExpressView;
+    private LinearLayout mAdContainer;
 
     private static final String CONFIG_SLOT_HOME_LUCKY = "slot_home_lucky";
 
@@ -77,17 +79,17 @@ public class NativeInterstitialActivity extends Activity {
         setlistener();
         //mvLoadNative();
         mFuseLoader = FuseAdLoader.get(CONFIG_SLOT_HOME_LUCKY, this);
+        mFuseLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         fuseLoadNative();
     }
 
     private void showLoadding() {
         mProgressBar.setVisibility(View.VISIBLE);
-        mLl_Root.setVisibility(View.GONE);
     }
 
     private void hideLoadding() {
         mProgressBar.setVisibility(View.GONE);
-        mLl_Root.setVisibility(View.VISIBLE);
     }
 
     private void setlistener() {
@@ -101,16 +103,9 @@ public class NativeInterstitialActivity extends Activity {
     }
 
     private void initView() {
-        mIvIcon = (BasicLazyLoadImageView) findViewById(R.id.mobvista_interstitial_iv_icon);
-        mIvImage = (BasicLazyLoadImageView) findViewById(R.id.mobvista_interstitial_iv_image);
-        mTvAppName = (TextView) findViewById(R.id.mobvista_interstitial_iv_app_name);
-        mTvAppDesc = (TextView) findViewById(R.id.mobvista_interstitial_tv_app_desc);
-        mTvCta = (TextView) findViewById(R.id.mobvista_interstitial_tv_cta);
         mRlClose = (RelativeLayout) findViewById(R.id.mobvista_interstitial_rl_close);
-        mStarLayout = (StarLevelLayoutView) findViewById(R.id.mobvista_interstitial_star);
         mProgressBar = (ProgressBar) findViewById(R.id.mobvista_interstitial_progress);
-        mLl_Root = (LinearLayout) findViewById(R.id.mobvista_interstitial_ll_root);
-        mChoiceImage = (BasicLazyLoadImageView) findViewById(R.id.ad_choices_image);
+        mAdContainer = (LinearLayout) findViewById(R.id.ad_container);
         initAdmobBannerView();
     }
 
@@ -210,25 +205,17 @@ public class NativeInterstitialActivity extends Activity {
         }
     }
     protected void fillInterstitialLayout(IAd ad) {
-        if (!TextUtils.isEmpty(ad.getIconImageUrl())) {
-            mIvIcon.setDefaultResource(0);
-            mIvIcon.requestDisplayURL(ad.getIconImageUrl());
-        }
-        if (!TextUtils.isEmpty(ad.getCoverImageUrl())) {
-            mIvImage.setDefaultResource(0);
-            mIvImage.requestDisplayURL(ad.getCoverImageUrl());
-        }
-        if (!TextUtils.isEmpty(ad.getPrivacyIconUrl())) {
-            mChoiceImage.setDefaultResource(0);
-            mChoiceImage.requestDisplayURL(ad.getPrivacyIconUrl());
-        }
-
-        mTvAppName.setText(ad.getTitle() + "");
-        mTvAppDesc.setText(ad.getBody() + "");
-        mTvCta.setText(ad.getCallToActionText());
-        int rating = (int) ad.getStarRating();
-        mStarLayout.setRating(rating);
-        ad.registerViewForInteraction(mLl_Root);
-        ad.registerPrivacyIconView(mChoiceImage);
+        final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.native_interstitial_layout)
+                .titleId(R.id.ad_title)
+                .textId(R.id.ad_subtitle_text)
+                .mainImageId(R.id.ad_cover_image)
+                .iconImageId(R.id.ad_icon_image)
+                .callToActionId(R.id.ad_cta_text)
+                .privacyInformationIconImageId(R.id.ad_choices_image)
+                .starLevelLayoutId(R.id.star_level_layout)
+                .build();
+        View adView = ad.getAdView(viewBinder);
+        mAdContainer.addView(adView);
+        mAdContainer.setVisibility(View.VISIBLE);
     }
 }

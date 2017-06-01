@@ -92,7 +92,7 @@ public class RemoteConfig {
         for (String s: sources) {
             String[] configs = s.split(":");
             if (configs == null || configs.length < 2) {
-                MLogs.e("Wrong config: " + config);
+                MLogs.e("Wrong config: " + s);
                 continue;
             }
             int cachTime = 0;
