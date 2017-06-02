@@ -2,6 +2,7 @@ package com.lody.virtual.server.pm;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -12,6 +13,7 @@ import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.VirtualRuntime;
 import com.lody.virtual.client.hook.secondary.GmsSupport;
+import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.collection.IntArray;
 import com.lody.virtual.helper.compat.NativeLibraryHelperCompat;
@@ -95,7 +97,34 @@ public class VAppManagerService extends IAppManager.Stub {
             }
             mBooting = false;
         }
+        upgradeApps();
         VLog.d(TAG, "=======after scanApps========");
+    }
+
+    private String  needUpgrade(String packageName){
+        try {
+            PackageInfo vinfo = VPackageManager.get().getPackageInfo(packageName, 0 ,0);
+            PackageInfo info = VirtualCore.get().getUnHookPackageManager().getPackageInfo(packageName,0);
+            if (vinfo == null || info == null) {
+                return null;
+            }
+            return vinfo.versionCode != info.versionCode? info.applicationInfo.sourceDir: null;
+        }catch (Exception e) {
+            VLog.e(TAG, e);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return null;
+    }
+
+    private void upgradeApps() {
+        for(String s: PackageCacheManager.PACKAGE_CACHE.keySet()) {
+            String newPath = needUpgrade(s);
+            if(newPath != null) {
+                upgradePackage(newPath, InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
+                VLog.logbug(TAG, "upgraded package: " + s + " on path:"+newPath);
+            }
+        }
     }
 
     private void recover() {
