@@ -205,6 +205,9 @@ public class VUserManagerService extends IUserManager.Stub {
             VLog.w(LOG_TAG, "getUserInfo: unknown user #" + userId);
             return null;
         }
+        if ( ui == null) {
+            VLog.logbug(LOG_TAG, "not able to find user info of " + userId);
+        }
         return ui;
     }
 
