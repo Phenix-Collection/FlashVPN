@@ -59,6 +59,7 @@ public final class BinderProvider extends ContentProvider {
 		VAccountManagerService.systemReady();
 		addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
         addService(ServiceManagerNative.VS, VirtualStorageService.get());
+		VAppManagerService.get().sendBootCompleted();
 		VLog.d("BinderProvider", "Service initialized!");
 		return true;
 	}

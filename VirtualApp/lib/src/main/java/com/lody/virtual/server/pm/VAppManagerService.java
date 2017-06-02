@@ -96,7 +96,6 @@ public class VAppManagerService extends IAppManager.Stub {
             mBooting = false;
         }
         VLog.d(TAG, "=======after scanApps========");
-        sendBootCompleted();
     }
 
     private void recover() {
@@ -515,7 +514,7 @@ public class VAppManagerService extends IAppManager.Stub {
         VAccountManagerService.get().refreshAuthenticatorCache(null);
     }
 
-    private void sendBootCompleted() {
+    public void sendBootCompleted() {
         Intent intent = new Intent(Intent.ACTION_BOOT_COMPLETED);
         VLog.logbug(TAG, "sendBootCompleted intent");
         VActivityManagerService.get().sendBroadcastAsUser(intent, VUserHandle.ALL);
