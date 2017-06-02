@@ -90,7 +90,7 @@ public class VAppManagerService extends IAppManager.Stub {
                     recover();
                 }
             }
-            if (StubManifest.ENABLE_GMS && !GmsSupport.isGoogleFrameworkInstalled()) {
+            if (StubManifest.ENABLE_GMS ) {
                 GmsSupport.installGms(0);
             }
             mBooting = false;

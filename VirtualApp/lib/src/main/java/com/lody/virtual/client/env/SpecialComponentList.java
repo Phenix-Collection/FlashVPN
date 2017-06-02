@@ -110,6 +110,11 @@ public final class SpecialComponentList {
         BROADCAST_START_WHITE_LIST.add("com.facebook.katana");
         BROADCAST_START_WHITE_LIST.add("com.tencent.mm");
         BROADCAST_START_WHITE_LIST.add("com.whatsapp");
+        BROADCAST_START_WHITE_LIST.add("com.google.android.gsf");
+        BROADCAST_START_WHITE_LIST.add("com.google.android.gms");
+        BROADCAST_START_WHITE_LIST.add("com.google.android.gsf.login");
+        BROADCAST_START_WHITE_LIST.add("com.android.vending");
+        BROADCAST_START_WHITE_LIST.add("com.google.android.play.games");
     }
 
     public static boolean isSticky(String action) {
@@ -124,9 +129,9 @@ public final class SpecialComponentList {
     }
 
     public static boolean canStartFromBroadcast(String pkg) {
-        if (GmsSupport.isGmsFamilyPackage(pkg)) {
-            return true;
-        }
+//        if (GmsSupport.isGmsFamilyPackage(pkg)) {
+//            return true;
+//        }
         if (BROADCAST_START_WHITE_LIST.contains(pkg)) {
             return true;
         }

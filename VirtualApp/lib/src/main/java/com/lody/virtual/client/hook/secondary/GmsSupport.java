@@ -8,48 +8,56 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.server.pm.VAppManagerService;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Lody
  */
 public class GmsSupport {
 
-    private static final List<String> GOOGLE_APP = Arrays.asList(
-            "com.android.vending",
-            "com.google.android.play.games",
-            "com.google.android.wearable.app",
-            "com.google.android.wearable.app.cn"
-    );
+    private static final HashSet<String> GOOGLE_APP = new HashSet<>();
+    static {
+        GOOGLE_APP.add("com.android.vending");
+        GOOGLE_APP.add("com.google.android.play.games");
+        GOOGLE_APP.add("com.google.android.wearable.app");
+        GOOGLE_APP.add("com.google.android.wearable.app.cn");
+    }
 
-    private static final List<String> GOOGLE_SERVICE = Arrays.asList(
-            "com.google.android.gsf",
-            "com.google.android.gms",
-            "com.google.android.gsf.login",
-            "com.google.android.backuptransport",
-            "com.google.android.backup",
-            "com.google.android.configupdater",
-            "com.google.android.syncadapters.contacts",
-            "com.google.android.feedback",
-            "com.google.android.onetimeinitializer",
-            "com.google.android.partnersetup",
-            "com.google.android.setupwizard",
-            "com.google.android.syncadapters.calendar"
-    );
+    private static final HashSet<String> GOOGLE_SERVICE =  new HashSet<>();
+    static {
+        GOOGLE_SERVICE.add("com.google.android.gsf");
+        GOOGLE_SERVICE.add("com.google.android.gms");
+        GOOGLE_SERVICE.add("com.google.android.gsf.login");
+        GOOGLE_SERVICE.add("com.google.android.backuptransport");
+        GOOGLE_SERVICE.add("com.google.android.backup");
+        GOOGLE_SERVICE.add("com.google.android.configupdater");
+        GOOGLE_SERVICE.add("com.google.android.syncadapters.contacts");
+        GOOGLE_SERVICE.add("com.google.android.feedback");
+        GOOGLE_SERVICE.add("com.google.android.onetimeinitializer");
+        GOOGLE_SERVICE.add("com.google.android.partnersetup");
+        GOOGLE_SERVICE.add("com.google.android.setupwizard");
+        GOOGLE_SERVICE.add("com.google.android.syncadapters.calendar");
+    };
 
 
     public static boolean isGmsFamilyPackage(String packageName) {
-        return packageName.equals("com.android.vending")
-                || packageName.equals("com.google.android.gms");
+//        return packageName.equals("com.android.vending")
+//                || packageName.equals("com.google.android.gms");
+        return GOOGLE_SERVICE.contains(packageName) || GOOGLE_APP.contains(packageName);
     }
 
     public static boolean isGoogleFrameworkInstalled() {
         return VirtualCore.get().isAppInstalled("com.google.android.gms");
     }
 
-    private static void installPackages(List<String> list, int userId) {
+    private static void installPackages(Set<String> list, int userId) {
         VAppManagerService service = VAppManagerService.get();
-        for (String packageName : list) {
+        Iterator iterator = list.iterator();
+        while (iterator.hasNext()) {
+            String packageName = (String) iterator.next();
             if (service.isAppInstalledAsUser(userId, packageName)) {
                 continue;
             }

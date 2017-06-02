@@ -27,6 +27,7 @@ import android.os.Parcel;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.os.TransactionTooLargeException;
 
 import com.lody.virtual.client.IVClient;
 import com.lody.virtual.client.core.VirtualCore;
@@ -242,13 +243,15 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			try {
 				return r.client.acquireProviderClient(info);
 			} catch (RemoteException e) {
-				for (int retry =0; retry < 5; retry ++) {
-					VLog.logbug(TAG, "retry " + retry + " for acquireProviderClient " + info.authority);
-					try {
-						Thread.sleep(250);
-						r.client.acquireProviderClient(info);
-					} catch (Throwable th) {
-						th.printStackTrace();
+				if (e instanceof TransactionTooLargeException) {
+					for (int retry = 0; retry < 5; retry++) {
+						VLog.logbug(TAG, "retry " + retry + " for acquireProviderClient " + info.authority);
+						try {
+							Thread.sleep(250);
+							return r.client.acquireProviderClient(info);
+						} catch (Throwable th) {
+							th.printStackTrace();
+						}
 					}
 				}
 			} catch ( Throwable e) {
