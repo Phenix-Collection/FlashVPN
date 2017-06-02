@@ -257,6 +257,8 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			} catch ( Throwable e) {
 				e.printStackTrace();
 			}
+		} else {
+			VLog.logbug(TAG, "Process " + processName + " died after got binder");
 		}
 		VLog.logbug(TAG, "acquireProviderClient return null : " + info.authority);
 		return null;

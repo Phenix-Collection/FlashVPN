@@ -872,6 +872,7 @@ class MethodProxies {
 
         static {
             BLOCK_COMPONENT_LIST.add("com.google.android.finsky.contentfilter.impl.ContentFiltersService");
+            BLOCK_COMPONENT_LIST.add("com.google.android.gsf.update.SystemUpdateService");
             //BLOCK_COMPONENT_LIST.add("com.google.android.finsky.wear.WearSupportService");
         }
 
@@ -1485,6 +1486,10 @@ class MethodProxies {
                         provider = VActivityManager.get().acquireProviderClient(userId, info);
                         VLog.logbug(TAG, "provider != null " + name + " process: " + info.processName +
                                 " pkg: " + info.packageName + " provider " + provider);
+                        if (provider == null) {
+                            provider = VActivityManager.get().acquireProviderClient(userId, info);
+                            VLog.logbug(TAG, "retry result: " + provider);
+                        }
                     } else {
                         VLog.logbug(TAG, "provider == null " + name + " process: " + info.processName +
                                 " pkg: " + info.packageName + " current: " + VClientImpl.get().getCurrentPackage());
