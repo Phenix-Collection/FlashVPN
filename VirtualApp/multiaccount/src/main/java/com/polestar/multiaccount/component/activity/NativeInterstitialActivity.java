@@ -53,17 +53,8 @@ public class NativeInterstitialActivity extends Activity {
     private static final String TAG = NativeInterstitialActivity.class.getName();
     private static final String UNIT_ID = "8998";
     public int BIG_IMG_REQUEST_AD_NUM = 1;
-    private BasicLazyLoadImageView mIvIcon;
-    private BasicLazyLoadImageView mIvImage;
-    private BasicLazyLoadImageView mChoiceImage;
-    private TextView mTvAppName;
-    private TextView mTvAppDesc;
-    private TextView mTvCta;
-    private MvNativeHandler nativeHandle;
     private RelativeLayout mRlClose;
-    private StarLevelLayoutView mStarLayout;
     private ProgressBar mProgressBar;
-    private LinearLayout mLl_Root;
     private FuseAdLoader mFuseLoader;
     private NativeExpressAdView mAdmobExpressView;
     private LinearLayout mAdContainer;
@@ -79,7 +70,7 @@ public class NativeInterstitialActivity extends Activity {
         setlistener();
         //mvLoadNative();
         mFuseLoader = FuseAdLoader.get(CONFIG_SLOT_HOME_LUCKY, this);
-        mFuseLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+        //mFuseLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
         //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         fuseLoadNative();
     }
@@ -158,8 +149,9 @@ public class NativeInterstitialActivity extends Activity {
             public void onAdLoaded() {
                 super.onAdLoaded();
                 hideLoadding();
-                mLl_Root.removeAllViews();
-                mLl_Root.addView(mAdmobExpressView);
+                mAdContainer.removeAllViews();
+                mAdContainer.addView(mAdmobExpressView);
+                mAdContainer.setVisibility(View.VISIBLE);
                 mAdmobExpressView.setVisibility(View.VISIBLE);
                 AdLog.d("on Banner AdLoaded ");
             }
