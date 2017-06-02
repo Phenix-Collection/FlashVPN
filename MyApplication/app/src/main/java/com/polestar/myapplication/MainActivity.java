@@ -1,8 +1,10 @@
 package com.polestar.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.UserManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         });
         Intent test = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         Log.e("SPC", "ACTION_BATTERY_CHANGED " + test);
+
+        UserManager  um = (UserManager) getSystemService(Context.USER_SERVICE);
+        String name = um.getUserName();
+        Log.e("SPC", "UserName " + name);
     }
 
     @Override
