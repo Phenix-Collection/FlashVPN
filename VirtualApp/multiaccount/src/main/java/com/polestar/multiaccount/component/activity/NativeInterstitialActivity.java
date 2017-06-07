@@ -25,22 +25,23 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.RemoteConfig;
-import com.polestar.multiaccount.widgets.StarLevelLayoutView;
+import com.polestar.multiaccount.utils.ToastUtils;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 
 /**
  * Native display interstitial
@@ -59,14 +60,45 @@ public class NativeInterstitialActivity extends Activity {
     private NativeExpressAdView mAdmobExpressView;
     private LinearLayout mAdContainer;
 
-    private static final String CONFIG_SLOT_HOME_LUCKY = "slot_home_lucky";
+    private static final String CONFIG_SLOT_HOME_LUCKY = "slot_home_lucky_new";
+    //private static final String CONFIG_SLOT_HOME_LUCKY = "slot_test";
+
+    private static final int MSG_TIMEOUT = 1;
+    private static final int DEFAULT_TIMEOUT_DELAY = 60*1000;
+
+    private static Activity sInstance = null;
+
+    static public Activity getInstance() {
+        return sInstance;
+    }
+
+    private boolean canceled = false;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case  MSG_TIMEOUT:
+                    canceled = true;
+                    ToastUtils.ToastDefult(NativeInterstitialActivity.this, getString(R.string.toast_no_lucky));
+                    hideLoadding();
+                    finish();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sInstance = this;
         setContentView(R.layout.mobvista_native_interstitial);
         initView();
         showLoadding();
+        long timeout = RemoteConfig.getLong("config_lucky_timeout");
+        MLogs.d("lucky timeout: " + timeout);
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TIMEOUT), timeout == 0? DEFAULT_TIMEOUT_DELAY: timeout);
         setlistener();
         //mvLoadNative();
         mFuseLoader = FuseAdLoader.get(CONFIG_SLOT_HOME_LUCKY, this);
@@ -148,6 +180,7 @@ public class NativeInterstitialActivity extends Activity {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                mHandler.removeMessages(MSG_TIMEOUT);
                 hideLoadding();
                 mAdContainer.removeAllViews();
                 mAdContainer.addView(mAdmobExpressView);
@@ -164,6 +197,7 @@ public class NativeInterstitialActivity extends Activity {
                 hideLoadding();
                 fillInterstitialLayout(ad);
                 mFuseLoader.loadAd(1, null);
+                mHandler.removeMessages(MSG_TIMEOUT);
 //                loadAdmobNativeExpress();
             }
 
@@ -197,17 +231,32 @@ public class NativeInterstitialActivity extends Activity {
         }
     }
     protected void fillInterstitialLayout(IAd ad) {
-        final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.native_interstitial_layout)
-                .titleId(R.id.ad_title)
-                .textId(R.id.ad_subtitle_text)
-                .mainImageId(R.id.ad_cover_image)
-                .iconImageId(R.id.ad_icon_image)
-                .callToActionId(R.id.ad_cta_text)
-                .privacyInformationIconImageId(R.id.ad_choices_image)
-                .starLevelLayoutId(R.id.star_level_layout)
-                .build();
-        View adView = ad.getAdView(viewBinder);
-        mAdContainer.addView(adView);
-        mAdContainer.setVisibility(View.VISIBLE);
+        if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL) ||
+                ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL) ||
+                ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL)) {
+            if (!canceled) {
+                ad.show();
+            }
+        } else {
+            final AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.native_interstitial_layout)
+                    .titleId(R.id.ad_title)
+                    .textId(R.id.ad_subtitle_text)
+                    .mainImageId(R.id.ad_cover_image)
+                    .iconImageId(R.id.ad_icon_image)
+                    .callToActionId(R.id.ad_cta_text)
+                    .privacyInformationIconImageId(R.id.ad_choices_image)
+                    .starLevelLayoutId(R.id.star_level_layout)
+                    .build();
+            View adView = ad.getAdView(viewBinder);
+            mAdContainer.addView(adView);
+            mAdContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sInstance = null;
+        finish();
     }
 }

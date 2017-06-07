@@ -55,6 +55,7 @@ public class FuseAdLoader implements IAdLoader {
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL);
 
     }
 
@@ -211,6 +212,8 @@ public class FuseAdLoader implements IAdLoader {
                 return new FBInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL:
                 return new AdmobInterstitialAdapter(mContext, config.key);
+            case AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL:
+                return new MopubInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_VK:
             default:
                 AdLog.e("not suppported source " + config.source);

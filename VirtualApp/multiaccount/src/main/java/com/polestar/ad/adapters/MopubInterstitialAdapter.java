@@ -1,0 +1,94 @@
+package com.polestar.ad.adapters;
+
+import android.content.Context;
+import android.view.View;
+
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubInterstitial;
+import com.polestar.ad.AdConstants;
+import com.polestar.ad.AdLog;
+import com.polestar.multiaccount.component.activity.NativeInterstitialActivity;
+
+/**
+ * Created by guojia on 2017/6/7.
+ */
+
+public class MopubInterstitialAdapter extends Ad implements MoPubInterstitial.InterstitialAdListener, IAdLoader  {
+    private MoPubInterstitial mInterstitial;
+    private IAdLoadListener mAdListener;
+    private Context mContext;
+    private String key;
+
+    public MopubInterstitialAdapter(Context context, String key) {
+        mContext = context;
+        this.key = key;
+
+    }
+
+    @Override
+    public void onInterstitialLoaded(MoPubInterstitial interstitial) {
+        if (mAdListener != null) {
+            mAdListener.onAdLoaded(this);
+        }
+        AdLog.d("Mopub interstitial loaded");
+    }
+
+    @Override
+    public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
+        AdLog.d("Mopub interstitial load error: " + errorCode);
+        if (mAdListener != null) {
+            mAdListener.onError("" + errorCode);
+        }
+    }
+
+    @Override
+    public void onInterstitialShown(MoPubInterstitial interstitial) {
+
+    }
+
+    @Override
+    public void onInterstitialClicked(MoPubInterstitial interstitial) {
+
+    }
+
+    @Override
+    public void onInterstitialDismissed(MoPubInterstitial interstitial) {
+
+    }
+
+    @Override
+    public void registerPrivacyIconView(View view) {
+
+    }
+
+    @Override
+    public void loadAd(int num, IAdLoadListener listener) {
+        mAdListener = listener;
+        if (listener == null) {
+            AdLog.e("Not set listener!");
+            return;
+        }
+        if (AdConstants.DEBUG) {
+            mKey = "24534e1901884e398f1253216226017e";
+        }
+        if (NativeInterstitialActivity.getInstance() == null) {
+            mAdListener.onError("No activity context found!");
+            return;
+        }
+        mInterstitial = new MoPubInterstitial(NativeInterstitialActivity.getInstance(), key);
+        mInterstitial.setInterstitialAdListener(this);
+        mInterstitial.load();
+    }
+
+    @Override
+    public void show() {
+        if (mInterstitial.isReady()) {
+            mInterstitial.show();
+        }
+    }
+
+    @Override
+    public String getAdType() {
+        return AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL;
+    }
+}

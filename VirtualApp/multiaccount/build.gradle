@@ -122,5 +122,10 @@ dependencies {
     compile('com.mopub:mopub-sdk-native-video:4.9.0@aar') {
         transitive = true
     }
+
+    // For interstitials
+    compile('com.mopub:mopub-sdk-interstitial:4.9.0@aar') {
+        transitive = true
+    }
 }
 apply plugin: 'com.google.gms.google-services'

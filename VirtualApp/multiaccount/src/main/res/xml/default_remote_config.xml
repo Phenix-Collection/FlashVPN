@@ -24,9 +24,14 @@
         <value>fb_interstitial:1700354860278115_1702702800043321:0</value>
     </entry>
     <entry>
-        <key>slot_home_lucky</key>
+        <key>slot_home_lucky_new</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>mp:e910f1133e0a4e289d71166f5d1ca724:0;fb:1700354860278115_1753636118283322:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
+        <value>mp_interstitial:60045d2f3ebd4042af67f02d7563763e:0;ab_interstitial:ca-app-pub-5490912237269284/6199077857:0;mp:e910f1133e0a4e289d71166f5d1ca724:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
+    </entry>
+    <entry>
+        <key>slot_test</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>mp_interstitial:60045d2f3ebd4042af67f02d7563763e:0;ab_interstitial:ca-app-pub-5490912237269284/6199077857:0;mp:e910f1133e0a4e289d71166f5d1ca724:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
     </entry>
     <entry>
         <key>slot_app_lock</key>
