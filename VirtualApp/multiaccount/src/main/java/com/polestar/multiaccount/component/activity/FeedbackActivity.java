@@ -104,7 +104,7 @@ public class FeedbackActivity extends BaseActivity {
                 Intent data=new Intent(Intent.ACTION_SENDTO);
                 data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about SuperClone");
-                String fullContent = content + "\n"  + "Additional Info: \n" + "Super Clone version: " + BuildConfig.VERSION_NAME
+                String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "Super Clone version: " + BuildConfig.VERSION_NAME
                         + "\n" + "Model info: " + Build.FINGERPRINT + "\n";
                 data.putExtra(Intent.EXTRA_TEXT, fullContent);
                 try {
