@@ -110,6 +110,8 @@ public class HomeFragment extends BaseFragment {
     private DropableLinearLayout deleteArea;
     private LinearLayout createDropButton;
     private LinearLayout deleteDropButton;
+    private TextView deleteDropTxt;
+    private TextView createDropTxt;
 
     private Handler adHandler = new Handler(Looper.getMainLooper()){
         private boolean adShowed = false;
@@ -324,15 +326,19 @@ public class HomeFragment extends BaseFragment {
         createShortcutArea = (DropableLinearLayout) contentView.findViewById(R.id.create_shortcut_area);
         createDropButton = (LinearLayout) contentView.findViewById(R.id.shortcut_drop_button);
         deleteDropButton = (LinearLayout) contentView.findViewById(R.id.delete_drop_button);
+        deleteDropTxt = (TextView) contentView.findViewById(R.id.delete_drop_text);
+        createDropTxt = (TextView) contentView.findViewById(R.id.shortcut_drop_text);
         createShortcutArea.setOnEnterListener(new DropableLinearLayout.IDragListener() {
             @Override
             public void onEnter() {
                 createDropButton.setBackgroundResource(R.drawable.shape_create_shortcut);
+                createDropTxt.setTextColor(getResources().getColor(R.color.shortcut_text_color));
             }
 
             @Override
             public void onExit() {
                 createDropButton.setBackgroundColor(0);
+                createDropTxt.setTextColor(getResources().getColor(R.color.white));
             }
         });
         deleteArea = (DropableLinearLayout) contentView.findViewById(R.id.delete_app_area);
@@ -340,11 +346,13 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onEnter() {
                 deleteDropButton.setBackgroundResource(R.drawable.shape_delete);
+                deleteDropTxt.setTextColor(getResources().getColor(R.color.delete_text_color));
             }
 
             @Override
             public void onExit() {
                 deleteDropButton.setBackgroundColor(0);
+                deleteDropTxt.setTextColor(getResources().getColor(R.color.white));
             }
         });
 

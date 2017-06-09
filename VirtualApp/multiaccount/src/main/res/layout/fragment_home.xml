@@ -71,7 +71,8 @@
                     android:gravity="center|start"
                     android:padding="5dp"
                     android:text="@string/create_shortcut"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:id="@+id/shortcut_drop_text"/>
 
             </com.polestar.multiaccount.widgets.dragdrop.DropableLinearLayout>
 
@@ -102,7 +103,8 @@
                     android:gravity="center|start"
                     android:padding="5dp"
                     android:text="@string/delete_dialog_right"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:id="@+id/delete_drop_text"/>
             </com.polestar.multiaccount.widgets.dragdrop.DropableLinearLayout>
 
 

@@ -65,4 +65,6 @@
     <color name="dialog_guide_high_light_content_text">#ff2dbbfb</color>
     <color name="dialog_guide_title_text">#ff454545</color>
     <color name="custom_dialog_bg">#8bb8ef</color>
+    <color name="delete_text_color">#f0eb0729</color>
+    <color name="shortcut_text_color">#f048d27f</color>
 </resources>
