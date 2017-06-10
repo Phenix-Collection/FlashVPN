@@ -2,6 +2,8 @@ package com.polestar.multiaccount.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
@@ -42,9 +44,14 @@ public class CloneHelper {
         DbManager.insertAppModel(context,appModel);
         DbManager.notifyChanged();
         mClonedApps.add(appModel);
-        if(loadedListener != null){
-            loadedListener.onInstalled(mClonedApps);
-        }
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if(loadedListener != null) {
+                    loadedListener.onInstalled(mClonedApps);
+                }
+            }
+        });
     }
 
     public void unInstallApp(Context context,String packageName){
@@ -58,9 +65,14 @@ public class CloneHelper {
                 i --;
             }
         }
-        if(loadedListener != null){
-            loadedListener.onUnstalled(mClonedApps);
-        }
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (loadedListener != null) {
+                    loadedListener.onUnstalled(mClonedApps);
+                }
+            }
+        });
     }
 
     public void preLoadClonedApp(Context context){
@@ -81,9 +93,15 @@ public class CloneHelper {
             }
         }
         isPreLoad = false;
-        if(loadedListener != null){
-            loadedListener.onLoaded(mClonedApps);
-        }
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if(loadedListener != null) {
+                    loadedListener.onLoaded(mClonedApps);
+                }
+            }
+        });
     }
 
     private CloneHelper(Context context){
@@ -92,29 +110,5 @@ public class CloneHelper {
 
     public List<AppModel> getClonedApps(){
         return mClonedApps;
-    }
-
-    class LoadClonedAppTask extends AsyncTask<Integer,Integer,List<AppModel>>{
-        private Context mContext;
-
-        LoadClonedAppTask(Context context){
-            this.mContext = context;
-        }
-
-        @Override
-        protected List<AppModel> doInBackground(Integer... integers) {
-            return AppManager.getClonedApp(mContext);
-        }
-
-        @Override
-        protected void onPostExecute(List<AppModel> appModels) {
-            if(appModels != null){
-                mClonedApps.clear();
-                mClonedApps.addAll(appModels);
-            }
-            if(loadedListener != null){
-                loadedListener.onLoaded(mClonedApps);
-            }
-        }
     }
 }

@@ -137,7 +137,7 @@ public class LauncherActivity extends BaseActivity{
                 @Override
                 public void updateDrawState(TextPaint ds) {
                     super.updateDrawState(ds);  //设置文件颜色
-                    ds.setColor(getResources().getColor(R.color.text_gray_light));
+                    ds.setColor(getResources().getColor(R.color.text_gray_dark));
                     ds.setUnderlineText(true);      //设置下划线
                 }
 
@@ -155,7 +155,7 @@ public class LauncherActivity extends BaseActivity{
                 @Override
                 public void updateDrawState(TextPaint ds) {
                     super.updateDrawState(ds);  //设置文件颜色
-                    ds.setColor(getResources().getColor(R.color.text_gray_light));
+                    ds.setColor(getResources().getColor(R.color.text_gray_dark));
                     ds.setUnderlineText(true);      //设置下划线
                 }
 

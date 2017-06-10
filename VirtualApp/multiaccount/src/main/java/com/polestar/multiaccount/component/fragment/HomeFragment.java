@@ -80,7 +80,7 @@ public class HomeFragment extends BaseFragment {
     private View contentView;
     private HeaderGridView pkgGridView;
     private PackageGridAdapter pkgGridAdapter;
-    private List<AppModel> appInfos;
+    private List<AppModel> appInfos = new ArrayList<>();
     private CustomFloatView floatView;
     private ExplosionField mExplosionField;
     private DragController mDragController;
@@ -662,48 +662,53 @@ public class HomeFragment extends BaseFragment {
     private List<AdConfig> headerNativeAdConfigs ;
 
     private void initData(){
-        CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
+        new Thread(new Runnable() {
             @Override
-            public void onInstalled(List<AppModel> clonedApp) {
-                appInfos = clonedApp;
-                if(pkgGridAdapter != null){
-                    pkgGridAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onUnstalled(List<AppModel> clonedApp) {
-                MLogs.d("onUninstalled");
-                appInfos = clonedApp;
-                if(pkgGridAdapter != null){
-                    pkgGridAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onLoaded(List<AppModel> clonedApp) {
-                appInfos = clonedApp;
-                MLogs.d("onLoaded applist");
-                long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
-                long gate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE);
-                showLucky = appInfos.size() >= gate && new Random().nextInt(100) < luckyRate ;
-                if (!showLucky) {
-                    MLogs.d("Not show lucky. Rate: " + luckyRate);
-                }
-                if(pkgGridAdapter != null){
-                    pkgGridAdapter.notifyDataSetChanged();
-                }
-                if (!PreferencesUtils.hasShownCloneGuide(mActivity) && (clonedApp == null || clonedApp.size() == 0)) {
-                    pkgGridView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showCloneAppGuide();
+            public void run() {
+                CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
+                    @Override
+                    public void onInstalled(List<AppModel> clonedApp) {
+                        appInfos = clonedApp;
+                        if(pkgGridAdapter != null){
+                            pkgGridAdapter.notifyDataSetChanged();
                         }
-                    }, 1000);
+                    }
 
-                }
+                    @Override
+                    public void onUnstalled(List<AppModel> clonedApp) {
+                        MLogs.d("onUninstalled");
+                        appInfos = clonedApp;
+                        if(pkgGridAdapter != null){
+                            pkgGridAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onLoaded(List<AppModel> clonedApp) {
+                        appInfos = clonedApp;
+                        MLogs.d("onLoaded applist");
+                        long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
+                        long gate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE);
+                        showLucky = appInfos.size() >= gate && new Random().nextInt(100) < luckyRate ;
+                        if (!showLucky) {
+                            MLogs.d("Not show lucky. Rate: " + luckyRate);
+                        }
+                        if(pkgGridAdapter != null){
+                            pkgGridAdapter.notifyDataSetChanged();
+                        }
+                        if (!PreferencesUtils.hasShownCloneGuide(mActivity) && (clonedApp == null || clonedApp.size() == 0)) {
+                            pkgGridView.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showCloneAppGuide();
+                                }
+                            }, 1000);
+
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     private void showDeleteDialog(AppModel appModel){
