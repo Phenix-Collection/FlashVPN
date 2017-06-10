@@ -112,9 +112,9 @@ public class HomeFragment extends BaseFragment {
     private LinearLayout deleteDropButton;
     private TextView deleteDropTxt;
     private TextView createDropTxt;
+    private boolean adShowed = false;
 
     private Handler adHandler = new Handler(Looper.getMainLooper()){
-        private boolean adShowed = false;
         @Override
         public void handleMessage(Message msg) {
             if (adShowed){
@@ -246,7 +246,12 @@ public class HomeFragment extends BaseFragment {
                 size ++;
             }
             if ( size < 15 ) {
-                size = 15;
+                if (adShowed) {
+                    size = 15;
+                } else {
+                    size = 18;
+                }
+
             } else {
                 size = size + 3 - (size % 3);
             }
@@ -635,23 +640,25 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        pkgGridView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mActivity != null) {
-                    if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(mActivity)) {
-                        showLongClickItemGuide();
-                    } else if (appInfos.size() > 0 && !PreferencesUtils.isApplockGuideShowed()
-                            && !PreferencesUtils.isLockerEnabled(mActivity)) {
-                        int index = getLockRecommandAppIdx();
-                        if ( index != -1 ||
-                                (CommonUtils.getInstallTime(mActivity, mActivity.getPackageName()) - System.currentTimeMillis() > 48*60*60*1000)) {
-                            showApplockGuide(index);
+        if (appInfos.size() > 0) {
+            pkgGridView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mActivity != null) {
+                        if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(mActivity)) {
+                            showLongClickItemGuide();
+                        } else if (appInfos.size() > 0 && !PreferencesUtils.isApplockGuideShowed()
+                                && !PreferencesUtils.isLockerEnabled(mActivity)) {
+                            int index = getLockRecommandAppIdx();
+                            if (index != -1 ||
+                                    (CommonUtils.getInstallTime(mActivity, mActivity.getPackageName()) - System.currentTimeMillis() > 48 * 60 * 60 * 1000)) {
+                                showApplockGuide(index);
+                            }
                         }
                     }
                 }
-            }
-        }, 1500);
+            }, 1500);
+        }
         if (pkgGridAdapter != null) {
             pkgGridAdapter.notifyDataSetChanged();
         }
