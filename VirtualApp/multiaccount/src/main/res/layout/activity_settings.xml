@@ -142,7 +142,7 @@
                 android:layout_marginBottom="13dp"
                 android:layout_marginTop="18dp"
                 android:layout_toLeftOf="@id/gms_switch_btn"
-                android:text="Google Play Service"
+                android:text="@string/settings_gms_title"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="15sp" />
 

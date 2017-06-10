@@ -65,8 +65,6 @@
     <string name="settings_privacy_locker_content">انقر لتعيين خلع الملابس الخصوصية لتطبيقات المستنسخة</string>
     <string name="settings_notification_content">انقر لتمكين أو تعطيل إخطار من التطبيقات المستنسخة</string>
     <string name="settings_privacy_policy">سياسة الخصوصية</string>
-    <string name="settings_more">مزيد من الإعدادات</string>
-    <string name="settings_general">الاعدادات العامة</string>
     <string name="settings_terms_of_service">شروط الخدمة</string>
     <string name="settings_follow_us">تابعنا في الفيسبوك الصفحة</string>
     <string name="settings_right">2016 Polestar Applab All rights reserved</string>
@@ -170,4 +168,9 @@
     <string name="settings_gms">تمكين خدمة غوغل بلاي للتطبيقات المستنسخة</string>
     <string name="settings_gms_disable_toast">تم تعطيل خدمة غوغل بلاي</string>
     <string name="settings_gms_enable_toast">تم تمكين خدمة غوغل بلاي</string>
+    <string name="settings_gms_title">خدمة جوجل بلاي</string>
+    <string name="settings_gms_disable_notice">تعطيل خدمة جوجل بلاي نقصان الذاكرة و استهلاك الطاقة، وتحسين سرعة إطلاق التطبيق المستنسخة.ولكن بعض التطبيقات لا تعمل بشكل صحيح إذا تعطيله.هل أنت متأكد من أن تعطيل خدمة جوجل بلاي؟</string>
+    <string name="settings_gms_enable_notice">تمكن خدمة جوجل بلاي قد تستهلك المزيد من الذاكرة و وحدة المعالجة المركزية.هل تريد تمكين خدمة جوجل بلاي؟</string>
+    <string name="toast_no_lucky">آسف، لا يوجد محتوى هذه المرة.يرجى المحاولة مرة أخرى في وقت لاحق.</string>
+    <string name="upgrade_start_tips">فإنه قد يستغرق وقتا أطول قليلا حيث أن هذا التطبيق هو مجرد ترقية.</string>
 </resources>

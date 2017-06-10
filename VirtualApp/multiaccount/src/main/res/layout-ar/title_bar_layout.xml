@@ -10,8 +10,8 @@
         android:textSize="20sp"
         android:paddingLeft="10dp"
         android:paddingRight="13dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:layout_width="wrap_content"
         android:onClick="onNavigationClick"
         android:layout_height="wrap_content" />

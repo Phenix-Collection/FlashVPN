@@ -64,8 +64,6 @@
     <string name="settings_privacy_locker_content">Klik untuk mengatur loker privasi untuk aplikasi dikloning</string>
     <string name="settings_notification_content">Klik untuk mengaktifkan atau menonaktifkan notifikasi dari aplikasi kloning.</string>
     <string name="settings_privacy_policy">Kebijakan Pribadi</string>
-    <string name="settings_more">Lebih Pengaturan</string>
-    <string name="settings_general">Pengaturan Umum</string>
     <string name="settings_terms_of_service">Ketentuan Layanan</string>
     <string name="settings_follow_us">Ikuti kami di Facebook</string>
     <string name="settings_right">2016 Polestar Applab All rights reserved</string>
@@ -171,4 +169,5 @@
     <string name="settings_gms">Aktifkan Layanan Google Play untuk aplikasi kloning</string>
     <string name="settings_gms_disable_toast">Layanan Google Play dinonaktifkan</string>
     <string name="settings_gms_enable_toast">Layanan Google Play diaktifkan</string>
+    <string name="settings_gms_disable_notice"></string>
 </resources>

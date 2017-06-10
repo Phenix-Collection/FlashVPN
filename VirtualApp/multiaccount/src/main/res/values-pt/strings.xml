@@ -64,8 +64,6 @@
     <string name="settings_privacy_locker_content">Click to config locker para aplicativos clonados</string>
     <string name="settings_notification_content">Clique para configurar notificações de aplicativos clonados</string>
     <string name="settings_privacy_policy">Política de Privacidade</string>
-    <string name="settings_more">Outros Configurações</string>
-    <string name="settings_general">Configurações Gerais</string>
     <string name="settings_terms_of_service">Termos de serviço</string>
     <string name="settings_follow_us">Siga-nos no Facebook</string>
     <string name="settings_right">2016 Polestar Applab All rights reserved</string>
@@ -171,4 +169,8 @@
     <string name="settings_gms">Ativar o serviço do Google Play para aplicativos clonados</string>
     <string name="settings_gms_disable_toast">O Google Play Service está desativado</string>
     <string name="settings_gms_enable_toast">O Google Play Service está habilitado</string>
+    <string name="settings_gms_disable_notice">Desactivar o Google play service diminui a memória e a utilização Da Energia, e otimizar a Velocidade de lançamento para clonar pedido.MAS alguns aplicativos podem não funcionar corretamente se desactivar.Tens a certeza que para desactivar o Google play service?</string>
+    <string name="settings_gms_enable_notice">Que o Google play serviço Pode consumir Mais memória e CPU.Você quer que o Google play service?</string>
+    <string name="toast_no_lucky">Desculpe, nenhum conteúdo Desta vez.Por favor, tente novamente Mais tarde.</string>
+    <string name="upgrade_start_tips">Pode demorar um pouco Mais que o aplicativo FOI atualizado.</string>
 </resources>

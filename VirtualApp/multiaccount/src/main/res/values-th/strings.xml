@@ -64,8 +64,6 @@
     <string name="settings_privacy_locker_content">คลิกเพื่อตั้งค่าความเป็นส่วนตัวล็อกเกอร์สำหรับแอปโคลน</string>
     <string name="settings_notification_content">คลิ๊กเพื่อเปิดหรือปิดการแจ้งเตือนจากแอปโคลน</string>
     <string name="settings_privacy_policy">นโยบายความเป็นส่วนตัว</string>
-    <string name="settings_more">การตั้งค่าเพิ่มเติม</string>
-    <string name="settings_general">การตั้งค่าทั่วไป</string>
     <string name="settings_terms_of_service">เงื่อนไขการให้บริการ</string>
     <string name="settings_follow_us">ติดตามเราบน Facebook</string>
     <string name="settings_right">2016 Polestar Applab All rights reserved</string>
@@ -171,4 +169,8 @@
     <string name="settings_gms">เปิดใช้บริการ Google Play สำหรับแอปพลิเคชันโคลน</string>
     <string name="settings_gms_disable_toast">บริการ Google Play ถูกปิดใช้งาน</string>
     <string name="settings_gms_enable_toast">มีการเปิดใช้บริการ Google Play แล้ว</string>
+    <string name="settings_gms_disable_notice">ปิดบริการ Google Play จะลดลงหน่วยความจำและการใช้พลังงาน และเพิ่มประสิทธิภาพความเร็วเปิดตัวสำหรับตัวโปรแกรม แต่โปรแกรมบางอย่างอาจไม่ทำงานอย่างถูกต้องหากปิดการใช้งาน คุณแน่ใจที่จะปิดการใช้งาน Google เล่นบริการ</string>
+    <string name="settings_gms_enable_notice">เปิดบริการ Google เล่นอาจใช้หน่วยความจำและซีพียู คุณต้องการให้ Google เล่นบริการ</string>
+    <string name="toast_no_lucky">ขออภัย ไม่พบเนื้อหาในครั้งนี้ โปรดลองอีกครั้งในภายหลัง</string>
+    <string name="upgrade_start_tips">มันอาจจะใช้เวลานานนิดหน่อยเป็น app นี้เป็นเพียงการอัพเกรด</string>
 </resources>
