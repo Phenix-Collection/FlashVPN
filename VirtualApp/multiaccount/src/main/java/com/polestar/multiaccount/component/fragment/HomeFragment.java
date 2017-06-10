@@ -185,7 +185,9 @@ public class HomeFragment extends BaseFragment {
             mDragController.addDropTarget(createShortcutArea);
             createShortcutArea.clearState();
             createDropButton.setBackgroundColor(0);
+            createDropTxt.setTextColor(getResources().getColor(R.color.white));
             deleteDropButton.setBackgroundColor(0);
+            deleteDropTxt.setTextColor(getResources().getColor(R.color.white));
             mDragController.addDropTarget(deleteArea);
             deleteArea.clearState();
         }
