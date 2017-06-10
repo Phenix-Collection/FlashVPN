@@ -78,7 +78,6 @@ public class LauncherActivity extends BaseActivity{
                 }
             }, 2000 - delta);
         } else {
-            PreferencesUtils.setStartPageStatus(true);
             enterText.setVisibility(View.VISIBLE);
             termText.setVisibility(View.VISIBLE);
             gmsSettingLayout.setVisibility(View.VISIBLE);
@@ -174,15 +173,17 @@ public class LauncherActivity extends BaseActivity{
             enterText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    PreferencesUtils.setStartPageStatus(true);
                     enterHome();
+                    if(!PreferencesUtils.isShortCutCreated() && !created) {
+                        PreferencesUtils.setShortCutCreated();
+                        createShortCut();
+                        created = true;
+                    }
                 }
             });
         }
-        if(!PreferencesUtils.isShortCutCreated() && !created) {
-            PreferencesUtils.setShortCutCreated();
-            createShortCut();
-            created = true;
-        }
+
     }
 
 
