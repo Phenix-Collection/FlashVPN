@@ -671,7 +671,7 @@ public class VAppManagerService extends IAppManager.Stub {
         VLog.logbug(TAG, "restart...");
         VirtualCore.get().killAllApps();
         try{
-            Thread.sleep(1000);
+            Thread.sleep(300);
         }catch (Throwable e) {
 
         }

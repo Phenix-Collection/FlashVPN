@@ -60,7 +60,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 PreferencesUtils.setGMSEnable(gmsSwitch.isChecked());
-                ToastUtils.ToastDefult(SettingsActivity.this, "GMS state: " + PreferencesUtils.isGMSEnable());
+                //ToastUtils.ToastDefult(SettingsActivity.this, "GMS state: " + PreferencesUtils.isGMSEnable());
                 VirtualCore.get().restart();
             }
         });
