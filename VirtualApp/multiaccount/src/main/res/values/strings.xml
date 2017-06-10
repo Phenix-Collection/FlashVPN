@@ -74,6 +74,8 @@
     <string name="create_shortcut">Create Shortcut</string>
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
     <string name="settings_gms">Enable Google Play Service for cloned applications</string>
+    <string name="settings_gms_enable_toast">Google Play Service is enabled</string>
+    <string name="settings_gms_disable_toast">Google Play Service is disabled</string>
     <string name="settings_privacy_locker_content">Click to set privacy locker for cloned apps</string>
     <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
     <string name="settings_privacy_policy">Privacy Policy</string>

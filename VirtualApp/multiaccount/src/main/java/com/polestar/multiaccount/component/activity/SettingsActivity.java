@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.multiaccount.BuildConfig;
@@ -62,6 +63,11 @@ public class SettingsActivity extends BaseActivity {
                 PreferencesUtils.setGMSEnable(gmsSwitch.isChecked());
                 //ToastUtils.ToastDefult(SettingsActivity.this, "GMS state: " + PreferencesUtils.isGMSEnable());
                 VirtualCore.get().restart();
+                if (PreferencesUtils.isGMSEnable()) {
+                    Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_enable_toast), Toast.LENGTH_SHORT);
+                } else {
+                    Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_disable_toast), Toast.LENGTH_SHORT);
+                }
             }
         });
     }
