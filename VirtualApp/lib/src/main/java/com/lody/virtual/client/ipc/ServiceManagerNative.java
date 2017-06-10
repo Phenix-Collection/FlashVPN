@@ -64,7 +64,20 @@ public class ServiceManagerNative {
 			@Override
 			public void binderDied() {
 				binder.unlinkToDeath(this, 0);
-				VLog.e(TAG, "Ops, the server has crashed.");
+				clearServerFetcher();
+				VLog.logbug(TAG, "Ops, the server has crashed.");
+				for (int i = 5; i > 0; i--) {
+					try{
+						Thread.sleep(400);
+					}catch (Throwable e){
+
+					}
+					VLog.logbug(TAG, "Try hot recover " + i);
+					if (getService(ServiceManagerNative.APP) != null) {
+						return;
+					}
+				}
+				VLog.logbug(TAG, "Hot recover failed. Exit.");
 				VirtualRuntime.exit();
 			}
 		};
