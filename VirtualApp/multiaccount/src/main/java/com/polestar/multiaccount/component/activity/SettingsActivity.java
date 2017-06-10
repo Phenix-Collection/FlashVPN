@@ -1,5 +1,6 @@
 package com.polestar.multiaccount.component.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
@@ -14,10 +15,12 @@ import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
+import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
+import com.polestar.multiaccount.widgets.UpDownDialog;
 
 /**
  * Created by yxx on 2016/7/29.
@@ -57,16 +60,50 @@ public class SettingsActivity extends BaseActivity {
         });
         gmsSwitch = (BlueSwitch) findViewById(R.id.gms_switch_btn);
         gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+        DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                boolean orig = PreferencesUtils.isGMSEnable();
+                switch (i) {
+                    case UpDownDialog.NEGATIVE_BUTTON:
+                        break;
+                    case UpDownDialog.POSITIVE_BUTTON:
+                        PreferencesUtils.setGMSEnable(!orig);
+                        VirtualCore.get().restart();
+                        boolean newStatus = PreferencesUtils.isGMSEnable();
+                        MTAManager.setGMS(SettingsActivity.this,newStatus);
+                        if (newStatus) {
+                            Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_enable_toast), Toast.LENGTH_SHORT);
+                        } else {
+                            Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_disable_toast), Toast.LENGTH_SHORT);
+                        }
+                        break;
+                }
+                gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+            }
+        };
         gmsSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PreferencesUtils.setGMSEnable(gmsSwitch.isChecked());
-                //ToastUtils.ToastDefult(SettingsActivity.this, "GMS state: " + PreferencesUtils.isGMSEnable());
-                VirtualCore.get().restart();
-                if (PreferencesUtils.isGMSEnable()) {
-                    Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_enable_toast), Toast.LENGTH_SHORT);
+                MTAManager.generalClickEvent(SettingsActivity.this, "gms_switch");
+                if(PreferencesUtils.isGMSEnable()) {
+                    UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_gms_disable_notice),
+                            getString(R.string.no_thanks), getString(R.string.yes), R.drawable.dialog_tag_comment,
+                            R.layout.dialog_up_down, dialogListener).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+                        }
+                    });
                 } else {
-                    Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_disable_toast), Toast.LENGTH_SHORT);
+                    UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_gms_enable_notice),
+                            getString(R.string.no_thanks), getString(R.string.yes), R.drawable.dialog_tag_comment,
+                            R.layout.dialog_up_down, dialogListener).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+                        }
+                    });
                 }
             }
         });

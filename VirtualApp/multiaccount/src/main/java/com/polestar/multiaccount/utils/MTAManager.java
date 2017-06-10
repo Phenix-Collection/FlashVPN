@@ -1,6 +1,7 @@
 package com.polestar.multiaccount.utils;
 
 import android.content.Context;
+import android.content.IIntentReceiver;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -58,15 +59,6 @@ public class MTAManager {
 
     public static void homeShow(Context context) {
         StatService.trackCustomEvent(context, "home_show");
-    }
-
-    public static void showLockWindow(Context context, String pkg) {
-        if (context != null) {
-            Properties prop = new Properties();
-            prop.setProperty("package", pkg);
-            StatService.trackCustomKVEvent(context, "show_lock_window", prop);
-            MLogs.d("show_lock_window: " + pkg);
-        }
     }
 
     public static void homeGiftClick(Context context, String adSource) {
@@ -188,6 +180,12 @@ public class MTAManager {
         StatService.trackCustomKVEvent(context, "love_clone_app", prop);
     }
 
+    public static void setGMS(Context context, boolean status) {
+        Properties prop = new Properties();
+        prop.setProperty("GMS", "" + status);
+        StatService.trackCustomKVEvent(context, "set_gms", prop);
+    }
+
     public static void menuShare(Context context) {
         StatService.trackCustomEvent(context, "menu_share");
     }
@@ -206,6 +204,12 @@ public class MTAManager {
         prop.setProperty(ReferrerReceiver.UTM_MEDIUM, utm_medium == null? "" : utm_medium);
         prop.setProperty(ReferrerReceiver.UTM_CAMPAIGN, utm_campaign == null? "" : utm_campaign);
         StatService.trackCustomKVEvent(context, "install_referrer", prop);
+    }
+
+    public static void generalClickEvent(Context context, String event) {
+        Properties prop = new Properties();
+        prop.setProperty("event", event);
+        StatService.trackCustomKVEvent(context, "click_event", prop);
     }
 
     public static void onResume(Context context) {
