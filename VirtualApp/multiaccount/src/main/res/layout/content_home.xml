@@ -5,11 +5,13 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto">
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/content_home"
+        android:background="@color/theme_color2">
 
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
-            android:id="@+id/content_home"
+            android:background="@color/divider_light_gray"
             android:layout_height="match_parent">
             <RelativeLayout
                 android:id="@+id/layout_setting"

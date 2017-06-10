@@ -53,7 +53,7 @@
         <TextView
             android:id="@+id/dialog_right_btn"
             android:textSize="14sp"
-            android:textColor="@color/dialog_right_btn_color"
+            android:textColor="@color/delete_text_color"
             android:layout_width="0dp"
             android:gravity="center"
             android:layout_weight="1"

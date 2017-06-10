@@ -74,11 +74,13 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".component.activity.AppCloneActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher"/>
         <activity
             android:name=".component.activity.HomeActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            />
 
         <activity
             android:name=".component.activity.AppStartActivity"
@@ -88,7 +90,7 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.polestar.multiaccount.launch"
-            android:theme="@style/AppTheme.FullScreenAndTranslucent"/>
+            android:theme="@style/AppTheme.Launcher"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

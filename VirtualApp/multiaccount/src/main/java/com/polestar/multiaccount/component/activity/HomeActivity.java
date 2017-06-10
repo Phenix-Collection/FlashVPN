@@ -154,6 +154,8 @@ public class HomeActivity extends BaseActivity {
 
             }
         });
+        View view = findViewById(R.id.content_home);
+        setImmerseLayout(view);
         mHomeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mHomeFragment).commitAllowingStateLoss();
     }

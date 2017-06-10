@@ -209,6 +209,7 @@ public class AppCloneActivity extends BaseActivity {
                 finish();
             }
         });
+        setImmerseLayout(mTitleText);
 
         mShortcutSwitch = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
         mLockerSwitch = (BlueSwitch) findViewById(R.id.locker_swichbtn);
