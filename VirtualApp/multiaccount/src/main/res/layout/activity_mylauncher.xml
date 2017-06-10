@@ -3,12 +3,58 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/launcher_bg"
     android:layout_height="match_parent"
-    android:background="@color/launch_page_color">
+    android:background="#3770df">
     <ImageView
         android:layout_width="match_parent"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="90dp"
         android:src="@mipmap/launch_logo"
         android:scaleType="centerInside"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/enter_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/start"
+        android:background="#5183e6"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/term_text"
+        android:layout_above="@id/enter_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_gray_light"
+        android:textSize="12sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/gms_setting_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/term_text"
+        android:layout_marginBottom="15dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gms_cb"/>
+        <TextView
+            android:layout_marginLeft="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_gms"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+    </LinearLayout>
 
 </RelativeLayout>

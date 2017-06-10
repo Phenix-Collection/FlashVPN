@@ -71,7 +71,7 @@ public class SettingsActivity extends BaseActivity {
                         PreferencesUtils.setGMSEnable(!orig);
                         VirtualCore.get().restart();
                         boolean newStatus = PreferencesUtils.isGMSEnable();
-                        MTAManager.setGMS(SettingsActivity.this,newStatus);
+                        MTAManager.setGMS(SettingsActivity.this,newStatus, "setting");
                         if (newStatus) {
                             Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_enable_toast), Toast.LENGTH_SHORT);
                         } else {
@@ -85,7 +85,7 @@ public class SettingsActivity extends BaseActivity {
         gmsSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MTAManager.generalClickEvent(SettingsActivity.this, "gms_switch");
+                MTAManager.generalClickEvent(SettingsActivity.this, "settings_gms_switch");
                 if(PreferencesUtils.isGMSEnable()) {
                     UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_gms_disable_notice),
                             getString(R.string.no_thanks), getString(R.string.yes), R.drawable.dialog_tag_comment,

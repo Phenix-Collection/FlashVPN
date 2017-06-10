@@ -180,9 +180,10 @@ public class MTAManager {
         StatService.trackCustomKVEvent(context, "love_clone_app", prop);
     }
 
-    public static void setGMS(Context context, boolean status) {
+    public static void setGMS(Context context, boolean status, String from) {
         Properties prop = new Properties();
         prop.setProperty("GMS", "" + status);
+        prop.setProperty("from", from);
         StatService.trackCustomKVEvent(context, "set_gms", prop);
     }
 

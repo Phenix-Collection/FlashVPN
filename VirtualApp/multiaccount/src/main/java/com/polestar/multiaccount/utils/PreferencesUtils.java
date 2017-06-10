@@ -395,4 +395,13 @@ public class PreferencesUtils {
         File stateFile = new File(MApp.getApp().getFilesDir(), "gms_disable");
         return !stateFile.exists();
     }
+
+    public static void setStartPageStatus(boolean shown) {
+        putBoolean(MApp.getApp(), "start_page_status", shown);
+    }
+
+    public static boolean hasShownStartPage() {
+        //return false;
+        return getBoolean(MApp.getApp(), "start_page_status");
+    }
 }

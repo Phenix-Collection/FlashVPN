@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Super Clone</string>
     <string name="app_alias_name" translatable="false">Super Clone</string>
+    <string name="enter_super_clone" translatable="false">Start</string>
 
     <string name="app_icon" translatable="false">app_icon</string>
 
@@ -73,7 +74,7 @@
     <string name="settings_shortcut_title">Shortcut</string>
     <string name="create_shortcut">Create Shortcut</string>
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
-    <string name="settings_gms">Enable Google Play Service for cloned applications</string>
+    <string name="settings_gms">Enable Google Play Service for cloned app</string>
     <string name="settings_gms_enable_toast">Google Play Service is enabled</string>
     <string name="settings_gms_disable_toast">Google Play Service is disabled</string>
     <string name="settings_gms_disable_notice">Disable Google play service will decrease memory and power usage, and optimize the launch speed for cloned application. But some application may not work properly if disable it. Are you sure to disable Google play service?</string>
