@@ -168,4 +168,7 @@
     <string name="notification_detail_setting">เปิดใช้งานการแจ้งเตือนสำหรับแอป</string>
     <string name="create_shortcut">สร้างทางลัด</string>
     <string name="enable_notification">เปิดใช้งานการแจ้งเตือน</string>
+    <string name="settings_gms">เปิดใช้บริการ Google Play สำหรับแอปพลิเคชันโคลน</string>
+    <string name="settings_gms_disable_toast">บริการ Google Play ถูกปิดใช้งาน</string>
+    <string name="settings_gms_enable_toast">มีการเปิดใช้บริการ Google Play แล้ว</string>
 </resources>

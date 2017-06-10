@@ -168,4 +168,7 @@
     <string name="notification_detail_setting">Ativar notificação para a aplicação</string>
     <string name="create_shortcut">Criar Atalho</string>
     <string name="enable_notification">Ativar notificação</string>
+    <string name="settings_gms">Ativar o serviço do Google Play para aplicativos clonados</string>
+    <string name="settings_gms_disable_toast">O Google Play Service está desativado</string>
+    <string name="settings_gms_enable_toast">O Google Play Service está habilitado</string>
 </resources>

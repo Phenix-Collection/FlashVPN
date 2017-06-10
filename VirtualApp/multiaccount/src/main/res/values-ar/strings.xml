@@ -167,4 +167,7 @@
     <string name="notification_detail_setting">تفعيل التبليغ عن التطبيق</string>
     <string name="create_shortcut">انشاء اختصار</string>
     <string name="enable_notification">تفعيل الإشعارات</string>
+    <string name="settings_gms">تمكين خدمة غوغل بلاي للتطبيقات المستنسخة</string>
+    <string name="settings_gms_disable_toast">تم تعطيل خدمة غوغل بلاي</string>
+    <string name="settings_gms_enable_toast">تم تمكين خدمة غوغل بلاي</string>
 </resources>

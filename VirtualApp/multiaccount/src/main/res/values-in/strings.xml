@@ -168,4 +168,7 @@
     <string name="notification_detail_setting">Aktifkan notifikasi untuk aplikasi</string>
     <string name="create_shortcut">Buat Pintasan</string>
     <string name="enable_notification">Aktifkan Pemberitahuan</string>
+    <string name="settings_gms">Aktifkan Layanan Google Play untuk aplikasi kloning</string>
+    <string name="settings_gms_disable_toast">Layanan Google Play dinonaktifkan</string>
+    <string name="settings_gms_enable_toast">Layanan Google Play diaktifkan</string>
 </resources>
