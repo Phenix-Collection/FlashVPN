@@ -803,4 +803,12 @@ public final class VirtualCore {
 		}
 
 	}
+
+	public void restart() {
+		try {
+			getService().restart();
+		} catch (Exception e){
+			VLog.logbug(VLog.VTAG, VLog.getStackTraceString(e));
+		}
+	}
 }

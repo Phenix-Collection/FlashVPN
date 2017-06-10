@@ -9,6 +9,7 @@
     android:background="@color/light_gray"
     android:orientation="vertical">
 
+    <include layout="@layout/setting_wide_splitter"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"

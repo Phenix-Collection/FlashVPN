@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.constant.AppConstants;
 
+import java.io.File;
+
 /**
  * Created by yxx on 2016/7/15.
  */
@@ -374,5 +376,23 @@ public class PreferencesUtils {
 
     public static String getInstallChannel() {
         return getString(MApp.getApp(), "install_channel", null);
+    }
+
+    public static void setGMSEnable(boolean enable) {
+        File stateFile = new File(MApp.getApp().getFilesDir(), "gms_disable");
+        try {
+            if (!enable) {
+                stateFile.createNewFile();
+            } else {
+                stateFile.delete();
+            }
+        } catch (Throwable e) {
+            MLogs.logBug(MLogs.getStackTraceString(e));
+        }
+    }
+
+    public static boolean isGMSEnable() {
+        File stateFile = new File(MApp.getApp().getFilesDir(), "gms_disable");
+        return !stateFile.exists();
     }
 }

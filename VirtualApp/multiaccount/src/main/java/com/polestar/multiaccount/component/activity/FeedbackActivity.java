@@ -25,6 +25,7 @@ import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ToastUtils;
 
 public class FeedbackActivity extends BaseActivity {
@@ -105,7 +106,7 @@ public class FeedbackActivity extends BaseActivity {
                 data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about SuperClone");
                 String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "Super Clone version: " + BuildConfig.VERSION_NAME
-                        + "\n" + "Model info: " + Build.FINGERPRINT + "\n";
+                        + "\n" + "Model info: " + Build.FINGERPRINT + "GMS state: " + PreferencesUtils.isGMSEnable() + "\n";
                 data.putExtra(Intent.EXTRA_TEXT, fullContent);
                 try {
                     startActivity(data);

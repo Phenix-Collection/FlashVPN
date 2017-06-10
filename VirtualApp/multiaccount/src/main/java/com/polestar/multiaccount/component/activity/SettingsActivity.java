@@ -8,12 +8,14 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
+import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
 
 /**
@@ -21,6 +23,7 @@ import com.polestar.multiaccount.widgets.BlueSwitch;
  */
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
+    private BlueSwitch gmsSwitch;
     private TextView versionTv;
     private TextView followTv;
     private String fbUrl;
@@ -49,6 +52,16 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 PreferencesUtils.putBoolean(SettingsActivity.this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,shortCutSwich.isChecked());
+            }
+        });
+        gmsSwitch = (BlueSwitch) findViewById(R.id.gms_switch_btn);
+        gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+        gmsSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PreferencesUtils.setGMSEnable(gmsSwitch.isChecked());
+                ToastUtils.ToastDefult(SettingsActivity.this, "GMS state: " + PreferencesUtils.isGMSEnable());
+                VirtualCore.get().restart();
             }
         });
     }

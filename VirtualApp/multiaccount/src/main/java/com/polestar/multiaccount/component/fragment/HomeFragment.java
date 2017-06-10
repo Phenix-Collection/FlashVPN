@@ -146,18 +146,6 @@ public class HomeFragment extends BaseFragment {
         nativeAdContainer.removeAllViews();
         nativeAdContainer.addView(adView);
         pkgGridAdapter.notifyDataSetChanged();
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(adView, "scaleX", 0.7f, 1.0f, 1.0f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(adView, "scaleY", 0.7f, 1.0f, 1.0f);
-        AnimatorSet animSet = new AnimatorSet();
-        animSet.play(scaleX).with(scaleY);
-        animSet.setInterpolator(new BounceInterpolator());
-        animSet.setDuration(800).start();
-        animSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-            }
-        });
         dismissLongClickGuide();
     }
 

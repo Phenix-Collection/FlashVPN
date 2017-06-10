@@ -61,9 +61,12 @@ public class MApp extends Application {
         Log.d(MLogs.DEFAULT_TAG, "LIB version: " + com.lody.virtual.BuildConfig.VERSION_NAME + " Type: " + com.lody.virtual.BuildConfig.BUILD_TYPE );
 
         super.attachBaseContext(base);
+        gDefault = this;
         try {
             StubManifest.ENABLE_IO_REDIRECT = true;
             StubManifest.ENABLE_INNER_SHORTCUT = false;
+            StubManifest.ENABLE_GMS = PreferencesUtils.isGMSEnable();
+            Log.d(MLogs.DEFAULT_TAG, "GMS state: " + StubManifest.ENABLE_GMS);
             VirtualCore.get().startup(base);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -72,7 +75,6 @@ public class MApp extends Application {
 
     @Override
     public void onCreate() {
-        gDefault = this;
         super.onCreate();
         VirtualCore virtualCore = VirtualCore.get();
         virtualCore.initialize(new VirtualCore.VirtualInitializer() {

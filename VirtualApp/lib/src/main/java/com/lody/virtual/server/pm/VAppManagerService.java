@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static java.lang.System.console;
+import static java.lang.System.exit;
 import static mirror.android.app.ActivityThread.ActivityClientRecord.activity;
 
 /**
@@ -131,6 +133,9 @@ public class VAppManagerService extends IAppManager.Stub {
         for (File appDir : VEnvironment.getDataAppDirectory().listFiles()) {
             String pkgName = appDir.getName();
             if ("android".equals(pkgName) || "system".equals(pkgName)) {
+                continue;
+            }
+            if (!StubManifest.ENABLE_GMS && GmsSupport.isGmsFamilyPackage(pkgName)) {
                 continue;
             }
             File storeFile = new File(appDir, "base.apk");
@@ -660,5 +665,17 @@ public class VAppManagerService extends IAppManager.Stub {
     public void  reloadLockerSetting(String key){
         VLog.d(TAG, "reloadLockerSetting ");
         VirtualCore.get().getComponentDelegate().reloadLockerSetting(key);
+    }
+
+    public void restart() {
+        VLog.logbug(TAG, "restart...");
+        VirtualCore.get().killAllApps();
+        try{
+            Thread.sleep(1000);
+        }catch (Throwable e) {
+
+        }
+        VLog.logbug(TAG, "stopping...");
+        exit(0);
     }
 }

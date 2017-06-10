@@ -2,6 +2,8 @@ package com.lody.virtual.server.pm;
 
 import android.os.Parcel;
 
+import com.lody.virtual.client.hook.secondary.GmsSupport;
+import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.PersistenceLayer;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VEnvironment;
@@ -57,8 +59,13 @@ class PackagePersistenceLayer extends PersistenceLayer {
     @Override
     public void readPersistenceData(Parcel p) {
         int count = p.readInt();
+        VLog.d(TAG, "GMS state: " + StubManifest.ENABLE_GMS);
         while (count-- > 0) {
             PackageSetting setting = new PackageSetting(p);
+            if (!StubManifest.ENABLE_GMS && GmsSupport.isGmsFamilyPackage(setting.packageName)) {
+                VLog.d(TAG, "Skip loading gms package: " + setting.packageName);
+                continue;
+            }
             if (!"android".equals(setting.packageName)) {
                 mService.loadPackage(setting);
             }

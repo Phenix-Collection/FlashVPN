@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public class StubManifest {
     public static final String STUB_DEF_AUTHORITY = "virtual_stub_";
-    public static final boolean ENABLE_GMS = true;
+    public static boolean ENABLE_GMS = true;
     public static String IDENTITY_PREFIX = "_VA_|";
     public static String STUB_ACTIVITY = StubActivity.class.getName();
     public static String STUB_DIALOG = StubDialog.class.getName();
