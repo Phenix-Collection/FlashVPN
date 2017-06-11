@@ -36,6 +36,10 @@ public class VNotificationManager {
         return mRemote;
     }
 
+    public void clearRemoteInterface() {
+        mRemote = null;
+    }
+
     public boolean dealNotification(int id, Notification notification, String packageName) {
         return VirtualCore.get().getHostPkg().equals(packageName)
                 || mNotificationCompat.dealNotification(id, notification, packageName);

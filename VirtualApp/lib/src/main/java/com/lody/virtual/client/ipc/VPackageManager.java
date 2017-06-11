@@ -43,6 +43,10 @@ public class VPackageManager {
 		return mRemote;
 	}
 
+	public void clearRemoteInterface() {
+		mRemote = null;
+	}
+
 	private Object getRemoteInterface() {
         final IBinder pmBinder = ServiceManagerNative.getService(ServiceManagerNative.PACKAGE);
         return IPackageManager.Stub.asInterface(pmBinder);

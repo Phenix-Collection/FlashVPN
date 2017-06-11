@@ -34,6 +34,10 @@ public class VirtualStorageManager {
         return mRemote;
     }
 
+    public void clearRemoteInterface() {
+        mRemote = null;
+    }
+
     private Object getRemoteInterface() {
         final IBinder binder = ServiceManagerNative.getService(ServiceManagerNative.VS);
         return IVirtualStorageService.Stub.asInterface(binder);

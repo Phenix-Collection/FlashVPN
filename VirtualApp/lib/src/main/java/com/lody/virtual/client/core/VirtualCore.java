@@ -28,8 +28,12 @@ import com.lody.virtual.client.hook.delegate.ComponentDelegate;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.ipc.LocalProxyUtils;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.lody.virtual.client.ipc.VAccountManager;
 import com.lody.virtual.client.ipc.VActivityManager;
+import com.lody.virtual.client.ipc.VJobScheduler;
+import com.lody.virtual.client.ipc.VNotificationManager;
 import com.lody.virtual.client.ipc.VPackageManager;
+import com.lody.virtual.client.ipc.VirtualStorageManager;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.compat.BundleCompat;
 import com.lody.virtual.helper.utils.BitmapUtils;
@@ -812,5 +816,11 @@ public final class VirtualCore {
 		}
 		mService = null;
 		waitForEngine();
+		VActivityManager.get().clearRemoteInterface();
+		VAccountManager.get().clearRemoteInterface();
+		VirtualStorageManager.get().clearRemoteInterface();
+		VJobScheduler.get().clearRemoteInterface();
+		VNotificationManager.get().clearRemoteInterface();
+		VPackageManager.get().clearRemoteInterface();
 	}
 }

@@ -35,6 +35,10 @@ public class VJobScheduler {
         return mRemote;
     }
 
+    public void clearRemoteInterface() {
+        mRemote = null;
+    }
+
     private Object getRemoteInterface() {
         final IBinder binder = ServiceManagerNative.getService(ServiceManagerNative.JOB);
         return IJobScheduler.Stub.asInterface(binder);

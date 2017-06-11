@@ -32,6 +32,10 @@ public class VAccountManager {
 		return mRemote;
 	}
 
+	public void clearRemoteInterface() {
+		mRemote = null;
+	}
+
 	private Object getStubInterface() {
 		return IAccountManager.Stub
 				.asInterface(ServiceManagerNative.getService(ServiceManagerNative.ACCOUNT));

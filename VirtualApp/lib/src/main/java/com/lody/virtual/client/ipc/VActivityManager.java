@@ -57,6 +57,10 @@ public class VActivityManager {
         return mRemote;
     }
 
+    public void clearRemoteInterface() {
+        mRemote = null;
+    }
+
     private Object getRemoteInterface() {
         return IActivityManager.Stub
                 .asInterface(ServiceManagerNative.getService(ServiceManagerNative.ACTIVITY));
