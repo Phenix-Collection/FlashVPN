@@ -802,6 +802,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		Bundle extras = new Bundle();
 		BundleCompat.putBinder(extras, "_VA_|_binder_", app);
 		extras.putInt( "_VA_|_vuid_", vuid);
+		extras.putInt( "_VA_|_vpid_", vpid);
 		extras.putString("_VA_|_process_", processName);
 		extras.putString("_VA_|_pkg_", info.packageName);
 		Bundle res = ProviderCall.call(StubManifest.getStubAuthority(vpid), "_VA_|_init_process_", null, extras);

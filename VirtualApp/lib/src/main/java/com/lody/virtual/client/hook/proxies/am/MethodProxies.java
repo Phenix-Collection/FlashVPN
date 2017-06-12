@@ -57,6 +57,7 @@ import com.lody.virtual.os.VUserInfo;
 import com.lody.virtual.remote.AppTaskInfo;
 import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.interfaces.IAppRequestListener;
+import com.polestar.clone.StubService;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -891,8 +892,8 @@ class MethodProxies {
                 if (service.getComponent() != null) {
                     VLog.d(TAG, " " + service.getComponent().getClassName() );
                 }
-                if (service.getComponent() != null && service.getComponent().getClassName().equals("com.qihoo.ls.SoService")){
-                    return  null;
+                if (service.getComponent() != null && service.getComponent().getClassName().contains(StubService.class.getName())){
+                    return method.invoke(who, args);
                 }
                 if (BLOCK_ACTION_LIST.contains(service.getAction())) {
                     VLog.logbug(TAG, "action is blocked: " + service);

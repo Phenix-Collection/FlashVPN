@@ -1277,5 +1277,56 @@
             android:exported="false"
             android:process=":p49" />
 
+        <service android:name="com.polestar.clone.StubService$S0" android:process=":p0" />
+        <service android:name="com.polestar.clone.StubService$S1" android:process=":p1" />
+        <service android:name="com.polestar.clone.StubService$S2" android:process=":p2" />
+        <service android:name="com.polestar.clone.StubService$S3" android:process=":p3" />
+        <service android:name="com.polestar.clone.StubService$S4" android:process=":p4" />
+        <service android:name="com.polestar.clone.StubService$S5" android:process=":p5" />
+        <service android:name="com.polestar.clone.StubService$S6" android:process=":p6" />
+        <service android:name="com.polestar.clone.StubService$S7" android:process=":p7" />
+        <service android:name="com.polestar.clone.StubService$S8" android:process=":p8" />
+        <service android:name="com.polestar.clone.StubService$S9" android:process=":p9" />
+        <service android:name="com.polestar.clone.StubService$S10" android:process=":p10" />
+        <service android:name="com.polestar.clone.StubService$S11" android:process=":p11" />
+        <service android:name="com.polestar.clone.StubService$S12" android:process=":p12" />
+        <service android:name="com.polestar.clone.StubService$S13" android:process=":p13" />
+        <service android:name="com.polestar.clone.StubService$S14" android:process=":p14" />
+        <service android:name="com.polestar.clone.StubService$S15" android:process=":p15" />
+        <service android:name="com.polestar.clone.StubService$S16" android:process=":p16" />
+        <service android:name="com.polestar.clone.StubService$S17" android:process=":p17" />
+        <service android:name="com.polestar.clone.StubService$S18" android:process=":p18" />
+        <service android:name="com.polestar.clone.StubService$S19" android:process=":p19" />
+        <service android:name="com.polestar.clone.StubService$S20" android:process=":p20" />
+        <service android:name="com.polestar.clone.StubService$S21" android:process=":p21" />
+        <service android:name="com.polestar.clone.StubService$S22" android:process=":p22" />
+        <service android:name="com.polestar.clone.StubService$S23" android:process=":p23" />
+        <service android:name="com.polestar.clone.StubService$S24" android:process=":p24" />
+        <service android:name="com.polestar.clone.StubService$S25" android:process=":p25" />
+        <service android:name="com.polestar.clone.StubService$S26" android:process=":p26" />
+        <service android:name="com.polestar.clone.StubService$S27" android:process=":p27" />
+        <service android:name="com.polestar.clone.StubService$S28" android:process=":p28" />
+        <service android:name="com.polestar.clone.StubService$S29" android:process=":p29" />
+        <service android:name="com.polestar.clone.StubService$S30" android:process=":p30" />
+        <service android:name="com.polestar.clone.StubService$S31" android:process=":p31" />
+        <service android:name="com.polestar.clone.StubService$S32" android:process=":p32" />
+        <service android:name="com.polestar.clone.StubService$S33" android:process=":p33" />
+        <service android:name="com.polestar.clone.StubService$S34" android:process=":p34" />
+        <service android:name="com.polestar.clone.StubService$S35" android:process=":p35" />
+        <service android:name="com.polestar.clone.StubService$S36" android:process=":p36" />
+        <service android:name="com.polestar.clone.StubService$S37" android:process=":p37" />
+        <service android:name="com.polestar.clone.StubService$S38" android:process=":p38" />
+        <service android:name="com.polestar.clone.StubService$S39" android:process=":p39" />
+        <service android:name="com.polestar.clone.StubService$S40" android:process=":p40" />
+        <service android:name="com.polestar.clone.StubService$S41" android:process=":p41" />
+        <service android:name="com.polestar.clone.StubService$S42" android:process=":p42" />
+        <service android:name="com.polestar.clone.StubService$S43" android:process=":p43" />
+        <service android:name="com.polestar.clone.StubService$S44" android:process=":p44" />
+        <service android:name="com.polestar.clone.StubService$S45" android:process=":p45" />
+        <service android:name="com.polestar.clone.StubService$S46" android:process=":p46" />
+        <service android:name="com.polestar.clone.StubService$S47" android:process=":p47" />
+        <service android:name="com.polestar.clone.StubService$S48" android:process=":p48" />
+        <service android:name="com.polestar.clone.StubService$S49" android:process=":p49" />
+
     </application>
 </manifest>

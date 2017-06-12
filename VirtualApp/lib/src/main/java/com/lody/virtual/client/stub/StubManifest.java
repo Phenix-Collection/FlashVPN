@@ -1,5 +1,7 @@
 package com.lody.virtual.client.stub;
 
+import com.polestar.clone.StubService;
+
 import java.util.Locale;
 
 /**
@@ -11,6 +13,7 @@ public class StubManifest {
     public static boolean ENABLE_GMS = true;
     public static String IDENTITY_PREFIX = "_VA_|";
     public static String STUB_ACTIVITY = StubActivity.class.getName();
+    public static String STUB_SERVICE = StubService.class.getName();
     public static String STUB_DIALOG = StubDialog.class.getName();
     public static String STUB_CP = StubContentProvider.class.getName();
     public static String STUB_JOB = StubJob.class.getName();
@@ -35,6 +38,10 @@ public class StubManifest {
 
     public static String getStubActivityName(int index) {
         return String.format(Locale.ENGLISH, "%s$C%d", STUB_ACTIVITY, index);
+    }
+
+    public static String getStubServiceName(int index) {
+        return String.format(Locale.ENGLISH, "%s$S%d", STUB_SERVICE, index);
     }
 
     public static String getStubDialogName(int index) {

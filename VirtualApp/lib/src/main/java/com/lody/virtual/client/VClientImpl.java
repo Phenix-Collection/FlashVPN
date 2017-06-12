@@ -90,6 +90,7 @@ public final class VClientImpl extends IVClient.Stub {
 
 	private IBinder token;
 	private int vuid;
+	private int vpid;
 	private AppBindData mBoundApplication;
 	private Application mInitialApplication;
 
@@ -120,6 +121,10 @@ public final class VClientImpl extends IVClient.Stub {
 		return vuid;
 	}
 
+	public int getVPid() {
+		return vpid;
+	}
+
 	public int getBaseVUid() {
 		return VUserHandle.getAppId(vuid);
 	}
@@ -146,14 +151,15 @@ public final class VClientImpl extends IVClient.Stub {
 		return token;
 	}
 
-	public void initProcess(IBinder token, int vuid) {
+	public void initProcess(IBinder token, int vuid, int vpid) {
 		if (this.token != null) {
 			Exception ex =  new IllegalStateException("Token is exist!");
 			VLog.logbug(TAG, VLog.getStackTraceString(ex));
 		}
 		this.token = token;
 		this.vuid = vuid;
-		VLog.d(TAG, "initProcess for vuid: " + vuid);
+		this.vpid = vpid;
+		VLog.d(TAG, "initProcess for vuid: " + vuid + " vpid: " + vpid);
 	}
 
 	private void handleNewIntent(NewIntentData data) {
