@@ -88,7 +88,7 @@ public class SettingsActivity extends BaseActivity {
                 MTAManager.generalClickEvent(SettingsActivity.this, "settings_gms_switch");
                 if(PreferencesUtils.isGMSEnable()) {
                     UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_gms_disable_notice),
-                            getString(R.string.no_thanks), getString(R.string.yes), R.drawable.dialog_tag_comment,
+                            getString(R.string.no_thanks), getString(R.string.yes), -1,
                             R.layout.dialog_up_down, dialogListener).setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
@@ -97,7 +97,7 @@ public class SettingsActivity extends BaseActivity {
                     });
                 } else {
                     UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_gms_enable_notice),
-                            getString(R.string.no_thanks), getString(R.string.yes), R.drawable.dialog_tag_comment,
+                            getString(R.string.no_thanks), getString(R.string.yes), -1,
                             R.layout.dialog_up_down, dialogListener).setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
