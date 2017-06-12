@@ -36,7 +36,6 @@ public final class SpecialComponentList {
     private static final HashSet<String> IO_REDIRECT_BLACK_LIST = new HashSet<>(1);
 
     private static final HashSet<String> BROADCAST_START_WHITE_LIST = new HashSet<>();
-    private static final HashSet<String> BROADCAST_AUTOSTART_WHITE_LIST = new HashSet<>();
     static {
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_ON);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_OFF);
@@ -116,11 +115,6 @@ public final class SpecialComponentList {
         BROADCAST_START_WHITE_LIST.add("com.google.android.gsf.login");
         BROADCAST_START_WHITE_LIST.add("com.android.vending");
         BROADCAST_START_WHITE_LIST.add("com.google.android.play.games");
-
-        BROADCAST_AUTOSTART_WHITE_LIST.add("com.facebook.orca");
-        BROADCAST_AUTOSTART_WHITE_LIST.add("com.facebook.katana");
-        BROADCAST_AUTOSTART_WHITE_LIST.add("com.tencent.mm");
-        BROADCAST_AUTOSTART_WHITE_LIST.add("com.whatsapp");
     }
 
     public static boolean isSticky(String action) {
@@ -134,14 +128,14 @@ public final class SpecialComponentList {
         return  true;
     }
 
-    public static boolean canStartFromBroadcast(String pkg, String action) {
+    public static boolean canStartFromBroadcast(String pkg) {
 //        if (GmsSupport.isGmsFamilyPackage(pkg)) {
 //            return true;
 //        }
-        if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
-            return BROADCAST_AUTOSTART_WHITE_LIST.contains(pkg);
+        if (BROADCAST_START_WHITE_LIST.contains(pkg)) {
+            return true;
         }
-        return BROADCAST_START_WHITE_LIST.contains(pkg);
+        return false;
     }
     public static boolean isSpecSystemPackage(String pkg) {
         return SPEC_SYSTEM_APP_LIST.contains(pkg);
