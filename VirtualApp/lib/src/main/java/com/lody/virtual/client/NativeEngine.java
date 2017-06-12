@@ -12,6 +12,7 @@ import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.InstalledAppInfo;
+import com.polestar.clone.StubService;
 
 import java.io.File;
 import java.io.IOException;
@@ -191,6 +192,7 @@ public class NativeEngine {
 		VLog.e(TAG, "killProcess: pid = %d, signal = %d.", pid, signal);
 		if (pid == android.os.Process.myPid()) {
 			VLog.e(TAG, VLog.getStackTraceString(new Throwable()));
+            StubService.stop(VirtualCore.get().getContext(), VClientImpl.get().getVPid());
 		}
 	}
 

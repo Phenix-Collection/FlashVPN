@@ -17,7 +17,7 @@ public class StubService extends Service {
     private static final String TAG = "StubService";
 
     public static void startup(Context context, int vpid) {
-        VLog.d(TAG, "Startup for : S" + vpid);
+        VLog.d(TAG, "Startup for : StubService$S" + vpid);
         try {
             Intent i = new Intent();
             i.setClassName(VirtualCore.get().getHostPkg(), StubManifest.getStubServiceName(vpid));
@@ -27,28 +27,40 @@ public class StubService extends Service {
         }
     }
 
+    public static void stop(Context context, int vpid) {
+        VLog.d(TAG, "stop for : StubService$S" + vpid);
+        try {
+            Intent i = new Intent();
+            i.setClassName(VirtualCore.get().getHostPkg(), StubManifest.getStubServiceName(vpid));
+            context.stopService(i);
+        }catch (Exception e){
+            VLog.logbug(TAG, VLog.getStackTraceString(e));
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         //startup(this);
+        VLog.d(TAG, this.getClass().getName() + " onDestroy");
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        VLog.logbug(TAG, "StubService onBind");
+        VLog.logbug(TAG, this.getClass().getName() + " onBind");
         return null;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        VLog.d(TAG, "StubService onCreate");
+        VLog.d(TAG, this.getClass().getName() + " onCreate");
 
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        VLog.d(TAG, "StubService onStartCommand");
+        VLog.d(TAG, this.getClass().getName() + " onStartCommand");
         return START_STICKY;
     }
 
