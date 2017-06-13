@@ -51,6 +51,7 @@ import com.polestar.multiaccount.utils.AnimatorHelper;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
+import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.ExplosionField;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
@@ -430,7 +431,9 @@ public class HomeFragment extends BaseFragment {
             mAdmobExpressView = null;
             return;
         }
-        mAdmobExpressView.setAdSize(new AdSize(360, 132));
+        int dpWidth = DisplayUtils.px2dip(mActivity, DisplayUtils.getScreenWidth(mActivity));
+        dpWidth = dpWidth < 290 ? dpWidth : dpWidth-10;
+        mAdmobExpressView.setAdSize(new AdSize(dpWidth, 135));
 //        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
         mAdmobExpressView.setAdUnitId(adunit);
         mAdmobExpressView.setVisibility(View.GONE);
@@ -608,7 +611,7 @@ public class HomeFragment extends BaseFragment {
             adLoadStartTime = System.currentTimeMillis();
             loadAdmobNativeExpress();
         }
-        if ( mNativeAdLoader.hasValidAdSource()) {
+        if ( false) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
