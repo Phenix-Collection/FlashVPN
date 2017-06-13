@@ -430,7 +430,8 @@ public class VActivityManager {
         try {
             return getService().isAppRunning(packageName, userId);
         } catch (RemoteException e) {
-            return VirtualRuntime.crash(e);
+            mRemote = null;
+            return false;
         }
     }
 

@@ -44,7 +44,6 @@ public class AppManager {
             if (model.getCustomIcon() == null) {
                 model.setCustomIcon(BitmapUtils.createCustomIcon(context, model.initDrawable(context)));
             }
-            setAppNotificationFlag(model.getPackageName(), model.isNotificationEnable());
         }
         deleteApp(context, uninstalledApp);
         appList.removeAll(uninstalledApp);
@@ -150,11 +149,6 @@ public class AppManager {
     public static void killApp(String packageName) {
         MLogs.d(TAG, "packageName = " + packageName);
         VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
-    }
-
-    public static void setAppNotificationFlag(String packageName, boolean enable) {
-        MLogs.d(TAG, "packageName = " + packageName + ", enable = " + enable);
-        //VirtualCore.get().getService().setAppNotificationFlag(packageName, enable);
     }
 
 }

@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -156,7 +157,6 @@ public class AppCloneActivity extends BaseActivity {
                                 @Override
                                 public void run() {
                                     CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
-                                    AppManager.setAppNotificationFlag(mPkgName, true);
                                     isDBUpdated = true;
                                 }
                             });
@@ -164,10 +164,25 @@ public class AppCloneActivity extends BaseActivity {
                             // showAd(installAd);
                         } else {
                             MTAManager.keyLog(AppCloneActivity.this, MTAManager.KeyLogTag.AERROR, "cloneError:"+ mPkgName);
+                            mAnimateHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(AppCloneActivity.this, getString(R.string.clone_error), Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
+                            }, 2000);
                         }
                     } else {
+                        MTAManager.keyLog(AppCloneActivity.this, MTAManager.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
                         isInstallSuccess = true;
                         isInstallDone = true;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
+                                isDBUpdated = true;
+                            }
+                        });
                     }
                 }
             }).start();

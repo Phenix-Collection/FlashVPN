@@ -323,11 +323,25 @@ public final class VirtualCore {
 	}
 
     public InstallResult installPackage(String apkPath, int flags) {
-		try {
-            return getService().installPackage(apkPath, flags);
-        } catch (RemoteException e) {
-            return VirtualRuntime.crash(e);
-        }
+		InstallResult result = null;
+		for (int i = 0; i < 5; i ++) {
+			try {
+				result = getService().installPackage(apkPath, flags);
+			} catch (RemoteException e) {
+				mService = null;
+				//return InstallResult.makeFailure("Service not available");
+				//return VirtualRuntime.crash(e);
+			}
+			if (result != null && result.isSuccess) {
+				return result;
+			}
+			try{
+				Thread.sleep(300);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return InstallResult.makeFailure("Service not available");
     }
 
 	public InstallResult upgradePackage(String apkPath, int flags) {
@@ -366,7 +380,8 @@ public final class VirtualCore {
 		try {
 			return getService().isAppInstalled(pkg);
 		} catch (RemoteException e) {
-			return VirtualRuntime.crash(e);
+			mService = null;
+			return false;
 		}
 	}
 
@@ -815,12 +830,12 @@ public final class VirtualCore {
 			VLog.logbug(VLog.VTAG, VLog.getStackTraceString(e));
 		}
 		mService = null;
-		waitForEngine();
 		VActivityManager.get().clearRemoteInterface();
 		VAccountManager.get().clearRemoteInterface();
 		VirtualStorageManager.get().clearRemoteInterface();
 		VJobScheduler.get().clearRemoteInterface();
 		VNotificationManager.get().clearRemoteInterface();
 		VPackageManager.get().clearRemoteInterface();
+		waitForEngine();
 	}
 }

@@ -55,7 +55,6 @@ public class NotificationActivity extends BaseActivity {
                 model.setNotificationEnable(status);
                 DbManager.updateAppModel(mContext, model);
 //                DbManager.notifyChanged();
-                AppManager.setAppNotificationFlag(model.getPackageName(), status);
             }
         });
         mNotificationAdapter.setIsCheckedCallback(new BasicPackageSwitchAdapter.IsCheckedCallback() {
