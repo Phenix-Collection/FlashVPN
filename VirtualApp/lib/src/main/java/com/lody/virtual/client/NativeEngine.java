@@ -1,5 +1,6 @@
 package com.lody.virtual.client;
 
+import android.content.Intent;
 import android.hardware.Camera;
 import android.media.AudioRecord;
 import android.os.Binder;
@@ -195,6 +196,27 @@ public class NativeEngine {
             StubService.stop(VirtualCore.get().getContext(), VClientImpl.get().getVPid());
 		}
 	}
+
+    public static void notifyNativeCrash(int signal) {
+        VLog.logbug(TAG, "notifyNativeCrash: signal = " + signal);
+        Exception ex = new Exception("native crash: "+ signal + " in pid: " + Process.myPid());
+        VLog.logbug(TAG, VLog.getStackTraceString(ex));
+        //StubService.stop(VirtualCore.get().getContext(), VClientImpl.get().getVPid());
+        //Thread.currentThread().stop(new Exception("native crash: "+ signal));
+        //CrashReport.postCatchedException(ex);
+        try {
+            Intent crash = new Intent("appclone.intent.action.SHOW_CRASH_DIALOG");
+            crash.putExtra("package", VClientImpl.get().getCurrentPackage());
+            crash.putExtra("exception", ex);
+            crash.putExtra("tag", 47414);
+            VirtualCore.get().getContext().sendBroadcast(crash);
+            Thread.sleep(500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0);
+    }
 
 	public static int onGetCallingUid(int originUid) {
 		int callingPid = Binder.getCallingPid();

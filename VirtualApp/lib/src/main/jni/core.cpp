@@ -2,10 +2,40 @@
 // VirtualApp Native Project
 //
 #include "Core.h"
-
+#include <signal.h>
+//int sigaction(int signum,const struct sigaction *act,struct sigaction *oldact);
+const int handledSignals[] = {
+        SIGSEGV, SIGABRT, SIGFPE, SIGILL, SIGBUS
+};
+const int handledSignalsNum = sizeof(handledSignals) / sizeof(handledSignals[0]);
+struct sigaction old_handlers[handledSignalsNum];
 
 JavaVM *g_vm;
 jclass g_jclass;
+//notifyNativeCrash  = (*env)->GetMethodID(env, cls,  "notifyNativeCrash", "()V");
+void my_sigaction(int signal, siginfo_t *info, void *reserved) {
+    // Here catch the native crash
+    extern JavaVM *g_vm;
+    extern jclass g_jclass;
+    JNIEnv *env = NULL;
+    g_vm->GetEnv((void **) &env, JNI_VERSION_1_4);
+    g_vm->AttachCurrentThread(&env, NULL);
+    jmethodID notifyNativeCrash = env->GetStaticMethodID(g_jclass, "notifyNativeCrash", "(I)V");
+    env->CallStaticVoidMethod(g_jclass, notifyNativeCrash, signal);
+}
+
+int nativeCrashHandler_onLoad(JNIEnv *env) {
+    struct sigaction handler;
+    //memset(&handler, 0, sizeof(sigaction));
+    handler.sa_sigaction = my_sigaction;
+    handler.sa_flags = SA_RESETHAND;
+
+    for (int i = 0; i < handledSignalsNum; ++i) {
+        sigaction(handledSignals[i], &handler, &old_handlers[i]);
+    }
+
+    return 1;
+}
 
 
 
@@ -15,6 +45,7 @@ void hook_native(JNIEnv *env, jclass jclazz, jobjectArray javaMethods, jstring p
         return;
     }
     patchAndroidVM(javaMethods, packageName, isArt, apiLevel, cameraMethodType);
+    nativeCrashHandler_onLoad(env);
     hasHooked = true;
 }
 

@@ -54,6 +54,7 @@ public class AppConstants {
         public static final int CLONE_CRASH = 32459;
         public static final int SERVER_CRASH = 41781;
         public static final int FG_CRASH = 41784;
+        public static final int NATIVE_CRASH = 41784;
 
     }
 
