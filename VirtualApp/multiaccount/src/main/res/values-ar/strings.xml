@@ -13,7 +13,6 @@
     <string name="cloning_tips">ويتم استنساخ تطبيق ...</string>
     <string name="app_starting_tips">تطبيق بدأت ...</string>
     <string name="first_start_tips">وسوف يستغرق وقتا أطول قليلا لبدء أول.</string>
-    <string name="clone_success">نجاح استنساخ. يتمتع بها الآن!</string>
 
     <!-- nav menu -->
     <string name="notifications">إخطارات</string>

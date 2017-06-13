@@ -12,7 +12,6 @@
     <string name="cloning_tips">%s จะถูกโคลน ...</string>
     <string name="app_starting_tips">%s จะเริ่มต้น ...</string>
     <string name="first_start_tips">มันจะใช้เวลาอีกหน่อยสำหรับการเริ่มต้นครั้งแรก</string>
-    <string name="clone_success">โคลนสำเร็จรูป สนุกกับมันในขณะนี้!</string>
 
     <!-- nav menu -->
     <string name="notifications">การแจ้งเตือน</string>

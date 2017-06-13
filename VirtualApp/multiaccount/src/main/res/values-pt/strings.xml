@@ -12,7 +12,6 @@
     <string name="cloning_tips">%s está sendo clonado ...</string>
     <string name="app_starting_tips">%s está começando ...</string>
     <string name="first_start_tips">Demorará um pouco mais para o primeiro início.</string>
-    <string name="clone_success">%s É clonado. Aproveite agora!</string>
 
     <!-- nav menu -->
     <string name="notifications">Notificações</string>

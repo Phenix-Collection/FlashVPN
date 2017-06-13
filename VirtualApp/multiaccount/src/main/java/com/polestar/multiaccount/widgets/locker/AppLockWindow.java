@@ -171,8 +171,10 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
             mAdmobExpressView = null;
             return;
         }
-        mAdmobExpressView.setAdSize(new AdSize(360, 280));
-        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/7955343852");
+        int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
+        dpWidth = Math.max(280, dpWidth*9/10);
+        mAdmobExpressView.setAdSize(new AdSize(dpWidth, 280));
+        mAdmobExpressView.setAdUnitId(adunit);
         //mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/7540311850");
        // mAdmobExpressView.setVisibility(View.GONE);
         mAdmobExpressView.setBackgroundColor(0);
@@ -246,6 +248,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 @Override
                 public void onAdLoaded(IAd ad) {
                     inflatNativeAd(ad);
+                    //loadAdmobNativeExpress();
                     adLoader.loadAd(1, null);
                 }
 

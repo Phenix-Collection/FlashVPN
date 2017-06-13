@@ -12,7 +12,6 @@
     <string name="cloning_tips">%s sedang kloning ...</string>
     <string name="app_starting_tips">%s mulai ...</string>
     <string name="first_start_tips">Ini akan memakan waktu sedikit lebih lama untuk start pertama.</string>
-    <string name="clone_success">%s clone selesai. Nikmati sekarang!</string>
 
     <!-- nav menu -->
     <string name="notifications">Pemberitahuan</string>
