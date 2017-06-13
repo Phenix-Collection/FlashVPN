@@ -90,6 +90,12 @@ public class NativeInterstitialActivity extends Activity {
     };
 
     @Override
+    public void onBackPressed() {
+        canceled = true;
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sInstance = this;
@@ -120,6 +126,7 @@ public class NativeInterstitialActivity extends Activity {
 
             @Override
             public void onClick(View v) {
+                canceled = true;
                 finish();
             }
         });
