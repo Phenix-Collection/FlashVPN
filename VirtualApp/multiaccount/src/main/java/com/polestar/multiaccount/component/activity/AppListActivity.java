@@ -46,6 +46,7 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.pbinterface.DataObserver;
 import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.CommonUtils;
+import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.RemoteConfig;
@@ -269,7 +270,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         if (burstLoad) {
             loadAdmobNativeExpress();
         }
-        if ( mNativeAdLoader.hasValidAdSource()) {
+        if (mNativeAdLoader.hasValidAdSource()) {
             adLoadStartTime = System.currentTimeMillis();
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
@@ -351,7 +352,9 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             AdLog.d("No admob banner view configured");
             return;
         }
-        expressAdView.setAdSize(new AdSize(360, 320));
+        int dpWidth = DisplayUtils.px2dip(this, DisplayUtils.getScreenWidth(this));
+        //dpWidth = Math.max(280, dpWidth*9/10);
+        expressAdView.setAdSize(new AdSize(dpWidth, 320));
 //        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
         expressAdView.setAdUnitId(adunit);
         expressAdView.setVisibility(View.GONE);

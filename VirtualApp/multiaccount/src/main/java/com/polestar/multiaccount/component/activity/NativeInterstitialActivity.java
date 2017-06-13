@@ -26,6 +26,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.multiaccount.R;
+import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.ToastUtils;
@@ -155,7 +156,9 @@ public class NativeInterstitialActivity extends Activity {
             mAdmobExpressView = null;
             return;
         }
-        mAdmobExpressView.setAdSize(new AdSize(360, 320));
+        int dpWidth = DisplayUtils.px2dip(this, DisplayUtils.getScreenWidth(this));
+        dpWidth = Math.max(280, dpWidth*9/10);
+        mAdmobExpressView.setAdSize(new AdSize(dpWidth, 320));
 //        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
         mAdmobExpressView.setAdUnitId(adunit);
         mAdmobExpressView.setVisibility(View.GONE);

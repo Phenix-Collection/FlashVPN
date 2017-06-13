@@ -611,7 +611,7 @@ public class HomeFragment extends BaseFragment {
             adLoadStartTime = System.currentTimeMillis();
             loadAdmobNativeExpress();
         }
-        if ( false) {
+        if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
