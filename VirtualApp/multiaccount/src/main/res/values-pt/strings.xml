@@ -172,4 +172,5 @@
     <string name="settings_gms_enable_notice">Que o Google play serviço Pode consumir Mais memória e CPU.Você quer que o Google play service?</string>
     <string name="toast_no_lucky">Desculpe, nenhum conteúdo Desta vez.Por favor, tente novamente Mais tarde.</string>
     <string name="upgrade_start_tips">Pode demorar um pouco Mais que o aplicativo FOI atualizado.</string>
+    <string name="clone_success">%s+ está pronto. Aproveite agora!</string>
 </resources>

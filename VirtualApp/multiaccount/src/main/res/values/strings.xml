@@ -11,7 +11,7 @@
     <string name="action_settings">Settings</string>
     <string name="most_popular_apps">Most Popular</string>
     <string name="more_apps">More Supported</string>
-    <string name="sponsor_text">Sponsor Apps</string>
+    <string name="sponsor_text">Sponsored</string>
     <string name="btn_clone">Clone</string>
     <string name="start">Start</string>
     <string name="cancel">Cancel</string>
@@ -21,6 +21,7 @@
     <string name="app_starting_tips">%s is starting ...</string>
     <string name="first_start_tips">It may take a little longer for the first start.</string>
     <string name="upgrade_start_tips">It may take a little longer as this app was just upgraded.</string>
+    <string name="clone_success">%s+ is ready. Enjoy it now!</string>
 
     <!-- nav menu -->
     <string name="notifications">Notifications</string>

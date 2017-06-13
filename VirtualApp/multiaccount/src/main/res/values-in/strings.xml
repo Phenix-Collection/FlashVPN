@@ -169,4 +169,5 @@
     <string name="settings_gms_disable_toast">Layanan Google Play dinonaktifkan</string>
     <string name="settings_gms_enable_toast">Layanan Google Play diaktifkan</string>
     <string name="settings_gms_disable_notice"></string>
+    <string name="clone_success">%s+ siap. Nikmati sekarang juga!</string>
 </resources>
