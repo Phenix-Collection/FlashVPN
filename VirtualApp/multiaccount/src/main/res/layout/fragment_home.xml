@@ -20,96 +20,13 @@
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="0dp" />
 
-            <com.polestar.multiaccount.widgets.CustomFloatView
-                android:id="@+id/addApp_btn"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="bottom|end"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"/>
-
-        <LinearLayout
-            android:id="@+id/bottom_area"
-            android:layout_width="match_parent"
+        <com.polestar.multiaccount.widgets.CustomFloatView
+            android:id="@+id/addApp_btn"
+            android:layout_width="wrap_content"
             android:layout_height="70dp"
-            android:layout_gravity="bottom|center"
             android:layout_alignParentBottom="true"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:background="@color/gray_drawer"
-            android:weightSum="1">
-            <com.polestar.multiaccount.widgets.dragdrop.DropableLinearLayout
-                android:id="@+id/create_shortcut_area"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/shortcut_drop_button">
-                    <ImageView
-                        android:layout_margin="15dp"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@mipmap/icon_add"
-                        />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center|start"
-                    android:padding="5dp"
-                    android:text="@string/create_shortcut"
-                    android:textColor="@android:color/white"
-                    android:id="@+id/shortcut_drop_text"/>
-
-            </com.polestar.multiaccount.widgets.dragdrop.DropableLinearLayout>
-
-            <com.polestar.multiaccount.widgets.dragdrop.DropableLinearLayout
-                android:id="@+id/delete_app_area"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/delete_drop_button">
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_margin="15dp"
-                        android:src="@mipmap/icon_delete"/>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center|start"
-                    android:padding="5dp"
-                    android:text="@string/delete_dialog_right"
-                    android:textColor="@android:color/white"
-                    android:id="@+id/delete_drop_text"/>
-            </com.polestar.multiaccount.widgets.dragdrop.DropableLinearLayout>
-
-
-        </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="16dp"/>
 
     </RelativeLayout>
 </com.polestar.multiaccount.widgets.dragdrop.DragLayer>

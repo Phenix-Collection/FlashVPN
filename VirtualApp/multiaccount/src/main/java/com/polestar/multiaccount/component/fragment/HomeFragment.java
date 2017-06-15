@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,12 +61,10 @@ import com.polestar.multiaccount.widgets.CustomFloatView;
 import com.polestar.multiaccount.widgets.GridAppCell;
 import com.polestar.multiaccount.widgets.HeaderGridView;
 import com.polestar.multiaccount.widgets.TutorialGuides;
-import com.polestar.multiaccount.widgets.TutorialGuidesUtils;
 import com.polestar.multiaccount.widgets.dragdrop.DragController;
 import com.polestar.multiaccount.widgets.dragdrop.DragImageView;
 import com.polestar.multiaccount.widgets.dragdrop.DragLayer;
 import com.polestar.multiaccount.widgets.dragdrop.DragSource;
-import com.polestar.multiaccount.widgets.dragdrop.DropableLinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,13 +103,6 @@ public class HomeFragment extends BaseFragment {
     private boolean showLucky;
     public static String UNIT_ID = "8439";
 
-    private LinearLayout bottomArea;
-    private DropableLinearLayout createShortcutArea;
-    private DropableLinearLayout deleteArea;
-    private LinearLayout createDropButton;
-    private LinearLayout deleteDropButton;
-    private TextView deleteDropTxt;
-    private TextView createDropTxt;
     private boolean adShowed = false;
 
     private Handler adHandler = new Handler(Looper.getMainLooper()){
@@ -178,51 +168,39 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void onDragStart(DragSource source, Object info, int dragAction) {
             MLogs.d("onDragStart");
-//            floatView.animToExpand();
-//            mDragController.addDropTarget(floatView);
-            floatView.setVisibility(View.GONE);
-            bottomArea.setVisibility(View.VISIBLE);
-            AnimatorHelper.verticalShowFromBottom(bottomArea);
-            mDragController.addDropTarget(createShortcutArea);
-            createShortcutArea.clearState();
-            createDropButton.setBackgroundColor(0);
-            createDropTxt.setTextColor(getResources().getColor(R.color.white));
-            deleteDropButton.setBackgroundColor(0);
-            deleteDropTxt.setTextColor(getResources().getColor(R.color.white));
-            mDragController.addDropTarget(deleteArea);
-            deleteArea.clearState();
+            floatView.animToExpand();
+            mDragController.addDropTarget(floatView);
         }
 
         @Override
         public void onDragEnd(DragSource source, Object info, int action) {
-            MLogs.d("onDragEnd + " );
-            if (createShortcutArea.isSelected()) {
-                MTAManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
-                CommonUtils.createShortCut(mActivity,((AppModel) info));
-                floatView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
-                        //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
-                    }
-                },CustomFloatView.ANIM_DURATION / 2);
-            } else if (deleteArea.isSelected()) {
-                pkgGridAdapter.notifyDataSetChanged();
-                floatView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        showDeleteDialog((AppModel) info);
-                    }
-                },CustomFloatView.ANIM_DURATION / 2);
+            MLogs.d("onDragEnd + " + floatView.getSelectedState());
+            switch (floatView.getSelectedState()) {
+                case CustomFloatView.SELECT_BTN_LEFT:
+                    MTAManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
+                    CommonUtils.createShortCut(mActivity,((AppModel) info));
+                    floatView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
+                            //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+                        }
+                    },CustomFloatView.ANIM_DURATION / 2);
+                    break;
+                case CustomFloatView.SELECT_BTN_RIGHT:
+                    pkgGridAdapter.notifyDataSetChanged();
+                    floatView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showDeleteDialog((AppModel) info);
+                        }
+                    },CustomFloatView.ANIM_DURATION / 2);
+                    break;
+                default:
+                    break;
             }
-            //            floatView.animToIdel();
-//            mDragController.removeDropTarget(floatView);
-            AnimatorHelper.hideToBottom(bottomArea);
-            bottomArea.setVisibility(View.GONE);
-            AnimatorHelper.verticalShowFromBottom(floatView);
-            floatView.setVisibility(View.VISIBLE);
-            mDragController.removeDropTarget(createShortcutArea);
-            mDragController.removeDropTarget(deleteArea);
+            floatView.animToIdel();
+            mDragController.removeDropTarget(floatView);
         }
     };
 
@@ -317,41 +295,6 @@ public class HomeFragment extends BaseFragment {
         pkgGridAdapter = new PackageGridAdapter();
 //        pkgGridView.setLayoutAnimation(getGridLayoutAnimController());
         pkgGridView.setAdapter(pkgGridAdapter);
-
-        bottomArea = (LinearLayout)contentView.findViewById(R.id.bottom_area);
-        createShortcutArea = (DropableLinearLayout) contentView.findViewById(R.id.create_shortcut_area);
-        createDropButton = (LinearLayout) contentView.findViewById(R.id.shortcut_drop_button);
-        deleteDropButton = (LinearLayout) contentView.findViewById(R.id.delete_drop_button);
-        deleteDropTxt = (TextView) contentView.findViewById(R.id.delete_drop_text);
-        createDropTxt = (TextView) contentView.findViewById(R.id.shortcut_drop_text);
-        createShortcutArea.setOnEnterListener(new DropableLinearLayout.IDragListener() {
-            @Override
-            public void onEnter() {
-                createDropButton.setBackgroundResource(R.drawable.shape_create_shortcut);
-                createDropTxt.setTextColor(getResources().getColor(R.color.shortcut_text_color));
-            }
-
-            @Override
-            public void onExit() {
-                createDropButton.setBackgroundColor(0);
-                createDropTxt.setTextColor(getResources().getColor(R.color.white));
-            }
-        });
-        deleteArea = (DropableLinearLayout) contentView.findViewById(R.id.delete_app_area);
-        deleteArea.setOnEnterListener(new DropableLinearLayout.IDragListener() {
-            @Override
-            public void onEnter() {
-                deleteDropButton.setBackgroundResource(R.drawable.shape_delete);
-                deleteDropTxt.setTextColor(getResources().getColor(R.color.delete_text_color));
-            }
-
-            @Override
-            public void onExit() {
-                deleteDropButton.setBackgroundColor(0);
-                deleteDropTxt.setTextColor(getResources().getColor(R.color.white));
-            }
-        });
-
 
         floatView = (CustomFloatView) contentView.findViewById(R.id.addApp_btn);
         floatView.startBreath();
