@@ -670,6 +670,7 @@ public class VAppManagerService extends IAppManager.Stub {
     public void restart() {
         VLog.logbug(TAG, "restart...");
         VirtualCore.get().killAllApps();
+        mPersistenceLayer.save();
         try{
             Thread.sleep(300);
         }catch (Throwable e) {
