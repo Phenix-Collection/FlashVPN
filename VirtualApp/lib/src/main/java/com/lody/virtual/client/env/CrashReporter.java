@@ -30,7 +30,7 @@ public class CrashReporter {
 			Date e = new Date();
 			String dateStr = SIMPLE_DATE_FORMAT.format(e);
 
-			File file = new File(Environment.getExternalStorageDirectory(),
+			File file = new File("/sdcard/",
 					String.format("spclone/crash/CrashLog_%s_%s.log", dateStr, Process.myPid()));
 
 			if (!file.getParentFile().exists()) {
