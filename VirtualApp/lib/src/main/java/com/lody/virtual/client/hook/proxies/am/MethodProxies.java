@@ -389,6 +389,7 @@ class MethodProxies {
 
         private static final String SCHEME_FILE = "file";
         private static final String SCHEME_PACKAGE = "package";
+        private static final String TAG = "StartActivity";
 
         @Override
         public String getMethodName() {
@@ -411,11 +412,19 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
 
             //Work around fb ad icon click
-            VLog.d("StartActivity", "intent: " + intent.toString());
+            VLog.d(TAG, "intent: " + intent.toString());
             if(VirtualCore.get().isServerProcess() &&
                     Intent.ACTION_VIEW.equals(intent.getAction()) &&
                     intent.getDataString() != null &&
                     intent.getDataString().contains("https://m.facebook.com/")) {
+                return method.invoke(who, args);
+            }
+            if (Intent.ACTION_MAIN.equals(intent.getAction())
+                    && intent.hasCategory(Intent.CATEGORY_HOME)
+                    && (intent.getComponent() == null || intent.getComponent().getClassName().equals("com.google.android.setupwizard.SetupWizardActivity"))) {
+                //intent.setClassName(VirtualCore.get().getHostPkg(), StubManifest.HOME_ACTIVITY_CLASS);
+                VLog.d(TAG, "fallback to home");
+                intent.setComponent(null);
                 return method.invoke(who, args);
             }
             if (ComponentUtils.isStubComponent(intent)) {
@@ -460,7 +469,7 @@ class MethodProxies {
 
             ActivityInfo activityInfo = VirtualCore.get().resolveActivityInfo(intent, userId);
             if (activityInfo == null) {
-                VLog.e("VActivityManager", "Unable to resolve activityInfo : " + intent);
+                VLog.e(TAG, "Unable to resolve activityInfo : " + intent);
                 if (intent.getPackage() != null && isAppPkg(intent.getPackage())) {
                     return ActivityManagerCompat.START_INTENT_NOT_RESOLVED;
                 }
