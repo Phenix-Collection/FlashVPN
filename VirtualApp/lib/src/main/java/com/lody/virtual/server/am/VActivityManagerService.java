@@ -219,7 +219,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			ListIterator<ServiceRecord> iterator = mHistory.listIterator();
 			while (iterator.hasNext()) {
 				ServiceRecord r = iterator.next();
-				if (r.process.pid == record.pid) {
+				if (r.process != null && r.process.pid == record.pid) {
 					iterator.remove();
 				}
 			}
@@ -470,13 +470,15 @@ public class VActivityManagerService extends IActivityManager.Stub {
                     }
                 }
 
-				try {
-					IApplicationThreadCompat.scheduleStopService(r.process.appThread, r);
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
-						mHistory.remove(r);
+                if (r.process != null && r.process.appThread != null){
+					try {
+						IApplicationThreadCompat.scheduleStopService(r.process.appThread, r);
+					} catch (RemoteException e) {
+						e.printStackTrace();
 					}
+				}
+				mHistory.remove(r);
+			}
 			return 1;
 		}
 	}
@@ -503,7 +505,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			}
 			if (r != null &&  (r.startId == startId || startId == -1)) {
 				try {
-					IApplicationThreadCompat.scheduleStopService(r.process.appThread, r);
+					if (r.process != null && r.process.appThread!= null) {
+						IApplicationThreadCompat.scheduleStopService(r.process.appThread, r);
+					}
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
@@ -594,7 +598,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
             }
             clist.add(c);
 
-            if (!canBind) {
+            if ((!canBind) || r.process == null || r.process.appThread == null) {
 				return 0;
 			}
 			ServiceRecord.IntentBindRecord boundRecord = r.peekBinding(service);
@@ -654,7 +658,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			return;
 		}
 
-		if (!c.serviceDead) {
+		if (!c.serviceDead && r.process != null && r.process.appThread != null) {
 			try {
 				IApplicationThreadCompat.scheduleUnbindService(r.process.appThread, r, b.intent.intent);
 			} catch (RemoteException e) {
@@ -763,7 +767,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		synchronized (mHistory) {
 			List<ActivityManager.RunningServiceInfo> services = new ArrayList<>(mHistory.size());
 			for (ServiceRecord r : mHistory) {
-                if (r.process.userId != userId) {
+                if (r.process == null || r.process.userId != userId) {
                     continue;
                 }
 				ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
