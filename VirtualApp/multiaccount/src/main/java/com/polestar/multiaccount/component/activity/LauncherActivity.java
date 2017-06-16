@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.MobVistaSDK;
 import com.mobvista.msdk.out.MobVistaSDKFactory;
@@ -69,6 +70,12 @@ public class LauncherActivity extends BaseActivity{
         },100);
 
         //VirtualCore.get().waitForEngine();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ServiceManagerNative.ensureServerStarted();
+            }
+        }).start();
         if (PreferencesUtils.hasShownStartPage()) {
             long delta = System.currentTimeMillis() - time;
             handler.postDelayed(new Runnable() {
