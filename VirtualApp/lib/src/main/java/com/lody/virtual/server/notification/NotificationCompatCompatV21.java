@@ -28,8 +28,8 @@ import static com.lody.virtual.os.VEnvironment.getPackageResourcePath;
     public boolean dealNotification(int id, Notification notification, String packageName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Context appContext = getAppContext(packageName);
-            return resolveRemoteViews(appContext, packageName, notification)
-                    || resolveRemoteViews(appContext, packageName, notification.publicVersion);
+            return appContext == null? false: (resolveRemoteViews(appContext, packageName, notification)
+                    || resolveRemoteViews(appContext, packageName, notification.publicVersion));
         }
         return super.dealNotification(id, notification, packageName);
     }
