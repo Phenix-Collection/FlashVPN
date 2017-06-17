@@ -148,21 +148,27 @@ public class ServiceRecord extends Binder {
 		}
 
 		public boolean containConnection(IServiceConnection connection) {
-			for (IServiceConnection con : connections) {
-				if (con.asBinder() == connection.asBinder()) {
-					return true;
+			synchronized (connections) {
+				for (IServiceConnection con : connections) {
+					if (con.asBinder() == connection.asBinder()) {
+						return true;
+					}
 				}
 			}
 			return false;
 		}
 
 		public void addConnection(IServiceConnection connection) {
-			if (!containConnection(connection)) {
-				connections.add(connection);
-				try {
-					connection.asBinder().linkToDeath(new DeathRecipient(this, connection), 0);
-				} catch (RemoteException e) {
-					e.printStackTrace();
+			if (containConnection(connection)) {
+				return;
+			} else {
+				synchronized (connections) {
+					connections.add(connection);
+					try {
+						connection.asBinder().linkToDeath(new DeathRecipient(this, connection), 0);
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
