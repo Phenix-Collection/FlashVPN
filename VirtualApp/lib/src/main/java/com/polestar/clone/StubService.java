@@ -3,6 +3,7 @@ package com.polestar.clone;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 
 import com.lody.virtual.client.core.VirtualCore;
@@ -16,11 +17,13 @@ import com.lody.virtual.helper.utils.VLog;
 public class StubService extends Service {
     private static final String TAG = "StubService";
 
+    private static final String EXTRA_STICKY = "sticky";
     public static void startup(Context context, int vpid) {
         VLog.d(TAG, "Startup for : StubService$S" + vpid);
         try {
             Intent i = new Intent();
             i.setClassName(VirtualCore.get().getHostPkg(), StubManifest.getStubServiceName(vpid));
+            i.putExtra(EXTRA_STICKY, true);
             context.startService(i);
         }catch (Exception e){
             VLog.logbug(TAG, VLog.getStackTraceString(e));
@@ -60,7 +63,16 @@ public class StubService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        VLog.d(TAG, this.getClass().getName() + " onStartCommand");
+        boolean sticky = intent == null? false: intent.getBooleanExtra(EXTRA_STICKY, false);
+        VLog.d(TAG, this.getClass().getName() + " onStartCommand sticky: " + sticky);
+        if (!sticky) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stopSelf();
+                }
+            }, 2000);
+        }
         return START_STICKY;
     }
 
