@@ -73,6 +73,10 @@ class VSPersistenceLayer extends PersistenceLayer {
         return false;
     }
 
+    @Override
+    public boolean verifyOSUpgrade() {
+        return true;
+    }
 
     @Override
     public void onPersistenceFileDamage() {

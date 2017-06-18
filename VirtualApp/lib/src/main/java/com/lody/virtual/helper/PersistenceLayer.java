@@ -35,6 +35,7 @@ public abstract class PersistenceLayer {
     public abstract boolean onVersionConflict(int fileVersion, int currentVersion);
 
     public abstract void onPersistenceFileDamage();
+    public abstract boolean verifyOSUpgrade();
 
     public void save() {
         Parcel p = Parcel.obtain();
@@ -69,6 +70,9 @@ public abstract class PersistenceLayer {
             if (!verifyMagic(p)) {
                 onPersistenceFileDamage();
                 throw new IOException("Invalid persistence file.");
+            }
+            if (!verifyOSUpgrade()) {
+                throw new IOException("OS upgrade");
             }
             int fileVersion = p.readInt();
             int currentVersion = getCurrentVersion();

@@ -1,7 +1,11 @@
 package com.lody.virtual.server.pm;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Parcel;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.secondary.GmsSupport;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.PersistenceLayer;
@@ -83,5 +87,34 @@ class PackagePersistenceLayer extends PersistenceLayer {
     public void onPersistenceFileDamage() {
         getPersistenceFile().delete();
         VAppManagerService.get().restoreFactoryState();
+    }
+
+    private void saveOSVersion() {
+        SharedPreferences sp = VirtualCore.get().getContext().getSharedPreferences("spc_config", Context.MODE_PRIVATE);
+        sp.edit().putString("osv", Build.FINGERPRINT).apply();
+    }
+
+    private String getOSVersion() {
+        SharedPreferences sp = VirtualCore.get().getContext().getSharedPreferences("spc_config", Context.MODE_PRIVATE);
+        return sp.getString("osv", null);
+    }
+
+    @Override
+    public boolean verifyOSUpgrade() {
+        String osv = getOSVersion();
+        boolean ret;
+        if (osv == null) {
+            ret = true;
+        } else {
+            if (!osv.equals(Build.FINGERPRINT)) {
+                VLog.keyLog(VirtualCore.get().getContext(), this.getClass().getSimpleName(), "OS upgrade! new :" + Build.FINGERPRINT + " old: " + osv);
+                saveOSVersion();
+                VEnvironment.getDalvikCacheDirectory().delete();
+                ret = false;
+            } else {
+                ret = true;
+            }
+        }
+        return  ret;
     }
 }
