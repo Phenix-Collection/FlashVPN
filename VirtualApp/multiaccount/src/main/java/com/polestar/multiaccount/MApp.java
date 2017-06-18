@@ -113,7 +113,7 @@ public class MApp extends Application {
                     public void onRequestInstall(String path) {
                         //We can start AppInstallActivity TODO
                         Toast.makeText(MApp.this, "Installing: " + path, Toast.LENGTH_SHORT).show();
-                        InstallResult res = VirtualCore.get().installPackage(path, InstallStrategy.UPDATE_IF_EXIST);
+                        InstallResult res = VirtualCore.get().installPackage("", path, InstallStrategy.UPDATE_IF_EXIST);
                         if (res.isSuccess) {
                             try {
                                 VirtualCore.get().preOpt(res.packageName);

@@ -80,7 +80,7 @@ public class AppManager {
     public static void upgradeApp(String packageName) {
         try {
             PackageInfo info = VirtualCore.get().getUnHookPackageManager().getPackageInfo(packageName, 0);
-            InstallResult result = VirtualCore.get().upgradePackage(info.applicationInfo.sourceDir,
+            InstallResult result = VirtualCore.get().upgradePackage(info.packageName, info.applicationInfo.sourceDir,
                     InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
             MLogs.logBug("package upgrade result: " + result.toString());
         }catch (Exception e) {
@@ -130,7 +130,8 @@ public class AppManager {
 
     public static boolean installApp(Context context, AppModel appModel) {
         MLogs.d(TAG, "apkPath = " + appModel.getApkPath());
-        InstallResult result = VirtualCore.get().installPackage(appModel.getApkPath(), InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
+        InstallResult result = VirtualCore.get().installPackage(appModel.getPackageName(), appModel.getApkPath(),
+                InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
         if (result.isSuccess && PreferencesUtils.getBoolean(context, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
             CommonUtils.createShortCut(context, appModel);
         }

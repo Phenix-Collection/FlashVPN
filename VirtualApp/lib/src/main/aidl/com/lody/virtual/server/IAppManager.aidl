@@ -13,8 +13,8 @@ interface IAppManager {
     void removeVisibleOutsidePackage(String pkg);
     boolean isOutsidePackageVisible(String pkg);
     InstalledAppInfo getInstalledAppInfo(String pkg, int flags);
-    InstallResult installPackage(String path, int flags);
-    InstallResult upgradePackage(String path, int flags);
+    InstallResult installPackage(String pkg, String path, int flags);
+    InstallResult upgradePackage(String pkg, String path, int flags);
     boolean isPackageLaunched(int userId, String packageName);
     void setPackageHidden(int userId, String packageName, boolean hidden);
     boolean installPackageAsUser(int userId, String packageName);

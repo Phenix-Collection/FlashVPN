@@ -123,7 +123,7 @@ public class VAppManagerService extends IAppManager.Stub {
         for(String s: PackageCacheManager.PACKAGE_CACHE.keySet()) {
             String newPath = needUpgrade(s);
             if(newPath != null) {
-                upgradePackage(newPath, InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
+                upgradePackage(s, newPath, InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
                 VLog.logbug(TAG, "upgraded package: " + s + " on path:"+newPath);
             }
         }
@@ -159,7 +159,7 @@ public class VAppManagerService extends IAppManager.Stub {
                 storeFile = new File(appInfo.publicSourceDir);
                 flags |= InstallStrategy.DEPEND_SYSTEM_IF_EXIST;
             }
-            InstallResult res = installPackage(storeFile.getPath(), flags, false);
+            InstallResult res = installPackage(pkgName, storeFile.getPath(), flags, false);
             if (!res.isSuccess) {
                 VLog.e(TAG, "Unable to install app %s: %s.", pkgName, res.error);
                 FileUtils.deleteDir(appDir);
@@ -225,16 +225,16 @@ public class VAppManagerService extends IAppManager.Stub {
     }
 
     @Override
-    public InstallResult installPackage(String path, int flags) {
-        return installPackage(path, flags, true);
+    public InstallResult installPackage(String pkg, String path, int flags) {
+        return installPackage(pkg, path, flags, true);
     }
 
     @Override
-    public InstallResult upgradePackage(String path, int flags) {
-        return installPackage(path, flags, false);
+    public InstallResult upgradePackage(String pkg, String path, int flags) {
+        return installPackage(pkg, path, flags, false);
     }
 
-    public synchronized InstallResult installPackage(String path, int flags, boolean notify) {
+    public synchronized InstallResult installPackage(String name, String path, int flags, boolean notify) {
         VLog.d(TAG, "install: " + path + " flags: " + flags + " notify: " + notify);
         long installTime = System.currentTimeMillis();
         if (path == null) {

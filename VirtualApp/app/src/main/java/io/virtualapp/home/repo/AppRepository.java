@@ -149,7 +149,7 @@ public class AppRepository implements AppDataSource {
         if (info.fastOpen) {
             flags |= InstallStrategy.DEPEND_SYSTEM_IF_EXIST;
         }
-        return VirtualCore.get().installPackage(info.path, flags);
+        return VirtualCore.get().installPackage(info.packageName, info.path, flags);
     }
 
     @Override

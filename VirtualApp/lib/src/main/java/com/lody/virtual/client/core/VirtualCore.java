@@ -322,11 +322,11 @@ public final class VirtualCore {
 		return VActivityManager.get().isAppRunning(packageName, userId);
 	}
 
-    public InstallResult installPackage(String apkPath, int flags) {
+    public InstallResult installPackage(String pkg, String apkPath, int flags) {
 		InstallResult result = null;
 		for (int i = 0; i < 5; i ++) {
 			try {
-				result = getService().installPackage(apkPath, flags);
+				result = getService().installPackage(pkg, apkPath, flags);
 			} catch (RemoteException e) {
 				mService = null;
 				//return InstallResult.makeFailure("Service not available");
@@ -344,9 +344,9 @@ public final class VirtualCore {
 		return InstallResult.makeFailure("Service not available");
     }
 
-	public InstallResult upgradePackage(String apkPath, int flags) {
+	public InstallResult upgradePackage(String pkg, String apkPath, int flags) {
 		try {
-			return getService().upgradePackage(apkPath, flags);
+			return getService().upgradePackage( pkg, apkPath, flags);
 		} catch (RemoteException e) {
 			return VirtualRuntime.crash(e);
 		}
