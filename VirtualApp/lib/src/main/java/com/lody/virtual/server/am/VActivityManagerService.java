@@ -981,8 +981,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		return app;
 	}
 
+	private int lastVpid = 0;
     private int queryFreeStubProcessLocked() {
-		for (int vpid = 0; vpid < StubManifest.STUB_COUNT; vpid++) {
+        //Finding [lastVpid + 1, STUB_COUNT) to avoid conflict with auto restarted services process
+		for (int vpid = lastVpid + 1; vpid < StubManifest.STUB_COUNT; vpid++) {
 			int N = mPidsSelfLocked.size();
 			boolean using = false;
 			while (N-- > 0) {
@@ -995,8 +997,26 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			if (using) {
 				continue;
 			}
+			lastVpid = vpid;
 			return vpid;
 		}
+		//Finding from [0 lastVpid + 1)
+        for (int vpid = 0; vpid < lastVpid + 1; vpid++) {
+            int N = mPidsSelfLocked.size();
+            boolean using = false;
+            while (N-- > 0) {
+                ProcessRecord r = mPidsSelfLocked.valueAt(N);
+                if (r!= null && r.vpid == vpid) {
+                    using = true;
+                    break;
+                }
+            }
+            if (using) {
+                continue;
+            }
+            lastVpid = vpid;
+            return vpid;
+        }
 		return -1;
 	}
 
