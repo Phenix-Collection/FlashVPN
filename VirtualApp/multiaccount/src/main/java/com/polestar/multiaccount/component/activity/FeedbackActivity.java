@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.remote.InstalledAppInfo;
 import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
@@ -106,7 +108,12 @@ public class FeedbackActivity extends BaseActivity {
                 data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about SuperClone");
                 String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "Super Clone version: " + BuildConfig.VERSION_NAME
-                        + "\n" + "Model info: " + Build.FINGERPRINT + "GMS state: " + PreferencesUtils.isGMSEnable() + "\n";
+                        + "\n" + "Model info: " + Build.FINGERPRINT + "\nGMS state: " + PreferencesUtils.isGMSEnable() + "\n";
+                for (InstalledAppInfo appInfo: VirtualCore.get().getInstalledApps(0)) {
+                    String pkgInfo = "\n Package: " + appInfo.packageName + " path: " + appInfo.apkPath;
+                    fullContent += pkgInfo;
+                }
+
                 data.putExtra(Intent.EXTRA_TEXT, fullContent);
                 try {
                     startActivity(data);
