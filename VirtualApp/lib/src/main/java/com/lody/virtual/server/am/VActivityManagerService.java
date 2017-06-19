@@ -59,6 +59,7 @@ import com.lody.virtual.server.pm.VPackageManagerService;
 import com.lody.virtual.server.secondary.BinderDelegateService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -82,7 +83,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	private static final String TAG = VActivityManagerService.class.getSimpleName();
 	private final SparseArray<ProcessRecord> mPidsSelfLocked = new SparseArray<ProcessRecord>();
 	private final ActivityStack mMainStack = new ActivityStack(this);
-	private final List<ServiceRecord> mHistory = new ArrayList<ServiceRecord>();
+    private final Set<ServiceRecord> mHistory = new HashSet<ServiceRecord>();
     final ArrayMap<IBinder, ArrayList<ConnectionRecord>> mServiceConnections
             = new ArrayMap<IBinder, ArrayList<ConnectionRecord>>();
 	private final ProcessMap<ProcessRecord> mProcessNames = new ProcessMap<ProcessRecord>();
@@ -216,7 +217,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 
 	public void processDead(ProcessRecord record) {
 		synchronized (mHistory) {
-			ListIterator<ServiceRecord> iterator = mHistory.listIterator();
+            Iterator<ServiceRecord> iterator = mHistory.iterator();
 			while (iterator.hasNext()) {
 				ServiceRecord r = iterator.next();
 				if (r.process != null && r.process.pid == record.pid) {
@@ -400,6 +401,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
+
+            // Note: If the service has been called for not AUTO_CREATE binding, the corresponding
+            // ServiceRecord is already in mHistory, so we use Set to replace List to avoid add
+            // ServiceRecord twice
 			addRecord(r);
 
             requestServiceBindingsLocked(r);
