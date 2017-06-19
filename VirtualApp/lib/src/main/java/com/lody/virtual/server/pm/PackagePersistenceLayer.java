@@ -71,9 +71,14 @@ class PackagePersistenceLayer extends PersistenceLayer {
                 continue;
             }
             if (!"android".equals(setting.packageName)) {
-                mService.loadPackage(setting);
+                if (GmsSupport.hasDexFile(setting.apkPath)) {
+                    mService.loadPackage(setting);
+                }
             }
             VLog.d(TAG, "read package: " + setting.packageName);
+        }
+        if (!VirtualCore.get().isAppInstalled(GmsSupport.GSF_PKG)) {
+            GmsSupport.removeGmsPackage(GmsSupport.GSF_PKG);
         }
     }
 

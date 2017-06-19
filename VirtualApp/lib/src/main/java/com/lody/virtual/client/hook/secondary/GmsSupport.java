@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.server.pm.VAppManagerService;
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.ZipFile;
 
 /**
  * @author Lody
@@ -19,6 +21,8 @@ import java.util.Set;
 public class GmsSupport {
 
     private static final HashSet<String> GOOGLE_APP = new HashSet<>();
+    private static final String TAG = "GmsSupport";
+    public static final String GSF_PKG = "com.google.android.gsf";
     static {
         GOOGLE_APP.add("com.android.vending");
         GOOGLE_APP.add("com.google.android.play.games");
@@ -26,9 +30,9 @@ public class GmsSupport {
         GOOGLE_APP.add("com.google.android.wearable.app.cn");
     }
 
-    private static final HashSet<String> GOOGLE_SERVICE =  new HashSet<>();
+    private static HashSet<String> GOOGLE_SERVICE =  new HashSet<>();
     static {
-        GOOGLE_SERVICE.add("com.google.android.gsf");
+        GOOGLE_SERVICE.add(GSF_PKG);
         GOOGLE_SERVICE.add("com.google.android.gms");
         GOOGLE_SERVICE.add("com.google.android.gsf.login");
         GOOGLE_SERVICE.add("com.google.android.backuptransport");
@@ -41,6 +45,33 @@ public class GmsSupport {
         GOOGLE_SERVICE.add("com.google.android.setupwizard");
         GOOGLE_SERVICE.add("com.google.android.syncadapters.calendar");
     };
+
+    //Make the outside gms package visible
+    public static void removeGmsPackage(String pkg) {
+        GOOGLE_APP.remove(pkg);
+        GOOGLE_SERVICE.remove(pkg);
+    }
+
+    public static boolean hasDexFile( String apkPath) {
+        if (apkPath == null) {
+            return  false;
+        }
+        if ( apkPath.contains("/system/app") || apkPath.startsWith("/system/priv-app")) {
+            boolean hasDex = false;
+            ZipFile zipFile = null;
+            try {
+                zipFile = new ZipFile(apkPath);
+                hasDex = zipFile.getEntry("classes.dex") != null;
+                zipFile.close();
+            }catch (Throwable e) {
+                VLog.logbug(TAG, "Error when find dex for path: " + apkPath);
+                VLog.logbug(TAG, VLog.getStackTraceString(e));
+            }
+            VLog.logbug(TAG, "apk : " + apkPath + " hasDex: " + hasDex);
+            return hasDex;
+        }
+        return true;
+    }
 
 
     public static boolean isGmsFamilyPackage(String packageName) {
@@ -70,10 +101,12 @@ public class GmsSupport {
             if (info == null || info.sourceDir == null) {
                 continue;
             }
-            if (userId == 0) {
-                service.installPackage(info.sourceDir, InstallStrategy.DEPEND_SYSTEM_IF_EXIST, false);
-            } else {
-                service.installPackageAsUser(userId, packageName);
+            if (hasDexFile(info.sourceDir)) {
+                if (userId == 0) {
+                    service.installPackage(packageName, info.sourceDir, InstallStrategy.DEPEND_SYSTEM_IF_EXIST, false);
+                } else {
+                    service.installPackageAsUser(userId, packageName);
+                }
             }
         }
     }
@@ -81,5 +114,8 @@ public class GmsSupport {
     public static void installGms(int userId) {
         installPackages(GOOGLE_SERVICE, userId);
         installPackages(GOOGLE_APP, userId);
+        if (!VirtualCore.get().isAppInstalled(GSF_PKG)) {
+            removeGmsPackage(GSF_PKG);
+        }
     }
 }

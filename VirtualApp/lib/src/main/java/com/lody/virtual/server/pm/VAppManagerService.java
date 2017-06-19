@@ -130,6 +130,7 @@ public class VAppManagerService extends IAppManager.Stub {
     }
 
     private void recover() {
+        boolean hasGsf = false;
         for (File appDir : VEnvironment.getDataAppDirectory().listFiles()) {
             String pkgName = appDir.getName();
             if ("android".equals(pkgName) || "system".equals(pkgName)) {
@@ -159,11 +160,20 @@ public class VAppManagerService extends IAppManager.Stub {
                 storeFile = new File(appInfo.publicSourceDir);
                 flags |= InstallStrategy.DEPEND_SYSTEM_IF_EXIST;
             }
-            InstallResult res = installPackage(pkgName, storeFile.getPath(), flags, false);
-            if (!res.isSuccess) {
-                VLog.e(TAG, "Unable to install app %s: %s.", pkgName, res.error);
-                FileUtils.deleteDir(appDir);
+            if (pkgName.equals(GmsSupport.GSF_PKG)) {
+                hasGsf = true;
             }
+            if (GmsSupport.hasDexFile(storeFile.getPath())) {
+                InstallResult res = installPackage(pkgName, storeFile.getPath(), flags, false);
+                if (!res.isSuccess) {
+                    VLog.e(TAG, "Unable to install app %s: %s.", pkgName, res.error);
+                    FileUtils.deleteDir(appDir);
+                }
+            }
+        }
+        //hasGSF, in case recover for new installation
+        if (hasGsf && (!VirtualCore.get().isAppInstalled(GmsSupport.GSF_PKG))) {
+            GmsSupport.removeGmsPackage(GmsSupport.GSF_PKG);
         }
     }
 
