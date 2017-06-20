@@ -128,6 +128,7 @@ public class ProviderHook implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Object fakeReturn = null;
         try {
             processArgs(method, args);
         } catch (Throwable e) {
@@ -136,26 +137,37 @@ public class ProviderHook implements InvocationHandler {
         try {
             String name = method.getName();
             if ("call".equals(name)) {
+                fakeReturn = null;
                 return call(method, args);
             } else if ("insert".equals(name)) {
+                fakeReturn = null;
                 return insert(method, args);
             } else if ("getType".equals(name)) {
+                fakeReturn = null;
                 return getType(method, args);
             } else if ("insert".equals(name)) {
+                fakeReturn = null;
                 return insert(method, args);
             } else if ("delete".equals(name)) {
+                fakeReturn = 0;
                 return bulkInsert(method, args);
             } else if ("delete".equals(name)) {
+                fakeReturn = 0;
                 return bulkInsert(method, args);
             } else if ("bulkInsert".equals(name)) {
+                fakeReturn = 0;
                 return bulkInsert(method, args);
             } else if ("update".equals(name)) {
+                fakeReturn = 0;
                 return update(method, args);
             } else if ("openFile".equals(name)) {
+                fakeReturn = null;
                 return openFile(method, args);
             } else if ("openAssetFile".equals(name)) {
+                fakeReturn = null;
                 return openAssetFile(method, args);
             } else if ("query".equals(name)) {
+                fakeReturn = null;
                 return query(method, args);
             }
             return method.invoke(mBase, args);
@@ -169,7 +181,7 @@ public class ProviderHook implements InvocationHandler {
                 //throw e.getCause();
             }
             //throw e;
-            return null;
+            return fakeReturn;
         }
     }
 
