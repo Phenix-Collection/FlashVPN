@@ -72,7 +72,7 @@
         <item name="navigation_notifications">การแจ้งเตือน</item>
         <item name="navigation_FAQ">FAQ</item>
         <item name="navigation_feedback">ข้อเสนอแนะ</item>
-        <item name="navigation_rate_us">คะแนน</item>
+        <item name="navigation_rate_us">ชอบมัน</item>
         <item name="navigation_share">แบ่งปันกับเพื่อน</item>
         <item name="navigation_setting">การตั้งค่า</item>
     </array>
