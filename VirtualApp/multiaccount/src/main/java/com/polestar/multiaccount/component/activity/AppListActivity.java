@@ -49,6 +49,7 @@ import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.FixedGridView;
 import com.polestar.multiaccount.widgets.FixedListView;
@@ -118,7 +119,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         burstLoad = RemoteConfig.getBoolean(CONFIG_APPLIST_BURST_LOAD);
         nativePriorTime = RemoteConfig.getLong(CONFIG_APPLIST_NATIVE_PRIOR_TIME);
         int random = new Random().nextInt(100);
-        if (random < adControl.random || BuildConfig.DEBUG) {
+        if (!PreferencesUtils.isAdFree() && (random < adControl.random || BuildConfig.DEBUG)) {
             if (adControl.network == AdControlInfo.NETWORK_BOTH
                     || (adControl.network == AdControlInfo.NETWORK_WIFI_ONLY && CommonUtils.isWiFiActive(this))){
                 initAdmobBannerView();

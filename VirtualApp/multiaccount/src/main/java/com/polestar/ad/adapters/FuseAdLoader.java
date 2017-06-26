@@ -7,6 +7,7 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.imageloader.ImageLoader;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 
 import java.util.ArrayList;
@@ -83,6 +84,13 @@ public class FuseAdLoader implements IAdLoader {
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
         AdLog.d("FuseAdLoader :" + mSlot + " load ad: " + num + " listener: " + listener);
+        if (PreferencesUtils.isAdFree()) {
+            AdLog.d("FuseAdLoader : AD free version");
+            if (listener != null) {
+                listener.onError("AD free version");
+            }
+            return;
+        }
         if ( num  < 0 || mNativeAdConfigList.size() == 0) {
             AdLog.d("FuseAdLoader :" + mSlot + " load num wrong: " + num);
             if (listener != null) {

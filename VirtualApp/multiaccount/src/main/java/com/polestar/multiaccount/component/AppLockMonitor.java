@@ -38,6 +38,7 @@ public class AppLockMonitor {
 
     private FuseAdLoader mAdLoader;
     private boolean hasLock;
+    private boolean adFree;
 
     private AppLockWindowManager mAppLockWindows = AppLockWindowManager.getInstance();
 
@@ -80,16 +81,19 @@ public class AppLockMonitor {
                 hasLock = true;
             }
         }
+        adFree = false;
         mAdLoader = FuseAdLoader.get(AppLockWindow.CONFIG_SLOT_APP_LOCK, MApp.getApp());
-        preloadAd();
+        if (hasLock && !adFree) {
+            preloadAd();
+        }
     }
 
     public FuseAdLoader getAdLoader(){
         return mAdLoader;
     }
 
-    public void reloadSetting(String newKey) {
-        MLogs.d("reloadSetting");
+    public void reloadSetting(String newKey, boolean adFree) {
+        MLogs.d("reloadSetting adfree:" + adFree);
         modelHashMap.clear();
         DbManager.resetSession();
         List<AppModel> list = DbManager.queryAppList(MApp.getApp());
@@ -99,7 +103,13 @@ public class AppLockMonitor {
                 hasLock = true;
             }
         }
-        preloadAd();
+        if (hasLock && !adFree) {
+            preloadAd();
+        }
+        if (this.adFree != adFree) {
+            mAppLockWindows.removeAll();
+        }
+        this.adFree = adFree;
         if (!TextUtils.isEmpty(newKey)) {
             LockPatternUtils.setTempKey(newKey);
         }
@@ -136,7 +146,7 @@ public class AppLockMonitor {
                     @Override
                     public void run() {
                         MLogs.d(TAG, "To show lock window");
-                        lockWindow.show();
+                        lockWindow.show(!adFree);
                     }
                 }, 0);
 

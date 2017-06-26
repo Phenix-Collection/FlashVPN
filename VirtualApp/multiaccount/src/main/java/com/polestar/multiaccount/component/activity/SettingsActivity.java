@@ -10,11 +10,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.billingclient.api.BillingClient;
 import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.billing.BillingConstants;
+import com.polestar.billing.BillingProvider;
 import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
@@ -28,9 +32,12 @@ import com.polestar.multiaccount.widgets.UpDownDialog;
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
     private BlueSwitch gmsSwitch;
+    private BlueSwitch adFreeSwitch;
     private TextView versionTv;
     private TextView followTv;
     private String fbUrl;
+
+    private boolean requestAdFree;
 
     private final static int REQUEST_UNLOCK_SETTINGS = 1;
 
@@ -107,6 +114,40 @@ public class SettingsActivity extends BaseActivity {
                 }
             }
         });
+
+        adFreeSwitch = (BlueSwitch) findViewById(R.id.adfree_switch);
+        adFreeSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (BillingProvider.get().isAdFreeVIP()) {
+                    PreferencesUtils.setAdFree(adFreeSwitch.isChecked());
+                    updateBillingStatus();
+                } else {
+                    UpDownDialog.show(SettingsActivity.this, getString(R.string.settings_adfree_title), getString(R.string.settings_adfree_content),
+                            getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    switch (i) {
+                                        case UpDownDialog.POSITIVE_BUTTON:
+                                            BillingProvider.get().getBillingManager()
+                                                    .initiatePurchaseFlow(SettingsActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
+                                            requestAdFree = true;
+                                            break;
+                                        case UpDownDialog.NEGATIVE_BUTTON:
+                                            break;
+                                    }
+                                    adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
+                                }
+                            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
+                        }
+                    });
+                }
+            }
+        });
+        adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
     }
 
     public void onNotificationSettingClick(View view) {
@@ -156,6 +197,27 @@ public class SettingsActivity extends BaseActivity {
             } catch (Exception localException2) {
             }
         }
+    }
+
+    private void updateBillingStatus() {
+        BillingProvider.get().updateStatus(new BillingProvider.OnStatusUpdatedListener() {
+            @Override
+            public void onStatusUpdated() {
+                MLogs.d("Billing onStatusUpdated");
+                if (requestAdFree) {
+                    if (BillingProvider.get().isAdFreeVIP()) {
+                        PreferencesUtils.setAdFree(true);
+                    }
+                    requestAdFree = false;
+                }
+                adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
+            }
+        });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateBillingStatus();
     }
 
     @Override

@@ -267,7 +267,7 @@ public class AppCloneActivity extends BaseActivity {
             if (mShortcutSwitch.isChecked()) {
                 CommonUtils.createShortCut(this, appModel);
             }
-            VirtualCore.get().reloadLockerSetting(null);
+            VirtualCore.get().reloadLockerSetting(null, PreferencesUtils.isAdFree());
             MTAManager.settingAfterClone(this, appModel.getPackageName(), mNotificationSwitch.isChecked(), mLockerSwitch.isChecked(), mShortcutSwitch.isChecked());
         }
     }
@@ -280,7 +280,8 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     private void initAd(){
-        boolean showAd = RemoteConfig.getBoolean(CONFIG_KEY_SHOW_AD_AFTER_CLONE);
+        boolean showAd = RemoteConfig.getBoolean(CONFIG_KEY_SHOW_AD_AFTER_CLONE)
+                && (!PreferencesUtils.isAdFree());
         MLogs.d(CONFIG_KEY_SHOW_AD_AFTER_CLONE + showAd);
         adConfigList = RemoteConfig.getAdConfigList(SLOT_AD_AFTER_CLONE);
         if (showAd && adConfigList!= null && adConfigList.size() > 0) {

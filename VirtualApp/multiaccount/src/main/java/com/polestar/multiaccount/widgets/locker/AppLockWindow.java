@@ -310,12 +310,14 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         });
     }
 
-    public void show() {
+    public void show(boolean showAd) {
         if (!mIsShowing) {
-            MLogs.d("LockWindow show");
+            MLogs.d("LockWindow show " + showAd);
             mAppLockPasswordLogic.onShow();
             mWindow.show();
-            loadNative();
+            if (showAd) {
+                loadNative();
+            }
             //loadAdmobNativeExpress();
             mIsShowing = true;
         }

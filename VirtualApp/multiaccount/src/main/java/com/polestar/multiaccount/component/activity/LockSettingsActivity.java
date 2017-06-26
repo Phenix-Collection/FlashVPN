@@ -196,7 +196,7 @@ public class LockSettingsActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         if (isSettingChanged) {
-            VirtualCore.get().reloadLockerSetting(null);
+            VirtualCore.get().reloadLockerSetting(null, PreferencesUtils.isAdFree());
         }
     }
 }

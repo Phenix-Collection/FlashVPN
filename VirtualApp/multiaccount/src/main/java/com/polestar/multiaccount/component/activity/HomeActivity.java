@@ -278,18 +278,24 @@ public class HomeActivity extends BaseActivity {
         super.onResume();
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
         preloadAppWall();
-        if (showAppWall) {
-            giftIconLayout.setVisibility(View.GONE);
-            giftIconView.setVisibility(View.GONE);
-            wallButtonLayout.setVisibility(View.GONE);
-            loadMVWallHandler();
-        } else{
-            if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
+        if (!PreferencesUtils.isAdFree()) {
+            if (showAppWall) {
                 giftIconLayout.setVisibility(View.GONE);
                 giftIconView.setVisibility(View.GONE);
                 wallButtonLayout.setVisibility(View.GONE);
-                loadAd();
+                loadMVWallHandler();
+            } else {
+                if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
+                    giftIconLayout.setVisibility(View.GONE);
+                    giftIconView.setVisibility(View.GONE);
+                    wallButtonLayout.setVisibility(View.GONE);
+                    loadAd();
+                }
             }
+        } else {
+            giftIconLayout.setVisibility(View.GONE);
+            giftIconView.setVisibility(View.GONE);
+            wallButtonLayout.setVisibility(View.GONE);
         }
     }
 
@@ -394,6 +400,9 @@ public class HomeActivity extends BaseActivity {
     public void onIconAdClick(View view) {
         MLogs.d("onIconAdClick showAppWall: " + showAppWall);
         PreferencesUtils.updateIconAdClickTime(this);
+        if (PreferencesUtils.isAdFree()) {
+            return;
+        }
         if (showAppWall) {
             openWall();
             MTAManager.homeGiftClick(this, "mv_app_wall");

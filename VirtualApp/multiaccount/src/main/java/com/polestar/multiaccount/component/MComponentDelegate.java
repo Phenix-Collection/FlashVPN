@@ -68,7 +68,7 @@ public class MComponentDelegate implements ComponentDelegate {
     }
 
     @Override
-    public void reloadLockerSetting(String newKey) {
-        AppLockMonitor.getInstance().reloadSetting(newKey);
+    public void reloadLockerSetting(String newKey, boolean adFree) {
+        AppLockMonitor.getInstance().reloadSetting(newKey, adFree);
     }
 }

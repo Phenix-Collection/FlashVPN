@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.polestar.billing.BillingProvider;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.constant.AppConstants;
 
@@ -403,5 +404,13 @@ public class PreferencesUtils {
     public static boolean hasShownStartPage() {
         //return false;
         return getBoolean(MApp.getApp(), "start_page_status");
+    }
+
+    public static boolean isAdFree() {
+        return BillingProvider.get().isAdFreeVIP()? getBoolean(MApp.getApp(), "ad_free") : false;
+    }
+
+    public static void setAdFree(boolean enable) {
+        putBoolean(MApp.getApp(), "ad_free" , enable);
     }
 }

@@ -20,6 +20,7 @@ import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdUtils;
+import com.polestar.billing.BillingProvider;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -91,6 +92,7 @@ public class MApp extends Application {
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 MTAManager.init(gDefault);
+                BillingProvider.get();
                //
             }
 
