@@ -119,6 +119,7 @@ public class SettingsActivity extends BaseActivity {
         adFreeSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_switch");
                 if (BillingProvider.get().isAdFreeVIP()) {
                     PreferencesUtils.setAdFree(adFreeSwitch.isChecked());
                     updateBillingStatus();
@@ -132,8 +133,10 @@ public class SettingsActivity extends BaseActivity {
                                             BillingProvider.get().getBillingManager()
                                                     .initiatePurchaseFlow(SettingsActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
                                             requestAdFree = true;
+                                            MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_yes");
                                             break;
                                         case UpDownDialog.NEGATIVE_BUTTON:
+                                            MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
                                             break;
                                     }
                                     adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
