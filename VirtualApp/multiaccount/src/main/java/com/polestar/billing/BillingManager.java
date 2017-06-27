@@ -68,7 +68,7 @@ public class BillingManager implements PurchasesUpdatedListener {
      * want to make it easy for an attacker to replace the public key with one
      * of their own and then fake messages from the server.
      */
-    private static final String BASE_64_ENCODED_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjqFo5S9x6WhgALXog0efuDyzrY4A7l++FMB9mvI7+R3Sv4GN6p3KRSbM3D3fqM/Odu49ue6uxJd8u9xB1md0OTKrPuemRjArtyQokxb5mk8UYcmriTWUkbxgaPFIg68T4jLZIcvpdbMSxWT2TmE37Bf450WjEvGB/6nHp8wQlYG8xILiJybXg5tfvsZllHw3+TZks/jOP+UfbKuM1o4vRymlKPUCtTClHDA6g5G/aWzUu1vCo8lG2AsX+wLw86IwGo1NdsD76Qez+0ShzawmOX7+JEg6hnNUDUnxV+DEIpYdwca9yjzKRfnmQoCLwaCcQIAoIr2P7ZX2HVXpjIRdxQIDAQAB";
+    private static final String BASE_64_ENCODED_PUBLIC_KEY = "ArtdUkbxgaPFIg68T4jLZIcamls+0ShzawmOX7+JEd9yjzKRfnmQoCdr2P7ZX2HVXpjIRdxQIDAQAB";
 
     /**
      * Listener to the updates that happen when purchases list was updated or consumption of the
@@ -80,6 +80,32 @@ public class BillingManager implements PurchasesUpdatedListener {
         void onPurchasesUpdated(List<Purchase> purchases);
     }
 
+    private static final String KEY = " A~qWZNyq&spcRoldO\"W!z==P[T/{`_!=D%E`\"QX f%]DEt";
+    private static final String KEY2 = "z]FCUbBUz^RW q#Q9wAlCc'`Uy.zQ$WeN=aZa. _aQy'XreR! Gsl=&E~lwa{YN!=\\Sq ~xXCRCxn@=RS_fOrauw/o|l]Dpx{GyUZawUuG_Wy_d$F!LN$^@Nf|_DrnG_RWGWT";
+    private static String hash = null;
+    private static String getKey() {
+        if (hash == null) {
+            StringBuffer str3 = new StringBuffer();  //存储解密后的字符串
+            for (int i = 0; i < BillingConstants.BILL_KEY.length(); i++) {
+                char c = (char) (BillingConstants.BILL_KEY.charAt(i) ^ 22);
+                str3.append(c);
+            }
+            for (int i = 0; i < KEY.length(); i++) {
+                char c = (char) (KEY.charAt(i) ^ 22);
+                str3.append(c);
+            }
+            for (int i = 0; i < BillingProvider.KEY.length(); i++) {
+                char c = (char) (BillingProvider.KEY.charAt(i) ^ 22);
+                str3.append(c);
+            }
+            for (int i = 0; i < KEY2.length(); i++) {
+                char c = (char) (KEY2.charAt(i) ^ 22);
+                str3.append(c);
+            }
+            hash = str3.toString();
+        }
+        return hash;
+    }
     /**
      * Listener for the Billing client state to become connected
      */
@@ -94,6 +120,7 @@ public class BillingManager implements PurchasesUpdatedListener {
         mBillingClient = new BillingClient.Builder(mContext).setListener(this).build();
 
         MLogs.d(TAG, "Starting setup.");
+        getKey();
 
         // Start setup. This is asynchronous and the specified listener will be called
         // once setup completes.
@@ -366,7 +393,7 @@ public class BillingManager implements PurchasesUpdatedListener {
         // instructions to run this sample (don't put these checks on your app!)
 
         try {
-            return Security.verifyPurchase(BASE_64_ENCODED_PUBLIC_KEY, signedData, signature);
+            return Security.verifyPurchase(getKey(), signedData, signature);
         } catch (IOException e) {
             MLogs.e(TAG, "Got an exception trying to validate a purchase: " + e);
             return false;
