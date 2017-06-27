@@ -27,8 +27,8 @@ import java.util.List;
  */
 public final class BillingConstants {
     // SKUs for our products: the premium upgrade (non-consumable) and gas (consumable)
-    public static final String SKU_AD_FREE = "test_not_buy";
-    //public static final String SKU_AD_FREE = "ad_free";
+    //public static final String SKU_AD_FREE = "test_not_buy";
+    public static final String SKU_AD_FREE = "ad_free";
 
     private static final String[] IN_APP_SKUS = {SKU_AD_FREE};
 
