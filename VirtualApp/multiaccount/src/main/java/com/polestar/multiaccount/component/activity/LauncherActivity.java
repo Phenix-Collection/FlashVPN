@@ -85,6 +85,7 @@ public class LauncherActivity extends BaseActivity{
                 }
             }, 2000 - delta);
         } else {
+            MTAManager.generalClickEvent(LauncherActivity.this, "show_start_page");
             enterText.setVisibility(View.VISIBLE);
             termText.setVisibility(View.VISIBLE);
             gmsSettingLayout.setVisibility(View.VISIBLE);
@@ -181,6 +182,7 @@ public class LauncherActivity extends BaseActivity{
                 @Override
                 public void onClick(View view) {
                     PreferencesUtils.setStartPageStatus(true);
+                    MTAManager.generalClickEvent(LauncherActivity.this, "click_enter_home");
                     enterHome();
                     if(!PreferencesUtils.isShortCutCreated() && !created) {
                         PreferencesUtils.setShortCutCreated();
