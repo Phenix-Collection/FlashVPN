@@ -140,9 +140,12 @@ public class HomeFragment extends BaseFragment {
         dismissLongClickGuide();
     }
 
-    private void hideAd() {
+    public void hideAd() {
         nativeAdContainer.removeAllViews();
         showLucky = false;
+        if (pkgGridAdapter != null) {
+            pkgGridAdapter.notifyDataSetChanged();
+        }
     }
 
     @Nullable

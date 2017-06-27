@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.billingclient.api.BillingClient;
 import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.MobVistaSDK;
 import com.mobvista.msdk.out.MobVistaSDKFactory;
@@ -28,6 +29,8 @@ import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAd;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.billing.BillingConstants;
+import com.polestar.billing.BillingProvider;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.NavigationAdapter;
@@ -69,6 +72,7 @@ public class HomeActivity extends BaseActivity {
     private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial_1026";
     private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
     private static final String CONFIG_CLONE_RATE_INTERVAL = "clone_rate_interval";
+    private static final String CONFIG_AD_FREE_DIALOG_INTERVAL = "ad_free_dialog_interval";
 
     private static final String RATE_FROM_QUIT = "quit";
     private static final String RATE_AFTER_CLONE = "clone";
@@ -292,10 +296,11 @@ public class HomeActivity extends BaseActivity {
                     loadAd();
                 }
             }
+            if (requestAdFree) {
+                updateBillingStatus();
+            }
         } else {
-            giftIconLayout.setVisibility(View.GONE);
-            giftIconView.setVisibility(View.GONE);
-            wallButtonLayout.setVisibility(View.GONE);
+            hideAd();
         }
     }
 
@@ -328,30 +333,25 @@ public class HomeActivity extends BaseActivity {
     private void doAnimationExit() {
     }
 
-    private void doAnimationEnter() {
-        mHomeFragment.showFromBottom();
+    private boolean guideRateIfNeeded() {
         if (cloningPackage != null) {
             String pkg = cloningPackage;
             cloningPackage = null;
             MLogs.d("Cloning package: " + pkg);
-            if (!PreferencesUtils.hasShownLongClickGuide(this)) {
-                MLogs.d("Not show long click guide.");
-                return;
-            }
             if (PreferencesUtils.isRated()) {
-                return;
+                return false;
             }
             String config = RemoteConfig.getString(CONFIG_CLONE_RATE_PACKAGE);
             if ("off".equalsIgnoreCase(config)) {
                 MLogs.d("Clone rate off");
-                return;
+                return false;
             }
             if(PreferencesUtils.getLoveApp() == -1) {
                 // not love, should wait for interval
                 long interval = RemoteConfig.getLong(CONFIG_CLONE_RATE_INTERVAL) * 60 * 60 * 1000;
                 if ((System.currentTimeMillis() - PreferencesUtils.getRateDialogTime(this)) < interval) {
                     MLogs.d("Not love, need wait longer");
-                    return;
+                    return false;
                 }
             }
             boolean match = "*".equals(config);
@@ -373,9 +373,80 @@ public class HomeActivity extends BaseActivity {
                         showRateDialog(RATE_AFTER_CLONE, pkg);
                     }
                 }, 800);
+                return true;
             } else {
                 MLogs.d("No matching package for clone rate");
             }
+        }
+        return false;
+    }
+
+    private void doAnimationEnter() {
+        mHomeFragment.showFromBottom();
+        if (!PreferencesUtils.hasShownLongClickGuide(this)) {
+            MLogs.d("Not show long click guide.");
+            return;
+        }
+        boolean needShowRate = guideRateIfNeeded();
+        if (!needShowRate && !BillingProvider.get().isAdFreeVIP()) {
+            long interval = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL) * 60 * 60 * 1000;
+            long last = PreferencesUtils.getLastAdFreeDialogTime();
+            if ((System.currentTimeMillis() - last) > interval || MLogs.DEBUG) {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAdFreeDialog();
+                    }
+                }, 800);
+                PreferencesUtils.updateLastAdFreeDialogTime();
+            }
+        }
+    }
+
+    private boolean requestAdFree = false;
+    private void showAdFreeDialog() {
+        MTAManager.generalClickEvent(HomeActivity.this, "ad_free_dialog_from_home");
+        UpDownDialog.show(HomeActivity.this, getString(R.string.adfree_dialog_title), getString(R.string.adfree_dialog_content),
+                getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                BillingProvider.get().getBillingManager()
+                                        .initiatePurchaseFlow(HomeActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
+                                requestAdFree = true;
+                                MTAManager.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_yes");
+                                break;
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                MTAManager.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
+                                break;
+                        }
+                    }
+                });
+    }
+
+    private void updateBillingStatus() {
+        BillingProvider.get().updateStatus(new BillingProvider.OnStatusUpdatedListener() {
+            @Override
+            public void onStatusUpdated() {
+                MLogs.d("Billing onStatusUpdated");
+                if (requestAdFree) {
+                    if (BillingProvider.get().isAdFreeVIP()) {
+                        PreferencesUtils.setAdFree(true);
+                        hideAd();
+                    }
+                    requestAdFree = false;
+                }
+            }
+        });
+    }
+
+    private void hideAd() {
+        giftIconLayout.setVisibility(View.GONE);
+        giftIconView.setVisibility(View.GONE);
+        wallButtonLayout.setVisibility(View.GONE);
+        if (mHomeFragment != null) {
+            mHomeFragment.hideAd();
         }
     }
 

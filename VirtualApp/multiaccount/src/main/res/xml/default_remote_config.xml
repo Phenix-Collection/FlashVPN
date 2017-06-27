@@ -116,4 +116,8 @@
         <key>fb_follow_page</key>
         <value>off</value>
     </entry>
+    <entry>
+        <key>ad_free_dialog_interval</key>
+        <value>48</value>
+    </entry>
 </defaultsMap>

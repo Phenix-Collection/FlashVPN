@@ -124,6 +124,7 @@ public class SettingsActivity extends BaseActivity {
                     PreferencesUtils.setAdFree(adFreeSwitch.isChecked());
                     updateBillingStatus();
                 } else {
+                    MTAManager.generalClickEvent(SettingsActivity.this, "ad_free_dialog_from_setting");
                     UpDownDialog.show(SettingsActivity.this, getString(R.string.adfree_dialog_title), getString(R.string.adfree_dialog_content),
                             getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                                 @Override

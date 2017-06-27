@@ -413,4 +413,11 @@ public class PreferencesUtils {
     public static void setAdFree(boolean enable) {
         putBoolean(MApp.getApp(), "ad_free" , enable);
     }
+
+    public static long getLastAdFreeDialogTime() {
+        return getLong(MApp.getApp(), "ad_free_dialog_time", -1);
+    }
+    public static void updateLastAdFreeDialogTime() {
+        putLong(MApp.getApp(), "ad_free_dialog_time", System.currentTimeMillis());
+    }
 }
