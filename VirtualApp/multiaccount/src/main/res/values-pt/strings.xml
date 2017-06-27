@@ -173,4 +173,8 @@
     <string name="toast_no_lucky">Desculpe, nenhum conteúdo Desta vez.Por favor, tente novamente Mais tarde.</string>
     <string name="upgrade_start_tips">Pode demorar um pouco Mais que o aplicativo FOI atualizado.</string>
     <string name="clone_success">%s+ está pronto. Aproveite agora!</string>
+    <string name="settings_adfree_title">Remover propagandas</string>
+    <string name="settings_adfree_content">Desativar anúncios no aplicativo</string>
+    <string name="adfree_dialog_title">Remover propagandas</string>
+    <string name="adfree_dialog_content">Seja um usuário premium do Super Clone e desative todos os ADs neste aplicativo. Você quer comprar agora?</string>
 </resources>

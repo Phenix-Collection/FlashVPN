@@ -172,4 +172,8 @@
     <string name="settings_gms_enable_notice">تمكن خدمة جوجل بلاي قد تستهلك المزيد من الذاكرة و وحدة المعالجة المركزية.هل تريد تمكين خدمة جوجل بلاي؟</string>
     <string name="toast_no_lucky">آسف، لا يوجد محتوى هذه المرة.يرجى المحاولة مرة أخرى في وقت لاحق.</string>
     <string name="upgrade_start_tips">فإنه قد يستغرق وقتا أطول قليلا حيث أن هذا التطبيق هو مجرد ترقية.</string>
+    <string name="settings_adfree_title">ازالة الاعلانات</string>
+    <string name="settings_adfree_content">إيقاف الإعلانات في التطبيق</string>
+    <string name="adfree_dialog_title">ازالة الاعلانات</string>
+    <string name="adfree_dialog_content">تصبح المستخدم قسط سوبر استنساخ وإيقاف جميع الإعلانات في هذا التطبيق. هل تريد شراء الآن؟</string>
 </resources>

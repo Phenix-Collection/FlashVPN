@@ -170,4 +170,8 @@
     <string name="settings_gms_enable_toast">Layanan Google Play diaktifkan</string>
     <string name="settings_gms_disable_notice"></string>
     <string name="clone_success">%s+ siap. Nikmati sekarang juga!</string>
+    <string name="settings_adfree_title">Hilangkan iklan</string>
+    <string name="settings_adfree_content">Matikan Iklan di aplikasi</string>
+    <string name="adfree_dialog_title">Hilangkan iklan</string>
+    <string name="adfree_dialog_content">Jadilah pengguna premium Super Clone dan matikan semua iklan di aplikasi ini. Apakah Anda ingin membeli sekarang?</string>
 </resources>

@@ -123,7 +123,7 @@ public class SettingsActivity extends BaseActivity {
                     PreferencesUtils.setAdFree(adFreeSwitch.isChecked());
                     updateBillingStatus();
                 } else {
-                    UpDownDialog.show(SettingsActivity.this, getString(R.string.settings_adfree_title), getString(R.string.settings_adfree_content),
+                    UpDownDialog.show(SettingsActivity.this, getString(R.string.adfree_dialog_title), getString(R.string.adfree_dialog_content),
                             getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
