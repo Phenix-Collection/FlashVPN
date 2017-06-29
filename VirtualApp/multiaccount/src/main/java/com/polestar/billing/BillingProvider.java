@@ -45,10 +45,12 @@ public class BillingProvider {
                 @Override
                 public void onPurchasesUpdated(List<Purchase> purchases) {
                     for (Purchase purchase : purchases) {
+                        MLogs.d(TAG, "SKU:  " + purchase.getSku()+ " time: " + purchase.getPurchaseTime()
+                                + " state: " + purchase.getPurchaseState());
                         switch (purchase.getSku()) {
                             case BillingConstants.SKU_AD_FREE:
-                                MLogs.d(TAG, "Got a AD free version!!!");
-                                isAdFreeVIP = true;
+                                MLogs.d(TAG, "Got a AD free version!!! ");
+                                isAdFreeVIP = (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED);
                                 break;
                         }
                     }
