@@ -829,6 +829,11 @@ public final class VirtualCore {
 		} catch (Exception e){
 			VLog.logbug(VLog.VTAG, VLog.getStackTraceString(e));
 		}
+		clearRemote();
+		waitForEngine();
+	}
+
+	public void clearRemote() {
 		mService = null;
 		VActivityManager.get().clearRemoteInterface();
 		VAccountManager.get().clearRemoteInterface();
@@ -836,6 +841,5 @@ public final class VirtualCore {
 		VJobScheduler.get().clearRemoteInterface();
 		VNotificationManager.get().clearRemoteInterface();
 		VPackageManager.get().clearRemoteInterface();
-		waitForEngine();
 	}
 }

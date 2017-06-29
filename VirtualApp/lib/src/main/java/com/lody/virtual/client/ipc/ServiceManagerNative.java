@@ -65,6 +65,9 @@ public class ServiceManagerNative {
 			public void binderDied() {
 				binder.unlinkToDeath(this, 0);
 				clearServerFetcher();
+				if (VirtualCore.get().isMainProcess()) {
+					VirtualCore.get().clearRemote();
+				}
 				VLog.logbug(TAG, "Ops, the server has crashed.");
 				for (int i = 5; i > 0; i--) {
 					try{
