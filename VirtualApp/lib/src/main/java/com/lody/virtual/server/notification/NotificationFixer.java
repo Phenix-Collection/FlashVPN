@@ -80,17 +80,26 @@ import mirror.com.android.internal.R_Hide;
         if (icon == null) {
             return;
         }
+        VLog.d("FixIcon", "installed:　" + installed + " pkg: " + appContext.getPackageName());
         int type = mirror.android.graphics.drawable.Icon.mType.get(icon);
         if (type == mirror.android.graphics.drawable.Icon.TYPE_RESOURCE) {
-            if (installed) {
+            if (installed && (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)) {
                 mirror.android.graphics.drawable.Icon.mObj1.set(icon, appContext.getResources());
                 mirror.android.graphics.drawable.Icon.mString1.set(icon, appContext.getPackageName());
             } else {
-                Drawable drawable = icon.loadDrawable(appContext);
-                Bitmap bitmap = drawableToBitMap(drawable);
-                mirror.android.graphics.drawable.Icon.mObj1.set(icon, bitmap);
-                mirror.android.graphics.drawable.Icon.mString1.set(icon, null);
-                mirror.android.graphics.drawable.Icon.mType.set(icon, mirror.android.graphics.drawable.Icon.TYPE_BITMAP);
+                try {
+                    Drawable drawable = icon.loadDrawable(appContext);
+                    Bitmap bitmap = drawableToBitMap(drawable);
+                    if (bitmap == null) {
+                        bitmap = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(appContext.getPackageName(), null);
+                    }
+                    mirror.android.graphics.drawable.Icon.mObj1.set(icon, bitmap);
+                    mirror.android.graphics.drawable.Icon.mString1.set(icon, null);
+                    mirror.android.graphics.drawable.Icon.mType.set(icon, mirror.android.graphics.drawable.Icon.TYPE_BITMAP);
+                } catch (Exception e) {
+                    VLog.logbug("FixIcon", "Error: " +VLog.getStackTraceString(e));
+                }
+
             }
         }
     }
