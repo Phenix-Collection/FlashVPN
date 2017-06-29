@@ -147,7 +147,6 @@
     <string name="app_lock_safe_question_toast_error">المصادقة الفاشلة، يرجى الدخول مرة أخرى</string>
     <string name="applock_window_title">+ %s</string>
     <string name="applock_forgot_password"><u>هل نسيت كلمة المرور</u></string>
-    <string name="applock_guide_text">الخصوصية الإعداد خلع الملابس لحماية الحيوانات المستنسخة الخاصة</string>
     <string name="need_set_secure_answer">يرجى تحديد الإجابة عن السؤال آمن ثم اضغط زر تأكيد.</string>
 
     <string-array name="secure_questions">

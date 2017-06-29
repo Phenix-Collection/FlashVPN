@@ -148,7 +148,6 @@
     <string name="app_lock_safe_question_toast_error">Falha na autenticação, insira novamente</string>
     <string name="applock_window_title">Clonado %s</string>
     <string name="applock_forgot_password"><u>Esqueceu a senha?</u></string>
-    <string name="applock_guide_text">Configurar o armário de privacidade para proteger seus clones particulares</string>
     <string name="need_set_secure_answer">Defina a resposta para uma pergunta segura e pressione o botão confirmar.</string>
 
     <string-array name="secure_questions">

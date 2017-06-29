@@ -148,7 +148,6 @@
     <string name="app_lock_safe_question_toast_error">รับรองความถูกต้องล้มเหลวโปรดใส่อีกครั้ง</string>
     <string name="applock_window_title">โคลน %s</string>
     <string name="applock_forgot_password"><u>ลืมรหัสผ่าน?</u></string>
-    <string name="applock_guide_text">ตั้งค่าความเป็นส่วนตัวล็อคเพื่อป้องกันโคลนส่วนตัวของคุณ</string>
     <string name="need_set_secure_answer">กรุณาตั้งค่าคำตอบสำหรับคำถามของความปลอดภัยและจากนั้นกดปุ่มยืนยัน</string>
 
     <string-array name="secure_questions">

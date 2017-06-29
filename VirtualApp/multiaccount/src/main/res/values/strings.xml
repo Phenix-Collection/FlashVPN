@@ -175,7 +175,6 @@
     <string name="app_lock_safe_question_toast_error">Authentication failed, please enter again</string>
     <string name="applock_window_title">Cloned %s</string>
     <string name="applock_forgot_password"><u>Forgot Password?</u></string>
-    <string name="applock_guide_text">Setup privacy locker to protect your private clones</string>
     <string name="need_set_secure_answer">Please set answer for secure question and then press confirm button.</string>
 
     <string-array name="month">

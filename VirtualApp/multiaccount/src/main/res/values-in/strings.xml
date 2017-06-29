@@ -148,7 +148,6 @@
     <string name="app_lock_safe_question_toast_error">Otentikasi gagal, masukkan lagi</string>
     <string name="applock_window_title">Klon %s</string>
     <string name="applock_forgot_password"><u>Lupa kata sandi?</u></string>
-    <string name="applock_guide_text">Set kunci privasi untuk melindungi klon pribadi Anda</string>
     <string name="need_set_secure_answer">Silahkan mengatur jawaban untuk pertanyaan aman dan kemudian tekan tombol konfirmasi.</string>
 
     <string-array name="secure_questions">
