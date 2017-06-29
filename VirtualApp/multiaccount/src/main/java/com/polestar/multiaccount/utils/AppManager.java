@@ -81,7 +81,7 @@ public class AppManager {
         try {
             PackageInfo info = VirtualCore.get().getUnHookPackageManager().getPackageInfo(packageName, 0);
             InstallResult result = VirtualCore.get().upgradePackage(info.packageName, info.applicationInfo.sourceDir,
-                    InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
+                    InstallStrategy.DEPEND_SYSTEM_IF_EXIST | InstallStrategy.UPDATE_IF_EXIST);
             MLogs.logBug("package upgrade result: " + result.toString());
         }catch (Exception e) {
             MLogs.e(e);
