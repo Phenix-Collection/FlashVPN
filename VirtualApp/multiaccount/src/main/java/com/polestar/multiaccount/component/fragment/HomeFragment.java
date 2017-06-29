@@ -445,44 +445,6 @@ public class HomeFragment extends BaseFragment {
 
     private TutorialGuides.Builder mTutorialBuilder;
 
-    private int getLockRecommandAppIdx() {
-        if (appInfos == null || appInfos.size() == 0) {
-            return  -1;
-        }
-        for (int i = 0; i < appInfos.size(); i++) {
-            AppModel model = appInfos.get(i);
-            if (CommonUtils.isSocialApp(model.getPackageName())) {
-                return i;
-            }
-        }
-        return  -1;
-    }
-
-    private void showApplockGuide(int index) {
-        try {
-            if (mLockSettingIcon == null) {
-                return;
-            }
-            String text = getString(R.string.applock_guide_text);
-            mTutorialBuilder = new TutorialGuides.Builder(mActivity);
-            mTutorialBuilder.anchorView(mLockSettingIcon);
-            mTutorialBuilder.defaultMaxWidth(true);
-            mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
-                @Override
-                public void onShow(TutorialGuides tooltip) {
-                    PreferencesUtils.setApplockGuideShowed();
-                }
-            });
-            mTutorialBuilder.text(text)
-                    .gravity(Gravity.BOTTOM)
-                    .build()
-                    .show();
-        }catch (Exception e){
-            MLogs.e("error to show guides");
-            MLogs.e(e);
-        }
-    }
-
     private void showCloneAppGuide(){
         //TutorialGuidesUtils.removeOnGlobalLayoutListener(pkgGridView,this);
         try {
@@ -602,13 +564,6 @@ public class HomeFragment extends BaseFragment {
                     if (mActivity != null) {
                         if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(mActivity)) {
                             showLongClickItemGuide();
-                        } else if (appInfos.size() > 0 && !PreferencesUtils.isApplockGuideShowed()
-                                && !PreferencesUtils.isLockerEnabled(mActivity)) {
-                            int index = getLockRecommandAppIdx();
-                            if (index != -1 ||
-                                    (CommonUtils.getInstallTime(mActivity, mActivity.getPackageName()) - System.currentTimeMillis() > 48 * 60 * 60 * 1000)) {
-                                showApplockGuide(index);
-                            }
                         }
                     }
                 }
