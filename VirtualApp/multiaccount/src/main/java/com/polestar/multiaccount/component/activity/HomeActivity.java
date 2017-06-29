@@ -390,6 +390,7 @@ public class HomeActivity extends BaseActivity {
         boolean needShowRate = guideRateIfNeeded();
         if (!needShowRate && !BillingProvider.get().isAdFreeVIP()) {
             long interval = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL) * 60 * 60 * 1000;
+            interval = PreferencesUtils.getAdFreeClickStatus() ? interval : interval*3;
             long last = PreferencesUtils.getLastAdFreeDialogTime();
             if ((System.currentTimeMillis() - last) > interval || MLogs.DEBUG) {
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -415,14 +416,22 @@ public class HomeActivity extends BaseActivity {
                                 BillingProvider.get().getBillingManager()
                                         .initiatePurchaseFlow(HomeActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
                                 requestAdFree = true;
+                                PreferencesUtils.updateAdFreeClickStatus(true);
                                 MTAManager.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_yes");
                                 break;
                             case UpDownDialog.NEGATIVE_BUTTON:
+                                PreferencesUtils.updateAdFreeClickStatus(false);
                                 MTAManager.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
                                 break;
                         }
                     }
-                });
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                PreferencesUtils.updateAdFreeClickStatus(false);
+                MTAManager.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
+            }
+        });
     }
 
     private void updateBillingStatus() {

@@ -407,9 +407,17 @@ public class PreferencesUtils {
     }
 
     public static long getLastAdFreeDialogTime() {
-        return getLong(MApp.getApp(), "ad_free_dialog_time", -1);
+        return getLong(MApp.getApp(), "ad_free_dialog_time", CommonUtils.getInstallTime(MApp.getApp(), MApp.getApp().getPackageName()));
     }
     public static void updateLastAdFreeDialogTime() {
         putLong(MApp.getApp(), "ad_free_dialog_time", System.currentTimeMillis());
     }
+    public static void updateAdFreeClickStatus(boolean status) {
+        putBoolean(MApp.getApp(), "ad_free_dialog_click", status);
+    }
+
+    public static boolean getAdFreeClickStatus() {
+        return getBoolean(MApp.getApp(), "ad_free_dialog_click", true);
+    }
+
 }

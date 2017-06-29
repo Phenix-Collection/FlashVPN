@@ -125,6 +125,7 @@ public class SettingsActivity extends BaseActivity {
                     updateBillingStatus();
                 } else {
                     MTAManager.generalClickEvent(SettingsActivity.this, "ad_free_dialog_from_setting");
+                    PreferencesUtils.updateLastAdFreeDialogTime();
                     UpDownDialog.show(SettingsActivity.this, getString(R.string.adfree_dialog_title), getString(R.string.adfree_dialog_content),
                             getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                                 @Override
@@ -134,9 +135,11 @@ public class SettingsActivity extends BaseActivity {
                                             BillingProvider.get().getBillingManager()
                                                     .initiatePurchaseFlow(SettingsActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
                                             requestAdFree = true;
+                                            PreferencesUtils.updateAdFreeClickStatus(true);
                                             MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_yes");
                                             break;
                                         case UpDownDialog.NEGATIVE_BUTTON:
+                                            PreferencesUtils.updateAdFreeClickStatus(false);
                                             MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
                                             break;
                                     }
@@ -145,6 +148,8 @@ public class SettingsActivity extends BaseActivity {
                             }).setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
+                            PreferencesUtils.updateAdFreeClickStatus(false);
+                            MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
                             adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
                         }
                     });
