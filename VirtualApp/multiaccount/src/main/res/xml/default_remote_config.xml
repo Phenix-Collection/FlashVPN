@@ -120,4 +120,8 @@
         <key>ad_free_dialog_interval</key>
         <value>48</value>
     </entry>
+    <entry>
+        <key>default_lock_enable</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>

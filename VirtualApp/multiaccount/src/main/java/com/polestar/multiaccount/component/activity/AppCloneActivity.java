@@ -245,7 +245,9 @@ public class AppCloneActivity extends BaseActivity {
 //        } else {
 //            mLockerSwitch.setChecked(appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
 //        }
-        mLockerSwitch.setChecked(appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
+        boolean defaultLock = RemoteConfig.getBoolean("default_lock_enable") && PreferencesUtils.isLockerEnabled(AppCloneActivity.this) && !TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(AppCloneActivity.this))
+                && CommonUtils.isSocialApp(appModel.getPackageName());
+        mLockerSwitch.setChecked(defaultLock);
         mLockerSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
