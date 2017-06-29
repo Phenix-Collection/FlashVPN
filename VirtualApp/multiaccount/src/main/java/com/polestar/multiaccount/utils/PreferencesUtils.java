@@ -345,14 +345,6 @@ public class PreferencesUtils {
         return getLong(c, "last_icon_ad_click",-1);
     }
 
-    public static void setApplockGuideShowed() {
-        putBoolean(MApp.getApp(),"app_lock_guide_showed", true);
-    }
-
-    public static boolean isApplockGuideShowed() {
-        return getBoolean(MApp.getApp(),"app_lock_guide_showed",false);
-    }
-
     public static boolean isFirstStart(String name) {
         return getLong(MApp.getApp(), name+"_first_start", -1) == -1;
     }
