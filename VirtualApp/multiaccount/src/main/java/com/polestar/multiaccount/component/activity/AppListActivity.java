@@ -78,7 +78,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private FuseAdLoader mNativeAdLoader;
     private final static String KEY_APPLIST_CONTROL_INFO = "applist_native_control";
     private TextView sponsorText;
-    private static final String SLOT_APPLIST_NATIVE = "slot_applist_native";
+    public static final String SLOT_APPLIST_NATIVE = "slot_applist_native";
 
     private static boolean burstLoad = true;
     private static long nativePriorTime = 1*1000;

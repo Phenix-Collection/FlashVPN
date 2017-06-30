@@ -601,11 +601,17 @@ public class HomeFragment extends BaseFragment {
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
                         }
+                        if (appInfos.size() == 0) {
+                            FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity).loadAd(1, null);
+                        }
                     }
 
                     @Override
                     public void onLoaded(List<AppModel> clonedApp) {
                         appInfos = clonedApp;
+                        if (appInfos.size() == 0) {
+                            FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity).loadAd(1, null);
+                        }
                         MLogs.d("onLoaded applist");
                         long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
                         long gate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE);
