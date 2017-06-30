@@ -37,6 +37,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
 import com.polestar.multiaccount.component.activity.AppListActivity;
@@ -105,25 +106,6 @@ public class HomeFragment extends BaseFragment {
 
     private boolean adShowed = false;
 
-    private Handler adHandler = new Handler(Looper.getMainLooper()){
-        @Override
-        public void handleMessage(Message msg) {
-            if (adShowed){
-                return;
-            }
-            adShowed = true;
-            switch (msg.what) {
-                case NATIVE_AD_READY:
-                    IAdAdapter ad = (IAdAdapter) msg.obj;
-                    inflateNativeAd(ad);
-                    break;
-                case BANNER_AD_READY:
-                    showBannerAd();
-                    break;
-            }
-        }
-    };
-
     public void inflateNativeAd(IAdAdapter ad) {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
                 .titleId(R.id.ad_title)
@@ -154,8 +136,6 @@ public class HomeFragment extends BaseFragment {
         contentView = inflater.inflate(R.layout.fragment_home, null);
         mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
         mExplosionField = ExplosionField.attachToWindow(mActivity);
-        burstLoad = RemoteConfig.getBoolean(CONFIG_HOME_BURST_LOAD);
-        nativePriorTime = RemoteConfig.getLong(CONFIG_HOME_NATIVE_PRIOR_TIME);
         initView();
         initData();
         boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD);
@@ -163,7 +143,6 @@ public class HomeFragment extends BaseFragment {
         headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
         if (showHeaderAd && headerNativeAdConfigs.size() > 0
                 && (!PreferencesUtils.isAdFree())) {
-            initAdmobBannerView();
             loadHeadNativeAd();
         }
         mDragController = new DragController(mActivity);
@@ -368,79 +347,10 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
-    private void initAdmobBannerView() {
-        mAdmobExpressView = new NativeExpressAdView(mActivity);
-        String adunit  = null;
-        if (headerNativeAdConfigs != null) {
-            for (AdConfig adConfig: headerNativeAdConfigs) {
-                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
-                    adunit = adConfig.key;
-                    break;
-                }
-            }
-        }
-        if (TextUtils.isEmpty(adunit)) {
-            mAdmobExpressView = null;
-            return;
-        }
-        int dpWidth = DisplayUtils.px2dip(mActivity, DisplayUtils.getScreenWidth(mActivity));
+    public static AdSize getBannerSize() {
+        int dpWidth = DisplayUtils.px2dip(MApp.getApp(), DisplayUtils.getScreenWidth(MApp.getApp()));
         dpWidth = dpWidth < 290 ? dpWidth : dpWidth-10;
-        mAdmobExpressView.setAdSize(new AdSize(dpWidth, 135));
-//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
-        mAdmobExpressView.setAdUnitId(adunit);
-        mAdmobExpressView.setVisibility(View.GONE);
-        mAdmobExpressView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                AdLog.d("onAdClosed");
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                AdLog.d("onAdFailedToLoad " + i);
-                mAdmobExpressView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                long delay = nativePriorTime - (System.currentTimeMillis() - adLoadStartTime);
-                adHandler.sendMessageDelayed(adHandler.obtainMessage(BANNER_AD_READY),delay );
-                AdLog.d("on Banner AdLoaded ");
-            }
-        });
-    }
-
-    private void showBannerAd(){
-        nativeAdContainer.removeAllViews();
-        mAdmobExpressView.setVisibility(View.VISIBLE);
-        nativeAdContainer.addView(mAdmobExpressView);
-        pkgGridAdapter.notifyDataSetChanged();
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleX", 0.7f, 1.0f, 1.0f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mAdmobExpressView, "scaleY", 0.7f, 1.0f, 1.0f);
-        AnimatorSet animSet = new AnimatorSet();
-        animSet.play(scaleX).with(scaleY);
-        animSet.setInterpolator(new BounceInterpolator());
-        animSet.setDuration(800).start();
-        animSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-            }
-        });
-        dismissLongClickGuide();
+        return new AdSize(dpWidth, 135);
     }
 
     private TutorialGuides.Builder mTutorialBuilder;
@@ -496,41 +406,19 @@ public class HomeFragment extends BaseFragment {
         if (longClickGuide !=null) longClickGuide.dismiss();
     }
 
-    private void loadAdmobNativeExpress(){
-        if (mAdmobExpressView == null) {
-            return;
-        }
-        MLogs.d("Home loadAdmobNativeExpress");
-        if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID(mActivity);
-            String deviceId = AdUtils.MD5(android_id).toUpperCase();
-            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-            boolean isTestDevice = request.isTestDevice(mActivity);
-            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
-            AdLog.d( "Admob unit id "+ mAdmobExpressView.getAdUnitId());
-            mAdmobExpressView.loadAd(request );
-        } else {
-            mAdmobExpressView.loadAd(new AdRequest.Builder().build());
-        }
-    }
 
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity());
+            mNativeAdLoader.setBannerAdSize(getBannerSize());
         }
-//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
-//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
 
-        if (burstLoad) {
-            adLoadStartTime = System.currentTimeMillis();
-            loadAdmobNativeExpress();
-        }
         if ( mNativeAdLoader.hasValidAdSource()) {
-            mNativeAdLoader.loadAd(1, new IAdLoadListener() {
+            mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_HOME_NATIVE_PRIOR_TIME), new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
-                    adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
                     nativeAd = ad;
+                    inflateNativeAd(ad);
                 }
 
                 @Override
@@ -540,17 +428,9 @@ public class HomeFragment extends BaseFragment {
 
                 @Override
                 public void onError(String error) {
-                    adLoadStartTime = 0;
-                    if (!burstLoad) {
-                        loadAdmobNativeExpress();
-                    }
+                    MLogs.d("Home ad error: " + error);
                 }
             });
-        } else {
-            adLoadStartTime = 0;
-            if (!burstLoad) {
-                loadAdmobNativeExpress();
-            }
         }
     }
 
