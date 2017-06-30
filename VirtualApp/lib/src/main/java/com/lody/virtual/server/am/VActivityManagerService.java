@@ -1095,7 +1095,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			int N = mPidsSelfLocked.size();
 			while (N-- > 0) {
 				ProcessRecord r = mPidsSelfLocked.valueAt(N);
-				if (r.userId == userId && r.info.packageName.equals(packageName)) {
+				if (r != null && r.userId == userId && r.info.packageName.equals(packageName)) {
 					running = true;
 					break;
 				}
