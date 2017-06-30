@@ -35,6 +35,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.multiaccount.BuildConfig;
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.AppGridAdapter;
@@ -81,29 +82,12 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private static long nativePriorTime = 1*1000;
     private static final String CONFIG_APPLIST_BURST_LOAD = "applist_burst_load";
     private static final String CONFIG_APPLIST_NATIVE_PRIOR_TIME = "applist_native_prior_time";
-    private long adLoadStartTime = 0;
-    private static final int NATIVE_AD_READY = 0;
-    private static final int BANNER_AD_READY = 1;
     private IAdAdapter nativeAd;
-    private Handler adHandler = new Handler(Looper.getMainLooper()){
-        private boolean adShowed = false;
-        @Override
-        public void handleMessage(Message msg) {
-            if (adShowed){
-                return;
-            }
-            adShowed = true;
-            switch (msg.what) {
-                case NATIVE_AD_READY:
-                    IAdAdapter ad = (IAdAdapter) msg.obj;
-                    inflateNativeAdView(ad);
-                    break;
-                case BANNER_AD_READY:
-                    showBannerAd();
-                    break;
-            }
-        }
-    };
+
+    public static AdSize getBannerAdSize() {
+        int dpWidth = DisplayUtils.px2dip(MApp.getApp(), DisplayUtils.getScreenWidth(MApp.getApp()));
+        return new AdSize(dpWidth, 320);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,7 +103,6 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         if (!PreferencesUtils.isAdFree() && (random < adControl.random || BuildConfig.DEBUG)) {
             if (adControl.network == AdControlInfo.NETWORK_BOTH
                     || (adControl.network == AdControlInfo.NETWORK_WIFI_ONLY && CommonUtils.isWiFiActive(this))){
-                initAdmobBannerView();
                 loadNativeAd();
                 MTAManager.applistAdLoad(this, "load");
             } else {
@@ -262,18 +245,15 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private void loadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_APPLIST_NATIVE, this);
+            mNativeAdLoader.setBannerAdSize(getBannerAdSize());
         }
 //        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
 //        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
-        if (burstLoad) {
-            loadAdmobNativeExpress();
-        }
         if (mNativeAdLoader.hasValidAdSource()) {
-            adLoadStartTime = System.currentTimeMillis();
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
-                    adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
+                   inflateNativeAdView(ad);
                 }
 
                 @Override
@@ -283,17 +263,9 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
                 @Override
                 public void onError(String error) {
-                    adLoadStartTime = 0;
-                    if (!burstLoad) {
-                        loadAdmobNativeExpress();
-                    }
+                    MLogs.d("AppList load ad error " + error);
                 }
             });
-        } else {
-            adLoadStartTime = 0;
-            if (!burstLoad) {
-                loadAdmobNativeExpress();
-            }
         }
     }
 
@@ -307,106 +279,12 @@ public class AppListActivity extends BaseActivity implements DataObserver {
                 .privacyInformationIconImageId(R.id.ad_choices_image)
                 .build();
         View adView = ad.getAdView(viewBinder);
+        nativeAd = ad;
         if (adView != null) {
             adContainer.removeAllViews();
             adContainer.addView(adView);
             adContainer.setVisibility(View.VISIBLE);
             sponsorText.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void loadAdmobNativeExpress() {
-        if (expressAdView == null) {
-            AdLog.d("Don't load : No admob banner view configured");
-            return;
-        }
-        MLogs.d("Applist loadAdmobNativeExpress");
-        if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID(this);
-            String deviceId = AdUtils.MD5(android_id).toUpperCase();
-            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-            boolean isTestDevice = request.isTestDevice(this);
-            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
-            AdLog.d( "Admob unit id "+ expressAdView.getAdUnitId());
-            expressAdView.loadAd(request );
-        } else {
-            expressAdView.loadAd(new AdRequest.Builder().build());
-        }
-    }
-
-    private void initAdmobBannerView() {
-        expressAdView = new NativeExpressAdView(this);
-        String adunit  = null;
-        if (adConfigList != null) {
-            for (AdConfig adConfig: adConfigList) {
-                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
-                    adunit = adConfig.key;
-                    break;
-                }
-            }
-        }
-        if (TextUtils.isEmpty(adunit)) {
-            expressAdView = null;
-            AdLog.d("No admob banner view configured");
-            return;
-        }
-        int dpWidth = DisplayUtils.px2dip(this, DisplayUtils.getScreenWidth(this));
-        //dpWidth = Math.max(280, dpWidth*9/10);
-        expressAdView.setAdSize(new AdSize(dpWidth, 320));
-//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
-        expressAdView.setAdUnitId(adunit);
-        expressAdView.setVisibility(View.GONE);
-        expressAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                AdLog.d("onAdClosed");
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                AdLog.d("onAdFailedToLoad " + i);
-                expressAdView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                long delay = nativePriorTime - (System.currentTimeMillis() - adLoadStartTime);
-                adHandler.sendMessageDelayed(adHandler.obtainMessage(BANNER_AD_READY),delay );
-                AdLog.d("onAdLoaded ");
-            }
-        });
-    }
-
-    private void showBannerAd() {
-        adContainer.removeAllViews();
-        adContainer.setVisibility(View.VISIBLE);
-        expressAdView.setVisibility(View.VISIBLE);
-        adContainer.addView(expressAdView);
-        sponsorText.setVisibility(View.VISIBLE);
-        android.animation.ObjectAnimator scaleX = android.animation.ObjectAnimator.ofFloat(expressAdView, "scaleX", 0.7f, 1.1f, 1.0f);
-        android.animation.ObjectAnimator scaleY = android.animation.ObjectAnimator.ofFloat(expressAdView, "scaleY", 0.7f, 1.1f, 1.0f);
-        AnimatorSet animSet = new AnimatorSet();
-        animSet.play(scaleX).with(scaleY);
-        animSet.setInterpolator(new BounceInterpolator());
-        animSet.setDuration(800).start();
-        animSet.addListener(new android.animation.AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(android.animation.Animator animation) {
-
-            }
-        });
     }
 }
