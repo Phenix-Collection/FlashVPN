@@ -22,8 +22,6 @@ import android.widget.TextView;
 
 import com.android.billingclient.api.BillingClient;
 import com.mobvista.msdk.MobVistaConstans;
-import com.mobvista.msdk.MobVistaSDK;
-import com.mobvista.msdk.out.MobVistaSDKFactory;
 import com.mobvista.msdk.out.MvWallHandler;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -46,12 +44,9 @@ import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.widgets.UpDownDialog;
 import com.polestar.multiaccount.utils.RemoteConfig;
-import com.polestar.multiaccount.utils.RenderScriptManager;
 import com.polestar.multiaccount.widgets.GifView;
 
 import java.io.File;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -317,7 +312,6 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RenderScriptManager.destroy();
     }
 
     /**

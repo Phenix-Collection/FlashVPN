@@ -62,25 +62,25 @@
             android:layout_height="210dp"
             android:scaleType="fitXY"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|left"
-            android:src="@drawable/ad_icon_new"/>
-        <!--<TextView-->
-            <!--android:id="@+id/ad_flag"-->
+        <!--<ImageView-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:ellipsize="end"-->
-            <!--android:text="AD"-->
-            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-            <!--android:textColor="@color/native_ad_text_white"-->
-            <!--android:background="@color/native_ad_transparent_black"-->
             <!--android:layout_gravity="top|left"-->
-            <!--android:paddingLeft="4dp"-->
-            <!--android:paddingRight="4dp"-->
-            <!--android:textStyle="bold"-->
-            <!--android:textSize="12sp" />-->
+            <!--android:src="@drawable/ad_icon_new"/>-->
+        <TextView
+            android:id="@+id/ad_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="AD"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/native_ad_text_white"
+            android:background="@color/native_ad_transparent_black"
+            android:layout_gravity="top|left"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textStyle="bold"
+            android:textSize="12sp" />
 
         <com.polestar.imageloader.widget.BasicLazyLoadImageView
             android:id="@+id/ad_choices_image"
