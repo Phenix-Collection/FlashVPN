@@ -88,6 +88,7 @@ public class HomeFragment extends BaseFragment {
     private IAdAdapter nativeAd;
 
     private FuseAdLoader mNativeAdLoader;
+    private FuseAdLoader mApplistAdLoader;
     private NativeExpressAdView mAdmobExpressView;
     private View mLockSettingIcon;
 
@@ -101,7 +102,6 @@ public class HomeFragment extends BaseFragment {
     private static final int NATIVE_AD_READY = 0;
     private static final int BANNER_AD_READY = 1;
     private boolean showLucky;
-    public static String UNIT_ID = "8439";
 
     private boolean adShowed = false;
 
@@ -601,17 +601,13 @@ public class HomeFragment extends BaseFragment {
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
                         }
-                        if (appInfos.size() == 0) {
-                            FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity).loadAd(1, null);
-                        }
+                        preloadAppListAd(false);
                     }
 
                     @Override
                     public void onLoaded(List<AppModel> clonedApp) {
                         appInfos = clonedApp;
-                        if (appInfos.size() == 0) {
-                            FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity).loadAd(1, null);
-                        }
+                        preloadAppListAd(false);
                         MLogs.d("onLoaded applist");
                         long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
                         long gate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE);
@@ -741,5 +737,16 @@ public class HomeFragment extends BaseFragment {
         if (nativeAd != null) {
             nativeAd.destroy();
         }
+    }
+
+    private void preloadAppListAd(boolean force) {
+        if (!force && appInfos.size() > 0 ) {
+            return;
+        }
+        if (mApplistAdLoader == null) {
+            mApplistAdLoader = FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity);
+            mApplistAdLoader.setBannerAdSize(AppListActivity.getBannerAdSize());
+        }
+        mApplistAdLoader.preloadAd();
     }
 }
