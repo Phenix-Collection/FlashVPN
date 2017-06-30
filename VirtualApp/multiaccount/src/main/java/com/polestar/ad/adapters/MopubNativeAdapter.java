@@ -58,11 +58,13 @@ public class MopubNativeAdapter extends Ad implements IAdLoader {
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
         mListener = listener;
+        AdLog.d("Mopub loadAd " + listener);
         moPubNative = new MoPubNative(mContext, this.adUnit, new MoPubNative.MoPubNativeNetworkListener() {
             @Override
             public void onNativeLoad(NativeAd nativeAd) {
                 AdLog.d("Mopub onNativeLoad " );
                 rawAd = nativeAd;
+                mLoadedTime = System.currentTimeMillis();
                 if (mListener != null) {
                     mListener.onAdLoaded(MopubNativeAdapter.this);
                 }
@@ -116,6 +118,8 @@ public class MopubNativeAdapter extends Ad implements IAdLoader {
         rendererProxy.setRenderImpl(staticAdRender);
 
         AdapterHelper helper = new AdapterHelper(mContext, 0, 5);
-        return helper.getAdView(null, null, rawAd, mpViewBinder);
+        View adview = helper.getAdView(null, null, rawAd, mpViewBinder);
+        registerViewForInteraction(adview);
+        return adview;
     }
 }

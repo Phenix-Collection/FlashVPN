@@ -124,4 +124,8 @@
         <key>default_lock_enable</key>
         <value>true</value>
     </entry>
+    <entry>
+        <key>applock_preload_interval</key>
+        <value>3600000</value>
+    </entry>
 </defaultsMap>

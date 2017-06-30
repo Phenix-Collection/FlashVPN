@@ -206,11 +206,13 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                mAdInfoContainer.removeAllViews();
-                mAdInfoContainer.addView(mAdmobExpressView);
-                mAdmobExpressView.setVisibility(View.VISIBLE);
-                updateTitleBar();
-                AppLockMonitor.getInstance().getAdLoader().loadAd(1, null);
+                if (isShowing()) {
+                    mAdInfoContainer.removeAllViews();
+                    mAdInfoContainer.addView(mAdmobExpressView);
+                    mAdmobExpressView.setVisibility(View.VISIBLE);
+                    updateTitleBar();
+                    AppLockMonitor.getInstance().getAdLoader().loadAd(1, null);
+                }
                 AdLog.d("LockWindow on Banner AdLoaded ");
             }
         });
@@ -247,9 +249,12 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
             adLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAd ad) {
-                    inflatNativeAd(ad);
-                    //loadAdmobNativeExpress();
-                    adLoader.loadAd(1, null);
+                    MLogs.d("Applock native ad loaded. showing: " + isShowing());
+                    if (isShowing()) {
+                        inflatNativeAd(ad);
+                        //loadAdmobNativeExpress();
+                        adLoader.loadAd(1, null);
+                    }
                 }
 
                 @Override
@@ -312,14 +317,14 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
     public void show(boolean showAd) {
         if (!mIsShowing) {
-            MLogs.d("LockWindow show " + showAd);
+            mIsShowing = true;
+            MLogs.d("LockWindow show ad" + showAd);
             mAppLockPasswordLogic.onShow();
             mWindow.show();
             if (showAd) {
                 loadNative();
             }
             //loadAdmobNativeExpress();
-            mIsShowing = true;
         }
     }
 

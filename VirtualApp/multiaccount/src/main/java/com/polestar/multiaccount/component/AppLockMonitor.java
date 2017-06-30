@@ -15,6 +15,7 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.LockPatternUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.locker.AppLockWindow;
 import com.polestar.multiaccount.widgets.locker.AppLockWindowManager;
 
@@ -34,6 +35,8 @@ public class AppLockMonitor {
     private final static long RELOCK_DELAY = 3*1000; //if paused for 2 minutes, and then resume, it need be locked
     private final static int MSG_DELAY_LOCK_APP = 0;
     public final static int MSG_PACKAGE_UNLOCKED = 1;
+    public final static int MSG_PRELOAD_AD = 2;
+    public final static String CONFIG_APPLOCK_PRELOAD_INTERVAL = "applock_preload_interval";
     private final static String TAG = "AppLockMonitor";
 
     private FuseAdLoader mAdLoader;
@@ -56,6 +59,16 @@ public class AppLockMonitor {
                         MLogs.d(TAG, "Package was unlocked" + pkg);
                         mUnlockedForegroudPkg = pkg;
                         break;
+                    case MSG_PRELOAD_AD:
+                        if (!adFree && hasLock) {
+                            mAdLoader.loadAd(1, null);
+                            long interval = RemoteConfig.getLong(CONFIG_APPLOCK_PRELOAD_INTERVAL);
+                            MLogs.d("Applocker schedule next ad at " + interval);
+                            if (interval >= 15*60*000) {
+                                mHandler.sendEmptyMessageDelayed(MSG_PRELOAD_AD, interval);
+                            }
+                        }
+                        break;
                 }
             }
         };
@@ -63,15 +76,9 @@ public class AppLockMonitor {
     }
 
     private void preloadAd() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (hasLock) {
-                    mAdLoader.loadAd(1, null);
-                }
-            }
-        });
+        mHandler.sendEmptyMessage(MSG_PRELOAD_AD);
     }
+
     private void initSetting() {
         MLogs.d("initSetting");
         List<AppModel> list = DbManager.queryAppList(MApp.getApp());
@@ -83,9 +90,7 @@ public class AppLockMonitor {
         }
         adFree = false;
         mAdLoader = FuseAdLoader.get(AppLockWindow.CONFIG_SLOT_APP_LOCK, MApp.getApp());
-        if (hasLock && !adFree) {
-            preloadAd();
-        }
+        preloadAd();
     }
 
     public FuseAdLoader getAdLoader(){
@@ -103,9 +108,7 @@ public class AppLockMonitor {
                 hasLock = true;
             }
         }
-        if (hasLock && !adFree) {
-            preloadAd();
-        }
+        preloadAd();
         if (this.adFree != adFree) {
             mAppLockWindows.removeAll();
         }
