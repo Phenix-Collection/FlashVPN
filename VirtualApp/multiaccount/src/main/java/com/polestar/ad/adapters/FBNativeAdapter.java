@@ -53,12 +53,14 @@ public class FBNativeAdapter extends AdAdapter {
             @Override
             public void onError(com.facebook.ads.Ad ad, AdError adError) {
                 mListener.onError(adError.getErrorMessage());
+                stopMonitor();
             }
 
             @Override
             public void onAdLoaded(com.facebook.ads.Ad ad) {
                 mLoadedTime = System.currentTimeMillis();
                 mListener.onAdLoaded(FBNativeAdapter.this);
+                stopMonitor();
             }
 
             @Override
@@ -67,6 +69,7 @@ public class FBNativeAdapter extends AdAdapter {
             }
         });
         mRawAd.loadAd();
+        startMonitor();
     }
 
     @Override
@@ -195,5 +198,12 @@ public class FBNativeAdapter extends AdAdapter {
             }
         }
         return  adView;
+    }
+
+    @Override
+    protected void onTimeOut() {
+        if (mListener != null) {
+            mListener.onError("TIME_OUT");
+        }
     }
 }

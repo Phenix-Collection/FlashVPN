@@ -1,6 +1,8 @@
 package com.polestar.ad.adapters;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.google.android.gms.ads.AdSize;
@@ -26,11 +28,12 @@ public class FuseAdLoader {
     private List<AdConfig> mNativeAdConfigList = new ArrayList();
     private HashMap<String, IAdAdapter> mNativeAdCache = new HashMap<>();
     private IAdLoadListener mListener;
-    private int currentLoadingIdx = -1;
-    private boolean mIsLoading = false;
+    private int lastIdx =0;
     private String mSlot;
-    private IAdAdapter mReadyAd;
     private AdSize mBannerAdSize;
+    private long mProtectOverTime = 0;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private int mLoadingBits;
 
     private static HashMap<String, FuseAdLoader> sAdLoaderMap = new HashMap<>();
     public synchronized static FuseAdLoader get(String slot, Context appContext) {
@@ -59,8 +62,11 @@ public class FuseAdLoader {
         mBannerAdSize = adSize;
     }
 
-    public void loadAd(int num, IAdLoadListener listener) {
-        AdLog.d("FuseAdLoader :" + mSlot + " load ad: " + num + " listener: " + listener);
+    public void loadAd(int burstNum, long protectTime, IAdLoadListener listener) {
+        AdLog.d("FuseAdLoader :" + mSlot + " load ad: " + burstNum + " listener: " + listener);
+        if (Looper.getMainLooper() != Looper.myLooper()) {
+            throw new IllegalStateException("Load ad not from main thread");
+        }
         if (PreferencesUtils.isAdFree()) {
             AdLog.d("FuseAdLoader : AD free version");
             if (listener != null) {
@@ -68,38 +74,111 @@ public class FuseAdLoader {
             }
             return;
         }
-        if ( num  < 0 || mNativeAdConfigList.size() == 0) {
-            AdLog.d("FuseAdLoader :" + mSlot + " load num wrong: " + num);
+        if ( burstNum  <= 0 || mNativeAdConfigList.size() == 0) {
+            AdLog.d("FuseAdLoader :" + mSlot + " load num wrong: " + burstNum);
             if (listener != null) {
                 listener.onError("Wrong config");
             }
             return;
         }
+        if (burstNum == 1) { protectTime = 0;}
+        mProtectOverTime = System.currentTimeMillis() + protectTime;
         mListener = listener;
-        if (!mIsLoading) {
-            currentLoadingIdx = 0;
-            mIsLoading = true;
+        lastIdx = 0;
+        if (protectTime > 0) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mListener != null) {
+                        IAdAdapter cache = getValidCache();
+                        if (cache != null) {
+                            mListener.onAdLoaded(cache);
+                            mListener = null;
+                        }
+                    }
+                }
+            }, protectTime);
+        }
+        for (int i = 0; i < burstNum; i ++ ) {
             loadNextNativeAd();
-        } else {
-            if (mReadyAd!= null && mListener!=null) {
-                mListener.onAdLoaded(mReadyAd);
-                mReadyAd = null;
-            }
-            AdLog.d(mSlot + " is already loading...");
         }
     }
 
-    static {
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL);
-        //SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER);
+    private boolean isLoading (int idx) {
+        return (mLoadingBits & (0x1 << idx)) != 0;
+    }
 
+    private void markLoading(int idx) {
+        mLoadingBits |= (0x1 << idx);
+    }
+
+    private void finishLoading(int idx) {
+        mLoadingBits &= (~(0x1 << idx));
+        long now = System.currentTimeMillis();
+        IAdAdapter ad = getValidCache();
+        if (ad == null) {
+            //need load next or no fill;
+            if (idx == mNativeAdConfigList.size() - 1) {
+                if (mListener != null) {
+                    mListener.onError("No Fill");
+                    mListener = null;
+                }
+            } else {
+                loadNextNativeAd();
+            }
+        } else {
+            // no need load next, fill or just wait timeout;
+            int i ;
+            for (i = idx -1; i >= 0; i --) {
+                if (isLoading(i)) {
+                    break;
+                }
+            }
+            if (now > mProtectOverTime || i < 0) {
+                if (mListener != null) {
+                    mListener.onAdLoaded(ad);
+                    mListener = null;
+                }
+            } else {
+                AdLog.d("Wait for protect time over");
+            }
+        }
+    }
+
+    private int nextLoadingIdx() {
+        return  lastIdx ++;
+    }
+
+    private IAdAdapter getValidCache() {
+        for (AdConfig config: mNativeAdConfigList) {
+            IAdAdapter cache = mNativeAdCache.get(config.key);
+            if (cache != null) {
+                if (cache.isShowed() || ((System.currentTimeMillis() - cache.getLoadedTime())/1000) > config.cacheTime) {
+                    AdLog.d("AdAdapter cache time out : " + cache.getTitle() + " type: " + cache.getAdType());
+                    mNativeAdCache.remove(config.key);
+                } else {
+                    return cache;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean hasValidCache(AdConfig config) {
+        IAdAdapter cache = mNativeAdCache.get(config.key);
+        if (cache != null) {
+            if (cache.isShowed() || ((System.currentTimeMillis() - cache.getLoadedTime())/1000) > config.cacheTime) {
+                AdLog.d("AdAdapter cache time out : " + cache.getTitle() + " type: " + cache.getAdType());
+                mNativeAdCache.remove(config.key);
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void loadAd(int burstNum, IAdLoadListener listener) {
+        loadAd(burstNum, 0 , listener);
     }
 
     public void addAdConfig(AdConfig adConfig) {
@@ -123,50 +202,40 @@ public class FuseAdLoader {
         return mNativeAdConfigList!=null && mNativeAdConfigList.size() > 0;
     }
 
+    abstract class IndexAdListener implements IAdLoadListener {
+        int index;
+        public IndexAdListener(int index) {
+            this.index = index;
+        }
+    }
     private void loadNextNativeAd() {
-        if ( currentLoadingIdx >= mNativeAdConfigList.size()) {
-            AdLog.e(mSlot + " tried to load all source, no fill. Index : " + currentLoadingIdx);
-            mIsLoading = false;
-            if (mListener != null) {
-                mListener.onError("No Fill");
-            }
+        int idx = nextLoadingIdx();
+        if (idx < 0 || idx >= mNativeAdConfigList.size()) {
+            AdLog.d(mSlot + " tried to load all source . Index : " + idx);
             return;
         }
-        AdConfig config = mNativeAdConfigList.get(currentLoadingIdx);
-        //Find cache
-        IAdAdapter ad = mNativeAdCache.get(config.key);
-        if (ad != null) {
-            if (ad.isShowed() || ((System.currentTimeMillis() - ad.getLoadedTime())/1000) > config.cacheTime) {
-                AdLog.d("AdAdapter cache time out : " + ad.getTitle() + " type: " + ad.getAdType());
-                mNativeAdCache.remove(config.key);
-            } else {
-                mIsLoading = false;
-                if (mListener != null) {
-                    mReadyAd = null;
-                    mListener.onAdLoaded(ad);
-                } else {
-                    mReadyAd = ad;
-                }
-                return;
-            }
+        if (isLoading(idx)) {
+            AdLog.d(mSlot + " already loading . Index : " + idx);
+            return;
+        }
+        markLoading(idx);
+        AdConfig config = mNativeAdConfigList.get(idx);
+        if (hasValidCache(config)) {
+            AdLog.d(mSlot + " already have cache for : " + config.key);
+            finishLoading(idx);
+            return;
         }
         //Do load
         IAdAdapter loader = getNativeAdAdapter(config);
         if (loader == null) {
-            mIsLoading = false;
-            if (mListener != null) {
-                mListener.onError("Wrong config");
-            }
+            finishLoading(idx);
             return;
         }
-        loader.loadAd(1, new IAdLoadListener() {
+        AdLog.d(mSlot + " start load for : " + config.source + " index : " + idx );
+        loader.loadAd(1, new IndexAdListener(idx) {
             @Override
             public void onAdLoaded(IAdAdapter ad) {
-                if (currentLoadingIdx < mNativeAdConfigList.size()) {
-                    mNativeAdCache.put(mNativeAdConfigList.get(currentLoadingIdx).key, ad);
-                } else {
-                    AdLog.e("AdAdapter loaded but not put into cache");
-                }
+                mNativeAdCache.put(mNativeAdConfigList.get(index).key, ad);
                 AdLog.d(mSlot + " ad loaded " + ad.getAdType());
                 if (ad.getCoverImageUrl() != null) {
                     AdLog.d("preload " + ad.getCoverImageUrl());
@@ -176,13 +245,7 @@ public class FuseAdLoader {
                     AdLog.d("preload " + ad.getIconImageUrl());
                     ImageLoader.getInstance().doPreLoad(mContext, ad.getIconImageUrl());
                 }
-                mIsLoading = false;
-                if (mListener != null) {
-                    mReadyAd = null;
-                    mListener.onAdLoaded(ad);
-                } else {
-                    mReadyAd = ad;
-                }
+                finishLoading(index);
             }
 
             @Override
@@ -192,17 +255,8 @@ public class FuseAdLoader {
 
             @Override
             public void onError(String error) {
-                if(currentLoadingIdx >= mNativeAdConfigList.size()) {
-                    AdLog.e("Tried to load all source, no fill. Index : " + currentLoadingIdx);
-                    mIsLoading = false;
-                    if (mListener != null) {
-                        mListener.onError("No Fill");
-                    }
-                    return;
-                }
-                AdLog.e("Load current source " + mNativeAdConfigList.get(currentLoadingIdx).source + " error : " + error);
-                currentLoadingIdx++;
-                loadNextNativeAd();
+                finishLoading(index);
+                AdLog.e("Load current source " + mNativeAdConfigList.get(index).source + " error : " + error);
             }
         });
     }
@@ -239,5 +293,17 @@ public class FuseAdLoader {
                 AdLog.e("not suppported source " + config.source);
                 return null;
         }
+    }
+
+    static {
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER);
     }
 }

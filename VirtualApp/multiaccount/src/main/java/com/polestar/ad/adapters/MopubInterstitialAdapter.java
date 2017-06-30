@@ -22,14 +22,17 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
     public MopubInterstitialAdapter(Context context, String key) {
         mContext = context;
         this.key = key;
+        LOAD_TIMEOUT = 20*1000;
 
     }
 
     @Override
     public void onInterstitialLoaded(MoPubInterstitial interstitial) {
+        mLoadedTime = System.currentTimeMillis();
         if (mAdListener != null) {
             mAdListener.onAdLoaded(this);
         }
+        stopMonitor();
         AdLog.d("Mopub interstitial loaded");
     }
 
@@ -39,6 +42,7 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
         if (mAdListener != null) {
             mAdListener.onError("" + errorCode);
         }
+        stopMonitor();
     }
 
     @Override
@@ -78,11 +82,13 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
         mInterstitial = new MoPubInterstitial(NativeInterstitialActivity.getInstance(), key);
         mInterstitial.setInterstitialAdListener(this);
         mInterstitial.load();
+        startMonitor();
     }
 
     @Override
     public void show() {
         if (mInterstitial.isReady()) {
+            registerViewForInteraction(null);
             mInterstitial.show();
         }
     }
@@ -90,5 +96,12 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
     @Override
     public String getAdType() {
         return AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL;
+    }
+
+    @Override
+    protected void onTimeOut() {
+        if (mAdListener != null) {
+            mAdListener.onError("TIME_OUT");
+        }
     }
 }

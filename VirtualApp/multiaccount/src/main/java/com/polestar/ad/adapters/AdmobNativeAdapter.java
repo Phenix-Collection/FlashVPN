@@ -91,6 +91,7 @@ public class AdmobNativeAdapter extends AdAdapter {
         } else {
             adLoader.loadAd(new AdRequest.Builder().build());
         }
+        startMonitor();
     }
 
     private void postOnAdLoaded(com.google.android.gms.ads.formats.NativeAd ad) {
@@ -99,12 +100,14 @@ public class AdmobNativeAdapter extends AdAdapter {
         if (mListener != null) {
             mListener.onAdLoaded(this);
         }
+        stopMonitor();
     }
 
     private void postOnAdLoadFail(int i) {
         if (mListener != null) {
             mListener.onError("" + i);
         }
+        stopMonitor();
     }
 
     @Override
@@ -205,5 +208,12 @@ public class AdmobNativeAdapter extends AdAdapter {
     @Override
     public String getId() {
         return null;
+    }
+
+    @Override
+    protected void onTimeOut() {
+        if (mListener != null) {
+            mListener.onError("TIME_OUT");
+        }
     }
 }

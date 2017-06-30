@@ -23,6 +23,7 @@ public class AdmobInterstitialAdapter extends AdAdapter {
     public AdmobInterstitialAdapter(Context context, String key) {
         mContext = context;
         this.key = key;
+        LOAD_TIMEOUT = 20*1000;
     }
     @Override
     public Object getAdObject() {
@@ -41,6 +42,7 @@ public class AdmobInterstitialAdapter extends AdAdapter {
 
     @Override
     public void show() {
+        registerViewForInteraction(null);
         rawAd.show();
     }
 
@@ -60,14 +62,17 @@ public class AdmobInterstitialAdapter extends AdAdapter {
                 if (adLoadListener != null) {
                     adLoadListener.onError("ErrorCode: " + i);
                 }
+                stopMonitor();
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                mLoadedTime = System.currentTimeMillis();
                 if (adLoadListener != null) {
                     adLoadListener.onAdLoaded(AdmobInterstitialAdapter.this);
                 }
+                stopMonitor();
             }
 
             @Override
@@ -95,6 +100,14 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
         } else {
             rawAd.loadAd(new AdRequest.Builder().build());
+        }
+        startMonitor();
+    }
+
+    @Override
+    protected void onTimeOut() {
+        if (adLoadListener != null) {
+            adLoadListener.onError("TIME_OUT");
         }
     }
 }

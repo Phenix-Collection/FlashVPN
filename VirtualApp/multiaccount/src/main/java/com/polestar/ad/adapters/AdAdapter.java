@@ -1,9 +1,15 @@
 package com.polestar.ad.adapters;
 
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 
 import com.polestar.ad.AdViewBinder;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by guojia on 2016/10/31.
@@ -13,6 +19,28 @@ public abstract class AdAdapter implements IAdAdapter {
     protected String mKey;
     protected long mLoadedTime = -1;
     protected int mShowCount = 0;
+    protected long LOAD_TIMEOUT = 10*1000;
+
+    protected Handler mHandler = new Handler(Looper.myLooper()) ;
+
+    private Runnable timeoutRunner = new Runnable() {
+        @Override
+        public void run() {
+            onTimeOut();
+        }
+    };
+
+    protected void startMonitor() {
+        mHandler.postDelayed(timeoutRunner, LOAD_TIMEOUT);
+    }
+
+    protected void stopMonitor() {
+        mHandler.removeCallbacks(timeoutRunner);
+    }
+
+    protected void onTimeOut() {
+
+    }
 
     @Override
     public long getLoadedTime() {

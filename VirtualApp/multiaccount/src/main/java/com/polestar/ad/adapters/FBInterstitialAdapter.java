@@ -37,6 +37,7 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
         interstitialAd = new InterstitialAd(mContext, key);
         interstitialAd.setAdListener(this);
         interstitialAd.loadAd();
+        startMonitor();
     }
 
     private String key;
@@ -45,11 +46,13 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
     public FBInterstitialAdapter(Context context, String key) {
         mContext = context;
         this.key = key;
+        LOAD_TIMEOUT = 20*1000;
 
     }
     @Override
     public void show() {
         if (interstitialAd != null) {
+            registerViewForInteraction(null);
             interstitialAd.show();
         }
     }
@@ -59,15 +62,18 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
         if (adListener != null) {
             adListener.onError(error.getErrorMessage());
         }
+        stopMonitor();
     }
 
     @Override
     public void onAdLoaded(com.facebook.ads.Ad ad) {
         // AdAdapter is loaded and ready to be displayed
         // You can now display the full screen add using this code:
+        mLoadedTime = System.currentTimeMillis();
         if(adListener != null) {
             adListener.onAdLoaded(this);
         }
+        stopMonitor();
     }
 
     @Override
@@ -104,5 +110,12 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
     @Override
     public String getAdType() {
         return AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL;
+    }
+
+    @Override
+    protected void onTimeOut() {
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
+        }
     }
 }

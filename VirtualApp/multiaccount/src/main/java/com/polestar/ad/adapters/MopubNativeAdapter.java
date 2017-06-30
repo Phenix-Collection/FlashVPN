@@ -68,6 +68,7 @@ public class MopubNativeAdapter extends AdAdapter {
                 if (mListener != null) {
                     mListener.onAdLoaded(MopubNativeAdapter.this);
                 }
+                stopMonitor();
             }
 
             @Override
@@ -76,11 +77,13 @@ public class MopubNativeAdapter extends AdAdapter {
                 if (mListener != null) {
                     mListener.onError(errorCode.toString());
                 }
+                stopMonitor();
             }
         });
         rendererProxy = new MoPubAdRendererProxy();
         moPubNative.registerAdRenderer(rendererProxy);
         moPubNative.makeRequest(parameters);
+        startMonitor();
     }
 
     @Override
@@ -121,5 +124,12 @@ public class MopubNativeAdapter extends AdAdapter {
         View adview = helper.getAdView(null, null, rawAd, mpViewBinder);
         registerViewForInteraction(adview);
         return adview;
+    }
+
+    @Override
+    protected void onTimeOut() {
+        if (mListener != null) {
+            mListener.onError("TIME_OUT");
+        }
     }
 }

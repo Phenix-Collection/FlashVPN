@@ -11,9 +11,6 @@ import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
-import com.polestar.multiaccount.utils.MLogs;
-
-import mirror.android.providers.Settings;
 
 /**
  * Created by guojia on 2017/6/30.
@@ -62,6 +59,7 @@ public class AdmobExpressAdapter  extends AdAdapter {
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
                 AdLog.d(TAG, "onAdFailedToLoad " + i);
+                stopMonitor();
                 if (mListener != null) {
                     mListener.onError("ErrorCode " + i);
                 }
@@ -81,6 +79,7 @@ public class AdmobExpressAdapter  extends AdAdapter {
             public void onAdLoaded() {
                 AdLog.d(TAG, "onAdLoaded");
                 mLoadedTime = System.currentTimeMillis();
+                stopMonitor();
                 super.onAdLoaded();
                 if (mListener != null) {
                     mListener.onAdLoaded(AdmobExpressAdapter.this);
@@ -93,6 +92,7 @@ public class AdmobExpressAdapter  extends AdAdapter {
     public void loadAd(int num, IAdLoadListener listener) {
         mListener = listener;
         AdLog.d("loadAdmobNativeExpress");
+        startMonitor();
         if (AdConstants.DEBUG) {
             String android_id = AdUtils.getAndroidID(mContext);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
@@ -115,5 +115,12 @@ public class AdmobExpressAdapter  extends AdAdapter {
     @Override
     public Object getAdObject() {
         return mRawAd;
+    }
+
+    @Override
+    protected void onTimeOut() {
+        if (mListener != null) {
+            mListener.onError("TIME_OUT");
+        }
     }
 }
