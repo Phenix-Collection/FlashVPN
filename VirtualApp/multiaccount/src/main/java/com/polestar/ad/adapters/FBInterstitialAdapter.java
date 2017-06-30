@@ -15,7 +15,7 @@ import com.polestar.ad.AdLog;
  * Created by guojia on 2016/12/11.
  */
 
-public class FBInterstitialAdapter extends Ad implements InterstitialAdListener, IAdLoader {
+public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdListener {
     private InterstitialAd interstitialAd;
     private IAdLoadListener adListener;
 
@@ -55,7 +55,7 @@ public class FBInterstitialAdapter extends Ad implements InterstitialAdListener,
     }
     @Override
     public void onError(com.facebook.ads.Ad ad, AdError error) {
-        // Ad failed to load
+        // AdAdapter failed to load
         if (adListener != null) {
             adListener.onError(error.getErrorMessage());
         }
@@ -63,7 +63,7 @@ public class FBInterstitialAdapter extends Ad implements InterstitialAdListener,
 
     @Override
     public void onAdLoaded(com.facebook.ads.Ad ad) {
-        // Ad is loaded and ready to be displayed
+        // AdAdapter is loaded and ready to be displayed
         // You can now display the full screen add using this code:
         if(adListener != null) {
             adListener.onAdLoaded(this);

@@ -35,7 +35,7 @@ import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
@@ -85,7 +85,7 @@ public class HomeFragment extends BaseFragment {
     private DragLayer mDragLayer;
     private LinearLayout nativeAdContainer;
 
-    private  IAd nativeAd;
+    private IAdAdapter nativeAd;
 
     private FuseAdLoader mNativeAdLoader;
     private NativeExpressAdView mAdmobExpressView;
@@ -114,7 +114,7 @@ public class HomeFragment extends BaseFragment {
             adShowed = true;
             switch (msg.what) {
                 case NATIVE_AD_READY:
-                    IAd ad = (IAd) msg.obj;
+                    IAdAdapter ad = (IAdAdapter) msg.obj;
                     inflateNativeAd(ad);
                     break;
                 case BANNER_AD_READY:
@@ -124,7 +124,7 @@ public class HomeFragment extends BaseFragment {
         }
     };
 
-    public void inflateNativeAd(IAd ad) {
+    public void inflateNativeAd(IAdAdapter ad) {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
@@ -528,13 +528,13 @@ public class HomeFragment extends BaseFragment {
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
-                public void onAdLoaded(IAd ad) {
+                public void onAdLoaded(IAdAdapter ad) {
                     adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
                     nativeAd = ad;
                 }
 
                 @Override
-                public void onAdListLoaded(List<IAd> ads) {
+                public void onAdListLoaded(List<IAdAdapter> ads) {
 
                 }
 

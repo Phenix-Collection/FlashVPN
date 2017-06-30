@@ -1,17 +1,11 @@
 package com.polestar.ad.adapters;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +16,6 @@ import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.imageloader.widget.BasicLazyLoadImageView;
-import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 
@@ -30,7 +23,7 @@ import com.polestar.multiaccount.widgets.StarLevelLayoutView;
  * Created by guojia on 2016/10/31.
  */
 
-public class FBNativeAdapter extends Ad implements IAdLoader {
+public class FBNativeAdapter extends AdAdapter {
 
     private com.facebook.ads.NativeAd mRawAd ;
     private Context mContext;

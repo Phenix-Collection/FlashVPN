@@ -18,7 +18,7 @@ import com.polestar.ad.AdUtils;
  * Created by guojia on 2016/10/31.
  */
 
-public class AdmobNativeAdapter extends Ad implements IAdLoader {
+public class AdmobNativeAdapter extends AdAdapter {
 
     private String mFilter;
     private Context mContext;

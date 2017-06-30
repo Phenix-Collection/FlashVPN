@@ -13,7 +13,7 @@ import com.polestar.multiaccount.component.activity.NativeInterstitialActivity;
  * Created by guojia on 2017/6/7.
  */
 
-public class MopubInterstitialAdapter extends Ad implements MoPubInterstitial.InterstitialAdListener, IAdLoader  {
+public class MopubInterstitialAdapter extends AdAdapter implements MoPubInterstitial.InterstitialAdListener {
     private MoPubInterstitial mInterstitial;
     private IAdLoadListener mAdListener;
     private Context mContext;

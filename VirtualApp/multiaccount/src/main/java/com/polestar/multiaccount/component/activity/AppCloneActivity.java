@@ -1,7 +1,5 @@
 package com.polestar.multiaccount.component.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -10,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -38,9 +35,8 @@ import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -57,7 +53,6 @@ import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
-import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 import java.util.List;
 import java.util.Timer;
@@ -106,7 +101,7 @@ public class AppCloneActivity extends BaseActivity {
     private NativeExpressAdView mAdmobExpressView;
     private boolean admobReady;
     private boolean fbReady;
-    private IAd nativeAd;
+    private IAdAdapter nativeAd;
     private boolean animateEnd;
     private LinearLayout nativeAdContainer;
     private FuseAdLoader mNativeAdLoader;
@@ -377,7 +372,7 @@ public class AppCloneActivity extends BaseActivity {
         nativeAdContainer.setVisibility(View.VISIBLE);
     }
 
-    private void inflateNativeAdView(IAd ad) {
+    private void inflateNativeAdView(IAdAdapter ad) {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.after_clone_native_ad)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
@@ -402,7 +397,7 @@ public class AppCloneActivity extends BaseActivity {
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
-                public void onAdLoaded(IAd ad) {
+                public void onAdLoaded(IAdAdapter ad) {
                     fbReady = true;
                     nativeAd = ad;
                     showAdIfNeeded();
@@ -410,7 +405,7 @@ public class AppCloneActivity extends BaseActivity {
                 }
 
                 @Override
-                public void onAdListLoaded(List<IAd> ads) {
+                public void onAdListLoaded(List<IAdAdapter> ads) {
 
                 }
 

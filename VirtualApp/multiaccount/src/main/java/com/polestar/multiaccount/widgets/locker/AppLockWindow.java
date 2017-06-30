@@ -24,9 +24,8 @@ import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.AppLockMonitor;
@@ -34,14 +33,12 @@ import com.polestar.multiaccount.component.activity.LockSecureQuestionActivity;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.ResourcesUtil;
 import com.polestar.multiaccount.widgets.FeedbackImageView;
 import com.polestar.multiaccount.widgets.FloatWindow;
 import com.polestar.multiaccount.widgets.PopupMenu;
-import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 import java.util.List;
 
@@ -225,7 +222,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         mToolbarText.setText(mCenterAppText.getText());
     }
 
-    private void inflatNativeAd(IAd ad) {
+    private void inflatNativeAd(IAdAdapter ad) {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
@@ -248,7 +245,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         if (adLoader != null) {
             adLoader.loadAd(1, new IAdLoadListener() {
                 @Override
-                public void onAdLoaded(IAd ad) {
+                public void onAdLoaded(IAdAdapter ad) {
                     MLogs.d("Applock native ad loaded. showing: " + isShowing());
                     if (isShowing()) {
                         inflatNativeAd(ad);
@@ -258,7 +255,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 }
 
                 @Override
-                public void onAdListLoaded(List<IAd> ads) {
+                public void onAdListLoaded(List<IAdAdapter> ads) {
 
                 }
 

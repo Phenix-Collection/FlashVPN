@@ -1,29 +1,18 @@
 package com.polestar.multiaccount.component.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
-import com.mobvista.msdk.MobVistaConstans;
-import com.mobvista.msdk.MobVistaSDK;
-import com.mobvista.msdk.out.Campaign;
-import com.mobvista.msdk.out.Frame;
-import com.mobvista.msdk.out.MobVistaSDKFactory;
-import com.mobvista.msdk.out.MvNativeHandler;
-import com.mobvista.msdk.out.MvNativeHandler.NativeAdListener;
-import com.mobvista.msdk.out.MvNativeHandler.Template;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.utils.DisplayUtils;
@@ -203,7 +192,7 @@ public class NativeInterstitialActivity extends Activity {
     public void fuseLoadNative() {
         mFuseLoader.loadAd(1, new IAdLoadListener() {
             @Override
-            public void onAdLoaded(IAd ad) {
+            public void onAdLoaded(IAdAdapter ad) {
                 hideLoadding();
                 fillInterstitialLayout(ad);
                 mFuseLoader.loadAd(1, null);
@@ -212,7 +201,7 @@ public class NativeInterstitialActivity extends Activity {
             }
 
             @Override
-            public void onAdListLoaded(List<IAd> ads) {
+            public void onAdListLoaded(List<IAdAdapter> ads) {
 
             }
 
@@ -240,7 +229,7 @@ public class NativeInterstitialActivity extends Activity {
             mAdmobExpressView.loadAd(new AdRequest.Builder().build());
         }
     }
-    protected void fillInterstitialLayout(IAd ad) {
+    protected void fillInterstitialLayout(IAdAdapter ad) {
         if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL) ||
                 ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL) ||
                 ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL)) {

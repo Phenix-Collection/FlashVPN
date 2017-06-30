@@ -14,7 +14,7 @@ import com.polestar.ad.AdLog;
  * Created by guojia on 2016/12/11.
  */
 
-public class AdmobInterstitialAdapter extends Ad implements IAdLoader  {
+public class AdmobInterstitialAdapter extends AdAdapter {
     private InterstitialAd rawAd;
     private IAdLoadListener adLoadListener;
     private Context mContext;

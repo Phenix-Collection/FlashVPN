@@ -10,7 +10,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -33,9 +32,8 @@ import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
@@ -53,7 +51,6 @@ import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.FixedGridView;
 import com.polestar.multiaccount.widgets.FixedListView;
-import com.polestar.multiaccount.widgets.StarLevelLayoutView;
 
 import java.util.List;
 import java.util.Random;
@@ -87,7 +84,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private long adLoadStartTime = 0;
     private static final int NATIVE_AD_READY = 0;
     private static final int BANNER_AD_READY = 1;
-    private IAd nativeAd;
+    private IAdAdapter nativeAd;
     private Handler adHandler = new Handler(Looper.getMainLooper()){
         private boolean adShowed = false;
         @Override
@@ -98,7 +95,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             adShowed = true;
             switch (msg.what) {
                 case NATIVE_AD_READY:
-                    IAd ad = (IAd) msg.obj;
+                    IAdAdapter ad = (IAdAdapter) msg.obj;
                     inflateNativeAdView(ad);
                     break;
                 case BANNER_AD_READY:
@@ -275,12 +272,12 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             adLoadStartTime = System.currentTimeMillis();
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
-                public void onAdLoaded(IAd ad) {
+                public void onAdLoaded(IAdAdapter ad) {
                     adHandler.sendMessage(adHandler.obtainMessage(NATIVE_AD_READY, ad ));
                 }
 
                 @Override
-                public void onAdListLoaded(List<IAd> ads) {
+                public void onAdListLoaded(List<IAdAdapter> ads) {
 
                 }
 
@@ -300,7 +297,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         }
     }
 
-    private void inflateNativeAdView(IAd ad) {
+    private void inflateNativeAdView(IAdAdapter ad) {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.native_ad_applist)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)

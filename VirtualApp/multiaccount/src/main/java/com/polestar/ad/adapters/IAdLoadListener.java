@@ -7,7 +7,7 @@ import java.util.List;
  */
 
 public interface IAdLoadListener {
-    void onAdLoaded(IAd ad);
-    void onAdListLoaded(List<IAd> ads);
+    void onAdLoaded(IAdAdapter ad);
+    void onAdListLoaded(List<IAdAdapter> ads);
     void onError(String error);
 }

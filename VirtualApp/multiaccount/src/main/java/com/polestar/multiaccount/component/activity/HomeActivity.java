@@ -25,7 +25,7 @@ import com.mobvista.msdk.MobVistaConstans;
 import com.mobvista.msdk.out.MvWallHandler;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.ad.adapters.IAd;
+import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.billing.BillingConstants;
 import com.polestar.billing.BillingProvider;
@@ -84,7 +84,7 @@ public class HomeActivity extends BaseActivity {
     private RelativeLayout iconAdLayout;
     private RelativeLayout giftIconLayout;
     private RelativeLayout wallButtonLayout;
-    private IAd interstitialAd;
+    private IAdAdapter interstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,7 +227,7 @@ public class HomeActivity extends BaseActivity {
         if (adLoader.hasValidAdSource()) {
             adLoader.loadAd(1, new IAdLoadListener() {
                 @Override
-                public void onAdLoaded(IAd ad) {
+                public void onAdLoaded(IAdAdapter ad) {
                     isInterstitialAdLoaded = true;
                    // giftGifView.setGifResource(R.drawable.front_page_gift_icon);
                     int iconId = new Random().nextInt(3);
@@ -259,7 +259,7 @@ public class HomeActivity extends BaseActivity {
                     interstitialAd = ad;
                 }
                 @Override
-                public void onAdListLoaded(List<IAd> ads) {
+                public void onAdListLoaded(List<IAdAdapter> ads) {
 
                 }
                 @Override

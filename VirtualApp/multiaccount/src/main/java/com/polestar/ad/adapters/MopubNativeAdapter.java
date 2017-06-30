@@ -21,7 +21,7 @@ import java.util.EnumSet;
  * Created by guojia on 2017/5/31.
  */
 
-public class MopubNativeAdapter extends Ad implements IAdLoader {
+public class MopubNativeAdapter extends AdAdapter {
     private Context mContext;
     private String adUnit;
     private RequestParameters parameters;

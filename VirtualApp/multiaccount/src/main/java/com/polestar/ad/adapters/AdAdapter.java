@@ -9,7 +9,7 @@ import com.polestar.ad.AdViewBinder;
  * Created by guojia on 2016/10/31.
  */
 
-public abstract class Ad implements IAd {
+public abstract class AdAdapter implements IAdAdapter {
     protected String mKey;
     protected long mLoadedTime = -1;
     protected int mShowCount = 0;
