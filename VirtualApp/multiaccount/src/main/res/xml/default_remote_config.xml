@@ -54,10 +54,6 @@
         <value>false</value>
     </entry>
     <entry>
-        <key>applist_native_control</key>
-        <value>100:48:both</value>
-    </entry>
-    <entry>
         <key>slot_applist_native</key>
         <value>mp:3e456ebc156d40eea40b1df12843eb55:0;fb:1700354860278115_1727890784191189:0;ab_native_banner:ca-app-pub-5490912237269284/7040042657:0</value>
     </entry>
@@ -71,10 +67,6 @@
         <!-- if not love should wait for hours -->
         <value>72</value>
         <!--<value>xhour</value>-->
-    </entry>
-    <entry>
-        <key>applist_burst_load</key>
-        <value>true</value>
     </entry>
     <entry>
         <key>applist_native_prior_time</key>

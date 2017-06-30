@@ -70,17 +70,10 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private List<AppModel> mInstalledModels;
     private Context mContext;
     private LinearLayout adContainer;
-    private NativeExpressAdView expressAdView;
-    private List<AdConfig> adConfigList;
-    private AdControlInfo adControl;
     private FuseAdLoader mNativeAdLoader;
-    private final static String KEY_APPLIST_CONTROL_INFO = "applist_native_control";
     private TextView sponsorText;
     public static final String SLOT_APPLIST_NATIVE = "slot_applist_native";
 
-    private static boolean burstLoad = true;
-    private static long nativePriorTime = 1*1000;
-    private static final String CONFIG_APPLIST_BURST_LOAD = "applist_burst_load";
     private static final String CONFIG_APPLIST_NATIVE_PRIOR_TIME = "applist_native_prior_time";
     private IAdAdapter nativeAd;
 
@@ -95,23 +88,8 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         setContentView(R.layout.activity_app_list);
         mContext = this;
         initView();
-        adControl = RemoteConfig.getAdControlInfo(KEY_APPLIST_CONTROL_INFO);
-        adConfigList = RemoteConfig.getAdConfigList(SLOT_APPLIST_NATIVE);
-        burstLoad = RemoteConfig.getBoolean(CONFIG_APPLIST_BURST_LOAD);
-        nativePriorTime = RemoteConfig.getLong(CONFIG_APPLIST_NATIVE_PRIOR_TIME);
-        int random = new Random().nextInt(100);
-        if (!PreferencesUtils.isAdFree() && (random < adControl.random || BuildConfig.DEBUG)) {
-            if (adControl.network == AdControlInfo.NETWORK_BOTH
-                    || (adControl.network == AdControlInfo.NETWORK_WIFI_ONLY && CommonUtils.isWiFiActive(this))){
-                loadNativeAd();
-                MTAManager.applistAdLoad(this, "load");
-            } else {
-                MLogs.d("No wifi");
-                MTAManager.applistAdLoad(this, "no_wifi");
-            }
-        } else {
-            MLogs.d("Random " + random + " config " + adControl.random);
-            MTAManager.applistAdLoad(this, "no_random");
+        if (!PreferencesUtils.isAdFree() ) {
+            loadNativeAd();
         }
     }
 
@@ -250,7 +228,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 //        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
 //        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (mNativeAdLoader.hasValidAdSource()) {
-            mNativeAdLoader.loadAd(1, new IAdLoadListener() {
+            mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_APPLIST_NATIVE_PRIOR_TIME), new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                    inflateNativeAdView(ad);
