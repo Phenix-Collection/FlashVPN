@@ -76,6 +76,7 @@ public class AppLockMonitor {
     }
 
     private void preloadAd() {
+        mHandler.removeMessages(MSG_PRELOAD_AD);
         mHandler.sendEmptyMessage(MSG_PRELOAD_AD);
     }
 

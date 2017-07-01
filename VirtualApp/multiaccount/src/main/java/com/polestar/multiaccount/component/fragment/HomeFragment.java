@@ -90,18 +90,12 @@ public class HomeFragment extends BaseFragment {
 
     private FuseAdLoader mNativeAdLoader;
     private FuseAdLoader mApplistAdLoader;
-    private NativeExpressAdView mAdmobExpressView;
     private View mLockSettingIcon;
-
-    private static boolean burstLoad = true;
-    private static long nativePriorTime = 2*1000;
-    private static final String CONFIG_HOME_BURST_LOAD = "home_burst_load";
     private static final String CONFIG_HOME_NATIVE_PRIOR_TIME = "home_native_prior_time";
     private static final String CONFIG_HOME_SHOW_LUCKY_RATE = "home_show_lucky_rate";
     private static final String CONFIG_HOME_SHOW_LUCKY_GATE= "home_show_lucky_gate";
-    private long adLoadStartTime = 0;
-    private static final int NATIVE_AD_READY = 0;
-    private static final int BANNER_AD_READY = 1;
+    private static final String CONFIG_HOME_PRELOAD_APPLIST_GATE= "home_preload_applist_gate";
+
     private boolean showLucky;
 
     private boolean adShowed = false;
@@ -620,7 +614,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void preloadAppListAd(boolean force) {
-        if (!force && appInfos.size() > 0 ) {
+        if (!force && appInfos.size() >= RemoteConfig.getLong(CONFIG_HOME_PRELOAD_APPLIST_GATE) ) {
             return;
         }
         if (mApplistAdLoader == null) {

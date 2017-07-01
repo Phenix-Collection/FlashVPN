@@ -128,4 +128,15 @@
         <key>slot_app_lock_protect_time</key>
         <value>0</value>
     </entry>
+    <entry>
+        <key>home_preload_applist_gate</key>
+        <!-- greater or equal than gate then no preload -->
+        <value>1</value>
+    </entry>
+    <!--
+    <entry>
+        <key>config_ad_load_timeout</key>
+        <value>ab_install:10000;ab_content:10000;ab:10000;fb:10000;mp:10000;fb_interstitial:10000;ab_interstitial:10000;mp_interstitial:10000;ab_native_banner:10000</value>
+    </entry>
+-->
 </defaultsMap>
