@@ -1328,5 +1328,11 @@
         <service android:name="com.polestar.clone.StubService$S48" android:process=":p48" />
         <service android:name="com.polestar.clone.StubService$S49" android:process=":p49" />
 
+        <provider
+            android:name="com.polestar.clone.ProxyContentProvider"
+            android:authorities="${applicationId}.ProxyContentProvider"
+            android:process=":p99"
+            android:exported="false"
+            android:grantUriPermissions="true"/>
     </application>
 </manifest>

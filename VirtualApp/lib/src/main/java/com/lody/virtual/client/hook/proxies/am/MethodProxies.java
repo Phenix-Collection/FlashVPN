@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.app.IServiceConnection;
 import android.app.PendingIntent;
+import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.IIntentReceiver;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.RemoteException;
+import android.provider.MediaStore;
 import android.system.Os;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -473,6 +475,26 @@ class MethodProxies {
                 if (intent.getPackage() != null && isAppPkg(intent.getPackage())) {
                     return ActivityManagerCompat.START_INTENT_NOT_RESOLVED;
                 }
+                if (Build.VERSION.SDK_INT >= 16) {
+                    ClipData data = intent.getClipData();
+                    if (data != null && data.getItemAt(0) != null) {
+                        Uri origin = data.getItemAt(0).getUri();
+                        if (origin != null && needProxyProvider(origin.getAuthority())) {
+                            Uri newUri = processUri(origin);
+                            ClipData newData = new ClipData(data.getDescription(),
+                                    new ClipData.Item(newUri));
+                            intent.setClipData(newData);
+                        }
+                    }
+                    Uri extra = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+                    if (extra != null && needProxyProvider(extra.getAuthority())) {
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, processUri(extra));
+                    }
+                    Uri dataExtra = intent.getData();
+                    if (dataExtra != null && needProxyProvider(dataExtra.getAuthority())) {
+                        intent.setData(processUri(dataExtra));
+                    }
+                }
                 return method.invoke(who, args);
             }
             int res = VActivityManager.get().startActivity(intent, activityInfo, resultTo, options, resultWho, requestCode, VUserHandle.myUserId());
@@ -505,6 +527,23 @@ class MethodProxies {
             return res;
         }
 
+        private boolean needProxyProvider(String authority) {
+            return authority!= null
+                    && (authority.equals("com.truecaller.fileprovider") || authority.equals("com.whatsapp.fileprovider"));
+        }
+
+        private Uri processUri(Uri in) {
+            Uri.Builder builder = new Uri.Builder();
+            if (in != null) {
+                builder.scheme("content").authority(VirtualCore.get().getHostPkg() + ".ProxyContentProvider").appendPath(in.getAuthority());
+                for (String s:in.getPathSegments()) {
+                    builder.appendPath(s);
+                }
+            }
+            Uri ret = builder.build();
+            VLog.logbug(TAG, "ProcessUri: in: " + in + " ret: " + ret);
+            return ret;
+        }
 
         private boolean handleInstallRequest(Intent intent) {
             IAppRequestListener listener = VirtualCore.get().getAppRequestListener();
