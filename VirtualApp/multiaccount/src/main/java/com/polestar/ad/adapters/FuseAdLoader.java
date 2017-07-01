@@ -134,7 +134,7 @@ public class FuseAdLoader {
                     break;
                 }
             }
-            if (now > mProtectOverTime || i < 0) {
+            if (now >= mProtectOverTime || i < 0) {
                 if (mListener != null) {
                     mListener.onAdLoaded(ad);
                     mListener = null;

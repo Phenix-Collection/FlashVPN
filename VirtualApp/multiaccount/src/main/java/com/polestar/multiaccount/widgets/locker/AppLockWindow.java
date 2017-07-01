@@ -70,6 +70,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     private AppLockPasswordLogic mAppLockPasswordLogic = null;
 
     public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
+    public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
 
     public AppLockWindow(String pkgName, Handler handler) {
         MLogs.d("AppLockWindow initialize for : " + pkgName);
@@ -117,8 +118,6 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         mToolbarText = (TextView) mContentView.findViewById(R.id.lock_bar_text);
 
         initToolbar();
-        initAdmobBannerView();
-  //      loadAdmobNativeExpress();
         MLogs.d("AppLockWindow initialized 0");
         mAdInfoContainer = (LinearLayout)mContentView.findViewById(R.id.layout_appinfo_container);
 
@@ -152,68 +151,10 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         MLogs.d("AppLockWindow initialized");
     }
 
-    private void initAdmobBannerView() {
-        mAdmobExpressView = new NativeExpressAdView(VirtualCore.get().getContext());
-        List<AdConfig> adConfigs = RemoteConfig.getAdConfigList(CONFIG_SLOT_APP_LOCK);
-        String adunit  = null;
-        if (adConfigs != null) {
-            for (AdConfig adConfig: adConfigs) {
-                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
-                    adunit = adConfig.key;
-                    break;
-                }
-            }
-        }
-        if (TextUtils.isEmpty(adunit)) {
-            mAdmobExpressView = null;
-            return;
-        }
+    public static AdSize getBannerSize() {
         int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
         dpWidth = Math.max(280, dpWidth*9/10);
-        mAdmobExpressView.setAdSize(new AdSize(dpWidth, 280));
-        mAdmobExpressView.setAdUnitId(adunit);
-        //mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/7540311850");
-       // mAdmobExpressView.setVisibility(View.GONE);
-        mAdmobExpressView.setBackgroundColor(0);
-        mAdmobExpressView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                AdLog.d("onAdClosed");
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                AdLog.d("onAdFailedToLoad " + i);
-                mAdmobExpressView.setVisibility(View.GONE);
-                AppLockMonitor.getInstance().getAdLoader().loadAd(1, null);
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                if (isShowing()) {
-                    mAdInfoContainer.removeAllViews();
-                    mAdInfoContainer.addView(mAdmobExpressView);
-                    mAdmobExpressView.setVisibility(View.VISIBLE);
-                    updateTitleBar();
-                    AppLockMonitor.getInstance().getAdLoader().loadAd(1, null);
-                }
-                AdLog.d("LockWindow on Banner AdLoaded ");
-            }
-        });
-        mAdmobExpressView.setBackgroundColor(0);
+        return  new AdSize(dpWidth, 280);
     }
 
     private void updateTitleBar() {
@@ -233,6 +174,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 .build();
         View adView = ad.getAdView(viewBinder);
         if (adView != null) {
+            adView.setBackgroundColor(0);
             mAdInfoContainer.removeAllViews();
             mAdInfoContainer.addView(adView);
             updateTitleBar();
@@ -240,10 +182,11 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     }
     private void loadNative(){
         final FuseAdLoader adLoader = AppLockMonitor.getInstance().getAdLoader();
+        adLoader.setBannerAdSize(getBannerSize());
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (adLoader != null) {
-            adLoader.loadAd(1, new IAdLoadListener() {
+            adLoader.loadAd(2, RemoteConfig.getLong(CONFIG_SLOT_APP_LOCK_PROTECT_TIME), new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     MLogs.d("Applock native ad loaded. showing: " + isShowing());
@@ -262,30 +205,9 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 @Override
                 public void onError(String error) {
                     MLogs.d("Lock window load ad error: " + error);
-                    loadAdmobNativeExpress();
-                    adLoader.loadAd(1, null);
                 }
             });
         }
-    }
-
-    private void loadAdmobNativeExpress(){
-        if (mAdmobExpressView == null) {
-            return;
-        }
-        MLogs.d("Lock loadAdmobNativeExpress");
-        if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID( VirtualCore.get().getContext());
-            String deviceId = AdUtils.MD5(android_id).toUpperCase();
-            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-            boolean isTestDevice = request.isTestDevice( VirtualCore.get().getContext());
-            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
-            AdLog.d( "Admob unit id "+ mAdmobExpressView.getAdUnitId());
-            mAdmobExpressView.loadAd(request );
-        } else {
-            mAdmobExpressView.loadAd(new AdRequest.Builder().build());
-        }
-        MLogs.d("X Lock loadAdmobNativeExpress");
     }
 
     private void initToolbar() {

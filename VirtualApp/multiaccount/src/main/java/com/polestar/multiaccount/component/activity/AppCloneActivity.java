@@ -92,15 +92,14 @@ public class AppCloneActivity extends BaseActivity {
     private static final int MSG_INSTALL_FINISHED = 1;
     private static final String CONFIG_KEY_SHOW_AD_AFTER_CLONE = "show_ad_after_clone";
     private static final String SLOT_AD_AFTER_CLONE = "slot_ad_after_clone";
+    private static final String CONFIG_AD_AFTER_CLONE_PROTECT_TIME= "ad_after_clone_protect_time";
 
     private List<AdConfig> adConfigList;
     private AppModel appModel;
     private boolean isInstallSuccess;
     private boolean isInstallDone;
     private boolean isCanceled;
-    private NativeExpressAdView mAdmobExpressView;
-    private boolean admobReady;
-    private boolean fbReady;
+    private boolean adReady;
     private IAdAdapter nativeAd;
     private boolean animateEnd;
     private LinearLayout nativeAdContainer;
@@ -282,94 +281,25 @@ public class AppCloneActivity extends BaseActivity {
         MLogs.d(CONFIG_KEY_SHOW_AD_AFTER_CLONE + showAd);
         adConfigList = RemoteConfig.getAdConfigList(SLOT_AD_AFTER_CLONE);
         if (showAd && adConfigList!= null && adConfigList.size() > 0) {
-            initAdmobBannerView();
             loadAd();
         }
     }
 
-    private void initAdmobBannerView() {
-        mAdmobExpressView = new NativeExpressAdView(this);
-        String adunit  = null;
-        if (adConfigList != null) {
-            for (AdConfig adConfig: adConfigList) {
-                if (adConfig.source != null && adConfig.source.equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER)){
-                    adunit = adConfig.key;
-                    break;
-                }
-            }
-        }
-        if (TextUtils.isEmpty(adunit)) {
-            mAdmobExpressView = null;
-            return;
-        }
+    private AdSize getBannerSize() {
         int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
         dpWidth = Math.max(280, dpWidth-20);
-        mAdmobExpressView.setAdSize(new AdSize(dpWidth, 280));
-//        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
-        mAdmobExpressView.setAdUnitId(adunit);
-        mAdmobExpressView.setVisibility(View.GONE);
-        mAdmobExpressView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                AdLog.d("onAdClosed");
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                AdLog.d("Clone admob onAdFailedToLoad " + i);
-                mAdmobExpressView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                AdLog.d("on Banner AdLoaded ");
-                admobReady = true;
-                showAdIfNeeded();
-            }
-        });
+        return new AdSize(dpWidth, 280);
     }
 
     private void showAdIfNeeded(){
-        MLogs.d("Animate end: " + animateEnd + " fb: " + fbReady + " admob: " + admobReady);
+        MLogs.d("Animate end: " + animateEnd + " adReady: " + adReady);
         TextView sponsor = (TextView) findViewById(R.id.sponsor_text);
-        if(animateEnd) {
-            if (fbReady) {
-                sponsor.setVisibility(View.VISIBLE);
-                MTAManager.appCloneAd(this, nativeAd.getAdType());
-                inflateNativeAdView(nativeAd);
-            } else if(admobReady){
-                sponsor.setVisibility(View.VISIBLE);
-                showBannerAd();
-                MTAManager.appCloneAd(this, "Admob");
-            }
+        if(animateEnd && adReady) {
+            sponsor.setVisibility(View.VISIBLE);
+            MTAManager.appCloneAd(this, nativeAd.getAdType());
+            inflateNativeAdView(nativeAd);
         }
 
-    }
-
-    private void showBannerAd(){
-        MLogs.d("AppClone showBannerAd");
-        nativeAdContainer.removeAllViews();
-        mAdmobExpressView.setVisibility(View.VISIBLE);
-//        LinearLayout admobContainer = new LinearLayout(this);
-//        admobContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        admobContainer.setOrientation(LinearLayout.VERTICAL);
-//        admobContainer.addView(mAdmobExpressView);
-//        nativeAdContainer.addView(admobContainer);
-        nativeAdContainer.addView(mAdmobExpressView);
-        nativeAdContainer.setVisibility(View.VISIBLE);
     }
 
     private void inflateNativeAdView(IAdAdapter ad) {
@@ -391,14 +321,15 @@ public class AppCloneActivity extends BaseActivity {
     private void loadAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_AD_AFTER_CLONE, this);
+            mNativeAdLoader.setBannerAdSize(getBannerSize());
         }
         //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
         //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if ( mNativeAdLoader.hasValidAdSource()) {
-            mNativeAdLoader.loadAd(1, new IAdLoadListener() {
+            mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_AD_AFTER_CLONE_PROTECT_TIME), new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
-                    fbReady = true;
+                    adReady = true;
                     nativeAd = ad;
                     showAdIfNeeded();
 //                    loadAdmobNativeExpress();
@@ -411,29 +342,9 @@ public class AppCloneActivity extends BaseActivity {
 
                 @Override
                 public void onError(String error) {
-                    loadAdmobNativeExpress();
+
                 }
             });
-        } else {
-            loadAdmobNativeExpress();
-        }
-    }
-
-    private void loadAdmobNativeExpress(){
-        if (mAdmobExpressView == null) {
-            return;
-        }
-        MLogs.d("AppClone loadAdmobNativeExpress");
-        if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID(this);
-            String deviceId = AdUtils.MD5(android_id).toUpperCase();
-            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-            boolean isTestDevice = request.isTestDevice(this);
-            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
-            AdLog.d( "Admob unit id "+ mAdmobExpressView.getAdUnitId());
-            mAdmobExpressView.loadAd(request );
-        } else {
-            mAdmobExpressView.loadAd(new AdRequest.Builder().build());
         }
     }
 

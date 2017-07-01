@@ -90,6 +90,7 @@ public class AppLockMonitor {
         }
         adFree = false;
         mAdLoader = FuseAdLoader.get(AppLockWindow.CONFIG_SLOT_APP_LOCK, MApp.getApp());
+        mAdLoader.setBannerAdSize(AppLockWindow.getBannerSize());
         preloadAd();
     }
 

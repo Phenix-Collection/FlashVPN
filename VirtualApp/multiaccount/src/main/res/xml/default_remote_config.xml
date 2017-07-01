@@ -120,4 +120,12 @@
         <key>applock_preload_interval</key>
         <value>3600000</value>
     </entry>
+    <entry>
+        <key>ad_after_clone_protect_time</key>
+        <value>3000</value>
+    </entry>
+    <entry>
+        <key>slot_app_lock_protect_time</key>
+        <value>0</value>
+    </entry>
 </defaultsMap>
