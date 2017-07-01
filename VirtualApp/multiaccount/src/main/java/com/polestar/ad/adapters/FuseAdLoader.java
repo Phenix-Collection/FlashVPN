@@ -100,7 +100,10 @@ public class FuseAdLoader {
             }, protectTime);
         }
         for (int i = 0; i < burstNum; i ++ ) {
-            loadNextNativeAd();
+            if (loadNextNativeAd()) {
+                AdLog.d("Stop burst as already find cache at: " + i);
+                break;
+            }
         }
     }
 
@@ -208,28 +211,28 @@ public class FuseAdLoader {
             this.index = index;
         }
     }
-    private void loadNextNativeAd() {
+    private boolean loadNextNativeAd() {
         int idx = nextLoadingIdx();
         if (idx < 0 || idx >= mNativeAdConfigList.size()) {
             AdLog.d(mSlot + " tried to load all source . Index : " + idx);
-            return;
+            return false;
         }
         if (isLoading(idx)) {
             AdLog.d(mSlot + " already loading . Index : " + idx);
-            return;
+            return false;
         }
         markLoading(idx);
         AdConfig config = mNativeAdConfigList.get(idx);
         if (hasValidCache(config)) {
             AdLog.d(mSlot + " already have cache for : " + config.key);
             finishLoading(idx);
-            return;
+            return true;
         }
         //Do load
         IAdAdapter loader = getNativeAdAdapter(config);
         if (loader == null) {
             finishLoading(idx);
-            return;
+            return false;
         }
         AdLog.d(mSlot + " start load for : " + config.source + " index : " + idx );
         loader.loadAd(1, new IndexAdListener(idx) {
@@ -259,6 +262,7 @@ public class FuseAdLoader {
                 AdLog.e("Load current source " + mNativeAdConfigList.get(index).source + " error : " + error);
             }
         });
+        return false;
     }
 
     private IAdAdapter getNativeAdAdapter(AdConfig config){
