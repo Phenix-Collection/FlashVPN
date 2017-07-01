@@ -19,11 +19,6 @@
         <value>50</value>
     </entry>
     <entry>
-        <key>slot_home_gift_interstitial</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb_interstitial:1700354860278115_1702702800043321:0</value>
-    </entry>
-    <entry>
         <key>slot_home_lucky_new</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>mp_interstitial:60045d2f3ebd4042af67f02d7563763e:0;ab_interstitial:ca-app-pub-5490912237269284/6199077857:0;mp:e910f1133e0a4e289d71166f5d1ca724:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
@@ -36,18 +31,18 @@
     <entry>
         <key>slot_app_lock</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>mp:e5cfa7539cc94b8285a326dadb3bde0c:0;fb:1700354860278115_1775329706113963:0;ab_native_banner:ca-app-pub-5490912237269284/7955343852:0</value>
+        <value>mp:e5cfa7539cc94b8285a326dadb3bde0c:0;ab_native_banner:ca-app-pub-5490912237269284/7955343852:0</value>
     </entry>
     <entry>
         <key>slot_home_gift_interstitial_1026</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>
-            ab_interstitial:ca-app-pub-5490912237269284/5384537050:0;fb_interstitial:1700354860278115_1702702800043321:0
+            ab_interstitial:ca-app-pub-5490912237269284/5384537050:0;mp_interstitial:b2f5c192f9cf44ebb423332e95c64378:0
         </value>
     </entry>
     <entry>
         <key>slot_home_header_native</key>
-        <value>mp:ea31e844abf44e3690e934daad125451:0;fb:1700354860278115_1739555343024733:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0</value>
+        <value>mp:ea31e844abf44e3690e934daad125451:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0</value>
     </entry>
     <entry>
         <key>home_show_header_ad</key>
@@ -55,7 +50,7 @@
     </entry>
     <entry>
         <key>slot_applist_native</key>
-        <value>mp:3e456ebc156d40eea40b1df12843eb55:0;fb:1700354860278115_1727890784191189:0;ab_native_banner:ca-app-pub-5490912237269284/7040042657:0</value>
+        <value>mp:3e456ebc156d40eea40b1df12843eb55:0;ab_native_banner:ca-app-pub-5490912237269284/7040042657:0</value>
     </entry>
     <entry>
         <key>clone_rate_package</key>
