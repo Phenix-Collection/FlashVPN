@@ -122,6 +122,10 @@ public class ProviderHook implements InvocationHandler {
         return (ParcelFileDescriptor) method.invoke(mBase, args);
     }
 
+    public AssetFileDescriptor openTypedAssetFile(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
+        return (AssetFileDescriptor) method.invoke(mBase, args);
+    }
+
     public AssetFileDescriptor openAssetFile(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
         return (AssetFileDescriptor) method.invoke(mBase, args);
     }
@@ -166,6 +170,9 @@ public class ProviderHook implements InvocationHandler {
             } else if ("openAssetFile".equals(name)) {
                 fakeReturn = null;
                 return openAssetFile(method, args);
+            } else if ("openTypedAssetFile".equals(name)) {
+                fakeReturn = null;
+                return openTypedAssetFile(method, args);
             } else if ("query".equals(name)) {
                 fakeReturn = null;
                 return query(method, args);
@@ -173,12 +180,15 @@ public class ProviderHook implements InvocationHandler {
             return method.invoke(mBase, args);
         } catch (Throwable e) {
             VLog.d("ProviderHook", "call: %s (%s) with error", method.getName(), Arrays.toString(args));
+            VLog.d("ProviderHook", "error: " + e);
             if (e instanceof InvocationTargetException) {
+                VLog.d("ProviderHook", "error: " + e.getCause() + VLog.getStackTraceString(e.getCause()));
                 if (e.getCause() instanceof SecurityException) {
                     VLog.d("ProviderHook", "call: with SecurityException" );
                    // return null;
+                } else {
+                    throw e.getCause();
                 }
-                //throw e.getCause();
             }
             //throw e;
             return fakeReturn;
