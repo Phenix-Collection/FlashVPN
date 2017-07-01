@@ -21,6 +21,7 @@ import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdUtils;
 import com.polestar.billing.BillingProvider;
+import com.polestar.multiaccount.component.AppLockMonitor;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -157,6 +158,7 @@ public class MApp extends Application {
                 MLogs.d("Server process app onCreate done");
                 AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
                 AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
+                AppLockMonitor.getInstance();
             }
         });
 
