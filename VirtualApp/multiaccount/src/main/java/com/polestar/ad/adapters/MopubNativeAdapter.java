@@ -98,11 +98,13 @@ public class MopubNativeAdapter extends AdAdapter {
 
     @Override
     public void destroy() {
-        if (moPubNative != null) {
-            moPubNative.destroy();
-        }
-        if (rawAd != null) {
-            rawAd.destroy();
+        if (isShowed()) {
+            if (moPubNative != null) {
+                moPubNative.destroy();
+            }
+            if (rawAd != null) {
+                rawAd.destroy();
+            }
         }
     }
 
