@@ -529,7 +529,9 @@ class MethodProxies {
 
         private boolean needProxyProvider(String authority) {
             return authority!= null
-                    && (authority.equals("com.truecaller.fileprovider") || authority.equals("com.whatsapp.fileprovider"));
+                    && (authority.equals("com.truecaller.fileprovider")
+                    || authority.equals("com.whatsapp.fileprovider")
+                    || authority.equals("com.whatsapp.provider.media"));
         }
 
         private Uri processUri(Uri in) {
