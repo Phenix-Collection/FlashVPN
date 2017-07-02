@@ -20,6 +20,7 @@ import com.android.billingclient.api.Purchase.PurchasesResult;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails.SkuDetailsResult;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.utils.MLogs;
 
@@ -318,30 +319,40 @@ public class BillingManager implements PurchasesUpdatedListener {
             @Override
             public void run() {
                 long time = System.currentTimeMillis();
-                PurchasesResult purchasesResult = mBillingClient.queryPurchases(SkuType.INAPP);
-                MLogs.i(TAG, "Querying purchases elapsed time: " + (System.currentTimeMillis() - time)
-                        + "ms");
-                // If there are subscriptions supported, we add subscription rows as well
-                if (areSubscriptionsSupported()) {
-                    PurchasesResult subscriptionResult
-                            = mBillingClient.queryPurchases(SkuType.SUBS);
-                    MLogs.i(TAG, "Querying purchases and subscriptions elapsed time: "
-                            + (System.currentTimeMillis() - time) + "ms");
-                    MLogs.i(TAG, "Querying subscriptions result code: "
-                            + subscriptionResult.getResponseCode()
-                            + " res: " + subscriptionResult.getPurchasesList().size());
+                PurchasesResult purchasesResult = null;
+                try {
+                    purchasesResult = mBillingClient.queryPurchases(SkuType.INAPP);
+                    MLogs.i(TAG, "Querying purchases elapsed time: " + (System.currentTimeMillis() - time)
+                            + "ms");
+                    // If there are subscriptions supported, we add subscription rows as well
+                    if (areSubscriptionsSupported()) {
+                        PurchasesResult subscriptionResult
+                                = mBillingClient.queryPurchases(SkuType.SUBS);
+                        MLogs.i(TAG, "Querying purchases and subscriptions elapsed time: "
+                                + (System.currentTimeMillis() - time) + "ms");
+                        MLogs.i(TAG, "Querying subscriptions result code: "
+                                + subscriptionResult.getResponseCode());
+                        if (subscriptionResult.getPurchasesList() != null) {
+                            MLogs.i(TAG, " res: " + subscriptionResult.getPurchasesList().size());
+                        }
 
-                    if (subscriptionResult.getResponseCode() == BillingResponse.OK) {
-                        purchasesResult.getPurchasesList().addAll(
-                                subscriptionResult.getPurchasesList());
+                        if (subscriptionResult.getResponseCode() == BillingResponse.OK) {
+                            purchasesResult.getPurchasesList().addAll(
+                                    subscriptionResult.getPurchasesList());
+                        } else {
+                            MLogs.logBug(TAG, "Got an error response trying to query subscription purchases");
+                        }
+                    } else if (purchasesResult.getResponseCode() == BillingResponse.OK) {
+                        MLogs.i(TAG, "Skipped subscription purchases query since they are not supported");
                     } else {
-                        MLogs.e(TAG, "Got an error response trying to query subscription purchases");
+                        MLogs.e(TAG, "queryPurchases() got an error response code: "
+                                + purchasesResult.getResponseCode());
                     }
-                } else if (purchasesResult.getResponseCode() == BillingResponse.OK) {
-                    MLogs.i(TAG, "Skipped subscription purchases query since they are not supported");
-                } else {
-                    MLogs.e(TAG, "queryPurchases() got an error response code: "
-                            + purchasesResult.getResponseCode());
+                } catch (Exception e) {
+                    MLogs.logBug(TAG, MLogs.getStackTraceString(e));
+                }
+                if (purchasesResult == null) {
+                    purchasesResult = new PurchasesResult(null, BillingResponse.SERVICE_DISCONNECTED);
                 }
                 onQueryPurchasesFinished(purchasesResult);
             }
