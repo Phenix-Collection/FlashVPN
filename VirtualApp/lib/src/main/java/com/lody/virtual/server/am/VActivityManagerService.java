@@ -244,7 +244,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		synchronized (this) {
 			r = startProcessIfNeedLocked(processName, userId, info.packageName);
 		}
-		if (r != null && r.client.asBinder().isBinderAlive()) {
+		if (r != null && r.client != null &&  r.client.asBinder().isBinderAlive()) {
 			try {
 				return r.client.acquireProviderClient(info);
 			} catch (RemoteException e) {
