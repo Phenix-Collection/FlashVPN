@@ -68,6 +68,7 @@ public class HomeActivity extends BaseActivity {
     private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
     private static final String CONFIG_CLONE_RATE_INTERVAL = "clone_rate_interval";
     private static final String CONFIG_AD_FREE_DIALOG_INTERVAL = "ad_free_dialog_interval";
+    private static final String CONFIG_AD_FREE_DIALOG_INTERVAL_2 = "ad_free_dialog_interval_2";
 
     private static final String RATE_FROM_QUIT = "quit";
     private static final String RATE_AFTER_CLONE = "clone";
@@ -384,7 +385,8 @@ public class HomeActivity extends BaseActivity {
         boolean needShowRate = guideRateIfNeeded();
         if (!needShowRate && !BillingProvider.get().isAdFreeVIP()) {
             long interval = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL) * 60 * 60 * 1000;
-            interval = PreferencesUtils.getAdFreeClickStatus() ? interval : interval*3;
+            long interval2 = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL_2) * 60 * 60 * 1000;
+            interval = PreferencesUtils.getAdFreeClickStatus() ? interval : interval2;
             long last = PreferencesUtils.getLastAdFreeDialogTime();
             if ((System.currentTimeMillis() - last) > interval || MLogs.DEBUG) {
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
