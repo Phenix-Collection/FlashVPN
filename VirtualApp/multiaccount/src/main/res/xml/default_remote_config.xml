@@ -60,7 +60,7 @@
     <entry>
         <key>clone_rate_interval</key>
         <!-- if not love should wait for hours -->
-        <value>72</value>
+        <value>720</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -106,6 +106,10 @@
     <entry>
         <key>ad_free_dialog_interval</key>
         <value>48</value>
+    </entry>
+    <entry>
+        <key>ad_free_dialog_interval_2</key>
+        <value>360</value>
     </entry>
     <entry>
         <key>default_lock_enable</key>
