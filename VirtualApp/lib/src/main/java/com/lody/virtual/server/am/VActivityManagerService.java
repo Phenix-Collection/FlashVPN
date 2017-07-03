@@ -518,7 +518,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
                 e.printStackTrace();
             }
         }
-        mHistory.remove(r);
+        synchronized (mHistory) {
+			mHistory.remove(r);
+		}
     }
 
 	@Override
