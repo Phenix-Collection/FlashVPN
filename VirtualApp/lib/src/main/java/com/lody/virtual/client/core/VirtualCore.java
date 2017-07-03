@@ -326,7 +326,9 @@ public final class VirtualCore {
 		InstallResult result = null;
 		for (int i = 0; i < 5; i ++) {
 			try {
-				result = getService().installPackage(pkg, apkPath, flags);
+				if (getService() != null ) {
+					result = getService().installPackage(pkg, apkPath, flags);
+				}
 			} catch (RemoteException e) {
 				mService = null;
 				//return InstallResult.makeFailure("Service not available");
