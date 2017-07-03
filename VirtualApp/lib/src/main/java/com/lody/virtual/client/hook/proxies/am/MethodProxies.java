@@ -415,12 +415,16 @@ class MethodProxies {
 
             //Work around fb ad icon click
             VLog.d(TAG, "intent: " + intent.toString());
-            if(VirtualCore.get().isServerProcess() &&
-                    Intent.ACTION_VIEW.equals(intent.getAction()) &&
+//            if(VirtualCore.get().isServerProcess()) {
+                if(Intent.ACTION_VIEW.equals(intent.getAction()) &&
                     intent.getDataString() != null &&
-                    intent.getDataString().contains("https://m.facebook.com/")) {
-                return method.invoke(who, args);
-            }
+                        (intent.getDataString().contains("m.facebook.com")
+                        || intent.getDataString().contains("www.googleadservices.com")
+                        || intent.getDataString().contains("play.google.com")
+                        || intent.getDataString().contains("market://"))) {
+                    return method.invoke(who, args);
+                }
+//            }
             if (Intent.ACTION_MAIN.equals(intent.getAction())
                     && intent.hasCategory(Intent.CATEGORY_HOME)
                     && (intent.getComponent() == null || intent.getComponent().getClassName().equals("com.google.android.setupwizard.SetupWizardActivity"))) {
@@ -470,7 +474,7 @@ class MethodProxies {
             }
 
             ActivityInfo activityInfo = VirtualCore.get().resolveActivityInfo(intent, userId);
-            if (activityInfo == null) {
+            if (activityInfo == null || activityInfo.applicationInfo.packageName.equals("com.android.vending")) {
                 VLog.e(TAG, "Unable to resolve activityInfo : " + intent);
                 if (intent.getPackage() != null && isAppPkg(intent.getPackage())) {
                     return ActivityManagerCompat.START_INTENT_NOT_RESOLVED;
