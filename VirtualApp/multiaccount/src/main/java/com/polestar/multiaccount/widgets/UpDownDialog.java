@@ -10,9 +10,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lody.virtual.helper.utils.VLog;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.utils.AnimatorHelper;
 import com.polestar.multiaccount.utils.DisplayUtils;
+import com.polestar.multiaccount.utils.MLogs;
 
 public class UpDownDialog {
 
@@ -74,7 +76,11 @@ public class UpDownDialog {
         // 设置Dialog的大小
         dialog.getWindow().setLayout(dialogwidth, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
+        try {
+            dialog.show();
+        }catch (Exception e) {
+            MLogs.logBug(VLog.getStackTraceString(e));
+        }
         AnimatorHelper.elasticScale(dialogView);
         return dialog;
     }
