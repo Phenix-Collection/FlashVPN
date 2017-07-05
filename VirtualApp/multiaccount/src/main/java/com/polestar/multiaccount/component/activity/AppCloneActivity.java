@@ -320,7 +320,7 @@ public class AppCloneActivity extends BaseActivity {
 
     private void loadAd() {
         if (mNativeAdLoader == null) {
-            mNativeAdLoader = FuseAdLoader.get(SLOT_AD_AFTER_CLONE, this);
+            mNativeAdLoader = FuseAdLoader.get(SLOT_AD_AFTER_CLONE, this.getApplicationContext());
             mNativeAdLoader.setBannerAdSize(getBannerSize());
         }
         //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));

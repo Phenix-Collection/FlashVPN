@@ -57,12 +57,6 @@ public class NativeInterstitialActivity extends Activity {
     private static final int MSG_TIMEOUT = 1;
     private static final int DEFAULT_TIMEOUT_DELAY = 60*1000;
 
-    private static Activity sInstance = null;
-
-    static public Activity getInstance() {
-        return sInstance;
-    }
-
     private boolean canceled = false;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -89,7 +83,6 @@ public class NativeInterstitialActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sInstance = this;
         setContentView(R.layout.mobvista_native_interstitial);
         initView();
         showLoadding();
@@ -185,7 +178,6 @@ public class NativeInterstitialActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        sInstance = null;
         finish();
     }
 }

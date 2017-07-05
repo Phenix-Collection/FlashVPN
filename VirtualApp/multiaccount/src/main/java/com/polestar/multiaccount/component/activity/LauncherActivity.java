@@ -54,7 +54,7 @@ public class LauncherActivity extends BaseActivity{
         long time = System.currentTimeMillis();
         setContentView(R.layout.activity_mylauncher);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
-        FuseAdLoader adLoader = FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this);
+        FuseAdLoader adLoader = FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this.getApplicationContext());
         adLoader.setBannerAdSize(HomeFragment.getBannerSize());
         adLoader.loadAd(1, null);
         Handler handler = new Handler();

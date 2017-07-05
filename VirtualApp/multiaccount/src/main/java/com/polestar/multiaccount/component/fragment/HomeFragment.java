@@ -403,7 +403,7 @@ public class HomeFragment extends BaseFragment {
 
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
-            mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity());
+            mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity().getApplicationContext());
             mNativeAdLoader.setBannerAdSize(getBannerSize());
         }
 
@@ -618,7 +618,7 @@ public class HomeFragment extends BaseFragment {
             return;
         }
         if (mApplistAdLoader == null) {
-            mApplistAdLoader = FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity);
+            mApplistAdLoader = FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity.getApplicationContext());
             mApplistAdLoader.setBannerAdSize(AppListActivity.getBannerAdSize());
         }
         mApplistAdLoader.preloadAd();

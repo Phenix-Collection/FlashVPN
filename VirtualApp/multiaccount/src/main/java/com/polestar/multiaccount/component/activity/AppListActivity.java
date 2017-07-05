@@ -222,7 +222,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
     private void loadNativeAd() {
         if (mNativeAdLoader == null) {
-            mNativeAdLoader = FuseAdLoader.get(SLOT_APPLIST_NATIVE, this);
+            mNativeAdLoader = FuseAdLoader.get(SLOT_APPLIST_NATIVE, this.getApplicationContext());
             mNativeAdLoader.setBannerAdSize(getBannerAdSize());
         }
 //        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));

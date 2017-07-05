@@ -39,7 +39,7 @@ public class FuseAdLoader {
     public synchronized static FuseAdLoader get(String slot, Context appContext) {
         FuseAdLoader adLoader = sAdLoaderMap.get(slot);
         if (adLoader == null) {
-            adLoader = new FuseAdLoader(slot, appContext.getApplicationContext());
+            adLoader = new FuseAdLoader(slot, appContext);
             sAdLoaderMap.put(slot, adLoader);
         }
         return adLoader;

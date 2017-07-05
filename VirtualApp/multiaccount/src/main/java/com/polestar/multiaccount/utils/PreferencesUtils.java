@@ -341,6 +341,18 @@ public class PreferencesUtils {
         return last;
     }
 
+    public static long getAutoInterstialTime() {
+        long last = getLong(MApp.getApp(), "auto_interstitial",-1);
+        if (last == -1) {
+            last = CommonUtils.getInstallTime(MApp.getApp(), MApp.getApp().getPackageName());
+        }
+        return last;
+    }
+
+    public static void updateAutoInterstialTime() {
+        putLong(MApp.getApp(),"auto_interstitial", System.currentTimeMillis() );
+    }
+
     public static long getLastIconAdClickTime(Context c) {
         return getLong(c, "last_icon_ad_click",-1);
     }

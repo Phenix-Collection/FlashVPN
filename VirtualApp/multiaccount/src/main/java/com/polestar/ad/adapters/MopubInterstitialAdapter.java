@@ -1,5 +1,6 @@
 package com.polestar.ad.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
@@ -7,7 +8,6 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
-import com.polestar.multiaccount.component.activity.NativeInterstitialActivity;
 
 /**
  * Created by guojia on 2017/6/7.
@@ -75,11 +75,11 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
         if (AdConstants.DEBUG) {
             mKey = "24534e1901884e398f1253216226017e";
         }
-        if (NativeInterstitialActivity.getInstance() == null) {
+        if (!(mContext instanceof Activity) ){
             mAdListener.onError("No activity context found!");
             return;
         }
-        mInterstitial = new MoPubInterstitial(NativeInterstitialActivity.getInstance(), key);
+        mInterstitial = new MoPubInterstitial((Activity)mContext, key);
         mInterstitial.setInterstitialAdListener(this);
         mInterstitial.load();
         startMonitor();
