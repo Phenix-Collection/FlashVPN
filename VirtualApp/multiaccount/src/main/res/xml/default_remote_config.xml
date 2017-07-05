@@ -36,9 +36,7 @@
     <entry>
         <key>slot_home_gift_interstitial_1026</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>
-            ab_interstitial:ca-app-pub-5490912237269284/5384537050:0;mp_interstitial:b2f5c192f9cf44ebb423332e95c64378:0
-        </value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/5384537050:0;mp_interstitial:b2f5c192f9cf44ebb423332e95c64378:0</value>
     </entry>
     <entry>
         <key>slot_home_header_native</key>
@@ -134,12 +132,10 @@
     </entry>
     <entry>
         <key>auto_home_interstitial_rate</key>
-        <!-- greater or equal than gate then no preload -->
         <value>0</value>
     </entry>
     <entry>
         <key>auto_home_interstitial_interval</key>
-        <!-- greater or equal than gate then no preload -->
         <value>48</value>
     </entry>
     <!--

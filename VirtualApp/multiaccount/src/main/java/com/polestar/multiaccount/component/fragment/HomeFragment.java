@@ -113,6 +113,7 @@ public class HomeFragment extends BaseFragment {
         nativeAdContainer.removeAllViews();
         nativeAdContainer.addView(adView);
         pkgGridAdapter.notifyDataSetChanged();
+        adShowed = true;
         dismissLongClickGuide();
     }
 

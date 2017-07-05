@@ -34,13 +34,13 @@ public class RemoteConfig {
         mFirebaseRemoteConfig.fetch(cacheTime).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                MLogs.d(TAG, "Fetch Succeeded");
+                MLogs.logBug(TAG, "Fetch Succeeded");
                 mFirebaseRemoteConfig.activateFetched();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                MLogs.d(TAG, "Fetch failed");
+                MLogs.logBug(TAG, "Fetch failed" + exception);
             }
         });
         mFirebaseRemoteConfig.activateFetched();
@@ -87,6 +87,8 @@ public class RemoteConfig {
         if (TextUtils.isEmpty(config)) {
             return new ArrayList<>();
         }
+        MLogs.d(TAG, "placement: " + placement);
+        MLogs.d(TAG, "config: " + config);
         List<AdConfig> configList = new ArrayList<>();
         String[] sources = config.split(";");
         for (String s: sources) {
