@@ -160,4 +160,8 @@ public class LockPatternUtils {
     public static void setTempKey(String key) {
         tempKey = key;
     }
+
+    public static String getTempKey() {
+        return tempKey;
+    }
 }

@@ -135,7 +135,9 @@ public class AppLockMonitor {
             MLogs.logBug(TAG, "cannot find cloned model : " + pkg);
             return;
         }
-        if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
+        if (model.getLockerState() != AppConstants.AppLockState.DISABLED
+                && (!TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(MApp.getApp()))
+                || !TextUtils.isEmpty(LockPatternUtils.getTempKey()))) {
             MLogs.d(TAG, "Need lock app " + pkg);
             if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(pkg))) {
                 //do lock
