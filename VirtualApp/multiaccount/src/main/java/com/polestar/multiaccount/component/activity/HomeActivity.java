@@ -101,7 +101,7 @@ public class HomeActivity extends BaseActivity {
         long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);
         int random = new Random().nextInt(100);
         showAppWall = random < wallPercent;
-        random = new Random().nextInt();
+        random = new Random().nextInt(100);
         long interval = System.currentTimeMillis() - PreferencesUtils.getAutoInterstialTime();
         autoShowInterstitial = (random < RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL)
                 && (interval > RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL))) || BuildConfig.DEBUG;
