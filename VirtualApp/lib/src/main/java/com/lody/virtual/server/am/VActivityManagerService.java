@@ -182,7 +182,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
 	@Override
 	public void onActivityCreated(ComponentName component, ComponentName caller, IBinder token, Intent intent, String affinity, int taskId, int launchMode, int flags) {
 		int pid = Binder.getCallingPid();
-		ProcessRecord targetApp = findProcessLocked(pid);
+		ProcessRecord targetApp;
+		synchronized (mPidsSelfLocked) {
+			targetApp = findProcessLocked(pid);
+		}
 		if (targetApp != null) {
 			mMainStack.onActivityCreated(targetApp, component, caller, token, intent, affinity, taskId, launchMode, flags);
 		}
@@ -774,7 +777,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
 				ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
 				info.uid = r.process.vuid;
 				info.pid = r.process.pid;
-				ProcessRecord processRecord = findProcessLocked(r.process.pid);
+				ProcessRecord processRecord;
+				synchronized (mPidsSelfLocked){
+					processRecord = findProcessLocked(r.process.pid);
+				}
 				if (processRecord != null) {
 					info.process = processRecord.processName;
 					info.clientPackage = processRecord.info.packageName;
@@ -796,7 +802,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		int appId = VAppManagerService.get().getAppId(packageName);
 		int uid = VUserHandle.getUid(userId, appId);
 		synchronized (this) {
-			ProcessRecord app = findProcessLocked(callingPid);
+			ProcessRecord app;
+			synchronized (mPidsSelfLocked) {
+			 	app = findProcessLocked(callingPid);
+			}
 			if (app == null) {
 				ApplicationInfo appInfo = VPackageManagerService.get().getApplicationInfo(packageName, 0, userId);
 				if (appInfo == null) {
@@ -882,8 +891,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		VLog.logbug(TAG, "attachClient for " + app.processName + " pid: " + app.pid);
 		synchronized (mProcessNames) {
 			mProcessNames.put(app.processName, app.vuid, app);
-			mPidsSelfLocked.put(app.pid, app);
 		}
+        synchronized (mPidsSelfLocked) {
+            mPidsSelfLocked.put(app.pid, app);
+        }
 //		try {
 //			client.bindApplication(app.info.packageName, app.processName);
 //		} catch (RemoteException e) {
@@ -893,8 +904,12 @@ public class VActivityManagerService extends IActivityManager.Stub {
 
 	private void onProcessDead(ProcessRecord record) {
 		VLog.d(TAG, "Process %s died.", record.processName);
-		mProcessNames.remove(record.processName, record.vuid);
-		mPidsSelfLocked.remove(record.pid);
+		synchronized (mProcessNames) {
+			mProcessNames.remove(record.processName, record.vuid);
+		}
+		synchronized (mPidsSelfLocked) {
+			mPidsSelfLocked.remove(record.pid);
+		}
 		processDead(record);
 		record.lock.open();
 	}
@@ -928,12 +943,18 @@ public class VActivityManagerService extends IActivityManager.Stub {
             VAppManagerService.get().savePersistenceData();
         }
         int uid = VUserHandle.getUid(userId, ps.appId);
-		ProcessRecord app = mProcessNames.get(processName, uid);
+		ProcessRecord app;
+		synchronized (mProcessNames) {
+			app = mProcessNames.get(processName, uid);
+		}
 		if (app != null && app.client.asBinder().isBinderAlive()) {
 			return app;
 		}
 		VLog.logbug(TAG, "startProcessIfNeedLocked No process record found for : " + processName);
-        int vpid = queryFreeStubProcessLocked();
+		int vpid;
+		synchronized (mPidsSelfLocked) {
+			vpid = queryFreeStubProcessLocked();
+		}
 		if (vpid == -1) {
 			return null;
 		}
@@ -1286,7 +1307,9 @@ public class VActivityManagerService extends IActivityManager.Stub {
 												PendingResultData result) {
 		ProcessRecord r;
 		synchronized (this) {
-			r = findProcessLocked(info.processName, vuid);
+			synchronized (mProcessNames) {
+				r = findProcessLocked(info.processName, vuid);
+			}
 			if (BROADCAST_NOT_STARTED_PKG && r == null
 					&& SpecialComponentList.canStartFromBroadcast(info.packageName)) {
 				int userId = getUserId(vuid);
