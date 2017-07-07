@@ -143,7 +143,7 @@ public class AppCloneActivity extends BaseActivity {
                         MLogs.logBug(MLogs.getStackTraceString(e));
                     }
                     if (!installed) {
-                        L.d("To install app " + mPkgName);
+                        MLogs.d("To install app " + mPkgName);
                         isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel);
                         isInstallDone = true;
                         if (isInstallSuccess) {

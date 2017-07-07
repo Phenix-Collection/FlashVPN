@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.polestar.multiaccount.MApp;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 
@@ -39,19 +41,24 @@ public class CloneHelper {
     }
 
     public void installApp(Context context,AppModel appModel){
-        appModel.setClonedTime(System.currentTimeMillis());
-        appModel.setIndex(mClonedApps.size());
-        DbManager.insertAppModel(context,appModel);
-        DbManager.notifyChanged();
-        mClonedApps.add(appModel);
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if(loadedListener != null) {
-                    loadedListener.onInstalled(mClonedApps);
+        try {
+            appModel.setClonedTime(System.currentTimeMillis());
+            appModel.setIndex(mClonedApps.size());
+            DbManager.insertAppModel(context, appModel);
+            DbManager.notifyChanged();
+            mClonedApps.add(appModel);
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (loadedListener != null) {
+                        loadedListener.onInstalled(mClonedApps);
+                    }
                 }
-            }
-        });
+            });
+        }catch (Exception ex) {
+            MLogs.logBug(MLogs.getStackTraceString(ex));
+            MTAManager.keyLog(MApp.getApp(), MTAManager.KeyLogTag.AERROR, "installError:" + appModel.getPackageName());
+        }
     }
 
     public void unInstallApp(Context context,String packageName){
