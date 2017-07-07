@@ -101,6 +101,10 @@ public class HomeFragment extends BaseFragment {
     private boolean adShowed = false;
 
     public void inflateNativeAd(IAdAdapter ad) {
+        if (adShowed) {
+            return;
+        }
+        adShowed = true;
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
@@ -113,7 +117,6 @@ public class HomeFragment extends BaseFragment {
         nativeAdContainer.removeAllViews();
         nativeAdContainer.addView(adView);
         pkgGridAdapter.notifyDataSetChanged();
-        adShowed = true;
         dismissLongClickGuide();
     }
 
