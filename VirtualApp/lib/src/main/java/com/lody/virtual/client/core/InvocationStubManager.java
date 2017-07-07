@@ -6,6 +6,7 @@ import com.lody.virtual.client.hook.base.MethodInvocationProxy;
 import com.lody.virtual.client.hook.base.MethodInvocationStub;
 import com.lody.virtual.client.hook.delegate.AppInstrumentation;
 import com.lody.virtual.client.hook.proxies.account.AccountManagerStub;
+import com.lody.virtual.client.hook.proxies.admin.DevicePolicyManagerStub;
 import com.lody.virtual.client.hook.proxies.alarm.AlarmManagerStub;
 import com.lody.virtual.client.hook.proxies.am.ActivityManagerStub;
 import com.lody.virtual.client.hook.proxies.am.HCallbackStub;
@@ -174,6 +175,7 @@ public final class InvocationStubManager {
 			if (Build.VERSION.SDK_INT >= N) {
                 addInjector(new WifiScannerStub());
                 addInjector(new ShortcutServiceStub());
+				addInjector(new DevicePolicyManagerStub());
             }
 		}
 	}
