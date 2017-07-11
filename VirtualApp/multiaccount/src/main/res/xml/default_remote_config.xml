@@ -91,7 +91,7 @@
     </entry>
     <entry>
         <key>show_ad_after_clone</key>
-        <value>false</value>
+        <value>true</value>
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
