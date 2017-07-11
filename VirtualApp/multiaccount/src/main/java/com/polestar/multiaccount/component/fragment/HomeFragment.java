@@ -550,20 +550,20 @@ public class HomeFragment extends BaseFragment {
             mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
                 @Override
                 public void onExplodeFinish(View v) {
-                    v.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            deleteApp(appModel);
-                        }
-                    }, 1000);
                 }
             });
-        } else {
-            deleteApp(appModel);
         }
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                deleteApp(appModel);
+            }
+        }, 1000);
+
     }
 
     private void deleteApp(AppModel appModel){
+        MLogs.d("deleteApp " + appModel.getPackageName());
         appInfos.remove(appModel);
         MTAManager.deleteClonedApp(mActivity, appModel.getPackageName());
 //        updateModelIndex(itemPosition,appInfos.size() - 1);
