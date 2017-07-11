@@ -277,7 +277,8 @@ public class AppCloneActivity extends BaseActivity {
 
     private void initAd(){
         boolean showAd = RemoteConfig.getBoolean(CONFIG_KEY_SHOW_AD_AFTER_CLONE)
-                && (!PreferencesUtils.isAdFree());
+                && (!PreferencesUtils.isAdFree())
+                && PreferencesUtils.hasCloned();
         MLogs.d(CONFIG_KEY_SHOW_AD_AFTER_CLONE + showAd);
         adConfigList = RemoteConfig.getAdConfigList(SLOT_AD_AFTER_CLONE);
         if (showAd && adConfigList!= null && adConfigList.size() > 0) {
