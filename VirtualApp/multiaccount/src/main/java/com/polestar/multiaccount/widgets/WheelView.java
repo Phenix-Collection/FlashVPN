@@ -21,6 +21,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.polestar.multiaccount.R;
+import com.polestar.multiaccount.utils.DisplayUtils;
+import com.polestar.multiaccount.utils.MLogs;
 
 import java.util.ArrayList;
 
@@ -201,6 +203,8 @@ public class WheelView extends View {
         controlWidth = getWidth();
         if (controlWidth != 0) {
             setMeasuredDimension(getWidth(), itemNumber * unitHeight);
+        } else {
+            controlWidth = DisplayUtils.dip2px(getContext(), 80);
         }
     }
 
