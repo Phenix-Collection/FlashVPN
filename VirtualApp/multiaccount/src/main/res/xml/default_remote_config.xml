@@ -44,7 +44,7 @@
     </entry>
     <entry>
         <key>home_show_header_ad</key>
-        <value>false</value>
+        <value>true</value>
     </entry>
     <entry>
         <key>slot_applist_native</key>

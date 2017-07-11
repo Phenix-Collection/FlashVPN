@@ -432,4 +432,12 @@ public class PreferencesUtils {
         return getBoolean(MApp.getApp(), "ad_free_dialog_click", true);
     }
 
+    public static boolean hasCloned() {
+        return getBoolean(MApp.getApp(), "spc_ever_cloned", false)
+                || hasShownLongClickGuide(MApp.getApp());
+    }
+
+    public static void setHasCloned() {
+        putBoolean(MApp.getApp(), "spc_ever_cloned", true);
+    }
 }

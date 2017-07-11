@@ -136,7 +136,8 @@ public class HomeFragment extends BaseFragment {
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
-        boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD);
+        boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
+                && PreferencesUtils.hasCloned();
         MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
         headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
         if (showHeaderAd && headerNativeAdConfigs.size() > 0
@@ -466,6 +467,9 @@ public class HomeFragment extends BaseFragment {
                 CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
                     @Override
                     public void onInstalled(List<AppModel> clonedApp) {
+                        if (!PreferencesUtils.hasCloned()) {
+                            PreferencesUtils.setHasCloned();
+                        }
                         appInfos = clonedApp;
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
@@ -489,9 +493,14 @@ public class HomeFragment extends BaseFragment {
                         MLogs.d("onLoaded applist");
                         long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
                         long gate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE);
-                        showLucky = (!PreferencesUtils.isAdFree()) && appInfos.size() >= gate && new Random().nextInt(100) < luckyRate ;
+                        showLucky = (!PreferencesUtils.isAdFree()) && appInfos.size() >= gate
+                                && PreferencesUtils.hasCloned()
+                                && new Random().nextInt(100) < luckyRate ;
                         if (!showLucky) {
                             MLogs.d("Not show lucky. Rate: " + luckyRate);
+                        }
+                        if (appInfos.size() >= 1 && !PreferencesUtils.hasCloned()) {
+                            PreferencesUtils.setHasCloned();
                         }
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
