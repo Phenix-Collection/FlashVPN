@@ -440,4 +440,12 @@ public class PreferencesUtils {
     public static void setHasCloned() {
         putBoolean(MApp.getApp(), "spc_ever_cloned", true);
     }
+
+    public static long getLockInterval() {
+        return getLong(MApp.getApp(), "relock_interval", 5*1000);
+    }
+
+    public static void setLockInterval(long val) {
+        putLong(MApp.getApp(), "relock_interval", val);
+    }
 }

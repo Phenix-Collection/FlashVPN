@@ -177,4 +177,6 @@
     <string name="text_Q6_title">Q6: Por que o armário de privacidade não aparece quando o lançamento do aplicativo?</string>
     <string name="text_Q7_content">A7: Verifique se você concedeu essas permissões ao Super Clone na configuração do seu sistema.</string>
     <string name="text_Q7_title">Q7: Por que o atalho não pode ser criado ou a câmera, o local não funciona?</string>
+    <string name="lock_interval_settings_content">O intervalo para bloquear o aplicativo novamente depois de deixá-lo</string>
+    <string name="lock_interval_settings_title">Intervalo de bloqueio</string>
 </resources>

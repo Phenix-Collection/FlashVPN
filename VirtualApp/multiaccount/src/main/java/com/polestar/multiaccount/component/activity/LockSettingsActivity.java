@@ -14,7 +14,9 @@ import com.polestar.multiaccount.component.adapter.BasicPackageSwitchAdapter;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
+import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
@@ -23,8 +25,10 @@ import com.polestar.multiaccount.widgets.BlueSwitch;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import java.util.List;
 
@@ -45,6 +49,9 @@ public class LockSettingsActivity extends BaseActivity {
     private ListView mCloneAppsListView;
     private boolean isSettingChanged = false;
     private String from;
+    private Spinner lockIntervalSpinner;
+
+    private final long ARR_INTERVAL[] = {5*1000, 15*1000, 30*1000, 60*1000, 15*60*1000, 30*60*1000, 60*60*1000};
 
     public static void start(Activity activity, String from) {
         Intent intent = new Intent(activity, LockSettingsActivity.class);
@@ -61,6 +68,17 @@ public class LockSettingsActivity extends BaseActivity {
         mContext = this;
         initView();
         initData();
+    }
+
+    private int getIntervalIdx(long inverval) {
+        int i = 0;
+        for (long val: ARR_INTERVAL) {
+            if (inverval == val) {
+                return i;
+            }
+            i ++;
+        }
+        return  -1;
     }
 
     private void initData() {
@@ -126,6 +144,7 @@ public class LockSettingsActivity extends BaseActivity {
     private void initView(){
         detailedSettingLayout = (LinearLayout)findViewById(R.id.locker_detailed_settings);
         lockerEnableSwitch = (BlueSwitch)findViewById(R.id.enable_lock_switch);
+        lockIntervalSpinner = (Spinner) findViewById(R.id.lock_interval_spinner);
         lockerEnableSwitch.setChecked(PreferencesUtils.getBoolean(mContext,AppConstants.PreferencesKey.LOCKER_FEATURE_ENABLED));
         lockerEnableSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +155,21 @@ public class LockSettingsActivity extends BaseActivity {
         });
         onLockerEnabled(lockerEnableSwitch.isChecked(), false);
         mCloneAppsListView = (ListView)findViewById(R.id.switch_lock_apps);
+        lockIntervalSpinner.setSelection(getIntervalIdx(PreferencesUtils.getLockInterval()), true);
+        lockIntervalSpinner.setDropDownVerticalOffset(DisplayUtils.dip2px(this, 15));
+        lockIntervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                PreferencesUtils.setLockInterval(ARR_INTERVAL[i]);
+                isSettingChanged = true;
+                MTAManager.generalClickEvent(LockSettingsActivity.this, "set_relock_interval_" + i);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void onLockerEnabled(boolean enabled, boolean report) {
@@ -196,7 +229,7 @@ public class LockSettingsActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         if (isSettingChanged) {
-            VirtualCore.get().reloadLockerSetting(null, PreferencesUtils.isAdFree());
+            AppManager.reloadLockerSetting();
         }
     }
 }

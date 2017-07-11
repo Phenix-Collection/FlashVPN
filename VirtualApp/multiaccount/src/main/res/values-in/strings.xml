@@ -177,4 +177,6 @@
     <string name="settings_gms_disable_notice">Nonaktifkan layanan putar Google akan mengurangi penggunaan memori dan daya, dan optimalkan kecepatan peluncuran untuk aplikasi kloning. Tapi beberapa aplikasi mungkin tidak bekerja dengan benar jika menonaktifkannya. Apakah Anda yakin untuk menonaktifkan layanan Google Play?</string>
     <string name="settings_gms_enable_notice">Aktifkan layanan pemutaran Google dapat menghabiskan lebih banyak memori dan CPU. Apakah Anda ingin mengaktifkan layanan Google Play?</string>
     <string name="upgrade_start_tips">Cela peut prendre un peu plus longtemps car cette application vient d\'être améliorée.</string>
+    <string name="lock_interval_settings_content">Interval untuk mengunci aplikasi lagi setelah Anda meninggalkannya</string>
+    <string name="lock_interval_settings_title">Kunci Interval</string>
 </resources>

@@ -152,4 +152,10 @@ public class AppManager {
         VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
     }
 
+    public static void reloadLockerSetting() {
+        String key = PreferencesUtils.getEncodedPatternPassword(MApp.getApp());
+        boolean adFree = PreferencesUtils.isAdFree();
+        long interval = PreferencesUtils.getLockInterval();
+        VirtualCore.get().reloadLockerSetting(key, adFree, interval);
+    }
 }

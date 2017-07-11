@@ -1,7 +1,5 @@
 package com.polestar.multiaccount.component;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -32,7 +30,7 @@ public class AppLockMonitor {
     private static AppLockMonitor sInstance = null;
     private HashMap<String , AppModel> modelHashMap = new HashMap<>();
     private Handler mHandler;
-    private final static long RELOCK_DELAY = 3*1000; //if paused for 2 minutes, and then resume, it need be locked
+    private static long relockDelay = PreferencesUtils.getLockInterval(); //if paused for 2 minutes, and then resume, it need be locked
     private final static int MSG_DELAY_LOCK_APP = 0;
     public final static int MSG_PACKAGE_UNLOCKED = 1;
     public final static int MSG_PRELOAD_AD = 2;
@@ -112,7 +110,7 @@ public class AppLockMonitor {
         return mAdLoader;
     }
 
-    public void reloadSetting(String newKey, boolean adFree) {
+    public void reloadSetting(String newKey, boolean adFree, long interval) {
         MLogs.d("reloadSetting adfree:" + adFree);
         modelHashMap.clear();
         DbManager.resetSession();
@@ -130,6 +128,9 @@ public class AppLockMonitor {
         this.adFree = adFree;
         if (!TextUtils.isEmpty(newKey)) {
             LockPatternUtils.setTempKey(newKey);
+        }
+        if ( interval >= 3000) {
+            relockDelay = interval;
         }
     }
 
@@ -173,7 +174,7 @@ public class AppLockMonitor {
     }
 
     public void onActivityPause(String pkg) {
-        MLogs.d(TAG, "onActivityPause " + pkg);
+        MLogs.d(TAG, "onActivityPause " + pkg + " delay relock: " + relockDelay);
         AppLockWindow window = mAppLockWindows.get(pkg);
         AppModel model = modelHashMap.get(pkg);
         if (window != null) {
@@ -182,6 +183,6 @@ public class AppLockMonitor {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_HIDE_LOCKER, window), 500);
         }
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, model.getPackageName()),
-                RELOCK_DELAY);
+                relockDelay);
     }
 }

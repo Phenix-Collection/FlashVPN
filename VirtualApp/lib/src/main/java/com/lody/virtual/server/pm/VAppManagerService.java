@@ -404,6 +404,7 @@ public class VAppManagerService extends IAppManager.Stub {
 
     @Override
     public synchronized boolean uninstallPackage(String packageName) {
+        VLog.logbug(TAG, "uninstallPackage " + packageName);
         PackageSetting ps = PackageCacheManager.getSetting(packageName);
         if (ps != null) {
             uninstallPackageFully(ps);
@@ -672,9 +673,9 @@ public class VAppManagerService extends IAppManager.Stub {
         VLog.d(TAG, "notifyActivityBeforePause " + pkg);
         VirtualCore.get().getComponentDelegate().beforeActivityPause(pkg);
     }
-    public void  reloadLockerSetting(String key, boolean adFree){
+    public void  reloadLockerSetting(String key, boolean adFree, long interval){
         VLog.d(TAG, "reloadLockerSetting ");
-        VirtualCore.get().getComponentDelegate().reloadLockerSetting(key, adFree);
+        VirtualCore.get().getComponentDelegate().reloadLockerSetting(key, adFree, interval);
     }
 
     public void restart() {

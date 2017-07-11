@@ -40,7 +40,7 @@ public interface ComponentDelegate {
         }
 
         @Override
-        public void reloadLockerSetting(String key, boolean adFree) {
+        public void reloadLockerSetting(String key, boolean adFree, long in) {
 
         }
     };
@@ -57,5 +57,5 @@ public interface ComponentDelegate {
 
     boolean isNotificationEnabled(String pkg);
 
-    void reloadLockerSetting(String newKey, boolean adFree);
+    void reloadLockerSetting(String newKey, boolean adFree, long interval);
 }

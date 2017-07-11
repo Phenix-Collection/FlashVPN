@@ -131,6 +131,8 @@
     <!-- lock settings -->
     <string name="lock_settings_title">Locker Settings</string>
     <string name="enable_lock_settings_title">Privacy Locker</string>
+    <string name="lock_interval_settings_title">Re-Lock Interval</string>
+    <string name="lock_interval_settings_content">The interval to relock the app after you left it</string>
     <string name="enable_lock_settings_content">Toggle to enable or disable privacy locker feature</string>
     <string name="password_setting_title">Password Setting</string>
     <string name="password_set_no_question">No secure question set.</string>
@@ -205,6 +207,16 @@
         <item>Where did you go to high school?</item>
         <item>What\'s your favorite movie?</item>
         <item>Customize questions</item>
+    </string-array>
+
+    <string-array name="arr_lock_interval">
+        <item>5s</item>
+        <item>15s</item>
+        <item>30s</item>
+        <item>1min</item>
+        <item>15min</item>
+        <item>30min</item>
+        <item>1hour</item>
     </string-array>
 
     <string-array name="secure_question_by_day_config">

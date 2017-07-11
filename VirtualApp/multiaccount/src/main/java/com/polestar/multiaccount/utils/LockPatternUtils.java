@@ -76,7 +76,7 @@ public class LockPatternUtils {
 
         LockPatternPref.getIns().setEncodedPatternPassword(encodedPatternPassword);
 
-        VirtualCore.get().reloadLockerSetting(encodedPatternPassword, PreferencesUtils.isAdFree());
+        AppManager.reloadLockerSetting();
     }
 
 //    /**

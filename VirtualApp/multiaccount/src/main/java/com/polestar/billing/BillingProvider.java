@@ -12,6 +12,7 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
 import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.multiaccount.MApp;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 
@@ -64,7 +65,7 @@ public class BillingProvider {
                             }
                         });
                     }
-                    VirtualCore.get().reloadLockerSetting(PreferencesUtils.getEncodedPatternPassword(MApp.getApp()), PreferencesUtils.isAdFree());
+                    AppManager.reloadLockerSetting();
                 }
             });
         }

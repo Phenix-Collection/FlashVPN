@@ -178,4 +178,6 @@
     <string name="text_Q7_content">يرجى التحقق مما إذا كنت قد منحت هذه الأذونات إلى سوبر كلون في إعداد النظام.</string>
     <string name="text_Q6_content">يرجى التحقق مما إذا كنت تمكين خزانة لهذا التطبيق ومنح إذن سوبر استنساخ لإظهار نافذة عائمة. على سبيل المثال، على جهاز زياومي، إعدادات-> إدارة التطبيقات-> سوبر كلون-> إذن التحكم-> العائمة النافذة.</string>
     <string name="text_Q7_title">لماذا لا يمكن إنشاء اختصار أو الكاميرا، والموقع لا يعمل؟</string>
+    <string name="lock_interval_settings_content">الفاصل الزمني لقفل التطبيق مرة أخرى بعد أن تركت ذلك</string>
+    <string name="lock_interval_settings_title">قفل الفاصل الزمني</string>
 </resources>

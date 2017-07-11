@@ -177,4 +177,6 @@
     <string name="text_Q6_title">Q6: ทำไมตู้เก็บข้อมูลส่วนบุคคลไม่ปรากฏขึ้นเมื่อแอปเปิดตัว?</string>
     <string name="text_Q7_content">A7: โปรดตรวจสอบว่าคุณได้รับสิทธิ์เหล่านี้กับ Super Clone ในการตั้งค่าระบบของคุณหรือไม่</string>
     <string name="text_Q7_title">Q7: เหตุใดจึงไม่สามารถสร้างทางลัดหรือกล้องถ่ายรูปได้ตำแหน่งไม่ทำงาน</string>
+    <string name="lock_interval_settings_content">ช่วงเวลาที่จะล็อคแอพพลิเคอีกครั้งหลังจากที่คุณทิ้งไว้</string>
+    <string name="lock_interval_settings_title">ช่วงล็อก</string>
 </resources>
