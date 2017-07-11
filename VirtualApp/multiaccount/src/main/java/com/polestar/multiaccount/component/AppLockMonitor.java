@@ -36,6 +36,8 @@ public class AppLockMonitor {
     private final static int MSG_DELAY_LOCK_APP = 0;
     public final static int MSG_PACKAGE_UNLOCKED = 1;
     public final static int MSG_PRELOAD_AD = 2;
+    public final static int MSG_SHOW_LOCKER = 3;
+    public final static int MSG_HIDE_LOCKER = 4;
     public final static String CONFIG_APPLOCK_PRELOAD_INTERVAL = "applock_preload_interval";
     private final static String TAG = "AppLockMonitor";
 
@@ -67,6 +69,17 @@ public class AppLockMonitor {
                             if (interval >= 15*60*000) {
                                 mHandler.sendEmptyMessageDelayed(MSG_PRELOAD_AD, interval);
                             }
+                        }
+                    case MSG_SHOW_LOCKER:
+                        AppLockWindow window = (AppLockWindow) msg.obj;
+                        if (window != null) {
+                            window.show(!adFree);
+                        }
+                        break;
+                    case MSG_HIDE_LOCKER:
+                        AppLockWindow locker = (AppLockWindow) msg.obj;
+                        if (locker != null) {
+                            locker.dismiss();
                         }
                         break;
                 }
@@ -149,14 +162,9 @@ public class AppLockMonitor {
                 }
                 final AppLockWindow lockWindow = appLockWindow;
                 MLogs.d(TAG, "Do lock app 2" + pkg);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        MLogs.d(TAG, "To show lock window");
-                        lockWindow.show(!adFree);
-                    }
-                }, 0);
-
+                mHandler.removeMessages(MSG_SHOW_LOCKER, lockWindow);
+                mHandler.removeMessages(MSG_HIDE_LOCKER, lockWindow);
+                mHandler.sendMessage(mHandler.obtainMessage(MSG_SHOW_LOCKER, lockWindow));
             }
         }
         //Remove the same object with send
@@ -169,12 +177,9 @@ public class AppLockMonitor {
         AppLockWindow window = mAppLockWindows.get(pkg);
         AppModel model = modelHashMap.get(pkg);
         if (window != null) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    window.dismiss();
-                }
-            }, 300);
+            mHandler.removeMessages(MSG_SHOW_LOCKER, window);
+            mHandler.removeMessages(MSG_HIDE_LOCKER, window);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_HIDE_LOCKER, window), 500);
         }
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, model.getPackageName()),
                 RELOCK_DELAY);
