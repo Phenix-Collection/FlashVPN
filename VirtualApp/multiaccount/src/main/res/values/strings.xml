@@ -90,7 +90,7 @@
     <string name="settings_privacy_policy">Privacy Policy</string>
     <string name="settings_terms_of_service">Terms of Service</string>
     <string name="settings_follow_us">Follow us on Facebook Page</string>
-    <string name="settings_right">2016 Polestar Applab All rights reserved</string>
+    <string name="settings_right" translatable="false">2017 Polestar Applab All rights reserved</string>
 
     <array name="navigationItem">
         <item name="navigation_notifications">Privacy Locker</item>
@@ -119,10 +119,14 @@
     <string name="text_Q4_content">A4: All sub-accounts added on your device are by default listed under Super Clone by the Android operating system. The large amount of storage consumption listed under Super Clone is the overall total storage used for all sub-accounts you’ve added. Super Clone itself uses little storage.</string>
     <string name="text_Q5_title">Q5: How does Super Clone’s Private App function protects my privacy?</string>
     <string name="text_Q5_content">A5: A password is required to access Private Apps each time you wake your device. Additionally, all Private Apps are installed on Super Clone, and therefore all Private Apps’ data are not accessible by any external programs.</string>
+    <string name="text_Q6_title">Q6: Why privacy locker not show up when app launch?</string>
+    <string name="text_Q6_content">A6: Please check whether you enabled locker for this app and grant permission to Super Clone to show floating window. For example, on Xiaomi device, Settings->App Management->Super Clone->Permission Control->Floating Window.</string>
+    <string name="text_Q7_title">Q7: Why shortcut cannot be created or camera, location not work?</string>
+    <string name="text_Q7_content">A7: Please check whether you granted these permissions to Super Clone in your system setting.</string>
 
     <string name="clone_label_tag">%s+</string>
 
-    <string name="powered_by_app">Powered by Super Clone</string>
+    <string name="powered_by_app" translatable="false">Powered by Super Clone</string>
 
     <!-- lock settings -->
     <string name="lock_settings_title">Locker Settings</string>

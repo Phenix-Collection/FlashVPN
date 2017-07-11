@@ -66,7 +66,6 @@
     <string name="settings_privacy_policy">سياسة الخصوصية</string>
     <string name="settings_terms_of_service">شروط الخدمة</string>
     <string name="settings_follow_us">تابعنا في الفيسبوك الصفحة</string>
-    <string name="settings_right">2016 Polestar Applab All rights reserved</string>
 
     <array name="navigationItem">
         <item name="navigation_notifications">الخزانة الخصوصية</item>
@@ -175,4 +174,8 @@
     <string name="settings_adfree_content">إيقاف الإعلانات في التطبيق</string>
     <string name="adfree_dialog_title">ازالة الاعلانات</string>
     <string name="adfree_dialog_content">تصبح المستخدم قسط سوبر استنساخ وإيقاف جميع الإعلانات في هذا التطبيق. هل تريد شراء الآن؟</string>
+    <string name="text_Q6_title">لماذا خزانة الخصوصية لا تظهر عند إطلاق التطبيق؟</string>
+    <string name="text_Q7_content">يرجى التحقق مما إذا كنت قد منحت هذه الأذونات إلى سوبر كلون في إعداد النظام.</string>
+    <string name="text_Q6_content">يرجى التحقق مما إذا كنت تمكين خزانة لهذا التطبيق ومنح إذن سوبر استنساخ لإظهار نافذة عائمة. على سبيل المثال، على جهاز زياومي، إعدادات-> إدارة التطبيقات-> سوبر كلون-> إذن التحكم-> العائمة النافذة.</string>
+    <string name="text_Q7_title">لماذا لا يمكن إنشاء اختصار أو الكاميرا، والموقع لا يعمل؟</string>
 </resources>

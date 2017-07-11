@@ -65,7 +65,6 @@
     <string name="settings_privacy_policy">Kebijakan Pribadi</string>
     <string name="settings_terms_of_service">Ketentuan Layanan</string>
     <string name="settings_follow_us">Ikuti kami di Facebook</string>
-    <string name="settings_right">2016 Polestar Applab All rights reserved</string>
 
     <array name="navigationItem">
         <item name="navigation_notifications">Locker Privasi</item>
@@ -94,8 +93,6 @@
     <string name="text_Q5_content">A5: Sandi diperlukan untuk mengakses aplikasi dilindungi setiap kali Anda bangun perangkat Anda. Selain itu, semua dari mereka diinstal tentang Super Clone, dan karena itu data mereka tidak dapat diakses oleh program eksternal.</string>
 
     <string name="clone_label_tag">%s+</string>
-
-    <string name="powered_by_app">Powered by Super Clone</string>
 
     <!-- lock settings -->
     <string name="lock_settings_title">Pengaturan Locker</string>
@@ -167,10 +164,17 @@
     <string name="settings_gms">Aktifkan Layanan Google Play untuk aplikasi kloning</string>
     <string name="settings_gms_disable_toast">Layanan Google Play dinonaktifkan</string>
     <string name="settings_gms_enable_toast">Layanan Google Play diaktifkan</string>
-    <string name="settings_gms_disable_notice"></string>
     <string name="clone_success">%s+ siap. Nikmati sekarang juga!</string>
     <string name="settings_adfree_title">Hilangkan iklan</string>
     <string name="settings_adfree_content">Matikan Iklan di aplikasi</string>
     <string name="adfree_dialog_title">Hilangkan iklan</string>
     <string name="adfree_dialog_content">Jadilah pengguna premium Super Clone dan matikan semua iklan di aplikasi ini. Apakah Anda ingin membeli sekarang?</string>
+    <string name="text_Q6_content">A6: Harap periksa apakah Anda mengaktifkan loker untuk aplikasi ini dan memberikan izin kepada Super Clone untuk menampilkan jendela apung. Misalnya, pada perangkat Xiaomi, Settings-> App Management-> Super Clone-> Permission Control-> Floating Window.</string>
+    <string name="text_Q6_title">Q6: Mengapa loker privasi tidak muncul saat peluncuran aplikasi?</string>
+    <string name="text_Q7_content">A7: Mohon periksa apakah Anda memberikan izin ini ke Super Clone di setelan sistem Anda.</string>
+    <string name="text_Q7_title">Q7: Mengapa jalan pintas tidak bisa dibuat atau kamera, lokasi tidak berfungsi?</string>
+    <string name="toast_no_lucky">Maaf, tidak ada konten kali ini Silakan coba lagi nanti.</string>
+    <string name="settings_gms_disable_notice">Nonaktifkan layanan putar Google akan mengurangi penggunaan memori dan daya, dan optimalkan kecepatan peluncuran untuk aplikasi kloning. Tapi beberapa aplikasi mungkin tidak bekerja dengan benar jika menonaktifkannya. Apakah Anda yakin untuk menonaktifkan layanan Google Play?</string>
+    <string name="settings_gms_enable_notice">Aktifkan layanan pemutaran Google dapat menghabiskan lebih banyak memori dan CPU. Apakah Anda ingin mengaktifkan layanan Google Play?</string>
+    <string name="upgrade_start_tips">Cela peut prendre un peu plus longtemps car cette application vient d\'être améliorée.</string>
 </resources>
