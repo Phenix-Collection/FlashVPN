@@ -37,6 +37,7 @@ public class NativeEngine {
     private static Method gCameraNativeSetup;
     private static int gCameraMethodType;
     private static Method gAudioRecordNativeCheckPermission;
+    private static boolean sFlag;
 
     static {
         try {
@@ -181,12 +182,16 @@ public class NativeEngine {
 	}
 
 	public static void hookNative() {
+        if (sFlag) {
+            return;
+        }
         Method[] methods = {gOpenDexFileNative, gCameraNativeSetup, gAudioRecordNativeCheckPermission};
 		try {
             nativeHookNative(methods, VirtualCore.get().getHostPkg(), VirtualRuntime.isArt(), Build.VERSION.SDK_INT, gCameraMethodType);
 		} catch (Throwable e) {
 			VLog.e(TAG, VLog.getStackTraceString(e));
 		}
+		sFlag = true;
 	}
 
 	public static void onKillProcess(int pid, int signal) {
