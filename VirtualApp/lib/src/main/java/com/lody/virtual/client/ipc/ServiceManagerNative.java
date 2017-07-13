@@ -33,16 +33,14 @@ public class ServiceManagerNative {
 	private static IServiceFetcher sFetcher;
 
 	private static IServiceFetcher getServiceFetcher() {
-		if (sFetcher == null) {
+		if (sFetcher == null || !sFetcher.asBinder().isBinderAlive()) {
 			synchronized (ServiceManagerNative.class) {
-				if (sFetcher == null) {
-					Context context = VirtualCore.get().getContext();
-					Bundle response = new ProviderCall.Builder(context, SERVICE_CP_AUTH).methodName("@").call();
-					if (response != null) {
-						IBinder binder = BundleCompat.getBinder(response, "_VA_|_binder_");
-						linkBinderDied(binder);
-						sFetcher = IServiceFetcher.Stub.asInterface(binder);
-					}
+				Context context = VirtualCore.get().getContext();
+				Bundle response = new ProviderCall.Builder(context, SERVICE_CP_AUTH).methodName("@").call();
+				if (response != null) {
+					IBinder binder = BundleCompat.getBinder(response, "_VA_|_binder_");
+					linkBinderDied(binder);
+					sFetcher = IServiceFetcher.Stub.asInterface(binder);
 				}
 			}
 		}

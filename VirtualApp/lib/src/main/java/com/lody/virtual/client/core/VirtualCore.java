@@ -235,12 +235,10 @@ public final class VirtualCore {
 	}
 
 	private IAppManager getService() {
-		if (mService == null) {
+		if (mService == null || !mService.asBinder().isBinderAlive()) {
 			synchronized (this) {
-				if (mService == null) {
-                    Object remote = getStubInterface();
-					mService = LocalProxyUtils.genProxy(IAppManager.class, remote);
-				}
+				Object remote = getStubInterface();
+				mService = LocalProxyUtils.genProxy(IAppManager.class, remote);
 			}
 		}
 		return mService;

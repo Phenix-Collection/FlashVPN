@@ -25,7 +25,7 @@ public class VAccountManager {
 	}
 
 	public IAccountManager getRemote() {
-		if (mRemote == null) {
+		if (mRemote == null || !mRemote.asBinder().isBinderAlive()) {
 			Object remote = getStubInterface();
 			mRemote = LocalProxyUtils.genProxy(IAccountManager.class, remote);
 		}
