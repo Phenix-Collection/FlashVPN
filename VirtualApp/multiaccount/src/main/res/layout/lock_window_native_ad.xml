@@ -16,7 +16,8 @@
             android:id="@+id/ad_cover_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="center" />
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true" />
 
         <TextView
             android:id="@+id/ad_flag"

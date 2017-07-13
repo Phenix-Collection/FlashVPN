@@ -137,6 +137,7 @@
     <entry>
         <key>auto_home_interstitial_interval</key>
         <value>172800000</value>
+        <!-- 48hour -->
     </entry>
     <!--
     <entry>
