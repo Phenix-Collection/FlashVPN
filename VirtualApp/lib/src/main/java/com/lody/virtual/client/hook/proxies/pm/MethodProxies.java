@@ -384,14 +384,16 @@ class MethodProxies {
             if (_hostResult != null) {
                 List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
                         : (List) _hostResult;
-                Iterator<ResolveInfo> iterator = hostResult.iterator();
-                while (iterator.hasNext()) {
-                    ResolveInfo info = iterator.next();
-                    if (info == null || info.serviceInfo == null || !isVisiblePackage(info.serviceInfo.applicationInfo)) {
-                        iterator.remove();
+                if (hostResult != null) {
+                    Iterator<ResolveInfo> iterator = hostResult.iterator();
+                    while (iterator.hasNext()) {
+                        ResolveInfo info = iterator.next();
+                        if (info == null || info.serviceInfo == null || !isVisiblePackage(info.serviceInfo.applicationInfo)) {
+                            iterator.remove();
+                        }
                     }
+                    appResult.addAll(hostResult);
                 }
-                appResult.addAll(hostResult);
             }
             if (slice) {
                 return ParceledListSliceCompat.create(appResult);
@@ -478,16 +480,18 @@ class MethodProxies {
                     (String) args[1], (Integer) args[2], userId);
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
-                List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
-                        : (List) _hostResult;
-                Iterator<ResolveInfo> iterator = hostResult.iterator();
-                while (iterator.hasNext()) {
-                    ResolveInfo info = iterator.next();
-                    if (info == null || info.activityInfo == null || !isVisiblePackage(info.activityInfo.applicationInfo)) {
-                        iterator.remove();
+                    List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
+                            : (List) _hostResult;
+                    if (hostResult != null) {
+                    Iterator<ResolveInfo> iterator = hostResult.iterator();
+                    while (iterator.hasNext()) {
+                        ResolveInfo info = iterator.next();
+                        if (info == null || info.activityInfo == null || !isVisiblePackage(info.activityInfo.applicationInfo)) {
+                            iterator.remove();
+                        }
                     }
+                    appResult.addAll(hostResult);
                 }
-                appResult.addAll(hostResult);
             }
             if (slice) {
                 return ParceledListSliceCompat.create(appResult);
@@ -822,6 +826,36 @@ class MethodProxies {
         }
     }
 
+    static class checkUidSignatures extends MethodProxy {
+
+        @Override
+        public String getMethodName() {
+            return "checkUidSignatures";
+        }
+
+        @Override
+        public Object call(Object who, Method method, Object... args) throws Throwable {
+            int uid1 = (int) args[0];
+            int uid2 = (int) args[1];
+            // TODO: verify the signatures by uid.
+            return PackageManager.SIGNATURE_MATCH;
+        }
+    }
+
+    static class getNameForUid extends MethodProxy {
+
+        @Override
+        public String getMethodName() {
+            return "getNameForUid";
+        }
+
+        @Override
+        public Object call(Object who, Method method, Object... args) throws Throwable {
+            int uid = (int) args[0];
+            return VPackageManager.get().getNameForUid(uid);
+        }
+    }
+
 
     static class DeletePackage extends MethodProxy {
 
@@ -1029,14 +1063,16 @@ class MethodProxies {
             if (_hostResult != null) {
                 List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
                         : (List) _hostResult;
-                Iterator<ResolveInfo> iterator = hostResult.iterator();
-                while (iterator.hasNext()) {
-                    ResolveInfo info = iterator.next();
-                    if (info == null || info.activityInfo == null || !isVisiblePackage(info.activityInfo.applicationInfo)) {
-                        iterator.remove();
+                if (hostResult != null) {
+                    Iterator<ResolveInfo> iterator = hostResult.iterator();
+                    while (iterator.hasNext()) {
+                        ResolveInfo info = iterator.next();
+                        if (info == null || info.activityInfo == null || !isVisiblePackage(info.activityInfo.applicationInfo)) {
+                            iterator.remove();
+                        }
                     }
+                    appResult.addAll(hostResult);
                 }
-                appResult.addAll(hostResult);
             }
             if (slice) {
                 return ParceledListSliceCompat.create(appResult);
@@ -1133,14 +1169,16 @@ class MethodProxies {
             if (_hostResult != null) {
                 List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
                         : (List) _hostResult;
-                Iterator<ResolveInfo> iterator = hostResult.iterator();
-                while (iterator.hasNext()) {
-                    ResolveInfo info = iterator.next();
-                    if (info == null || info.providerInfo == null || !isVisiblePackage(info.providerInfo.applicationInfo)) {
-                        iterator.remove();
+                if (hostResult != null) {
+                    Iterator<ResolveInfo> iterator = hostResult.iterator();
+                    while (iterator.hasNext()) {
+                        ResolveInfo info = iterator.next();
+                        if (info == null || info.providerInfo == null || !isVisiblePackage(info.providerInfo.applicationInfo)) {
+                            iterator.remove();
+                        }
                     }
+                    appResult.addAll(hostResult);
                 }
-                appResult.addAll(hostResult);
             }
             if (ParceledListSliceCompat.isReturnParceledListSlice(method)) {
                 return ParceledListSliceCompat.create(appResult);
