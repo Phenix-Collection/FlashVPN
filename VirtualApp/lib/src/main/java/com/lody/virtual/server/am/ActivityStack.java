@@ -703,9 +703,9 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 					}
 				}
 				VLog.d(TAG, "getCallingPackage caller " + r.caller);
-				return r.caller != null ? r.caller.getPackageName() : null;
+				return r.caller != null ? r.caller.getPackageName() : "android";
 			}
-			return null;
+			return "android";
 		}
 	}
 
