@@ -44,11 +44,9 @@ import com.lody.virtual.os.VEnvironment;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.InstalledAppInfo;
 import com.lody.virtual.remote.PendingResultData;
-import com.lody.virtual.server.secondary.FakeIdentityBinder;
 import com.taobao.android.dex.interpret.ARTUtils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +66,6 @@ import mirror.android.view.RenderScript;
 import mirror.android.view.ThreadedRenderer;
 import mirror.com.android.internal.content.ReferrerIntent;
 import mirror.dalvik.system.VMRuntime;
-import mirror.java.lang.ThreadGroupN;
 
 import static com.lody.virtual.os.VUserHandle.getUserId;
 
@@ -229,7 +226,7 @@ public final class VClientImpl extends IVClient.Stub {
             Process.killProcess(0);
             System.exit(0);
         }
-        if (!info.dependSystem && info.artFlyMode) {
+        if (!info.dependSystem && info.skipDexOpt) {
             ARTUtils.init(VirtualCore.get().getContext());
             ARTUtils.setIsDex2oatEnabled(false);
         }

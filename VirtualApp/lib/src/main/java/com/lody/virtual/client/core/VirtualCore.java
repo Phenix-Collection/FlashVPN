@@ -1,7 +1,6 @@
 package com.lody.virtual.client.core;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.ConditionVariable;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.Process;
 import android.os.RemoteException;
@@ -304,7 +302,7 @@ public final class VirtualCore {
      */
 	public void preOpt(String pkg) throws IOException {
         InstalledAppInfo info = getInstalledAppInfo(pkg, 0);
-        if (info != null && !info.dependSystem && !info.artFlyMode) {
+        if (info != null && !info.dependSystem && !info.skipDexOpt) {
 			DexFile.loadDex(info.apkPath, info.getOdexFile().getPath(), 0).close();
 		}
 	}

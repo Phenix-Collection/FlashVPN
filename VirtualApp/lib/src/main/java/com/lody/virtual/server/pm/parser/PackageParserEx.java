@@ -56,6 +56,7 @@ public class PackageParserEx {
                     && p.mAppMetaData.containsKey(Constants.FEATURE_FAKE_SIGNATURE)) {
             String sig = p.mAppMetaData.getString(Constants.FEATURE_FAKE_SIGNATURE);
             p.mSignatures = new Signature[]{new Signature(sig)};
+            VLog.logbug(TAG, "Using fake-signature feature on : " + p.packageName);
         } else {
             PackageParserCompat.collectCertificates(parser, p, PackageParser.PARSE_IS_SYSTEM);
         }

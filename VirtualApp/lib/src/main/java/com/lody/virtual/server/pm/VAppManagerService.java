@@ -42,9 +42,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static java.lang.System.console;
 import static java.lang.System.exit;
-import static mirror.android.app.ActivityThread.ActivityClientRecord.activity;
 
 /**
  * @author Lody
@@ -250,7 +248,7 @@ public class VAppManagerService extends IAppManager.Stub {
         if (path == null) {
             return InstallResult.makeFailure("path = NULL");
         }
-        boolean artFlyMode = VirtualRuntime.isArt() && (flags & InstallStrategy.ART_FLY_MODE) != 0;
+        boolean skipDexOpt = VirtualRuntime.isArt() && (flags & InstallStrategy.SKIP_DEX_OPT) != 0;
         File packageFile = new File(path);
         if (!packageFile.exists() || !packageFile.isFile()) {
             return InstallResult.makeFailure("Package File is not exist.");
@@ -328,7 +326,7 @@ public class VAppManagerService extends IAppManager.Stub {
         } else {
             ps = new PackageSetting();
         }
-        ps.artFlyMode = artFlyMode;
+        ps.skipDexOpt = skipDexOpt;
         ps.dependSystem = dependSystem;
         ps.apkPath = packageFile.getPath();
         ps.libPath = libDir.getPath();
