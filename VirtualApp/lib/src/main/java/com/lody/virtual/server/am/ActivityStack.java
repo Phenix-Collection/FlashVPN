@@ -280,7 +280,6 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		ReuseTarget reuseTarget = ReuseTarget.CURRENT;
 		ClearTarget clearTarget = ClearTarget.NOTHING;
 		boolean clearTop = containFlags(intent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        boolean clearTask = containFlags(intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
 		if (intent.getComponent() == null) {
 			intent.setComponent(new ComponentName(info.packageName, info.name));
@@ -292,7 +291,7 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 			removeFlags(intent, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			clearTarget = ClearTarget.TOP;
 		}
-        if (clearTask) {
+		if (containFlags(intent, Intent.FLAG_ACTIVITY_CLEAR_TASK)) {
 			if (containFlags(intent, Intent.FLAG_ACTIVITY_NEW_TASK)) {
 				clearTarget = ClearTarget.TASK;
 			} else {
@@ -314,9 +313,9 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 
 		switch (info.launchMode) {
 			case LAUNCH_SINGLE_TOP : {
-//				if (!clearTop) {
-                    singleTop = true;
-//				}
+				if (!clearTop) {
+					singleTop = true;
+				}
 				if (containFlags(intent, Intent.FLAG_ACTIVITY_NEW_TASK)) {
 					reuseTarget = containFlags(intent, Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
 							? ReuseTarget.MULTIPLE
@@ -350,11 +349,11 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 				clearTarget = ClearTarget.SPEC_ACTIVITY;
 			}
 		}
-        String affinity = ComponentUtils.getTaskAffinity(info);
-        if ((sourceTask == null && reuseTarget == ReuseTarget.CURRENT) || (sourceTask != null && !sourceTask.affinity.equals(affinity))) {
+		if (sourceTask == null && reuseTarget == ReuseTarget.CURRENT) {
 			reuseTarget = ReuseTarget.AFFINITY;
 		}
 
+		String affinity = ComponentUtils.getTaskAffinity(info);
 		TaskRecord reuseTask = null;
 		switch (reuseTarget) {
 			case AFFINITY :
@@ -381,12 +380,12 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		} else {
 			boolean delivered = false;
 			mAM.moveTaskToFront(reuseTask.taskId, 0);
-            boolean startTaskToFront = !clearTask && !clearTop && ComponentUtils.isSameIntent(intent, reuseTask.taskRoot);
+			boolean startTaskToFront = !clearTop && ComponentUtils.isSameIntent(intent, reuseTask.taskRoot);
 
 			if (clearTarget.deliverIntent || singleTop) {
 				taskMarked = markTaskByClearTarget(reuseTask, clearTarget, intent.getComponent());
 				ActivityRecord topRecord = topActivityInTask(reuseTask);
-                if (clearTop && !singleTop && topRecord != null && taskMarked) {
+				if (clearTop && topRecord != null && taskMarked) {
 					topRecord.marked = true;
 				}
 				// Target activity is on top
@@ -400,10 +399,10 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
                     scheduleFinishMarkedActivityLocked();
 				}
 			}
-//			if (reuseTask.isFinishing()) {
-//				startActivityInNewTaskLocked(userId, intent, info, options);
-//				delivered = true;
-//			}
+			if (reuseTask.isFinishing()) {
+				startActivityInNewTaskLocked(userId, intent, info, options);
+				delivered = true;
+			}
 			if (!startTaskToFront) {
 				 if (!delivered) {
 					destIntent = startActivityProcess(userId, sourceRecord, intent, info);
@@ -468,7 +467,6 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
 		if (top != null) {
 			if (startActivityProcess(task.userId, top, intent, info) != null) {
 				realStartActivityLocked(top.token, intent, resultWho, requestCode, options);
-				return true;
 			}
 		}
 		return false;
