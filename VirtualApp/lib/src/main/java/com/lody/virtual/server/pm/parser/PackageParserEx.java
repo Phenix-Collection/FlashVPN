@@ -18,6 +18,7 @@ import android.os.Parcel;
 import android.text.TextUtils;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.client.env.Constants;
 import com.lody.virtual.client.fixer.ComponentFixer;
 import com.lody.virtual.helper.collection.ArrayMap;
 import com.lody.virtual.helper.compat.PackageParserCompat;
@@ -50,7 +51,14 @@ public class PackageParserEx {
     public static VPackage parsePackage(File packageFile) throws Throwable {
         PackageParser parser = PackageParserCompat.createParser(packageFile);
         PackageParser.Package p = PackageParserCompat.parsePackage(parser, packageFile, 0);
-        PackageParserCompat.collectCertificates(parser, p, PackageParser.PARSE_IS_SYSTEM);
+        if (p.requestedPermissions.contains("android.permission.FAKE_PACKAGE_SIGNATURE")
+                    && p.mAppMetaData != null
+                    && p.mAppMetaData.containsKey(Constants.FEATURE_FAKE_SIGNATURE)) {
+            String sig = p.mAppMetaData.getString(Constants.FEATURE_FAKE_SIGNATURE);
+            p.mSignatures = new Signature[]{new Signature(sig)};
+        } else {
+            PackageParserCompat.collectCertificates(parser, p, PackageParser.PARSE_IS_SYSTEM);
+        }
         return buildPackageCache(p);
     }
 
