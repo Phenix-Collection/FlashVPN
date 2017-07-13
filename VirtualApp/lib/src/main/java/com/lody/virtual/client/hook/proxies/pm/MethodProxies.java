@@ -242,6 +242,10 @@ class MethodProxies {
     }
 
     static class GetPackageInstaller extends MethodProxy {
+        @Override
+        public boolean isEnable() {
+                      return isAppProcess();
+        }
 
         @Override
         public String getMethodName() {
