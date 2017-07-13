@@ -92,11 +92,19 @@ public class ActivityManagerStub extends MethodInvocationProxy<MethodInvocationS
                             continue;
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            info.baseActivity = taskInfo.baseActivity;
-                            info.topActivity = taskInfo.topActivity;
+                            try {
+                                info.baseActivity = taskInfo.baseActivity;
+                                info.topActivity = taskInfo.topActivity;
+                            }catch (Exception e) {
+
+                            }
                         }
-                        info.origActivity = taskInfo.baseActivity;
-                        info.baseIntent = taskInfo.baseIntent;
+                        try {
+                            info.origActivity = taskInfo.baseActivity;
+                            info.baseIntent = taskInfo.baseIntent;
+                        }catch (Exception e) {
+
+                        }
                     }
                     return _infos;
                 }
