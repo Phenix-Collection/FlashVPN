@@ -136,7 +136,7 @@
     </entry>
     <entry>
         <key>auto_home_interstitial_interval</key>
-        <value>48</value>
+        <value>172800000</value>
     </entry>
     <!--
     <entry>
