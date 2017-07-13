@@ -1,5 +1,6 @@
 package com.lody.virtual.client.hook.proxies.pm;
 
+import android.os.Build;
 import android.os.IInterface;
 
 import com.lody.virtual.client.hook.base.BinderInvocationStub;
@@ -29,6 +30,11 @@ public final class PackageManagerStub extends MethodInvocationProxy<MethodInvoca
 		addMethodProxy(new ResultStaticMethodProxy("performDexOpt", true));
 		addMethodProxy(new ResultStaticMethodProxy("performDexOptIfNeeded", false));
 		addMethodProxy(new ResultStaticMethodProxy("performDexOptSecondary", true));
+		addMethodProxy(new ResultStaticMethodProxy("addOnPermissionsChangeListener", 0));
+		addMethodProxy(new ResultStaticMethodProxy("removeOnPermissionsChangeListener", 0));
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			addMethodProxy(new ResultStaticMethodProxy("checkPackageStartable", 0));
+		}
 		if (BuildCompat.isOreo()) {
 			addMethodProxy(new ResultStaticMethodProxy("notifyDexLoad", 0));
 			addMethodProxy(new ResultStaticMethodProxy("notifyPackageUse", 0));
