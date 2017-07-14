@@ -394,7 +394,11 @@ public class PackageParserEx {
         if ((flags & PackageManager.GET_META_DATA) != 0) {
             ai.metaData = p.mAppMetaData;
         }
-        initApplicationAsUser(ai, userId);
+        try {
+            initApplicationAsUser(ai, userId);
+        } catch (Exception e) {
+            //avoid android O crash
+        }
         return ai;
     }
 
