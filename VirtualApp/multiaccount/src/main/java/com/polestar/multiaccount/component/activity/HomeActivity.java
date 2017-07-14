@@ -529,22 +529,24 @@ public class HomeActivity extends BaseActivity {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            boolean showRate = false;
             if (! PreferencesUtils.isRated()) {
                 MLogs.d("Quit Rate config:" +  RemoteConfig.getLong(QUIT_RATE_INTERVAL)+" , "
                         + RemoteConfig.getLong(QUIT_RATE_RANDOM) + " , gate " +RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
                 long interval = RemoteConfig.getLong(QUIT_RATE_INTERVAL) * 60 * 60 * 1000;
                 long lastTime = PreferencesUtils.getRateDialogTime(this);
-                if (PreferencesUtils.getLoveApp() == -1) {
+                if (PreferencesUtils.getLoveApp() != -1) {
                     //Don't love app
-                    interval = 5*interval;
+                    int random = new Random().nextInt(100);
+                    int clonedCnt = CloneHelper.getInstance(this).getClonedApps().size();
+                    boolean isShowRateDialog = PreferencesUtils.getLoveApp() == 1 ||
+                            ((random < RemoteConfig.getLong(QUIT_RATE_RANDOM)) && clonedCnt >= RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
+                    if (isShowRateDialog && (System.currentTimeMillis() - lastTime) > interval) {
+                        showRate = true;
+                        showRateDialog(RATE_FROM_QUIT, null);
+                    }
                 }
-                int random = new Random().nextInt(100);
-                int clonedCnt = CloneHelper.getInstance(this).getClonedApps().size();
-                boolean isShowRateDialog = PreferencesUtils.getLoveApp() == 1 ||
-                        ((random < RemoteConfig.getLong(QUIT_RATE_RANDOM)) && clonedCnt >= RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
-                if (isShowRateDialog && (System.currentTimeMillis() - lastTime) > interval) {
-                    showRateDialog(RATE_FROM_QUIT, null);
-                } else {
+                if (!showRate) {
                     super.onBackPressed();
                 }
             } else {
