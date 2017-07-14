@@ -134,4 +134,5 @@
     <string name="clone_success">%s+ est prêt. Profitez-en maintenant!</string>
     <string name="lock_interval_settings_content">L\'intervalle pour verrouiller l\'application à nouveau après l\'avoir quitté</string>
     <string name="lock_interval_settings_title">Intervalle de verrouillage</string>
+    <string name="settings_join_us">Rejoignez notre communauté</string>
 </resources>

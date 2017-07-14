@@ -180,4 +180,5 @@
     <string name="text_Q7_title">لماذا لا يمكن إنشاء اختصار أو الكاميرا، والموقع لا يعمل؟</string>
     <string name="lock_interval_settings_content">الفاصل الزمني لقفل التطبيق مرة أخرى بعد أن تركت ذلك</string>
     <string name="lock_interval_settings_title">قفل الفاصل الزمني</string>
+    <string name="settings_join_us">الانضمام إلى مجتمعنا</string>
 </resources>

@@ -179,4 +179,5 @@
     <string name="text_Q7_title">Q7: Por que o atalho não pode ser criado ou a câmera, o local não funciona?</string>
     <string name="lock_interval_settings_content">O intervalo para bloquear o aplicativo novamente depois de deixá-lo</string>
     <string name="lock_interval_settings_title">Intervalo de bloqueio</string>
+    <string name="settings_join_us">Junte-se a nossa comunidade</string>
 </resources>

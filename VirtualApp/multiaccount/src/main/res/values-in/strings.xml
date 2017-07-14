@@ -179,4 +179,5 @@
     <string name="upgrade_start_tips">Cela peut prendre un peu plus longtemps car cette application vient d\'être améliorée.</string>
     <string name="lock_interval_settings_content">Interval untuk mengunci aplikasi lagi setelah Anda meninggalkannya</string>
     <string name="lock_interval_settings_title">Kunci Interval</string>
+    <string name="settings_join_us">Bergabunglah dengan Komunitas Kita</string>
 </resources>
