@@ -40,6 +40,7 @@ import com.lody.virtual.client.hook.providers.ProviderHook;
 import com.lody.virtual.client.hook.secondary.ServiceConnectionDelegate;
 import com.lody.virtual.client.hook.utils.MethodParameterUtils;
 import com.lody.virtual.client.ipc.ActivityClientRecord;
+import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.ChooserActivity;
@@ -1518,6 +1519,9 @@ class MethodProxies {
             int nameIdx = getProviderNameIndex();
             String name = (String) args[nameIdx];
             int userId = VUserHandle.myUserId();
+            if (name != null && name.contains(ServiceManagerNative.SERVICE_CP_AUTH)) {
+                return method.invoke(who, args);
+            }
             ProviderInfo info = VPackageManager.get().resolveContentProvider(name, 0, userId);
             if (info != null && info.enabled && isAppPkg(info.packageName)) {
                 int targetVPid = VActivityManager.get().initProcess(info.packageName, info.processName, userId);

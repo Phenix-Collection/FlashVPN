@@ -24,6 +24,7 @@ import android.os.Process;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.base.MethodProxy;
 import com.lody.virtual.client.hook.utils.MethodParameterUtils;
+import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.helper.collection.ArraySet;
 import com.lody.virtual.helper.compat.ParceledListSliceCompat;
@@ -358,6 +359,9 @@ class MethodProxies {
             String name = (String) args[0];
             int flags = (int) args[1];
             int userId = VUserHandle.myUserId();
+            if (name != null && name.contains(ServiceManagerNative.SERVICE_CP_AUTH)) {
+                return method.invoke(who, args);
+            }
             ProviderInfo info = VPackageManager.get().resolveContentProvider(name, flags, userId);
             if (info == null) {
                 info = (ProviderInfo) method.invoke(who, args);
