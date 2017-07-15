@@ -56,7 +56,7 @@
     <string name="notification_detail_setting">Enable notification for app</string>
     <string name="enable_notification">Enable Notification</string>
 
-    <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
+    <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application. You can download it here: %s</string>
 
     <!-- feedback -->
     <string name="feedback_hint">Please tell us the detail about the problem you met , and please tell us the steps to reproduce it and better with screenshot.</string>
