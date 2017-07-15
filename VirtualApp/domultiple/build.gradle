@@ -1,0 +1,88 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'org.greenrobot.greendao'
+
+def releaseTime() {
+    return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
+}
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        applicationId "com.polestar.domultiple"
+        minSdkVersion 16
+        targetSdkVersion 21
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+        multiDexEnabled = true
+
+    }
+
+    signingConfigs {
+        myConfig {
+            storeFile file("D:\\Project\\VirtualApp\\VirtualApp\\publish\\test.keystore")
+            storePassword "123456"
+            keyAlias "test.keystore"
+            keyPassword "123456"
+        }
+    }
+    productFlavors {
+        develop {
+            versionCode 9999
+            versionName '9999'
+            manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
+        }
+        play {
+            versionCode 1000
+            versionName "1.0.00.${releaseTime()}"
+            manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
+        }
+    }
+
+    buildTypes {
+        debug {
+            jniDebuggable false
+            pseudoLocalesEnabled true
+        }
+        release {
+            shrinkResources true
+            pseudoLocalesEnabled true
+            signingConfig signingConfigs.myConfig
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'lib-proguard.txt'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+
+    compile 'org.greenrobot:greendao:3.0.1'
+
+    compile project(':lib')
+}
+
+apply plugin: 'com.google.gms.google-services'
