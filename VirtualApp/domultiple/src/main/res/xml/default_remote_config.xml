@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>quit_rating_random</key>
+        <value>100</value>
+    </entry>
+</defaultsMap>
