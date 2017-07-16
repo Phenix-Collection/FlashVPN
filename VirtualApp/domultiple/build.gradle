@@ -8,6 +8,7 @@ def releaseTime() {
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.polestar.domultiple"
@@ -81,6 +82,34 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile 'org.greenrobot:greendao:3.0.1'
+    compile 'com.tencent.bugly:crashreport:2.6.5'
+
+    compile 'com.google.firebase:firebase-core:9.8.0'
+    compile 'com.google.firebase:firebase-config:9.8.0'
+    compile 'com.google.firebase:firebase-ads:9.8.0'
+    compile 'com.google.firebase:firebase-crash:9.8.0'
+    compile 'com.android.billingclient:billing:dp-1'
+
+   // compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+
+    compile 'com.facebook.android:audience-network-sdk:4.+'
+
+    compile('com.mopub:mopub-sdk-banner:4.9.0@aar') {
+        transitive = true
+    }
+    // For native static (images).
+    compile('com.mopub:mopub-sdk-native-static:4.9.0@aar') {
+        transitive = true
+    }
+    // For native video. This will automatically also include native static
+    compile('com.mopub:mopub-sdk-native-video:4.9.0@aar') {
+        transitive = true
+    }
+
+    // For interstitials
+    compile('com.mopub:mopub-sdk-interstitial:4.9.0@aar') {
+        transitive = true
+    }
 
     compile project(':lib')
 }
