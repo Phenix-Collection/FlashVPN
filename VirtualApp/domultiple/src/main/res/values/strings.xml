@@ -3,4 +3,7 @@
     <string name="clone_label_tag">%s +</string>
     <string name="share_with_friends">Share With Friends</string>
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
+    <string name="feel_lucky">Feel Lucky</string>
+    <string name="hot_clone_title">Hot Cloned</string>
+    <string name="hot_clone_detail">Millions of users create clone for below applications</string>
 </resources>

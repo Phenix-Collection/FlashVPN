@@ -4,4 +4,8 @@
         <key>quit_rating_random</key>
         <value>100</value>
     </entry>
+    <entry>
+        <key>hot_clone_list</key>
+        <value>com.facebook.orca:com.whatsapp</value>
+    </entry>
 </defaultsMap>

@@ -1,0 +1,169 @@
+package com.polestar.domultiple.components.ui;
+
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+
+import com.polestar.domultiple.R;
+import com.polestar.domultiple.clone.CloneManager;
+import com.polestar.domultiple.utils.MLogs;
+import com.polestar.domultiple.utils.RemoteConfig;
+import com.polestar.domultiple.widget.SelectGridAppItem;
+import com.polestar.domultiple.widget.SelectPkgGridAdapter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+
+/**
+ * Created by guojia on 2017/7/16.
+ */
+
+public class AddCloneActivity extends BaseActivity {
+    private static final int APP_LIST_READY = 0;
+    private static final String CONFIG_HOT_CLONE_LIST = "hot_clone_list";
+    private List<SelectGridAppItem> hotAppList = new ArrayList<>();
+    private List<SelectGridAppItem> otherAppList = new ArrayList<>();
+    private LinearLayout hotAppLayout;
+    private LinearLayout adContainer;
+    private LinearLayout otherAppLayout;
+    private GridView hotAppGridView;
+    private GridView otherAppGridView;
+
+    private Handler mHandler = new Handler(Looper.myLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case APP_LIST_READY:
+                    updateGrid();
+                    break;
+            }
+        }
+    };
+
+    private void updateGrid() {
+        if (hotAppList == null || hotAppList.size() == 0) {
+            hotAppLayout.setVisibility(View.GONE);
+        } else {
+            MLogs.d("Hot app size: " + hotAppList.size());
+            hotAppLayout.setVisibility(View.VISIBLE);
+            SelectPkgGridAdapter adapter = new SelectPkgGridAdapter(this,hotAppList);
+            hotAppGridView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            //setGrideViewHeightBasedOnChildren(hotAppGridView);
+        }
+        if (otherAppList == null || otherAppList.size() == 0) {
+            otherAppLayout.setVisibility(View.GONE);
+        } else {
+            MLogs.d("Other app size: " + otherAppList.size());
+            otherAppLayout.setVisibility(View.VISIBLE);
+            SelectPkgGridAdapter adapter = new SelectPkgGridAdapter(this,otherAppList);
+            otherAppGridView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            //setGrideViewHeightBasedOnChildren(otherAppGridView);
+        }
+
+    }
+
+    private void setGrideViewHeightBasedOnChildren(GridView grid) {
+        ListAdapter adapter = grid.getAdapter();
+        if (adapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+
+        View listItem = adapter.getView(0, null, grid);
+        listItem.measure(0, 0);
+        if (adapter.getCount() - 1 < 0) {
+            totalHeight = listItem.getMeasuredHeight();
+        } else {
+            int line = adapter.getCount() / 3;
+            if (adapter.getCount() % 3 != 0)
+                line = line + 1;
+            totalHeight = (listItem.getMeasuredHeight() + 30) * line;
+        }
+
+        ViewGroup.LayoutParams params = grid.getLayoutParams();
+        params.height = totalHeight + 30;
+        grid.setLayoutParams(params);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
+    private void initData() {
+        loadAppListAsync();
+    }
+
+    private void initView() {
+        setContentView(R.layout.add_clone_activity_layout);
+        hotAppLayout = (LinearLayout) findViewById(R.id.hot_clone_layout);
+        hotAppGridView = (GridView) findViewById(R.id.hot_clone_grid);
+        otherAppLayout = (LinearLayout) findViewById(R.id.other_clone_layout);
+        otherAppGridView = (GridView) findViewById(R.id.other_clone_grid);
+    }
+
+    private void loadAppListAsync() {
+        // NOT include host APP itself, already cloned APP in core and popular APP.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String hotCloneConf = RemoteConfig.getString(CONFIG_HOT_CLONE_LIST);
+                HashSet<String> hotCloneSet = new HashSet<>();
+                if(!TextUtils.isEmpty(hotCloneConf)) {
+                    String[] arr = hotCloneConf.split(":");
+                    for (String s: arr) {
+                        hotCloneSet.add(s);
+                    }
+                }
+                PackageManager pm = getPackageManager();
+                Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+                mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> resolveInfos = pm.queryIntentActivities(mainIntent, 0);
+                String hostPkg = getPackageName();
+
+                for (ResolveInfo resolveInfo : resolveInfos) {
+                    String pkgName = resolveInfo.activityInfo.packageName;
+                    if (hostPkg.equals(pkgName)) {
+                        continue;
+                    }
+                    if (!CloneManager.getInstance(AddCloneActivity.this).isClonable(pkgName)) {
+                        MLogs.d("package: " + pkgName + " not clonable!");
+                        continue;
+                    }
+                    SelectGridAppItem item = new SelectGridAppItem();
+                    item.icon = resolveInfo.activityInfo.loadIcon(pm);
+                    item.name = resolveInfo.activityInfo.loadLabel(pm);
+                    item.selected = false;
+                    item.pkg = pkgName;
+                    if (hotCloneSet.contains(pkgName)) {
+                        hotAppList.add(item);
+                    } else{
+                        otherAppList.add(item);
+                    }
+                }
+                mHandler.sendEmptyMessage(APP_LIST_READY);
+            }
+        }).start();
+    }
+}

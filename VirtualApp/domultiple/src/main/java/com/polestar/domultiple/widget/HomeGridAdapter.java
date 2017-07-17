@@ -1,0 +1,117 @@
+package com.polestar.domultiple.widget;
+
+import android.content.Context;
+import android.graphics.Typeface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.polestar.domultiple.R;
+import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.utils.CommonUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by guojia on 2017/7/16.
+ */
+public class HomeGridAdapter extends BaseAdapter {
+    
+    private List<CloneModel> appInfos;
+    private boolean showLucky;
+    private Context mContext;
+
+    public void setShowLucky(boolean s) {
+        showLucky = s;
+    }
+
+    public HomeGridAdapter(Context context) {
+        super();
+        mContext = context;
+        appInfos = new ArrayList<>(0);
+    }
+
+    public void notifyDataSetChanged(List<CloneModel> list) {
+        appInfos = list;
+        super.notifyDataSetChanged();
+    }
+
+    public int getPosition(CloneModel appModel) {
+        int ret = 0;
+        if (appModel != null && appInfos != null) {
+            for (CloneModel m : appInfos) {
+                if (m.getPackageName().equals(appModel.getPackageName())) {
+                    return ret;
+                }
+                ret++;
+            }
+        }
+        return  -1;
+    }
+    @Override
+    public int getCount() {
+        int size = appInfos == null ? 0 : appInfos.size();
+        if (showLucky) {
+            size ++;
+        }
+        if ( size < 6 ) {
+            size = 6;
+        } else {
+            size = size + 3 - (size % 3);
+        }
+        return size;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        if ( appInfos == null) {
+            return  null;
+        }
+        if (position < appInfos.size() && position >= 0) {
+            return  appInfos.get(position);
+        }
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        view = new GridAppCell(mContext);
+
+        ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
+        TextView appName = (TextView) view.findViewById(R.id.app_name);
+
+        CloneModel appModel = (CloneModel) getItem(i);
+        if (appModel != null) {
+            if (appModel.getCustomIcon() == null) {
+                appModel.setCustomIcon(CommonUtils.createCustomIcon(mContext, appModel.getIconDrawable(mContext)));
+            }
+
+            if (appModel.getCustomIcon() != null) {
+                appIcon.setImageBitmap(appModel.getCustomIcon());
+            }
+            appName.setText(appModel.getName());
+        } else {
+            int luckyIdx = appInfos.size();
+            int addIdx = showLucky? luckyIdx + 1 : luckyIdx;
+            if (showLucky && i == luckyIdx) {
+                appIcon.setImageResource(R.drawable.icon_feel_lucky);
+                appName.setText(R.string.feel_lucky);
+                appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                appName.setTextColor(mContext.getResources().getColor(R.color.lucky_red));
+            }
+            if (i == addIdx) {
+                appIcon.setImageResource(R.drawable.icon_add);
+            }
+        }
+
+        return view;
+    }
+}

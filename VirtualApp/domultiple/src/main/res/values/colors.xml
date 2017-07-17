@@ -5,4 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="title_bar_bg">#668184</color>
     <color name="title_bar_text_color">#FFFFFF</color>
+    <color name="lucky_red">#fd7921</color>
+    <color name="theme_text_color">#FF4A4A4A</color>
+    <color name="grid_line">#d3d3d3</color>
+    <color name="grid_pressed">#b7b7b7</color>
+    <color name="grid_bg">#e8e8e8</color>
 </resources>

@@ -1,7 +1,10 @@
 package com.polestar.domultiple.db;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import org.greenrobot.greendao.annotation.*;
@@ -25,6 +28,12 @@ public class CloneModel {
     private Boolean notificationEnable;
     private Integer lockerState;
     private Integer launched;
+    @Transient
+    private PackageInfo packageInfo;
+    @Transient
+    private Drawable icon;
+    @Transient
+    private Bitmap customIcon;
 
     @Generated(hash = 1465161905)
     public CloneModel() {
@@ -132,6 +141,25 @@ public class CloneModel {
         PackageManager pm = context.getPackageManager();
         try {
             return pm.getApplicationIcon(packageName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Bitmap getCustomIcon() {
+        return customIcon;
+    }
+
+    public void setCustomIcon(Bitmap customIcon) {
+        this.customIcon = customIcon;
+    }
+
+    public String getApkPath(Context context){
+        PackageManager pm = context.getPackageManager();
+        try {
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+            return ai.sourceDir;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
