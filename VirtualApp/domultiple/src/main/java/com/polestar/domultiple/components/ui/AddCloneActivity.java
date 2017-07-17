@@ -17,9 +17,11 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
+import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.SelectGridAppItem;
@@ -75,33 +77,8 @@ public class AddCloneActivity extends BaseActivity {
             SelectPkgGridAdapter adapter = new SelectPkgGridAdapter(this,otherAppList);
             otherAppGridView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            //setGrideViewHeightBasedOnChildren(otherAppGridView);
         }
 
-    }
-
-    private void setGrideViewHeightBasedOnChildren(GridView grid) {
-        ListAdapter adapter = grid.getAdapter();
-        if (adapter == null) {
-            return;
-        }
-
-        int totalHeight = 0;
-
-        View listItem = adapter.getView(0, null, grid);
-        listItem.measure(0, 0);
-        if (adapter.getCount() - 1 < 0) {
-            totalHeight = listItem.getMeasuredHeight();
-        } else {
-            int line = adapter.getCount() / 3;
-            if (adapter.getCount() % 3 != 0)
-                line = line + 1;
-            totalHeight = (listItem.getMeasuredHeight() + 30) * line;
-        }
-
-        ViewGroup.LayoutParams params = grid.getLayoutParams();
-        params.height = totalHeight + 30;
-        grid.setLayoutParams(params);
     }
 
     @Override
@@ -117,6 +94,7 @@ public class AddCloneActivity extends BaseActivity {
 
     private void initView() {
         setContentView(R.layout.add_clone_activity_layout);
+        setTitle(R.string.add_clone_title);
         hotAppLayout = (LinearLayout) findViewById(R.id.hot_clone_layout);
         hotAppGridView = (GridView) findViewById(R.id.hot_clone_grid);
         otherAppLayout = (LinearLayout) findViewById(R.id.other_clone_layout);
@@ -147,6 +125,9 @@ public class AddCloneActivity extends BaseActivity {
                     if (hostPkg.equals(pkgName)) {
                         continue;
                     }
+                    if (CloneManager.isAppInstalled(pkgName)) {
+                        continue;
+                    }
                     if (!CloneManager.getInstance(AddCloneActivity.this).isClonable(pkgName)) {
                         MLogs.d("package: " + pkgName + " not clonable!");
                         continue;
@@ -165,5 +146,28 @@ public class AddCloneActivity extends BaseActivity {
                 mHandler.sendEmptyMessage(APP_LIST_READY);
             }
         }).start();
+    }
+
+    public void onCloneClick(View view) {
+        boolean selected = false;
+        for (SelectGridAppItem item: hotAppList) {
+            if( item.selected) {
+                CloneModel model = new CloneModel(item.pkg, this);
+                CloneManager.getInstance(this).createClone(this, model);
+                selected = true;
+            }
+        }
+        for (SelectGridAppItem item: otherAppList) {
+            if( item.selected) {
+                CloneModel model = new CloneModel(item.pkg, this);
+                CloneManager.getInstance(this).createClone(this, model);
+                selected = true;
+            }
+        }
+        if (!selected) {
+            Toast.makeText(this, R.string.no_selection_for_clone, Toast.LENGTH_LONG).show();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

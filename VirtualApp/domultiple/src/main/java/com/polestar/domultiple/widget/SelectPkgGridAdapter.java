@@ -9,11 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.polestar.domultiple.R;
-import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.MLogs;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,16 +52,37 @@ public class SelectPkgGridAdapter  extends BaseAdapter{
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        view = new GridAppCell(mContext);
+        view = new SelectAppCell(mContext);
         MLogs.d("getView: " + i);
         ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
+        ImageView cb = (ImageView) view.findViewById(R.id.select_cb_img);
         TextView appName = (TextView) view.findViewById(R.id.app_name);
 
         SelectGridAppItem appModel = (SelectGridAppItem) getItem(i);
         if (appModel != null) {
             appIcon.setImageDrawable(appModel.icon);
             appName.setText(appModel.name);
+            if (appModel.selected ) {
+                cb.setImageResource(R.drawable.selectd);
+            } else{
+                cb.setImageResource(R.drawable.not_select);
+            }
         }
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SelectGridAppItem item = (SelectGridAppItem) view.getTag();
+                if (item != null) {
+                    ImageView cbox = (ImageView) view.findViewById(R.id.select_cb_img);
+                    item.selected = !item.selected;
+                    if (item.selected) {
+                        cbox.setImageResource(R.drawable.selectd);
+                    } else{
+                        cbox.setImageResource(R.drawable.not_select);
+                    }
+                }
+            }
+        });
         view.setTag(appModel);
         return view;
     }

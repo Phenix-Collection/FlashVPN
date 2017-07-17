@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="colorPrimary">#668184</color>
+    <color name="colorPrimaryDark">#394647</color>
+    <color name="colorAccent">#ff48d27f</color>
     <color name="title_bar_bg">#668184</color>
     <color name="title_bar_text_color">#FFFFFF</color>
     <color name="lucky_red">#fd7921</color>
@@ -10,4 +11,13 @@
     <color name="grid_line">#d3d3d3</color>
     <color name="grid_pressed">#b7b7b7</color>
     <color name="grid_bg">#e8e8e8</color>
+    <color name="delete_text_color">#f0eb0729</color>
+    <color name="shortcut_text_color">#f048d27f</color>
+
+    <color name="dialog_guide_button_negative_text">#ff454545</color>
+    <color name="dialog_guide_button_positive_text">#ff2dbbfb</color>
+    <color name="dialog_guide_button_press_bg">#22dddddd</color>
+    <color name="dialog_guide_content_text">#ff454545</color>
+    <color name="dialog_guide_high_light_content_text">#ff2dbbfb</color>
+    <color name="dialog_guide_title_text">#ff454545</color>
 </resources>

@@ -39,6 +39,12 @@ public class CloneModel {
     public CloneModel() {
     }
 
+    public CloneModel(String pkg, Context c) {
+        this.packageName = pkg;
+        this.path = getApkPath(c);
+        this.name = (String)getLabel(c);
+
+    }
     public CloneModel(Long id) {
         this.id = id;
     }
@@ -160,6 +166,17 @@ public class CloneModel {
         try {
             ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
             return ai.sourceDir;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public CharSequence getLabel(Context context){
+        PackageManager pm = context.getPackageManager();
+        try {
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+            return pm.getApplicationLabel(ai);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

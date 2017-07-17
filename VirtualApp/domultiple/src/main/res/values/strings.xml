@@ -4,6 +4,18 @@
     <string name="share_with_friends">Share With Friends</string>
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
     <string name="feel_lucky">Feel Lucky</string>
+    <string name="add_clone_title">Create Multiple</string>
     <string name="hot_clone_title">Hot Cloned</string>
     <string name="hot_clone_detail">Millions of users create clone for below applications</string>
+    <string name="other_clone_title">More Supported Apps</string>
+    <string name="other_clone_detail">Create clone to have multiple accounts login and online at the same time</string>
+    <string name="clone_action_txt">Clone with Do Multiple</string>
+    <string name="no_selection_for_clone">Please click and select items to clone.</string>
+    <string name="create_shortcut">Shortcut</string>
+    <string name="delete">Delete</string>
+    <string name="toast_shortcut_added">Shortcut added</string>
+    <string name="delete_dialog_title">Caution</string>
+    <string name="delete_dialog_content">Delete clone will totally remove its data. Do you want to continue?</string>
+    <string name="yes">Yes</string>
+    <string name="no_thanks">No,thanks</string>
 </resources>
