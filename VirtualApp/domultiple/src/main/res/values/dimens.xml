@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="title_bar_height">56dp</dimen>
-    <dimen name="title_bar_title_size">16sp</dimen>
+    <dimen name="title_bar_title_size">20sp</dimen>
+    <dimen name="faq_title_size">16sp</dimen>
+    <dimen name="faq_content_size">14sp</dimen>
 </resources>

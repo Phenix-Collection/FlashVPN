@@ -87,13 +87,18 @@ public class HomeGridAdapter extends BaseAdapter {
 
         ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
         TextView appName = (TextView) view.findViewById(R.id.app_name);
+        ImageView newDot = (ImageView) view.findViewById(R.id.new_dot);
 
         CloneModel appModel = (CloneModel) getItem(i);
         if (appModel != null) {
             if (appModel.getCustomIcon() == null) {
                 appModel.setCustomIcon(CommonUtils.createCustomIcon(mContext, appModel.getIconDrawable(mContext)));
             }
-
+            if (appModel.getLaunched() == 0) {
+                newDot.setVisibility(View.VISIBLE);
+            } else {
+                newDot.setVisibility(View.INVISIBLE);
+            }
             if (appModel.getCustomIcon() != null) {
                 appIcon.setImageBitmap(appModel.getCustomIcon());
             }

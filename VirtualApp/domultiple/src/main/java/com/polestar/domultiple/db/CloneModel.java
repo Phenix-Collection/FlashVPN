@@ -120,7 +120,7 @@ public class CloneModel {
     }
 
     public Boolean getNotificationEnable() {
-        return notificationEnable;
+        return notificationEnable == null? false : notificationEnable;
     }
 
     public void setNotificationEnable(Boolean notificationEnable) {
@@ -136,7 +136,7 @@ public class CloneModel {
     }
 
     public Integer getLaunched() {
-        return launched;
+        return launched == null? 0 : launched;
     }
 
     public void setLaunched(Integer launched) {

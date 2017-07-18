@@ -28,6 +28,7 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:onClick="onMenuClick"
+            android:id="@+id/menu_more"
             android:src="@drawable/more_dot" />
     </FrameLayout>
     <LinearLayout

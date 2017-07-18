@@ -6,10 +6,10 @@
     <ImageView
         android:id="@+id/navigation_bar"
         android:src="@mipmap/back"
-        android:paddingTop="20dp"
+        android:paddingTop="10dp"
         android:paddingLeft="13dp"
         android:paddingRight="13dp"
-        android:paddingBottom="20dp"
+        android:paddingBottom="10dp"
         android:layout_width="wrap_content"
         android:scaleType="centerCrop"
         android:onClick="onNavigationClick"
@@ -19,6 +19,7 @@
         style="@style/TextStyle_Activity_Title"
         android:layout_toRightOf="@id/navigation_bar"
         android:layout_width="wrap_content"
+        android:gravity="center_horizontal"
         android:paddingTop="16dp"
         android:layout_height="wrap_content" />
 </RelativeLayout>

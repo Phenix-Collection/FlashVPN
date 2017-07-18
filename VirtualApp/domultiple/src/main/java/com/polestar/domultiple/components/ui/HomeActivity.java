@@ -5,11 +5,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.support.v7.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +21,7 @@ import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.AnimatorHelper;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.MLogs;
@@ -53,6 +58,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private TextView deleteDropTxt;
     private TextView createDropTxt;
     private ExplosionField mExplosionField;
+    private PopupMenu homeMenuPopup;
 
     @Override
     protected boolean useCustomTitleBar() {
@@ -87,6 +93,11 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 if (i < mClonedList.size()) {
                     CloneModel model = (CloneModel)gridAdapter.getItem(i);
                     CloneManager.launchApp(model.getPackageName());
+                    if (model.getLaunched() == 0) {
+                        model.setLaunched(1);
+                        DBManager.updateCloneModel(HomeActivity.this, model);
+                        gridAdapter.notifyDataSetChanged();
+                    }
                 } else if (showLucky && i == luckyIdx) {
                     MLogs.d("lucky clicked");
                 } else if (i == addIdx) {
@@ -177,7 +188,38 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     }
 
     public void onMenuClick(View view) {
-
+        View more = findViewById(R.id.menu_more);
+        if (homeMenuPopup == null) {
+            homeMenuPopup = new PopupMenu(this, more);
+            homeMenuPopup.inflate(R.menu.home_menu_popup);
+        }
+        //菜单项的监听
+        homeMenuPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.item_notification:
+                        startActivity(new Intent(HomeActivity.this, NotificationActivity.class));
+                        break;
+                    case R.id.item_faq:
+                        startActivity(new Intent(HomeActivity.this, FaqActivity.class));
+                        break;
+                }
+                return true;
+            }
+        });
+        try {
+            MenuPopupHelper menuHelper = new MenuPopupHelper(this, (MenuBuilder) homeMenuPopup.getMenu(), more);
+            menuHelper.setForceShowIcon(true);
+            menuHelper.show();
+//            Field field = homeMenuPopup.getClass().getDeclaredField("mPopup");
+//            field.setAccessible(true);
+//            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(homeMenuPopup);
+//            mHelper.setForceShowIcon(true);
+        } catch (Exception e) {
+            MLogs.logBug(MLogs.getStackTraceString(e));
+        }
+        //homeMenuPopup.show();
     }
 
     @Override

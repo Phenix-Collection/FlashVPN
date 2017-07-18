@@ -13,6 +13,12 @@
     <color name="grid_bg">#e8e8e8</color>
     <color name="delete_text_color">#f0eb0729</color>
     <color name="shortcut_text_color">#f048d27f</color>
+    <color name="text_gray_dark">#3f3f3f</color>
+    <color name="text_gray_light">#a6a6a6</color>
+    <color name="default_bg_color">#FFFFFF</color>
+    <color name="default_divider_color">#ebebeb</color>
+    <color name="faq_title_color">#00aab8</color>
+    <color name="faq_content_color">@color/text_gray_dark</color>
 
     <color name="dialog_guide_button_negative_text">#ff454545</color>
     <color name="dialog_guide_button_positive_text">#ff2dbbfb</color>

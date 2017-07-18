@@ -1,11 +1,17 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/title_bar_bg</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/title_bar_bg</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:screenOrientation">portrait</item>
         <item name="android:windowAnimationStyle">@style/activityAnimationStyle</item>
+        <item name="android:dropDownListViewStyle">@style/MyListViewStyle</item>
+    </style>
+
+    <style name="MyListViewStyle">
+        <item name="android:divider">@color/default_divider_color</item>
+        <item name="android:dividerHeight">1dp</item>
     </style>
     <style name="activityAnimationStyle">
 
@@ -48,7 +54,7 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <!-- 背景阴影 -->
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
         <!-- 设置全屏 -->
         <item name="android:windowFullscreen">true</item>
         <!-- 背景透明 -->

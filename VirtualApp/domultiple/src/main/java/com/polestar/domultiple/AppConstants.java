@@ -26,7 +26,6 @@ public class AppConstants {
     public static final int APP_ICON_PADDING = 5;//dp
 
     public static final String PREFERENCE_NAME = "DoMultiple-pref";
-    public static final String KEY_SERVER_PUSH = "key_server_push";
     public static final String KEY_AUTO_CREATE_SHORTCUT = "key_auto_create_shortcut";
 
     public class PreferencesKey {
@@ -39,6 +38,7 @@ public class AppConstants {
         public static final String CUSTOMIZED_SAFE_QUESTION = "custom_safe_ques";
         public static final String APP_LOCK_INVISIBLE_PATTERN_PATH = "app_lock_invisible_pattern_path";
         public static final String SAFE_QUESTION_ID = "safe_question_id";
+        public static final String NOTIFICATION_MASTER_SWITCH = "notification_all";
     }
 
     public class AppLockState{
