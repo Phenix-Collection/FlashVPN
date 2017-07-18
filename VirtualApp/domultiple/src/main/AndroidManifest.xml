@@ -17,9 +17,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".components.ui.HomeActivity" android:screenOrientation="portrait" />
-        <activity android:name=".components.ui.AddCloneActivity" android:screenOrientation="portrait" />
-        <activity android:name=".components.ui.NotificationActivity" android:screenOrientation="portrait" />
-        <activity android:name=".components.ui.FaqActivity" android:screenOrientation="portrait" />
+        <activity android:name=".components.ui.AddCloneActivity" android:screenOrientation="portrait" android:exported="false"/>
+        <activity android:name=".components.ui.NotificationActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".components.ui.FaqActivity" android:screenOrientation="portrait" android:exported="false"/>
+        <activity android:name=".components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".components.ui.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
     </application>
 
 </manifest>

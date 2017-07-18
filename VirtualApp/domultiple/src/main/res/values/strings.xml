@@ -27,6 +27,35 @@
     <string name="join_us">Join Community</string>
     <string name="follow_us">Follow Us</string>
     <string name="settings">Settings</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="settings_right" translatable="false">2017 Polestar Applab All rights reserved</string>
+
+    <!-- locker -->
+    <string name="lock_settings_title">Locker Settings</string>
+    <string name="enable_lock_settings_title">Privacy Locker</string>
+    <string name="lock_interval_settings_title">Re-Lock Interval</string>
+    <string name="lock_interval_settings_content">The interval to relock the app after you left it</string>
+    <string name="enable_lock_settings_content">Toggle to enable or disable privacy locker feature</string>
+
+    <!--settings -->
+    <string name="settings_shortcut_title">Shortcut</string>
+    <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
+    <string name="settings_privacy_locker_content">Click to set privacy locker for cloned apps</string>
+    <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
+    <!--gms-->
+    <string name="settings_gms">Enable Google Play service for clones</string>
+    <string name="settings_gms_title">Google Play Service</string>
+    <string name="settings_gms_enable_toast">Google Play Service is enabled</string>
+    <string name="settings_gms_disable_toast">Google Play Service is disabled</string>
+    <string name="settings_gms_disable_notice">Disable Google play service will decrease memory and power usage, and optimize the launch speed for cloned application. But some application may not work properly if disable it. Are you sure to disable Google play service?</string>
+    <string name="settings_gms_enable_notice">Enable Google play service may consume more memory and CPU. Do you want to enable Google play service?</string>
+
+    <!--ad free-->
+    <string name="settings_adfree_title">Remove Ads</string>
+    <string name="adfree_dialog_title">Upgrade to Ad Free Version</string>
+    <string name="settings_adfree_content">Turn off Ads in the app</string>
+    <string name="adfree_dialog_content">Become premium user of Super Clone and turn off all ADs in this app. Do you want to buy now?</string>
 
     <!-- notification -->
     <string name="notification_decription">Enable or disable notifications from cloned application</string>

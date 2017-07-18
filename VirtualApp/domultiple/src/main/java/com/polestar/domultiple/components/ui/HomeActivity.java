@@ -204,6 +204,9 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                     case R.id.item_faq:
                         startActivity(new Intent(HomeActivity.this, FaqActivity.class));
                         break;
+                    case R.id.item_setting:
+                        startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
+                        break;
                 }
                 return true;
             }
