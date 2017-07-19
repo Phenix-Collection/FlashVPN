@@ -22,6 +22,7 @@ import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
+import com.polestar.domultiple.widget.locker.AppLockMonitor;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -121,6 +122,7 @@ public class PolestarApp extends Application {
                 VirtualCore.get().setComponentDelegate(delegate);
                 MLogs.d("Server process app onCreate 2");
                 MLogs.d("Server process app onCreate done");
+                AppLockMonitor.getInstance();
             }
         });
 

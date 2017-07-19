@@ -22,6 +22,9 @@
         <activity android:name=".components.ui.FaqActivity" android:screenOrientation="portrait" android:exported="false"/>
         <activity android:name=".components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".components.ui.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".components.ui.LockSecureQuestionActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".components.ui.LockSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
     </application>
 
 </manifest>

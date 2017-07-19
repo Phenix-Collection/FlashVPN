@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_divider_color">
+    android:background="@color/default_background_color">
 
 
     <LinearLayout
@@ -15,10 +15,10 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="@color/white">
+            android:background="@color/default_foreground_color">
 
             <TextView
-                android:id="@+id/text_notification_dotspace"
+                android:id="@+id/text_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -33,16 +33,16 @@
                 android:id="@+id/text_notification_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/text_notification_dotspace"
-                android:layout_below="@id/text_notification_dotspace"
-                android:layout_marginTop="13dp"
+                android:layout_alignLeft="@id/text_notification"
+                android:layout_below="@id/text_notification"
+                android:layout_marginTop="8dp"
                 android:paddingLeft="22dp"
                 android:text="@string/notification_decription"
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp"/>
 
             <com.polestar.domultiple.widget.BlueSwitch
-                android:id="@+id/switch_notification_dotspace"
+                android:id="@+id/switch_notification"
                 android:layout_width="82.5dp"
                 android:layout_height="70dp"
                 android:paddingBottom="28dp"
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
-            android:background="@color/white">
+            android:background="@color/default_foreground_color">
         </com.polestar.domultiple.widget.FixedListView>
 
     </LinearLayout>

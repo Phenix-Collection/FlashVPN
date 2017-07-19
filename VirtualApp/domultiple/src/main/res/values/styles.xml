@@ -10,7 +10,7 @@
     </style>
 
     <style name="MyListViewStyle">
-        <item name="android:divider">@color/default_divider_color</item>
+        <item name="android:divider">@color/default_background_color</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
     <style name="activityAnimationStyle">

@@ -23,6 +23,7 @@ import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
+import com.polestar.domultiple.utils.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -258,5 +259,12 @@ public class CloneManager {
     public static void killApp(String packageName) {
         MLogs.d(TAG, "packageName = " + packageName);
         VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
+    }
+
+    public static void reloadLockerSetting() {
+        String key = PreferencesUtils.getEncodedPatternPassword(PolestarApp.getApp());
+        boolean adFree = PreferencesUtils.isAdFree();
+        long interval = PreferencesUtils.getLockInterval();
+        VirtualCore.get().reloadLockerSetting(key, adFree, interval);
     }
 }

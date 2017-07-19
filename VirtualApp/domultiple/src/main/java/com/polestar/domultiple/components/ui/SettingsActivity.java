@@ -156,9 +156,9 @@ public class SettingsActivity extends BaseActivity {
 
     public void onPrivacyLockerClick(View view) {
         if (PreferencesUtils.isLockerEnabled(this) ) {
-           // LockPasswordSettingActivity.start(this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
+            LockPasswordSettingActivity.start(this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
         } else {
-          //  LockSettingsActivity.start(this,"setting");
+            LockSettingsActivity.start(this,"setting");
         }
     }
 
@@ -233,7 +233,7 @@ public class SettingsActivity extends BaseActivity {
         if (requestCode == REQUEST_UNLOCK_SETTINGS) {
             switch (resultCode) {
                 case RESULT_OK:
-                    //LockSettingsActivity.start(this, "setting");
+                    LockSettingsActivity.start(this, "setting");
                     break;
                 case RESULT_CANCELED:
                     break;

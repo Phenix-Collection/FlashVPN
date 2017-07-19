@@ -14,9 +14,9 @@
     <color name="delete_text_color">#f0eb0729</color>
     <color name="shortcut_text_color">#f048d27f</color>
     <color name="text_gray_dark">#3f3f3f</color>
-    <color name="text_gray_light">#a6a6a6</color>
-    <color name="default_bg_color">#FFFFFF</color>
-    <color name="default_divider_color">#ebebeb</color>
+    <color name="text_gray_light">#989898</color>
+    <color name="default_foreground_color">#FFFFFF</color>
+    <color name="default_background_color">#f1f1f1</color>
     <color name="faq_title_color">#00aab8</color>
     <color name="faq_content_color">@color/text_gray_dark</color>
 
@@ -26,4 +26,14 @@
     <color name="dialog_guide_content_text">#ff454545</color>
     <color name="dialog_guide_high_light_content_text">#ff2dbbfb</color>
     <color name="dialog_guide_title_text">#ff454545</color>
+
+    <color name="applock_lockpattern_pattern_path_green_light">#05f1f9</color>
+    <color name="applock_lockpattern_pattern_path_red_light">#FFEC4F62</color>
+    <color name="applock_lockpattern_pattern_path_light">#FF4A4A4A</color>
+    <color name="applock_lockpattern_pattern_path_white_light">#FFFFFFFF</color>
+    <color name="applock_scanresult_item_title">#7f7f7f</color>
+
+    <color name="blue">#005cd5</color>
+
+    <color name="native_ad_transparent_black">#64000000</color>
 </resources>

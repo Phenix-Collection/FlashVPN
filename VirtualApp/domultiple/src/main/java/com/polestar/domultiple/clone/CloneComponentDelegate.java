@@ -7,8 +7,14 @@ package com.polestar.domultiple.clone;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
+import com.polestar.domultiple.PolestarApp;
+import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.MLogs;
+import com.polestar.domultiple.utils.PreferencesUtils;
+import com.polestar.domultiple.widget.locker.AppLockMonitor;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,12 +27,12 @@ public class CloneComponentDelegate implements ComponentDelegate {
 
     private HashSet<String> pkgs = new HashSet<>();
     public void init() {
-//        List<CloneModel> list = DbManager.queryAppList(MApp.getApp());
-//        for(CloneModel app:list) {
-//            if (app.isNotificationEnable()) {
-//                pkgs.add(app.getPackageName());
-//            }
-//        }
+        List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
+        for(CloneModel app:list) {
+            if (app.getNotificationEnable()) {
+                pkgs.add(app.getPackageName());
+            }
+        }
     }
 
     @Override
@@ -37,17 +43,17 @@ public class CloneComponentDelegate implements ComponentDelegate {
     @Override
     public void beforeActivityResume(String pkg) {
         MLogs.d("beforeActivityResume " + pkg);
-        //if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
-        //AppLockMonitor.getInstance().onActivityResume(pkg);
-        //}
+        if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
+            AppLockMonitor.getInstance().onActivityResume(pkg);
+        }
     }
 
     @Override
     public void beforeActivityPause(String pkg) {
         MLogs.d("beforeActivityPause " + pkg);
-        // if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
-        //AppLockMonitor.getInstance().onActivityPause(pkg);
-        // }
+         if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
+            AppLockMonitor.getInstance().onActivityPause(pkg);
+         }
     }
 
     @Override
@@ -68,6 +74,6 @@ public class CloneComponentDelegate implements ComponentDelegate {
 
     @Override
     public void reloadLockerSetting(String newKey, boolean adFree, long interval) {
-       // AppLockMonitor.getInstance().reloadSetting(newKey, adFree, interval);
+       AppLockMonitor.getInstance().reloadSetting(newKey, adFree, interval);
     }
 }

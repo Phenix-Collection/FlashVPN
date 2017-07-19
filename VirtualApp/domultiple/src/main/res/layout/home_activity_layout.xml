@@ -20,6 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:numColumns="3"
+                android:horizontalSpacing="1dp"
+                android:verticalSpacing="1dp"
                 android:scrollbars="none">
 
             </com.polestar.domultiple.widget.FixedGridView>

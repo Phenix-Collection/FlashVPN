@@ -4,6 +4,7 @@ package com.polestar.domultiple.components.ui;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
@@ -35,6 +36,7 @@ import com.polestar.domultiple.widget.dragdrop.DragImageView;
 import com.polestar.domultiple.widget.dragdrop.DragLayer;
 import com.polestar.domultiple.widget.dragdrop.DragSource;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -59,6 +61,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private TextView createDropTxt;
     private ExplosionField mExplosionField;
     private PopupMenu homeMenuPopup;
+    private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
     @Override
     protected boolean useCustomTitleBar() {
@@ -187,6 +190,17 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         gridAdapter.notifyDataSetChanged(mClonedList);
     }
 
+    public static boolean isDebugMode(){
+        try {
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "polestarunlocktest");
+            if (file.exists()) {
+                return true;
+            }
+        } catch (Exception e) {
+            MLogs.e(e);
+        }
+        return false;
+    }
     public void onMenuClick(View view) {
         View more = findViewById(R.id.menu_more);
         if (homeMenuPopup == null) {
@@ -206,6 +220,13 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                         break;
                     case R.id.item_setting:
                         startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
+                        break;
+                    case R.id.item_locker:
+                        if (PreferencesUtils.isLockerEnabled(HomeActivity.this) || isDebugMode()) {
+                            LockPasswordSettingActivity.start(HomeActivity.this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
+                        } else {
+                            LockSettingsActivity.start(HomeActivity.this,"home");
+                        }
                         break;
                 }
                 return true;
@@ -313,5 +334,19 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_UNLOCK_SETTINGS) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    LockSettingsActivity.start(this, "home");
+                    break;
+                case RESULT_CANCELED:
+                    break;
+            }
+            return;
+        }
     }
 }
