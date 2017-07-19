@@ -32,6 +32,11 @@
         android:icon="@drawable/notification_icon_small"
         />
     <item
+        android:id="@+id/item_feedback"
+        android:title="@string/feedback"
+        android:icon="@drawable/notification_icon_small"
+        />
+    <item
         android:id="@+id/item_setting"
         android:title="@string/settings"
         android:icon="@drawable/notification_icon_small"

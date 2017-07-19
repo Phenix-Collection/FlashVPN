@@ -68,21 +68,6 @@ public class SelectPkgGridAdapter  extends BaseAdapter{
                 cb.setImageResource(R.drawable.not_select);
             }
         }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SelectGridAppItem item = (SelectGridAppItem) view.getTag();
-                if (item != null) {
-                    ImageView cbox = (ImageView) view.findViewById(R.id.select_cb_img);
-                    item.selected = !item.selected;
-                    if (item.selected) {
-                        cbox.setImageResource(R.drawable.selectd);
-                    } else{
-                        cbox.setImageResource(R.drawable.not_select);
-                    }
-                }
-            }
-        });
         view.setTag(appModel);
         return view;
     }

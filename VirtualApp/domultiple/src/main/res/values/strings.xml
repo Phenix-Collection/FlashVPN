@@ -4,12 +4,12 @@
     <string name="share_with_friends">Share With Friends</string>
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
     <string name="feel_lucky">Feel Lucky</string>
-    <string name="add_clone_title">Create Multiple</string>
+    <string name="add_clone_title">Create Clone</string>
     <string name="hot_clone_title">Hot Cloned</string>
     <string name="hot_clone_detail">Millions of users create clone for below applications</string>
     <string name="other_clone_title">More Supported Apps</string>
     <string name="other_clone_detail">Create clone to have multiple accounts login and online at the same time</string>
-    <string name="clone_action_txt">Clone with Do Multiple</string>
+    <string name="clone_action_txt">Clone with Do Multiple %s</string>
     <string name="no_selection_for_clone">Please click and select items to clone.</string>
     <string name="create_shortcut">Shortcut</string>
     <string name="delete">Delete</string>
@@ -17,13 +17,23 @@
     <string name="delete_dialog_title">Caution</string>
     <string name="delete_dialog_content">Delete clone will totally remove its data. Do you want to continue?</string>
     <string name="yes">Yes</string>
-    <string name="no_thanks">No,thanks</string>
     <string name="notification">Notification</string>
     <string name="privacy_locker">Privacy Locker</string>
     <string name="faq">FAQ</string>
+    <string name="ok">OK</string>
+    <string name="congratulations">Congratulations</string>
+    <string name="dialog_rating_us_content">Enjoy using Do Multiple app?</string>
+    <string name="dialog_feedback_content">Would you kindly give us some feedback to help improve it?</string>
+    <string name="not_really">Not Really</string>
+    <string name="no_thanks">No, thanks</string>
+    <string name="dialog_love_title">Love Do Multiple</string>
+    <string name="dialog_love_content">Would you mind give us a 5-star rating on the Play Store? It will inspire us and we appreciate your support!</string>
+    <string name="remind_me_later">Remind me later</string>
+    <string name="star_rating">Go 5-star rating now</string>
+    <string name="feedback">Feedback</string>
     <string name="ad_free">Remove Ads</string>
     <string name="share">Share</string>
-    <string name="rate_us">Like it</string>
+    <string name="rate_us">Like It</string>
     <string name="join_us">Join Community</string>
     <string name="follow_us">Follow Us</string>
     <string name="settings">Settings</string>
@@ -91,11 +101,19 @@
     <string name="settings_adfree_title">Remove Ads</string>
     <string name="adfree_dialog_title">Upgrade to Ad Free Version</string>
     <string name="settings_adfree_content">Turn off Ads in the app</string>
-    <string name="adfree_dialog_content">Become premium user of Super Clone and turn off all ADs in this app. Do you want to buy now?</string>
+    <string name="adfree_dialog_content">Become premium user of Do Multiple and turn off all ADs in this app. Do you want to buy now?</string>
 
     <!-- notification -->
     <string name="notification_decription">Enable or disable notifications from cloned application</string>
     <string name="notification_detail_setting">Enable notification for app</string>
+
+    <!-- feedback -->
+    <string name="feedback_hint">Please tell us the detail about the problem you met , and please tell us the steps to reproduce it and better with screenshot.</string>
+    <string name="button_submit">Submit</string>
+    <string name="submit_success">Thanks for providing feedback!</string>
+    <string name="feedback_no_description">Description can not be empty!</string>
+    <string name="feedback_go_faq">Click here to check our handy FAQ.</string>
+    <string name="extra_feedback_decription">We will resolve the issue for you ASAP and appreciate your help to improve the product!</string>
 
     <!-- FAQ -->
     <string name="text_Q1_title">Q1: Why cannot I receive message notifications from Do Multiple enabled apps?</string>

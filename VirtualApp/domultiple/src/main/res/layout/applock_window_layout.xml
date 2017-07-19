@@ -26,7 +26,7 @@
         android:orientation="vertical"
         android:paddingTop="50dp">
 
-        <com.polestar.multiaccount.widgets.FeedbackImageView
+        <com.polestar.domultiple.widget.locker.LockIconImageView
             android:id="@+id/window_applock_icon"
             android:layout_width="70dp"
             android:layout_height="70dp"
@@ -53,7 +53,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:clipChildren="false">
-        <com.polestar.multiaccount.widgets.locker.LockPatternView
+        <com.polestar.domultiple.widget.locker.LockPatternView
             android:id="@+id/applock_pattern_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

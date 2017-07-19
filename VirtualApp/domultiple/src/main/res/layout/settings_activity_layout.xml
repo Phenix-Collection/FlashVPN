@@ -249,7 +249,7 @@
             android:textSize="15sp" />
         <TextView
             android:id="@+id/version_info"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

@@ -25,20 +25,23 @@
                     android:id="@+id/hot_clone_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:text="@string/hot_clone_title"
+                    android:textColor="@color/text_gray_dark"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/hot_clone_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/hot_clone_detail"
+                    android:textColor="@color/text_gray_light"
                     android:textSize="12sp" />
 
                 <com.polestar.domultiple.widget.FixedGridView
@@ -47,6 +50,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center|center_horizontal|center_vertical"
                     android:numColumns="3"
+                    android:horizontalSpacing="4dp"
+                    android:verticalSpacing="4dp"
                     android:scrollbars="none"></com.polestar.domultiple.widget.FixedGridView>
             </LinearLayout>
 
@@ -70,8 +75,9 @@
                     android:id="@+id/other_clone_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:text="@string/other_clone_title"
                     android:textSize="16sp" />
 
@@ -79,11 +85,11 @@
                     android:id="@+id/other_clone_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/other_clone_detail"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:text="@string/other_clone_detail"
                     android:textSize="12sp" />
 
                 <com.polestar.domultiple.widget.FixedGridView
@@ -92,24 +98,30 @@
                     android:layout_height="wrap_content"
                     android:gravity="center|center_horizontal|center_vertical"
                     android:numColumns="3"
-                    android:scrollbars="none"></com.polestar.domultiple.widget.FixedGridView>
+                    android:scrollbars="none"
+                    android:horizontalSpacing="4dp"
+                    android:verticalSpacing="4dp"
+                    android:layout_marginBottom="60dp">
+                </com.polestar.domultiple.widget.FixedGridView>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/clone_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
         android:layout_marginBottom="10dp"
         android:layout_gravity="bottom|center"
         android:text="@string/clone_action_txt"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:background="@drawable/shape_clone_action"
+        android:background="@drawable/general_button"
+        android:enabled="false"
         android:onClick="onCloneClick"/>
 </FrameLayout>

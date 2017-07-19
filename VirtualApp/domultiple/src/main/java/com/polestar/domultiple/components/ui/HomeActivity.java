@@ -63,6 +63,11 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private PopupMenu homeMenuPopup;
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
+    private boolean rateDialogShowed = false;
+    private static final String RATE_FROM_QUIT = "quit";
+    private static final String RATE_AFTER_CLONE = "clone";
+    private static final String RATE_FROM_MENU = "menu";
+
     @Override
     protected boolean useCustomTitleBar() {
         return false;
@@ -228,6 +233,16 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                             LockSettingsActivity.start(HomeActivity.this,"home");
                         }
                         break;
+                    case R.id.item_rate:
+                        showRateDialog("menu", "");
+                        break;
+                    case R.id.item_feedback:
+                        Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
+                        startActivity(feedback);
+                        break;
+                    case R.id.item_share:
+                        CommonUtils.shareWithFriends(HomeActivity.this);
+                        break;
                 }
                 return true;
             }
@@ -348,5 +363,64 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             }
             return;
         }
+    }
+
+    private void showRateDialog(String from, String pkg){
+        if (RATE_AFTER_CLONE.equals(from) || RATE_FROM_QUIT.equals(from)){
+            if (rateDialogShowed ) {
+                MLogs.d("Already showed dialog this time");
+                return;
+            }
+            rateDialogShowed= true;
+        }
+        PreferencesUtils.updateRateDialogTime(this);
+        String title = RATE_AFTER_CLONE.equals(from) ? getString(R.string.congratulations) : getString(R.string.rate_us);
+        UpDownDialog.show(this, title,
+                getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
+                getString(R.string.yes), R.drawable.dialog_tag_congratulations,
+                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                PreferencesUtils.setLoveApp(false);
+                                UpDownDialog.show(HomeActivity.this, getString(R.string.feedback),
+                                        getString(R.string.dialog_feedback_content),
+                                        getString(R.string.no_thanks),
+                                        getString(R.string.ok), R.drawable.dialog_tag_comment,
+                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which) {
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
+                                                        startActivity(feedback);
+                                                        break;
+                                                }
+                                            }
+                                        });
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                PreferencesUtils.setLoveApp(true);
+                                UpDownDialog.show(HomeActivity.this, getString(R.string.dialog_love_title),
+                                        getString(R.string.dialog_love_content),
+                                        getString(R.string.remind_me_later),
+                                        getString(R.string.star_rating), R.drawable.dialog_tag_love,
+                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which) {
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        PreferencesUtils.setRated(true);
+                                                        CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                                        break;
+                                                }
+                                            }
+                                        });
+                                break;
+                        }
+                    }
+                });
+
     }
 }

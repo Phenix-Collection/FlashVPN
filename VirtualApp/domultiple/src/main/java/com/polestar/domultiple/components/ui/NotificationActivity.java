@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
@@ -14,6 +15,8 @@ import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.widget.BlueSwitch;
 import com.polestar.domultiple.widget.FixedListView;
 import com.polestar.domultiple.widget.PackageSwitchListAdapter;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class NotificationActivity extends BaseActivity {
     private PackageSwitchListAdapter mNotificationAdapter;
     private List<CloneModel> mClonedModels;
     private Context mContext;
+    private TextView mPerAppTxt;
 
 
     @Override
@@ -74,15 +78,23 @@ public class NotificationActivity extends BaseActivity {
                 PreferencesUtils.putBoolean(mContext, AppConstants.PreferencesKey.NOTIFICATION_MASTER_SWITCH, val);
                 if (val) {
                     mListView.setVisibility(View.VISIBLE);
+                    if (mClonedModels.size() > 0) {
+                        mPerAppTxt.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     for (CloneModel model: mClonedModels) {
                         model.setNotificationEnable(false);
                     }
                     mNotificationAdapter.notifyDataSetChanged();
                     mListView.setVisibility(View.INVISIBLE);
+                    mPerAppTxt.setVisibility(View.INVISIBLE);
                 }
             }
         });
+        mPerAppTxt = (TextView) findViewById(R.id.enable_per_app_txt);
+        if (mClonedModels.size() == 0) {
+            mPerAppTxt.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

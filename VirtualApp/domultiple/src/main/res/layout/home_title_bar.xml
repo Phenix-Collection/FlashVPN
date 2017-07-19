@@ -19,6 +19,7 @@
             android:layout_marginStart="20dp"
             android:text="@string/app_name"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:textSize="20sp" />
 
         <ImageView

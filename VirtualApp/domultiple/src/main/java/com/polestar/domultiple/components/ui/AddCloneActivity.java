@@ -14,9 +14,12 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.polestar.domultiple.R;
@@ -27,6 +30,8 @@ import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.SelectGridAppItem;
 import com.polestar.domultiple.widget.SelectPkgGridAdapter;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,7 +41,7 @@ import java.util.List;
  * Created by guojia on 2017/7/16.
  */
 
-public class AddCloneActivity extends BaseActivity {
+public class AddCloneActivity extends BaseActivity implements AdapterView.OnItemClickListener{
     private static final int APP_LIST_READY = 0;
     private static final String CONFIG_HOT_CLONE_LIST = "hot_clone_list";
     private List<SelectGridAppItem> hotAppList = new ArrayList<>();
@@ -46,12 +51,15 @@ public class AddCloneActivity extends BaseActivity {
     private LinearLayout otherAppLayout;
     private GridView hotAppGridView;
     private GridView otherAppGridView;
+    private TextView cloneButton;
+    private int selected;
 
     private Handler mHandler = new Handler(Looper.myLooper()){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case APP_LIST_READY:
+                    selected = 0;
                     updateGrid();
                     break;
             }
@@ -66,6 +74,7 @@ public class AddCloneActivity extends BaseActivity {
             hotAppLayout.setVisibility(View.VISIBLE);
             SelectPkgGridAdapter adapter = new SelectPkgGridAdapter(this,hotAppList);
             hotAppGridView.setAdapter(adapter);
+            hotAppGridView.setOnItemClickListener(this);
             adapter.notifyDataSetChanged();
             //setGrideViewHeightBasedOnChildren(hotAppGridView);
         }
@@ -76,6 +85,7 @@ public class AddCloneActivity extends BaseActivity {
             otherAppLayout.setVisibility(View.VISIBLE);
             SelectPkgGridAdapter adapter = new SelectPkgGridAdapter(this,otherAppList);
             otherAppGridView.setAdapter(adapter);
+            otherAppGridView.setOnItemClickListener(this);
             adapter.notifyDataSetChanged();
         }
 
@@ -94,11 +104,13 @@ public class AddCloneActivity extends BaseActivity {
 
     private void initView() {
         setContentView(R.layout.add_clone_activity_layout);
-        setTitle(R.string.add_clone_title);
+        setTitle(getString(R.string.add_clone_title));
         hotAppLayout = (LinearLayout) findViewById(R.id.hot_clone_layout);
         hotAppGridView = (GridView) findViewById(R.id.hot_clone_grid);
         otherAppLayout = (LinearLayout) findViewById(R.id.other_clone_layout);
         otherAppGridView = (GridView) findViewById(R.id.other_clone_grid);
+        cloneButton = (TextView)findViewById(R.id.clone_button);
+        cloneButton.setText(String.format(getString(R.string.clone_action_txt), ""));
     }
 
     private void loadAppListAsync() {
@@ -169,5 +181,38 @@ public class AddCloneActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SelectGridAppItem item = (SelectGridAppItem) view.getTag();
+                if (item != null) {
+                    ImageView cbox = (ImageView) view.findViewById(R.id.select_cb_img);
+                    View cover = findViewById(R.id.cover);
+                    if (cbox != null) {
+                        item.selected = !item.selected;
+                        if (item.selected) {
+                            selected ++;
+                            cbox.setImageResource(R.drawable.selectd);
+                        } else {
+                            selected --;
+                            cbox.setImageResource(R.drawable.not_select);
+                        }
+                        if (selected > 0) {
+                            cloneButton.setText(String.format(getString(R.string.clone_action_txt), "(" + selected + ")"));
+                            cloneButton.setEnabled(true);
+                            cover.setVisibility(View.INVISIBLE);
+                        } else {
+                            cloneButton.setText(String.format(getString(R.string.clone_action_txt), ""));
+                            cloneButton.setEnabled(false);
+                            cover.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+        });
     }
 }
