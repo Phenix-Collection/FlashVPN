@@ -19,6 +19,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
     private GridView otherAppGridView;
     private TextView cloneButton;
     private int selected;
+    private ProgressBar progressBar;
 
     private Handler mHandler = new Handler(Looper.myLooper()){
         @Override
@@ -60,6 +62,8 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
             switch (msg.what) {
                 case APP_LIST_READY:
                     selected = 0;
+                    progressBar.setVisibility(View.GONE);
+                    cloneButton.setVisibility(View.VISIBLE);
                     updateGrid();
                     break;
             }
@@ -111,6 +115,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         otherAppGridView = (GridView) findViewById(R.id.other_clone_grid);
         cloneButton = (TextView)findViewById(R.id.clone_button);
         cloneButton.setText(String.format(getString(R.string.clone_action_txt), ""));
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
     }
 
     private void loadAppListAsync() {
@@ -176,6 +181,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 selected = true;
             }
         }
+        MLogs.d("on clone button click");
         if (!selected) {
             Toast.makeText(this, R.string.no_selection_for_clone, Toast.LENGTH_LONG).show();
         } else {
@@ -185,34 +191,31 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SelectGridAppItem item = (SelectGridAppItem) view.getTag();
-                if (item != null) {
-                    ImageView cbox = (ImageView) view.findViewById(R.id.select_cb_img);
-                    View cover = findViewById(R.id.cover);
-                    if (cbox != null) {
-                        item.selected = !item.selected;
-                        if (item.selected) {
-                            selected ++;
-                            cbox.setImageResource(R.drawable.selectd);
-                        } else {
-                            selected --;
-                            cbox.setImageResource(R.drawable.not_select);
-                        }
-                        if (selected > 0) {
-                            cloneButton.setText(String.format(getString(R.string.clone_action_txt), "(" + selected + ")"));
-                            cloneButton.setEnabled(true);
-                            cover.setVisibility(View.INVISIBLE);
-                        } else {
-                            cloneButton.setText(String.format(getString(R.string.clone_action_txt), ""));
-                            cloneButton.setEnabled(false);
-                            cover.setVisibility(View.VISIBLE);
-                        }
-                    }
+        SelectGridAppItem item = (SelectGridAppItem) view.getTag();
+        if (item != null) {
+            ImageView cbox = (ImageView) view.findViewById(R.id.select_cb_img);
+            View cover = view.findViewById(R.id.cover);
+            if (cbox != null) {
+                item.selected = !item.selected;
+                if (item.selected) {
+                    selected ++;
+                    cbox.setImageResource(R.drawable.selectd);
+                    cover.setVisibility(View.INVISIBLE);
+                } else {
+                    selected --;
+                    cbox.setImageResource(R.drawable.not_select);
+                    cover.setVisibility(View.VISIBLE);
+                }
+                if (selected > 0) {
+                    cloneButton.setText(String.format(getString(R.string.clone_action_txt), "(" + selected + ")"));
+                    cloneButton.setEnabled(true);
+
+                } else {
+                    cloneButton.setText(String.format(getString(R.string.clone_action_txt), ""));
+                    cloneButton.setEnabled(false);
+
                 }
             }
-        });
+        }
     }
 }

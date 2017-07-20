@@ -57,8 +57,8 @@ public class HomeGridAdapter extends BaseAdapter {
         if (showLucky) {
             size ++;
         }
-        if ( size < 6 ) {
-            size = 6;
+        if ( size < 9 ) {
+            size = 9;
         } else {
             size = size + 3 - (size % 3);
         }

@@ -5,9 +5,10 @@
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
     <string name="feel_lucky">Feel Lucky</string>
     <string name="add_clone_title">Create Clone</string>
+    <string name="creating_clones">Creating Clones ...</string>
     <string name="hot_clone_title">Hot Cloned</string>
     <string name="hot_clone_detail">Millions of users create clone for below applications</string>
-    <string name="other_clone_title">More Supported Apps</string>
+    <string name="other_clone_title">More Supported</string>
     <string name="other_clone_detail">Create clone to have multiple accounts login and online at the same time</string>
     <string name="clone_action_txt">Clone with Do Multiple %s</string>
     <string name="no_selection_for_clone">Please click and select items to clone.</string>

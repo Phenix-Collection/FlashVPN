@@ -61,6 +61,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private TextView createDropTxt;
     private ExplosionField mExplosionField;
     private PopupMenu homeMenuPopup;
+    private View mProgressBar;
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
     private boolean rateDialogShowed = false;
@@ -88,9 +89,25 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (CloneManager.getInstance(this).hasPendingClones()) {
+            MLogs.d("Has pending clones");
+            mProgressBar.setVisibility(View.VISIBLE);
+            mProgressBar.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mProgressBar.setVisibility(View.GONE);
+                }
+            }, 60*1000);
+        }
+    }
+
     private void initView() {
         setContentView(R.layout.home_activity_layout);
         cloneGridView = (GridView) findViewById(R.id.clone_grid_view);
+        mProgressBar = findViewById(R.id.progressBar);
         gridAdapter = new HomeGridAdapter(this);
         cloneGridView.setAdapter(gridAdapter);
         cloneGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -176,6 +193,9 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         mClonedList = cm.getClonedApps();
         if (result && PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
             CommonUtils.createShortCut(this, clonedApp);
+        }
+        if (!CloneManager.getInstance(this).hasPendingClones()) {
+            mProgressBar.setVisibility(View.GONE);
         }
         gridAdapter.notifyDataSetChanged(mClonedList);
     }

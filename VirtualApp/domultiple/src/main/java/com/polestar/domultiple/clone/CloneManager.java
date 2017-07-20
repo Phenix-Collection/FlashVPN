@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.text.TextUtils;
 
@@ -39,6 +40,13 @@ public class CloneManager {
     private OnClonedAppChangListener loadedListener;
     private boolean isLoading;
     private Context mContext;
+    private HandlerThread mWorkThread;
+    private Handler mWorkHandler;
+    private List<CloneModel> mPendingClones = new ArrayList<>();
+
+    public boolean hasPendingClones() {
+        return mPendingClones.size() > 0;
+    }
 
     public interface OnClonedAppChangListener {
         void onInstalled(CloneModel clonedApp, boolean result);
@@ -62,18 +70,19 @@ public class CloneManager {
             return;
         }
         isLoading = true;
-        new Thread(new Runnable() {
+        mWorkHandler.post(new Runnable() {
             @Override
             public void run() {
                 loadClonedApp(context);
                 isLoading = false;
             }
-        }).start();
+        });
 //        new LoadClonedAppTask(context).execute();
     }
 
     public void createClone(Context context, CloneModel appModel) {
-        new Thread(new Runnable() {
+        mPendingClones.add(appModel);
+        mWorkHandler.post(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -88,6 +97,7 @@ public class CloneManager {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            mPendingClones.remove(appModel);
                             if (loadedListener != null) {
                                 loadedListener.onInstalled(appModel, result.isSuccess);
                             }
@@ -97,11 +107,11 @@ public class CloneManager {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
     }
 
     public void deleteClone(Context context, String packageName) {
-        new Thread(new Runnable() {
+        mWorkHandler.post(new Runnable() {
             @Override
             public void run() {
                 if(!TextUtils.isEmpty(packageName)){
@@ -128,7 +138,7 @@ public class CloneManager {
                     }
                 }
             }
-        }).start();
+        });
     }
 
     private void loadClonedApp(Context context){
@@ -163,6 +173,9 @@ public class CloneManager {
         mClonedApps = new ArrayList<>();
         mHandler = new Handler(Looper.getMainLooper());
         mContext = context;
+        mWorkThread = new HandlerThread("clone-worker");
+        mWorkThread.start();
+        mWorkHandler = new Handler(mWorkThread.getLooper());
     }
 
     public List<CloneModel> getClonedApps(){

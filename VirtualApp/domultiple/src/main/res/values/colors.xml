@@ -37,5 +37,5 @@
     <color name="button_disabled_color">#c1c1c1</color>
 
     <color name="native_ad_transparent_black">#64000000</color>
-    <color name="transparent_gray_cover">#55686868</color>
+    <color name="transparent_gray_cover">#55dddddd</color>
 </resources>
