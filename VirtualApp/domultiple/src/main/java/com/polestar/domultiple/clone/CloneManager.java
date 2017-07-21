@@ -6,9 +6,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Process;
 import android.text.TextUtils;
 
 import com.lody.virtual.client.core.InstallStrategy;
@@ -18,6 +20,7 @@ import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.InstallResult;
+import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
@@ -27,6 +30,7 @@ import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -43,6 +47,7 @@ public class CloneManager {
     private HandlerThread mWorkThread;
     private Handler mWorkHandler;
     private List<CloneModel> mPendingClones = new ArrayList<>();
+    private static HashSet<String> blackList = new HashSet<>();
 
     public boolean hasPendingClones() {
         return mPendingClones.size() > 0;
@@ -176,6 +181,22 @@ public class CloneManager {
         mWorkThread = new HandlerThread("clone-worker");
         mWorkThread.start();
         mWorkHandler = new Handler(mWorkThread.getLooper());
+        blackList.add("com.google.android.music");
+        blackList.add("com.google.android.dialer");
+        Intent home = new Intent(Intent.ACTION_MAIN);
+        home.addCategory(Intent.CATEGORY_HOME);
+        List<ResolveInfo> list  = context.getPackageManager().queryIntentActivities(home, 0);
+        for (ResolveInfo ri: list) {
+            blackList.add(ri.activityInfo.applicationInfo.packageName);
+            MLogs.logBug("Add black: " + ri.activityInfo.applicationInfo.packageName);
+        }
+        Intent input = new Intent("android.view.InputMethod");
+        list = context.getPackageManager().queryIntentActivities(input, 0);
+        for (ResolveInfo ri: list) {
+            blackList.add(ri.serviceInfo.applicationInfo.packageName);
+            MLogs.logBug("Add black: " + ri.serviceInfo.applicationInfo.packageName);
+        }
+
     }
 
     public List<CloneModel> getClonedApps(){
@@ -224,23 +245,6 @@ public class CloneManager {
         }
     }
 
-    private static final String[] GMS_PKG = {
-            "com.android.vending",
-
-            "com.google.android.gsf",
-            "com.google.android.gsf.login",
-            "com.google.android.gms",
-
-            "com.google.android.backuptransport",
-            "com.google.android.backup",
-            "com.google.android.configupdater",
-            "com.google.android.syncadapters.contacts",
-            "com.google.android.feedback",
-            "com.google.android.onetimeinitializer",
-            "com.google.android.partnersetup",
-            "com.google.android.setupwizard",
-            "com.google.android.syncadapters.calendar",};
-
     public boolean isClonable(String pkg) {
         if ( GmsSupport.isGmsFamilyPackage(pkg) ) {
             return false;
@@ -254,14 +258,19 @@ public class CloneManager {
             if (ai.sourceDir.contains("/system/priv-app")) {
                 return false;
             }
+            if (ai.uid < Process.FIRST_APPLICATION_UID) {
+                return false;
+            }
+            if (ai.processName.equals("android.process.acore")){
+                return false;
+            }
+            if (blackList.contains(ai.packageName)) {
+                return false;
+            }
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
         return true;
-    }
-
-    public static String[] getPreInstalledPkgs() {
-        return GMS_PKG;
     }
 
     public static boolean isAppInstalled(String packageName) {
@@ -279,5 +288,28 @@ public class CloneManager {
         boolean adFree = PreferencesUtils.isAdFree();
         long interval = PreferencesUtils.getLockInterval();
         VirtualCore.get().reloadLockerSetting(key, adFree, interval);
+    }
+
+    public final CloneModel getCloneModel(String packageName) {
+        if (packageName == null) {
+            return null;
+        }
+        if (mClonedApps.size() > 0) {
+            for (CloneModel model:mClonedApps) {
+                if (model.getPackageName().equals(packageName)) {
+                    return model;
+                }
+            }
+        } else {
+            List<CloneModel> appModels = DBManager.queryCloneModelByPackageName(mContext, packageName);
+            if (appModels != null && appModels.size() > 0) {
+                return appModels.get(0);
+            }
+        }
+        return null;
+    }
+
+    public static boolean isAppRunning(String pkg) {
+        return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId());
     }
 }

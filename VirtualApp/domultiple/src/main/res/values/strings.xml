@@ -12,10 +12,13 @@
     <string name="other_clone_detail">Create clone in another space and enjoy more fun!</string>
     <string name="clone_action_txt">Clone with Do Multiple %s</string>
     <string name="app_slogan">Do Multiple, Do More Fun!</string>
+    <string name="app_slogan_line1">Do Multiple</string>
+    <string name="app_slogan_line2">Do More Fun</string>
     <string name="no_selection_for_clone">Please click and select items to clone.</string>
     <string name="create_shortcut">Shortcut</string>
     <string name="delete">Delete</string>
     <string name="toast_shortcut_added">Shortcut added</string>
+    <string name="toast_shortcut_invalid">Shortcut is invalid</string>
     <string name="delete_dialog_title">Caution</string>
     <string name="delete_dialog_content">Delete clone will totally remove its data. Do you want to continue?</string>
     <string name="yes">Yes</string>
@@ -42,6 +45,11 @@
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="settings_right" translatable="false">2017 Polestar Applab All rights reserved</string>
+
+    <!-- app loading -->
+    <string name="app_starting_tips">%s is starting ...</string>
+    <string name="first_start_tips">It may take a little longer for the first start.</string>
+    <string name="upgrade_start_tips">It may take a little longer as this app was just upgraded.</string>
 
     <!-- locker -->
     <string name="lock_settings_title">Locker Settings</string>

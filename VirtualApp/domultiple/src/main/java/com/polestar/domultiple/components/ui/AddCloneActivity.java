@@ -160,7 +160,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                     item.name = resolveInfo.activityInfo.loadLabel(pm);
                     item.selected = false;
                     item.pkg = pkgName;
-                    if (hotCloneSet.contains(pkgName)) {
+                    if (hotCloneSet.contains(pkgName) && hotAppList.size() < 6) {
                         hotAppList.add(item);
                     } else{
                         otherAppList.add(item);

@@ -17,6 +17,7 @@ import com.polestar.ad.AdConstants;
 import com.polestar.domultiple.billing.BillingProvider;
 import com.polestar.domultiple.clone.CloneApiDelegate;
 import com.polestar.domultiple.clone.CloneComponentDelegate;
+import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
@@ -85,6 +86,7 @@ public class PolestarApp extends Application {
                 //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
+                //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                 //
             }
 

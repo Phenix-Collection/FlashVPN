@@ -25,7 +25,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long time = System.currentTimeMillis();
-        //setContentView(R.layout.activity_mylauncher);
+        setContentView(R.layout.splash_activity_layout);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
 //        FuseAdLoader adLoader = FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this.getApplicationContext());
 //        adLoader.setBannerAdSize(HomeFragment.getBannerSize());
@@ -46,7 +46,7 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 enterHome();
             }
-        }, 2000 - delta);
+        }, 2500 - delta);
 
     }
 

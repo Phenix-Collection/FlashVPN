@@ -119,7 +119,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 int addIdx = showLucky? luckyIdx + 1 : luckyIdx;
                 if (i < mClonedList.size()) {
                     CloneModel model = (CloneModel)gridAdapter.getItem(i);
-                    CloneManager.launchApp(model.getPackageName());
+                    AppLoadingActivity.startAppStartActivity(HomeActivity.this, model.getPackageName(), model.getLaunched() == 0);
                     if (model.getLaunched() == 0) {
                         model.setLaunched(1);
                         DBManager.updateCloneModel(HomeActivity.this, model);

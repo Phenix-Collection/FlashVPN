@@ -4,7 +4,8 @@
     <color name="colorPrimary">#668184</color>
     <color name="colorPrimaryDark">#394647</color>
     <color name="colorAccent">#ff48d27f</color>
-    <color name="title_bar_bg">#668184</color>
+    <color name="title_bar_bg">#4b6163</color>
+    <color name="app_loading_bg">#FFFFFF</color>
     <color name="title_bar_text_color">#FFFFFF</color>
     <color name="lucky_red">#fd7921</color>
     <color name="theme_text_color">#FF4A4A4A</color>
@@ -16,7 +17,8 @@
     <color name="text_gray_dark">#3f3f3f</color>
     <color name="text_gray_light">#989898</color>
     <color name="default_foreground_color">#FFFFFF</color>
-    <color name="default_background_color">#f1f1f1</color>
+    <color name="default_background_color">#ededed</color>
+    <color name="home_pressed_color">#e1e1e1</color>
     <color name="faq_title_color">#00aab8</color>
     <color name="faq_content_color">@color/text_gray_dark</color>
 

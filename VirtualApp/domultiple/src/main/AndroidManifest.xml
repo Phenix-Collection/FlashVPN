@@ -16,7 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".components.ui.HomeActivity" android:screenOrientation="portrait" />
+        <activity android:name=".components.ui.HomeActivity" android:screenOrientation="portrait" android:launchMode="singleTask"/>
         <activity android:name=".components.ui.AddCloneActivity" android:screenOrientation="portrait" android:exported="false"/>
         <activity android:name=".components.ui.NotificationActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".components.ui.FaqActivity" android:screenOrientation="portrait" android:exported="false"/>
@@ -26,6 +26,11 @@
         <activity android:name=".components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".components.ui.LockSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".components.ui.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".components.ui.AppLoadingActivity" android:screenOrientation="portrait" android:exported="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:taskAffinity="com.polestar.domultiple.launch"/>
 
 
         <activity android:name="com.google.android.gms.ads.AdActivity"
