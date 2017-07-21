@@ -7,10 +7,11 @@
     <string name="add_clone_title">Create Clone</string>
     <string name="creating_clones">Creating Clones ...</string>
     <string name="hot_clone_title">Hot Cloned</string>
-    <string name="hot_clone_detail">Millions of users create clone for below applications</string>
+    <string name="hot_clone_detail">Enjoy double fun with double accounts online meanwhile!</string>
     <string name="other_clone_title">More Supported</string>
-    <string name="other_clone_detail">Create clone to have multiple accounts login and online at the same time</string>
+    <string name="other_clone_detail">Create clone in another space and enjoy more fun!</string>
     <string name="clone_action_txt">Clone with Do Multiple %s</string>
+    <string name="app_slogan">Do Multiple, Do More Fun!</string>
     <string name="no_selection_for_clone">Please click and select items to clone.</string>
     <string name="create_shortcut">Shortcut</string>
     <string name="delete">Delete</string>

@@ -73,6 +73,12 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
     private void updateGrid() {
         if (hotAppList == null || hotAppList.size() == 0) {
             hotAppLayout.setVisibility(View.GONE);
+            View otherTitle = findViewById(R.id.other_clone_title);
+            View otherDetail = findViewById(R.id.other_clone_detail);
+            View noHotTitle = findViewById(R.id.no_hot_title);
+            otherDetail.setVisibility(View.GONE);
+            otherTitle.setVisibility(View.GONE);
+            noHotTitle.setVisibility(View.VISIBLE);
         } else {
             MLogs.d("Hot app size: " + hotAppList.size());
             hotAppLayout.setVisibility(View.VISIBLE);

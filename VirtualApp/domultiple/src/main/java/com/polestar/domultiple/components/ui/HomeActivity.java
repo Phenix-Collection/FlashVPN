@@ -30,6 +30,7 @@ import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.widget.DropableLinearLayout;
 import com.polestar.domultiple.widget.ExplosionField;
 import com.polestar.domultiple.widget.HomeGridAdapter;
+import com.polestar.domultiple.widget.NarrowPromotionCard;
 import com.polestar.domultiple.widget.UpDownDialog;
 import com.polestar.domultiple.widget.dragdrop.DragController;
 import com.polestar.domultiple.widget.dragdrop.DragImageView;
@@ -61,6 +62,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private TextView createDropTxt;
     private ExplosionField mExplosionField;
     private PopupMenu homeMenuPopup;
+    private NarrowPromotionCard functionCard;
     private View mProgressBar;
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
@@ -186,6 +188,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         });
 
         mExplosionField = ExplosionField.attachToWindow(this);
+        functionCard = (NarrowPromotionCard) findViewById(R.id.narrow_function_card);
+        functionCard.init(R.drawable.icon_locker_small, R.string.privacy_locker, new Intent(this, LockSettingsActivity.class));
     }
 
     @Override
