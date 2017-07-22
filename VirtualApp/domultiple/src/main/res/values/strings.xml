@@ -100,12 +100,12 @@
     <string name="settings_privacy_locker_content">Click to set privacy locker for cloned apps</string>
     <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
     <!--gms-->
-    <string name="settings_gms">Enable Google Play service for clones</string>
-    <string name="settings_gms_title">Google Play Service</string>
-    <string name="settings_gms_enable_toast">Google Play Service is enabled</string>
-    <string name="settings_gms_disable_toast">Google Play Service is disabled</string>
-    <string name="settings_gms_disable_notice">Disable Google play service will decrease memory and power usage, and optimize the launch speed for cloned application. But some application may not work properly if disable it. Are you sure to disable Google play service?</string>
-    <string name="settings_gms_enable_notice">Enable Google play service may consume more memory and CPU. Do you want to enable Google play service?</string>
+    <string name="settings_lite_mode">Enable lite mode for fewer memory and power usage</string>
+    <string name="settings_lite_mode_title">Lite Mode</string>
+    <string name="settings_lite_disable_toast">Lite mode is disabled.</string>
+    <string name="settings_lite_enable_toast">Switched to lite mode</string>
+    <string name="settings_lite_enable_notice">In Lite Mode, Google Play Service will be disabled for fewer memory and power usage. Please turn it off when clones are using Google services. Are you sure to switch on Lite Mode?</string>
+    <string name="settings_lite_disable_notice">In normal mode, Google Play Service is supported and may cause more memory and battery usage. Do you want to switch off Lite Mode?</string>
 
     <!--ad free-->
     <string name="settings_adfree_title">Remove Ads</string>

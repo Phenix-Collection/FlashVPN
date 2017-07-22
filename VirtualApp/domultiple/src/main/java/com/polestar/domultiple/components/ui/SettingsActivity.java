@@ -28,7 +28,7 @@ import com.polestar.domultiple.widget.UpDownDialog;
 
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
-    private BlueSwitch gmsSwitch;
+    private BlueSwitch liteSwitch;
     private BlueSwitch adFreeSwitch;
     private TextView versionTv;
     private TextView followTv;
@@ -62,48 +62,48 @@ public class SettingsActivity extends BaseActivity {
                 PreferencesUtils.putBoolean(SettingsActivity.this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,shortCutSwich.isChecked());
             }
         });
-        gmsSwitch = (BlueSwitch) findViewById(R.id.gms_switch_btn);
-        gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+        liteSwitch = (BlueSwitch) findViewById(R.id.lite_switch_btn);
+        liteSwitch.setChecked(PreferencesUtils.isLiteMode());
         DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                boolean orig = PreferencesUtils.isGMSEnable();
+                boolean orig = PreferencesUtils.isLiteMode();
                 switch (i) {
                     case UpDownDialog.NEGATIVE_BUTTON:
                         break;
                     case UpDownDialog.POSITIVE_BUTTON:
-                        PreferencesUtils.setGMSEnable(!orig);
+                        PreferencesUtils.setLiteMode(!orig);
                         VirtualCore.get().restart();
-                        boolean newStatus = PreferencesUtils.isGMSEnable();
-                        if (newStatus) {
-                            Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_enable_toast), Toast.LENGTH_SHORT);
+                        boolean newStatus = PreferencesUtils.isLiteMode();
+                        if (!newStatus) {
+                            Toast.makeText(SettingsActivity.this, getString(R.string.settings_lite_disable_toast), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_disable_toast), Toast.LENGTH_SHORT);
+                            Toast.makeText(SettingsActivity.this, getString(R.string.settings_lite_enable_toast), Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }
-                gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+                liteSwitch.setChecked(PreferencesUtils.isLiteMode());
             }
         };
-        gmsSwitch.setOnClickListener(new View.OnClickListener() {
+        liteSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(PreferencesUtils.isGMSEnable()) {
-                    UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_gms_disable_notice),
+                if(!PreferencesUtils.isLiteMode()) {
+                    UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_lite_enable_notice),
                             getString(R.string.no_thanks), getString(R.string.yes), -1,
                             R.layout.dialog_up_down, dialogListener).setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
-                            gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+                            liteSwitch.setChecked(PreferencesUtils.isLiteMode());
                         }
                     });
                 } else {
-                    UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_gms_enable_notice),
+                    UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_lite_disable_notice),
                             getString(R.string.no_thanks), getString(R.string.yes), -1,
                             R.layout.dialog_up_down, dialogListener).setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
-                            gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
+                            liteSwitch.setChecked(PreferencesUtils.isLiteMode());
                         }
                     });
                 }

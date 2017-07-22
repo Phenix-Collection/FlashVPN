@@ -30,8 +30,11 @@ import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
+import mirror.android.providers.Settings;
 
 /**
  * Created by guojia on 2017/7/16.
@@ -48,6 +51,7 @@ public class CloneManager {
     private Handler mWorkHandler;
     private List<CloneModel> mPendingClones = new ArrayList<>();
     private static HashSet<String> blackList = new HashSet<>();
+    private static HashMap<String, Long> mPackageLaunchTime = new HashMap<>();
 
     public boolean hasPendingClones() {
         return mPendingClones.size() > 0;
@@ -236,6 +240,7 @@ public class CloneManager {
         //Check app version and trying to upgrade if necessary
         try {
             MLogs.d(TAG, "launchApp packageName = " + packageName);
+            mPackageLaunchTime.put(packageName, System.currentTimeMillis());
             Intent intent = VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId());
             VActivityManager.get().startActivity(intent, VUserHandle.myUserId());
         } catch (Exception e) {
@@ -312,4 +317,11 @@ public class CloneManager {
     public static boolean isAppRunning(String pkg) {
         return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId());
     }
+
+    public static boolean isAppLaunched(String pkg) {
+        long time = mPackageLaunchTime.get(pkg) == null ? 0:  mPackageLaunchTime.get(pkg);
+        return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId())
+                && ((System.currentTimeMillis()-time) < 60*60*1000);
+    }
+
 }

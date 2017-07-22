@@ -53,7 +53,7 @@ public class AppLoadingActivity extends BaseActivity {
         if (CloneManager.needUpgrade(packageName)) {
             CloneManager.killApp(packageName);
         } else {
-            if (CloneManager.isAppRunning(packageName)) {
+            if (CloneManager.isAppLaunched(packageName)) {
                 CloneManager.launchApp(packageName);
                 return;
             }

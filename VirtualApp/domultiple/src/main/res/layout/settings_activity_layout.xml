@@ -124,7 +124,7 @@
             android:paddingLeft="22dp">
 
             <com.polestar.domultiple.widget.BlueSwitch
-                android:id="@+id/gms_switch_btn"
+                android:id="@+id/lite_switch_btn"
                 android:layout_width="82.5dp"
                 android:layout_height="70dp"
                 android:layout_alignParentRight="true"
@@ -140,8 +140,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="13dp"
                 android:layout_marginTop="18dp"
-                android:layout_toLeftOf="@id/gms_switch_btn"
-                android:text="@string/settings_gms_title"
+                android:layout_toLeftOf="@id/lite_switch_btn"
+                android:text="@string/settings_lite_mode_title"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="15sp" />
 
@@ -149,8 +149,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/gms_title"
-                android:layout_toLeftOf="@id/gms_switch_btn"
-                android:text="@string/settings_gms"
+                android:layout_toLeftOf="@id/lite_switch_btn"
+                android:text="@string/settings_lite_mode"
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp" />
         </RelativeLayout>

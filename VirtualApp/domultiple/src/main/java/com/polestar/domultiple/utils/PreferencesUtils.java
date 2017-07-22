@@ -383,10 +383,10 @@ public class PreferencesUtils {
         return getString(PolestarApp.getApp(), "install_channel", null);
     }
 
-    public static void setGMSEnable(boolean enable) {
-        File stateFile = new File(PolestarApp.getApp().getFilesDir(), "gms_disable");
+    public static void setLiteMode(boolean enable) {
+        File stateFile = new File(PolestarApp.getApp().getFilesDir(), "lite_mode");
         try {
-            if (!enable) {
+            if (enable) {
                 stateFile.createNewFile();
             } else {
                 stateFile.delete();
@@ -396,9 +396,9 @@ public class PreferencesUtils {
         }
     }
 
-    public static boolean isGMSEnable() {
-        File stateFile = new File(PolestarApp.getApp().getFilesDir(), "gms_disable");
-        return !stateFile.exists();
+    public static boolean isLiteMode() {
+        File stateFile = new File(PolestarApp.getApp().getFilesDir(), "lite_mode");
+        return stateFile.exists();
     }
 
     public static void setStartPageStatus(boolean shown) {

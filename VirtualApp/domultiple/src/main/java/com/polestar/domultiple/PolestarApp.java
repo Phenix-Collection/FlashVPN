@@ -17,7 +17,6 @@ import com.polestar.ad.AdConstants;
 import com.polestar.domultiple.billing.BillingProvider;
 import com.polestar.domultiple.clone.CloneApiDelegate;
 import com.polestar.domultiple.clone.CloneComponentDelegate;
-import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
@@ -59,7 +58,7 @@ public class PolestarApp extends Application {
         try {
             StubManifest.ENABLE_IO_REDIRECT = true;
             StubManifest.ENABLE_INNER_SHORTCUT = false;
-            StubManifest.ENABLE_GMS = PreferencesUtils.isGMSEnable();
+            StubManifest.ENABLE_GMS = !PreferencesUtils.isLiteMode();
             Log.d(MLogs.DEFAULT_TAG, "GMS state: " + StubManifest.ENABLE_GMS);
             VirtualCore.get().startup(base);
         } catch (Throwable e) {
