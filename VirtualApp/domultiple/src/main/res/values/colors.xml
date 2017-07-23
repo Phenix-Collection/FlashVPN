@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#394647</color>
     <color name="colorAccent">#ff48d27f</color>
     <color name="title_bar_bg">#4b6163</color>
+    <color name="title_bar_button_pressed">#44585a</color>
     <color name="app_loading_bg">#FFFFFF</color>
     <color name="title_bar_text_color">#FFFFFF</color>
     <color name="lucky_red">#fd7921</color>

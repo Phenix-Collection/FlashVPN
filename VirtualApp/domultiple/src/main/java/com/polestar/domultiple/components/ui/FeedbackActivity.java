@@ -102,12 +102,12 @@ public class FeedbackActivity extends BaseActivity {
                 }
 
                 Intent data=new Intent(Intent.ACTION_SENDTO);
-                data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
+                data.setData(Uri.parse("mailto:riverstone.app@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about Do Multiple");
-                String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "Super Clone version: " + BuildConfig.VERSION_NAME
-                        + "\n" + "Model info: " + Build.FINGERPRINT + "\nLite Mode: " + PreferencesUtils.isLiteMode() + "\n";
+                String fullContent = content + "\n\n\n\n"  + "Additional Info for Debug: \n" + "App version: " + BuildConfig.VERSION_NAME
+                        + "\n" + "Model info: " + Build.FINGERPRINT + "\nOS Version: " + Build.VERSION.SDK_INT + "\nLite Mode: " + PreferencesUtils.isLiteMode() + "\n";
                 for (InstalledAppInfo appInfo: VirtualCore.get().getInstalledApps(0)) {
-                    String pkgInfo = "\n Package: " + appInfo.packageName + " path: " + appInfo.apkPath;
+                    String pkgInfo = "\n Clone: " + appInfo.packageName + " source: " + appInfo.apkPath;
                     fullContent += pkgInfo;
                 }
 

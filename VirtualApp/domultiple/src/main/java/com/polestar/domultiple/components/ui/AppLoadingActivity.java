@@ -23,6 +23,7 @@ import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 
 /**
@@ -49,12 +50,14 @@ public class AppLoadingActivity extends BaseActivity {
     private static final String EXTRA_FIRST_START = "first_start";
 
 
-    public static void startAppStartActivity(Activity activity, String packageName, boolean firstStart) {
+    public static void startAppStartActivity(Activity activity, CloneModel model) {
+        String packageName = model.getPackageName();
         if (CloneManager.needUpgrade(packageName)) {
             CloneManager.killApp(packageName);
         } else {
             if (CloneManager.isAppLaunched(packageName)) {
                 CloneManager.launchApp(packageName);
+                EventReporter.appStart(true, model.getLockerState() != AppConstants.AppLockState.DISABLED, "home", model.getPackageName());
                 return;
             }
         }
@@ -63,7 +66,7 @@ public class AppLoadingActivity extends BaseActivity {
 //        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         intent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, packageName);
         intent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_HOME);
-        intent.putExtra(EXTRA_FIRST_START, firstStart);
+        intent.putExtra(EXTRA_FIRST_START, model.getLaunched() == 0);
 
         activity.startActivity(intent);
         activity.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
@@ -109,6 +112,7 @@ public class AppLoadingActivity extends BaseActivity {
                 }
             }, delay);
         }
+        EventReporter.appStart(CloneManager.isAppLaunched(appModel.getPackageName()), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName());
     }
 
     private void initView() {

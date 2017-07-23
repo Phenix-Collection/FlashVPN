@@ -6,14 +6,18 @@
     <ImageView
         android:id="@+id/navigation_bar"
         android:src="@mipmap/back"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:layout_width="30dp"
+        android:background="@drawable/selector_title_button_bg"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:paddingRight = "10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_width="50dp"
         android:scaleType="centerCrop"
         android:onClick="onNavigationClick"
-        android:layout_height="30dp" />
+        android:layout_height="60dp" />
     <TextView
         android:id="@+id/title"
         style="@style/TextStyle_Activity_Title"

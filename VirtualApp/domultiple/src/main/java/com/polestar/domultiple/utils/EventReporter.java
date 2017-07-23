@@ -23,7 +23,20 @@ public class EventReporter {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(PolestarApp.getApp());
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         mFirebaseAnalytics.setUserProperty("channel", channel);
+        mFirebaseAnalytics.setUserProperty("lite_mode", String.valueOf(PreferencesUtils.isLiteMode()));
+        mFirebaseAnalytics.setUserProperty("adfree", String.valueOf(PreferencesUtils.isAdFree()));
         MLogs.e("MTA channel: " + channel);
+    }
+
+    public static void reportReferrer(String utm_source, String utm_medium, String utm_campaign, String utm_content, String utm_term, String gclid) {
+        Bundle bundle = new Bundle();
+        bundle.putString("utm_source", utm_source);
+        bundle.putString("utm_medium", utm_medium);
+        bundle.putString("utm_campaign", utm_campaign);
+        bundle.putString("utm_content", utm_content);
+        bundle.putString("utm_term", utm_term);
+        bundle.putString("gclid", gclid);
+        mFirebaseAnalytics.logEvent("refer", bundle);
     }
 
     public class KeyLogTag {
@@ -34,28 +47,35 @@ public class EventReporter {
         FirebaseCrash.log(tag + log);
     }
 
-    public static void homeShow(Context context) {
+    public static void homeShow() {
         mFirebaseAnalytics.logEvent("home_show", null);
     }
 
-    public static void reportCrash(Context context, String packageName, boolean forground) {
-        FirebaseCrash.report(new Exception());
+    public static void appStart(boolean coldStart, boolean locker, String from, String pkg) {
+        Bundle bundle = new Bundle();
+        bundle.putString("package", pkg);
+        bundle.putBoolean("coldStart", coldStart);
+        bundle.putBoolean("locker", locker);
+        bundle.putString("from", from);
+        mFirebaseAnalytics.logEvent("app_start", bundle);
     }
 
-    public static void reportRate(Context context, String status, String from) {
-        int hour = 0;
+    public static void reportCrash(Throwable ex, String packageName, boolean forground) {
+        FirebaseCrash.report(ex);
+        Bundle bundle = new Bundle();
+        bundle.putString("package", packageName);
+        bundle.putBoolean("forground", forground);
+        mFirebaseAnalytics.logEvent("crash_event", bundle);
+    }
+
+    public static void reportRate(String status, String from) {
         Bundle bundle = new Bundle();
         bundle.putString("status", status);
         bundle.putString("from", from);
-        bundle.putInt("install_hour", (int)hour);
+        long installTime = CommonUtils.getInstallTime(PolestarApp.getApp(), PolestarApp.getApp().getPackageName());
+        long hour = (System.currentTimeMillis() - installTime)/(1000*60*60);
+        bundle.putLong("install_hour", hour);
         mFirebaseAnalytics.logEvent("rate", bundle);
-    }
-
-    public static void loveApp(Context context, boolean love, String from) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("love", love);
-        bundle.putString("from", from);
-        mFirebaseAnalytics.logEvent("love_app", bundle);
     }
 
 }

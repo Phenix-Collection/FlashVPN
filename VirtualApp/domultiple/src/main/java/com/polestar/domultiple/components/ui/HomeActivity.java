@@ -25,6 +25,7 @@ import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.AnimatorHelper;
 import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.widget.DropableLinearLayout;
@@ -81,6 +82,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         super.onCreate(savedInstanceState);
         initView();
         initData();
+        EventReporter.homeShow();
     }
 
     private void initData() {
@@ -119,7 +121,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 int addIdx = showLucky? luckyIdx + 1 : luckyIdx;
                 if (i < mClonedList.size()) {
                     CloneModel model = (CloneModel)gridAdapter.getItem(i);
-                    AppLoadingActivity.startAppStartActivity(HomeActivity.this, model.getPackageName(), model.getLaunched() == 0);
+                    AppLoadingActivity.startAppStartActivity(HomeActivity.this, model);
                     if (model.getLaunched() == 0) {
                         model.setLaunched(1);
                         DBManager.updateCloneModel(HomeActivity.this, model);
@@ -419,10 +421,19 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                                                     case UpDownDialog.POSITIVE_BUTTON:
                                                         Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
                                                         startActivity(feedback);
+                                                        EventReporter.reportRate("not_love_go_fb", from);
+                                                        break;
+                                                    case UpDownDialog.NEGATIVE_BUTTON:
+                                                        EventReporter.reportRate("not_love_not_fb", from);
                                                         break;
                                                 }
                                             }
-                                        });
+                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialogInterface) {
+                                        EventReporter.reportRate("not_love_cancel_fb", from);
+                                    }
+                                });
                                 break;
                             case UpDownDialog.POSITIVE_BUTTON:
                                 PreferencesUtils.setLoveApp(true);
@@ -437,14 +448,28 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                                                     case UpDownDialog.POSITIVE_BUTTON:
                                                         PreferencesUtils.setRated(true);
                                                         CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                                        EventReporter.reportRate("love_rate", from);
+                                                        break;
+                                                    case UpDownDialog.NEGATIVE_BUTTON:
+                                                        EventReporter.reportRate("love_not_rate", from);
                                                         break;
                                                 }
                                             }
-                                        });
+                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialogInterface) {
+                                        EventReporter.reportRate("love_cancel_rate", from);
+                                    }
+                                });
                                 break;
                         }
                     }
-                });
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                EventReporter.reportRate("cancel_rate", from);
+            }
+        });
 
     }
 }

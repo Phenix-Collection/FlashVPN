@@ -32,6 +32,40 @@
             android:noHistory="true"
             android:taskAffinity="com.polestar.domultiple.launch"/>
 
+        <receiver android:name=".components.receiver.CrashReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="appclone.intent.action.SHOW_CRASH_DIALOG"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".components.receiver.ReferrerReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".components.receiver.WakeReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.polestar.multiaccount.wake" />
+            </intent-filter>
+        </receiver>
+
 
         <activity android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"

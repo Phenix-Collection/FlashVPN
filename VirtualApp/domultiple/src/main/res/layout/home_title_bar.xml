@@ -23,14 +23,18 @@
             android:textSize="20sp" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
             android:layout_gravity="center_vertical|right|end"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
+            android:paddingLeft="5dp"
+            android:paddingEnd="5dp"
+            android:paddingRight="5dp"
             android:onClick="onMenuClick"
             android:id="@+id/menu_more"
-            android:src="@drawable/more_dot" />
+            android:src="@drawable/more_dot"
+            android:background="@drawable/selector_title_button_bg"/>
     </FrameLayout>
     <LinearLayout
         android:id="@+id/action_bar"
