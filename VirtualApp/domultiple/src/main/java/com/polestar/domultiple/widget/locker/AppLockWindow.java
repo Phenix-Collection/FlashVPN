@@ -45,6 +45,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
 
     private PopupMenu mPopupMenu;
+    private BlurBackground mBlurBackground;
 
     private String mPkgName;
     private Handler mHandler;
@@ -75,6 +76,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
         mContentView = LayoutInflater.from(PolestarApp.getApp()).inflate(R.layout.applock_window_layout, null);
 
         mWindow.setContentView(mContentView);
+        mBlurBackground = (BlurBackground)mContentView.findViewById(R.id.applock_window);
         mWindow.setOnBackPressedListener(new FloatWindow.OnBackPressedListener() {
             @Override
             public void onBackPressed() {
@@ -99,10 +101,12 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
 
             @Override
             public void onIncorrectPassword() {
+                mBlurBackground.onIncorrectPassword(mAdInfoContainer);
             }
 
             @Override
             public void onCancel() {
+                mBlurBackground.onIncorrectPassword(mAdInfoContainer);
             }
         });
         mAppLockPasswordLogic.onFinishInflate();
@@ -130,7 +134,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
             }
             CharSequence title = pm.getApplicationLabel(ai);
             if (title != null) {
-                mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.applock_window_title),title));
+                mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.clone_label_tag),title));
             }
         }
         MLogs.d("AppLockWindow initialized 1");
@@ -232,6 +236,8 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
     public void show(boolean showAd) {
         if (!mIsShowing) {
             mIsShowing = true;
+            mBlurBackground.init();
+            mBlurBackground.reloadWithTheme(mPkgName);
             MLogs.d("LockWindow show ad" + showAd);
             mAppLockPasswordLogic.onShow();
             mWindow.show();
@@ -244,6 +250,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
 
     public void dismiss() {
         if (mIsShowing && mPopupMenu != null && mWindow != null) {
+            mBlurBackground.resetLayout();
             mAppLockPasswordLogic.onBeforeHide();
             mPopupMenu.dismiss();
             mWindow.hide();

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.polestar.domultiple.AppConstants;
+import com.polestar.domultiple.utils.CommonUtils;
 
 import org.greenrobot.greendao.annotation.*;
 
@@ -146,13 +147,7 @@ public class CloneModel {
     }
 
     public Drawable getIconDrawable(Context context) {
-        PackageManager pm = context.getPackageManager();
-        try {
-            return pm.getApplicationIcon(packageName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return CommonUtils.getAppIcon(packageName);
     }
 
     public Bitmap getCustomIcon() {

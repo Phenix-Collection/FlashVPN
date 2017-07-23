@@ -309,4 +309,14 @@ public class CommonUtils {
         }
         return shortCutBitMap;
     }
+
+    public static Drawable getAppIcon(String packageName) {
+        PackageManager pm = PolestarApp.getApp().getPackageManager();
+        try {
+            return pm.getApplicationIcon(packageName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
