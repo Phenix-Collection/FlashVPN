@@ -190,6 +190,7 @@ public class LockSettingsActivity extends BaseActivity {
         }else{
             detailedSettingLayout.setVisibility(View.GONE);
             PreferencesUtils.setLockerEnabled(this, false);
+            PreferencesUtils.setEncodedPatternPassword(this,"");
             if(report) {
                 MTAManager.lockerEnable(this, "disable", "none", from);
             }
@@ -228,8 +229,8 @@ public class LockSettingsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (isSettingChanged) {
-            AppManager.reloadLockerSetting();
-        }
+
+        AppManager.reloadLockerSetting();
+
     }
 }

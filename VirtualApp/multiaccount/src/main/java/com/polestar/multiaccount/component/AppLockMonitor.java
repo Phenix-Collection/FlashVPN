@@ -40,7 +40,7 @@ public class AppLockMonitor {
     private final static String TAG = "AppLockMonitor";
 
     private FuseAdLoader mAdLoader;
-    private boolean hasLock;
+    private boolean hasAppLocked;
     private boolean adFree;
 
     private AppLockWindowManager mAppLockWindows = AppLockWindowManager.getInstance();
@@ -60,7 +60,7 @@ public class AppLockMonitor {
                         mUnlockedForegroudPkg = pkg;
                         break;
                     case MSG_PRELOAD_AD:
-                        if (!adFree && hasLock) {
+                        if (!adFree && hasLocker()) {
                             mAdLoader.loadAd(1, null);
                             long interval = RemoteConfig.getLong(CONFIG_APPLOCK_PRELOAD_INTERVAL);
                             MLogs.d("Applocker schedule next ad at " + interval);
@@ -97,10 +97,11 @@ public class AppLockMonitor {
         for (AppModel model: list) {
             modelHashMap.put(model.getPackageName(), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
-                hasLock = true;
+                hasAppLocked = true;
             }
         }
         adFree = false;
+        LockPatternUtils.setTempKey(PreferencesUtils.getEncodedPatternPassword(MApp.getApp()));
         mAdLoader = FuseAdLoader.get(AppLockWindow.CONFIG_SLOT_APP_LOCK, MApp.getApp());
         mAdLoader.setBannerAdSize(AppLockWindow.getBannerSize());
         preloadAd();
@@ -118,7 +119,7 @@ public class AppLockMonitor {
         for (AppModel model: list) {
             modelHashMap.put(model.getPackageName(), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
-                hasLock = true;
+                hasAppLocked = true;
             }
         }
         preloadAd();
@@ -126,9 +127,7 @@ public class AppLockMonitor {
             mAppLockWindows.removeAll();
         }
         this.adFree = adFree;
-        if (!TextUtils.isEmpty(newKey)) {
-            LockPatternUtils.setTempKey(newKey);
-        }
+        LockPatternUtils.setTempKey(newKey);
         if ( interval >= 3000) {
             relockDelay = interval;
         }
@@ -150,8 +149,7 @@ public class AppLockMonitor {
             return;
         }
         if (model.getLockerState() != AppConstants.AppLockState.DISABLED
-                && (!TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(MApp.getApp()))
-                || !TextUtils.isEmpty(LockPatternUtils.getTempKey()))) {
+                && hasLocker()) {
             MLogs.d(TAG, "Need lock app " + pkg);
             if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(pkg))) {
                 //do lock
@@ -184,5 +182,9 @@ public class AppLockMonitor {
         }
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, model.getPackageName()),
                 relockDelay);
+    }
+
+    private boolean hasLocker() {
+        return hasAppLocked && !TextUtils.isEmpty(LockPatternUtils.getTempKey());
     }
 }
