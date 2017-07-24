@@ -5,6 +5,10 @@
         <value>100</value>
     </entry>
     <entry>
+        <key>applock_preload_interval</key>
+        <value>3600000</value>
+    </entry>
+    <entry>
         <key>hot_clone_list</key>
         <value>com.facebook.orca:com.whatsapp:com.facebook.katana:com.bbm:com.imo.android.imoim:com.bsb.hike:com.supercell.clashofclans:com.instagram.android:com.facebook.lite:com.supercell.clashroyale:jp.naver.line.android</value>
     </entry>
