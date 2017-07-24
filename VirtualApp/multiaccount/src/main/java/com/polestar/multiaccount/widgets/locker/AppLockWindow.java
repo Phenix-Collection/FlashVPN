@@ -51,6 +51,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
     private PopupMenu mPopupMenu;
+    private BlurBackground mBlurBackground;
 
     private String mPkgName;
     private Handler mHandler;
@@ -80,6 +81,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         mWindow = new FloatWindow(MApp.getApp());
 
         mContentView = LayoutInflater.from(MApp.getApp()).inflate(R.layout.applock_window_layout, null);
+        mBlurBackground = (BlurBackground)mContentView.findViewById(R.id.applock_window);
 
         mWindow.setContentView(mContentView);
         mWindow.setOnBackPressedListener(new FloatWindow.OnBackPressedListener() {
@@ -106,10 +108,12 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
             @Override
             public void onIncorrectPassword() {
+                mBlurBackground.onIncorrectPassword(mAdInfoContainer);
             }
 
             @Override
             public void onCancel() {
+                mBlurBackground.onIncorrectPassword(mAdInfoContainer);
             }
         });
         mAppLockPasswordLogic.onFinishInflate();
@@ -238,6 +242,8 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         if (!mIsShowing) {
             mIsShowing = true;
             MLogs.d("LockWindow show ad" + showAd);
+            mBlurBackground.init();
+            mBlurBackground.reloadWithTheme(mPkgName);
             mAppLockPasswordLogic.onShow();
             mWindow.show();
             if (showAd) {
@@ -249,6 +255,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
     public void dismiss() {
         if (mIsShowing && mPopupMenu != null && mWindow != null) {
+            mBlurBackground.resetLayout();
             mAppLockPasswordLogic.onBeforeHide();
             mPopupMenu.dismiss();
             mWindow.hide();
