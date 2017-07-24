@@ -37,7 +37,7 @@ public class AppLockMonitor {
     private final static String TAG = "AppLockMonitor";
 
     private FuseAdLoader mAdLoader;
-    private boolean hasLock;
+    private boolean hasAppLocked;
     private boolean adFree;
 
     private AppLockWindowManager mAppLockWindows = AppLockWindowManager.getInstance();
@@ -57,11 +57,14 @@ public class AppLockMonitor {
                         mUnlockedForegroudPkg = pkg;
                         break;
                     case MSG_PRELOAD_AD:
-                        if (!adFree && hasLock) {
-                            mAdLoader.loadAd(1, null);
+                        if (!adFree && hasLocker()) {
+                            if (mAdLoader.hasValidAdSource()) {
+                                mAdLoader.loadAd(1, null);
+                            }
                             long interval = RemoteConfig.getLong(CONFIG_APPLOCK_PRELOAD_INTERVAL);
-                            MLogs.d("Applocker schedule next ad at " + interval);
+                            MLogs.d(TAG, "Applocker schedule next ad at " + interval);
                             if (interval >= 15*60*000) {
+                                MLogs.d(TAG, "Go schedule next ad at " + interval);
                                 mHandler.sendEmptyMessageDelayed(MSG_PRELOAD_AD, interval);
                             }
                         }
@@ -83,6 +86,9 @@ public class AppLockMonitor {
         initSetting();
     }
 
+    private boolean hasLocker() {
+        return hasAppLocked && !TextUtils.isEmpty(LockPatternUtils.getTempKey());
+    }
     private void preloadAd() {
         mHandler.removeMessages(MSG_PRELOAD_AD);
         mHandler.sendEmptyMessage(MSG_PRELOAD_AD);
@@ -94,7 +100,7 @@ public class AppLockMonitor {
         for (CloneModel model: list) {
             modelHashMap.put(model.getPackageName(), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
-                hasLock = true;
+                hasAppLocked = true;
             }
         }
         adFree = false;
@@ -109,15 +115,15 @@ public class AppLockMonitor {
     }
 
     public void reloadSetting(String newKey, boolean adFree, long interval) {
-        MLogs.d(TAG, "reloadSetting adfree:" + adFree);
+        MLogs.d(TAG, "reloadSetting adfree:" + adFree + " tmpkey: " + newKey);
         modelHashMap.clear();
         DBManager.resetSession();
         List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
         for (CloneModel model: list) {
             modelHashMap.put(model.getPackageName(), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
-                MLogs.d(TAG, "hasLock " + model.getPackageName());
-                hasLock = true;
+                MLogs.d(TAG, "hasAppLocked " + model.getPackageName());
+                hasAppLocked = true;
             }
         }
         preloadAd();
@@ -146,8 +152,7 @@ public class AppLockMonitor {
             MLogs.logBug(TAG, "cannot find cloned model : " + pkg);
             return;
         }
-        if (model.getLockerState() != AppConstants.AppLockState.DISABLED
-                &&  !TextUtils.isEmpty(LockPatternUtils.getTempKey())) {
+        if (hasLocker() && model.getLockerState() != AppConstants.AppLockState.DISABLED) {
             MLogs.d(TAG, "Need lock app " + pkg);
             if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(pkg))) {
                 //do lock

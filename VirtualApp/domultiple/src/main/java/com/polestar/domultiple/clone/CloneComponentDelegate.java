@@ -43,17 +43,13 @@ public class CloneComponentDelegate implements ComponentDelegate {
     @Override
     public void beforeActivityResume(String pkg) {
         MLogs.d("beforeActivityResume " + pkg);
-        if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
-            AppLockMonitor.getInstance().onActivityResume(pkg);
-        }
+        AppLockMonitor.getInstance().onActivityResume(pkg);
     }
 
     @Override
     public void beforeActivityPause(String pkg) {
         MLogs.d("beforeActivityPause " + pkg);
-         if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
-            AppLockMonitor.getInstance().onActivityPause(pkg);
-         }
+        AppLockMonitor.getInstance().onActivityPause(pkg);
     }
 
     @Override

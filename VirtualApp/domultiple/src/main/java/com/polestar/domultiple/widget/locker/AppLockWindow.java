@@ -182,7 +182,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
         adLoader.setBannerAdSize(getBannerSize());
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
-        if (adLoader != null) {
+        if (adLoader != null && adLoader.hasValidAdSource()) {
             adLoader.loadAd(2, RemoteConfig.getLong(CONFIG_SLOT_APP_LOCK_PROTECT_TIME), new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
