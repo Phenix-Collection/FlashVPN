@@ -80,13 +80,15 @@ public class BillingManager implements PurchasesUpdatedListener {
         void onPurchasesUpdated(List<Purchase> purchases);
     }
 
-    private static final String KEY = " A~qWZNyq&spcRoldO\"W!z==P[T/{`_!=D%E`\"QX f%]DEt";
-    private static final String KEY2 = "z]FCUbBUz^RW q#Q9wAlCc'`Uy.zQ$WeN=aZa. _aQy'XreR! Gsl=&E~lwa{YN!=\\Sq ~xXCRCxn@=RS_fOrauw/o|l]Dpx{GyUZawUuG_Wy_d$F!LN$^@Nf|_DrnG_RWGWT";
+//    public String PUB_KEY ="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvmuCaE7SGRpShOzw8zlZdQvDqDRyhOuWVHSKlWX5bJSSqYNmlZb3vKYDIp3SGXaZvnWbK3DY12rC6hMGrkgKmKcuERycgAyYOmRilbZOSIBRboo+tdssfTrSXprWaDAE51rbvb4zSJkgNeU1yS47n47sUSQd9qMZVLT70h/aJWteATq20TO9XFiqgsk6E1kQSjusSDWL98pPr6AJLSGa5SWtZwv3EMzrroiiRYQZTiRoD4UqJC5RP4rbKh7DmIWL4M9QtqR0TqeFGUxyPfgzh4j/EZMulN3jCEDrQ0oj8vmL4ObP3d3SMTQm2yqU2GYlhNj3MGMmZkjCs2RRXDwS4wIDAQAB"
+//    public static String PUB_KEY_dom = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvmuCaE7SGRpShOzw8zlZdQvDqDRyhOuWVHSKlWX5bJSSqYNmlZb3vKYDIp3SGXaZvnWbK3DY12rC6hMGrkgKmKcuERycgAyYOmRilbZOSIBRboo+tdssfTrSXprWaDAE51rbvb4zSJkgNeU1yS47n47sUSQd9qMZVLT70h/aJWteATq20TO9XFiqgsk6E1kQSjusSDWL98pPr6AJLSGa5SWtZwv3EMzrroiiRYQZTiRoD4UqJC5RP4rbKh7DmIWL4M9QtqR0TqeFGUxyPfgzh4j/EZMulN3jCEDrQ0oj8vmL4ObP3d3SMTQm2yqU2GYlhNj3MGMmZkjCs2RRXDwS4wIDAQAB";
+    private static final String KEY = "RgRDo~YcA@^E]zAN#t\\EEgOX{zLt%`]OR_f%EQNwL`xAt]%RO'$dU ~[Qd}q]{]ucSDo";
+    private static final String KEY2 = "gqe} S'}GE|ceERAZ/.fFd W\\ZEQw#EAbLa`%S[lddy\u007F\u007FDOGLB\u007FDyR\"Cg\\U#DF\"dt]~!R{_AZ\"[/GbgD&BgsPQCnoFpql~\"|9SL[czX%|USRdG&y|.`{Z\"YtF%r%E[BG{$ogC$QOz~X|%[Q[{L}|Ue$DDNRaE\"a_RWGWT";
     private static String hash = null;
     private static String getKey() {
-        if (!BuildConfig.DEBUG) {
-            throw new NullPointerException();
-        }
+//        if (!BuildConfig.DEBUG) {
+//            throw new NullPointerException();
+//        }
         if (hash == null) {
             StringBuffer str3 = new StringBuffer();  //存储解密后的字符串
             for (int i = 0; i < BillingConstants.BILL_KEY.length(); i++) {
