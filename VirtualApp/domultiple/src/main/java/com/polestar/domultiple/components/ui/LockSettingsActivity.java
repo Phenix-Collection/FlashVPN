@@ -153,6 +153,7 @@ public class LockSettingsActivity extends BaseActivity {
             }
         }else{
             detailedSettingLayout.setVisibility(View.GONE);
+            PreferencesUtils.setEncodedPatternPassword(this,"");
             PreferencesUtils.setLockerEnabled(this, false);
         }
     }
@@ -189,8 +190,8 @@ public class LockSettingsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (isSettingChanged) {
+       // if (isSettingChanged) {
             CloneManager.reloadLockerSetting();
-        }
+        //}
     }
 }

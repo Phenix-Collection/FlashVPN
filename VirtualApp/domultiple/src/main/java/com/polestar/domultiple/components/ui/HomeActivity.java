@@ -202,6 +202,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         }
         if (!CloneManager.getInstance(this).hasPendingClones()) {
             mProgressBar.setVisibility(View.GONE);
+            CloneManager.reloadLockerSetting();
         }
         gridAdapter.notifyDataSetChanged(mClonedList);
     }

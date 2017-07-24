@@ -100,6 +100,7 @@ public class AppLockMonitor {
         adFree = false;
         mAdLoader = FuseAdLoader.get(AppLockWindow.CONFIG_SLOT_APP_LOCK, PolestarApp.getApp());
         mAdLoader.setBannerAdSize(AppLockWindow.getBannerSize());
+        LockPatternUtils.setTempKey(PreferencesUtils.getEncodedPatternPassword(PolestarApp.getApp()));
         preloadAd();
     }
 
@@ -108,13 +109,14 @@ public class AppLockMonitor {
     }
 
     public void reloadSetting(String newKey, boolean adFree, long interval) {
-        MLogs.d("reloadSetting adfree:" + adFree);
+        MLogs.d(TAG, "reloadSetting adfree:" + adFree);
         modelHashMap.clear();
         DBManager.resetSession();
         List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
         for (CloneModel model: list) {
             modelHashMap.put(model.getPackageName(), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
+                MLogs.d(TAG, "hasLock " + model.getPackageName());
                 hasLock = true;
             }
         }
@@ -123,9 +125,7 @@ public class AppLockMonitor {
             mAppLockWindows.removeAll();
         }
         this.adFree = adFree;
-        if (!TextUtils.isEmpty(newKey)) {
-            LockPatternUtils.setTempKey(newKey);
-        }
+        LockPatternUtils.setTempKey(newKey);
         if ( interval >= 3000) {
             relockDelay = interval;
         }
@@ -147,8 +147,7 @@ public class AppLockMonitor {
             return;
         }
         if (model.getLockerState() != AppConstants.AppLockState.DISABLED
-                && (!TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(PolestarApp.getApp()))
-                || !TextUtils.isEmpty(LockPatternUtils.getTempKey()))) {
+                &&  !TextUtils.isEmpty(LockPatternUtils.getTempKey())) {
             MLogs.d(TAG, "Need lock app " + pkg);
             if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(pkg))) {
                 //do lock

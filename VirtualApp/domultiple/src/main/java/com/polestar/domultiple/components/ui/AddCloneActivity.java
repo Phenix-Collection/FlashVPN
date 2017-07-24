@@ -23,9 +23,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.SelectGridAppItem;
@@ -173,9 +175,13 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
 
     public void onCloneClick(View view) {
         boolean selected = false;
+        boolean hasLock = false;
         for (SelectGridAppItem item: hotAppList) {
             if( item.selected) {
                 CloneModel model = new CloneModel(item.pkg, this);
+                if (CommonUtils.isSocialApp(item.pkg)) {
+                    model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                }
                 CloneManager.getInstance(this).createClone(this, model);
                 selected = true;
             }
@@ -183,6 +189,9 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         for (SelectGridAppItem item: otherAppList) {
             if( item.selected) {
                 CloneModel model = new CloneModel(item.pkg, this);
+                if (CommonUtils.isSocialApp(item.pkg)) {
+                    model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                }
                 CloneManager.getInstance(this).createClone(this, model);
                 selected = true;
             }
