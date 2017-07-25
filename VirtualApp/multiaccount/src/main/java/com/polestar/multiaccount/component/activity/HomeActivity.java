@@ -45,7 +45,6 @@ import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.widgets.UpDownDialog;
 import com.polestar.multiaccount.utils.RemoteConfig;
-import com.polestar.multiaccount.widgets.GifView;
 
 import java.io.File;
 import java.util.List;
@@ -59,10 +58,9 @@ public class HomeActivity extends BaseActivity {
     private ListView navigationList;
     private View navigationLayout;
     private TextView appNameTv;
-    private GifView giftGifView;
     private ImageView giftIconView;
     private FuseAdLoader adLoader;
-    private boolean isInterstitialAdClicked;
+    private boolean isAutoInterstitialShown;
     private boolean isInterstitialAdLoaded;
     private boolean autoShowInterstitial;
 
@@ -225,9 +223,38 @@ public class HomeActivity extends BaseActivity {
             MLogs.e("MVActivity", e.toString());
         }
     }
+
+    private void showGiftIcon() {
+        int iconId = new Random().nextInt(3);
+        int giftRes;
+        switch (iconId) {
+            case 0:
+                giftRes = R.drawable.ring_ad;
+                break;
+            default:
+                giftRes = R.drawable.ad_taged_gift_icon;
+                break;
+        }
+        giftIconView.setImageResource(giftRes);
+        giftIconView.setVisibility(View.VISIBLE);
+        giftIconLayout.setVisibility(View.VISIBLE);
+        long interval = System.currentTimeMillis() - PreferencesUtils.getLastIconAdClickTime(HomeActivity.this);
+        RelativeLayout layout = (RelativeLayout) giftIconLayout.findViewById(R.id.gift_new_tip);
+        if (interval > 24 * 60 * 60 * 1000) {
+            layout.setVisibility(View.VISIBLE);
+        } else {
+            layout.setVisibility(View.INVISIBLE);
+        }
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIconView, "scaleX", 0.7f, 1.3f, 1.0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIconView, "scaleY", 0.7f, 1.3f, 1.0f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleX).with(scaleY);
+        animSet.setInterpolator(new BounceInterpolator());
+        animSet.setDuration(800).start();
+    }
+
     private void loadHomeInterstitial() {
         MLogs.e("start INTERSTITIAL loadHomeInterstitial");
-        isInterstitialAdClicked = false;
         isInterstitialAdLoaded = false;
         interstitialAd = null;
         adLoader = FuseAdLoader.get(SLOT_HOME_GIFT_INTERSTITIAL, this);
@@ -239,34 +266,6 @@ public class HomeActivity extends BaseActivity {
                     isInterstitialAdLoaded = true;
                     interstitialAd = ad;
                    // giftGifView.setGifResource(R.drawable.front_page_gift_icon);
-                    if (!showAppWall) {
-                        int iconId = new Random().nextInt(3);
-                        int giftRes;
-                        switch (iconId) {
-                            case 0:
-                                giftRes = R.drawable.ring_ad;
-                                break;
-                            default:
-                                giftRes = R.drawable.ad_taged_gift_icon;
-                                break;
-                        }
-                        giftIconView.setImageResource(giftRes);
-                        giftIconView.setVisibility(View.VISIBLE);
-                        giftIconLayout.setVisibility(View.VISIBLE);
-                        long interval = System.currentTimeMillis() - PreferencesUtils.getLastIconAdClickTime(HomeActivity.this);
-                        RelativeLayout layout = (RelativeLayout) giftIconLayout.findViewById(R.id.gift_new_tip);
-                        if (interval > 24 * 60 * 60 * 1000) {
-                            layout.setVisibility(View.VISIBLE);
-                        } else {
-                            layout.setVisibility(View.INVISIBLE);
-                        }
-                        ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIconView, "scaleX", 0.7f, 1.3f, 1.0f);
-                        ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIconView, "scaleY", 0.7f, 1.3f, 1.0f);
-                        AnimatorSet animSet = new AnimatorSet();
-                        animSet.play(scaleX).with(scaleY);
-                        animSet.setInterpolator(new BounceInterpolator());
-                        animSet.setDuration(800).start();
-                    }
 
                 }
                 @Override
@@ -288,7 +287,7 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isInterstitialAdClicked " + isInterstitialAdClicked);
+        MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isAutoInterstitialShown " + isAutoInterstitialShown);
         preloadAppWall();
         if (!PreferencesUtils.isAdFree()) {
             if (showAppWall) {
@@ -296,16 +295,20 @@ public class HomeActivity extends BaseActivity {
                 giftIconView.setVisibility(View.GONE);
                 wallButtonLayout.setVisibility(View.GONE);
                 loadMVWallHandler();
-                if (autoShowInterstitial) {
-                    loadHomeInterstitial();
-                }
+
             }else {
-                if (!isInterstitialAdLoaded || (isInterstitialAdClicked && isInterstitialAdLoaded)) {
-                    giftIconLayout.setVisibility(View.GONE);
-                    giftIconView.setVisibility(View.GONE);
-                    wallButtonLayout.setVisibility(View.GONE);
-                    loadHomeInterstitial();
-                }
+                giftIconLayout.setVisibility(View.GONE);
+                giftIconView.setVisibility(View.GONE);
+                giftIconView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showGiftIcon();
+                    }
+                },800);
+
+            }
+            if (autoShowInterstitial && !isAutoInterstitialShown) {
+                loadHomeInterstitial();
             }
             if (requestAdFree) {
                 updateBillingStatus();
@@ -405,7 +408,7 @@ public class HomeActivity extends BaseActivity {
             long interval2 = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL_2) * 60 * 60 * 1000;
             interval = PreferencesUtils.getAdFreeClickStatus() ? interval : interval2;
             long last = PreferencesUtils.getLastAdFreeDialogTime();
-            if ((System.currentTimeMillis() - last) > interval || MLogs.DEBUG) {
+            if ((System.currentTimeMillis() - last) > interval ) {
                 showAdFree = true;
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
@@ -416,13 +419,14 @@ public class HomeActivity extends BaseActivity {
                 PreferencesUtils.updateLastAdFreeDialogTime();
             }
         }
-        if (!showAdFree && !isInterstitialAdClicked && autoShowInterstitial) {
+        if (!showAdFree && !isAutoInterstitialShown && autoShowInterstitial) {
             if (interstitialAd != null) {
                 try {
                     interstitialAd.show();
-                    isInterstitialAdClicked = true;
+                    isAutoInterstitialShown = true;
                     PreferencesUtils.updateAutoInterstialTime();
                     MTAManager.homeGiftClick(this, interstitialAd.getAdType() + "_auto_home");
+                    interstitialAd = null;
                 } catch (Exception ex) {
                     MLogs.logBug("Show interstitial fail: " + MLogs.getStackTraceString(ex));
                 }
@@ -513,11 +517,9 @@ public class HomeActivity extends BaseActivity {
             openWall();
             MTAManager.homeGiftClick(this, "mv_app_wall");
         } else {
-            if (interstitialAd != null) {
-                interstitialAd.show();
-                MTAManager.homeGiftClick(this, interstitialAd.getAdType());
-                isInterstitialAdClicked = true;
-            }
+            Intent intent = new Intent(this, NativeInterstitialActivity.class);
+            startActivity(intent);
+            MTAManager.homeGiftClick(this, "lucky");
         }
     }
 
