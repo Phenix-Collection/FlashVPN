@@ -39,7 +39,7 @@
         </receiver>
 
         <receiver
-            android:name=".components.receiver.ReferrerReceiver"
+            android:name=".components.receiver.ReferReceiver"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
