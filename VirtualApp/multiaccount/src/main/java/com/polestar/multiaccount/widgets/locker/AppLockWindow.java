@@ -88,6 +88,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
             @Override
             public void onBackPressed() {
                 MLogs.d("AppLockWindow onBackPressed");
+                mBlurBackground.onIncorrectPassword(mAdInfoContainer);
             }
         });
 
