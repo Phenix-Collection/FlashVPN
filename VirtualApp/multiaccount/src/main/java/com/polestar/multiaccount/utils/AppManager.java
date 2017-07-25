@@ -19,11 +19,14 @@ import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AppManager {
     private final static String TAG = "AppManager";
     private static AppManager instance;
+
+    private static HashMap<String, Long> mPackageLaunchTime = new HashMap<>();
 
     public static List<AppModel> getClonedApp(Context context) {
         List<AppModel> appList = DbManager.queryAppList(context);
@@ -94,6 +97,7 @@ public class AppManager {
         //Check app version and trying to upgrade if necessary
         try {
             MLogs.d(TAG, "launchApp packageName = " + packageName);
+            mPackageLaunchTime.put(packageName, System.currentTimeMillis());
             Intent intent = VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId());
             VActivityManager.get().startActivity(intent, VUserHandle.myUserId());
         } catch (Exception e) {
@@ -157,5 +161,15 @@ public class AppManager {
         boolean adFree = PreferencesUtils.isAdFree();
         long interval = PreferencesUtils.getLockInterval();
         VirtualCore.get().reloadLockerSetting(key, adFree, interval);
+    }
+
+    public static boolean isAppRunning(String pkg) {
+        return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId());
+    }
+
+    public static boolean isAppLaunched(String pkg) {
+        long time = mPackageLaunchTime.get(pkg) == null ? 0:  mPackageLaunchTime.get(pkg);
+        return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId())
+                && ((System.currentTimeMillis()-time) < 60*60*1000);
     }
 }

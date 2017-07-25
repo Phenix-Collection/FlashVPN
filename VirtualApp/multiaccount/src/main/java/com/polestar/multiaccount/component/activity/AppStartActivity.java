@@ -54,7 +54,7 @@ public class AppStartActivity extends BaseActivity {
         if (AppManager.needUpgrade(packageName)) {
             VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
         } else {
-            if (VirtualCore.get().isAppRunning(packageName, VUserHandle.myUserId())) {
+            if (AppManager.isAppLaunched(packageName)) {
                 AppManager.launchApp(packageName);
                 return;
             }
