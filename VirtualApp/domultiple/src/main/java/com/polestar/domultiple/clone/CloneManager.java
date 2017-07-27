@@ -272,6 +272,9 @@ public class CloneManager {
             if (blackList.contains(ai.packageName)) {
                 return false;
             }
+            if (ai.packageName.equals("com.polestar.multiaccount")) {
+                return false;
+            }
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }

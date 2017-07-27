@@ -149,6 +149,10 @@ public class AppListUtils implements DataObserver {
                 continue;
             }
 
+            if ("com.polestar.domultiple".equals(pkgName)) {
+                continue;
+            }
+
             //Todo:workground re-check here: [Bug] if app install failed, then kill recent appclone process,
             //and restart PB, will see two same apps, need core level root cause.
             if (isAlreadyContains(list, pkgName)) {
