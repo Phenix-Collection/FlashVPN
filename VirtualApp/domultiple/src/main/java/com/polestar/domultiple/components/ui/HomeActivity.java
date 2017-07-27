@@ -117,9 +117,10 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         cloneGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int luckyIdx = mClonedList.size();
+                int size = mClonedList == null? 0 : mClonedList.size();
+                int luckyIdx = size;
                 int addIdx = showLucky? luckyIdx + 1 : luckyIdx;
-                if (i < mClonedList.size()) {
+                if (i < size) {
                     CloneModel model = (CloneModel)gridAdapter.getItem(i);
                     AppLoadingActivity.startAppStartActivity(HomeActivity.this, model);
                     if (model.getLaunched() == 0) {
@@ -138,7 +139,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         cloneGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i >= mClonedList.size()) {
+                int size = mClonedList == null? 0: mClonedList.size();
+                if (i >= size) {
                     return false;
                 }
                 DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
