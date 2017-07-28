@@ -137,7 +137,22 @@
     <entry>
         <key>auto_home_interstitial_interval</key>
         <value>172800000</value>
-        <!-- 48hour -->
+    </entry>
+    <entry>
+        <key>slot_app_start_freq_hour</key>
+        <value>2</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_ramp_hour</key>
+        <value>24</value>
+    </entry>
+    <entry>
+        <key>slot_app_start</key>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/3423200657:0</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_filter</key>
+        <value>all</value>
     </entry>
     <!--
     <entry>
