@@ -4,13 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.polestar.multiaccount.R;
-import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
-import com.polestar.multiaccount.utils.ToastUtils;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.stat.StatService;
 
 /**
  * Created by hxx on 9/21/16.
@@ -29,7 +25,7 @@ public class CrashReceiver extends BroadcastReceiver {
                     boolean forground = intent.getBooleanExtra("forground", false);
                     int tag = intent.getIntExtra("tag", 0);
                     MLogs.logBug("CrashReceiver onReceive crash: " + pName + " forground: " + forground);
-                    MTAManager.reportCrash(context, pName,forground);
+                    EventReporter.reportCrash(context, pName,forground);
                     CrashReport.startCrashReport();
                     CrashReport.setUserSceneTag(context, tag);
                     Throwable ex = (Throwable) intent.getSerializableExtra("exception");

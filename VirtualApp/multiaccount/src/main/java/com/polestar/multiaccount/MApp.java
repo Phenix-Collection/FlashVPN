@@ -4,8 +4,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,7 +27,7 @@ import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.ImageLoaderUtil;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -94,7 +92,7 @@ public class MApp extends Application {
                 initRawData();
                 MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
-                MTAManager.init(gDefault);
+                EventReporter.init(gDefault);
                 BillingProvider.get();
                //
             }
@@ -183,7 +181,7 @@ public class MApp extends Application {
             @Override
             public void keyLog(Context context, String tag, String log) {
                 MLogs.logBug(tag,log);
-                MTAManager.keyLog(MApp.gDefault, tag, log);
+                EventReporter.keyLog(MApp.gDefault, tag, log);
             }
 
             @Override

@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 
 /**
  * Created by yxx on 2016/9/7.
@@ -36,7 +36,7 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
         MLogs.e("onActivityResumed " +  activity.getComponentName());
         isForground = true;
         //MTA
-        MTAManager.onResume(activity);
+        EventReporter.onResume(activity);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
         MLogs.e("onActivityPaused " + activity.getComponentName());
         isForground = false;
         //MTA
-        MTAManager.onPause(activity);
+        EventReporter.onPause(activity);
     }
 
     @Override

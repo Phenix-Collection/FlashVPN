@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -35,7 +34,7 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.ToastUtils;
@@ -176,7 +175,7 @@ public class AppStartActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from, appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
+                EventReporter.launchApp(AppStartActivity.this, appModel.getPackageName(), from, appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
                 // Todo: if app is already launched, just switch it to front, no need re-launch
                 if (needDoUpGrade) {
                     AppManager.upgradeApp(appModel.getPackageName());

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -39,7 +39,7 @@ public class DataBaseOpenHelper extends DaoMaster.DevOpenHelper{
                 }
             }
         } catch (Exception e) {
-            MTAManager.keyLog(mContext, "DB_UPGRADE", "Failed. Drop all.");
+            EventReporter.keyLog(mContext, "DB_UPGRADE", "Failed. Drop all.");
             DaoMaster.dropAllTables(db, true);
             onCreate(db);
         }

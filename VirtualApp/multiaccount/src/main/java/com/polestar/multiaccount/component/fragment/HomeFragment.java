@@ -33,7 +33,6 @@ import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.model.CustomizeAppData;
-import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.AnimatorHelper;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
@@ -41,7 +40,7 @@ import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.ExplosionField;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.LeftRightDialog;
@@ -151,7 +150,7 @@ public class HomeFragment extends BaseFragment {
             MLogs.d("onDragEnd + " + floatView.getSelectedState());
             switch (floatView.getSelectedState()) {
                 case CustomFloatView.SELECT_BTN_LEFT:
-                    MTAManager.addShortCut(mActivity, ((AppModel) info).getPackageName());
+                    EventReporter.addShortCut(mActivity, ((AppModel) info).getPackageName());
                     CommonUtils.createShortCut(mActivity,((AppModel) info));
                     floatView.postDelayed(new Runnable() {
                         @Override
@@ -275,7 +274,7 @@ public class HomeFragment extends BaseFragment {
             public void onClick(View view) {
                 startAppListActivity();
                 PreferencesUtils.setCloneGuideShowed(mActivity);
-                MTAManager.homeAdd(mActivity);
+                EventReporter.homeAdd(mActivity);
             }
         });
 
@@ -302,7 +301,7 @@ public class HomeFragment extends BaseFragment {
                         MLogs.d("Show lucky");
                         Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
                         startActivity(intent);
-                        MTAManager.homeGiftClick(mActivity, "lucky");
+                        EventReporter.homeGiftClick(mActivity, "lucky");
                     }
                 }
             }
@@ -321,7 +320,7 @@ public class HomeFragment extends BaseFragment {
                         MLogs.d("Show lucky");
                         Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
                         startActivity(intent);
-                        MTAManager.homeGiftClick(mActivity, "lucky");
+                        EventReporter.homeGiftClick(mActivity, "lucky");
                     }
                     return  false;
                 }
@@ -549,7 +548,7 @@ public class HomeFragment extends BaseFragment {
     private void deleteApp(AppModel appModel){
         MLogs.d("deleteApp " + appModel.getPackageName());
         appInfos.remove(appModel);
-        MTAManager.deleteClonedApp(mActivity, appModel.getPackageName());
+        EventReporter.deleteClonedApp(mActivity, appModel.getPackageName());
 //        updateModelIndex(itemPosition,appInfos.size() - 1);
         AppManager.uninstallApp(appModel.getPackageName());
         CommonUtils.removeShortCut(mActivity,appModel);

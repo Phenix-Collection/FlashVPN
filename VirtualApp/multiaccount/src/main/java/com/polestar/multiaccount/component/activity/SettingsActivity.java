@@ -19,10 +19,9 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
-import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
 import com.polestar.multiaccount.widgets.UpDownDialog;
 
@@ -78,7 +77,7 @@ public class SettingsActivity extends BaseActivity {
                         PreferencesUtils.setGMSEnable(!orig);
                         VirtualCore.get().restart();
                         boolean newStatus = PreferencesUtils.isGMSEnable();
-                        MTAManager.setGMS(SettingsActivity.this,newStatus, "setting");
+                        EventReporter.setGMS(SettingsActivity.this,newStatus, "setting");
                         if (newStatus) {
                             Toast.makeText(SettingsActivity.this, getString(R.string.settings_gms_enable_toast), Toast.LENGTH_SHORT);
                         } else {
@@ -92,7 +91,7 @@ public class SettingsActivity extends BaseActivity {
         gmsSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MTAManager.generalClickEvent(SettingsActivity.this, "settings_gms_switch");
+                EventReporter.generalClickEvent(SettingsActivity.this, "settings_gms_switch");
                 if(PreferencesUtils.isGMSEnable()) {
                     UpDownDialog.show(SettingsActivity.this, getString(R.string.delete_dialog_title), getString(R.string.settings_gms_disable_notice),
                             getString(R.string.no_thanks), getString(R.string.yes), -1,
@@ -119,12 +118,12 @@ public class SettingsActivity extends BaseActivity {
         adFreeSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_switch");
+                EventReporter.generalClickEvent(SettingsActivity.this, "click_ad_free_switch");
                 if (BillingProvider.get().isAdFreeVIP()) {
                     PreferencesUtils.setAdFree(adFreeSwitch.isChecked());
                     updateBillingStatus();
                 } else {
-                    MTAManager.generalClickEvent(SettingsActivity.this, "ad_free_dialog_from_setting");
+                    EventReporter.generalClickEvent(SettingsActivity.this, "ad_free_dialog_from_setting");
                     PreferencesUtils.updateLastAdFreeDialogTime();
                     UpDownDialog.show(SettingsActivity.this, getString(R.string.adfree_dialog_title), getString(R.string.adfree_dialog_content),
                             getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
@@ -136,11 +135,11 @@ public class SettingsActivity extends BaseActivity {
                                                     .initiatePurchaseFlow(SettingsActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
                                             requestAdFree = true;
                                             PreferencesUtils.updateAdFreeClickStatus(true);
-                                            MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_yes");
+                                            EventReporter.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_yes");
                                             break;
                                         case UpDownDialog.NEGATIVE_BUTTON:
                                             PreferencesUtils.updateAdFreeClickStatus(false);
-                                            MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
+                                            EventReporter.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
                                             break;
                                     }
                                     adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
@@ -149,7 +148,7 @@ public class SettingsActivity extends BaseActivity {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
                             PreferencesUtils.updateAdFreeClickStatus(false);
-                            MTAManager.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
+                            EventReporter.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
                             adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
                         }
                     });
@@ -196,7 +195,7 @@ public class SettingsActivity extends BaseActivity {
             Intent intent = new Intent("android.intent.action.VIEW",Uri.parse("https://plus.google.com/communities/104830818454731991305"));
 //                intent.putExtra("START_OUTTER_APP_FLAG",true);
             startActivity(intent);
-            MTAManager.generalClickEvent(this, "join_us_click");
+            EventReporter.generalClickEvent(this, "join_us_click");
         } catch (Exception localException1) {
             localException1.printStackTrace();
         }

@@ -17,7 +17,7 @@ import java.util.Properties;
 /**
  * Created by hxx on 8/2/16.
  */
-public class MTAManager {
+public class EventReporter {
 
     private static final String APP_KEY = "AP546TPUIQ4X";
 

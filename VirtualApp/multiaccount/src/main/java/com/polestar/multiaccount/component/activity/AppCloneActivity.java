@@ -42,7 +42,7 @@ import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.ToastUtils;
@@ -149,10 +149,10 @@ public class AppCloneActivity extends BaseActivity {
                                     isDBUpdated = true;
                                 }
                             });
-                            MTAManager.applistClone(AppCloneActivity.this, appModel.getPackageName());
+                            EventReporter.applistClone(AppCloneActivity.this, appModel.getPackageName());
                             // showAd(installAd);
                         } else {
-                            MTAManager.keyLog(AppCloneActivity.this, MTAManager.KeyLogTag.AERROR, "cloneError:"+ mPkgName);
+                            EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "cloneError:"+ mPkgName);
                             mAnimateHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -162,7 +162,7 @@ public class AppCloneActivity extends BaseActivity {
                             }, 2000);
                         }
                     } else {
-                        MTAManager.keyLog(AppCloneActivity.this, MTAManager.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
+                        EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
                         isInstallSuccess = true;
                         isInstallDone = true;
                         runOnUiThread(new Runnable() {
@@ -269,7 +269,7 @@ public class AppCloneActivity extends BaseActivity {
                 CommonUtils.createShortCut(this, appModel);
             }
             AppManager.reloadLockerSetting();
-            MTAManager.settingAfterClone(this, appModel.getPackageName(), mNotificationSwitch.isChecked(), mLockerSwitch.isChecked(), mShortcutSwitch.isChecked());
+            EventReporter.settingAfterClone(this, appModel.getPackageName(), mNotificationSwitch.isChecked(), mLockerSwitch.isChecked(), mShortcutSwitch.isChecked());
         }
     }
 
@@ -302,7 +302,7 @@ public class AppCloneActivity extends BaseActivity {
         TextView sponsor = (TextView) findViewById(R.id.sponsor_text);
         if(animateEnd && adReady) {
             sponsor.setVisibility(View.VISIBLE);
-            MTAManager.appCloneAd(this, nativeAd.getAdType());
+            EventReporter.appCloneAd(this, nativeAd.getAdType());
             inflateNativeAdView(nativeAd);
         }
 

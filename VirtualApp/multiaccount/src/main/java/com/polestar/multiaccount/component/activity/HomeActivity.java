@@ -41,7 +41,7 @@ import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.widgets.UpDownDialog;
 import com.polestar.multiaccount.utils.RemoteConfig;
@@ -92,7 +92,7 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MTAManager.homeShow(this);
+        EventReporter.homeShow(this);
         setContentView(R.layout.activity_home);
         initView();
         AppListUtils.getInstance(this); // init AppListUtils
@@ -146,7 +146,7 @@ public class HomeActivity extends BaseActivity {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                MTAManager.homeMenu(HomeActivity.this);
+                EventReporter.homeMenu(HomeActivity.this);
             }
 
             @Override
@@ -190,7 +190,7 @@ public class HomeActivity extends BaseActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (!wallClickReported) {
-                    MTAManager.homeGiftClick(HomeActivity.this, "mv_app_wall");
+                    EventReporter.homeGiftClick(HomeActivity.this, "mv_app_wall");
                 }
                 wallClickReported = true;
                 return false;
@@ -396,7 +396,7 @@ public class HomeActivity extends BaseActivity {
 
     private void doAnimationEnter() {
         mHomeFragment.showFromBottom();
-        MTAManager.generalClickEvent(this, "home_animate_enter");
+        EventReporter.generalClickEvent(this, "home_animate_enter");
         if (!PreferencesUtils.hasShownLongClickGuide(this)) {
             MLogs.d("Not show long click guide.");
             return;
@@ -425,7 +425,7 @@ public class HomeActivity extends BaseActivity {
                     interstitialAd.show();
                     isAutoInterstitialShown = true;
                     PreferencesUtils.updateAutoInterstialTime();
-                    MTAManager.homeGiftClick(this, interstitialAd.getAdType() + "_auto_home");
+                    EventReporter.homeGiftClick(this, interstitialAd.getAdType() + "_auto_home");
                     interstitialAd = null;
                 } catch (Exception ex) {
                     MLogs.logBug("Show interstitial fail: " + MLogs.getStackTraceString(ex));
@@ -436,7 +436,7 @@ public class HomeActivity extends BaseActivity {
 
     private boolean requestAdFree = false;
     private void showAdFreeDialog() {
-        MTAManager.generalClickEvent(HomeActivity.this, "ad_free_dialog_from_home");
+        EventReporter.generalClickEvent(HomeActivity.this, "ad_free_dialog_from_home");
         UpDownDialog.show(HomeActivity.this, getString(R.string.adfree_dialog_title), getString(R.string.adfree_dialog_content),
                 getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                     @Override
@@ -447,11 +447,11 @@ public class HomeActivity extends BaseActivity {
                                         .initiatePurchaseFlow(HomeActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
                                 requestAdFree = true;
                                 PreferencesUtils.updateAdFreeClickStatus(true);
-                                MTAManager.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_yes");
+                                EventReporter.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_yes");
                                 break;
                             case UpDownDialog.NEGATIVE_BUTTON:
                                 PreferencesUtils.updateAdFreeClickStatus(false);
-                                MTAManager.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
+                                EventReporter.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
                                 break;
                         }
                     }
@@ -459,7 +459,7 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 PreferencesUtils.updateAdFreeClickStatus(false);
-                MTAManager.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
+                EventReporter.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
             }
         });
     }
@@ -515,11 +515,11 @@ public class HomeActivity extends BaseActivity {
         }
         if (showAppWall) {
             openWall();
-            MTAManager.homeGiftClick(this, "mv_app_wall");
+            EventReporter.homeGiftClick(this, "mv_app_wall");
         } else {
             Intent intent = new Intent(this, NativeInterstitialActivity.class);
             startActivity(intent);
-            MTAManager.homeGiftClick(this, "lucky");
+            EventReporter.homeGiftClick(this, "lucky");
         }
     }
 
@@ -579,20 +579,20 @@ public class HomeActivity extends BaseActivity {
                 } else {
                     LockSettingsActivity.start(this,"home");
                 }
-                MTAManager.menuPrivacyLocker(this);
+                EventReporter.menuPrivacyLocker(this);
                 break;
             case 1:
-                MTAManager.menuNotification(this);
+                EventReporter.menuNotification(this);
                 Intent notification = new Intent(this, NotificationActivity.class);
                 startActivity(notification);
                 break;
             case 2:
-                MTAManager.menuFAQ(this);
+                EventReporter.menuFAQ(this);
                 Intent intentToFAQ = new Intent(this, FaqActivity.class);
                 startActivity(intentToFAQ);
                 break;
             case 3:
-                MTAManager.menuFeedback(this);
+                EventReporter.menuFeedback(this);
                 Intent feedback = new Intent(this, FeedbackActivity.class);
                 startActivity(feedback);
                 break;
@@ -600,11 +600,11 @@ public class HomeActivity extends BaseActivity {
                 showRateDialog(RATE_FROM_MENU, null);
                 break;
             case 5:
-                MTAManager.menuShare(this);
+                EventReporter.menuShare(this);
                 CommonUtils.shareWithFriends(this);
                 break;
             case 6:
-                MTAManager.menuSettings(this);
+                EventReporter.menuSettings(this);
                 Intent intentToSettings = new Intent(this, SettingsActivity.class);
                 startActivity(intentToSettings);
                 break;
@@ -629,7 +629,7 @@ public class HomeActivity extends BaseActivity {
             }
             rateDialogShowed= true;
         }
-        MTAManager.reportRate(this,"start", from);
+        EventReporter.reportRate(this,"start", from);
         PreferencesUtils.updateRateDialogTime(this);
         String title = RATE_AFTER_CLONE.equals(from) ? getString(R.string.congratulations) : getString(R.string.rate_us);
         UpDownDialog.show(this, title,
@@ -642,9 +642,9 @@ public class HomeActivity extends BaseActivity {
                             case UpDownDialog.NEGATIVE_BUTTON:
                                 PreferencesUtils.setLoveApp(false);
                                 if (!RATE_AFTER_CLONE.equals(from)) {
-                                    MTAManager.loveCloneApp(HomeActivity.this, false, from );
+                                    EventReporter.loveCloneApp(HomeActivity.this, false, from );
                                 } else {
-                                    MTAManager.loveCloneApp(HomeActivity.this, false,pkg);
+                                    EventReporter.loveCloneApp(HomeActivity.this, false,pkg);
                                 }
                                 UpDownDialog.show(HomeActivity.this, getString(R.string.feedback),
                                         getString(R.string.dialog_feedback_content),
@@ -655,7 +655,7 @@ public class HomeActivity extends BaseActivity {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 switch (which) {
                                                     case UpDownDialog.POSITIVE_BUTTON:
-                                                        MTAManager.reportRate(HomeActivity.this, "go_faq", from);
+                                                        EventReporter.reportRate(HomeActivity.this, "go_faq", from);
                                                         Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
                                                         startActivity(feedback);
                                                         break;
@@ -666,9 +666,9 @@ public class HomeActivity extends BaseActivity {
                             case UpDownDialog.POSITIVE_BUTTON:
                                 PreferencesUtils.setLoveApp(true);
                                 if (!RATE_AFTER_CLONE.equals(from)) {
-                                    MTAManager.loveCloneApp(HomeActivity.this, true, from );
+                                    EventReporter.loveCloneApp(HomeActivity.this, true, from );
                                 } else {
-                                    MTAManager.loveCloneApp(HomeActivity.this, true,pkg);
+                                    EventReporter.loveCloneApp(HomeActivity.this, true,pkg);
                                 }
                                 UpDownDialog.show(HomeActivity.this, getString(R.string.dialog_love_title),
                                         getString(R.string.dialog_love_content),
@@ -679,7 +679,7 @@ public class HomeActivity extends BaseActivity {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 switch (which) {
                                                     case UpDownDialog.POSITIVE_BUTTON:
-                                                        MTAManager.reportRate(HomeActivity.this, "go_rating",from);
+                                                        EventReporter.reportRate(HomeActivity.this, "go_rating",from);
                                                         PreferencesUtils.setRated(true);
                                                         CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
                                                         break;

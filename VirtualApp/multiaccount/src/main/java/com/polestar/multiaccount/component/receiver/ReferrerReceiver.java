@@ -9,9 +9,8 @@ import android.text.TextUtils;
 import com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
-import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.stat.StatConfig;
 
@@ -77,7 +76,7 @@ public class ReferrerReceiver extends BroadcastReceiver {
             PreferencesUtils.setInstallChannel(utm_source);
             CrashReport.setAppChannel(MApp.getApp(), utm_source);
             StatConfig.setInstallChannel(MApp.getApp(), utm_source);
-            MTAManager.reportReferrer(MApp.getApp(), utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid);
+            EventReporter.reportReferrer(MApp.getApp(), utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid);
         }
         new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
     }

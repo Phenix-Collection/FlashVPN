@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.os.VUserHandle;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.adapter.BasicPackageSwitchAdapter;
@@ -18,7 +16,7 @@ import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.ToastUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
@@ -110,10 +108,10 @@ public class LockSettingsActivity extends BaseActivity {
                                 isSettingChanged = true;
                                 if(status) {
                                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
-                                    MTAManager.lockerEnable(LockSettingsActivity.this, "enable",model.getPackageName(), from);
+                                    EventReporter.lockerEnable(LockSettingsActivity.this, "enable",model.getPackageName(), from);
                                 } else {
                                     model.setLockerState(AppConstants.AppLockState.DISABLED);
-                                    MTAManager.lockerEnable(LockSettingsActivity.this, "disable", model.getPackageName(), from);
+                                    EventReporter.lockerEnable(LockSettingsActivity.this, "disable", model.getPackageName(), from);
                                 }
                                 DbManager.updateAppModel(mContext, model);
                                 MLogs.d("lock state changed: " + model.getPackageName());
@@ -162,7 +160,7 @@ public class LockSettingsActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 PreferencesUtils.setLockInterval(ARR_INTERVAL[i]);
                 isSettingChanged = true;
-                MTAManager.generalClickEvent(LockSettingsActivity.this, "set_relock_interval_" + i);
+                EventReporter.generalClickEvent(LockSettingsActivity.this, "set_relock_interval_" + i);
             }
 
             @Override
@@ -178,13 +176,13 @@ public class LockSettingsActivity extends BaseActivity {
                 LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
                 ToastUtils.ToastDefult(this, getString(R.string.no_password_set));
                 if(report) {
-                    MTAManager.lockerEnable(this, "no_password", "none", from);
+                    EventReporter.lockerEnable(this, "no_password", "none", from);
                 }
             } else {
                 detailedSettingLayout.setVisibility(View.VISIBLE);
                 PreferencesUtils.setLockerEnabled(this, true);
                 if(report) {
-                    MTAManager.lockerEnable(this, "enable", "none", from);
+                    EventReporter.lockerEnable(this, "enable", "none", from);
                 }
             }
         }else{
@@ -192,7 +190,7 @@ public class LockSettingsActivity extends BaseActivity {
             PreferencesUtils.setLockerEnabled(this, false);
             PreferencesUtils.setEncodedPatternPassword(this,"");
             if(report) {
-                MTAManager.lockerEnable(this, "disable", "none", from);
+                EventReporter.lockerEnable(this, "disable", "none", from);
             }
         }
     }

@@ -1,40 +1,25 @@
 package com.polestar.multiaccount.component.activity;
 
-import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.polestar.ad.AdConfig;
-import com.polestar.ad.AdConstants;
-import com.polestar.ad.AdControlInfo;
-import com.polestar.ad.AdLog;
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
@@ -44,17 +29,14 @@ import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.pbinterface.DataObserver;
 import com.polestar.multiaccount.utils.AppListUtils;
-import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.widgets.FixedGridView;
 import com.polestar.multiaccount.widgets.FixedListView;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by yxx on 2016/7/15.
