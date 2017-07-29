@@ -15,12 +15,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.activity.AppStartActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.model.CustomizeAppData;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,8 +39,9 @@ public class CommonUtils {
         MApp.getApp().startActivity(intent);
     }
     public static void createShortCut(Context context, AppModel appModel) {
-        Bitmap iconBitmap = BitmapUtils.createCustomIcon(context, appModel.initDrawable(context));
-        String appName = context.getResources().getString(R.string.clone_label_tag,appModel.getName());
+        Bitmap iconBitmap = BitmapUtils.getCustomIcon(context, appModel.getPackageName());
+        CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+        String appName = data.label;
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppStartActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());

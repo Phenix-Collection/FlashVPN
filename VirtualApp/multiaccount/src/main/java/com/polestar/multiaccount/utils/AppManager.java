@@ -2,17 +2,14 @@ package com.polestar.multiaccount.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
-import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.os.VUserHandle;
-import com.lody.virtual.remote.InstalledAppInfo;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
@@ -45,7 +42,7 @@ public class AppManager {
                 MLogs.logBug(MLogs.getStackTraceString(e));
             }
             if (model.getCustomIcon() == null) {
-                model.setCustomIcon(BitmapUtils.createCustomIcon(context, model.initDrawable(context)));
+                model.setCustomIcon(BitmapUtils.getCustomIcon(context, model.getPackageName()));
             }
         }
         deleteApp(context, uninstalledApp);

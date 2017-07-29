@@ -1,5 +1,7 @@
 package com.polestar.multiaccount.constant;
 
+import android.os.Environment;
+
 public class AppConstants {
 
     public static boolean IS_RELEASE_VERSION;
@@ -30,6 +32,10 @@ public class AppConstants {
     public static final String KEY_AUTO_CREATE_SHORTCUT = "key_auto_create_shortcut";
 
     public static final String POPULAR_FILE_NAME = "popular_apps.txt";
+
+    public static final String ICON_FILE_PATH = "/icons";
+    public final static String CUSTOMIZE_PREF = "app_custom_";
+    public final static int COLOR_MID_VALUE = 127;
 
     public class PreferencesKey {
         public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";

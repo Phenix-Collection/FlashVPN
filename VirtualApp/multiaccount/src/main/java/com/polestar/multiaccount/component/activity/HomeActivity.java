@@ -509,18 +509,19 @@ public class HomeActivity extends BaseActivity {
 
     public void onIconAdClick(View view) {
         MLogs.d("onIconAdClick showAppWall: " + showAppWall);
-        PreferencesUtils.updateIconAdClickTime(this);
-        if (PreferencesUtils.isAdFree()) {
-            return;
-        }
-        if (showAppWall) {
-            openWall();
-            MTAManager.homeGiftClick(this, "mv_app_wall");
-        } else {
-            Intent intent = new Intent(this, NativeInterstitialActivity.class);
-            startActivity(intent);
-            MTAManager.homeGiftClick(this, "lucky");
-        }
+        CustomizeIconActivity.start(this, null);
+//        PreferencesUtils.updateIconAdClickTime(this);
+//        if (PreferencesUtils.isAdFree()) {
+//            return;
+//        }
+//        if (showAppWall) {
+//            openWall();
+//            MTAManager.homeGiftClick(this, "mv_app_wall");
+//        } else {
+//            Intent intent = new Intent(this, NativeInterstitialActivity.class);
+//            startActivity(intent);
+//            MTAManager.homeGiftClick(this, "lucky");
+//        }
     }
 
     private final static String QUIT_RATE_RANDOM = "quit_rating_random";

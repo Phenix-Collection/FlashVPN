@@ -230,4 +230,7 @@
         <item>0</item>
         <item>0</item>
     </string-array>
+
+    <!-- customize -->
+    <string name="customize_title">Customize</string>
 </resources>

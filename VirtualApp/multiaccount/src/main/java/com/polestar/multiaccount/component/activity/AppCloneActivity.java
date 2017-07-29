@@ -23,16 +23,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.lody.virtual.client.core.VirtualCore;
-import com.nostra13.universalimageloader.utils.L;
 import com.polestar.ad.AdConfig;
-import com.polestar.ad.AdConstants;
-import com.polestar.ad.AdLog;
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -226,6 +219,9 @@ public class AppCloneActivity extends BaseActivity {
         initSwitchStatus(true);
     }
 
+    public void onAppIconClick(View view) {
+        CustomizeIconActivity.start(this, appModel.getPackageName());
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -465,7 +461,7 @@ public class AppCloneActivity extends BaseActivity {
             }
         });
         //mImgSuccessBg.setVisibility(View.VISIBLE);
-        appModel.setCustomIcon(BitmapUtils.createCustomIcon(AppCloneActivity.this, appModel.getIcon() ));
+        appModel.setCustomIcon(BitmapUtils.getCustomIcon(AppCloneActivity.this, mPkgName ));
         mImgAppIcon.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.INVISIBLE);
 

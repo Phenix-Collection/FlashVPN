@@ -122,6 +122,7 @@
                     android:layout_centerInParent="true"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="15dp"
+                    android:onClick="onAppIconClick"
                     android:id="@+id/clone_finish_icon">
                     <ImageView
                         android:layout_width="150dp"
@@ -133,6 +134,12 @@
                         android:layout_width="55dp"
                         android:layout_height="55dp"
                         android:layout_centerInParent="true" />
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:src="@drawable/icon_editable"/>
                 </RelativeLayout>
 
                 <View

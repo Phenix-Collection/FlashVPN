@@ -21,20 +21,10 @@ public class AppApiDelegate implements IAppApiDelegate {
         }
         if (icon == null) {
             PackageManager pm = MApp.getApp().getPackageManager();
-            Drawable drawable = null;
-            try {
-                drawable = pm.getApplicationIcon(pkg);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-            if (drawable != null) {
-                return BitmapUtils.createCustomIcon(MApp.getApp(), drawable);
-            }
+            return BitmapUtils.getCustomIcon(MApp.getApp(), pkg);
         } else {
-            return BitmapUtils.createCustomIcon(MApp.getApp(), new BitmapDrawable(icon));
+            return BitmapUtils.createBadgeIcon(MApp.getApp(), new BitmapDrawable(icon));
         }
-
-        return null;
     }
 
     @Override

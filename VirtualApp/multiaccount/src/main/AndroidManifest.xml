@@ -73,6 +73,10 @@
             android:name=".component.activity.SettingsActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".component.activity.CustomizeIconActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivityStyle"/>
+        <activity
             android:name=".component.activity.AppCloneActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher"/>

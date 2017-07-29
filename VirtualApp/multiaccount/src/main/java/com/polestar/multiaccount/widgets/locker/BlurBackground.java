@@ -2,11 +2,14 @@ package com.polestar.multiaccount.widgets.locker;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.polestar.multiaccount.MApp;
+import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.CommonUtils;
 
 
@@ -51,7 +54,7 @@ public class BlurBackground extends LinearLayout {
         if(TextUtils.isEmpty(packageName) || CommonUtils.getAppIcon(packageName)==null){
             return;
         }
-        mDefaultThemeLogic.setBackground(packageName, CommonUtils.getAppIcon(packageName));
+        mDefaultThemeLogic.setBackground(packageName, new BitmapDrawable(BitmapUtils.getCustomIcon(MApp.getApp(), packageName)));
     }
 
     public void resetLayout() {

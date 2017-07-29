@@ -3,6 +3,7 @@ package com.polestar.multiaccount.widgets.locker;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -13,15 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.lody.virtual.client.core.VirtualCore;
-import com.polestar.ad.AdConfig;
-import com.polestar.ad.AdConstants;
-import com.polestar.ad.AdLog;
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -30,6 +25,7 @@ import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.AppLockMonitor;
 import com.polestar.multiaccount.component.activity.LockSecureQuestionActivity;
+import com.polestar.multiaccount.model.CustomizeAppData;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
@@ -128,22 +124,24 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
         mCenterIcon = (FeedbackImageView) mContentView.findViewById(R.id.window_applock_icon);
         mCenterAppText = (TextView) mContentView.findViewById(R.id.window_applock_name);
-        PackageManager pm = MApp.getApp().getPackageManager();
-        ApplicationInfo ai = null;
-        try {
-            ai = pm.getApplicationInfo(mPkgName, 0);
-        }catch (Exception e) {
-            MLogs.logBug(MLogs.getStackTraceString(e));
+        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName);
+        if (TextUtils.isEmpty(data.label)) {
+            PackageManager pm = MApp.getApp().getPackageManager();
+            ApplicationInfo ai = null;
+            try {
+                ai = pm.getApplicationInfo(mPkgName, 0);
+                CharSequence title = pm.getApplicationLabel(ai);
+                data.label = String.format(ResourcesUtil.getString(R.string.applock_window_title),title);
+            }catch (Exception e) {
+                MLogs.logBug(MLogs.getStackTraceString(e));
+            }
         }
-        if ( ai != null) {
-            Drawable drawable = pm.getApplicationIcon(ai);
-            if (drawable != null) {
-                mCenterIcon.setImageBitmap( BitmapUtils.createCustomIcon(MApp.getApp(), drawable));
-            }
-            CharSequence title = pm.getApplicationLabel(ai);
-            if (title != null) {
-                mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.applock_window_title),title));
-            }
+        Bitmap icon = BitmapUtils.getCustomIcon(MApp.getApp(), mPkgName);
+        if (icon != null) {
+            mCenterIcon.setImageBitmap( icon);
+        }
+        if (data.label != null) {
+            mCenterAppText.setText(data.label);
         }
         MLogs.d("AppLockWindow initialized 1");
         mForgotPasswordTv = (TextView)mContentView.findViewById(R.id.forgot_password_tv);

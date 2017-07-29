@@ -1,23 +1,14 @@
 package com.polestar.multiaccount.component.fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -25,14 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.polestar.ad.AdConfig;
-import com.polestar.ad.AdConstants;
-import com.polestar.ad.AdLog;
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -46,6 +31,7 @@ import com.polestar.multiaccount.component.activity.NativeInterstitialActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.model.CustomizeAppData;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.AnimatorHelper;
 import com.polestar.multiaccount.utils.AppManager;
@@ -249,14 +235,15 @@ public class HomeFragment extends BaseFragment {
 
             AppModel appModel = (AppModel) getItem(i);
             if (appModel != null) {
+                CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
                 if (appModel.getCustomIcon() == null) {
-                    appModel.setCustomIcon(BitmapUtils.createCustomIcon(mActivity, appModel.initDrawable(mActivity)));
+                    appModel.setCustomIcon(data.getCustomIcon());
                 }
 
                 if (appModel.getCustomIcon() != null) {
                     appIcon.setImageBitmap(appModel.getCustomIcon());
                 }
-                appName.setText(appModel.getName());
+                appName.setText(data.customized? data.label: appModel.getName());
             } else {
                 if (showLucky && i == appInfos.size()) {
                     appIcon.setImageResource(R.drawable.icon_feel_lucky);

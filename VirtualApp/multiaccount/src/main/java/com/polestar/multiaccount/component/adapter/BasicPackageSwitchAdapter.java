@@ -1,6 +1,8 @@
 package com.polestar.multiaccount.component.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,9 @@ import android.widget.TextView;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.model.CustomizeAppData;
 import com.polestar.multiaccount.utils.AppManager;
+import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.widgets.BlueSwitch;
 
 import java.util.List;
@@ -78,8 +82,9 @@ public class BasicPackageSwitchAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.iconView.setImageDrawable(model.getIcon());
-        viewHolder.nameView.setText(model.getName());
+        CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName());
+        viewHolder.iconView.setImageBitmap(data.getCustomIcon());
+        viewHolder.nameView.setText(data.customized? data.label: model.getName());
         if (position == (getCount() - 1)) {
             viewHolder.divider.setVisibility(View.INVISIBLE);
         } else {
