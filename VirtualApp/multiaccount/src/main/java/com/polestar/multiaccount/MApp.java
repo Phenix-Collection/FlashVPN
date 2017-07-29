@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.InstallStrategy;
@@ -91,6 +92,7 @@ public class MApp extends Application {
                 RemoteConfig.init();
                 ImageLoaderUtil.init(gDefault);
                 initRawData();
+                MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 MTAManager.init(gDefault);
                 BillingProvider.get();
@@ -156,6 +158,7 @@ public class MApp extends Application {
 //                virtualCore.addVisibleOutsidePackage("com.tencent.mm");
 //                virtualCore.addVisibleOutsidePackage("com.immomo.momo");
                 MLogs.d("Server process app onCreate done");
+                MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
                 AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
                 AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
                 AppLockMonitor.getInstance();

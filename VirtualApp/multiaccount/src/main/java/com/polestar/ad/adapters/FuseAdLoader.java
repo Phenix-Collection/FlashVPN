@@ -41,6 +41,8 @@ public class FuseAdLoader {
         if (adLoader == null) {
             adLoader = new FuseAdLoader(slot, appContext);
             sAdLoaderMap.put(slot, adLoader);
+        } else {
+            adLoader.attachContext(appContext);
         }
         return adLoader;
     }
@@ -50,6 +52,10 @@ public class FuseAdLoader {
         mSlot = slot;
         List<AdConfig> adSources = RemoteConfig.getAdConfigList(mSlot);
         addAdConfigList(adSources);
+    }
+
+    public void attachContext(Context context) {
+        mContext = context;
     }
 
     public static final HashSet<String> SUPPORTED_TYPES = new HashSet<>();
