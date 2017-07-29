@@ -86,8 +86,6 @@
             android:name=".component.activity.AppStartActivity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:launchMode="singleTask"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.polestar.multiaccount.launch"
             android:theme="@style/AppTheme.Launcher"/>

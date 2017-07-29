@@ -6,9 +6,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -21,16 +22,25 @@ import android.widget.TextView;
 
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.os.VUserHandle;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.multiaccount.BuildConfig;
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppManager;
+import com.polestar.multiaccount.utils.CommonUtils;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.MTAManager;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.RemoteConfig;
 import com.polestar.multiaccount.utils.ToastUtils;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -48,7 +58,74 @@ public class AppStartActivity extends BaseActivity {
     private  AppModel appModel;
     private String from;
     private boolean needDoUpGrade;
+    private FuseAdLoader mAdLoader;
+    private static final String SLOT_APP_START = "slot_app_start";
+    private static final String CONFIG_APP_START_AD_FREQ = "slot_app_start_freq_hour";
+    private static final String CONFIG_APP_START_AD_RAMP = "slot_app_start_ramp_hour";
+    private static final String CONFIG_APP_START_AD_FILTER = "slot_app_start_filter";
+    private static HashSet<String> filterPkgs ;
+    private boolean hasShownAd;
+    private boolean launched;
 
+    public static boolean needLoadAd(boolean preload, String pkg) {
+        long interval = RemoteConfig.getLong(CONFIG_APP_START_AD_FREQ)*60*60*1000;
+        long ramp = RemoteConfig.getLong(CONFIG_APP_START_AD_RAMP)*60*60*1000;
+        long last = getLastShowTime();
+        if (last == 0 && TextUtils.isEmpty(pkg)) {
+            return false;
+        }
+        long actualLast = last == 0? CommonUtils.getInstallTime(MApp.getApp(), pkg): last;
+        long delta =
+                preload? System.currentTimeMillis() - actualLast + 15*60*1000: System.currentTimeMillis()-actualLast;
+        boolean need =  last == 0? delta > ramp: delta > interval;
+        if (filterPkgs == null) {
+            filterPkgs = new HashSet<>();
+            String[] arr = RemoteConfig.getString(CONFIG_APP_START_AD_FILTER).split(":");
+            if(arr !=null) {
+                for (String s : arr) {
+                    filterPkgs.add(s);
+                }
+            }
+        }
+        MLogs.d("needLoad start app ad: " + need);
+        return (need && !filterPkgs.contains(pkg)) || BuildConfig.DEBUG;
+    }
+
+    public void loadAd() {
+        mAdLoader = FuseAdLoader.get(SLOT_APP_START, this);
+        hasShownAd = false;
+        if(mAdLoader.hasValidAdSource()){
+            mAdLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAdAdapter ad) {
+                    if (!launched) {
+                        ad.show();
+                        hasShownAd = true;
+                        updateShowTime();
+                    }
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+                    MLogs.d(SLOT_APP_START + " load error:" + error);
+                    doLaunch();
+                }
+            });
+        }
+    }
+
+    private static long getLastShowTime() {
+        return PreferencesUtils.getLong(MApp.getApp(), "app_start_last", 0);
+    }
+
+    private static void updateShowTime() {
+        PreferencesUtils.putLong(MApp.getApp(), "app_start_last", System.currentTimeMillis());
+    }
 
     public static void startAppStartActivity(Activity activity, String packageName) {
         if (AppManager.needUpgrade(packageName)) {
@@ -73,6 +150,7 @@ public class AppStartActivity extends BaseActivity {
     private void initData() {
 
         Intent intent = getIntent();
+        launched = false;
         if (intent != null) {
             String packageName = intent.getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
             from = intent.getStringExtra(AppConstants.EXTRA_FROM);
@@ -89,28 +167,31 @@ public class AppStartActivity extends BaseActivity {
             finish();
         } else {
             needDoUpGrade = AppManager.needUpgrade(appModel.getPackageName());
-            int delay = 500;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from, appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
-                    // Todo: if app is already launched, just switch it to front, no need re-launch
-                    if (needDoUpGrade) {
-                        AppManager.upgradeApp(appModel.getPackageName());
-                    }
-                    AppManager.launchApp(appModel.getPackageName());
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 10000);
-//                            finish();
-                }
-            }, delay);
         }
     }
 
+    private void doLaunch(){
+        if (launched) return;
+        launched = true;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MTAManager.launchApp(AppStartActivity.this, appModel.getPackageName(), from, appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
+                // Todo: if app is already launched, just switch it to front, no need re-launch
+                if (needDoUpGrade) {
+                    AppManager.upgradeApp(appModel.getPackageName());
+                }
+                AppManager.launchApp(appModel.getPackageName());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MLogs.d("AppStart finish");
+                        finish();
+                    }
+                }, 4000);
+            }
+        }, 500);
+    }
     private void initView() {
         mLoadingView = (ProgressBar) findViewById(R.id.loading);
         //It's the first one trick here, ProgressBar widget will be drawn in indeterminate mode
@@ -195,7 +276,23 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (!hasShownAd && needLoadAd(false, appModel.getPackageName())) {
+            loadAd();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //not have ad loaded
+                    if (!hasShownAd) {
+                        doLaunch();
+                    }
+                }
+                //wait 4000ms
+            }, 3000);
+        } else {
+            doLaunch();
+        }
     }
+
 
     @Override
     public void onStop() {
@@ -205,6 +302,7 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        MLogs.d("AppStartActivity onDestroy");
     }
 
     @Override
