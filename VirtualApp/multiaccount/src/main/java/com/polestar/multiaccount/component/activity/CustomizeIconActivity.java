@@ -95,11 +95,12 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
             finish();
         }
         initData();
+        labelText.setText(mData.label);
+        labelText.setSelection(mData.label.length());
         updateView();
     }
 
     private void updateView() {
-        labelText.setText(mData.label);
         seekBarLight.setProgress(mData.light );
         seekBarSat.setProgress(mData.sat );
         seekBarHue.setProgress(mData.hue );

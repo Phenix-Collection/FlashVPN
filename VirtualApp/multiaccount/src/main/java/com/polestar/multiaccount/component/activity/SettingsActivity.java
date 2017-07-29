@@ -172,6 +172,11 @@ public class SettingsActivity extends BaseActivity {
         }
     }
 
+    public void onCustomizeClick(View view) {
+        Intent intent = new Intent(this, CustomizeSettingActivity.class);
+        startActivity(intent);
+    }
+
     public void onPrivacyPolicyClick(View view) {
         Intent intent = new Intent(this, WebViewActivity.class);
         intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.settings_privacy_policy));

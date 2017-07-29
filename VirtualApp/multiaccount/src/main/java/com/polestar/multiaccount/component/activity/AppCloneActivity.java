@@ -35,6 +35,7 @@ import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.model.CustomizeAppData;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
@@ -100,6 +101,7 @@ public class AppCloneActivity extends BaseActivity {
 
     private RelativeLayout mCloneSettingLayout;
     private boolean isDBUpdated ;
+    private CustomizeAppData data;
 
     private Handler mAnimateHandler = new Handler(){
         public void handleMessage(Message msg) {
@@ -226,6 +228,13 @@ public class AppCloneActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         initSwitchStatus(false);
+        if (mCloneSettingLayout.getVisibility() == View.VISIBLE) {
+            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+            ImageView icon = (ImageView) mCloneSettingLayout.findViewById(R.id.img_app_icon_done);
+            icon.setImageBitmap(data.getCustomIcon());
+            mTxtInstalled.setText(String.format(getString(R.string.clone_success), data.label));
+        }
+
     }
 
     private void initSwitchStatus(boolean firstTime) {
@@ -471,7 +480,8 @@ public class AppCloneActivity extends BaseActivity {
         mLayoutCancel.setVisibility(View.INVISIBLE);
         mTxtInstalling.setVisibility(View.INVISIBLE);
         mTxtAppLabel.setVisibility(View.INVISIBLE);
-        mTxtInstalled.setText(String.format(getString(R.string.clone_success), mPkgLabel));
+        data = CustomizeAppData.loadFromPref(mPkgName);
+        mTxtInstalled.setText(String.format(getString(R.string.clone_success), data.label));
         showCloneSetting();
     }
 
@@ -485,7 +495,7 @@ public class AppCloneActivity extends BaseActivity {
         mCloneSettingLayout.startAnimation(successBgFadeIn);
         ImageView icon = (ImageView)mCloneSettingLayout.findViewById(R.id.img_app_icon_done);
         icon.setBackground(null);
-        icon.setImageBitmap(appModel.getCustomIcon());
+        icon.setImageBitmap(data.getCustomIcon());
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(icon, "scaleX", 0.7f, 1.3f, 1.1f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(icon, "scaleY", 0.7f, 1.3f, 1.1f);
         AnimatorSet animSet = new AnimatorSet();

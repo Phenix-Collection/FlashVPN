@@ -73,6 +73,9 @@
             android:name=".component.activity.SettingsActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".component.activity.CustomizeSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".component.activity.CustomizeIconActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogActivityStyle"/>

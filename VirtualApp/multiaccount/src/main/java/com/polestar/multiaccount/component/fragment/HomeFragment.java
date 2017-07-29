@@ -2,6 +2,7 @@ package com.polestar.multiaccount.component.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -236,13 +237,9 @@ public class HomeFragment extends BaseFragment {
             AppModel appModel = (AppModel) getItem(i);
             if (appModel != null) {
                 CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
-                if (appModel.getCustomIcon() == null) {
-                    appModel.setCustomIcon(data.getCustomIcon());
-                }
-
-                if (appModel.getCustomIcon() != null) {
-                    appIcon.setImageBitmap(appModel.getCustomIcon());
-                }
+                Bitmap bmp = data.getCustomIcon();
+                appIcon.setImageBitmap(bmp);
+                appModel.setCustomIcon(bmp);
                 appName.setText(data.customized? data.label: appModel.getName());
             } else {
                 if (showLucky && i == appInfos.size()) {

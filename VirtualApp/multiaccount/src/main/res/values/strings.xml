@@ -233,4 +233,5 @@
 
     <!-- customize -->
     <string name="customize_title">Customize</string>
+    <string name="customize_setting_desc">Click to customize icon and label for clones</string>
 </resources>

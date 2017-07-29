@@ -39,6 +39,8 @@
             android:id="@+id/app_label"
             android:hint="No more than 20 characters"
             android:textColor="@color/text_gray_dark"
+            android:maxLines="1"
+            android:maxLength="30"
             android:textSize="16sp"/>
 
         <LinearLayout
