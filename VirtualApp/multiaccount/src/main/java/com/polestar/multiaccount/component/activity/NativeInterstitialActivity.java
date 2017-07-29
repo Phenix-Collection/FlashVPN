@@ -55,7 +55,7 @@ public class NativeInterstitialActivity extends Activity {
     //private static final String CONFIG_SLOT_HOME_LUCKY = "slot_test";
 
     private static final int MSG_TIMEOUT = 1;
-    private static final int DEFAULT_TIMEOUT_DELAY = 60*1000;
+    private static final int DEFAULT_TIMEOUT_DELAY = 30*1000;
 
     private boolean canceled = false;
 
