@@ -1,12 +1,10 @@
 package com.polestar.multiaccount.utils;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.polestar.multiaccount.MApp;
-import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 
@@ -57,7 +55,7 @@ public class CloneHelper {
             });
         }catch (Exception ex) {
             MLogs.logBug(MLogs.getStackTraceString(ex));
-            MTAManager.keyLog(MApp.getApp(), MTAManager.KeyLogTag.AERROR, "installError:" + appModel.getPackageName());
+            EventReporter.keyLog(MApp.getApp(), EventReporter.KeyLogTag.AERROR, "installError:" + appModel.getPackageName());
         }
     }
 
