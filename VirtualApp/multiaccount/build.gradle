@@ -96,8 +96,7 @@ dependencies {
     // MTA
     compile files('libs/mid-sdk-3.5.jar')
     compile files('libs/mta-sdk-2.2.0.jar')
-    //Avazu
-    //compile 'com.google.code.gson:gson:2.8.0'
+
 
     //    compile files('libs/mta-sdk-2.2.0.jar')
     //compile 'com.google.android.gms:play-services-ads:11.0.2'
@@ -127,5 +126,10 @@ dependencies {
     }
 
     compile 'com.android.billingclient:billing:dp-1'
+
+    //Avazu
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile(name: 'anative_common', ext: 'aar')
+    compile(name: 'anative_appwall', ext: 'aar')
 }
 apply plugin: 'com.google.gms.google-services'

@@ -89,6 +89,7 @@ public class HomeActivity extends BaseActivity {
     private RelativeLayout giftIconLayout;
     private RelativeLayout wallButtonLayout;
     private IAdAdapter interstitialAd;
+    private boolean av, mv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,15 +97,24 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
         initView();
         AppListUtils.getInstance(this); // init AppListUtils
+        String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
+        av = "all".equals(conf) || "avz".equals(conf);
+        mv = "all".equals(conf) || "mv".equals(conf);
         long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);
         int random = new Random().nextInt(100);
-        showAppWall = random < wallPercent;
+        showAppWall = mv && random < wallPercent;
         random = new Random().nextInt(100);
         long interval = System.currentTimeMillis() - PreferencesUtils.getAutoInterstialTime();
         autoShowInterstitial = (random < RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL)
                 && (interval > RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL))) || BuildConfig.DEBUG;
-        MLogs.d("showAppWall: " + showAppWall + " autoInterstitial: " + autoShowInterstitial);
+        MLogs.d("showAppWall: " + showAppWall + " autoInterstitial: " + autoShowInterstitial + " wallPercent : " + wallPercent);
         //showAppWall = true;
+        if (av) {
+            random = new Random().nextInt(100);
+            if (random < 8 || BuildConfig.DEBUG) {
+                AdUtils.uploadWallImpression(random < 2 || BuildConfig.DEBUG);
+            }
+        }
     }
 
     private void initView() {
@@ -287,7 +297,9 @@ public class HomeActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isAutoInterstitialShown " + isAutoInterstitialShown);
-        preloadAppWall();
+        if (mv) {
+            preloadAppWall();
+        }
         if (!PreferencesUtils.isAdFree()) {
             if (showAppWall) {
                 giftIconLayout.setVisibility(View.GONE);

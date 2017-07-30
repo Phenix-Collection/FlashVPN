@@ -37,6 +37,8 @@ public class AppConstants {
     public final static String CUSTOMIZE_PREF = "app_custom_";
     public final static int COLOR_MID_VALUE = 127;
 
+    public final static String CONF_WALL_SDK = "conf_wall_sdk";
+
     public class PreferencesKey {
         public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";
         public static final String SHOWN_LONG_CLICK_GUIDE = "show_guide_for_long_press";

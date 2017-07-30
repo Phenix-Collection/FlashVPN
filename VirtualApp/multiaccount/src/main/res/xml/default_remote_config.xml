@@ -82,14 +82,6 @@
         <value>1</value>
     </entry>
     <entry>
-        <key>avazu_imp_rate</key>
-        <value>10</value>
-    </entry>
-    <entry>
-        <key>avazu_click_rate</key>
-        <value>5</value>
-    </entry>
-    <entry>
         <key>show_ad_after_clone</key>
         <value>true</value>
     </entry>
@@ -157,6 +149,10 @@
     <entry>
         <key>conf_social_app_list</key>
         <value>com.whatsapp:com.viber.voip:com.twitter.android:sg.bigo.live:com.UCMobile.intl:com.tencent.com.bsb.hike:com.bbm:com.instagram.android:com.facebook.orca:com.facebook.katana:com.imo.android.imoim:com.linecorp.LGGRTHN:com.bsb.hike:com.snapchat.android:jp.naver.line.android:net.one97.paytm:com.facebook.lite:com.cmcm.whatscall</value>
+    </entry>
+    <entry>
+        <key>conf_wall_sdk</key>
+        <value>all</value>
     </entry>
     <!--
     <entry>

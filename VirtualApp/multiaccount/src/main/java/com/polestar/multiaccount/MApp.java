@@ -15,6 +15,7 @@ import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.AdConstants;
@@ -36,6 +37,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import nativesdk.ad.common.AdSdk;
+import nativesdk.ad.common.app.Constants;
 
 
 public class MApp extends Application {
@@ -82,8 +86,6 @@ public class MApp extends Application {
             @Override
             public void onMainProcess() {
                 MLogs.d("Main process create");
-                AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
-                AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
 
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
@@ -92,6 +94,16 @@ public class MApp extends Application {
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
+                String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
+                boolean av = "all".equals(conf) || "avz".equals(conf);
+                boolean mv = "all".equals(conf) || "mv".equals(conf);
+                if (av) {
+                    AdSdk.initialize(gDefault, "behaajhihgfedc1");
+                }
+                if (mv) {
+                    AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
+                    AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
+                }
                //
             }
 
@@ -155,8 +167,16 @@ public class MApp extends Application {
 //                virtualCore.addVisibleOutsidePackage("com.immomo.momo");
                 MLogs.d("Server process app onCreate done");
                 MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
-                AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
-                AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
+                String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
+                boolean av = "all".equals(conf) || "avz".equals(conf);
+                boolean mv = "all".equals(conf) || "mv".equals(conf);
+                if (av) {
+                    AdSdk.initialize(gDefault, "behaajhihgfedc1");
+                }
+                if (mv) {
+                    AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
+                    AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
+                }
                 AppLockMonitor.getInstance();
             }
         });
