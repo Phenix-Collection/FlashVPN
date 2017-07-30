@@ -180,4 +180,9 @@
     <string name="lock_interval_settings_content">O intervalo para bloquear o aplicativo novamente depois de deixá-lo</string>
     <string name="lock_interval_settings_title">Intervalo de bloqueio</string>
     <string name="settings_join_us">Junte-se a nossa comunidade</string>
+    <string name="customize_title">Personalização</string>
+    <string name="customize_setting_desc">Clique para personalizar o ícone e o rótulo para clones</string>
+    <string name="hue">Matiz</string>
+    <string name="light">Leveza</string>
+    <string name="badge">Tag</string>
 </resources>

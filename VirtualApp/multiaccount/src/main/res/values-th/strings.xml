@@ -180,4 +180,9 @@
     <string name="lock_interval_settings_content">ช่วงเวลาที่จะล็อคแอพพลิเคอีกครั้งหลังจากที่คุณทิ้งไว้</string>
     <string name="lock_interval_settings_title">ช่วงล็อก</string>
     <string name="settings_join_us">เข้าร่วมชุมชนของเรา</string>
+    <string name="customize_title">การปรับแต่ง</string>
+    <string name="customize_setting_desc">คลิกเพื่อปรับแต่งไอคอนและป้ายกำกับสำหรับโคลน</string>
+    <string name="hue">สี</string>
+    <string name="light">ความสว่าง</string>
+    <string name="badge">เครื่องหมาย</string>
 </resources>

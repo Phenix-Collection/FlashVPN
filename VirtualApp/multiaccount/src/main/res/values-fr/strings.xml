@@ -135,4 +135,9 @@
     <string name="lock_interval_settings_content">L\'intervalle pour verrouiller l\'application à nouveau après l\'avoir quitté</string>
     <string name="lock_interval_settings_title">Intervalle de verrouillage</string>
     <string name="settings_join_us">Rejoignez notre communauté</string>
+    <string name="customize_title">Personnalisation</string>
+    <string name="customize_setting_desc">Cliquez pour personnaliser l\'icône et l\'étiquette pour les clones</string>
+    <string name="hue">Teinte</string>
+    <string name="light">Légèreté</string>
+    <string name="badge">Marque</string>
 </resources>

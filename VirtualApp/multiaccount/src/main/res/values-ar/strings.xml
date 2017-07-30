@@ -181,4 +181,9 @@
     <string name="lock_interval_settings_content">الفاصل الزمني لقفل التطبيق مرة أخرى بعد أن تركت ذلك</string>
     <string name="lock_interval_settings_title">قفل الفاصل الزمني</string>
     <string name="settings_join_us">الانضمام إلى مجتمعنا</string>
+    <string name="customize_title">التخصيص</string>
+    <string name="customize_setting_desc">انقر لتخصيص رمز والتسمية للاستنساخ</string>
+    <string name="hue">مسحة</string>
+    <string name="light">خفة</string>
+    <string name="badge">علامة</string>
 </resources>

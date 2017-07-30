@@ -180,4 +180,9 @@
     <string name="lock_interval_settings_content">Interval untuk mengunci aplikasi lagi setelah Anda meninggalkannya</string>
     <string name="lock_interval_settings_title">Kunci Interval</string>
     <string name="settings_join_us">Bergabunglah dengan Komunitas Kita</string>
+    <string name="customize_title">Kustomisasi</string>
+    <string name="customize_setting_desc">Klik untuk menyesuaikan ikon dan label untuk kloning</string>
+    <string name="hue">Warna</string>
+    <string name="light">Keringanan</string>
+    <string name="badge">Menandai</string>
 </resources>

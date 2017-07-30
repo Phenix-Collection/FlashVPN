@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="14sp"
-                android:text="Hue"/>
+                android:text="@string/hue"/>
             <SeekBar
                 android:id="@+id/seek_bar_hue"
                 android:layout_width="fill_parent"
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="14sp"
-                android:text="Saturation"/>
+                android:text="@string/saturation"/>
             <SeekBar
                 android:id="@+id/seek_bar_sat"
                 android:layout_width="fill_parent"
@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="14sp"
-                android:text="Lightness"/>
+                android:text="@string/light"/>
             <SeekBar
                 android:id="@+id/seek_bar_light"
                 android:layout_width="fill_parent"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="14sp"
-                android:text="Badge"/>
+                android:text="@string/badge"/>
 
             <CheckBox
                 android:id="@+id/badge_checkbox"
