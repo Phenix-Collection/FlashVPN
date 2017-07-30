@@ -31,6 +31,7 @@ import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.model.CustomizeAppData;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.MLogs;
@@ -205,8 +206,8 @@ public class AppStartActivity extends BaseActivity {
 
 
         try{
-
-            mImgAppIcon.setImageBitmap(appModel.getCustomIcon());
+            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+            mImgAppIcon.setImageBitmap(data.getCustomIcon());
             ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImgAppIcon, "scaleX", 0.7f, 1.2f, 1.0f);
             ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImgAppIcon, "scaleY", 0.7f, 1.2f, 1.0f);
             AnimatorSet animSet = new AnimatorSet();

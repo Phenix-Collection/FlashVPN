@@ -131,7 +131,7 @@
     <string name="enable_lock_settings_title">Casier de confidentialité</string>
     <string name="enable_notification">Activer la notification</string>
     <string name="start_tips">Commençons par cloner votre première application ici!</string>
-    <string name="clone_success">%s+ est prêt. Profitez-en maintenant!</string>
+    <string name="clone_success">%s est prêt. Profitez-en maintenant!</string>
     <string name="lock_interval_settings_content">L\'intervalle pour verrouiller l\'application à nouveau après l\'avoir quitté</string>
     <string name="lock_interval_settings_title">Intervalle de verrouillage</string>
     <string name="settings_join_us">Rejoignez notre communauté</string>

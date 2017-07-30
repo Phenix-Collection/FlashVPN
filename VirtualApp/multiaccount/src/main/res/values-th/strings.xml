@@ -168,7 +168,7 @@
     <string name="settings_gms_enable_notice">เปิดบริการ Google เล่นอาจใช้หน่วยความจำและซีพียู คุณต้องการให้ Google เล่นบริการ</string>
     <string name="toast_no_lucky">ขออภัย ไม่พบเนื้อหาในครั้งนี้ โปรดลองอีกครั้งในภายหลัง</string>
     <string name="upgrade_start_tips">มันอาจจะใช้เวลานานนิดหน่อยเป็น app นี้เป็นเพียงการอัพเกรด</string>
-    <string name="clone_success">%s+ พร้อมแล้ว สนุกกับมันในขณะนี้!</string>
+    <string name="clone_success">%s พร้อมแล้ว สนุกกับมันในขณะนี้!</string>
     <string name="settings_adfree_title">ลบโฆษณา</string>
     <string name="settings_adfree_content">ปิดโฆษณาในแอป</string>
     <string name="adfree_dialog_title">ลบโฆษณา</string>
