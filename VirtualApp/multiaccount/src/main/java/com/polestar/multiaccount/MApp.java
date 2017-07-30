@@ -25,7 +25,6 @@ import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.CommonUtils;
-import com.polestar.multiaccount.utils.ImageLoaderUtil;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
@@ -88,7 +87,6 @@ public class MApp extends Application {
 
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
-                ImageLoaderUtil.init(gDefault);
                 initRawData();
                 MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));

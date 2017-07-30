@@ -277,11 +277,7 @@ public class HomeActivity extends BaseActivity {
                 }
                 @Override
                 public void onError(String error) {
-                    if (!showAppWall) {
-                        loadMVWallHandler();
-                        showAppWall = true;
                         MLogs.e(error);
-                    }
                 }
             });
         }
