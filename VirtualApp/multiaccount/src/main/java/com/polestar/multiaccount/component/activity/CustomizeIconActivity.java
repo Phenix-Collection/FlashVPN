@@ -24,6 +24,7 @@ import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.model.CustomizeAppData;
 import com.polestar.multiaccount.utils.BitmapUtils;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.MLogs;
 
 import java.io.File;
@@ -62,6 +63,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customize_dialog_layout);
+        EventReporter.generalClickEvent(this, "customize_icon_enter");
         seekBarHue = (SeekBar) findViewById(R.id.seek_bar_hue);
         seekBarSat = (SeekBar) findViewById(R.id.seek_bar_sat);
         seekBarLight = (SeekBar) findViewById(R.id.seek_bar_light);
@@ -154,6 +156,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         if (TextUtils.isEmpty(text)) {
             return;
         }
+        EventReporter.generalClickEvent(this, "customize_icon_save");
         mData.label = text;
         mData.saveToPref();
         try{
