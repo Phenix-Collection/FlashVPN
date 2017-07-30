@@ -231,6 +231,9 @@ public class HomeActivity extends BaseActivity {
             case 0:
                 giftRes = R.drawable.ring_ad;
                 break;
+            case 1:
+                giftRes = R.drawable.egg_ad;
+                break;
             default:
                 giftRes = R.drawable.ad_taged_gift_icon;
                 break;
