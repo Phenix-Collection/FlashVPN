@@ -231,30 +231,18 @@ public class CommonUtils {
         return false;
     }
 
-    private static HashSet<String> SOCIAL_APP_LIST = new HashSet<>();
-    static {
-        SOCIAL_APP_LIST.add("com.whatsapp");
-        SOCIAL_APP_LIST.add("com.instagram.android");
-        SOCIAL_APP_LIST.add("com.facebook.orca");
-        SOCIAL_APP_LIST.add("com.facebook.katana");
-        SOCIAL_APP_LIST.add("com.imo.android.imoim");
-        SOCIAL_APP_LIST.add("com.linecorp.LGGRTHN");
-        SOCIAL_APP_LIST.add("com.bsb.hike");
-        SOCIAL_APP_LIST.add("com.snapchat.android");
-        SOCIAL_APP_LIST.add("jp.naver.line.android");
-        SOCIAL_APP_LIST.add("net.one97.paytm");
-        SOCIAL_APP_LIST.add("com.facebook.lite");
-        SOCIAL_APP_LIST.add("com.cmcm.whatscall");
-        SOCIAL_APP_LIST.add("com.tencent.mm");
-        SOCIAL_APP_LIST.add("com.bsb.hike");
-        SOCIAL_APP_LIST.add("com.bbm");
-        SOCIAL_APP_LIST.add("com.viber.voip");
-        SOCIAL_APP_LIST.add("com.twitter.android");
-        SOCIAL_APP_LIST.add("sg.bigo.live");
-        SOCIAL_APP_LIST.add("com.UCMobile.intl");
-    }
+    private static HashSet<String> SOCIAL_APP_LIST ;
+    private static final String CONF_SOCIAL_APP = "conf_social_app_list";
 
     public static boolean isSocialApp(String pkg) {
+        if (SOCIAL_APP_LIST == null) {
+            SOCIAL_APP_LIST = new HashSet<>();
+            String conf = RemoteConfig.getString(CONF_SOCIAL_APP);
+            String[] arr = conf.split(":");
+            for (String s:arr) {
+                SOCIAL_APP_LIST.add(s);
+            }
+        }
         return SOCIAL_APP_LIST.contains(pkg);
     }
 

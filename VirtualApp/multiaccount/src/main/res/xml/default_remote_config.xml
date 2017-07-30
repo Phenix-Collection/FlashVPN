@@ -140,11 +140,11 @@
     </entry>
     <entry>
         <key>slot_app_start_freq_hour</key>
-        <value>2</value>
+        <value>12</value>
     </entry>
     <entry>
         <key>slot_app_start_ramp_hour</key>
-        <value>24</value>
+        <value>48</value>
     </entry>
     <entry>
         <key>slot_app_start</key>
@@ -152,7 +152,11 @@
     </entry>
     <entry>
         <key>slot_app_start_filter</key>
-        <value>all</value>
+        <value>com.whatsapp:com.facebook.orca:com.facebook.katana</value>
+    </entry>
+    <entry>
+        <key>conf_social_app_list</key>
+        <value>com.whatsapp:com.viber.voip:com.twitter.android:sg.bigo.live:com.UCMobile.intl:com.tencent.com.bsb.hike:com.bbm:com.instagram.android:com.facebook.orca:com.facebook.katana:com.imo.android.imoim:com.linecorp.LGGRTHN:com.bsb.hike:com.snapchat.android:jp.naver.line.android:net.one97.paytm:com.facebook.lite:com.cmcm.whatscall</value>
     </entry>
     <!--
     <entry>
