@@ -37,11 +37,11 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:id="@+id/app_label"
-            android:hint="No more than 20 characters"
             android:textColor="@color/text_gray_dark"
             android:maxLines="1"
             android:maxLength="30"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:inputType="textPersonName"/>
 
         <LinearLayout
             android:layout_width="match_parent"
