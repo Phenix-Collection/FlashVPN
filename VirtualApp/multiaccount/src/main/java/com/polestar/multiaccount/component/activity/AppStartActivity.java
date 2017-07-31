@@ -100,6 +100,7 @@ public class AppStartActivity extends BaseActivity {
                 public void onAdLoaded(IAdAdapter ad) {
                     if (!launched) {
                         ad.show();
+                        EventReporter.generalClickEvent(AppStartActivity.this, "app_start_ad_show");
                         hasShownAd = true;
                         updateShowTime();
                     }
