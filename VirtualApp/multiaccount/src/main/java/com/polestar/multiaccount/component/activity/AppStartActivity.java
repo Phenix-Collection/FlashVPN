@@ -74,7 +74,7 @@ public class AppStartActivity extends BaseActivity {
         if (last == 0 && TextUtils.isEmpty(pkg)) {
             return false;
         }
-        long actualLast = last == 0? CommonUtils.getInstallTime(MApp.getApp(), pkg): last;
+        long actualLast = last == 0? CommonUtils.getInstallTime(MApp.getApp(), MApp.getApp().getPackageName()): last;
         long delta =
                 preload? System.currentTimeMillis() - actualLast + 15*60*1000: System.currentTimeMillis()-actualLast;
         boolean need =  last == 0? delta > ramp: delta > interval;
