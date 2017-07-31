@@ -110,7 +110,7 @@
                 android:id="@+id/clone_setting_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="30dp"
                 android:layout_below="@+id/layout_title"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -234,22 +234,11 @@
                 android:textColor="@color/clone_text_color"
                 android:textSize="18sp"/>
 
-            <TextView
-                android:id="@+id/sponsor_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/ad_container"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="15dp"
-                android:textSize="12sp"
-                android:textColor="@color/text_gray_light"
-                android:text="@string/sponsor_text"
-                android:visibility="gone"/>
             <LinearLayout
                 android:id="@+id/ad_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="15dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:orientation="vertical"

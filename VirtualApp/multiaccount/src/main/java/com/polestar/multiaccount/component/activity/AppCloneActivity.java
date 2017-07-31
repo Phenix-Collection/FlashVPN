@@ -299,9 +299,7 @@ public class AppCloneActivity extends BaseActivity {
 
     private void showAdIfNeeded(){
         MLogs.d("Animate end: " + animateEnd + " adReady: " + adReady);
-        TextView sponsor = (TextView) findViewById(R.id.sponsor_text);
         if(animateEnd && adReady) {
-            sponsor.setVisibility(View.VISIBLE);
             EventReporter.appCloneAd(this, nativeAd.getAdType());
             inflateNativeAdView(nativeAd);
         }
