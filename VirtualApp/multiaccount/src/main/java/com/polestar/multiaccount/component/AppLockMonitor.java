@@ -123,9 +123,9 @@ public class AppLockMonitor {
             }
         }
         preloadAd();
-        if (this.adFree != adFree) {
+        //if (this.adFree != adFree) {
             mAppLockWindows.removeAll();
-        }
+        //}
         this.adFree = adFree;
         LockPatternUtils.setTempKey(newKey);
         if ( interval >= 3000) {

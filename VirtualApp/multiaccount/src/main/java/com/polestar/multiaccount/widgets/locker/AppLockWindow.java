@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -54,7 +52,6 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     private FloatWindow mWindow;
     private View mContentView;
     private TextView mForgotPasswordTv;
-    private NativeExpressAdView mAdmobExpressView;
     private LinearLayout mAdInfoContainer;
     private ImageView mToolbarIcon;
     private TextView mToolbarText;

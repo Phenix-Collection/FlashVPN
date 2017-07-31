@@ -23,6 +23,7 @@ import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.model.CustomizeAppData;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.MLogs;
@@ -167,6 +168,9 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
             BitmapUtils.saveBitmapToPNG(customIcon, dir.getPath() + "/" + pkg);
         } catch (Exception e) {
             MLogs.logBug(MLogs.getStackTraceString(e));
+        }
+        if (appModel.getLockerState() != AppConstants.AppLockState.DISABLED) {
+            AppManager.reloadLockerSetting();
         }
         finish();
     }
