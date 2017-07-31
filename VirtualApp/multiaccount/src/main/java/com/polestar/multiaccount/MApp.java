@@ -45,6 +45,7 @@ import nativesdk.ad.common.app.Constants;
 public class MApp extends Application {
 
     private static MApp gDefault;
+    private static final String AV_APP_ID = "bfjdca8i76fed2b";
 
     public static MApp getApp() {
         return gDefault;
@@ -98,7 +99,7 @@ public class MApp extends Application {
                 boolean av = "all".equals(conf) || "avz".equals(conf);
                 boolean mv = "all".equals(conf) || "mv".equals(conf);
                 if (av) {
-                    AdSdk.initialize(gDefault, "behaajhihgfedc1");
+                    AdSdk.initialize(gDefault, AV_APP_ID);
                 }
                 if (mv) {
                     AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
@@ -171,7 +172,7 @@ public class MApp extends Application {
                 boolean av = "all".equals(conf) || "avz".equals(conf);
                 boolean mv = "all".equals(conf) || "mv".equals(conf);
                 if (av) {
-                    AdSdk.initialize(gDefault, "behaajhihgfedc1");
+                    AdSdk.initialize(gDefault, AV_APP_ID);
                 }
                 if (mv) {
                     AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
