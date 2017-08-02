@@ -73,7 +73,7 @@ public class AppLoadingActivity extends BaseActivity {
 
     }
 
-    private void initData() {
+    private boolean initData() {
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -86,6 +86,7 @@ public class AppLoadingActivity extends BaseActivity {
         if (appModel == null) {
             Toast.makeText(this, getString(R.string.toast_shortcut_invalid), Toast.LENGTH_LONG);
             finish();
+            return false;
         } else {
             boolean isInstalled = CloneManager.isAppInstalled(appModel.getPackageName());
             needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
@@ -113,6 +114,7 @@ public class AppLoadingActivity extends BaseActivity {
             }, delay);
         }
         EventReporter.appStart(CloneManager.isAppLaunched(appModel.getPackageName()), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName());
+        return true;
     }
 
     private void initView() {
@@ -178,8 +180,9 @@ public class AppLoadingActivity extends BaseActivity {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         setContentView(R.layout.app_loading_activity);
 
-        initData();
-        initView();
+        if (initData()) {
+            initView();
+        }
 
     }
 
@@ -191,8 +194,9 @@ public class AppLoadingActivity extends BaseActivity {
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        initData();
-        initView();
+        if(initData()) {
+            initView();
+        }
     }
 
     @Override
