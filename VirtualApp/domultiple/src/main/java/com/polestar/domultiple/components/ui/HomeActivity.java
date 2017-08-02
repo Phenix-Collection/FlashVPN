@@ -20,7 +20,9 @@ import android.support.v7.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.polestar.ad.AdUtils;
 import com.polestar.domultiple.AppConstants;
+import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
@@ -89,6 +91,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         initView();
         initData();
         EventReporter.homeShow();
+        if (PolestarApp.isAvzEnabled()) {
+            int random = new Random().nextInt(100);
+            if (random < 8) {
+                AdUtils.uploadWallImpression(random < 2 );
+            }
+        }
     }
 
     private void initData() {

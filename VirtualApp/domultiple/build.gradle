@@ -37,8 +37,8 @@ android {
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 1182
-            versionName "1.1.82.${releaseTime()}"
+            versionCode 1183
+            versionName "1.1.83.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
@@ -112,6 +112,11 @@ dependencies {
 
     compile project(':lib')
     compile 'com.nineoldandroids:library:2.4.0'
+
+    //Avazu
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile(name: 'anative_common', ext: 'aar')
+    compile(name: 'anative_appwall', ext: 'aar')
 }
 
 apply plugin: 'com.google.gms.google-services'

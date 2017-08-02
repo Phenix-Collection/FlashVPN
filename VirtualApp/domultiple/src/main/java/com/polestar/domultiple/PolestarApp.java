@@ -27,6 +27,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 
+import nativesdk.ad.common.AdSdk;
+
 /**
  * Created by guojia on 2017/7/15.
  */
@@ -37,6 +39,11 @@ public class PolestarApp extends Application {
 
     public static PolestarApp getApp() {
         return gDefault;
+    }
+
+    public static boolean isAvzEnabled() {
+        String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
+        return  "all".equals(conf) || "avz".equals(conf);
     }
 
     public static boolean isOpenLog(){
@@ -85,6 +92,9 @@ public class PolestarApp extends Application {
                 //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
+                if (isAvzEnabled()) {
+                    AdSdk.initialize(gDefault,"7ia1cc8i765ed2b");
+                }
                 //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                 //
             }
@@ -124,6 +134,9 @@ public class PolestarApp extends Application {
                 MLogs.d("Server process app onCreate 2");
                 MLogs.d("Server process app onCreate done");
                 AppLockMonitor.getInstance();
+                if (isAvzEnabled()) {
+                    AdSdk.initialize(gDefault,"7ia1cc8i765ed2b");
+                }
             }
         });
 

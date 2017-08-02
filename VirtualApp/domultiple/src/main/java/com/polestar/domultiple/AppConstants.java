@@ -17,7 +17,6 @@ public class AppConstants {
 
     public static final String EXTRA_CLONED_APP_PACKAGENAME = "app_packagename";
     public static final String EXTRA_FROM = "From where";
-    public static final String EXTRA_IS_INSTALL_SUCCESS = "is install success";
     public static final String VALUE_FROM_SHORTCUT = "From shortcut";
     public static final String VALUE_FROM_HOME = "From home";
 
@@ -48,13 +47,14 @@ public class AppConstants {
     }
 
     public class CrashTag {
-        public static final int MAPP_CRASH = 33117;
-        public static final int CLONE_CRASH = 32459;
-        public static final int SERVER_CRASH = 41781;
+        public static final int MAPP_CRASH = 51815;
+        public static final int CLONE_CRASH = 51817;
+        public static final int SERVER_CRASH = 51816;
         public static final int FG_CRASH = 41784;
         public static final int NATIVE_CRASH = 41784;
 
     }
 
+    public final static String CONF_WALL_SDK = "conf_wall_sdk";
     public static final String WALL_UNIT_ID = "8442";
 }
