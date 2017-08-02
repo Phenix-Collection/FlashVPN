@@ -99,11 +99,10 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         }
     }
 
+    private static final String CONF_LUCKY_GATE = "home_show_lucky_gate";
     private void initData() {
         cm = CloneManager.getInstance(this);
         cm.loadClonedApps(this, this);
-        showLucky = PreferencesUtils.hasCloned() && !PreferencesUtils.isAdFree();
-        gridAdapter.setShowLucky(showLucky );
     }
 
 
@@ -196,6 +195,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                         gridAdapter.notifyDataSetChanged();
                     }
                 } else if (showLucky && i == luckyIdx) {
+                    Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
+                    startActivity(intent);
                     MLogs.d("lucky clicked");
                 } else if (i == addIdx) {
                     MLogs.d("to add more clone");
@@ -272,6 +273,9 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         if (!CloneManager.getInstance(this).hasPendingClones()) {
             mProgressBar.setVisibility(View.GONE);
             CloneManager.reloadLockerSetting();
+            long gate = RemoteConfig.getLong(CONF_LUCKY_GATE);
+            showLucky = showLucky ||  mClonedList.size() >= gate && !PreferencesUtils.isAdFree();
+            gridAdapter.setShowLucky(showLucky );
         }
         gridAdapter.notifyDataSetChanged(mClonedList);
     }
@@ -288,6 +292,9 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     @Override
     public void onLoaded(List<CloneModel> clonedApp) {
         mClonedList = cm.getClonedApps();
+        long gate = RemoteConfig.getLong(CONF_LUCKY_GATE);
+        showLucky = showLucky || mClonedList.size() >= gate && !PreferencesUtils.isAdFree();
+        gridAdapter.setShowLucky(showLucky );
         gridAdapter.notifyDataSetChanged(mClonedList);
     }
 

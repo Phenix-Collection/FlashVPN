@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.VirtualCore;
@@ -92,6 +93,7 @@ public class PolestarApp extends Application {
                 //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
+                MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~6272167416");
                 if (isAvzEnabled()) {
                     AdSdk.initialize(gDefault,"7ia1cc8i765ed2b");
                 }
@@ -126,6 +128,7 @@ public class PolestarApp extends Application {
                 });
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
+                MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~6272167416");
                 MLogs.d("Server process app onCreate 0");
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
                 delegate.init();

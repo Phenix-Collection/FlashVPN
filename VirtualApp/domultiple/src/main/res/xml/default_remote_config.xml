@@ -32,4 +32,13 @@
         <value>720</value>
         <!--<value>xhour</value>-->
     </entry>
+    <entry>
+        <key>home_show_lucky_gate</key>
+        <value>1</value>
+    </entry>
+    <entry>
+        <key>slot_home_lucky</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>ab_interstitial:ca-app-pub-5490912237269284/9387261829:0;ab_native_banner:ca-app-pub-5490912237269284/8896488415:0</value>
+    </entry>
 </defaultsMap>

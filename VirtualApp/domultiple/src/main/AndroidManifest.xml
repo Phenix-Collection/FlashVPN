@@ -26,6 +26,7 @@
         <activity android:name=".components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".components.ui.LockSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".components.ui.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".components.ui.NativeInterstitialActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".components.ui.AppLoadingActivity" android:screenOrientation="portrait" android:exported="true"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"

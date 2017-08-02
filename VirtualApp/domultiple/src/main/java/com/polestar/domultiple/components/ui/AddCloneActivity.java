@@ -29,6 +29,7 @@ import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.MLogs;
+import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.SelectGridAppItem;
 import com.polestar.domultiple.widget.SelectPkgGridAdapter;
@@ -200,6 +201,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         if (!selected) {
             Toast.makeText(this, R.string.no_selection_for_clone, Toast.LENGTH_LONG).show();
         } else {
+            PreferencesUtils.setHasCloned();
             super.onBackPressed();
         }
     }
