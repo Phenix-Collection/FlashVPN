@@ -136,6 +136,8 @@ public class NativeInterstitialActivity extends Activity {
             @Override
             public void onError(String error) {
                 MLogs.e("Lucky load native error " + error);
+                mHandler.removeMessages(MSG_TIMEOUT);
+                mHandler.sendMessage(mHandler.obtainMessage(MSG_TIMEOUT));
             }
         });
     }
