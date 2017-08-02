@@ -30,7 +30,6 @@ public class SelectPkgGridAdapter  extends BaseAdapter{
 
     @Override
     public int getCount() {
-        MLogs.d("get Count: " + appInfos.size());
         return appInfos.size();
     }
 
@@ -53,7 +52,6 @@ public class SelectPkgGridAdapter  extends BaseAdapter{
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = new SelectAppCell(mContext);
-        MLogs.d("getView: " + i);
         ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
         ImageView cb = (ImageView) view.findViewById(R.id.select_cb_img);
         TextView appName = (TextView) view.findViewById(R.id.app_name);

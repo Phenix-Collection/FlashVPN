@@ -21,4 +21,15 @@
         <key>hot_clone_list</key>
         <value>com.facebook.orca:com.whatsapp:com.facebook.katana:com.bbm:com.imo.android.imoim:com.bsb.hike:com.supercell.clashofclans:com.instagram.android:com.facebook.lite:com.supercell.clashroyale:jp.naver.line.android</value>
     </entry>
+    <entry>
+        <key>clone_rate_package</key>
+        <!--off to close; * for all; package:package: -->
+        <value>com.facebook.orca:com.whatsapp</value>
+    </entry>
+    <entry>
+        <key>clone_rate_interval</key>
+        <!-- if not love should wait for hours -->
+        <value>720</value>
+        <!--<value>xhour</value>-->
+    </entry>
 </defaultsMap>

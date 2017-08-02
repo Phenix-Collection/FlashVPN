@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
@@ -74,6 +76,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private static final String RATE_AFTER_CLONE = "clone";
     private static final String RATE_FROM_MENU = "menu";
 
+    private String startingPkg;
+
     @Override
     protected boolean useCustomTitleBar() {
         return false;
@@ -107,7 +111,59 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                     mProgressBar.setVisibility(View.GONE);
                 }
             }, 60*1000);
+        } else {
+            guideRateIfNeeded();
         }
+    }
+
+    private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
+    private static final String CONFIG_CLONE_RATE_INTERVAL = "clone_rate_interval";
+    private boolean guideRateIfNeeded() {
+        if (startingPkg != null) {
+            String pkg = startingPkg;
+            startingPkg = null;
+            MLogs.d("Cloning package: " + pkg);
+            if (PreferencesUtils.isRated()) {
+                return false;
+            }
+            String config = RemoteConfig.getString(CONFIG_CLONE_RATE_PACKAGE);
+            if ("off".equalsIgnoreCase(config)) {
+                MLogs.d("Clone rate off");
+                return false;
+            }
+            if(PreferencesUtils.getLoveApp() == -1) {
+                // not love, should wait for interval
+                long interval = RemoteConfig.getLong(CONFIG_CLONE_RATE_INTERVAL) * 60 * 60 * 1000;
+                if ((System.currentTimeMillis() - PreferencesUtils.getRateDialogTime(this)) < interval) {
+                    MLogs.d("Not love, need wait longer");
+                    return false;
+                }
+            }
+            boolean match = "*".equals(config);
+            if (!match) {
+                String[] pkgList = config.split(":");
+                if (pkgList != null && pkgList.length > 0) {
+                    for (String s: pkgList) {
+                        if(s.equalsIgnoreCase(pkg)) {
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (match) {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showRateDialog(RATE_AFTER_CLONE, pkg);
+                    }
+                }, 800);
+                return true;
+            } else {
+                MLogs.d("No matching package for clone rate");
+            }
+        }
+        return false;
     }
 
     private void initView() {
@@ -125,6 +181,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 if (i < size) {
                     CloneModel model = (CloneModel)gridAdapter.getItem(i);
                     AppLoadingActivity.startAppStartActivity(HomeActivity.this, model);
+                    startingPkg = model.getPackageName();
                     if (model.getLaunched() == 0) {
                         model.setLaunched(1);
                         DBManager.updateCloneModel(HomeActivity.this, model);
@@ -265,7 +322,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                         }
                         break;
                     case R.id.item_rate:
-                        showRateDialog("menu", "");
+                        showRateDialog(RATE_FROM_MENU, "");
                         break;
                     case R.id.item_feedback:
                         Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
