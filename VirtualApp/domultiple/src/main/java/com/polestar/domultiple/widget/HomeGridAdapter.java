@@ -39,18 +39,6 @@ public class HomeGridAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
-    public int getPosition(CloneModel appModel) {
-        int ret = 0;
-        if (appModel != null && appInfos != null) {
-            for (CloneModel m : appInfos) {
-                if (m.getPackageName().equals(appModel.getPackageName())) {
-                    return ret;
-                }
-                ret++;
-            }
-        }
-        return  -1;
-    }
     @Override
     public int getCount() {
         int size = appInfos == null ? 0 : appInfos.size();
