@@ -5,6 +5,15 @@
         <value>100</value>
     </entry>
     <entry>
+        <key>quit_rating_interval</key>
+        <value>72</value>
+        <!--<value>xhour</value>-->
+    </entry>
+    <entry>
+        <key>quit_rating_cloned_app_gate</key>
+        <value>3</value>
+    </entry>
+    <entry>
         <key>applock_preload_interval</key>
         <value>3600000</value>
     </entry>

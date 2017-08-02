@@ -28,6 +28,7 @@ import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
+import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.DropableLinearLayout;
 import com.polestar.domultiple.widget.ExplosionField;
 import com.polestar.domultiple.widget.HomeGridAdapter;
@@ -40,6 +41,7 @@ import com.polestar.domultiple.widget.dragdrop.DragSource;
 
 import java.io.File;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by guojia on 2017/7/15.
@@ -473,6 +475,33 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 EventReporter.reportRate("cancel_rate", from);
             }
         });
+    }
 
+    private final static String QUIT_RATE_RANDOM = "quit_rating_random";
+    private final static String QUIT_RATE_INTERVAL = "quit_rating_interval";
+    private final static String QUIT_RATE_CLONED_APP_GATE = "quit_rating_cloned_app_gate";
+    @Override
+    public void onBackPressed() {
+        boolean showRate = false;
+        if (! PreferencesUtils.isRated()) {
+            MLogs.d("Quit Rate config:" +  RemoteConfig.getLong(QUIT_RATE_INTERVAL)+" , "
+                    + RemoteConfig.getLong(QUIT_RATE_RANDOM) + " , gate " +RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
+            long interval = RemoteConfig.getLong(QUIT_RATE_INTERVAL) * 60 * 60 * 1000;
+            long lastTime = PreferencesUtils.getRateDialogTime(this);
+            if (PreferencesUtils.getLoveApp() != -1) {
+                //Don't love app
+                int random = new Random().nextInt(100);
+                int clonedCnt = mClonedList.size();
+                boolean isShowRateDialog = PreferencesUtils.getLoveApp() == 1 ||
+                        ((random < RemoteConfig.getLong(QUIT_RATE_RANDOM)) && clonedCnt >= RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
+                if (isShowRateDialog && (System.currentTimeMillis() - lastTime) > interval) {
+                    showRate = true;
+                    showRateDialog(RATE_FROM_QUIT, null);
+                }
+            }
+        }
+        if (!showRate) {
+            super.onBackPressed();
+        }
     }
 }
