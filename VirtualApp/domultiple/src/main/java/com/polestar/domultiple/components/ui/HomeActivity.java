@@ -563,7 +563,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             if (PreferencesUtils.getLoveApp() != -1) {
                 //Don't love app
                 int random = new Random().nextInt(100);
-                int clonedCnt = mClonedList.size();
+                int clonedCnt = mClonedList == null? 0 : mClonedList.size();
                 boolean isShowRateDialog = PreferencesUtils.getLoveApp() == 1 ||
                         ((random < RemoteConfig.getLong(QUIT_RATE_RANDOM)) && clonedCnt >= RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
                 if (isShowRateDialog && (System.currentTimeMillis() - lastTime) > interval) {
