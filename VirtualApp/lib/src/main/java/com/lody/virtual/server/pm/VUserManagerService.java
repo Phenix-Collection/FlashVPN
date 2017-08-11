@@ -437,7 +437,7 @@ public class VUserManagerService extends IUserManager.Stub {
             upgradeIfNecessary();
         } catch (IOException ioe) {
             fallbackToSingleUserLocked();
-        } catch (XmlPullParserException pe) {
+        } catch (Exception pe) {
             fallbackToSingleUserLocked();
         } finally {
             if (fis != null) {
