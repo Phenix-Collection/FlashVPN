@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 
 import com.lody.virtual.client.hook.secondary.GmsSupport;
+import com.lody.virtual.helper.utils.ComponentUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,7 +174,7 @@ public final class SpecialComponentList {
                     iterator.remove();
                     continue;
                 }
-                if ("com.google.android.gms".equals(pkg)
+                if (GmsSupport.isGmsFamilyPackage(pkg)
                         && "android.provider.Telephony.SMS_RECEIVED".equals(action)){
                     iterator.remove();
                     continue;
