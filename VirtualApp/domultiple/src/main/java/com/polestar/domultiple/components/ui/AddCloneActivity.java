@@ -275,6 +275,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 CloneModel model = new CloneModel(item.pkg, this);
                 if (CommonUtils.isSocialApp(item.pkg)) {
                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                    model.setNotificationEnable(true);
                 }
                 CloneManager.getInstance(this).createClone(this, model);
                 selected = true;
