@@ -159,8 +159,10 @@ public class NativeInterstitialActivity extends Activity {
                     .starLevelLayoutId(R.id.star_level_layout)
                     .build();
             View adView = ad.getAdView(viewBinder);
-            mAdContainer.addView(adView);
-            mAdContainer.setVisibility(View.VISIBLE);
+            if (adView != null) {
+                mAdContainer.addView(adView);
+                mAdContainer.setVisibility(View.VISIBLE);
+            }
         }
     }
 
