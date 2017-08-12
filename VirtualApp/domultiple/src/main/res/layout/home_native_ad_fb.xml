@@ -80,7 +80,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/text_gray_dark"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/ad_cta_text"
