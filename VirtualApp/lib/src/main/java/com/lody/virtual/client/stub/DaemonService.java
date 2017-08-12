@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.helper.utils.VLog;
 
 
@@ -18,7 +19,7 @@ import com.lody.virtual.helper.utils.VLog;
 public class DaemonService extends Service {
 
     private static final int NOTIFY_ID = 1001;
-	private static final String WAKE_ACTION = "com.polestar.multiaccount.wake";
+	private static final String WAKE_ACTION = VirtualCore.get().getHostPkg() + ".wake";
 	private final static int ALARM_INTERVAL = 30 * 60 * 1000;
 
 	public static void startup(Context context) {
