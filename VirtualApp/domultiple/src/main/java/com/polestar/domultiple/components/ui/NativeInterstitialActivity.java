@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -153,10 +152,10 @@ public class NativeInterstitialActivity extends Activity {
             final AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.native_interstitial_layout)
                     .titleId(R.id.ad_title)
                     .textId(R.id.ad_subtitle_text)
-                    .mainImageId(R.id.ad_cover_image)
+                    .mainMediaId(R.id.ad_cover_image)
                     .iconImageId(R.id.ad_icon_image)
                     .callToActionId(R.id.ad_cta_text)
-                    .privacyInformationIconImageId(R.id.ad_choices_image)
+                    .privacyInformationId(R.id.ad_choices_image)
                     .starLevelLayoutId(R.id.star_level_layout)
                     .build();
             View adView = ad.getAdView(viewBinder);

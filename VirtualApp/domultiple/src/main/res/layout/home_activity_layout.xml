@@ -41,22 +41,21 @@
 
                     <include layout="@layout/setting_wide_splitter" />
 
-                    <LinearLayout
-                        android:id="@+id/ad_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <include layout="@layout/setting_wide_splitter" />
-                    </LinearLayout>
-
                     <com.polestar.domultiple.widget.NarrowPromotionCard
                         android:id="@+id/narrow_function_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                     </com.polestar.domultiple.widget.NarrowPromotionCard>
+
+                    <include layout="@layout/setting_wide_splitter" />
+                    <LinearLayout
+                        android:id="@+id/ad_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 

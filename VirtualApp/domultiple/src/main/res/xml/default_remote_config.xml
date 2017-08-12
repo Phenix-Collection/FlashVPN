@@ -39,6 +39,11 @@
     <entry>
         <key>slot_home_lucky</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/9387261829:0;ab_native_banner:ca-app-pub-5490912237269284/8896488415:0</value>
+        <value>fb_interstitial:1459853160757953_1459894630753806:0;ab_interstitial:ca-app-pub-5490912237269284/9387261829:0;ab_native_banner:ca-app-pub-5490912237269284/8896488415:0</value>
+    </entry>
+    <entry>
+        <key>slot_home_native</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>fb:1459853160757953_1459875127422423:0;mp:882d63a898684cbf9c24adc140164cb4:0;ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>
     </entry>
 </defaultsMap>

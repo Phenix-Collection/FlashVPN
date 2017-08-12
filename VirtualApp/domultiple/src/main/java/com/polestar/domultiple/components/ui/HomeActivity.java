@@ -20,7 +20,13 @@ import android.support.v7.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdSize;
+import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.AdViewBinder;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
@@ -29,6 +35,7 @@ import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.AnimatorHelper;
 import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
@@ -78,6 +85,10 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private static final String RATE_AFTER_CLONE = "clone";
     private static final String RATE_FROM_MENU = "menu";
 
+    private static final String SLOT_HOME_NATIVE = "slot_home_native";
+    private FuseAdLoader adLoader ;
+    private LinearLayout nativeAdContainer;
+
     private String startingPkg;
 
     @Override
@@ -103,6 +114,73 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private void initData() {
         cm = CloneManager.getInstance(this);
         cm.loadClonedApps(this, this);
+        loadAd();
+    }
+
+    private void loadAd() {
+        loadEmbedNative();
+    }
+
+    public static AdSize getBannerAdSize() {
+        int dpWidth = DisplayUtils.px2dip(PolestarApp.getApp(), DisplayUtils.getScreenWidth(PolestarApp.getApp()));
+        return new AdSize(dpWidth, 320);
+    }
+    private void inflateNativeAdView(IAdAdapter ad) {
+        if (ad == null) {
+            return;
+        }
+        final AdViewBinder viewBinder;
+        switch (ad.getAdType()) {
+            case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK:
+                viewBinder =  new AdViewBinder.Builder(R.layout.home_native_ad_fb)
+                        .titleId(R.id.ad_title)
+                        .textId(R.id.ad_subtitle_text)
+                        .mainMediaId(R.id.ad_cover_image)
+                        .callToActionId(R.id.ad_cta_text)
+                        .privacyInformationId(R.id.ad_choices_container)
+                        .build();
+                break;
+            default:
+                viewBinder =  new AdViewBinder.Builder(R.layout.home_native_ad_default)
+                        .titleId(R.id.ad_title)
+                        .textId(R.id.ad_subtitle_text)
+                        .mainMediaId(R.id.ad_cover_image)
+                        .callToActionId(R.id.ad_cta_text)
+                        .privacyInformationId(R.id.ad_choices_image)
+                        .build();
+                break;
+        }
+
+        View adView = ad.getAdView(viewBinder);
+        if (adView != null) {
+            nativeAdContainer.removeAllViews();
+            nativeAdContainer.addView(adView);
+            nativeAdContainer.setVisibility(View.VISIBLE);
+        }
+    }
+    private void loadEmbedNative() {
+        if (adLoader == null) {
+            adLoader = FuseAdLoader.get(SLOT_HOME_NATIVE, HomeActivity.this);
+        }
+        if (adLoader.hasValidAdSource()) {
+            adLoader.setBannerAdSize(getBannerAdSize());
+            adLoader.loadAd(2, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAdAdapter ad) {
+                    inflateNativeAdView(ad);
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+                    MLogs.e(SLOT_HOME_NATIVE + " load error: " + error);
+                }
+            });
+        }
     }
 
 
@@ -262,6 +340,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         mExplosionField = ExplosionField.attachToWindow(this);
         functionCard = (NarrowPromotionCard) findViewById(R.id.narrow_function_card);
         functionCard.init(R.drawable.icon_locker_small, R.string.privacy_locker, new Intent(this, LockSettingsActivity.class));
+
+        nativeAdContainer = (LinearLayout) findViewById(R.id.ad_container);
     }
 
     @Override

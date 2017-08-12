@@ -23,6 +23,7 @@ public class HomeGridAdapter extends BaseAdapter {
     private List<CloneModel> appInfos;
     private boolean showLucky;
     private Context mContext;
+    private static final int MIN_GRID_SIZE = 6;
 
     public void setShowLucky(boolean s) {
         showLucky = s;
@@ -45,8 +46,8 @@ public class HomeGridAdapter extends BaseAdapter {
         if (showLucky) {
             size ++;
         }
-        if ( size < 9 ) {
-            size = 9;
+        if ( size < MIN_GRID_SIZE ) {
+            size = MIN_GRID_SIZE;
         } else {
             size = size + 3 - (size % 3);
         }
