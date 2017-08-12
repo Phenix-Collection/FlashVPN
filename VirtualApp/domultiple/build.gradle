@@ -70,7 +70,7 @@ android {
 }
 repositories {
     flatDir {
-        dirs 'libs'
+        dirs 'libs',project(':fuseadloader').file('libs')
     }
 }
 dependencies {
@@ -86,37 +86,14 @@ dependencies {
 
     compile 'com.google.firebase:firebase-core:11.0.2'
     compile 'com.google.firebase:firebase-config:11.0.2'
-    compile 'com.google.firebase:firebase-ads:11.0.2'
-    compile 'com.facebook.android:audience-network-sdk:4.+'
     compile 'com.google.firebase:firebase-crash:11.0.2'
     compile 'com.android.billingclient:billing:dp-1'
 
    // compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 
-    compile('com.mopub:mopub-sdk-banner:4.9.0@aar') {
-        transitive = true
-    }
-    // For native static (images).
-    compile('com.mopub:mopub-sdk-native-static:4.9.0@aar') {
-        transitive = true
-    }
-    // For native video. This will automatically also include native static
-    compile('com.mopub:mopub-sdk-native-video:4.9.0@aar') {
-        transitive = true
-    }
-
-    // For interstitials
-    compile('com.mopub:mopub-sdk-interstitial:4.9.0@aar') {
-        transitive = true
-    }
-
     compile project(':lib')
+    compile project(':fuseadloader')
     compile 'com.nineoldandroids:library:2.4.0'
-
-    //Avazu
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile(name: 'anative_common', ext: 'aar')
-    compile(name: 'anative_appwall', ext: 'aar')
 }
 
 apply plugin: 'com.google.gms.google-services'

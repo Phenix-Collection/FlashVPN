@@ -14,7 +14,9 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.helper.utils.VLog;
+import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
+import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.billing.BillingProvider;
 import com.polestar.domultiple.clone.CloneApiDelegate;
 import com.polestar.domultiple.clone.CloneComponentDelegate;
@@ -27,6 +29,7 @@ import com.polestar.domultiple.widget.locker.AppLockMonitor;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
+import java.util.List;
 
 import nativesdk.ad.common.AdSdk;
 
@@ -74,6 +77,23 @@ public class PolestarApp extends Application {
         }
     }
 
+    private void initAd() {
+        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~6272167416");
+        if (isAvzEnabled()) {
+            AdSdk.initialize(gDefault,"7ia1cc8i765ed2b");
+        }
+        FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
+            @Override
+            public boolean isAdFree() {
+                return PreferencesUtils.isAdFree();
+            }
+
+            @Override
+            public List<AdConfig> getAdConfigList(String slot) {
+                return RemoteConfig.getAdConfigList(slot);
+            }
+        });
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -83,8 +103,6 @@ public class PolestarApp extends Application {
             @Override
             public void onMainProcess() {
                 MLogs.d("Main process create");
-//                AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
-//                AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
 
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
@@ -93,10 +111,7 @@ public class PolestarApp extends Application {
                 //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
-                MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~6272167416");
-                if (isAvzEnabled()) {
-                    AdSdk.initialize(gDefault,"7ia1cc8i765ed2b");
-                }
+                initAd();
                 //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                 //
             }
@@ -128,18 +143,11 @@ public class PolestarApp extends Application {
                 });
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
-                MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~6272167416");
-                MLogs.d("Server process app onCreate 0");
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
                 delegate.init();
-                MLogs.d("Server process app onCreate 1");
                 VirtualCore.get().setComponentDelegate(delegate);
-                MLogs.d("Server process app onCreate 2");
-                MLogs.d("Server process app onCreate done");
+                initAd();
                 AppLockMonitor.getInstance();
-                if (isAvzEnabled()) {
-                    AdSdk.initialize(gDefault,"7ia1cc8i765ed2b");
-                }
             }
         });
 
@@ -151,7 +159,7 @@ public class PolestarApp extends Application {
             e.printStackTrace();
         }
 
-        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION ) {
+        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION  || BuildConfig.DEBUG) {
             VLog.openLog();
             VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             MLogs.DEBUG = true;

@@ -112,7 +112,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
 
     public static AdSize getBannerAdSize() {
         int dpWidth = DisplayUtils.px2dip(PolestarApp.getApp(), DisplayUtils.getScreenWidth(PolestarApp.getApp()));
-        return new AdSize(dpWidth, 320);
+        return new AdSize(dpWidth, 140);
     }
 
     private void loadAd() {

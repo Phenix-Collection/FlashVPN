@@ -105,7 +105,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         if (PolestarApp.isAvzEnabled()) {
             int random = new Random().nextInt(100);
             if (random < 8) {
-                AdUtils.uploadWallImpression(random < 2 );
+                AdUtils.uploadWallImpression(this, random < 2 );
             }
         }
     }
@@ -382,7 +382,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         if (mClonedList.size() <= RemoteConfig.getLong(CONF_ADD_CLONE_PRELOAD_GATE)
                 && !PreferencesUtils.isAdFree()) {
             FuseAdLoader.get(AddCloneActivity.SLOT_ADD_CLONE_AD, PolestarApp.getApp())
-                    .setBannerAdSize(getBannerAdSize()).preloadAd();
+                    .setBannerAdSize(AddCloneActivity.getBannerAdSize()).preloadAd();
         }
     }
 
