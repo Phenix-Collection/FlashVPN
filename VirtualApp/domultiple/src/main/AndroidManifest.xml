@@ -63,7 +63,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.polestar.multiaccount.wake" />
+                <action android:name="com.polestar.domultiple.wake" />
             </intent-filter>
         </receiver>
     </application>
