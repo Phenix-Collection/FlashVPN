@@ -34,6 +34,7 @@ public class FuseAdLoader {
     private long mProtectOverTime = 0;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private int mLoadingBits;
+    private boolean mAdReturned;
 
     private static HashMap<String, FuseAdLoader> sAdLoaderMap = new HashMap<>();
     public synchronized static FuseAdLoader get(String slot, Context appContext) {
@@ -84,6 +85,7 @@ public class FuseAdLoader {
         if (burstNum == 1) { protectTime = 0;}
         mProtectOverTime = System.currentTimeMillis() + protectTime;
         mListener = listener;
+        mAdReturned = false;
         lastIdx = 0;
         if (protectTime > 0) {
             mHandler.postDelayed(new Runnable() {
@@ -92,6 +94,7 @@ public class FuseAdLoader {
                     if (mListener != null) {
                         IAdAdapter cache = getValidCache();
                         if (cache != null) {
+                            mAdReturned = true;
                             mListener.onAdLoaded(cache);
                             mListener = null;
                         }
@@ -117,9 +120,13 @@ public class FuseAdLoader {
 
     private void finishLoading(int idx) {
         mLoadingBits &= (~(0x1 << idx));
+        if (mAdReturned) {
+            AdLog.d("Ad already returned");
+            return;
+        }
         long now = System.currentTimeMillis();
         IAdAdapter ad = getValidCache();
-        if (ad == null) {
+        if (ad == null ) {
             //need load next or no fill;
             if (idx == mNativeAdConfigList.size() - 1) {
                 if (mListener != null) {
@@ -139,6 +146,7 @@ public class FuseAdLoader {
             }
             if (now >= mProtectOverTime || i < 0) {
                 if (mListener != null) {
+                    mAdReturned = true;
                     mListener.onAdLoaded(ad);
                     mListener = null;
                 }
@@ -157,7 +165,8 @@ public class FuseAdLoader {
             IAdAdapter cache = mNativeAdCache.get(config.key);
             if (cache != null) {
                 if (cache.isShowed() || ((System.currentTimeMillis() - cache.getLoadedTime())/1000) > config.cacheTime) {
-                    AdLog.d("AdAdapter cache time out : " + cache.getTitle() + " type: " + cache.getAdType());
+                    long delta = (System.currentTimeMillis() - cache.getLoadedTime())/1000;
+                    AdLog.d("AdAdapter cache time out : " + delta + " config: " +config.cacheTime + " type: " + cache.getAdType());
                     mNativeAdCache.remove(config.key);
                 } else {
                     return cache;

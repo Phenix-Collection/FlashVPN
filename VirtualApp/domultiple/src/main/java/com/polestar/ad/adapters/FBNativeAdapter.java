@@ -7,11 +7,14 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSettings;
+import com.facebook.ads.MediaView;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdViewBinder;
@@ -160,12 +163,8 @@ public class FBNativeAdapter extends AdAdapter {
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        adView.setLayoutParams(params);
         if (adView != null) {
-            ImageView coverView = (ImageView) adView.findViewById(viewBinder.mainImageId);
-            if (coverView instanceof BasicLazyLoadImageView) {
-                BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
-                lazyLoadImageView.setDefaultResource(0);
-                lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
-            }
+            MediaView  coverView = (MediaView) adView.findViewById(viewBinder.mainMediaId);
+            coverView.setNativeAd(mRawAd);
             ImageView iconView = (ImageView) adView.findViewById(viewBinder.iconImageId);
             if (iconView instanceof BasicLazyLoadImageView) {
                 BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) iconView;
@@ -186,15 +185,9 @@ public class FBNativeAdapter extends AdAdapter {
                 }
             }
             registerViewForInteraction(adView);
-            if (getPrivacyIconUrl() != null) {
-                ImageView choiceIconImage = (ImageView) adView.findViewById(viewBinder.privacyInformationIconImageId);
-                if (choiceIconImage instanceof BasicLazyLoadImageView) {
-                    BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) choiceIconImage;
-                    lazyLoadImageView.setDefaultResource(0);
-                    lazyLoadImageView.requestDisplayURL(getPrivacyIconUrl());
-                }
-                registerPrivacyIconView(choiceIconImage);
-            }
+            LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(viewBinder.privacyInformationId);
+            AdChoicesView adChoicesView = new AdChoicesView(mContext, mRawAd, true);
+            adChoicesContainer.addView(adChoicesView);
         }
         return  adView;
     }

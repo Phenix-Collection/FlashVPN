@@ -16,9 +16,9 @@ public class AdViewBinder {
         private int titleId;
         private int textId;
         private int callToActionId;
-        private int mainImageId;
-        private int iconImageId;
-        private int privacyInformationIconImageId;
+        private int mainMediaId;
+        private int iconImageId = -1;
+        private int privacyInformationId;
         private int starLevelLayoutId = -1;
         @NonNull
         private Map<String, Integer> extras = Collections.emptyMap();
@@ -47,8 +47,8 @@ public class AdViewBinder {
         }
 
         @NonNull
-        public final Builder mainImageId(final int mediaLayoutId) {
-            this.mainImageId = mediaLayoutId;
+        public final Builder mainMediaId(final int mediaLayoutId) {
+            this.mainMediaId = mediaLayoutId;
             return this;
         }
 
@@ -59,8 +59,8 @@ public class AdViewBinder {
         }
 
         @NonNull
-        public final Builder privacyInformationIconImageId(final int privacyInformationIconImageId) {
-            this.privacyInformationIconImageId = privacyInformationIconImageId;
+        public final Builder privacyInformationId(final int privacyInformationIconImageId) {
+            this.privacyInformationId = privacyInformationIconImageId;
             return this;
         }
 
@@ -92,9 +92,9 @@ public class AdViewBinder {
     public final int titleId;
     public final int textId;
     public final int callToActionId;
-    public final int mainImageId;
+    public final int mainMediaId;
     public final int iconImageId;
-    public final int privacyInformationIconImageId;
+    public final int privacyInformationId;
     public final int starLevelLayoutId;
     @NonNull public final Map<String, Integer> extras;
 
@@ -103,9 +103,9 @@ public class AdViewBinder {
         this.titleId = builder.titleId;
         this.textId = builder.textId;
         this.callToActionId = builder.callToActionId;
-        this.mainImageId = builder.mainImageId;
+        this.mainMediaId = builder.mainMediaId;
         this.iconImageId = builder.iconImageId;
-        this.privacyInformationIconImageId = builder.privacyInformationIconImageId;
+        this.privacyInformationId = builder.privacyInformationId;
         this.starLevelLayoutId = builder.starLevelLayoutId;
         this.extras = builder.extras;
     }
