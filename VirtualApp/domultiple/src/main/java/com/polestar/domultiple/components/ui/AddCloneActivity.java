@@ -23,11 +23,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdSize;
+import com.polestar.ad.AdConstants;
+import com.polestar.ad.AdViewBinder;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.domultiple.AppConstants;
+import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
@@ -48,6 +56,7 @@ import java.util.List;
 public class AddCloneActivity extends BaseActivity implements AdapterView.OnItemClickListener{
     private static final int APP_LIST_READY = 0;
     private static final String CONFIG_HOT_CLONE_LIST = "hot_clone_list";
+    public static final String SLOT_ADD_CLONE_AD = "slot_add_clone_native";
     private List<SelectGridAppItem> hotAppList = new ArrayList<>();
     private List<SelectGridAppItem> otherAppList = new ArrayList<>();
     private LinearLayout hotAppLayout;
@@ -58,6 +67,82 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
     private TextView cloneButton;
     private int selected;
     private ProgressBar progressBar;
+    private FuseAdLoader adLoader;
+    private IAdAdapter mAd;
+    private boolean appListReady;
+
+    private void inflateNativeAd() {
+        if (mAd == null || !appListReady) {
+            return;
+        }
+        if (hotAppList.size() == 0) {
+            adContainer = (LinearLayout) findViewById(R.id.ad_container_2);
+        } else {
+            adContainer = (LinearLayout) findViewById(R.id.ad_container_1);
+        }
+        final AdViewBinder viewBinder;
+        switch (mAd.getAdType()) {
+            case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK:
+                viewBinder =  new AdViewBinder.Builder(R.layout.add_clone_native_ad_fb)
+                        .titleId(R.id.ad_title)
+                        .textId(R.id.ad_subtitle_text)
+                        .mainMediaId(R.id.ad_cover_image)
+                        .callToActionId(R.id.ad_cta_text)
+                        .privacyInformationId(R.id.ad_choices_container)
+                        .build();
+                break;
+            default:
+                viewBinder =  new AdViewBinder.Builder(R.layout.add_clone_native_ad_default)
+                        .titleId(R.id.ad_title)
+                        .textId(R.id.ad_subtitle_text)
+                        .mainMediaId(R.id.ad_cover_image)
+                        .callToActionId(R.id.ad_cta_text)
+                        .privacyInformationId(R.id.ad_choices_image)
+                        .build();
+                break;
+        }
+
+        View adView = mAd.getAdView(viewBinder);
+        if (adView != null) {
+            adContainer.removeAllViews();
+            adContainer.addView(adView);
+            adContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static AdSize getBannerAdSize() {
+        int dpWidth = DisplayUtils.px2dip(PolestarApp.getApp(), DisplayUtils.getScreenWidth(PolestarApp.getApp()));
+        return new AdSize(dpWidth, 320);
+    }
+
+    private void loadAd() {
+        if (adLoader == null) {
+            adLoader = FuseAdLoader.get(SLOT_ADD_CLONE_AD, this);
+        }
+        adLoader.setBannerAdSize(getBannerAdSize());
+        if (adLoader.hasValidAdSource()) {
+            mAd = null;
+            adLoader.loadAd(2, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAdAdapter ad) {
+                    mAd = ad;
+                    if(appListReady) {
+                        inflateNativeAd();
+                    }
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+        }
+    }
 
     private Handler mHandler = new Handler(Looper.myLooper()){
         @Override
@@ -68,6 +153,10 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                     progressBar.setVisibility(View.GONE);
                     cloneButton.setVisibility(View.VISIBLE);
                     updateGrid();
+                    appListReady = true;
+                    if (mAd != null) {
+                        inflateNativeAd();
+                    }
                     break;
             }
         }
@@ -109,6 +198,9 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         super.onCreate(savedInstanceState);
         initView();
         initData();
+        if(!PreferencesUtils.isAdFree()) {
+            loadAd();
+        }
     }
 
     private void initData() {
@@ -129,6 +221,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
 
     private void loadAppListAsync() {
         // NOT include host APP itself, already cloned APP in core and popular APP.
+        appListReady = false;
         new Thread(new Runnable() {
             @Override
             public void run() {

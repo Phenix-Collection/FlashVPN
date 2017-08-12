@@ -46,4 +46,14 @@
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>fb:1459853160757953_1459875127422423:0;mp:882d63a898684cbf9c24adc140164cb4:0;ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>
     </entry>
+    <entry>
+        <key>slot_add_clone_native</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>fb:1459853160757953_1459876500755619:0;mp:57b0c41a95fc4f4aa5037cf72f35ab08:0;ab_native_banner:ca-app-pub-5490912237269284/6660633893:0</value>
+    </entry>
+    <entry>
+        <key>add_clone_preload_gate</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>1</value>
+    </entry>
 </defaultsMap>

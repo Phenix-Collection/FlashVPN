@@ -85,7 +85,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private static final String RATE_AFTER_CLONE = "clone";
     private static final String RATE_FROM_MENU = "menu";
 
-    private static final String SLOT_HOME_NATIVE = "slot_home_native";
+    public static final String SLOT_HOME_NATIVE = "slot_home_native";
     private FuseAdLoader adLoader ;
     private LinearLayout nativeAdContainer;
 
@@ -111,10 +111,13 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     }
 
     private static final String CONF_LUCKY_GATE = "home_show_lucky_gate";
+    private static final String CONF_ADD_CLONE_PRELOAD_GATE = "add_clone_preload_gate";
     private void initData() {
         cm = CloneManager.getInstance(this);
         cm.loadClonedApps(this, this);
-        loadAd();
+        if (!PreferencesUtils.isAdFree()) {
+            loadAd();
+        }
     }
 
     private void loadAd() {
@@ -376,6 +379,11 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         showLucky = showLucky || mClonedList.size() >= gate && !PreferencesUtils.isAdFree();
         gridAdapter.setShowLucky(showLucky );
         gridAdapter.notifyDataSetChanged(mClonedList);
+        if (mClonedList.size() <= RemoteConfig.getLong(CONF_ADD_CLONE_PRELOAD_GATE)
+                && !PreferencesUtils.isAdFree()) {
+            FuseAdLoader.get(AddCloneActivity.SLOT_ADD_CLONE_AD, PolestarApp.getApp())
+                    .setBannerAdSize(getBannerAdSize()).preloadAd();
+        }
     }
 
     public static boolean isDebugMode(){

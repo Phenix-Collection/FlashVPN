@@ -42,8 +42,14 @@ public class FuseAdLoader {
         if (adLoader == null) {
             adLoader = new FuseAdLoader(slot, appContext);
             sAdLoaderMap.put(slot, adLoader);
+        } else {
+            adLoader.attachContext(appContext);
         }
         return adLoader;
+    }
+
+    public void attachContext(Context context) {
+        mContext = context;
     }
 
     private FuseAdLoader(String slot, Context context) {
@@ -59,8 +65,9 @@ public class FuseAdLoader {
         loadAd(1, null);
     }
 
-    public void setBannerAdSize(AdSize adSize) {
+    public FuseAdLoader setBannerAdSize(AdSize adSize) {
         mBannerAdSize = adSize;
+        return this;
     }
 
     public void loadAd(int burstNum, long protectTime, IAdLoadListener listener) {

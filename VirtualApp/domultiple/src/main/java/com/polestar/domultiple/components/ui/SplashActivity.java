@@ -27,9 +27,11 @@ public class SplashActivity extends BaseActivity {
         long time = System.currentTimeMillis();
         setContentView(R.layout.splash_activity_layout);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
-//        FuseAdLoader adLoader = FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this.getApplicationContext());
-//        adLoader.setBannerAdSize(HomeFragment.getBannerSize());
-//        adLoader.loadAd(1, null);
+        if (!PreferencesUtils.isAdFree()) {
+            FuseAdLoader adLoader = FuseAdLoader.get(HomeActivity.SLOT_HOME_NATIVE, this.getApplicationContext());
+            adLoader.setBannerAdSize(HomeActivity.getBannerAdSize());
+            adLoader.preloadAd();
+        }
         Handler handler = new Handler();
         CloneManager.getInstance(this).loadClonedApps(this, null);
 

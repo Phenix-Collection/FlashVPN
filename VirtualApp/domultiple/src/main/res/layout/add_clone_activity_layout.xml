@@ -57,12 +57,13 @@
 
 
             <LinearLayout
-                android:id="@+id/ad_container"
+                android:id="@+id/ad_container_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:visibility="gone"></LinearLayout>
+                android:visibility="gone"
+                android:layout_marginTop="10dp"/>
 
             <LinearLayout
                 android:id="@+id/other_clone_layout"
@@ -70,7 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_marginBottom="60dp">
 
                 <TextView
                     android:id="@+id/other_clone_title"
@@ -114,9 +116,16 @@
                     android:numColumns="3"
                     android:scrollbars="none"
                     android:horizontalSpacing="4dp"
-                    android:verticalSpacing="4dp"
-                    android:layout_marginBottom="60dp">
+                    android:verticalSpacing="4dp">
                 </com.polestar.domultiple.widget.FixedGridView>
+                <LinearLayout
+                    android:id="@+id/ad_container_2"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
