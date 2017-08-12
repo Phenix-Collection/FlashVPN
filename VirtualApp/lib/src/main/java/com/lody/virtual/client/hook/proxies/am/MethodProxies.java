@@ -1300,19 +1300,6 @@ class MethodProxies {
             return "registerReceiver";
         }
 
-        private boolean  isSticky(IntentFilter filter) {
-            if (filter != null) {
-                Iterator<String> iterator = filter.actionsIterator();
-                while (iterator.hasNext()) {
-                    String action = iterator.next();
-                    if (SpecialComponentList.isSticky(action)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             String origPkg = MethodParameterUtils.replaceFirstAppPkg(args);
@@ -1323,12 +1310,6 @@ class MethodProxies {
                 return method.invoke(who,args);
             }
             IntentFilter filter = (IntentFilter) args[IDX_IntentFilter];
-            if (isSticky(filter)) {
-                Object origReceiver = args[IDX_IIntentReceiver];
-                args[IDX_IIntentReceiver] = null;
-                directRet = method.invoke(who,args);
-                args[IDX_IIntentReceiver] = origReceiver;
-            }
             SpecialComponentList.protectIntentFilter(filter, origPkg);
             if (args.length > IDX_IIntentReceiver && IIntentReceiver.class.isInstance(args[IDX_IIntentReceiver])) {
                 final IInterface old = (IInterface) args[IDX_IIntentReceiver];
@@ -1355,11 +1336,7 @@ class MethodProxies {
                     }
                 }
             }
-            if (directRet != null) {
-                return directRet;
-            } else {
-                return method.invoke(who, args);
-            }
+            return method.invoke(who, args);
         }
 
 

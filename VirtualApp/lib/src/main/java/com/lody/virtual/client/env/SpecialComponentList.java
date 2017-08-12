@@ -31,7 +31,6 @@ public final class SpecialComponentList {
     private static final HashSet<String> INSTRUMENTATION_CONFLICTING = new HashSet<>(2);
     private static final HashSet<String> SPEC_SYSTEM_APP_LIST = new HashSet<>(3);
     private static final Set<String> SYSTEM_BROADCAST_ACTION = new HashSet<>(7);
-    private static final Set<String> SYSTEM_STICKY_BROADCAST_ACTION = new HashSet<>(7);
     private static String PROTECT_ACTION_PREFIX = "_VA_protected_";
 
     private static final HashSet<String> IO_REDIRECT_BLACK_LIST = new HashSet<>(1);
@@ -47,7 +46,7 @@ public final class SpecialComponentList {
         //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_CHANGED);
         SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIMEZONE_CHANGED);
 
-//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_CHANGED);
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_CHANGED);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_LOW);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_OKAY);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_CONNECTED);
@@ -63,18 +62,21 @@ public final class SpecialComponentList {
         SYSTEM_BROADCAST_ACTION.add("android.intent.action.SIM_STATE_CHANGED");
         SYSTEM_BROADCAST_ACTION.add("android.location.PROVIDERS_CHANGED");
         SYSTEM_BROADCAST_ACTION.add("android.location.MODE_CHANGED");
+        SYSTEM_BROADCAST_ACTION.add("android.media.RINGER_MODE_CHANGED");
+        SYSTEM_BROADCAST_ACTION.add("android.media.action.HDMI_AUDIO_PLUG");
+        SYSTEM_BROADCAST_ACTION.add("android.media.ACTION_SCO_AUDIO_STATE_UPDATED");
 
 
-        SYSTEM_STICKY_BROADCAST_ACTION.add("android.net.conn.CONNECTIVITY_CHANGE");
-        SYSTEM_STICKY_BROADCAST_ACTION.add("android.net.wifi.WIFI_STATE_CHANGED");
-        SYSTEM_STICKY_BROADCAST_ACTION.add("android.intent.action.BATTERY_CHANGED");
-        SYSTEM_STICKY_BROADCAST_ACTION.add("android.intent.action.ANY_DATA_STATE");
-        SYSTEM_STICKY_BROADCAST_ACTION.add("android.media.RINGER_MODE_CHANGED");
-        SYSTEM_STICKY_BROADCAST_ACTION.add("android.media.action.HDMI_AUDIO_PLUG");
-        SYSTEM_STICKY_BROADCAST_ACTION.add("android.media.ACTION_SCO_AUDIO_STATE_UPDATED");
-        SYSTEM_STICKY_BROADCAST_ACTION.add(Intent.ACTION_DEVICE_STORAGE_LOW);
-        SYSTEM_STICKY_BROADCAST_ACTION.add(Intent.ACTION_DOCK_EVENT);
-        SYSTEM_STICKY_BROADCAST_ACTION.add("android.intent.action.DEVICE_STORAGE_FULL");
+//        SYSTEM_STICKY_BROADCAST_ACTION.add("android.net.conn.CONNECTIVITY_CHANGE");
+//        SYSTEM_STICKY_BROADCAST_ACTION.add("android.net.wifi.WIFI_STATE_CHANGED");
+//        SYSTEM_STICKY_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_CHANGED);
+//        SYSTEM_STICKY_BROADCAST_ACTION.add("android.intent.action.ANY_DATA_STATE");
+//        SYSTEM_STICKY_BROADCAST_ACTION.add("android.media.RINGER_MODE_CHANGED");
+//        SYSTEM_STICKY_BROADCAST_ACTION.add("android.media.action.HDMI_AUDIO_PLUG");
+//        SYSTEM_STICKY_BROADCAST_ACTION.add("android.media.ACTION_SCO_AUDIO_STATE_UPDATED");
+//        SYSTEM_STICKY_BROADCAST_ACTION.add(Intent.ACTION_DEVICE_STORAGE_LOW);
+//        SYSTEM_STICKY_BROADCAST_ACTION.add(Intent.ACTION_DOCK_EVENT);
+//        SYSTEM_STICKY_BROADCAST_ACTION.add("android.intent.action.DEVICE_STORAGE_FULL");
 
         IO_REDIRECT_BLACK_LIST.add("com.snapchat.android");
 
@@ -116,10 +118,6 @@ public final class SpecialComponentList {
         BROADCAST_START_WHITE_LIST.add("com.google.android.gsf.login");
         BROADCAST_START_WHITE_LIST.add("com.android.vending");
         BROADCAST_START_WHITE_LIST.add("com.google.android.play.games");
-    }
-
-    public static boolean isSticky(String action) {
-        return SYSTEM_STICKY_BROADCAST_ACTION.contains(action);
     }
 
     public static boolean needIORedirect(String pkg) {
