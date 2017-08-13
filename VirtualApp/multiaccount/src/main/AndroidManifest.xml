@@ -154,11 +154,6 @@
             android:exported="true" >
         </provider>
 
-        <!-- fb ad -->
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <activity android:name="com.facebook.ads.AudienceNetworkActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-
         <activity
             android:name="com.mobvista.msdk.shell.MVActivity"
             android:configChanges="keyboard|orientation"
