@@ -585,10 +585,13 @@ HOOK_DEF(int, kill, pid_t pid, int sig) {
     JNIEnv *env = NULL;
     g_vm->GetEnv((void **) &env, JNI_VERSION_1_4);
     g_vm->AttachCurrentThread(&env, NULL);
-    jmethodID method = env->GetStaticMethodID(g_jclass, "onKillProcess", "(II)V");
-    env->CallStaticVoidMethod(g_jclass, method, pid, sig);
-    int ret = syscall(__NR_kill, pid, sig);
-    return ret;
+    jmethodID method = env->GetStaticMethodID(g_jclass, "onKillProcess", "(II)I");
+    int allow = env->CallStaticIntMethod(g_jclass, method, pid, sig);
+    if ( allow == 0) {
+        return syscall(__NR_kill, pid, sig);
+    }
+    //int ret = syscall(__NR_kill, pid, sig);
+    return 0;
 }
 
 __END_DECLS

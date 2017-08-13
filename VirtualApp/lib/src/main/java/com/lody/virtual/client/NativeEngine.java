@@ -194,12 +194,18 @@ public class NativeEngine {
 		sFlag = true;
 	}
 
-	public static void onKillProcess(int pid, int signal) {
+	public static int onKillProcess(int pid, int signal) {
 		VLog.e(TAG, "killProcess: pid = %d, signal = %d.", pid, signal);
-		if (pid == android.os.Process.myPid()) {
-			VLog.e(TAG, VLog.getStackTraceString(new Throwable()));
+        if (pid == android.os.Process.myPid()) {
+            VLog.e(TAG, VLog.getStackTraceString(new Throwable()));
             StubService.stop(VirtualCore.get().getContext(), VClientImpl.get().getVPid());
-		}
+        }
+        if (VClientImpl.get().getCurrentPackage().equals("com.imo.android.imoim")) {
+            if (pid != android.os.Process.myPid() ){
+                return 1;
+            }
+        }
+        return 0;
 	}
 
     public static void notifyNativeCrash(int signal) {
