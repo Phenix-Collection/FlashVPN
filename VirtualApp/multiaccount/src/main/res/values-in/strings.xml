@@ -189,4 +189,7 @@
     <string name="update_dialog_right">Memperbarui</string>
     <string name="update_dialog_left">Mengabaikan</string>
     <string name="update_dialog_content">Versi baru akan datang! Kami meningkatkan banyak pada versi terbaru %s. Apakah Anda ingin memperbarui Super Clone Anda sekarang?</string>
+    <string name="check_update"><u>Cek pembaruan</u></string>
+    <string name="saturation">Kejenuhan</string>
+    <string name="about">Tentang</string>
 </resources>

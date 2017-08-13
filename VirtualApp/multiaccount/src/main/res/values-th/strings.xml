@@ -189,4 +189,7 @@
     <string name="update_dialog_title">ปรับปรุง</string>
     <string name="update_dialog_left">ไม่สนใจ</string>
     <string name="update_dialog_content">เวอร์ชันใหม่กำลังจะมาถึง! เราปรับปรุงเวอร์ชันล่าสุดขึ้นเป็นจำนวน %s คุณต้องการอัปเดต Super Clone ของคุณตอนนี้หรือไม่?</string>
+    <string name="check_update"><u>ตรวจสอบการอัปเดต</u></string>
+    <string name="saturation">ความอิ่มตัว</string>
+    <string name="about">เกี่ยวกับ</string>
 </resources>

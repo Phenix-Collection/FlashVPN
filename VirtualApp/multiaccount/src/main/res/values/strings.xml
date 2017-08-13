@@ -14,6 +14,7 @@
     <string name="sponsor_text">Sponsored</string>
     <string name="btn_clone">Clone</string>
     <string name="start">Start</string>
+    <string name="about">About</string>
     <string name="cancel">Cancel</string>
     <string name="cloning">Cloning...</string>
     <string name="cloning_tips">%s is being cloned ...</string>
@@ -77,6 +78,7 @@
 
     <!-- settings -->
     <string name="settings_shortcut_title">Shortcut</string>
+    <string name="check_update"><u>Check Update</u></string>
     <string name="create_shortcut">Create Shortcut</string>
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
     <string name="settings_gms">Enable Google Play service for clones</string>
@@ -93,6 +95,7 @@
     <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
     <string name="settings_privacy_policy">Privacy Policy</string>
     <string name="settings_terms_of_service">Terms of Service</string>
+    <string name="settings_terms_text">Terms of Service and Privacy Policy</string>
     <string name="settings_follow_us">Follow us on Facebook Page</string>
     <string name="settings_join_us">Join Our Community</string>
     <string name="settings_right" translatable="false">2017 Polestar Applab All rights reserved</string>
@@ -109,8 +112,6 @@
 
     <!-- titles -->
     <string name="clone_apps_title">Clone Apps</string>
-
-    <string name="facebook_app_id" translatable="false">1700354860278115</string>
 
     <string name="crash_hint">Sorry, some error happen, and we will fix it in next version.</string>
 

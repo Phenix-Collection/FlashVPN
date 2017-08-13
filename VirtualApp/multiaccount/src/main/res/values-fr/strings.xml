@@ -144,4 +144,9 @@
     <string name="update_dialog_right">Mettre à jour</string>
     <string name="update_dialog_left">Ignorer</string>
     <string name="update_dialog_content">Une nouvelle version arrive! Nous avons beaucoup amélioré la dernière version %s. Voulez-vous mettre à jour votre Super Clone maintenant?</string>
+    <string name="crash_hint">Désolé, des erreurs se produisent, et nous allons le réparer dans la prochaine version.</string>
+    <string name="clone_error"></string>
+    <string name="check_update"><u>Vérifier la mise à jour</u></string>
+    <string name="saturation">Saturation</string>
+    <string name="about">Sur</string>
 </resources>
