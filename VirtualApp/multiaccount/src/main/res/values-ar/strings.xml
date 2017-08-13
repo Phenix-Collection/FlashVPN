@@ -186,4 +186,8 @@
     <string name="hue">مسحة</string>
     <string name="light">خفة</string>
     <string name="badge">علامة</string>
+    <string name="update_dialog_right">تحديث</string>
+    <string name="update_dialog_title">تحديث</string>
+    <string name="update_dialog_left">تجاهل</string>
+    <string name="update_dialog_content">الإصدار الجديد قادم! قمنا بتحسين الكثير على أحدث إصدار. هل ترغب في تحديث الآن؟</string>
 </resources>

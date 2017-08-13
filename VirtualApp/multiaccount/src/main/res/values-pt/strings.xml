@@ -185,4 +185,8 @@
     <string name="hue">Matiz</string>
     <string name="light">Leveza</string>
     <string name="badge">Tag</string>
+    <string name="update_dialog_right">Atualizar</string>
+    <string name="update_dialog_title">Atualizar</string>
+    <string name="update_dialog_left">Ignorar</string>
+    <string name="update_dialog_content">Nova versão está chegando! Melhoramos muito a última versão %s. Gostaria de atualizar o seu Super Clone agora?</string>
 </resources>

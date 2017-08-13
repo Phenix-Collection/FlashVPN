@@ -38,6 +38,8 @@ public class AppConstants {
     public final static int COLOR_MID_VALUE = 127;
 
     public final static String CONF_WALL_SDK = "conf_wall_sdk";
+    public final static String CONF_UPDATE_VERSION = "push_update_version";
+    public final static String CONF_LATEST_VERSION = "current_version";
 
     public class PreferencesKey {
         public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";

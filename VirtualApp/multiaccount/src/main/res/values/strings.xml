@@ -37,6 +37,10 @@
     <string name="delete_dialog_content">Removing this cloned app means\n deleting all of its data.</string>
     <string name="delete_dialog_left">Cancel</string>
     <string name="delete_dialog_right">Delete</string>
+    <string name="update_dialog_title">Update</string>
+    <string name="update_dialog_content">New version is coming! We improved a lot on version %s. Would you like to update your Super Clone now?</string>
+    <string name="update_dialog_left">Ignore</string>
+    <string name="update_dialog_right">Update</string>
     <string name="dialog_rating_us_content">Enjoy using Super Clone app?</string>
     <string name="dialog_feedback_content">Would you kindly give us some feedback to help improve it?</string>
     <string name="not_really">Not Really</string>

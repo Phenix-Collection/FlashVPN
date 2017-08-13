@@ -448,4 +448,12 @@ public class PreferencesUtils {
     public static void setLockInterval(long val) {
         putLong(MApp.getApp(), "relock_interval", val);
     }
+
+    public static void ignoreVersion(long code) {
+        putLong(MApp.getApp(),"ignore_version", code);
+    }
+
+    public static long getIgnoreVersion() {
+        return getLong(MApp.getApp(), "ignore_version", -1);
+    }
 }

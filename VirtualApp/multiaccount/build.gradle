@@ -34,8 +34,8 @@ android {
 
     productFlavors {
         develop {
-            versionCode 9999
-            versionName '1.0.1.9999'
+            versionCode 9
+            versionName '9999'
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {

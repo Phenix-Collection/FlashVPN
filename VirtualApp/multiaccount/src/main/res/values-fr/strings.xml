@@ -140,4 +140,8 @@
     <string name="hue">Teinte</string>
     <string name="light">Légèreté</string>
     <string name="badge">Marque</string>
+    <string name="update_dialog_title">Mettre à jour</string>
+    <string name="update_dialog_right">Mettre à jour</string>
+    <string name="update_dialog_left">Ignorer</string>
+    <string name="update_dialog_content">Une nouvelle version arrive! Nous avons beaucoup amélioré la dernière version %s. Voulez-vous mettre à jour votre Super Clone maintenant?</string>
 </resources>

@@ -185,4 +185,8 @@
     <string name="hue">Warna</string>
     <string name="light">Keringanan</string>
     <string name="badge">Menandai</string>
+    <string name="update_dialog_title">Memperbarui</string>
+    <string name="update_dialog_right">Memperbarui</string>
+    <string name="update_dialog_left">Mengabaikan</string>
+    <string name="update_dialog_content">Versi baru akan datang! Kami meningkatkan banyak pada versi terbaru %s. Apakah Anda ingin memperbarui Super Clone Anda sekarang?</string>
 </resources>

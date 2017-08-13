@@ -2,6 +2,7 @@ package com.polestar.multiaccount.component.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -43,6 +44,7 @@ import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.widgets.LeftRightDialog;
 import com.polestar.multiaccount.widgets.UpDownDialog;
 import com.polestar.multiaccount.utils.RemoteConfig;
 
@@ -90,9 +92,20 @@ public class HomeActivity extends BaseActivity {
     private RelativeLayout wallButtonLayout;
     private IAdAdapter interstitialAd;
     private boolean av, mv;
+    private Handler mainHandler;
+
+    private static final String EXTRA_NEED_UPDATE = "extra_need_update";
+    public static void enter(Activity activity, boolean needUpdate) {
+        MLogs.d("Enter home: update: " + needUpdate);
+        Intent intent = new Intent(activity, HomeActivity.class);
+        intent.putExtra(EXTRA_NEED_UPDATE, needUpdate);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(android.R.anim.fade_in, -1);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainHandler = new Handler();
         EventReporter.homeShow(this);
         setContentView(R.layout.activity_home);
         initView();
@@ -115,6 +128,43 @@ public class HomeActivity extends BaseActivity {
                 AdUtils.uploadWallImpression(random < 2 || BuildConfig.DEBUG);
             }
         }
+        boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
+        if (needUpdate) {
+            MLogs.d("need update");
+            mainHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showUpdateDialog();
+                }
+            }, 1000);
+        }
+    }
+
+    private void showUpdateDialog() {
+        LeftRightDialog.show(this,this.getResources().getString(R.string.update_dialog_title),
+                this.getResources().getString(R.string.update_dialog_content, ""+ RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION)),
+                this.getResources().getString(R.string.update_dialog_left),this.getResources().getString(R.string.update_dialog_right),
+                new DialogInterface.OnClickListener(){
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i){
+                            case LeftRightDialog.LEFT_BUTTON:
+                                dialogInterface.dismiss();
+                                PreferencesUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
+                                break;
+                            case LeftRightDialog.RIGHT_BUTTON:
+                                dialogInterface.dismiss();
+                                CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                break;
+                        }
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                PreferencesUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
+            }
+        });
     }
 
     private void initView() {

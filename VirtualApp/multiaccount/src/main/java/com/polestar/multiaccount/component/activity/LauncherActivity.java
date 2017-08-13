@@ -1,6 +1,8 @@
 package com.polestar.multiaccount.component.activity;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -11,8 +13,11 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.fragment.HomeFragment;
+import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.CloneHelper;
+import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.multiaccount.utils.RemoteConfig;
 
 /**
  * Created by yxx on 2016/8/23.
@@ -88,8 +93,25 @@ public class LauncherActivity extends BaseActivity{
             createShortCut();
             created = true;
         }
-        startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
-        overridePendingTransition(android.R.anim.fade_in, -1);
+        HomeActivity.enter(this, needUpdate());
         finish();
+    }
+
+    private boolean needUpdate() {
+        try {
+            PackageInfo vinfo = getPackageManager().getPackageInfo(getPackageName(),0);
+            int versionCode = vinfo.versionCode;
+            long pushVersion = RemoteConfig.getLong(AppConstants.CONF_UPDATE_VERSION);
+            long latestVersion = RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION);
+            long ignoreVersion = PreferencesUtils.getIgnoreVersion();
+            MLogs.d("local: " + versionCode + " push: " + pushVersion + " latest: " + latestVersion + " ignore: "+ ignoreVersion);
+            if (versionCode <= pushVersion
+                   && ignoreVersion < latestVersion) {
+                return true;
+            }
+        }catch (Exception e) {
+            MLogs.e(e);
+        }
+        return false;
     }
 }

@@ -185,4 +185,8 @@
     <string name="hue">สี</string>
     <string name="light">ความสว่าง</string>
     <string name="badge">เครื่องหมาย</string>
+    <string name="update_dialog_right">ปรับปรุง</string>
+    <string name="update_dialog_title">ปรับปรุง</string>
+    <string name="update_dialog_left">ไม่สนใจ</string>
+    <string name="update_dialog_content">เวอร์ชันใหม่กำลังจะมาถึง! เราปรับปรุงเวอร์ชันล่าสุดขึ้นเป็นจำนวน %s คุณต้องการอัปเดต Super Clone ของคุณตอนนี้หรือไม่?</string>
 </resources>

@@ -154,6 +154,14 @@
         <key>conf_wall_sdk</key>
         <value>all</value>
     </entry>
+    <entry>
+        <key>push_update_version</key>
+        <value>9999</value>
+    </entry>
+    <entry>
+        <key>current_version</key>
+        <value>9999</value>
+    </entry>
     <!--
     <entry>
         <key>config_ad_load_timeout</key>
