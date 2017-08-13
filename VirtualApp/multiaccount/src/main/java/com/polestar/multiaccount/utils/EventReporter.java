@@ -213,6 +213,20 @@ public class EventReporter {
         StatService.trackCustomKVEvent(context, "click_event", prop);
     }
 
+    public static void reportActive(Context context, boolean fg){
+        if (!PreferencesUtils.needReportActive(fg)) {
+            return;
+        }
+        PreferencesUtils.updateActiveTime(fg);
+        Properties prop = new Properties();
+        prop.setProperty("fg", fg?"user":"service");
+        prop.setProperty("locker", ""+ PreferencesUtils.isLockerEnabled(context));
+        prop.setProperty("adfree", "" + PreferencesUtils.isAdFree());
+        prop.setProperty("rated", "" + PreferencesUtils.isRated());
+        prop.setProperty("channel", "" + PreferencesUtils.getInstallChannel());
+        StatService.trackCustomKVEvent(context, "track_active", prop);
+    }
+
     public static void onResume(Context context) {
         StatService.onResume(context);
     }

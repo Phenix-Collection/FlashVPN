@@ -456,4 +456,13 @@ public class PreferencesUtils {
     public static long getIgnoreVersion() {
         return getLong(MApp.getApp(), "ignore_version", -1);
     }
+
+    public static void updateActiveTime(boolean fg) {
+        putLong(MApp.getApp(), fg? "fg_active": "bg_active", System.currentTimeMillis());
+    }
+
+    public static boolean needReportActive(boolean fg) {
+        long time =  getLong(MApp.getApp(), fg? "fg_active": "bg_active", 0);
+        return System.currentTimeMillis() - time > 12*60*60*1000;
+    }
 }

@@ -141,6 +141,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void showUpdateDialog() {
+        EventReporter.generalClickEvent(this, "update_dialog");
         LeftRightDialog.show(this,this.getResources().getString(R.string.update_dialog_title),
                 this.getResources().getString(R.string.update_dialog_content, ""+ RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION)),
                 this.getResources().getString(R.string.update_dialog_left),this.getResources().getString(R.string.update_dialog_right),
@@ -156,6 +157,7 @@ public class HomeActivity extends BaseActivity {
                             case LeftRightDialog.RIGHT_BUTTON:
                                 dialogInterface.dismiss();
                                 CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                EventReporter.generalClickEvent(HomeActivity.this, "update_go");
                                 break;
                         }
                     }
@@ -377,6 +379,7 @@ public class HomeActivity extends BaseActivity {
         } else {
             hideAd();
         }
+        EventReporter.reportActive(this, true);
     }
 
     @Override

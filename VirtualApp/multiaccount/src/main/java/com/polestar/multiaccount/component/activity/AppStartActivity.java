@@ -259,6 +259,7 @@ public class AppStartActivity extends BaseActivity {
 
         initData();
         initView();
+        EventReporter.reportActive(this, true);
 
     }
 
