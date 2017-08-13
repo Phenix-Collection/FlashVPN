@@ -12,6 +12,7 @@
 		[-crashlog]				【崩溃日志】
 		[-x86]					【x86支持】
 		[-msg]					【消息推送】
+		[-business]				【商务合作】
 	-showconfig				显示已配置加固项
 	-version				显示当前版本号
 	-update					升级到最新版本
