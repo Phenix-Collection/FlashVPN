@@ -137,34 +137,15 @@ public class AppCloneActivity extends BaseActivity {
                     } catch (Exception e) {
                         MLogs.logBug(MLogs.getStackTraceString(e));
                     }
-                    if (!installed) {
-                        MLogs.d("To install app " + mPkgName);
-                        isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel);
-                        isInstallDone = true;
-                        if (isInstallSuccess) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
-                                    isDBUpdated = true;
-                                }
-                            });
-                            EventReporter.applistClone(AppCloneActivity.this, appModel.getPackageName());
-                            // showAd(installAd);
-                        } else {
-                            EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "cloneError:"+ mPkgName);
-                            mAnimateHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(AppCloneActivity.this, getString(R.string.clone_error), Toast.LENGTH_LONG).show();
-                                    finish();
-                                }
-                            }, 2000);
-                        }
-                    } else {
+                    if (installed) {
+                        AppManager.uninstallApp(mPkgName);
+                        installed = false;
                         EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
-                        isInstallSuccess = true;
-                        isInstallDone = true;
+                    }
+                    MLogs.d("To install app " + mPkgName);
+                    isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel);
+                    isInstallDone = true;
+                    if (isInstallSuccess) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -172,6 +153,17 @@ public class AppCloneActivity extends BaseActivity {
                                 isDBUpdated = true;
                             }
                         });
+                        EventReporter.applistClone(AppCloneActivity.this, appModel.getPackageName());
+                        // showAd(installAd);
+                    } else {
+                        EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "cloneError:"+ mPkgName);
+                        mAnimateHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AppCloneActivity.this, getString(R.string.clone_error), Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        }, 2000);
                     }
                 }
             }).start();

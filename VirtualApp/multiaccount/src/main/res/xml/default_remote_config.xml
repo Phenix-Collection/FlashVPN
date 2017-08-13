@@ -148,7 +148,7 @@
     </entry>
     <entry>
         <key>conf_social_app_list</key>
-        <value>com.whatsapp:com.viber.voip:com.twitter.android:sg.bigo.live:com.UCMobile.intl:com.tencent.com.bsb.hike:com.bbm:com.instagram.android:com.facebook.orca:com.facebook.katana:com.imo.android.imoim:com.linecorp.LGGRTHN:com.bsb.hike:com.snapchat.android:jp.naver.line.android:net.one97.paytm:com.facebook.lite:com.cmcm.whatscall</value>
+        <value>com.whatsapp:com.viber.voip:com.twitter.android:sg.bigo.live:com.UCMobile.intl:com.tencent.com.bsb.hike:com.bbm:com.instagram.android:com.facebook.orca:com.facebook.katana:com.imo.android.imoim:com.linecorp.LGGRTHN:com.bsb.hike:com.snapchat.android:jp.naver.line.android:net.one97.paytm:com.facebook.lite:com.cmcm.whatscall:com.imo.android.imoim</value>
     </entry>
     <entry>
         <key>conf_wall_sdk</key>
