@@ -154,6 +154,14 @@ public class SettingsActivity extends BaseActivity {
         startActivity(notification);
     }
 
+    public void onPrivacyLockerClick(View view) {
+        if (PreferencesUtils.isLockerEnabled(this) ) {
+            LockPasswordSettingActivity.start(this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
+        } else {
+            LockSettingsActivity.start(this,"setting");
+        }
+    }
+
     public void onFeedbackClick(View view) {
         Intent intent = new Intent(this, FeedbackActivity.class);
         startActivity(intent);
