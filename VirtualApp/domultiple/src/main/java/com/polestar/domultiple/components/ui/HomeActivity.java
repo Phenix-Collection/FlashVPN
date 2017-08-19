@@ -1,6 +1,7 @@
 package com.polestar.domultiple.components.ui;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -90,6 +91,15 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private LinearLayout nativeAdContainer;
 
     private String startingPkg;
+    private final static String EXTRA_NEED_UPDATE = "extra_need_update";
+    private Handler mainHandler;
+    public static void enter(Activity activity, boolean needUpdate) {
+        MLogs.d("Enter home: update: " + needUpdate);
+        Intent intent = new Intent(activity, HomeActivity.class);
+        intent.putExtra(EXTRA_NEED_UPDATE, needUpdate);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(android.R.anim.fade_in, -1);
+    }
 
     @Override
     protected boolean useCustomTitleBar() {
@@ -99,6 +109,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainHandler = new Handler();
         initView();
         initData();
         EventReporter.homeShow();
@@ -107,6 +118,16 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             if (random < 8) {
                 AdUtils.uploadWallImpression(this, random < 2 );
             }
+        }
+        boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
+        if (needUpdate) {
+            MLogs.d("need update");
+            mainHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showUpdateDialog();
+                }
+            }, 1000);
         }
     }
 
@@ -118,6 +139,36 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         if (!PreferencesUtils.isAdFree()) {
             loadAd();
         }
+    }
+
+    private void showUpdateDialog() {
+        EventReporter.generalClickEvent("update_dialog");
+        UpDownDialog.show(this, this.getResources().getString(R.string.update_dialog_title),
+                this.getResources().getString(R.string.update_dialog_content, "" + RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION)),
+                this.getResources().getString(R.string.update_dialog_left), this.getResources().getString(R.string.update_dialog_right),
+                -1, R.layout.dialog_up_down,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                PreferencesUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                EventReporter.generalClickEvent("update_go");
+                                break;
+                        }
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                PreferencesUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
+            }
+        });
     }
 
     private void loadAd() {
@@ -565,7 +616,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             rateDialogShowed= true;
         }
         PreferencesUtils.updateRateDialogTime(this);
-        String title = RATE_AFTER_CLONE.equals(from) ? getString(R.string.congratulations) : getString(R.string.rate_us);
+        String title = RATE_AFTER_CLONE.equals(from) ? getString(R.string.congratulations) : getString(R.string.like_it);
         UpDownDialog.show(this, title,
                 getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
                 getString(R.string.yes), R.drawable.dialog_tag_congratulations,

@@ -28,7 +28,7 @@
         />
     <item
         android:id="@+id/item_rate"
-        android:title="@string/rate_us"
+        android:title="@string/like_it"
         android:icon="@drawable/icon_rate_small"
         />
     <item

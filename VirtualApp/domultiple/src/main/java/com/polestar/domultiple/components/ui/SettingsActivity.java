@@ -17,6 +17,9 @@ import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.billing.BillingConstants;
 import com.polestar.domultiple.billing.BillingProvider;
+import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.domultiple.utils.EventReporter;
+import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.BlueSwitch;
@@ -30,10 +33,6 @@ public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
     private BlueSwitch liteSwitch;
     private BlueSwitch adFreeSwitch;
-    private TextView versionTv;
-    private TextView followTv;
-    private String fbUrl;
-
     private boolean requestAdFree;
 
     private final static int REQUEST_UNLOCK_SETTINGS = 1;
@@ -47,13 +46,6 @@ public class SettingsActivity extends BaseActivity {
 
     private void initView() {
         setTitle(getString(R.string.settings));
-        versionTv = (TextView)findViewById(R.id.version_info);
-        followTv = (TextView)findViewById(R.id.follow_us_txt);
-        versionTv.setText(getString(R.string.settings_right) + "\n" + "Version: " + BuildConfig.VERSION_NAME);
-        fbUrl = RemoteConfig.getString("fb_follow_page");
-        if (fbUrl == null || fbUrl.equals("off")) {
-            followTv.setVisibility(View.INVISIBLE);
-        }
         shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
         shortCutSwich.setChecked(PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,false));
         shortCutSwich.setOnClickListener(new View.OnClickListener() {
@@ -162,50 +154,87 @@ public class SettingsActivity extends BaseActivity {
         }
     }
 
-    public void onPrivacyPolicyClick(View view) {
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.privacy_policy));
-        intent.putExtra(WebViewActivity.EXTRA_URL, "file:///android_asset/privacy_policy.html");
+    public void onAboutClick(View view) {
+        Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
     }
 
-    public void onTermsClick(View view) {
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.terms_of_service));
-        intent.putExtra(WebViewActivity.EXTRA_URL, "file:///android_asset/term_of_service.html");
-        startActivity(intent);
+    public void onRateUsClick(View view) {
+        showRateDialog();
     }
 
-    public void onJoinUsClick(View view) {
-        try {
-            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://plus.google.com/communities/104830818454731991305"));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-            startActivity(intent);
-        } catch (Exception localException1) {
-            localException1.printStackTrace();
-        }
-    }
-
-    public void onFollowUsClick(View view) {
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo("com.facebook.katana", 0);
-            if (packageInfo != null && packageInfo.versionCode >= 3002850) {
-                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("fb://facewebmodal/f?href=" + fbUrl));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-                startActivity(intent);
-            }else{
-                Intent intent = new Intent("android.intent.action.VIEW",Uri.parse(fbUrl));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-                startActivity(intent);
+    private void showRateDialog(){
+        PreferencesUtils.updateRateDialogTime(this);
+        String title = getString(R.string.like_it);
+        UpDownDialog.show(this, title,
+                getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
+                getString(R.string.yes), R.drawable.dialog_tag_congratulations,
+                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                PreferencesUtils.setLoveApp(false);
+                                UpDownDialog.show(SettingsActivity.this, getString(R.string.feedback),
+                                        getString(R.string.dialog_feedback_content),
+                                        getString(R.string.no_thanks),
+                                        getString(R.string.ok), R.drawable.dialog_tag_comment,
+                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which) {
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        Intent feedback = new Intent(SettingsActivity.this, FeedbackActivity.class);
+                                                        startActivity(feedback);
+                                                        EventReporter.reportRate("not_love_go_fb", "settings");
+                                                        break;
+                                                    case UpDownDialog.NEGATIVE_BUTTON:
+                                                        EventReporter.reportRate("not_love_not_fb", "settings");
+                                                        break;
+                                                }
+                                            }
+                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialogInterface) {
+                                        EventReporter.reportRate("not_love_cancel_fb", "settings");
+                                    }
+                                });
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                PreferencesUtils.setLoveApp(true);
+                                UpDownDialog.show(SettingsActivity.this, getString(R.string.dialog_love_title),
+                                        getString(R.string.dialog_love_content),
+                                        getString(R.string.remind_me_later),
+                                        getString(R.string.star_rating), R.drawable.dialog_tag_love,
+                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which) {
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        PreferencesUtils.setRated(true);
+                                                        CommonUtils.jumpToMarket(SettingsActivity.this, getPackageName());
+                                                        EventReporter.reportRate("love_rate", "settings");
+                                                        break;
+                                                    case UpDownDialog.NEGATIVE_BUTTON:
+                                                        EventReporter.reportRate("love_not_rate", "settings");
+                                                        break;
+                                                }
+                                            }
+                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialogInterface) {
+                                        EventReporter.reportRate("love_cancel_rate", "settings");
+                                    }
+                                });
+                                break;
+                        }
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                EventReporter.reportRate("cancel_rate", "settings");
             }
-        } catch (Exception localException1) {
-            try {
-                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(fbUrl));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-                startActivity(intent);
-            } catch (Exception localException2) {
-            }
-        }
+        });
     }
 
     private void updateBillingStatus() {

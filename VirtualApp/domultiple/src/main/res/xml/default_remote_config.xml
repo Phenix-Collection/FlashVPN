@@ -56,4 +56,12 @@
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>1</value>
     </entry>
+    <entry>
+        <key>push_update_version</key>
+        <value>9999</value>
+    </entry>
+    <entry>
+        <key>current_version</key>
+        <value>9999</value>
+    </entry>
 </defaultsMap>

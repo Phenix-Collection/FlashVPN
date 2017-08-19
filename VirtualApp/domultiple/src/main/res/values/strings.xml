@@ -38,7 +38,8 @@
     <string name="feedback">Feedback</string>
     <string name="ad_free">Remove Ads</string>
     <string name="share">Share</string>
-    <string name="rate_us">Like It</string>
+    <string name="like_it">Like It</string>
+    <string name="rate_us">Rate Us</string>
     <string name="join_us">Join Community</string>
     <string name="follow_us">Follow Us</string>
     <string name="settings">Settings</string>
@@ -109,14 +110,23 @@
     <string name="settings_lite_disable_notice">In normal mode, Google Play Service is supported and may cause more memory and battery usage. Do you want to switch off Lite Mode?</string>
 
     <!--ad free-->
-    <string name="settings_adfree_title">Remove Ads</string>
-    <string name="adfree_dialog_title">Upgrade to Ad Free Version</string>
-    <string name="settings_adfree_content">Turn off Ads in the app</string>
-    <string name="adfree_dialog_content">Become premium user of Do Multiple and turn off all ADs in this app. Do you want to buy now?</string>
+    <string name="settings_adfree_title">VIP Service</string>
+    <string name="adfree_dialog_title">Become VIP user</string>
+    <string name="settings_adfree_content">Enable VIP service of Do Multiple</string>
+    <string name="adfree_dialog_content">Donate to developer and become premium user of Do Multiple and turn off all ADs in this app. Do you want to buy now?</string>
 
     <!-- notification -->
     <string name="notification_decription">Enable or disable notifications from cloned application</string>
     <string name="notification_detail_setting">Enable notification for app</string>
+
+    <!-- update & about -->
+    <string name="check_update"><u>Check Update</u></string>
+    <string name="update_dialog_title">Update</string>
+    <string name="update_dialog_content">New version is coming! We improved a lot on version %s. Would you like to update Do Multiple now?</string>
+    <string name="update_dialog_left">Ignore this version</string>
+    <string name="update_dialog_right">Update</string>
+    <string name="about">About</string>
+    <string name="settings_terms_text">Terms of Service and Privacy Policy</string>
 
     <!-- feedback -->
     <string name="feedback_hint">Please tell us the detail about the problem you met , and please tell us the steps to reproduce it and better with screenshot.</string>

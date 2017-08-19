@@ -78,4 +78,10 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("rate", bundle);
     }
 
+    public static void generalClickEvent(String event) {
+        Bundle bundle = new Bundle();
+        bundle.putString("event", event);
+        mFirebaseAnalytics.logEvent("general_event", bundle);
+    }
+
 }

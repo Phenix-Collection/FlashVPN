@@ -41,4 +41,6 @@
 
     <color name="native_ad_transparent_black">#64000000</color>
     <color name="transparent_gray_cover">#55dddddd</color>
+
+    <color name="about_text_light">#dedcdc</color>
 </resources>

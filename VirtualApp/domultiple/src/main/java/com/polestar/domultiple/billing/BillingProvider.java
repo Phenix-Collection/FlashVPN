@@ -11,6 +11,7 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
 import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.domultiple.PolestarApp;
+import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.utils.MLogs;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class BillingProvider {
 
     private BillingProvider() {
         if (VirtualCore.get().isMainProcess()) {
+            MLogs.d(TAG,"start init");
             manager = new BillingManager(PolestarApp.getApp(), new BillingManager.BillingUpdatesListener() {
                 @Override
                 public void onBillingClientSetupFinished() {
@@ -62,7 +64,7 @@ public class BillingProvider {
                             }
                         });
                     }
-                    //AppManager.reloadLockerSetting();
+                    CloneManager.reloadLockerSetting();
                 }
             });
         }

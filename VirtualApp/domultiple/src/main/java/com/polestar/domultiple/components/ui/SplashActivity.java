@@ -2,6 +2,7 @@ package com.polestar.domultiple.components.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -9,9 +10,12 @@ import android.support.annotation.Nullable;
 
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
+import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
+import com.polestar.domultiple.utils.RemoteConfig;
 
 /**
  * Created by guojia on 2017/7/15.
@@ -85,8 +89,25 @@ public class SplashActivity extends BaseActivity {
             createShortCut();
             created = true;
         }
-        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-        overridePendingTransition(android.R.anim.fade_in, -1);
+        HomeActivity.enter(this, needUpdate());
         finish();
+    }
+
+    private boolean needUpdate() {
+        try {
+            PackageInfo vinfo = getPackageManager().getPackageInfo(getPackageName(),0);
+            int versionCode = vinfo.versionCode;
+            long pushVersion = RemoteConfig.getLong(AppConstants.CONF_UPDATE_VERSION);
+            long latestVersion = RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION);
+            long ignoreVersion = PreferencesUtils.getIgnoreVersion();
+            MLogs.d("local: " + versionCode + " push: " + pushVersion + " latest: " + latestVersion + " ignore: "+ ignoreVersion);
+            if (versionCode <= pushVersion
+                    && ignoreVersion < latestVersion) {
+                return true;
+            }
+        }catch (Exception e) {
+            MLogs.e(e);
+        }
+        return false;
     }
 }

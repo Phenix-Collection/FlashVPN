@@ -57,4 +57,7 @@ public class AppConstants {
 
     public final static String CONF_WALL_SDK = "conf_wall_sdk";
     public static final String WALL_UNIT_ID = "8442";
+
+    public final static String CONF_UPDATE_VERSION = "push_update_version";
+    public final static String CONF_LATEST_VERSION = "current_version";
 }
