@@ -410,7 +410,7 @@ public class BillingManager implements PurchasesUpdatedListener {
         try {
             return Security.verifyPurchase(getKey(), signedData, signature);
         } catch (IOException e) {
-            MLogs.e(TAG, "Got an exception trying to validate a purchase: " + e);
+            MLogs.logBug(TAG, "Got an exception trying to validate a purchase: " + e);
             return false;
         }
     }

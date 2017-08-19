@@ -97,6 +97,24 @@ public class PolestarApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION  || BuildConfig.DEBUG) {
+            VLog.openLog();
+            VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
+            MLogs.DEBUG = true;
+            AdConstants.DEBUG = true;
+        }
+        VLog.setKeyLogger(new VLog.IKeyLogger() {
+            @Override
+            public void keyLog(Context context, String tag, String log) {
+                MLogs.logBug(tag,log);
+                EventReporter.keyLog(gDefault, tag, log);
+            }
+
+            @Override
+            public void logBug(String tag, String log) {
+                MLogs.logBug(tag, log);
+            }
+        });
         VirtualCore virtualCore = VirtualCore.get();
         virtualCore.initialize(new VirtualCore.VirtualInitializer() {
 
@@ -159,24 +177,6 @@ public class PolestarApp extends Application {
             e.printStackTrace();
         }
 
-        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION  || BuildConfig.DEBUG) {
-            VLog.openLog();
-            VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
-            MLogs.DEBUG = true;
-            AdConstants.DEBUG = true;
-        }
-        VLog.setKeyLogger(new VLog.IKeyLogger() {
-            @Override
-            public void keyLog(Context context, String tag, String log) {
-                MLogs.logBug(tag,log);
-                EventReporter.keyLog(gDefault, tag, log);
-            }
-
-            @Override
-            public void logBug(String tag, String log) {
-                MLogs.logBug(tag, log);
-            }
-        });
     }
 
     private class MAppCrashHandler implements Thread.UncaughtExceptionHandler {
