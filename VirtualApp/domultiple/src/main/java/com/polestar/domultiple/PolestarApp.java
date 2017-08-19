@@ -80,7 +80,7 @@ public class PolestarApp extends Application {
     private void initAd() {
         MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~6272167416");
         if (isAvzEnabled()) {
-            AdSdk.initialize(gDefault,"7ia1cc8i765ed2b");
+            AdSdk.initialize(gDefault,"39fi40iihgfedc1");
         }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
