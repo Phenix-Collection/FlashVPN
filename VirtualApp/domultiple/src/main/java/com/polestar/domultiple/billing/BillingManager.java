@@ -109,7 +109,6 @@ public class BillingManager implements PurchasesUpdatedListener {
             }
             hash = str3.toString();
         }
-        MLogs.d(TAG,hash);
         return hash;
     }
     /**
