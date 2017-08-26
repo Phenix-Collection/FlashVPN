@@ -68,6 +68,9 @@ public class AppStartActivity extends BaseActivity {
     private boolean launched;
 
     public static boolean needLoadAd(boolean preload, String pkg) {
+        if (PreferencesUtils.isAdFree()) {
+            return false;
+        }
         long interval = RemoteConfig.getLong(CONFIG_APP_START_AD_FREQ)*60*60*1000;
         long ramp = RemoteConfig.getLong(CONFIG_APP_START_AD_RAMP)*60*60*1000;
         long last = getLastShowTime();

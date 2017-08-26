@@ -118,7 +118,7 @@ public class HomeActivity extends BaseActivity {
         showAppWall = mv && random < wallPercent;
         random = new Random().nextInt(100);
         long interval = System.currentTimeMillis() - PreferencesUtils.getAutoInterstialTime();
-        autoShowInterstitial = (random < RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL)
+        autoShowInterstitial = (!PreferencesUtils.isAdFree() && random < RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL)
                 && (interval > RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL))) || BuildConfig.DEBUG;
         MLogs.d("showAppWall: " + showAppWall + " autoInterstitial: " + autoShowInterstitial + " wallPercent : " + wallPercent);
         //showAppWall = true;
