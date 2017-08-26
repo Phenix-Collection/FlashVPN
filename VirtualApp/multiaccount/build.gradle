@@ -107,7 +107,7 @@ dependencies {
     compile 'com.google.firebase:firebase-core:11.0.2'
     compile 'com.google.firebase:firebase-config:11.0.2'
     compile 'com.google.firebase:firebase-ads:11.0.2'
-    compile 'com.facebook.android:audience-network-sdk:4.+'
+    //compile 'com.facebook.android:audience-network-sdk:4.+'
     compile project(':lib')
 
     //mopub
