@@ -96,13 +96,8 @@ public class MApp extends Application {
                 BillingProvider.get();
                 String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
                 boolean av = "all".equals(conf) || "avz".equals(conf);
-                boolean mv = "all".equals(conf) || "mv".equals(conf);
                 if (av) {
                     AdSdk.initialize(gDefault, AppConstants.AV_APP_ID);
-                }
-                if (mv) {
-                    AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
-                    AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
                 }
                //
             }
@@ -169,13 +164,8 @@ public class MApp extends Application {
                 MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
                 String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
                 boolean av = "all".equals(conf) || "avz".equals(conf);
-                boolean mv = "all".equals(conf) || "mv".equals(conf);
                 if (av) {
                     AdSdk.initialize(gDefault, AppConstants.AV_APP_ID);
-                }
-                if (mv) {
-                    AdUtils.initMVSDK("33047", "e4a6e0bf98078d3fa81ca6d315c28123", gDefault);
-                    AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
                 }
                 AppLockMonitor.getInstance();
             }

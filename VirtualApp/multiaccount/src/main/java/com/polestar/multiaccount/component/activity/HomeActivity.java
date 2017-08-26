@@ -22,8 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.billingclient.api.BillingClient;
-import com.mobvista.msdk.MobVistaConstans;
-import com.mobvista.msdk.out.MvWallHandler;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -84,14 +82,13 @@ public class HomeActivity extends BaseActivity {
     private static final String CONFIG_APP_WALL_PERCENTAGE = "home_appwall_percentage";
     private static final String CONFIG_AVAZU_CLICK_RATE = "avazu_click_rate";
     private static final String CONFIG_AVAZU_IMP_RATE = "avazu_imp_rate";
-    private boolean showAppWall;
 
     private String cloningPackage;
     private RelativeLayout iconAdLayout;
     private RelativeLayout giftIconLayout;
     private RelativeLayout wallButtonLayout;
     private IAdAdapter interstitialAd;
-    private boolean av, mv;
+    private boolean av;
     private Handler mainHandler;
 
     private static final String EXTRA_NEED_UPDATE = "extra_need_update";
@@ -112,16 +109,13 @@ public class HomeActivity extends BaseActivity {
         AppListUtils.getInstance(this); // init AppListUtils
         String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
         av = "all".equals(conf) || "avz".equals(conf);
-        mv = "all".equals(conf) || "mv".equals(conf);
         long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);
         int random = new Random().nextInt(100);
-        showAppWall = mv && random < wallPercent;
         random = new Random().nextInt(100);
         long interval = System.currentTimeMillis() - PreferencesUtils.getAutoInterstialTime();
         autoShowInterstitial = (!PreferencesUtils.isAdFree() && random < RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL)
                 && (interval > RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL))) || BuildConfig.DEBUG;
-        MLogs.d("showAppWall: " + showAppWall + " autoInterstitial: " + autoShowInterstitial + " wallPercent : " + wallPercent);
-        //showAppWall = true;
+        MLogs.d( " autoInterstitial: " + autoShowInterstitial + " wallPercent : " + wallPercent);
         if (av) {
             random = new Random().nextInt(100);
             if (random < 8 || BuildConfig.DEBUG) {
@@ -227,64 +221,6 @@ public class HomeActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mHomeFragment).commitAllowingStateLoss();
     }
 
-    private void preloadAppWall() {
-        AdUtils.preloadAppWall(AppConstants.WALL_UNIT_ID);
-    }
-
-    private MvWallHandler mvHandler;
-    private boolean wallClickReported = false;
-    public void loadMVWallHandler(){
-        MLogs.d("loadMVWallHandler");
-        wallButtonLayout.setVisibility(View.VISIBLE);
-        giftIconLayout.setVisibility(View.GONE);
-        giftIconView.setVisibility(View.GONE);
-        wallClickReported = false;
-        Map<String,Object> properties = MvWallHandler.getWallProperties(AppConstants.WALL_UNIT_ID);
-        properties.put(MobVistaConstans.PROPERTIES_WALL_STATUS_COLOR, R.color.theme_color2);
-        properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT,  getString(R.string.appwall_title));
-        properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_TYPEFACE,  MobVistaConstans.TITLE_TYPEFACE_DEFAULT_BOLD);
-        properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_SIZE, DisplayUtils.dip2px(this,20));
-        properties.put(MobVistaConstans.PROPERTIES_WALL_TITLE_BACKGROUND_COLOR, R.color.theme_color2);
-        properties.put(MobVistaConstans.PROPERTIES_WALL_NAVIGATION_COLOR, R.color.theme_color2);
-        properties.put(MobVistaConstans.PROPERTIES_WALL_TAB_BACKGROUND_ID, R.color.theme_color2);
-        mvHandler = new MvWallHandler(properties, this, wallButtonLayout);//nat为点击事件的vg，请确保改vg的点击事件不被拦截
-        wallButtonLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (!wallClickReported) {
-                    EventReporter.homeGiftClick(HomeActivity.this, "mv_app_wall");
-                }
-                wallClickReported = true;
-                return false;
-            }
-        });
-        //customer entry layout begin 该部分代码可以不用
-        View view = getLayoutInflater().inflate(R.layout.mv_wall_button, null);
-        view.findViewById(R.id.imageview).setTag(MobVistaConstans.WALL_ENTRY_ID_IMAGEVIEW_IMAGE);
-        view.findViewById(R.id.newtip_area).setTag(MobVistaConstans.WALL_ENTRY_ID_VIEWGROUP_NEWTIP);
-        mvHandler.setHandlerCustomerLayout(view);
-        //customer entry layout end */
-        mvHandler.load();
-    }
-
-    public void openWall(){
-        try {
-            Class<?> aClass = Class
-                    .forName("com.mobvista.msdk.shell.MVActivity");
-            Intent intent = new Intent(this, aClass);
-            intent.putExtra(MobVistaConstans.PROPERTIES_UNIT_ID, AppConstants.WALL_UNIT_ID);
-            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_STATUS_COLOR, R.color.theme_color2);
-            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT,  getString(R.string.appwall_title));
-            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_TYPEFACE,  MobVistaConstans.TITLE_TYPEFACE_DEFAULT_BOLD);
-            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_LOGO_TEXT_SIZE, DisplayUtils.dip2px(this,20));
-            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TITLE_BACKGROUND_COLOR, R.color.theme_color2);
-            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_NAVIGATION_COLOR, R.color.theme_color2);
-            intent.putExtra(MobVistaConstans.PROPERTIES_WALL_TAB_BACKGROUND_ID, R.color.theme_color2);
-            this.startActivity(intent);
-        } catch (Exception e) {
-            MLogs.e("MVActivity", e.toString());
-        }
-    }
 
     private void showGiftIcon() {
         int iconId = new Random().nextInt(3);
@@ -349,27 +285,15 @@ public class HomeActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isAutoInterstitialShown " + isAutoInterstitialShown);
-        if (mv) {
-            preloadAppWall();
-        }
         if (!PreferencesUtils.isAdFree()) {
-            if (showAppWall) {
-                giftIconLayout.setVisibility(View.GONE);
-                giftIconView.setVisibility(View.GONE);
-                wallButtonLayout.setVisibility(View.GONE);
-                loadMVWallHandler();
-
-            }else {
-                giftIconLayout.setVisibility(View.GONE);
-                giftIconView.setVisibility(View.GONE);
-                giftIconView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        showGiftIcon();
-                    }
-                },800);
-
-            }
+            giftIconLayout.setVisibility(View.GONE);
+            giftIconView.setVisibility(View.GONE);
+            giftIconView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showGiftIcon();
+                }
+            },800);
             if (autoShowInterstitial && !isAutoInterstitialShown) {
                 loadHomeInterstitial();
             }
@@ -572,19 +496,15 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void onIconAdClick(View view) {
-        MLogs.d("onIconAdClick showAppWall: " + showAppWall);
+        MLogs.d("onIconAdClick  " );
         PreferencesUtils.updateIconAdClickTime(this);
         if (PreferencesUtils.isAdFree()) {
             return;
         }
-        if (showAppWall) {
-            openWall();
-            EventReporter.homeGiftClick(this, "mv_app_wall");
-        } else {
-            Intent intent = new Intent(this, NativeInterstitialActivity.class);
-            startActivity(intent);
-            EventReporter.homeGiftClick(this, "lucky");
-        }
+
+        Intent intent = new Intent(this, NativeInterstitialActivity.class);
+        startActivity(intent);
+        EventReporter.homeGiftClick(this, "lucky");
     }
 
     private final static String QUIT_RATE_RANDOM = "quit_rating_random";

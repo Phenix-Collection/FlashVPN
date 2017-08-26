@@ -2,15 +2,9 @@ package com.polestar.multiaccount.component.activity;
 
 import java.util.List;
 
-import com.facebook.ads.Ad;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
-import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
-import com.polestar.ad.AdLog;
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -26,7 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -83,7 +76,7 @@ public class NativeInterstitialActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mobvista_native_interstitial);
+        setContentView(R.layout.native_interstitial);
         initView();
         showLoadding();
         long timeout = RemoteConfig.getLong("config_lucky_timeout");
