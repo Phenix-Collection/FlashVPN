@@ -200,6 +200,9 @@ public final class VClientImpl extends IVClient.Stub {
 
 	private void bindApplicationNoCheck(String packageName, String processName, ConditionVariable lock) {
 		VLog.d(TAG, "bindApplicationNoCheck " + packageName + " proc: " + processName);
+		if (processName == null) {
+			processName = packageName;
+		}
 		mBindAppWatchDog.watch(WATCH_BIND_APP, 75*1000);
 		mTempLock = lock;
 		if (isBound()) {
