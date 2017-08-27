@@ -11,7 +11,7 @@
     <string name="cancel">إلغاء</string>
     <string name="cloning">استنساخ...</string>
     <string name="cloning_tips">ويتم استنساخ تطبيق ...</string>
-    <string name="app_starting_tips">تطبيق بدأت ...</string>
+    <string name="app_starting_tips">تطبيق بدأت %s ...</string>
     <string name="first_start_tips">وسوف يستغرق وقتا أطول قليلا لبدء أول.</string>
 
     <!-- nav menu -->
@@ -44,7 +44,7 @@
     <!-- notification -->
     <string name="notification_decription">تمكين أو تعطيل إخطارات من تطبيق المستنسخة</string>
 
-    <string name="share_with_friends_tip">ويسرني أن أدعوكم لاستخدام هذا التطبيق الرائع. إنه لأمر مدهش، ويمكن دعم العديد من تعاطيه على الانترنت في الوقت نفسه. يمكنك تحميله من هنا:</string>
+    <string name="share_with_friends_tip">يسرني أن أدعوكم لاستخدام هذا التطبيق الرائع %s. يمكنك تحميله من هنا:</string>
 
     <!-- feedback -->
     <string name="feedback_hint">من فضلك قل لنا التفاصيل حول المشكلة التي اجتمعت، ومن فضلك قل لنا خطوات لإعادة إنتاجه وأفضل مع قطة.</string>

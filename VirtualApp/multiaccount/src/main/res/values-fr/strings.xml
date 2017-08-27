@@ -51,7 +51,7 @@
     <string name="submit_success">Merci d\'avoir répondu!</string>
     <string name="start">Début</string>
     <string name="star_rating">Go 5 étoiles maintenant</string>
-    <string name="share_with_friends_tip">Je suis heureux de vous inviter à utiliser cette merveilleuse application% s. Vous pouvez le télécharger ici:</string>
+    <string name="share_with_friends_tip">Je suis heureux de vous inviter à utiliser cette merveilleuse application %s. Vous pouvez le télécharger ici:</string>
     <string name="sponsor_text">Sponsorisé</string>
     <string name="share_with_friends">Partager avec des amis</string>
     <string name="settings_terms_of_service">Conditions d\'utilisation</string>

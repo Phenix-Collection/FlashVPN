@@ -120,8 +120,8 @@ public class CommonUtils {
         shareIntent.setType("text/plain");
         String appName = context.getResources().getString(R.string.app_name);
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, appName);
-        String shareContent = context.getResources().getString(R.string.share_with_friends_tip);
-        shareContent = String.format(shareContent, appName) + "https://play.google.com/store/apps/details?id=" + context.getPackageName();
+        String shareContent = context.getResources().getString(R.string.share_with_friends_tip, appName);
+        shareContent = shareContent + "https://play.google.com/store/apps/details?id=" + context.getPackageName();
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
         context.startActivity(Intent.createChooser(shareIntent, context.getResources().getText(R.string.share_with_friends)));
     }
