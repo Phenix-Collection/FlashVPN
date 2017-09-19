@@ -91,7 +91,7 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             }
         });
 
-        if (AdConstants.DEBUG) {
+        if (false) {
             String android_id = AdUtils.getAndroidID(mContext);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();

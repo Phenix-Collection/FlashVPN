@@ -97,12 +97,6 @@ public class PolestarApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION  || BuildConfig.DEBUG) {
-            VLog.openLog();
-            VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
-            MLogs.DEBUG = true;
-            AdConstants.DEBUG = true;
-        }
         VLog.setKeyLogger(new VLog.IKeyLogger() {
             @Override
             public void keyLog(Context context, String tag, String log) {
@@ -175,6 +169,12 @@ public class PolestarApp extends Application {
             initBugly(gDefault);
         }catch (Exception e){
             e.printStackTrace();
+        }
+        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION  || BuildConfig.DEBUG) {
+            VLog.openLog();
+            VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
+            MLogs.DEBUG = true;
+            AdConstants.DEBUG = true;
         }
 
     }
