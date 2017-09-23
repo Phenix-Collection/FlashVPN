@@ -101,7 +101,7 @@ public class AppStartActivity extends BaseActivity {
             mAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
-                    if (!launched) {
+                    if (!launched && !PreferencesUtils.isAdFree()) {
                         ad.show();
                         EventReporter.generalClickEvent(AppStartActivity.this, "app_start_ad_show");
                         hasShownAd = true;

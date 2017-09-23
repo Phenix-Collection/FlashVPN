@@ -408,7 +408,7 @@ public class HomeActivity extends BaseActivity {
             }
         }
         if (!showAdFree && !isAutoInterstitialShown && autoShowInterstitial) {
-            if (interstitialAd != null) {
+            if (interstitialAd != null && !PreferencesUtils.isAdFree()) {
                 try {
                     interstitialAd.show();
                     isAutoInterstitialShown = true;
