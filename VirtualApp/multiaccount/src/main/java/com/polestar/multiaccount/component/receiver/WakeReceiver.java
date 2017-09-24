@@ -25,7 +25,7 @@ public class WakeReceiver extends BroadcastReceiver {
         String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
         boolean av = "all".equals(conf) || "avz".equals(conf);
         if (av) {
-            AdSdk.initialize(MApp.getApp(), AppConstants.AV_APP_ID);
+            AdSdk.initialize(MApp.getApp(), AppConstants.AV_APP_ID, null);
         }
         ServiceManagerNative.getService(ServiceManagerNative.APP);
         EventReporter.reportActive(MApp.getApp(), false);
