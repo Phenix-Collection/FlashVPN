@@ -2,11 +2,13 @@ package com.polestar.domultiple.widget.locker;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.utils.CommonUtils;
 
 /**
@@ -47,10 +49,12 @@ public class BlurBackground extends LinearLayout {
     }
 
     public void reloadWithTheme(String packageName) {
-        if(TextUtils.isEmpty(packageName) || CommonUtils.getAppIcon(packageName)==null){
+        if(TextUtils.isEmpty(packageName) ){
             return;
         }
-        mDefaultThemeLogic.setBackground(packageName, CommonUtils.getAppIcon(packageName));
+        CustomizeAppData data = CustomizeAppData.loadFromPref(packageName);
+//        mCenterIcon.setImageBitmap(data.getCustomIcon());
+        mDefaultThemeLogic.setBackground(packageName, new BitmapDrawable( data.getCustomIcon()));
     }
 
     public void resetLayout() {

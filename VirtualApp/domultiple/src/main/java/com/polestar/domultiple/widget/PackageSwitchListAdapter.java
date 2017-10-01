@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.db.CustomizeAppData;
 
 import java.util.List;
 
@@ -79,8 +80,11 @@ public class PackageSwitchListAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.iconView.setImageDrawable(model.getIconDrawable(mContext));
-        viewHolder.nameView.setText(model.getName());
+        CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName());
+        viewHolder.iconView.setImageBitmap(data.getCustomIcon());
+        viewHolder.nameView.setText(data.customized? data.label: model.getName());
+//        viewHolder.iconView.setImageDrawable(model.getIconDrawable(mContext));
+//        viewHolder.nameView.setText(model.getName());
         if (position == (getCount() - 1)) {
             viewHolder.divider.setVisibility(View.INVISIBLE);
         } else {

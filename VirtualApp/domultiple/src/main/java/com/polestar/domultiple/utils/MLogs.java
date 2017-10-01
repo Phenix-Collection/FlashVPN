@@ -65,4 +65,7 @@ public class MLogs {
         Log.e(DEFAULT_TAG, msg);
         //BuglyLog.e(DEFAULT_TAG+"_BUGLY", msg);
     }
+    public static void logBug(Exception ex) {
+        MLogs.logBug(MLogs.getStackTraceString(ex));
+    }
 }

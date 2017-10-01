@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -23,6 +24,7 @@ import com.lody.virtual.remote.InstallResult;
 import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
@@ -159,7 +161,11 @@ public class CloneManager {
                 continue;
             }
             if (model.getCustomIcon() == null) {
-                model.setCustomIcon(CommonUtils.createCustomIcon(context, model.getIconDrawable(context)));
+                CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName());
+                Bitmap bmp = data.getCustomIcon();
+                //appIcon.setImageBitmap(bmp);
+                model.setCustomIcon(bmp);
+                //model.setCustomIcon(CommonUtils.createCustomIcon(context, model.getIconDrawable(context)));
             }
         }
         DBManager.deleteAppModeList(context, uninstalledApp);

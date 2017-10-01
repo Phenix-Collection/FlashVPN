@@ -1,6 +1,7 @@
 package com.polestar.domultiple.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.utils.CommonUtils;
 
 import java.util.ArrayList;
@@ -80,9 +82,14 @@ public class HomeGridAdapter extends BaseAdapter {
 
         CloneModel appModel = (CloneModel) getItem(i);
         if (appModel != null) {
-            if (appModel.getCustomIcon() == null) {
-                appModel.setCustomIcon(CommonUtils.createCustomIcon(mContext, appModel.getIconDrawable(mContext)));
-            }
+            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+//            if (appModel.getCustomIcon() == null) {
+//            Bitmap bmp =
+//            appIcon.setImageBitmap(bmp);
+            appModel.setCustomIcon(data.getCustomIcon());
+
+//                appModel.setCustomIcon(CommonUtils.createCustomIcon(mContext, appModel.getIconDrawable(mContext)));
+//            }
             if (appModel.getLaunched() == 0) {
                 newDot.setVisibility(View.VISIBLE);
             } else {
@@ -91,7 +98,7 @@ public class HomeGridAdapter extends BaseAdapter {
             if (appModel.getCustomIcon() != null) {
                 appIcon.setImageBitmap(appModel.getCustomIcon());
             }
-            appName.setText(appModel.getName());
+            appName.setText(data.customized? data.label: appModel.getName());
         } else {
             int luckyIdx = appInfos.size();
             int addIdx = showLucky? luckyIdx + 1 : luckyIdx;

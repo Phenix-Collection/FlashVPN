@@ -237,6 +237,11 @@ public class SettingsActivity extends BaseActivity {
         });
     }
 
+    public void onCustomizeClick(View view) {
+        Intent intent = new Intent(this, CustomizeSettingActivity.class);
+        startActivity(intent);
+    }
+
     private void updateBillingStatus() {
         BillingProvider.get().updateStatus(new BillingProvider.OnStatusUpdatedListener() {
             @Override

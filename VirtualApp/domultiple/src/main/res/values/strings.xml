@@ -201,4 +201,12 @@
         <item>0</item>
         <item>0</item>
     </string-array>
+
+    <string name="customize_title">Customization</string>
+    <string name="customize_setting_desc">Click to customize icon and label for clones</string>
+    <string name="saturation">Saturation</string>
+    <string name="light">Lightness</string>
+    <string name="hue">Hue</string>
+    <string name="badge">Badge</string>
+    <string name="cancel">Cancel</string>
 </resources>

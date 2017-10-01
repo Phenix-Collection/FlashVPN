@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.components.ui.LockSecureQuestionActivity;
+import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.MLogs;
@@ -128,14 +130,16 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
         }catch (Exception e) {
             MLogs.logBug(MLogs.getStackTraceString(e));
         }
+        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName);
+        mCenterIcon.setImageBitmap(data.getCustomIcon());
         if ( ai != null) {
-            Drawable drawable = pm.getApplicationIcon(ai);
-            if (drawable != null) {
-                mCenterIcon.setImageBitmap( CommonUtils.createCustomIcon(PolestarApp.getApp(), drawable));
-            }
-            CharSequence title = pm.getApplicationLabel(ai);
-            if (title != null) {
-                mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.clone_label_tag),title));
+            if (data.customized) {
+                CharSequence title = pm.getApplicationLabel(ai);
+                if (title != null) {
+                    mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.clone_label_tag),title));
+                }
+            } else {
+                mCenterAppText.setText(data.label);
             }
         }
         MLogs.d("AppLockWindow initialized 1");

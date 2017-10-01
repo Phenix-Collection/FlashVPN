@@ -33,6 +33,13 @@
             android:launchMode="singleTop"
             android:noHistory="true"
             android:taskAffinity="com.polestar.domultiple.launch"/>
+        <activity
+            android:name=".components.ui.CustomizeSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".components.ui.CustomizeIconActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivityStyle"/>
 
         <receiver android:name=".components.receiver.CrashReceiver" android:exported="false">
             <intent-filter>

@@ -253,6 +253,9 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         } else {
             guideRateIfNeeded();
         }
+        if (mClonedList != null && gridAdapter != null) {
+            gridAdapter.notifyDataSetChanged(mClonedList);
+        }
     }
 
     private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
