@@ -78,6 +78,10 @@
         <value>ab_interstitial:ca-app-pub-5490912237269284/6692336792:0;fb_interstitial:1459853160757953_1459899664086636:0</value>
     </entry>
     <entry>
+        <key>slot_app_lock</key>
+        <value>ab_native_banner:ca-app-pub-5490912237269284/2036945252:0;fb:1459853160757953_1459901287419807:0</value>
+    </entry>
+    <entry>
         <key>slot_app_start_filter</key>
         <value>com.whatsapp:com.facebook.orca:com.facebook.katana</value>
     </entry>

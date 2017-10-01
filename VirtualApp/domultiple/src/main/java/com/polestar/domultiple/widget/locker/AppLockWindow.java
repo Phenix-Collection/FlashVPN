@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -156,7 +157,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
     public static AdSize getBannerSize() {
         int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
         dpWidth = Math.max(280, dpWidth*9/10);
-        return  new AdSize(dpWidth, 280);
+        return  new AdSize(dpWidth, 250);
     }
 
     private void updateTitleBar() {
@@ -166,21 +167,37 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
     }
 
     private void inflatNativeAd(IAdAdapter ad) {
-//        final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad)
-//                .titleId(R.id.ad_title)
-//                .textId(R.id.ad_subtitle_text)
-//                .mainMediaId(R.id.ad_cover_image)
-//                .iconImageId(R.id.ad_icon_image)
-//                .callToActionId(R.id.ad_cta_text)
-//                .privacyInformationId(R.id.ad_choices_image)
-//                .build();
-//        View adView = ad.getAdView(viewBinder);
-//        if (adView != null) {
-//            adView.setBackgroundColor(0);
-//            mAdInfoContainer.removeAllViews();
-//            mAdInfoContainer.addView(adView);
-//            updateTitleBar();
-//        }
+        final AdViewBinder viewBinder;
+        switch (ad.getAdType()) {
+            case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK:
+                viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad_fb)
+                        .titleId(R.id.ad_title)
+                        .textId(R.id.ad_subtitle_text)
+                        .mainMediaId(R.id.ad_cover_image)
+                        .callToActionId(R.id.ad_cta_text)
+                        .privacyInformationId(R.id.ad_choices_container)
+                        .build();
+                break;
+            default:
+                viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad)
+                        .titleId(R.id.ad_title)
+                        .textId(R.id.ad_subtitle_text)
+                        .mainMediaId(R.id.ad_cover_image)
+                        .iconImageId(R.id.ad_icon_image)
+                        .callToActionId(R.id.ad_cta_text)
+                        .privacyInformationId(R.id.ad_choices_image)
+                        .build();
+                break;
+        }
+
+
+        View adView = ad.getAdView(viewBinder);
+        if (adView != null) {
+            adView.setBackgroundColor(0);
+            mAdInfoContainer.removeAllViews();
+            mAdInfoContainer.addView(adView);
+            updateTitleBar();
+        }
     }
     private void loadNative(){
         final FuseAdLoader adLoader = AppLockMonitor.getInstance().getAdLoader();
