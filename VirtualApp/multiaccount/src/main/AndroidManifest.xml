@@ -159,11 +159,6 @@
         </provider>
 
         <activity
-            android:name="com.mobvista.msdk.shell.MVActivity"
-            android:configChanges="keyboard|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme2" />
-        <activity
             android:name="com.polestar.multiaccount.component.activity.NativeInterstitialActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
