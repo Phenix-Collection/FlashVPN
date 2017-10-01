@@ -37,7 +37,7 @@ public class FBNativeAdapter extends AdAdapter {
     }
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
-        if (false) {
+        if (AdConstants.DEBUG) {
             SharedPreferences sp = mContext.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
             String deviceIdHash = sp.getString("deviceIdHash", "");
             AdSettings.addTestDevice(deviceIdHash);

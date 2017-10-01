@@ -64,4 +64,21 @@
         <key>current_version</key>
         <value>9999</value>
     </entry>
+
+    <entry>
+        <key>slot_app_start_freq_hour</key>
+        <value>12</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_ramp_hour</key>
+        <value>48</value>
+    </entry>
+    <entry>
+        <key>slot_app_start</key>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/6692336792:0;fb_interstitial:1459853160757953_1459899664086636:0</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_filter</key>
+        <value>com.whatsapp:com.facebook.orca:com.facebook.katana</value>
+    </entry>
 </defaultsMap>

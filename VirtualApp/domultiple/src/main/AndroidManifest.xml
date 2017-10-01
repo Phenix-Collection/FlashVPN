@@ -30,9 +30,7 @@
         <activity android:name=".components.ui.NativeInterstitialActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".components.ui.AppLoadingActivity" android:screenOrientation="portrait" android:exported="true"
             android:excludeFromRecents="true"
-            android:launchMode="singleTop"
-            android:noHistory="true"
-            android:taskAffinity="com.polestar.domultiple.launch"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".components.ui.CustomizeSettingActivity"
             android:screenOrientation="portrait"/>

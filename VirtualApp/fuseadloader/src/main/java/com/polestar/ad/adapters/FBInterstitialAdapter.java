@@ -27,7 +27,7 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
             AdLog.e("Not set listener!");
             return;
         }
-        if (false) {
+        if (AdConstants.DEBUG) {
             SharedPreferences sp = mContext.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
             String deviceIdHash = sp.getString("deviceIdHash", "");
             AdSettings.addTestDevice(deviceIdHash);
