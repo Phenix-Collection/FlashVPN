@@ -16,6 +16,8 @@ import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.utils.MLogs;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -32,8 +34,12 @@ public class CustomizeSettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customize_setting_activity_layout);
         setTitle(getString(R.string.customize_title));
+        TextView hint = (TextView) findViewById(R.id.text_customize_hint);
         listView = (ListView) findViewById(R.id.customize_apps);
         modelList = CloneManager.getInstance(this).getClonedApps();
+        if (modelList.size() == 0) {
+            hint.setText(getString(R.string.customize_setting_no_clone));
+        }
         adapter = new BaseAdapter() {
             @Override
             public int getCount() {

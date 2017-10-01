@@ -204,6 +204,7 @@
 
     <string name="customize_title">Customization</string>
     <string name="customize_setting_desc">Click to customize icon and label for clones</string>
+    <string name="customize_setting_no_clone">Please clone apps and then customize it</string>
     <string name="saturation">Saturation</string>
     <string name="light">Lightness</string>
     <string name="hue">Hue</string>
