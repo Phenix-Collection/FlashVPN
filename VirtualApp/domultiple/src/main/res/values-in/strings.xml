@@ -7,7 +7,7 @@
     <string name="adfree_dialog_title">Jadilah pengguna VIP</string>
     <string name="al_btn_finish">Memastikan</string>
     <string name="al_btn_next">Berikutnya</string>
-    <string name="al_btn_reset"><u> Atur ulang </ u></string>
+    <string name="al_btn_reset"><u> Atur ulang </u></string>
     <string name="al_change_security_question">Ubah Pertanyaan Aman</string>
     <string name="al_changepassword">Ganti kata sandi</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Harap Konfirmasikan Pola</string>
