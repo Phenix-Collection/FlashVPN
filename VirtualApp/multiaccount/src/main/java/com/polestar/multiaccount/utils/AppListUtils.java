@@ -6,7 +6,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Process;
 
+import com.lody.virtual.client.hook.secondary.GmsSupport;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
@@ -21,6 +23,7 @@ import org.json.JSONObject;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,6 +37,7 @@ public class AppListUtils implements DataObserver {
     private List<AppModel> mInstalledModels = new ArrayList<>();
     private List<AppModel> mClonedModels;
     private Context mContext;
+    private static HashSet<String> blackList = new HashSet<>();
 
     public static synchronized AppListUtils getInstance(Context context) {
         if (sInstance == null) {
@@ -56,6 +60,21 @@ public class AppListUtils implements DataObserver {
     private void update() {
         MLogs.e("update app list");
         synchronized (this) {
+            blackList.add("com.google.android.music");
+            blackList.add("com.google.android.dialer");
+            Intent home = new Intent(Intent.ACTION_MAIN);
+            home.addCategory(Intent.CATEGORY_HOME);
+            List<ResolveInfo> list  = mContext.getPackageManager().queryIntentActivities(home, 0);
+            for (ResolveInfo ri: list) {
+                blackList.add(ri.activityInfo.applicationInfo.packageName);
+                MLogs.logBug("Add black: " + ri.activityInfo.applicationInfo.packageName);
+            }
+            Intent input = new Intent("android.view.InputMethod");
+            list = mContext.getPackageManager().queryIntentActivities(input, 0);
+            for (ResolveInfo ri: list) {
+                blackList.add(ri.serviceInfo.applicationInfo.packageName);
+                MLogs.logBug("Add black: " + ri.serviceInfo.applicationInfo.packageName);
+            }
             mClonedModels = DbManager.queryAppList(mContext);
             getPopularApps(mPopularModels);
             getIntalledApps(mInstalledModels);
@@ -117,6 +136,38 @@ public class AppListUtils implements DataObserver {
         }
     }
 
+    public boolean isClonable(String pkg) {
+        if ( GmsSupport.isGmsFamilyPackage(pkg) ) {
+            return false;
+        }
+        try {
+            PackageManager pm = mContext.getPackageManager();
+            ApplicationInfo ai = pm.getApplicationInfo(pkg, 0);
+            if (!GmsSupport.hasDexFile(ai.sourceDir)) {
+                return false;
+            }
+            if (ai.sourceDir.contains("/system/priv-app")) {
+                return false;
+            }
+            if (ai.uid < Process.FIRST_APPLICATION_UID) {
+                return false;
+            }
+            if (ai.processName.equals("android.process.acore")){
+                return false;
+            }
+            if (blackList.contains(ai.packageName)) {
+                return false;
+            }
+
+            if ("com.polestar.domultiple".equals(ai.packageName)) {
+                return false;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
     // NOT include host APP itself, already cloned APP in core and popular APP.
     public void getIntalledApps(List<AppModel> list) {
         if (list == null) {
@@ -138,10 +189,14 @@ public class AppListUtils implements DataObserver {
             if (isPreInstalledPkg(pkgName)) {
                 continue;
             }
-            //Skip system app
-            if ((resolveInfo.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM )!=0) {
+
+            if (!isClonable(pkgName)) {
                 continue;
             }
+            //Skip system app
+//            if ((resolveInfo.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM )!=0) {
+//                continue;
+//            }
             if (isAlreadyClonedApp(pkgName)) {
                 continue;
             }
@@ -149,9 +204,6 @@ public class AppListUtils implements DataObserver {
                 continue;
             }
 
-            if ("com.polestar.domultiple".equals(pkgName)) {
-                continue;
-            }
 
             //Todo:workground re-check here: [Bug] if app install failed, then kill recent appclone process,
             //and restart PB, will see two same apps, need core level root cause.
