@@ -18,8 +18,10 @@ import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.server.accounts.VAccountManagerService;
 import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.am.VActivityManagerService;
+import com.lody.virtual.server.device.VDeviceManagerService;
 import com.lody.virtual.server.interfaces.IServiceFetcher;
 import com.lody.virtual.server.job.VJobSchedulerService;
+import com.lody.virtual.server.location.VirtualLocationService;
 import com.lody.virtual.server.notification.VNotificationManagerService;
 import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
@@ -31,50 +33,52 @@ import com.lody.virtual.server.vs.VirtualStorageService;
  */
 public final class BinderProvider extends ContentProvider {
 
-	private final ServiceFetcher mServiceFetcher = new ServiceFetcher();
+    private final ServiceFetcher mServiceFetcher = new ServiceFetcher();
 
-	@Override
-	public boolean onCreate() {
-		VLog.d("BinderProvider", "onCreate");
-		Context context = getContext();
-		DaemonService.startup(context);
-		if (!VirtualCore.get().isStartup()) {
-			return true;
-		}
-		VPackageManagerService.systemReady();
-		addService(ServiceManagerNative.PACKAGE, VPackageManagerService.get());
-		VActivityManagerService.systemReady(context);
-		addService(ServiceManagerNative.ACTIVITY, VActivityManagerService.get());
-		addService(ServiceManagerNative.USER, VUserManagerService.get());
-		VAppManagerService.systemReady();
-		addService(ServiceManagerNative.APP, VAppManagerService.get());
-		BroadcastSystem.attach(VActivityManagerService.get(), VAppManagerService.get());
-		VAppManagerService.get().scanApps();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		addService(ServiceManagerNative.JOB, VJobSchedulerService.get());
-		}
-		VNotificationManagerService.systemReady(context);
-		addService(ServiceManagerNative.NOTIFICATION, VNotificationManagerService.get());
-		//VAppManagerService.get().preloadAllApps();
-		VAccountManagerService.systemReady();
-		addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
+    @Override
+    public boolean onCreate() {
+        VLog.d("BinderProvider", "onCreate");
+        Context context = getContext();
+        DaemonService.startup(context);
+        if (!VirtualCore.get().isStartup()) {
+            return true;
+        }
+        VPackageManagerService.systemReady();
+        addService(ServiceManagerNative.PACKAGE, VPackageManagerService.get());
+        VActivityManagerService.systemReady(context);
+        addService(ServiceManagerNative.ACTIVITY, VActivityManagerService.get());
+        addService(ServiceManagerNative.USER, VUserManagerService.get());
+        VAppManagerService.systemReady();
+        addService(ServiceManagerNative.APP, VAppManagerService.get());
+        BroadcastSystem.attach(VActivityManagerService.get(), VAppManagerService.get());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            addService(ServiceManagerNative.JOB, VJobSchedulerService.get());
+        }
+        VNotificationManagerService.systemReady(context);
+        addService(ServiceManagerNative.NOTIFICATION, VNotificationManagerService.get());
+        VAccountManagerService.systemReady();
+        VAppManagerService.get().scanApps();
+        addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
         addService(ServiceManagerNative.VS, VirtualStorageService.get());
+        addService(ServiceManagerNative.DEVICE, VDeviceManagerService.get());
+        addService(ServiceManagerNative.VIRTUAL_LOC, VirtualLocationService.get());
 		VAppManagerService.get().sendBootCompleted();
-		VLog.d("BinderProvider", "Service initialized!");
-		return true;
-	}
+        VLog.d("BinderProvider", "Service initialized!");
+        return true;
+    }
 
-	private void addService(String name, IBinder service) {
-		ServiceCache.addService(name, service);
-	}
 
-	@Override
-	public Bundle call(String method, String arg, Bundle extras) {
+    private void addService(String name, IBinder service) {
+        ServiceCache.addService(name, service);
+    }
+
+    @Override
+    public Bundle call(String method, String arg, Bundle extras) {
         if ("@".equals(method)) {
-		Bundle bundle = new Bundle();
-		BundleCompat.putBinder(bundle, "_VA_|_binder_", mServiceFetcher);
-		return bundle;
-	}
+            Bundle bundle = new Bundle();
+            BundleCompat.putBinder(bundle, "_VA_|_binder_", mServiceFetcher);
+            return bundle;
+        }
         return null;
     }
 
@@ -103,28 +107,27 @@ public final class BinderProvider extends ContentProvider {
         return 0;
     }
 
-	private class ServiceFetcher extends IServiceFetcher.Stub {
-		@Override
-		public IBinder getService(String name) throws RemoteException {
-			if (name != null) {
-				return ServiceCache.getService(name);
-			}
-			return null;
-		}
+    private class ServiceFetcher extends IServiceFetcher.Stub {
+        @Override
+        public IBinder getService(String name) throws RemoteException {
+            if (name != null) {
+                return ServiceCache.getService(name);
+            }
+            return null;
+        }
 
-		@Override
-		public void addService(String name, IBinder service) throws RemoteException {
-			if (name != null && service != null) {
-				ServiceCache.addService(name, service);
-			}
-		}
+        @Override
+        public void addService(String name, IBinder service) throws RemoteException {
+            if (name != null && service != null) {
+                ServiceCache.addService(name, service);
+            }
+        }
 
-		@Override
-		public void removeService(String name) throws RemoteException {
-			if (name != null) {
-				ServiceCache.removeService(name);
-			}
-		}
-	}
-
+        @Override
+        public void removeService(String name) throws RemoteException {
+            if (name != null) {
+                ServiceCache.removeService(name);
+            }
+        }
+    }
 }

@@ -1,12 +1,12 @@
 package com.lody.virtual.client.env;
 
 import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 
-import com.lody.virtual.client.hook.secondary.GmsSupport;
-import com.lody.virtual.helper.utils.ComponentUtils;
+import com.lody.virtual.GmsSupport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ import mirror.android.webkit.WebViewFactory;
 public final class SpecialComponentList {
 
     private static final List<String> ACTION_BLACK_LIST = new ArrayList<String>(1);
-
     private static final Map<String, String> PROTECTED_ACTION_MAP = new HashMap<>(5);
     private static final HashSet<String> WHITE_PERMISSION = new HashSet<>(3);
     private static final HashSet<String> INSTRUMENTATION_CONFLICTING = new HashSet<>(2);
@@ -37,21 +36,20 @@ public final class SpecialComponentList {
 
     private static final HashSet<String> BROADCAST_START_WHITE_LIST = new HashSet<>();
     static {
+        SYSTEM_BROADCAST_ACTION.add(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_ON);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_OFF);
-
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_NEW_OUTGOING_CALL);
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_TICK);
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_TICK);
         SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BOOT_COMPLETED);
-        //SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_CHANGED);
+//        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIME_CHANGED);
         SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_TIMEZONE_CHANGED);
-
         SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_CHANGED);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_LOW);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_BATTERY_OKAY);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_CONNECTED);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_DISCONNECTED);
-
+        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_USER_PRESENT);
         SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_RECEIVED");
         //SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_DELIVER");
         SYSTEM_BROADCAST_ACTION.add("android.net.wifi.STATE_CHANGE");
@@ -177,7 +175,7 @@ public final class SpecialComponentList {
                     iterator.remove();
                     continue;
                 }
-                if (SYSTEM_BROADCAST_ACTION.contains(action) && !Intent.ACTION_BOOT_COMPLETED.equals(action)){
+                if (SYSTEM_BROADCAST_ACTION.contains(action) && !Intent.ACTION_BOOT_COMPLETED.equals(action)) {
                     continue;
                 }
                 String newAction = SpecialComponentList.protectAction(action);
@@ -187,6 +185,7 @@ public final class SpecialComponentList {
             }
         }
     }
+
     public static void protectIntent(Intent intent) {
         String protectAction = protectAction(intent.getAction());
         if (protectAction != null) {

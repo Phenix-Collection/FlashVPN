@@ -9,12 +9,13 @@ import android.os.Build;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 
+import com.lody.virtual.GmsSupport;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.VirtualRuntime;
-import com.lody.virtual.client.hook.secondary.GmsSupport;
 import com.lody.virtual.client.ipc.VPackageManager;
-import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.client.stub.VASettings;
+import com.lody.virtual.helper.ArtDexOptimizer;
 import com.lody.virtual.helper.collection.IntArray;
 import com.lody.virtual.helper.compat.NativeLibraryHelperCompat;
 import com.lody.virtual.helper.utils.ArrayUtils;
@@ -42,7 +43,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static java.lang.System.exit;
+import dalvik.system.DexFile;
 
 /**
  * @author Lody
@@ -56,7 +57,6 @@ public class VAppManagerService extends IAppManager.Stub {
     private final Set<String> mVisibleOutsidePackages = new HashSet<>();
     private boolean mBooting;
     private RemoteCallbackList<IPackageObserver> mRemoteCallbackList = new RemoteCallbackList<>();
-
     private IAppRequestListener mAppRequestListener;
 
     public static VAppManagerService get() {
@@ -92,9 +92,10 @@ public class VAppManagerService extends IAppManager.Stub {
                     recover();
                 }
             }
-            if (StubManifest.ENABLE_GMS ) {
-                GmsSupport.installGms(0);
+            if (VASettings.ENABLE_GMS && !GmsSupport.isGoogleFrameworkInstalled()) {
+                GmsSupport.installGApps(0);
             }
+            PrivilegeAppOptimizer.get().performOptimizeAllApps();
             mBooting = false;
         }
         upgradeApps();
@@ -134,7 +135,7 @@ public class VAppManagerService extends IAppManager.Stub {
             if ("android".equals(pkgName) || "system".equals(pkgName)) {
                 continue;
             }
-            if (!StubManifest.ENABLE_GMS && GmsSupport.isGmsFamilyPackage(pkgName)) {
+            if (!VASettings.ENABLE_GMS && GmsSupport.isGmsFamilyPackage(pkgName)) {
                 continue;
             }
             File storeFile = new File(appDir, "base.apk");
@@ -163,12 +164,12 @@ public class VAppManagerService extends IAppManager.Stub {
             }
             if (GmsSupport.hasDexFile(storeFile.getPath())) {
                 InstallResult res = installPackage(pkgName, storeFile.getPath(), flags, false);
-                if (!res.isSuccess) {
-                    VLog.e(TAG, "Unable to install app %s: %s.", pkgName, res.error);
-                    FileUtils.deleteDir(appDir);
-                }
+            if (!res.isSuccess) {
+                VLog.e(TAG, "Unable to install app %s: %s.", pkgName, res.error);
+                FileUtils.deleteDir(appDir);
             }
         }
+    }
         //hasGSF, in case recover for new installation
         if (hasGsf && (!VirtualCore.get().isAppInstalled(GmsSupport.GSF_PKG))) {
             GmsSupport.removeGmsPackage(GmsSupport.GSF_PKG);
@@ -248,7 +249,6 @@ public class VAppManagerService extends IAppManager.Stub {
         if (path == null) {
             return InstallResult.makeFailure("path = NULL");
         }
-        boolean skipDexOpt = VirtualRuntime.isArt() && (flags & InstallStrategy.SKIP_DEX_OPT) != 0;
         File packageFile = new File(path);
         if (!packageFile.exists() || !packageFile.isFile()) {
             return InstallResult.makeFailure("Package File is not exist.");
@@ -280,8 +280,6 @@ public class VAppManagerService extends IAppManager.Stub {
             res.isUpdate = true;
         }
         File appDir = VEnvironment.getDataAppPackageDirectory(pkg.packageName);
-
-
         File libDir = new File(appDir, "lib");
         if (res.isUpdate) {
             FileUtils.deleteDir(libDir);
@@ -326,7 +324,6 @@ public class VAppManagerService extends IAppManager.Stub {
         } else {
             ps = new PackageSetting();
         }
-        ps.skipDexOpt = skipDexOpt;
         ps.dependSystem = dependSystem;
         ps.apkPath = packageFile.getPath();
         ps.libPath = libDir.getPath();
@@ -345,6 +342,26 @@ public class VAppManagerService extends IAppManager.Stub {
         PackageParserEx.savePackageCache(pkg);
         PackageCacheManager.put(pkg, ps);
         mPersistenceLayer.save();
+        if (!dependSystem) {
+            boolean runDexOpt = false;
+            if (VirtualRuntime.isArt()) {
+                try {
+                    ArtDexOptimizer.interpretDex2Oat(ps.apkPath, VEnvironment.getOdexFile(ps.packageName).getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    runDexOpt = true;
+                }
+            } else {
+                runDexOpt = true;
+            }
+            if (runDexOpt) {
+                try {
+                    DexFile.loadDex(ps.apkPath, VEnvironment.getOdexFile(ps.packageName).getPath(), 0).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         BroadcastSystem.get().startApp(pkg);
         if (notify) {
             notifyAppInstalled(ps, -1);
@@ -410,6 +427,7 @@ public class VAppManagerService extends IAppManager.Stub {
         }
         return false;
     }
+
     @Override
     public synchronized boolean uninstallPackageAsUser(String packageName, int userId) {
         if (!VUserManagerService.get().exists(userId)) {
@@ -424,6 +442,7 @@ public class VAppManagerService extends IAppManager.Stub {
             if (userIds.length == 1) {
                 uninstallPackageFully(ps);
             } else {
+                // Just hidden it
                 VActivityManagerService.get().killAppByPkg(packageName, userId);
                 ps.setInstalled(userId, false);
                 notifyAppUninstalled(ps, userId);
@@ -434,21 +453,22 @@ public class VAppManagerService extends IAppManager.Stub {
         }
         return false;
     }
+
     private void uninstallPackageFully(PackageSetting ps) {
         String packageName = ps.packageName;
-                    try {
-                        BroadcastSystem.get().stopApp(packageName);
-                        VActivityManagerService.get().killAppByPkg(packageName, VUserHandle.USER_ALL);
-                        VEnvironment.getPackageResourcePath(packageName).delete();
-                        FileUtils.deleteDir(VEnvironment.getDataAppPackageDirectory(packageName));
-                        VEnvironment.getOdexFile(packageName).delete();
-                        for (int id : VUserManagerService.get().getUserIds()) {
-                            FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(id, packageName));
-                        }
-                        PackageCacheManager.remove(packageName);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
+        try {
+            BroadcastSystem.get().stopApp(packageName);
+            VActivityManagerService.get().killAppByPkg(packageName, VUserHandle.USER_ALL);
+            VEnvironment.getPackageResourcePath(packageName).delete();
+            FileUtils.deleteDir(VEnvironment.getDataAppPackageDirectory(packageName));
+            VEnvironment.getOdexFile(packageName).delete();
+            for (int id : VUserManagerService.get().getUserIds()) {
+                FileUtils.deleteDir(VEnvironment.getDataUserPackageDirectory(id, packageName));
+            }
+            PackageCacheManager.remove(packageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             notifyAppUninstalled(ps, -1);
         }
     }
@@ -526,6 +546,7 @@ public class VAppManagerService extends IAppManager.Stub {
                     sendInstalledBroadcast(pkg);
                     mRemoteCallbackList.getBroadcastItem(N).onPackageInstalled(pkg);
                     mRemoteCallbackList.getBroadcastItem(N).onPackageInstalledAsUser(0, pkg);
+
                 } else {
                     mRemoteCallbackList.getBroadcastItem(N).onPackageInstalledAsUser(userId, pkg);
                 }
@@ -568,11 +589,13 @@ public class VAppManagerService extends IAppManager.Stub {
         intent.setData(Uri.parse("package:" + packageName));
         VActivityManagerService.get().sendBroadcastAsUser(intent, VUserHandle.ALL);
     }
+
     private void sendUninstalledBroadcast(String packageName) {
         Intent intent = new Intent(Intent.ACTION_PACKAGE_REMOVED);
         intent.setData(Uri.parse("package:" + packageName));
         VActivityManagerService.get().sendBroadcastAsUser(intent, VUserHandle.ALL);
     }
+
     @Override
     public void registerObserver(IPackageObserver observer) {
         try {
@@ -686,6 +709,6 @@ public class VAppManagerService extends IAppManager.Stub {
 
         }
         VLog.logbug(TAG, "stopping...");
-        exit(0);
+        System.exit(0);
     }
 }

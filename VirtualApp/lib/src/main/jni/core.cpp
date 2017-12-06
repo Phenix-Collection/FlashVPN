@@ -1,7 +1,7 @@
 //
 // VirtualApp Native Project
 //
-#include "Core.h"
+#include "core.h"
 #include <signal.h>
 //int sigaction(int signum,const struct sigaction *act,struct sigaction *oldact);
 const int handledSignals[] = {

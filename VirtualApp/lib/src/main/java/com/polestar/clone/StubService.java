@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.IBinder;
 
 import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.utils.VLog;
 
 /**
@@ -22,7 +22,7 @@ public class StubService extends Service {
         VLog.d(TAG, "Startup for : StubService$S" + vpid);
         try {
             Intent i = new Intent();
-            i.setClassName(VirtualCore.get().getHostPkg(), StubManifest.getStubServiceName(vpid));
+            i.setClassName(VirtualCore.get().getHostPkg(), VASettings.getStubServiceName(vpid));
             i.putExtra(EXTRA_STICKY, true);
             context.startService(i);
         }catch (Exception e){
@@ -34,7 +34,7 @@ public class StubService extends Service {
         VLog.d(TAG, "stop for : StubService$S" + vpid);
         try {
             Intent i = new Intent();
-            i.setClassName(VirtualCore.get().getHostPkg(), StubManifest.getStubServiceName(vpid));
+            i.setClassName(VirtualCore.get().getHostPkg(), VASettings.getStubServiceName(vpid));
             context.stopService(i);
         }catch (Exception e){
             VLog.logbug(TAG, VLog.getStackTraceString(e));

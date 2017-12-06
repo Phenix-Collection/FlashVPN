@@ -52,7 +52,7 @@ public class PackageParserEx {
         PackageParser parser = PackageParserCompat.createParser(packageFile);
         PackageParser.Package p = PackageParserCompat.parsePackage(parser, packageFile, 0);
         if (p.requestedPermissions.contains("android.permission.FAKE_PACKAGE_SIGNATURE")
-                    && p.mAppMetaData != null
+                && p.mAppMetaData != null
                     && p.mAppMetaData.containsKey(Constants.FEATURE_FAKE_SIGNATURE)) {
             String sig = p.mAppMetaData.getString(Constants.FEATURE_FAKE_SIGNATURE);
             p.mSignatures = new Signature[]{new Signature(sig)};
@@ -234,9 +234,11 @@ public class PackageParserEx {
             ApplicationInfoL.scanPublicSourceDir.set(ai, ai.dataDir);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            ApplicationInfoN.deviceEncryptedDataDir.set(ai, ai.dataDir);
+            if(Build.VERSION.SDK_INT < 26) {
+                ApplicationInfoN.deviceEncryptedDataDir.set(ai, ai.dataDir);
+                ApplicationInfoN.credentialEncryptedDataDir.set(ai, ai.dataDir);
+            }
             ApplicationInfoN.deviceProtectedDataDir.set(ai, ai.dataDir);
-            ApplicationInfoN.credentialEncryptedDataDir.set(ai, ai.dataDir);
             ApplicationInfoN.credentialProtectedDataDir.set(ai, ai.dataDir);
         }
     }
@@ -295,10 +297,10 @@ public class PackageParserEx {
         pi.firstInstallTime = firstInstallTime;
         pi.lastUpdateTime = lastUpdateTime;
         if (p.requestedPermissions != null && !p.requestedPermissions.isEmpty()) {
-           String[] requestedPermissions = new String[p.requestedPermissions.size()];
-           p.requestedPermissions.toArray(requestedPermissions);
-           pi.requestedPermissions = requestedPermissions;
-       }
+            String[] requestedPermissions = new String[p.requestedPermissions.size()];
+            p.requestedPermissions.toArray(requestedPermissions);
+            pi.requestedPermissions = requestedPermissions;
+        }
         if ((flags & PackageManager.GET_GIDS) != 0) {
             pi.gids = PackageParserCompat.GIDS;
         }
@@ -395,7 +397,7 @@ public class PackageParserEx {
             ai.metaData = p.mAppMetaData;
         }
         try {
-            initApplicationAsUser(ai, userId);
+        initApplicationAsUser(ai, userId);
         } catch (Exception e) {
             //avoid android O crash
         }

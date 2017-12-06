@@ -2,9 +2,9 @@ package com.lody.virtual.helper;
 
 import android.os.Parcel;
 
-
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -22,19 +22,26 @@ public abstract class PersistenceLayer {
     public final File getPersistenceFile() {
         return mPersistenceFile;
     }
+
     public abstract int getCurrentVersion();
 
-    public abstract void writeMagic(Parcel p);
+    public void writeMagic(Parcel p) {
+    }
 
-    public abstract boolean verifyMagic(Parcel p);
+    public boolean verifyMagic(Parcel p) {
+        return true;
+    }
 
     public abstract void writePersistenceData(Parcel p);
 
     public abstract void readPersistenceData(Parcel p);
 
-    public abstract boolean onVersionConflict(int fileVersion, int currentVersion);
+    public boolean onVersionConflict(int fileVersion, int currentVersion) {
+        return false;
+    }
 
-    public abstract void onPersistenceFileDamage();
+    public void onPersistenceFileDamage() {
+    }
     public abstract boolean verifyOSUpgrade();
 
     public void save() {
@@ -84,7 +91,9 @@ public abstract class PersistenceLayer {
             readPersistenceData(p);
             ret = true;
         } catch (Exception e) {
-            e.printStackTrace();
+            if (!(e instanceof FileNotFoundException)) {
+                e.printStackTrace();
+            }
             ret = false;
         } finally {
             p.recycle();

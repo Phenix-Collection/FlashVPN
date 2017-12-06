@@ -48,7 +48,7 @@ public class ContentProviderCompat {
                 SystemClock.sleep(100);
                 retry++;
                 try {
-                    client = acquireContentProviderClient(context, uri);
+                client = acquireContentProviderClient(context, uri);
                 }catch (Exception e) {
                     VLog.logbug("ProviderCall", VLog.getStackTraceString(e));
                 }
@@ -65,7 +65,7 @@ public class ContentProviderCompat {
                 SystemClock.sleep(100);
                 retry++;
                 try {
-                    client = acquireContentProviderClient(context, name);
+                client = acquireContentProviderClient(context, name);
                 }catch (Exception e) {
                     VLog.logbug("ProviderCall", VLog.getStackTraceString(e));
                 }

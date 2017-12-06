@@ -9,13 +9,16 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageDeleteObserver2;
+import android.content.pm.IPackageInstallerCallback;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IInterface;
@@ -30,6 +33,9 @@ import com.lody.virtual.helper.collection.ArraySet;
 import com.lody.virtual.helper.compat.ParceledListSliceCompat;
 import com.lody.virtual.helper.utils.ArrayUtils;
 import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.server.IPackageInstaller;
+import com.lody.virtual.server.pm.installer.SessionInfo;
+import com.lody.virtual.server.pm.installer.SessionParams;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -243,9 +249,10 @@ class MethodProxies {
     }
 
     static class GetPackageInstaller extends MethodProxy {
+
         @Override
         public boolean isEnable() {
-                      return isAppProcess();
+            return isAppProcess();
         }
 
         @Override
@@ -256,18 +263,73 @@ class MethodProxies {
         @Override
         public Object call(final Object who, Method method, Object... args) throws Throwable {
             final IInterface installer = (IInterface) method.invoke(who, args);
-
+            final IPackageInstaller vInstaller = VPackageManager.get().getPackageInstaller();
             return Proxy.newProxyInstance(installer.getClass().getClassLoader(), installer.getClass().getInterfaces(),
                     new InvocationHandler() {
                         @Override
                         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                            String name = method.getName();
-                            if (name.equals("getMySessions")) {
-                                MethodParameterUtils.replaceFirstAppPkg(args);
-                            } else if (name.equals("createSession")) {
-                                MethodParameterUtils.replaceFirstAppPkg(args);
+                            switch (method.getName()) {
+                                case "createSession": {
+                                    SessionParams params = SessionParams.create((PackageInstaller.SessionParams) args[0]);
+                                    String installerPackageName = (String) args[1];
+                                    return vInstaller.createSession(params, installerPackageName, VUserHandle.myUserId());
+                                }
+                                case "updateSessionAppIcon": {
+                                    int sessionId = (int) args[0];
+                                    Bitmap appIcon = (Bitmap) args[1];
+                                    vInstaller.updateSessionAppIcon(sessionId, appIcon);
+                                    return 0;
+                                }
+                                case "updateSessionAppLabel": {
+                                    int sessionId = (int) args[0];
+                                    String appLabel = (String) args[1];
+                                    vInstaller.updateSessionAppLabel(sessionId, appLabel);
+                                    return 0;
+                                }
+                                case "abandonSession": {
+                                    vInstaller.abandonSession((Integer) args[0]);
+                                    return 0;
+                                }
+                                case "openSession": {
+                                    return vInstaller.openSession((Integer) args[0]);
+                                }
+                                case "getSessionInfo": {
+                                    SessionInfo info = vInstaller.getSessionInfo((Integer) args[0]);
+                                    if (info != null) {
+                                        return info.alloc();
+                                    }
+                                    return null;
+                                }
+                                case "getAllSessions": {
+                                    return ParceledListSliceCompat.create(
+                                            vInstaller.getAllSessions((Integer) args[0]).getList()
+                                    );
+                                }
+                                case "getMySessions": {
+                                    String installerPackageName = (String) args[0];
+                                    int userId = (int) args[1];
+                                    return ParceledListSliceCompat.create(
+                                            vInstaller.getMySessions(installerPackageName, userId).getList()
+                                    );
+                                }
+                                case "registerCallback": {
+                                    IPackageInstallerCallback callback = (IPackageInstallerCallback) args[0];
+                                    vInstaller.registerCallback(callback, VUserHandle.myUserId());
+                                    return 0;
+                                }
+                                case "unregisterCallback": {
+                                    IPackageInstallerCallback callback = (IPackageInstallerCallback) args[0];
+                                    vInstaller.unregisterCallback(callback);
+                                    return 0;
+                                }
+                                case "setPermissionsResult": {
+                                    int sessionId = (int) args[0];
+                                    boolean accepted = (boolean) args[1];
+                                    vInstaller.setPermissionsResult(sessionId, accepted);
+                                    return 0;
+                                }
                             }
-                            return method.invoke(installer, args);
+                            throw new RuntimeException("Not support PackageInstaller method : " + method.getName());
                         }
                     });
         }
@@ -457,21 +519,6 @@ class MethodProxies {
 
     }
 
-
-    static class AddOnPermissionsChangeListener extends MethodProxy {
-
-        @Override
-        public String getMethodName() {
-            return "addOnPermissionsChangeListener";
-        }
-
-        @Override
-        public Object call(Object who, Method method, Object... args) throws Throwable {
-            return 0;
-        }
-    }
-
-
     @SuppressWarnings("unchecked")
     static class QueryIntentActivities extends MethodProxy {
 
@@ -488,9 +535,9 @@ class MethodProxies {
                     (String) args[1], (Integer) args[2], userId);
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
-                    List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
-                            : (List) _hostResult;
-                    if (hostResult != null) {
+                List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
+                        : (List) _hostResult;
+                if (hostResult != null) {
                     Iterator<ResolveInfo> iterator = hostResult.iterator();
                     while (iterator.hasNext()) {
                         ResolveInfo info = iterator.next();
@@ -817,7 +864,6 @@ class MethodProxies {
                         if (ArrayUtils.isEmpty(two)) {
                             return PackageManager.SIGNATURE_SECOND_NOT_SIGNED;
                         } else {
-                            // 走到了这里说明两个包的签名都在
                             if (Arrays.equals(one, two)) {
                                 return PackageManager.SIGNATURE_MATCH;
                             } else {
@@ -1069,18 +1115,18 @@ class MethodProxies {
                     (Integer) args[2], userId);
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
-                List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
-                        : (List) _hostResult;
-                if (hostResult != null) {
-                    Iterator<ResolveInfo> iterator = hostResult.iterator();
-                    while (iterator.hasNext()) {
-                        ResolveInfo info = iterator.next();
-                        if (info == null || info.activityInfo == null || !isVisiblePackage(info.activityInfo.applicationInfo)) {
-                            iterator.remove();
-                        }
+            List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
+                    : (List) _hostResult;
+            if (hostResult != null) {
+                Iterator<ResolveInfo> iterator = hostResult.iterator();
+                while (iterator.hasNext()) {
+                    ResolveInfo info = iterator.next();
+                    if (info == null || info.activityInfo == null || !isVisiblePackage(info.activityInfo.applicationInfo)) {
+                        iterator.remove();
                     }
-                    appResult.addAll(hostResult);
                 }
+                appResult.addAll(hostResult);
+            }
             }
             if (slice) {
                 return ParceledListSliceCompat.create(appResult);
@@ -1175,18 +1221,18 @@ class MethodProxies {
                     (Integer) args[2], userId);
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
-                List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
-                        : (List) _hostResult;
-                if (hostResult != null) {
-                    Iterator<ResolveInfo> iterator = hostResult.iterator();
-                    while (iterator.hasNext()) {
-                        ResolveInfo info = iterator.next();
-                        if (info == null || info.providerInfo == null || !isVisiblePackage(info.providerInfo.applicationInfo)) {
-                            iterator.remove();
-                        }
+            List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
+                    : (List) _hostResult;
+            if (hostResult != null) {
+                Iterator<ResolveInfo> iterator = hostResult.iterator();
+                while (iterator.hasNext()) {
+                    ResolveInfo info = iterator.next();
+                    if (info == null || info.providerInfo == null || !isVisiblePackage(info.providerInfo.applicationInfo)) {
+                        iterator.remove();
                     }
-                    appResult.addAll(hostResult);
                 }
+                appResult.addAll(hostResult);
+            }
             }
             if (ParceledListSliceCompat.isReturnParceledListSlice(method)) {
                 return ParceledListSliceCompat.create(appResult);
@@ -1201,19 +1247,6 @@ class MethodProxies {
     }
 
 
-    static class RemoveOnPermissionsChangeListener extends MethodProxy {
-
-        @Override
-        public String getMethodName() {
-            return "removeOnPermissionsChangeListener";
-        }
-
-        @Override
-        public Object call(Object who, Method method, Object... args) throws Throwable {
-            return 0;
-        }
-    }
-
     static class GetApplicationBlockedSettingAsUser extends MethodProxy {
 
         @Override
@@ -1227,4 +1260,5 @@ class MethodProxies {
             return method.invoke(who, args);
         }
     }
+
 }

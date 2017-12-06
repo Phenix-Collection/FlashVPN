@@ -4,7 +4,8 @@ import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.IServiceConnection;
-import android.app.PendingIntent;
+import android.app.Notification;
+import android.app.Service;
 import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.IIntentReceiver;
@@ -20,6 +21,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,33 +29,36 @@ import android.os.IBinder;
 import android.os.IInterface;
 import android.os.RemoteException;
 import android.provider.MediaStore;
-import android.system.Os;
 import android.text.TextUtils;
 import android.util.TypedValue;
 
 import com.lody.virtual.client.VClientImpl;
+import com.lody.virtual.client.badger.BadgerManager;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.Constants;
 import com.lody.virtual.client.env.SpecialComponentList;
 import com.lody.virtual.client.hook.base.MethodProxy;
+import com.lody.virtual.client.hook.delegate.TaskDescriptionDelegate;
 import com.lody.virtual.client.hook.providers.ProviderHook;
 import com.lody.virtual.client.hook.secondary.ServiceConnectionDelegate;
 import com.lody.virtual.client.hook.utils.MethodParameterUtils;
 import com.lody.virtual.client.ipc.ActivityClientRecord;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.lody.virtual.client.ipc.VActivityManager;
+import com.lody.virtual.client.ipc.VNotificationManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.stub.ChooserActivity;
-import com.lody.virtual.client.stub.StubManifest;
 import com.lody.virtual.client.stub.StubPendingActivity;
 import com.lody.virtual.client.stub.StubPendingReceiver;
 import com.lody.virtual.client.stub.StubPendingService;
+import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.compat.ActivityManagerCompat;
 import com.lody.virtual.helper.compat.BuildCompat;
 import com.lody.virtual.helper.utils.ArrayUtils;
 import com.lody.virtual.helper.utils.BitmapUtils;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.helper.utils.DrawableUtils;
+import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.os.VUserInfo;
@@ -76,8 +81,6 @@ import mirror.android.app.LoadedApk;
 import mirror.android.content.ContentProviderHolderOreo;
 import mirror.android.content.IIntentReceiverJB;
 import mirror.android.content.pm.UserInfo;
-
-import static android.os.Build.VERSION_CODES.N;
 
 /**
  * @author Lody
@@ -292,25 +295,21 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             String creator = (String) args[1];
-            args[1] = getHostPkg();
             String[] resolvedTypes = (String[]) args[6];
             int type = (int) args[0];
             int flags = (int) args[7];
             int indexToken = ArrayUtils.indexOfFirst(args, IBinder.class);
             IBinder token = indexToken == -1 ? null : (IBinder) args[indexToken];
-            if ((PendingIntent.FLAG_UPDATE_CURRENT & flags) != 0) {
-                flags = (flags & ~(PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_NO_CREATE)) | PendingIntent.FLAG_CANCEL_CURRENT;
-            }
             if (args[5] instanceof Intent[]) {
                 Intent[] intents = (Intent[]) args[5];
-                if (intents.length > 0) {
-                    Intent intent = intents[intents.length - 1];
-                    if (resolvedTypes != null && resolvedTypes.length > 0) {
-                        intent.setDataAndType(intent.getData(), resolvedTypes[resolvedTypes.length - 1]);
+                for (int i = 0; i < intents.length; i++) {
+                    Intent intent = intents[i];
+                    if (resolvedTypes != null && i < resolvedTypes.length) {
+                        intent.setDataAndType(intent.getData(), resolvedTypes[i]);
                     }
                     Intent targetIntent = redirectIntentSender(type, creator, intent, token);
                     if (targetIntent != null) {
-                        intents[intents.length - 1] = targetIntent;
+                        intents[i] = targetIntent;
                     }
                 }
             }
@@ -329,13 +328,11 @@ class MethodProxies {
 
         private Intent redirectIntentSender(int type, String creator, Intent intent, IBinder token) {
             Intent newIntent = intent.cloneFilter();
-            boolean ok = false;
             switch (type) {
                 case ActivityManagerCompat.INTENT_SENDER_ACTIVITY: {
                     VLog.d(getMethodName(), "INTENT_SENDER_ACTIVITY " + intent.toString());
                     ComponentInfo info = VirtualCore.get().resolveActivityInfo(intent, VUserHandle.myUserId());
                     if (info != null) {
-                        ok = true;
                         newIntent.setClass(getHostContext(), StubPendingActivity.class);
                         //newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         newIntent.setFlags(intent.getFlags());
@@ -357,21 +354,16 @@ class MethodProxies {
                 case ActivityManagerCompat.INTENT_SENDER_SERVICE: {
                     ComponentInfo info = VirtualCore.get().resolveServiceInfo(intent, VUserHandle.myUserId());
                     if (info != null) {
-                        ok = true;
                         newIntent.setClass(getHostContext(), StubPendingService.class);
                     }
                 }
                 break;
                 case ActivityManagerCompat.INTENT_SENDER_BROADCAST: {
-                    ok = true;
                     newIntent.setClass(getHostContext(), StubPendingReceiver.class);
                 }
                 break;
                 default:
                     return null;
-            }
-            if (!ok) {
-                return null;
             }
             newIntent.putExtra("_VA_|_user_id_", VUserHandle.myUserId());
             newIntent.putExtra("_VA_|_intent_", intent);
@@ -473,6 +465,11 @@ class MethodProxies {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 args[intentIndex - 1] = getHostPkg();
+            }
+            if (intent.getScheme() != null && intent.getScheme().equals(SCHEME_PACKAGE) && intent.getData() != null) {
+                if (intent.getAction() != null && intent.getAction().startsWith("android.settings.")) {
+                    intent.setData(Uri.parse("package:" + getHostPkg()));
+                }
             }
 
             ActivityInfo activityInfo = VirtualCore.get().resolveActivityInfo(intent, userId);
@@ -609,8 +606,12 @@ class MethodProxies {
                 token = (IBinder) args[tokenIndex];
             }
             Bundle options = ArrayUtils.getFirst(args, Bundle.class);
-
             return VActivityManager.get().startActivities(intents, resolvedTypes, token, options, VUserHandle.myUserId());
+        }
+
+        @Override
+        public boolean isEnable() {
+            return isAppProcess();
         }
     }
 
@@ -767,6 +768,37 @@ class MethodProxies {
 
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
+            ComponentName component = (ComponentName) args[0];
+            IBinder token = (IBinder) args[1];
+            int id = (int) args[2];
+            Notification notification = (Notification) args[3];
+            boolean removeNotification = false;
+            if (args[4] instanceof Boolean) {
+                removeNotification = (boolean) args[4];
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && args[4] instanceof Integer) {
+                int flags = (int) args[4];
+                removeNotification = (flags & Service.STOP_FOREGROUND_REMOVE) != 0;
+            } else {
+                VLog.e(getClass().getSimpleName(), "Unknown flag : " + args[4]);
+            }
+            VNotificationManager.get().dealNotification(id, notification, getAppPkg());
+
+            /**
+             * `BaseStatusBar#updateNotification` aosp will use use
+             * `new StatusBarIcon(...notification.getSmallIcon()...)`
+             *  while in samsung SystemUI.apk ,the corresponding code comes as
+             * `new StatusBarIcon(...pkgName,notification.icon...)`
+             * the icon comes from `getSmallIcon.getResource`
+             * which will throw an exception on :x process thus crash the application
+             */
+            if (notification != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    (Build.BRAND.equalsIgnoreCase("samsung") || Build.MANUFACTURER.equalsIgnoreCase("samsung"))) {
+                notification.icon = getHostContext().getApplicationInfo().icon;
+                Icon icon = Icon.createWithResource(getHostPkg(), notification.icon);
+                Reflect.on(notification).call("setSmallIcon", icon);
+            }
+
+            VActivityManager.get().setServiceForeground(component, token, id, notification, removeNotification);
             return 0;
         }
 
@@ -809,9 +841,9 @@ class MethodProxies {
         public Object afterCall(Object who, Method method, Object[] args, Object result) throws Throwable {
             Intent intent = (Intent) super.afterCall(who, method, args, result);
             try {
-                if (intent != null && intent.hasExtra("_VA_|_intent_")) {
-                    return intent.getParcelableExtra("_VA_|_intent_");
-                }
+            if (intent != null && intent.hasExtra("_VA_|_intent_")) {
+                return intent.getParcelableExtra("_VA_|_intent_");
+            }
             }catch (Exception e){
                 VLog.logbug("getIntentForIntentSender", VLog.getStackTraceString(e));
             }
@@ -954,7 +986,7 @@ class MethodProxies {
                 }
                 if (BLOCK_ACTION_LIST.contains(service.getAction())) {
                     VLog.logbug(TAG, "action is blocked: " + service);
-                    return null;
+                    return  null;
                 }
             }
             if (service.getComponent() != null
@@ -1056,7 +1088,7 @@ class MethodProxies {
                             info.processName = processName;
                         }
                         if (pkgList != null) {
-                            info.pkgList = pkgList.toArray(new String[pkgList.size()]);
+                        info.pkgList = pkgList.toArray(new String[pkgList.size()]);
                         }
                         info.uid = VUserHandle.getAppId(VActivityManager.get().getUidByPid(info.pid));
                     }
@@ -1359,9 +1391,9 @@ class MethodProxies {
                     return;
                 }
                 try {
-                    if (intent.hasExtra("_VA_|_intent_")) {
-                        intent = intent.getParcelableExtra("_VA_|_intent_");
-                    }
+                if (intent.hasExtra("_VA_|_intent_")) {
+                    intent = intent.getParcelableExtra("_VA_|_intent_");
+                }
                 }catch (Exception e ) {
                     VLog.logbug(TAG, VLog.getStackTraceString(e));
                 }
@@ -1505,7 +1537,7 @@ class MethodProxies {
                 if (targetVPid == -1) {
                     return null;
                 }
-                args[nameIdx] = StubManifest.getStubAuthority(targetVPid);
+                args[nameIdx] = VASettings.getStubAuthority(targetVPid);
                 Object holder = method.invoke(who, args);
                 if (holder == null) {
                     VLog.logbug(TAG, "holder == null " + name + " pkg: " + info.packageName);
@@ -1583,31 +1615,44 @@ class MethodProxies {
 
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
-            ActivityManager.TaskDescription td = (ActivityManager.TaskDescription)args[1];
+            ActivityManager.TaskDescription td = (ActivityManager.TaskDescription) args[1];
             String label = td.getLabel();
             Bitmap icon = td.getIcon();
-            String VACLIENT_SUFFIX = " Cloned";
-//		if ((label == null || !label.startsWith(VACLIENT_SUFFIX) || icon == null)){
-            Application app = VClientImpl.get().getCurrentApplication();
-            if (app != null) {
-                if (label == null) {
-                    label = "" + app.getApplicationInfo().loadLabel(app.getPackageManager());
-                }
+
+            // If the activity label/icon isn't specified, the application's label/icon is shown instead
+            // Android usually does that for us, but in this case we want info about the contained app, not VIrtualApp itself
+            if (label == null || icon == null) {
+                Application app = VClientImpl.get().getCurrentApplication();
+                if (app != null) {
+                    try {
+                        if (label == null) {
+                            label = app.getApplicationInfo().loadLabel(app.getPackageManager()).toString();
+                        }
 
                 if (VirtualCore.get().getAppApiDelegate() != null) {
                     icon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(app.getPackageName(), icon);
                     label = VirtualCore.get().getAppApiDelegate().getCloneTagedLabel(label);
                 }
 
-                if (icon == null) {
-                    Drawable drawable = app.getApplicationInfo().loadIcon(app.getPackageManager());
-                    if (drawable != null) {
-                        icon = DrawableUtils.drawableToBitMap(drawable);
+                        if (icon == null) {
+                            Drawable drawable = app.getApplicationInfo().loadIcon(app.getPackageManager());
+                            if (drawable != null) {
+                                icon = DrawableUtils.drawableToBitMap(drawable);
+                            }
+                        }
+                        td = new ActivityManager.TaskDescription(label, icon, td.getPrimaryColor());
+                    } catch (Throwable e) {
+                        e.printStackTrace();
                     }
                 }
-                args[1] = new ActivityManager.TaskDescription(label, icon, td.getPrimaryColor());
             }
-//		}
+
+            TaskDescriptionDelegate descriptionDelegate = VirtualCore.get().getTaskDescriptionDelegate();
+            if (descriptionDelegate != null) {
+                td = descriptionDelegate.getTaskDescription(td);
+            }
+
+            args[1] = td;
             return method.invoke(who, args);
         }
 
@@ -1722,22 +1767,27 @@ class MethodProxies {
             final String action = intent.getAction();
             if ("android.intent.action.CREATE_SHORTCUT".equals(action)
                     || "com.android.launcher.action.INSTALL_SHORTCUT".equals(action)) {
-                handleInstallShortcutIntent(intent);
+
+                return VASettings.ENABLE_INNER_SHORTCUT ? handleInstallShortcutIntent(intent) : null;
+
             } else if ("com.android.launcher.action.UNINSTALL_SHORTCUT".equals(action)) {
+
                 handleUninstallShortcutIntent(intent);
+
+            } else if (BadgerManager.handleBadger(intent)) {
+                return null;
             } else {
                 return ComponentUtils.redirectBroadcastIntent(intent, VUserHandle.myUserId());
             }
             return intent;
         }
 
-        private void handleInstallShortcutIntent(Intent intent) {
+        private Intent handleInstallShortcutIntent(Intent intent) {
             Intent shortcut = intent.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT);
-            String pkg;
             if (shortcut != null) {
                 ComponentName component = shortcut.resolveActivity(VirtualCore.getPM());
                 if (component != null) {
-                    pkg = component.getPackageName();
+                    String pkg = component.getPackageName();
                     Intent newShortcutIntent = new Intent();
                     newShortcutIntent.setClassName(getHostPkg(), Constants.SHORTCUT_PROXY_ACTIVITY_NAME);
                     newShortcutIntent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -1756,21 +1806,22 @@ class MethodProxies {
                         try {
                             Resources resources = VirtualCore.get().getResources(pkg);
                             if (resources != null) {
-                                int resId = resources.getIdentifier(icon.resourceName, "drawable", pkg);
-                                if (resId > 0) {
-                                    Drawable iconDrawable = resources.getDrawable(resId);
-                                    Bitmap newIcon = BitmapUtils.drawableToBitmap(iconDrawable);
+                            int resId = resources.getIdentifier(icon.resourceName, "drawable", pkg);
+                            if (resId > 0) {
+                                //noinspection deprecation
+                                Drawable iconDrawable = resources.getDrawable(resId);
+                                Bitmap newIcon = BitmapUtils.drawableToBitmap(iconDrawable);
                                     newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(icon.packageName, newIcon);
-                                    if (newIcon != null) {
-                                        intent.removeExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE);
-                                        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, newIcon);
-                                    }
+                                if (newIcon != null) {
+                                    intent.removeExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE);
+                                    intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, newIcon);
                                 }
+                            }
                             }
                         } catch (Throwable e) {
                             e.printStackTrace();
                         }
-                    } else {
+                     } else {
                         try {
                             Bitmap origIcon = intent.getParcelableExtra(Intent.EXTRA_SHORTCUT_ICON);
                             if (origIcon != null && pkg != null && !TextUtils.equals(pkg, getHostPkg())){
@@ -1786,6 +1837,7 @@ class MethodProxies {
                     }
                 }
             }
+            return intent;
         }
 
         private void handleUninstallShortcutIntent(Intent intent) {

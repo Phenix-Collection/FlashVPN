@@ -8,13 +8,13 @@ import com.lody.virtual.client.hook.base.MethodProxy;
 import com.lody.virtual.client.hook.base.ReplaceLastPkgMethodProxy;
 import com.lody.virtual.client.hook.base.StaticMethodProxy;
 import com.lody.virtual.helper.utils.VLog;
+import com.lody.virtual.client.ipc.ServiceManagerNative;
 
 import java.lang.reflect.Method;
 
 import mirror.android.net.IConnectivityManager;
 
 import static android.os.Build.VERSION_CODES.KITKAT;
-import static android.os.Build.VERSION_CODES.N_MR1;
 
 /**
  * @author legency
@@ -28,12 +28,11 @@ public class ConnectivityStub extends BinderInvocationProxy {
     @Override
     protected void onBindMethods() {
         super.onBindMethods();
-        addMethodProxy(new ReplaceLastPkgMethodProxy("getActiveNetworkInfo"));
         addMethodProxy(new ReportInetCondition());
         if (Build.VERSION.SDK_INT >= KITKAT) {
             addMethodProxy(new CheckMobileProvisioning());
         }
-        if (Build.VERSION.SDK_INT >= N_MR1) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             addMethodProxy(new IsTetheringSupported());
         }
     }

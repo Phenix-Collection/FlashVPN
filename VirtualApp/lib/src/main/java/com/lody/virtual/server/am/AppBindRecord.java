@@ -27,10 +27,10 @@ final class AppBindRecord {
     final ProcessRecord client;     // Who has started/bound the service.
 
     final HashSet<ConnectionRecord> connections = new HashSet<ConnectionRecord>();
-    // All ConnectionRecord for this client.
+                                    // All ConnectionRecord for this client.
 
     AppBindRecord(ServiceRecord _service, ServiceRecord.IntentBindRecord _intent,
-                  ProcessRecord _client) {
+            ProcessRecord _client) {
         service = _service;
         intent = _intent;
         client = _client;

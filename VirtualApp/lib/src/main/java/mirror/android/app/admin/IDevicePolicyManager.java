@@ -8,13 +8,14 @@ import mirror.RefClass;
 import mirror.RefStaticMethod;
 
 /**
- * Created by guojia on 2017/7/7.
+ * Created by wy on 2017/10/20.
  */
 
 public class IDevicePolicyManager {
     public static Class<?> TYPE = RefClass.load(IDevicePolicyManager.class, "android.app.admin.IDevicePolicyManager");
-    public static class Stub {
-        public static Class<?> TYPE = RefClass.load(IDevicePolicyManager.Stub.class, "android.app.admin.IDevicePolicyManager$Stub");
+
+    public static class  Stub {
+        public static Class<?> TYPE = RefClass.load(Stub.class, "android.app.admin.IDevicePolicyManager$Stub");
         @MethodParams({IBinder.class})
         public static RefStaticMethod<IInterface> asInterface;
     }

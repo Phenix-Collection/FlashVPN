@@ -14,9 +14,9 @@ import android.os.Looper;
 import android.os.Process;
 import android.text.TextUtils;
 
+import com.lody.virtual.GmsSupport;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.hook.secondary.GmsSupport;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.os.VUserHandle;

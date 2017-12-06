@@ -3,6 +3,7 @@ package io.virtualapp.home;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,7 +57,7 @@ public class LoadingActivity extends AppCompatActivity {
         nameView.setText(String.format(Locale.ENGLISH, "Opening %s...", appModel.name));
 
         Intent intent = getIntent().getParcelableExtra(KEY_INTENT);
-        VirtualCore.get().setLoadingPage(intent, this);
+        VirtualCore.get().setUiCallback(intent, mUiCallback);
         if (intent != null) {
             VUiKit.defer().when(() -> {
                 long startTime = System.currentTimeMillis();
@@ -79,6 +80,14 @@ public class LoadingActivity extends AppCompatActivity {
                     VActivityManager.get().startActivity(intent, userId));
         }
     }
+
+    private final VirtualCore.UiCallback mUiCallback = new VirtualCore.UiCallback() {
+
+        @Override
+        public void onAppOpened(String packageName, int userId) throws RemoteException {
+            finish();
+        }
+    };
 
     @Override
     protected void onResume() {

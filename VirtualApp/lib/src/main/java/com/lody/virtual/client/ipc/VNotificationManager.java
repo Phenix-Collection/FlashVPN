@@ -25,7 +25,8 @@ public class VNotificationManager {
     }
 
     public INotificationManager getService() {
-        if (mRemote == null || !mRemote.asBinder().isBinderAlive()) {
+        if (mRemote == null ||
+                (!mRemote.asBinder().isBinderAlive() && !VirtualCore.get().isVAppProcess())) {
             synchronized (VNotificationManager.class) {
                 final IBinder pmBinder = ServiceManagerNative.getService(ServiceManagerNative.NOTIFICATION);
                 mRemote = INotificationManager.Stub.asInterface(pmBinder);
@@ -39,6 +40,7 @@ public class VNotificationManager {
     }
 
     public boolean dealNotification(int id, Notification notification, String packageName) {
+        if(notification == null)return false;
         return VirtualCore.get().getHostPkg().equals(packageName)
                 || mNotificationCompat.dealNotification(id, notification, packageName);
     }

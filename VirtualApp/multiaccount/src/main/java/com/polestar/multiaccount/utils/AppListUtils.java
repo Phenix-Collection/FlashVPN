@@ -8,7 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Process;
 
-import com.lody.virtual.client.hook.secondary.GmsSupport;
+import com.lody.virtual.GmsSupport;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;

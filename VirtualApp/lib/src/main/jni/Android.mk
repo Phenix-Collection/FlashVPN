@@ -15,7 +15,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/Foundation
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/InlineHook
 
-LOCAL_SRC_FILES := Core.cpp \
+LOCAL_SRC_FILES := core.cpp \
 				   Foundation/IOUniformer.cpp \
 				   Foundation/VMPatch.cpp \
 				   InlineHook/MSHook.cpp \

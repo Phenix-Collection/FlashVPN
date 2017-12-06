@@ -28,6 +28,7 @@ public class PackageSetting implements Parcelable {
     public String apkPath;
     public String libPath;
     public boolean dependSystem;
+    @Deprecated
     public boolean skipDexOpt;
     public int appId;
     public long firstInstallTime;

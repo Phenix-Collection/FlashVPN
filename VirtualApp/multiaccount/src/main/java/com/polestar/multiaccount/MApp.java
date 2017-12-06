@@ -14,7 +14,7 @@ import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
-import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
@@ -67,10 +67,10 @@ public class MApp extends Application {
         super.attachBaseContext(base);
         gDefault = this;
         try {
-            StubManifest.ENABLE_IO_REDIRECT = true;
-            StubManifest.ENABLE_INNER_SHORTCUT = false;
-            StubManifest.ENABLE_GMS = PreferencesUtils.isGMSEnable();
-            Log.d(MLogs.DEFAULT_TAG, "GMS state: " + StubManifest.ENABLE_GMS);
+            VASettings.ENABLE_IO_REDIRECT = true;
+            VASettings.ENABLE_INNER_SHORTCUT = false;
+            VASettings.ENABLE_GMS = PreferencesUtils.isGMSEnable();
+            Log.d(MLogs.DEFAULT_TAG, "GMS state: " + VASettings.ENABLE_GMS);
             VirtualCore.get().startup(base);
         } catch (Throwable e) {
             e.printStackTrace();

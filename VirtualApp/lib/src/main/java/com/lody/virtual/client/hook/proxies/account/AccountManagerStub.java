@@ -401,13 +401,13 @@ public class AccountManagerStub extends BinderInvocationProxy {
 		@Override
 		public Object call(Object who, Method method, Object... args) throws Throwable {
 			try {
-				IAccountManagerResponse response = (IAccountManagerResponse) args[0];
-				String accountType = (String) args[1];
-				String authTokenType = (String) args[2];
-				String[] requiredFeatures = (String[]) args[3];
-				boolean expectActivityLaunch = (boolean) args[4];
-				Bundle options = (Bundle) args[5];
-				Mgr.addAccount(response, accountType, authTokenType, requiredFeatures, expectActivityLaunch, options);
+			IAccountManagerResponse response = (IAccountManagerResponse) args[0];
+			String accountType = (String) args[1];
+			String authTokenType = (String) args[2];
+			String[] requiredFeatures = (String[]) args[3];
+			boolean expectActivityLaunch = (boolean) args[4];
+			Bundle options = (Bundle) args[5];
+			Mgr.addAccount(response, accountType, authTokenType, requiredFeatures, expectActivityLaunch, options);
 			} catch (Exception e) {
 				VLog.logbug("Account", VLog.getStackTraceString(e));
 			}

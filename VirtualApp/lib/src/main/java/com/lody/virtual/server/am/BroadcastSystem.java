@@ -1,5 +1,6 @@
 package com.lody.virtual.server.am;
 
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,9 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 
 import com.lody.virtual.client.core.VirtualCore;
@@ -32,6 +35,7 @@ import mirror.android.app.LoadedApkHuaWei;
 import mirror.android.rms.resource.ReceiverResourceLP;
 import mirror.android.rms.resource.ReceiverResourceM;
 import mirror.android.rms.resource.ReceiverResourceN;
+
 import static android.content.Intent.FLAG_RECEIVER_REGISTERED_ONLY;
 
 /**
@@ -47,22 +51,24 @@ public class BroadcastSystem {
     private static final int BROADCAST_TIME_OUT = 8500;
     private static BroadcastSystem gDefault;
 
-
-
-	private final ArrayMap<String, List<BroadcastReceiver>> mReceivers = new ArrayMap<>();
+    private final ArrayMap<String, List<BroadcastReceiver>> mReceivers = new ArrayMap<>();
     private final Map<IBinder, BroadcastRecord> mBroadcastRecords = new HashMap<>();
-	private final Context mContext;
-	private final StaticScheduler mScheduler;
+    private final Context mContext;
+    private final StaticScheduler mScheduler;
     private final TimeoutHandler mTimeoutHandler;
-	private final VActivityManagerService mAMS;
-	private final VAppManagerService mApp;
+    private final VActivityManagerService mAMS;
+    private final VAppManagerService mApp;
 
     private BroadcastSystem(Context context, VActivityManagerService ams, VAppManagerService app) {
-		this.mContext = context;
-		this.mApp = app;
-		this.mAMS = ams;
-		mScheduler = new StaticScheduler();
-        mTimeoutHandler = new TimeoutHandler();
+        this.mContext = context;
+        this.mApp = app;
+        this.mAMS = ams;
+        HandlerThread broadcastThread = new HandlerThread("BroadcastThread");
+        HandlerThread anrThread = new HandlerThread("BroadcastAnrThread");
+        broadcastThread.start();
+        anrThread.start();
+        mScheduler = new StaticScheduler(broadcastThread.getLooper());
+        mTimeoutHandler = new TimeoutHandler(anrThread.getLooper());
         fuckHuaWeiVerifier();
     }
 
@@ -91,6 +97,7 @@ public class BroadcastSystem {
      * at com.lody.virtual.server.BinderProvider.onCreate(BinderProvider.java:42)
      */
     private void fuckHuaWeiVerifier() {
+
         if (LoadedApkHuaWei.mReceiverResource != null) {
             Object packageInfo = ContextImpl.mPackageInfo.get(mContext);
             if (packageInfo != null) {
@@ -100,20 +107,24 @@ public class BroadcastSystem {
                         if (ReceiverResourceN.mWhiteList != null) {
                             List<String> whiteList = ReceiverResourceN.mWhiteList.get(receiverResource);
                             List<String> newWhiteList = new ArrayList<>();
+                            // Add our package name to the white list.
                             newWhiteList.add(mContext.getPackageName());
                             if (whiteList != null) {
                                 newWhiteList.addAll(whiteList);
                             }
                             ReceiverResourceN.mWhiteList.set(receiverResource, newWhiteList);
                         }
+
                     } else {
                         if (ReceiverResourceM.mWhiteList != null) {
                             String[] whiteList = ReceiverResourceM.mWhiteList.get(receiverResource);
                             List<String> newWhiteList = new LinkedList<>();
                             Collections.addAll(newWhiteList, whiteList);
+                            // Add our package name to the white list.
                             newWhiteList.add(mContext.getPackageName());
                             ReceiverResourceM.mWhiteList.set(receiverResource, newWhiteList.toArray(new String[newWhiteList.size()]));
                         } else if (ReceiverResourceLP.mResourceConfig != null) {
+                            // Just clear the ResourceConfig.
                             ReceiverResourceLP.mResourceConfig.set(receiverResource, null);
                         }
                     }
@@ -121,34 +132,35 @@ public class BroadcastSystem {
             }
         }
     }
-	public void startApp(VPackage p) {
+
+    public void startApp(VPackage p) {
         PackageSetting setting = (PackageSetting) p.mExtras;
-		VLog.d("BroadcastSystem","startApp " + p.packageName);
-		for (VPackage.ActivityComponent receiver : p.receivers) {
-			ActivityInfo info = receiver.info;
-			List<BroadcastReceiver> receivers = mReceivers.get(p.packageName);
-			if (receivers == null) {
-				receivers = new ArrayList<>();
-				mReceivers.put(p.packageName, receivers);
-			}
-			String componentAction = String.format("_VA_%s_%s", info.packageName, info.name);
+        VLog.d("BroadcastSystem", "startApp " + p.packageName);
+        for (VPackage.ActivityComponent receiver : p.receivers) {
+            ActivityInfo info = receiver.info;
+            List<BroadcastReceiver> receivers = mReceivers.get(p.packageName);
+            if (receivers == null) {
+                receivers = new ArrayList<>();
+                mReceivers.put(p.packageName, receivers);
+            }
+            String componentAction = String.format("_VA_%s_%s", info.packageName, info.name);
             IntentFilter componentFilter = new IntentFilter(componentAction);
             BroadcastReceiver r = new StaticBroadcastReceiver(setting.appId, info, componentFilter);
             mContext.registerReceiver(r, componentFilter, null, mScheduler);
-//			VLog.d("BroadcastSystem", "register " + componentFilter.getAction(0));
+            VLog.d("BroadcastSystem", "register " + componentFilter.getAction(0));
             receivers.add(r);
-            for (VPackage.ActivityIntentInfo ci : receiver.intents)  {
-				IntentFilter cloneFilter = new IntentFilter(ci.filter);
+            for (VPackage.ActivityIntentInfo ci : receiver.intents) {
+                IntentFilter cloneFilter = new IntentFilter(ci.filter);
                 SpecialComponentList.protectIntentFilter(cloneFilter, ci.activity.getComponentName().getPackageName());
                 r = new StaticBroadcastReceiver(setting.appId, info, cloneFilter);
-				mContext.registerReceiver(r, cloneFilter, null, mScheduler);
-				receivers.add(r);
-			}
-		}
-	}
+                mContext.registerReceiver(r, cloneFilter, null, mScheduler);
+                receivers.add(r);
+            }
+        }
+    }
 
 
-	public void stopApp(String packageName) {
+    public void stopApp(String packageName) {
         synchronized (mBroadcastRecords) {
             Iterator<Map.Entry<IBinder, BroadcastRecord>> iterator = mBroadcastRecords.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -168,7 +180,7 @@ public class BroadcastSystem {
                 }
             }
             mReceivers.remove(packageName);
-	    }
+        }
     }
 
     void broadcastFinish(PendingResultData res) {
@@ -192,9 +204,12 @@ public class BroadcastSystem {
         mTimeoutHandler.sendMessageDelayed(msg, BROADCAST_TIME_OUT);
     }
 
-	private static final class StaticScheduler extends Handler {
+    private static final class StaticScheduler extends Handler {
 
-	}
+        StaticScheduler(Looper looper) {
+            super(looper);
+        }
+    }
 
     private static final class BroadcastRecord {
         int vuid;
@@ -209,6 +224,11 @@ public class BroadcastSystem {
     }
 
     private final class TimeoutHandler extends Handler {
+
+        TimeoutHandler(Looper looper) {
+            super(looper);
+        }
+
         @Override
         public void handleMessage(Message msg) {
             IBinder token = (IBinder) msg.obj;
@@ -221,49 +241,50 @@ public class BroadcastSystem {
     }
 
 
+    private final class StaticBroadcastReceiver extends BroadcastReceiver {
+        private int appId;
+        private ActivityInfo info;
+        @SuppressWarnings("unused")
+        private IntentFilter filter;
 
+        private StaticBroadcastReceiver(int appId, ActivityInfo info, IntentFilter filter) {
+            this.appId = appId;
+            this.info = info;
+            this.filter = filter;
+        }
 
-
-	private final class StaticBroadcastReceiver extends BroadcastReceiver {
-		private int appId;
-		private ActivityInfo info;
-		@SuppressWarnings("unused")
-		private IntentFilter filter;
-
-		private StaticBroadcastReceiver(int appId, ActivityInfo info, IntentFilter filter) {
-			this.appId = appId;
-			this.info = info;
-			this.filter = filter;
-		}
-
-		@Override
+        @Override
 		public void onReceive(Context context, final Intent intent) {
-			VLog.logbug("StaticBroadcastReceiver", "E onReceive " + intent.toString());
-			if (mApp.isBooting()) {
-				return;
-			}
+            VLog.logbug("StaticBroadcastReceiver", "E onReceive " + intent.toString());
+            if (mApp.isBooting()) {
+                return;
+            }
             if ((intent.getFlags() & FLAG_RECEIVER_REGISTERED_ONLY) != 0 || isInitialStickyBroadcast()) {
+                return;
+            }
+            String privilegePkg = intent.getStringExtra("_VA_|_privilege_pkg_");
+            if (privilegePkg != null && !info.packageName.equals(privilegePkg)) {
                 return;
             }
             final PendingResult result = goAsync();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!mAMS.handleStaticBroadcast(appId, info, intent, new PendingResultData(result))) {
-                        result.finish();
-//					if (mOrderedHint) {
-//						am.finishReceiver(mToken, mResultCode, mResultData, mResultExtras,
-//								mAbortBroadcast, mFlags);
-//					} else {
-//						// This broadcast was sent to a component; it is not ordered,
-//						// but we still need to tell the activity manager we are done.
-//						am.finishReceiver(mToken, 0, null, null, false, mFlags);
-//					}
-                    }
+            if (!mAMS.handleStaticBroadcast(appId, info, intent, new PendingResultData(result))) {
+                result.finish();
+//                if (mOrderedHint) {
+//                    am.finishReceiver(mToken, mResultCode, mResultData, mResultExtras,
+//                            mAbortBroadcast, mFlags);
+//                } else {
+//                    // This broadcast was sent to a component; it is not ordered,
+//                    // but we still need to tell the activity manager we are done.
+//                    am.finishReceiver(mToken, 0, null, null, false, mFlags);
+//                }
+            }
                 }
             }).start();
 
-			VLog.d("StaticBroadcastReceiver", "X onReceive " + intent.toString());
-		}
-	}
+            VLog.d("StaticBroadcastReceiver", "X onReceive " + intent.toString());
+        }
+    }
 }

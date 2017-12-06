@@ -1,6 +1,7 @@
 package com.lody.virtual.server.am;
 
 import android.app.IServiceConnection;
+import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,8 @@ public class ServiceRecord extends Binder {
 	public ProcessRecord process;
 	final HashMap<IBinder, ArrayList<ConnectionRecord>> connections
 			= new HashMap<IBinder, ArrayList<ConnectionRecord>>();
+	public int foregroundId;
+	public Notification foregroundNoti;
 
 	public boolean containConnection(IServiceConnection connection) {
 		for (IntentBindRecord record : bindings.values()) {
@@ -149,11 +152,11 @@ public class ServiceRecord extends Binder {
 
 		public boolean containConnection(IServiceConnection connection) {
 			synchronized (connections) {
-				for (IServiceConnection con : connections) {
-					if (con.asBinder() == connection.asBinder()) {
-						return true;
-					}
+			for (IServiceConnection con : connections) {
+				if (con.asBinder() == connection.asBinder()) {
+					return true;
 				}
+			}
 			}
 			return false;
 		}
@@ -163,14 +166,14 @@ public class ServiceRecord extends Binder {
 				return;
 			} else {
 				synchronized (connections) {
-					connections.add(connection);
-					try {
-						connection.asBinder().linkToDeath(new DeathRecipient(this, connection), 0);
-					} catch (RemoteException e) {
-						e.printStackTrace();
-					}
+				connections.add(connection);
+				try {
+					connection.asBinder().linkToDeath(new DeathRecipient(this, connection), 0);
+				} catch (RemoteException e) {
+					e.printStackTrace();
 				}
 			}
+		}
 		}
 
 		public void removeConnection(IServiceConnection connection) {

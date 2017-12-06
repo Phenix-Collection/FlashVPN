@@ -1,12 +1,13 @@
 package com.lody.virtual.helper.utils;
 
 import android.content.Context;
-import android.os.Environment;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.lody.virtual.BuildConfig;
 
 import java.io.File;
+import java.util.Set;
 
 /**
  * @author Lody
@@ -94,6 +95,25 @@ public class VLog {
 		}
 	}
 
+	public static String toString(Bundle bundle){
+		if(bundle==null)return null;
+		if(Reflect.on(bundle).get("mParcelledData")!=null){
+			Set<String> keys=bundle.keySet();
+			StringBuilder stringBuilder=new StringBuilder("Bundle[");
+			if(keys!=null) {
+				for (String key : keys) {
+					stringBuilder.append(key);
+					stringBuilder.append("=");
+					stringBuilder.append(bundle.get(key));
+					stringBuilder.append(",");
+				}
+			}
+			stringBuilder.append("]");
+			return stringBuilder.toString();
+		}
+		return bundle.toString();
+	}
+
 	public static String getStackTraceString(Throwable tr) {
 		return Log.getStackTraceString(tr);
 	}
@@ -105,6 +125,7 @@ public class VLog {
 	public static void e(String tag, Throwable e) {
 		Log.e(VTAG+tag, getStackTraceString(e));
 	}
+
 	public static void logbug(String tag, String msg) {
 		if (sKeyLogger != null) {
 			sKeyLogger.logBug(VTAG + tag, msg);

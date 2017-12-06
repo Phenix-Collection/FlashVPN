@@ -26,10 +26,9 @@ import mirror.RefObject;
 import mirror.RefMethod;
 import mirror.MethodParams;
 import mirror.MethodReflectParams;
-import mirror.RefStaticMethod;
 import mirror.RefStaticObject;
 import mirror.RefStaticInt;
-import mirror.android.content.res.CompatibilityInfo;
+import mirror.RefStaticMethod;
 
 public class ActivityThread {
     public static Class<?> TYPE = RefClass.load(ActivityThread.class, "android.app.ActivityThread");
@@ -59,6 +58,13 @@ public class ActivityThread {
         public static RefObject<Object> compatInfo;
     }
 
+    public static Object installProvider(Object mainThread, Context context, ProviderInfo providerInfo, Object holder) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            return installProvider.call(mainThread, context, holder, providerInfo, false, true);
+        }
+        return installProvider.call(mainThread, context, holder, providerInfo, false, true, true);
+    }
+
     public static class ActivityClientRecord {
         public static Class<?> TYPE = RefClass.load(ActivityClientRecord.class, "android.app.ActivityThread$ActivityClientRecord");
         public static RefObject<Activity> activity;
@@ -75,10 +81,9 @@ public class ActivityThread {
         public static RefObject<IInterface> mProvider;
     }
 
+
     public static class ProviderClientRecordJB {
         public static Class<?> TYPE = RefClass.load(ProviderClientRecordJB.class, "android.app.ActivityThread$ProviderClientRecord");
-        @MethodReflectParams({"android.app.ActivityThread", "[Ljava.lang.String;", "android.content.IContentProvider", "android.content.ContentProvider", "android.app.IActivityManager$ContentProviderHolder"})
-        public static RefConstructor<?> ctor;
         public static RefObject<Object> mHolder;
         public static RefObject<IInterface> mProvider;
     }
@@ -102,13 +107,6 @@ public class ActivityThread {
         public static Class<?> TYPE = RefClass.load(H.class, "android.app.ActivityThread$H");
         public static RefStaticInt LAUNCH_ACTIVITY;
         public static RefStaticInt CREATE_SERVICE;
-    }
-
-
-    public static Object installProvider(Object mainThread, Context context, ProviderInfo providerInfo, Object holder) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            return installProvider.call(mainThread, context, holder, providerInfo, false, true);
-        }
-        return installProvider.call(mainThread, context, holder, providerInfo, true, true, true);
+        public static RefStaticInt SCHEDULE_CRASH;
     }
 }

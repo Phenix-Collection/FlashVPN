@@ -4,12 +4,11 @@ import android.app.Application;
 import android.content.Context;
 
 import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.stub.StubManifest;
+import com.lody.virtual.client.stub.VASettings;
 
 import io.virtualapp.delegate.MyAppRequestListener;
 import io.virtualapp.delegate.MyComponentDelegate;
 import io.virtualapp.delegate.MyPhoneInfoDelegate;
-import io.virtualapp.delegate.MyTaskDescriptionDelegate;
 import jonathanfinerty.once.Once;
 
 /**
@@ -27,8 +26,8 @@ public class VApp extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        StubManifest.ENABLE_IO_REDIRECT = true;
-        StubManifest.ENABLE_INNER_SHORTCUT = false;
+        VASettings.ENABLE_IO_REDIRECT = true;
+        VASettings.ENABLE_INNER_SHORTCUT = false;
         try {
             VirtualCore.get().startup(base);
         } catch (Throwable e) {

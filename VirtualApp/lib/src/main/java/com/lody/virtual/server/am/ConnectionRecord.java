@@ -28,10 +28,9 @@ final class ConnectionRecord {
     boolean serviceDead;            // Well is it?
 
     ConnectionRecord(AppBindRecord _binding,
-                     IServiceConnection _conn, int _flags) {
+               IServiceConnection _conn, int _flags) {
         binding = _binding;
         conn = _conn;
         flags = _flags;
     }
 }
-

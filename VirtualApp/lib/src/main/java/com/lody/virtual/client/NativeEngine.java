@@ -196,10 +196,10 @@ public class NativeEngine {
 
 	public static int onKillProcess(int pid, int signal) {
 		VLog.e(TAG, "killProcess: pid = %d, signal = %d.", pid, signal);
-        if (pid == android.os.Process.myPid()) {
-            VLog.e(TAG, VLog.getStackTraceString(new Throwable()));
+		if (pid == android.os.Process.myPid()) {
+			VLog.e(TAG, VLog.getStackTraceString(new Throwable()));
             StubService.stop(VirtualCore.get().getContext(), VClientImpl.get().getVPid());
-        }
+		}
         if (VClientImpl.get().getCurrentPackage().equals("com.imo.android.imoim")) {
             if (pid != android.os.Process.myPid() ){
                 return 1;
@@ -227,7 +227,7 @@ public class NativeEngine {
         }
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
-    }
+	}
 
 	public static int onGetCallingUid(int originUid) {
 		int callingPid = Binder.getCallingPid();

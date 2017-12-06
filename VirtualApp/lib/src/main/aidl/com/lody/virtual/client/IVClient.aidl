@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.ProviderInfo;
 
 import com.lody.virtual.remote.PendingResultData;
+
 interface IVClient {
     void scheduleReceiver(in String processName,in ComponentName component, in Intent intent, in PendingResultData resultData);
     void scheduleNewIntent(in String creator, in IBinder token, in Intent intent);

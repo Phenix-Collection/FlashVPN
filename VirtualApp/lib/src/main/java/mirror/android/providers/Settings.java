@@ -30,10 +30,12 @@ public class Settings {
         public static Class<?> TYPE = RefClass.load(NameValueCacheOreo.class, "android.provider.Settings$NameValueCache");
         public static RefObject<Object> mProviderHolder;
     }
+
     public static class ContentProviderHolder {
         public static Class<?> TYPE = RefClass.load(ContentProviderHolder.class, "android.provider.Settings$ContentProviderHolder");
         public static RefObject<IInterface> mContentProvider;
     }
+
     public static class Secure {
         public static Class<?> TYPE = RefClass.load(Secure.class, android.provider.Settings.Secure.class);
         public static RefStaticObject<Object> sNameValueCache;

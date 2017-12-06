@@ -16,6 +16,7 @@ import android.os.Build;
 import android.widget.RemoteViews;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.helper.utils.OSUtils;
 import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.helper.utils.VLog;
 
@@ -76,11 +77,12 @@ import mirror.com.android.internal.R_Hide;
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     void fixIcon(Icon icon, Context appContext, boolean installed) {
         if (icon == null) {
             return;
         }
-        VLog.d("FixIcon", "installed:　" + installed + " pkg: " + appContext.getPackageName());
+        VLog.d("FixIcon", "installed: " + installed + " pkg: " + appContext.getPackageName());
         int type = mirror.android.graphics.drawable.Icon.mType.get(icon);
         if (type == mirror.android.graphics.drawable.Icon.TYPE_RESOURCE) {
             if (installed && (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)) {
@@ -88,14 +90,14 @@ import mirror.com.android.internal.R_Hide;
                 mirror.android.graphics.drawable.Icon.mString1.set(icon, appContext.getPackageName());
             } else {
                 try {
-                    Drawable drawable = icon.loadDrawable(appContext);
-                    Bitmap bitmap = drawableToBitMap(drawable);
+                Drawable drawable = icon.loadDrawable(appContext);
+                Bitmap bitmap = drawableToBitMap(drawable);
                     if (bitmap == null) {
                         bitmap = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(appContext.getPackageName(), null);
                     }
-                    mirror.android.graphics.drawable.Icon.mObj1.set(icon, bitmap);
-                    mirror.android.graphics.drawable.Icon.mString1.set(icon, null);
-                    mirror.android.graphics.drawable.Icon.mType.set(icon, mirror.android.graphics.drawable.Icon.TYPE_BITMAP);
+                mirror.android.graphics.drawable.Icon.mObj1.set(icon, bitmap);
+                mirror.android.graphics.drawable.Icon.mString1.set(icon, null);
+                mirror.android.graphics.drawable.Icon.mType.set(icon, mirror.android.graphics.drawable.Icon.TYPE_BITMAP);
                 } catch (Exception e) {
                     VLog.logbug("FixIcon", "Error: " +VLog.getStackTraceString(e));
                 }
@@ -149,8 +151,7 @@ import mirror.com.android.internal.R_Hide;
                         mActions.remove(action);
                         continue;
                     }
-                    if (ReflectionActionCompat.isInstance(action)
-                            || (action.getClass().getSimpleName().endsWith("ReflectionAction"))) {
+                    if (ReflectionActionCompat.isInstance(action)) {
                         int viewId = Reflect.on(action).get("viewId");
 
                         String methodName = Reflect.on(action).get("methodName");
@@ -209,7 +210,7 @@ import mirror.com.android.internal.R_Hide;
     }
 
     void fixIconImage(Resources resources, RemoteViews remoteViews, boolean hasIconBitmap, Notification notification) {
-        if (remoteViews == null) return;
+        if (remoteViews == null || notification.icon == 0) return;
         if (!mNotificationCompat.isSystemLayout(remoteViews)) {
             return;
         }
@@ -222,12 +223,12 @@ import mirror.com.android.internal.R_Hide;
                 drawable.setLevel(notification.iconLevel);
                 Bitmap bitmap = drawableToBitMap(drawable);
                 remoteViews.setImageViewBitmap(id, bitmap);
-            }
-            if (Build.VERSION.SDK_INT >= 21) {
-                remoteViews.setInt(id, "setBackgroundColor", Color.TRANSPARENT);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                remoteViews.setViewPadding(id, 0, 0, 0, 0);
+                //emui
+                if(OSUtils.getInstance().isEmui()) {
+                    if (notification.largeIcon == null) {
+                        notification.largeIcon = bitmap;
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

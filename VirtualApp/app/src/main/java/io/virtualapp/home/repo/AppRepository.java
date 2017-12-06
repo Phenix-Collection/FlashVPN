@@ -154,7 +154,7 @@ public class AppRepository implements AppDataSource {
 
     @Override
     public boolean removeVirtualApp(String packageName, int userId) {
-        return VirtualCore.get().uninstallPackage(packageName, userId);
+        return VirtualCore.get().uninstallPackageAsUser(packageName, userId);
     }
 
 }
