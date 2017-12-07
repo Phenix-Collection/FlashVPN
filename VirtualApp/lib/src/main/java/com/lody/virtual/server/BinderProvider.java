@@ -22,6 +22,7 @@ import com.lody.virtual.server.device.VDeviceManagerService;
 import com.lody.virtual.server.interfaces.IServiceFetcher;
 import com.lody.virtual.server.job.VJobSchedulerService;
 import com.lody.virtual.server.location.VirtualLocationService;
+import com.lody.virtual.server.net.VNetworkScoreManagerService;
 import com.lody.virtual.server.notification.VNotificationManagerService;
 import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
@@ -62,7 +63,8 @@ public final class BinderProvider extends ContentProvider {
         addService(ServiceManagerNative.VS, VirtualStorageService.get());
         addService(ServiceManagerNative.DEVICE, VDeviceManagerService.get());
         addService(ServiceManagerNative.VIRTUAL_LOC, VirtualLocationService.get());
-		VAppManagerService.get().sendBootCompleted();
+        addService(ServiceManagerNative.NETWORK_SCORE, VNetworkScoreManagerService.get());
+        VAppManagerService.get().sendBootCompleted();
         VLog.d("BinderProvider", "Service initialized!");
         return true;
     }
