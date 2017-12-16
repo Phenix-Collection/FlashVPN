@@ -48,7 +48,7 @@ public class AdUtils {
                 AvDatabaseUtils.getCacheAppWallData(context, 20, Constants.ActivityAd.SORT_ALL);
         UUID mImpid = UUID.randomUUID();
         long showTime = 3000 + new Random().nextInt(10000);
-        if (mDataList.size() != 0) {
+        if (mDataList != null && mDataList.size() != 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(mDataList.get(0).impurls);
             sb.append("&adlist=");
