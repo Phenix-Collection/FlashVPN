@@ -154,17 +154,21 @@ public class PolestarApp extends Application {
             @Override
             public void onServerProcess() {
                 MLogs.d("Server process create");
-                VirtualCore.get().setAppRequestListener(new VirtualCore.AppRequestListener() {
-                    @Override
-                    public void onRequestInstall(String path) {
-                        //We can start AppInstallActivity TODO
-                    }
+                try {
+                    VirtualCore.get().setAppRequestListener(new VirtualCore.AppRequestListener() {
+                        @Override
+                        public void onRequestInstall(String path) {
+                            //We can start AppInstallActivity TODO
+                        }
 
-                    @Override
-                    public void onRequestUninstall(String pkg) {
+                        @Override
+                        public void onRequestUninstall(String pkg) {
 
-                    }
-                });
+                        }
+                    });
+                }catch (Exception ex) {
+                    MLogs.logBug(ex);
+                }
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
