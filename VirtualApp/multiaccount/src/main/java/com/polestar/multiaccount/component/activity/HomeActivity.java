@@ -504,7 +504,7 @@ public class HomeActivity extends BaseActivity {
 
         Intent intent = new Intent(this, NativeInterstitialActivity.class);
         startActivity(intent);
-        EventReporter.homeGiftClick(this, "lucky");
+        EventReporter.homeGiftClick(this, "lucky_icon");
     }
 
     private final static String QUIT_RATE_RANDOM = "quit_rating_random";

@@ -301,7 +301,7 @@ public class HomeFragment extends BaseFragment {
                         MLogs.d("Show lucky");
                         Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
                         startActivity(intent);
-                        EventReporter.homeGiftClick(mActivity, "lucky");
+                        EventReporter.homeGiftClick(mActivity, "lucky_item");
                     }
                 }
             }
@@ -320,7 +320,7 @@ public class HomeFragment extends BaseFragment {
                         MLogs.d("Show lucky");
                         Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
                         startActivity(intent);
-                        EventReporter.homeGiftClick(mActivity, "lucky");
+                        EventReporter.homeGiftClick(mActivity, "lucky_item");
                     }
                     return  false;
                 }
