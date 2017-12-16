@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,8 +65,10 @@ public class AppStartActivity extends BaseActivity {
     private static final String CONFIG_APP_START_AD_RAMP = "slot_app_start_ramp_hour";
     private static final String CONFIG_APP_START_AD_FILTER = "slot_app_start_filter";
     private static HashSet<String> filterPkgs ;
+    private static final long INTERSTITIAL_SHOW_DELAY = 2000;
     private boolean hasShownAd;
     private boolean launched;
+    private long loadingStart;
 
     public static boolean needLoadAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
@@ -91,21 +94,41 @@ public class AppStartActivity extends BaseActivity {
             }
         }
         MLogs.d("needLoad start app ad: " + need);
-        return (need && !filterPkgs.contains(pkg)) || BuildConfig.DEBUG;
+        return (need && (!filterPkgs.contains(pkg) || pkg ==null)) || BuildConfig.DEBUG;
+    }
+
+    public static void preloadAd(Context context) {
+        if (needLoadAd(true, null)) {
+            FuseAdLoader.get(SLOT_APP_START, context).preloadAd();
+        }
     }
 
     public void loadAd() {
         mAdLoader = FuseAdLoader.get(SLOT_APP_START, this);
+        loadingStart = System.currentTimeMillis();
         hasShownAd = false;
         if(mAdLoader.hasValidAdSource()){
             mAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     if (!launched && !PreferencesUtils.isAdFree()) {
-                        ad.show();
-                        EventReporter.generalClickEvent(AppStartActivity.this, "app_start_ad_show");
-                        hasShownAd = true;
-                        updateShowTime();
+                        long delta = System.currentTimeMillis() - loadingStart;
+                        if (delta < 0) {
+                            ad.show();
+                            EventReporter.generalClickEvent(AppStartActivity.this, "app_start_ad_show");
+                            hasShownAd = true;
+                            updateShowTime();
+                        } else {
+                            mImgAppIcon.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ad.show();
+                                    EventReporter.generalClickEvent(AppStartActivity.this, "app_start_ad_show");
+                                    hasShownAd = true;
+                                    updateShowTime();
+                                }
+                            }, INTERSTITIAL_SHOW_DELAY - delta);
+                        }
                     }
                 }
 

@@ -27,6 +27,7 @@ import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
 import com.polestar.multiaccount.component.activity.AppListActivity;
+import com.polestar.multiaccount.component.activity.AppStartActivity;
 import com.polestar.multiaccount.component.activity.HomeActivity;
 import com.polestar.multiaccount.component.activity.NativeInterstitialActivity;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -81,6 +82,7 @@ public class HomeFragment extends BaseFragment {
     private static final String CONFIG_HOME_SHOW_LUCKY_RATE = "home_show_lucky_rate";
     private static final String CONFIG_HOME_SHOW_LUCKY_GATE= "home_show_lucky_gate";
     private static final String CONFIG_HOME_PRELOAD_APPLIST_GATE= "home_preload_applist_gate";
+    private final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
 
     private boolean showLucky;
 
@@ -129,6 +131,9 @@ public class HomeFragment extends BaseFragment {
         if (showHeaderAd && headerNativeAdConfigs.size() > 0
                 && (!PreferencesUtils.isAdFree())) {
             loadHeadNativeAd();
+        }
+        if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(CONFIG_NEED_PRELOAD_LOADING)) {
+            AppStartActivity.preloadAd(mActivity);
         }
         mDragController = new DragController(mActivity);
         mDragController.setDragListener(mDragListener);
