@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Process;
+import android.text.TextUtils;
 
 import com.lody.virtual.GmsSupport;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
@@ -62,6 +63,13 @@ public class AppListUtils implements DataObserver {
         synchronized (this) {
             blackList.add("com.google.android.music");
             blackList.add("com.google.android.dialer");
+            String conf = RemoteConfig.getString("black_list");
+            if (!TextUtils.isEmpty(conf)) {
+                String[] arr = conf.split(";");
+                for (String s: arr) {
+                    blackList.add(s);
+                }
+            }
             Intent home = new Intent(Intent.ACTION_MAIN);
             home.addCategory(Intent.CATEGORY_HOME);
             List<ResolveInfo> list  = mContext.getPackageManager().queryIntentActivities(home, 0);
@@ -144,6 +152,10 @@ public class AppListUtils implements DataObserver {
             PackageManager pm = mContext.getPackageManager();
             ApplicationInfo ai = pm.getApplicationInfo(pkg, 0);
             if (!GmsSupport.hasDexFile(ai.sourceDir)) {
+                return false;
+            }
+            if ((!RemoteConfig.getBoolean("allow_system_app")
+                     && (ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0)) {
                 return false;
             }
             if (ai.sourceDir.contains("/system/priv-app")) {

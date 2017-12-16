@@ -162,6 +162,14 @@
         <key>current_version</key>
         <value>9999</value>
     </entry>
+    <entry>
+        <key>black_list</key>
+        <value>com.google.android.googlequicksearchbox;com.android.chrome;com.android.gallery3d</value>
+    </entry>
+    <entry>
+        <key>allow_system_app</key>
+        <value>true</value>
+    </entry>
     <!--
     <entry>
         <key>config_ad_load_timeout</key>
