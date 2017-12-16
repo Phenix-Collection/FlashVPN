@@ -22,7 +22,11 @@ public class DaemonService extends Service {
     private final static int ALARM_INTERVAL = 30 * 60 * 1000;
 
     public static void startup(Context context) {
-        context.startService(new Intent(context, DaemonService.class));
+		try {
+			context.startService(new Intent(context, DaemonService.class));
+		}catch (Exception ex) {
+			VLog.e("DaemonService",  ex.toString());
+		}
     }
 
     @Override

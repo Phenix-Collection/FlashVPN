@@ -40,7 +40,6 @@ public final class BinderProvider extends ContentProvider {
     public boolean onCreate() {
         VLog.d("BinderProvider", "onCreate");
         Context context = getContext();
-        DaemonService.startup(context);
         if (!VirtualCore.get().isStartup()) {
             return true;
         }
@@ -65,10 +64,13 @@ public final class BinderProvider extends ContentProvider {
         addService(ServiceManagerNative.VIRTUAL_LOC, VirtualLocationService.get());
         addService(ServiceManagerNative.NETWORK_SCORE, VNetworkScoreManagerService.get());
         VAppManagerService.get().sendBootCompleted();
+		// avoid some customized os will getPackageInfo during start up service
+//		at android.app.ApplicationPackageManager.getPackageInfo (ApplicationPackageManager.java:137)
+//		at com.android.internal.agui.LimitThirdApp.isThirdApp (LimitThirdApp.java:26)
+		DaemonService.startup(context);
         VLog.d("BinderProvider", "Service initialized!");
         return true;
     }
-
 
     private void addService(String name, IBinder service) {
         ServiceCache.addService(name, service);

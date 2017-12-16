@@ -411,6 +411,8 @@ public final class VirtualCore {
         } catch (RemoteException e) {
 			mService = null;
 			return false;
+		} catch (Exception ex) {
+			return false;
         }
     }
 
