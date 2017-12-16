@@ -439,7 +439,7 @@ public class AppLoadingActivity extends BaseActivity {
                                     hasShownInterstitialAd = true;
                                     updateShowTime(true);
                                 }
-                            }, INTERSTITIAL_SHOW_DELAY);
+                            }, INTERSTITIAL_SHOW_DELAY - delta);
                         }
                     }
                 }
