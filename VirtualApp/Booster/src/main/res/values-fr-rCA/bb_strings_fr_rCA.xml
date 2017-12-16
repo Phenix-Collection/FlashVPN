@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="booster_available">Disponible</string>
+    <string name="booster_release">Libérée</string>
+    <string name="booster_ram">Mémoire</string>
+</resources>

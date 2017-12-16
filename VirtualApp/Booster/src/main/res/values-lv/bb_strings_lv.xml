@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">Pieejams</string>
+    <string name="booster_release">Izlaists</string>
+    <string name="booster_ram">Atmiņa</string>
+</resources>

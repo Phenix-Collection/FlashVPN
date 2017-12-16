@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="booster_available">Trống</string>
+    <string name="booster_release">Đã giải phóng</string>
+    <string name="booster_ram">Bộ nhớ</string>
+  <string name="booster_auto_boost">Tự động dọn dẹp</string>
+  <string name="boost_when_memory_more_than">"Khi bộ nhớ vượt quá "</string>
+</resources>

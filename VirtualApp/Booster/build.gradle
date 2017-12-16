@@ -1,0 +1,68 @@
+apply plugin: 'com.android.library'
+
+def releaseDate() {
+    return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
+}
+
+//def svnRevision() {
+//    ISVNOptions options = SVNWCUtil.createDefaultOptions(true);
+//    SVNClientManager clientManager = SVNClientManager.newInstance(options);
+//    SVNStatusClient statusClient = clientManager.getStatusClient();
+//    SVNStatus status = statusClient.doStatus(rootDir, false);
+//    SVNRevision revision = status.getCommittedRevision();
+//    return revision.getNumber();
+//}
+
+def quote(String s) {
+    return "\"" + s + "\""
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0.${versionCode}.${releaseDate()}"
+
+        consumerProguardFiles 'proguard-rules.pro'
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            libraryVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def file = output.outputFile
+                    def fileName = file.name.replace("cleaner-release.aar", "cleanersdk-library-release" + ".aar")
+                    output.outputFile = new File(file.parent, fileName)
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    provided fileTree(include: ['*.jar'], dir: 'libs')
+
+    //compile(name: 'commonsdk-library-release', ext: 'aar')
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.makeramen:roundedimageview:2.2.1'
+    compile 'com.google.firebase:firebase-ads:9.6.0'
+    compile 'com.google.android.gms:play-services-ads:9.2.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    //compile ':fuseadloader'
+    compile project(':fuseadloader')
+}

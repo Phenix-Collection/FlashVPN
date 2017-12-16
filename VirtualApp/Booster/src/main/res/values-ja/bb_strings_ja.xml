@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">入手可能</string>
+    <string name="booster_release">リリース済み</string>
+    <string name="booster_ram">メモリ</string>
+  <string name="booster_auto_boost">自動クリーン</string>
+  <string name="boost_when_memory_more_than">「メモリーが以下を超える時：」</string>
+</resources>

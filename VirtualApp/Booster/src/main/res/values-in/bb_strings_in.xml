@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">Tersedia</string>
+    <string name="booster_release">Dibebaskan</string>
+    <string name="booster_ram">Memori</string>
+  <string name="booster_auto_boost">Bersihkan otomatis</string>
+  <string name="boost_when_memory_more_than">"Jika memori lebih dari "</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">ที่สามารถใช้ได้</string>
+    <string name="booster_release">ที่ปล่อยแล้ว</string>
+    <string name="booster_ram">หน่วยความจำ</string>
+  <string name="booster_auto_boost">ทำความสะอาดอัตโนมัติ</string>
+  <string name="boost_when_memory_more_than">"เมื่อหน่วยความจำสูงกว่า "</string>
+</resources>

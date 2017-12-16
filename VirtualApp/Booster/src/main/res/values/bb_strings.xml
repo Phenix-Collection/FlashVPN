@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="booster_cleaner">Do Booster</string>
+    <string name="booster_available">AVAILABLE</string>
+    <string name="booster_release">RELEASE</string>
+    <string name="booster_ram">RAM</string>
+    <string name="booster_auto_boost">Auto boost</string>
+    <string name="boost_when_memory_more_than">"When memory more than "</string>
+</resources>

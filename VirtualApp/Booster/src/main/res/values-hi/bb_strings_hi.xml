@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">उपलब्ध</string>
+    <string name="booster_release">रिलीज़ हो गया है</string>
+    <string name="booster_ram">मेमोरी</string>
+  <string name="booster_auto_boost">स्वतः सफाई</string>
+  <string name="boost_when_memory_more_than">"जब मेमरी इससे अधिक होगी"</string>
+</resources>

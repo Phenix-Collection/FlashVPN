@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cleanersdk_available_memory_color">#00D167</color>
+    <color name="cleanersdk_clean_memory_color">#ffb638</color>
+    <color name="cleanersdk_orange">#19aaf7</color>
+    <color name="cleanersdk_click_selector">#eeeeee</color>
+    <color name="booster_adflag_color">#dedede</color>
+    <color name="booster_ad_title_color">#dfdfdf</color>
+    <color name="booster_cta_color">#ffffff</color>
+    <color name="booster_cta_btn_color">#23a0ff</color>
+    <color name="booster_ad_transparent_black">#64000000</color>
+
+</resources>

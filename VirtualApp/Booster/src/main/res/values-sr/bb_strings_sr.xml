@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">Доступно</string>
+    <string name="booster_release">Објављено</string>
+    <string name="booster_ram">Меморија</string>
+  <string name="booster_auto_boost">Аутоматско чишћење</string>
+  <string name="boost_when_memory_more_than">„Када је меморија преко “</string>
+</resources>

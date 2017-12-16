@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">Beschikbaar</string>
+    <string name="booster_release">Uitgebracht</string>
+    <string name="booster_ram">Geheugen</string>
+  <string name="booster_auto_boost">Automatische schoonmaak</string>
+  <string name="boost_when_memory_more_than">"Bij meer geheugen dan "</string>
+</resources>

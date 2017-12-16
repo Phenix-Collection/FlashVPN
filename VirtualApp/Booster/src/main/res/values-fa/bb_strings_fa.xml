@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">موجود</string>
+    <string name="booster_release">منتشر شده</string>
+    <string name="booster_ram">حافظه</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">Elérhető</string>
+    <string name="booster_release">Felszabadított</string>
+    <string name="booster_ram">Memória</string>
+  <string name="booster_auto_boost">Auto clean</string>
+  <string name="boost_when_memory_more_than">"When memory more than "</string>
+</resources>

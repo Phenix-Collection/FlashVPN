@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">Dostupná</string>
+    <string name="booster_release">Uvolněná</string>
+    <string name="booster_ram">Paměť</string>
+  <string name="booster_auto_boost">Automatické čištění</string>
+  <string name="boost_when_memory_more_than">"Když je paměť více než"</string>
+</resources>

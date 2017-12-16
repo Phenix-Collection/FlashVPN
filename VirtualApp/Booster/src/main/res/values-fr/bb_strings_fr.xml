@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+	<string name="booster_available">Disponible</string>
+    <string name="booster_release">Libéré</string>
+  <string name="booster_auto_boost">Nettoyage automatique</string>
+  <string name="boost_when_memory_more_than">« Lorsque la mémoire dépasse »</string>
+    <string name="booster_ram">Mémoire</string>
+</resources>

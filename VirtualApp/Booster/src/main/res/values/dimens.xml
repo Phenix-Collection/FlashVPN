@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="cleanersdk_nebula_animation_size">190dp</dimen>
+    <dimen name="cleanersdk_wheel_size">170dp</dimen>
+</resources>

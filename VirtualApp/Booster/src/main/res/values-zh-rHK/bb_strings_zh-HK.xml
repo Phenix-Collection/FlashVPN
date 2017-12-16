@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="booster_available">可用内存</string>
+    <string name="booster_release">已清理</string>
+    <string name="booster_ram">内存</string>
+	<string name="booster_auto_boost">自動清理</string>
+	<string name="boost_when_memory_more_than">當內存超過 </string>
+</resources>
