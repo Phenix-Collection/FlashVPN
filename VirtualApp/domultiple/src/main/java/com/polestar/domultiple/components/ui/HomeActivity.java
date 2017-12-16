@@ -14,14 +14,15 @@ import android.support.v7.view.menu.MenuPopupHelper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.support.v7.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.booster.BoosterSdk;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
@@ -55,8 +56,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
+
 /**
- * Created by guojia on 2017/7/15.
+ * Created by PolestarApp on 2017/7/15.
  */
 
 public class HomeActivity extends BaseActivity implements CloneManager.OnClonedAppChangListener, DragController.DragListener{
@@ -67,7 +69,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     boolean showLucky;
     private DragLayer mDragLayer;
     private DragController mDragController;
-    private FrameLayout mTitleBar;
+    private RelativeLayout mTitleBar;
     private LinearLayout mActionBar;
     private DropableLinearLayout createShortcutArea;
     private DropableLinearLayout deleteArea;
@@ -92,6 +94,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     private String startingPkg;
     private final static String EXTRA_NEED_UPDATE = "extra_need_update";
+    private final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
     private Handler mainHandler;
     public static void enter(Activity activity, boolean needUpdate) {
         MLogs.d("Enter home: update: " + needUpdate);
@@ -173,6 +176,9 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     private void loadAd() {
         loadEmbedNative();
+        if (RemoteConfig.getBoolean(CONFIG_NEED_PRELOAD_LOADING)) {
+            AppLoadingActivity.preloadAd(this);
+        }
     }
 
     public static AdSize getBannerAdSize() {
@@ -353,7 +359,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         });
 
         mActionBar = (LinearLayout) findViewById(R.id.action_bar) ;
-        mTitleBar = (FrameLayout) findViewById(R.id.title_bar);
+        mTitleBar = (RelativeLayout) findViewById(R.id.title_bar);
 
         mDragLayer = (DragLayer)findViewById(R.id.drag_layer);
         mDragController = new DragController(this);
@@ -451,6 +457,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         }
         return false;
     }
+
+    public void onBoosterClick(View view) {
+        BoosterSdk.startClean(this, "home");
+        //HomeBoostActivity.start(this, HomeBoostActivity.FROM_HOME);
+    }
+
     public void onMenuClick(View view) {
         View more = findViewById(R.id.menu_more);
         if (homeMenuPopup == null) {

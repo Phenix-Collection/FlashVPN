@@ -21,7 +21,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 /**
- * Created by guojia on 2017/7/18.
+ * Created by PolestarApp on 2017/7/18.
  */
 
 public class NotificationActivity extends BaseActivity {

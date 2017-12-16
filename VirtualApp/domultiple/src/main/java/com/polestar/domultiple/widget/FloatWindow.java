@@ -18,7 +18,7 @@ import android.view.WindowManager;
 import com.polestar.domultiple.utils.CommonUtils;
 
 /**
- * Created by guojia on 2017/1/3.
+ * Created by PolestarApp on 2017/1/3.
  */
 
 public class FloatWindow {

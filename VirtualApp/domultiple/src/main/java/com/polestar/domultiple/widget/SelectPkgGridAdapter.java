@@ -14,7 +14,7 @@ import com.polestar.domultiple.utils.MLogs;
 import java.util.List;
 
 /**
- * Created by guojia on 2017/7/17.
+ * Created by PolestarApp on 2017/7/17.
  */
 
 public class SelectPkgGridAdapter  extends BaseAdapter{

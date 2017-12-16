@@ -12,7 +12,7 @@ import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.utils.CommonUtils;
 
 /**
- * Created by guojia on 2017/7/23.
+ * Created by PolestarApp on 2017/7/23.
  */
 
 public class BlurBackground extends LinearLayout {

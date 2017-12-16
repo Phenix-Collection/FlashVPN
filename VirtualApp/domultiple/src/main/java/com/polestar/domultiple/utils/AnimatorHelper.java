@@ -8,7 +8,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
 /**
- * Created by yxx on 2016/8/22.
+ * Created by PolestarApp on 2016/8/22.
  */
 public class AnimatorHelper {
 

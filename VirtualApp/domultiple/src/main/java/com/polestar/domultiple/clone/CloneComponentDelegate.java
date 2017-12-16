@@ -1,7 +1,7 @@
 package com.polestar.domultiple.clone;
 
 /**
- * Created by guojia on 2017/7/16.
+ * Created by PolestarApp on 2017/7/16.
  */
 
 import android.app.Activity;
@@ -21,19 +21,25 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Created by guojia on 2016/12/16.
+ * Created by PolestarApp on 2016/12/16.
  */
 
 public class CloneComponentDelegate implements ComponentDelegate {
 
     private HashSet<String> pkgs = new HashSet<>();
-    public void init() {
-        List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
-        for(CloneModel app:list) {
-            if (app.getNotificationEnable()) {
-                pkgs.add(app.getPackageName());
+    public void asyncInit() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
+                for(CloneModel app:list) {
+                    if (app.getNotificationEnable()) {
+                        pkgs.add(app.getPackageName());
+                    }
+                }
             }
-        }
+        }).start();
+
     }
 
     @Override

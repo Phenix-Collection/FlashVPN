@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import com.polestar.domultiple.R;
 
 /**
- * Created by guojia on 2017/7/17.
+ * Created by PolestarApp on 2017/7/17.
  */
 
 public class SelectAppCell extends RelativeLayout {

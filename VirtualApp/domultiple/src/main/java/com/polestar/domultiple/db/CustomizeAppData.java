@@ -15,7 +15,7 @@ import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.ResourcesUtil;
 
 /**
- * Created by guojia on 2017/7/29.
+ * Created by PolestarApp on 2017/7/29.
  */
 
 public class CustomizeAppData {

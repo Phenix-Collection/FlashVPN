@@ -39,7 +39,7 @@ import java.util.List;
 import mirror.android.providers.Settings;
 
 /**
- * Created by guojia on 2017/7/16.
+ * Created by PolestarApp on 2017/7/16.
  */
 
 public class CloneManager {

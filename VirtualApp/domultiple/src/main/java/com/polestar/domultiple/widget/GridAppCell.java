@@ -11,7 +11,7 @@ import com.polestar.domultiple.widget.dragdrop.DragController;
 import com.polestar.domultiple.widget.dragdrop.DragSource;
 
 /**
- * Created by guojia on 2017/7/16.
+ * Created by PolestarApp on 2017/7/16.
  */
 
 public class GridAppCell extends LinearLayout {

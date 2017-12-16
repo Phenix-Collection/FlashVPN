@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.GridView;
 
 /**
- * Created by yxx on 2016/7/14.
+ * Created by PolestarApp on 2016/7/14.
  */
 public class FixedGridView extends GridView {
     public FixedGridView(Context context, AttributeSet attrs) {

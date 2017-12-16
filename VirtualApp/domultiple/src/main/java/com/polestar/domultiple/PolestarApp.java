@@ -4,11 +4,14 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
@@ -34,7 +37,7 @@ import java.util.List;
 import nativesdk.ad.common.AdSdk;
 
 /**
- * Created by guojia on 2017/7/15.
+ * Created by PolestarApp on 2017/7/15.
  */
 
 public class PolestarApp extends Application {
@@ -118,7 +121,7 @@ public class PolestarApp extends Application {
 
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
-                //ImageLoaderUtil.init(gDefault);
+                //ImageLoaderUtil.asyncInit(gDefault);
                 initRawData();
                 //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
@@ -126,13 +129,22 @@ public class PolestarApp extends Application {
                 initAd();
                 //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                 //
+
+                BoosterSdk.init(gDefault, new BoosterSdk.BoosterConfig(), new BoosterSdk.IEventReporter() {
+                    @Override
+                    public void reportEvent(String s, Bundle b) {
+                        FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);
+                    }
+                });
+                //BoosterSdk.setMemoryThreshold(20);
+                //BoosterSdk.showSettings(this);
             }
 
             @Override
             public void onVirtualProcess() {
                 MLogs.d("Virtual process create");
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
-                delegate.init();
+                delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
                 virtualCore.setPhoneInfoDelegate(new MyPhoneInfoDelegate());
 
@@ -156,7 +168,7 @@ public class PolestarApp extends Application {
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
-                delegate.init();
+                delegate.asyncInit();
                 VirtualCore.get().setComponentDelegate(delegate);
                 initAd();
                 AppLockMonitor.getInstance();
@@ -164,7 +176,7 @@ public class PolestarApp extends Application {
         });
 
         try {
-            // init exception handler and bugly before attatchBaseContext and appOnCreate
+            // asyncInit exception handler and bugly before attatchBaseContext and appOnCreate
             setDefaultUncaughtExceptionHandler(this);
             initBugly(gDefault);
         }catch (Exception e){

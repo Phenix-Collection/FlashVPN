@@ -24,7 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Created by yxx on 2016/7/22.
+ * Created by PolestarApp on 2016/7/22.
  */
 public class BitmapUtils {
 

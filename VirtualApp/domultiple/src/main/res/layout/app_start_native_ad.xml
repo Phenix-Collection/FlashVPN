@@ -1,0 +1,106 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/native_ad_layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="10px" />-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+            android:id="@+id/ad_cover_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true" />
+
+        <TextView
+            android:id="@+id/ad_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:background="@drawable/round_corner_box"
+            android:ellipsize="end"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="AD"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+            android:id="@+id/ad_choices_image"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="top|right"
+            android:scaleType="fitXY" />
+
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+            android:id="@+id/ad_icon_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ad_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="this is title"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/ad_subtitle_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="2"
+                android:text="this is sub"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/ad_cta_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/shape_button_enabled"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="install"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+</LinearLayout>

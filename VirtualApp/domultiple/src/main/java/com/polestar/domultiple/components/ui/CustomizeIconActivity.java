@@ -30,7 +30,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Created by guojia on 2017/7/29.
+ * Created by PolestarApp on 2017/7/29.
  */
 
 public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBarChangeListener{

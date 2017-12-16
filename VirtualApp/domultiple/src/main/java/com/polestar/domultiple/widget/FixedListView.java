@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.ListView;
 
 /**
- * Created by yxx on 2016/7/14.
+ * Created by PolestarApp on 2016/7/14.
  */
 public class FixedListView extends ListView {
     public FixedListView(Context context, AttributeSet attrs) {

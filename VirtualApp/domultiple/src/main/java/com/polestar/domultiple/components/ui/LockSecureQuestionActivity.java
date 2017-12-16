@@ -25,7 +25,7 @@ import com.polestar.domultiple.widget.WheelView;
 import java.util.ArrayList;
 
 /**
- * Created by guojia on 2017/1/2.
+ * Created by PolestarApp on 2017/1/2.
  */
 
 public class LockSecureQuestionActivity extends BaseActivity implements View.OnClickListener {

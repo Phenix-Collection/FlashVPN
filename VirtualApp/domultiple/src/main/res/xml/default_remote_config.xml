@@ -54,7 +54,7 @@
     <entry>
         <key>add_clone_preload_gate</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>1</value>
+        <value>0</value>
     </entry>
     <entry>
         <key>push_update_version</key>
@@ -67,22 +67,51 @@
 
     <entry>
         <key>slot_app_start_freq_hour</key>
-        <value>12</value>
+        <value>2</value>
     </entry>
     <entry>
         <key>slot_app_start_ramp_hour</key>
-        <value>48</value>
+        <value>2</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_native_freq_min</key>
+        <value>30</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_native_ramp_min</key>
+        <value>30</value>
     </entry>
     <entry>
         <key>slot_app_start</key>
         <value>ab_interstitial:ca-app-pub-5490912237269284/6692336792:0;fb_interstitial:1459853160757953_1459899664086636:0</value>
     </entry>
     <entry>
+        <key>slot_app_start_native</key>
+        <!--<value>ab_native_banner:ca-app-pub-5490912237269284/8998403107:0;fb:1459853160757953_1558953330847935:0;mp:58664de38d5c46678988e90136d075fe:0</value>-->
+        <value>fb:1459853160757953_1558953330847935:0;mp:58664de38d5c46678988e90136d075fe:0;ab_native_banner:ca-app-pub-5490912237269284/8896488415:0</value>
+    </entry>
+    <entry>
         <key>slot_app_lock</key>
-        <value>ab_native_banner:ca-app-pub-5490912237269284/2036945252:0;fb:1459853160757953_1459901287419807:0</value>
+        <value>fb:1459853160757953_1459901287419807:0;ab_native_banner:ca-app-pub-5490912237269284/2036945252:0</value>
     </entry>
     <entry>
         <key>slot_app_start_filter</key>
-        <value>com.whatsapp:com.facebook.orca:com.facebook.katana</value>
+        <value>off</value>
     </entry>
+    <entry>
+        <key>slot_app_start_style</key>
+        <value>all</value>
+    </entry>
+    <entry>
+        <key>conf_need_preload_start_ad</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>slot_boost_ad</key>
+        <value>fb:1459853160757953_1567501253326476:0;mp:58664de38d5c46678988e90136d075fe:0;ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>
+    </entry>
+    <!--<entry>-->
+        <!--<key>slot_boost_ad</key>-->
+        <!--<value>ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>-->
+    <!--</entry>-->
 </defaultsMap>

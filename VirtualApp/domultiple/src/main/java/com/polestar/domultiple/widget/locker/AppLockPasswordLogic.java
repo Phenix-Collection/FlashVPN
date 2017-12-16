@@ -15,7 +15,7 @@ import com.polestar.domultiple.utils.PreferencesUtils;
 import java.util.List;
 
 /**
- * Created by guojia on 2017/1/3.
+ * Created by PolestarApp on 2017/1/3.
  */
 
 public class AppLockPasswordLogic {

@@ -8,7 +8,7 @@ import com.polestar.domultiple.R;
 
 
 /**
- * Created by guojia on 2016/12/10.
+ * Created by PolestarApp on 2016/12/10.
  */
 
 public class FaqActivity extends BaseActivity {

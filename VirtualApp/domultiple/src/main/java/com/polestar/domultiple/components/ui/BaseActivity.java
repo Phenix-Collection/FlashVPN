@@ -18,7 +18,7 @@ import com.polestar.domultiple.R;
 
 
 /**
- * Created by yxx on 2016/7/14.
+ * Created by PolestarApp on 2016/7/14.
  */
 public class BaseActivity extends AppCompatActivity {
 

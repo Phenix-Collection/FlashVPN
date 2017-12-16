@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 import com.polestar.domultiple.R;
 
 /**
- * Created by yxx on 2016/7/26.
+ * Created by PolestarApp on 2016/7/26.
  */
 public class WebViewActivity extends BaseActivity {
 

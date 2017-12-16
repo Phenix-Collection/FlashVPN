@@ -18,7 +18,7 @@ import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 
 /**
- * Created by guojia on 2017/7/15.
+ * Created by PolestarApp on 2017/7/15.
  */
 
 public class SplashActivity extends BaseActivity {

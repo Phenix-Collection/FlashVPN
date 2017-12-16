@@ -11,7 +11,7 @@ import com.polestar.domultiple.widget.dragdrop.DragView;
 import com.polestar.domultiple.widget.dragdrop.DropTarget;
 
 /**
- * Created by guojia on 2017/6/1.
+ * Created by PolestarApp on 2017/6/1.
  */
 
 public class DropableLinearLayout extends LinearLayout implements DropTarget {

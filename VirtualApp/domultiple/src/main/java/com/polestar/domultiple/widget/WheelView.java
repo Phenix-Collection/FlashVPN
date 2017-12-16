@@ -1,7 +1,7 @@
 package com.polestar.domultiple.widget;
 
 /**
- * Created by guojia on 2017/1/2.
+ * Created by PolestarApp on 2017/1/2.
  */
 
 import android.annotation.SuppressLint;

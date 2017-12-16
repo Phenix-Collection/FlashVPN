@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by guojia on 2016/12/17.
+ * Created by PolestarApp on 2016/12/17.
  */
 
 public class RemoteConfig {
@@ -29,7 +29,7 @@ public class RemoteConfig {
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
-        int cacheTime = BuildConfig.DEBUG ? 0 : 4*60*60;
+        int cacheTime = BuildConfig.DEBUG ? 0 : 2*60*60;
         mFirebaseRemoteConfig.setDefaults(R.xml.default_remote_config);
         mFirebaseRemoteConfig.fetch(cacheTime).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

@@ -1,7 +1,7 @@
 package com.polestar.domultiple.widget.locker;
 
 /**
- * Created by guojia on 2017/1/1.
+ * Created by PolestarApp on 2017/1/1.
  */
 
 

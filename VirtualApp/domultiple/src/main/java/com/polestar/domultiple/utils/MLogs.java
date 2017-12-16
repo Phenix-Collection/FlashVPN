@@ -5,7 +5,7 @@ import android.util.Log;
 import com.polestar.domultiple.BuildConfig;
 
 /**
- * Created by guojia on 2017/7/16.
+ * Created by PolestarApp on 2017/7/16.
  */
 
 public class MLogs {

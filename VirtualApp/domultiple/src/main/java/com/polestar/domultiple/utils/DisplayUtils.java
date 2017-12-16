@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 /**
- * Created by yxx on 2016/7/14.
+ * Created by PolestarApp on 2016/7/14.
  */
 public class DisplayUtils {
     private static WindowManager mWindowManager;

@@ -11,7 +11,7 @@ import com.polestar.domultiple.R;
 import com.polestar.domultiple.utils.CommonUtils;
 
 /**
- * Created by guojia on 2017/7/16.
+ * Created by PolestarApp on 2017/7/16.
  */
 
 public class CloneApiDelegate implements IAppApiDelegate {

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 /**
- * Created by guojia on 2016/11/30.
+ * Created by PolestarApp on 2016/11/30.
  */
 
 public class DragImageView extends android.support.v7.widget.AppCompatImageView implements DragSource {

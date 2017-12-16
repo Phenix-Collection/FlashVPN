@@ -11,7 +11,7 @@ import com.polestar.domultiple.utils.MLogs;
 import nativesdk.ad.common.AdSdk;
 
 /**
- * Created by guojia on 2017/7/23.
+ * Created by PolestarApp on 2017/7/23.
  */
 
 public class WakeReceiver extends BroadcastReceiver {

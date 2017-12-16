@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.polestar.domultiple.R;
 
 /**
- * Created by guojia on 2017/7/19.
+ * Created by PolestarApp on 2017/7/19.
  */
 
 

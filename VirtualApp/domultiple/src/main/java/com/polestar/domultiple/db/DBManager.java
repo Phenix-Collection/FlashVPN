@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Created by guojia on 2017/7/16.
+ * Created by PolestarApp on 2017/7/16.
  */
 
 public class DBManager {

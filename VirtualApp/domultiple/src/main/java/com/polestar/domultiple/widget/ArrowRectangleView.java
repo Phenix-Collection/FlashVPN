@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import com.polestar.domultiple.R;
 
 /**
- * Created by guojia on 2017/1/3.
+ * Created by PolestarApp on 2017/1/3.
  */
 
 public class ArrowRectangleView extends ViewGroup {

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.polestar.domultiple.R;
 
 /**
- * Created by guojia on 2017/7/20.
+ * Created by PolestarApp on 2017/7/20.
  */
 
 public class NarrowPromotionCard extends LinearLayout implements View.OnClickListener{

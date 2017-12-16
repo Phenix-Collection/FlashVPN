@@ -42,7 +42,7 @@ import java.util.List;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
- * Created by guojia on 2017/1/3.
+ * Created by PolestarApp on 2017/1/3.
  */
 
 public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {

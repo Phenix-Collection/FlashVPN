@@ -12,14 +12,13 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.polestar.domultiple.PolestarApp;
 
 /**
- * Created by hxx on 8/2/16.
+ * Created by PolestarApp on 8/2/16.
  */
 public class EventReporter {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
 
     public static void init(Context context) {
-        //StatConfig.init(context);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(PolestarApp.getApp());
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         mFirebaseAnalytics.setUserProperty("channel", channel);

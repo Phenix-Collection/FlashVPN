@@ -1,7 +1,7 @@
 package com.polestar.domultiple.billing;
 
 /**
- * Created by guojia on 2017/6/25.
+ * Created by PolestarApp on 2017/6/25.
  */
 
 

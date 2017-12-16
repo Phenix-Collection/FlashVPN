@@ -12,7 +12,7 @@ import com.polestar.domultiple.billing.BillingProvider;
 import java.io.File;
 
 /**
- * Created by yxx on 2016/7/15.
+ * Created by PolestarApp on 2016/7/15.
  */
 public class PreferencesUtils {
 

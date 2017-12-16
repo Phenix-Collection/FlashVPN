@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by yxx on 2016/7/21.
+ * Created by PolestarApp on 2016/7/21.
  */
 public class CommonUtils {
     public static void gotoHomeScreen() {

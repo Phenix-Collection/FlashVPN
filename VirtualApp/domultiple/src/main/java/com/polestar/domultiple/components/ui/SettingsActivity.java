@@ -26,7 +26,7 @@ import com.polestar.domultiple.widget.BlueSwitch;
 import com.polestar.domultiple.widget.UpDownDialog;
 
 /**
- * Created by guojia on 2017/7/18.
+ * Created by PolestarApp on 2017/7/18.
  */
 
 public class SettingsActivity extends BaseActivity {
