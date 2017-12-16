@@ -4,12 +4,15 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
@@ -117,6 +120,12 @@ public class MApp extends Application {
                 EventReporter.init(gDefault);
                 BillingProvider.get();
                 initAd();
+                BoosterSdk.init(gDefault, new BoosterSdk.BoosterConfig(), new BoosterSdk.IEventReporter() {
+                    @Override
+                    public void reportEvent(String s, Bundle b) {
+                        FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
+                    }
+                });
             }
 
             @Override

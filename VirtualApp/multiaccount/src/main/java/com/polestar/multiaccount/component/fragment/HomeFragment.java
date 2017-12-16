@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.booster.BoosterSdk;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -80,7 +81,6 @@ public class HomeFragment extends BaseFragment {
     private View mLockSettingIcon;
     private static final String CONFIG_HOME_NATIVE_PRIOR_TIME = "home_native_prior_time";
     private static final String CONFIG_HOME_SHOW_LUCKY_RATE = "home_show_lucky_rate";
-    private static final String CONFIG_HOME_SHOW_LUCKY_GATE= "home_show_lucky_gate";
     private static final String CONFIG_HOME_PRELOAD_APPLIST_GATE= "home_preload_applist_gate";
     private final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
     private final static String CONFIG_SHOW_BOOSTER = "conf_show_booster_in_home";
@@ -201,7 +201,7 @@ public class HomeFragment extends BaseFragment {
         @Override
         public int getCount() {
             int size = appInfos == null ? 0 : appInfos.size();
-            if (showBooster && size != 0) {
+            if (showBooster ) {
                 size ++;
                 //for booster icon
             }
@@ -322,7 +322,7 @@ public class HomeFragment extends BaseFragment {
                         EventReporter.homeGiftClick(mActivity, "lucky_item");
                     } else if (showBooster && i==boosterIdx) {
                         MLogs.d("Start booster");
-                        EventReporter.boostFrom(mActivity, "item_click");
+                        BoosterSdk.startClean(mActivity, "home_item");
                     }
                 }
             }
@@ -346,7 +346,7 @@ public class HomeFragment extends BaseFragment {
                         EventReporter.homeGiftClick(mActivity, "lucky_item_long");
                     } else if (showBooster && i==boosterIdx) {
                         MLogs.d("Start booster");
-                        EventReporter.boostFrom(mActivity, "item_long_click");
+                        BoosterSdk.startClean(mActivity, "home_item_long");
                     }
                     return  false;
                 }
@@ -470,7 +470,7 @@ public class HomeFragment extends BaseFragment {
     private List<AdConfig> headerNativeAdConfigs ;
 
     private void initData(){
-        showBooster = RemoteConfig.getBoolean(CONFIG_SHOW_BOOSTER);
+        showBooster = RemoteConfig.getBoolean(CONFIG_SHOW_BOOSTER) && PreferencesUtils.hasCloned();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -502,8 +502,7 @@ public class HomeFragment extends BaseFragment {
                         preloadAppListAd(false);
                         MLogs.d("onLoaded applist");
                         long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
-                        long gate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_GATE);
-                        showLucky = (!PreferencesUtils.isAdFree()) && appInfos.size() >= gate
+                        showLucky = (!PreferencesUtils.isAdFree())
                                 && PreferencesUtils.hasCloned()
                                 && new Random().nextInt(100) < luckyRate ;
                         if (!showLucky) {
