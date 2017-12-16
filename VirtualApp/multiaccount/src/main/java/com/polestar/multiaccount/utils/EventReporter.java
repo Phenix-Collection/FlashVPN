@@ -227,6 +227,12 @@ public class EventReporter {
         StatService.trackCustomKVEvent(context, "track_active", prop);
     }
 
+    public static void boostFrom(Context context, String from){
+        Properties prop = new Properties();
+        prop.setProperty("from", from);
+        StatService.trackCustomKVEvent(context, "boost_from", prop);
+    }
+
     public static void onResume(Context context) {
         StatService.onResume(context);
     }

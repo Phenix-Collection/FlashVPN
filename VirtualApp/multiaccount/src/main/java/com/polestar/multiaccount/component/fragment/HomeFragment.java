@@ -83,8 +83,10 @@ public class HomeFragment extends BaseFragment {
     private static final String CONFIG_HOME_SHOW_LUCKY_GATE= "home_show_lucky_gate";
     private static final String CONFIG_HOME_PRELOAD_APPLIST_GATE= "home_preload_applist_gate";
     private final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
+    private final static String CONFIG_SHOW_BOOSTER = "conf_show_booster_in_home";
 
     private boolean showLucky;
+    private boolean showBooster;
 
     private boolean adShowed = false;
 
@@ -199,6 +201,10 @@ public class HomeFragment extends BaseFragment {
         @Override
         public int getCount() {
             int size = appInfos == null ? 0 : appInfos.size();
+            if (showBooster && size != 0) {
+                size ++;
+                //for booster icon
+            }
             if (showLucky) {
                 size ++;
             }
@@ -246,11 +252,16 @@ public class HomeFragment extends BaseFragment {
                 appModel.setCustomIcon(bmp);
                 appName.setText(data.customized? data.label: appModel.getName());
             } else {
-                if (showLucky && i == appInfos.size()) {
+                int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
+                int boosterIdx = appInfos.size();
+                if (showLucky && i == luckIdx) {
                     appIcon.setImageResource(R.drawable.icon_feel_lucky);
                     appName.setText(R.string.feel_lucky);
                     appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                     appName.setTextColor(getResources().getColor(R.color.lucky_red));
+                } else if(showBooster && i == boosterIdx) {
+                    appIcon.setImageResource(R.drawable.boost_icon);
+                    appName.setText(R.string.booster_title);
                 }
             }
 
@@ -302,11 +313,16 @@ public class HomeFragment extends BaseFragment {
                         },100);
                     }
                 }else{
-                    if(showLucky && i == appInfos.size()){
+                    int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
+                    int boosterIdx = appInfos.size();
+                    if(showLucky && i == luckIdx){
                         MLogs.d("Show lucky");
                         Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
                         startActivity(intent);
                         EventReporter.homeGiftClick(mActivity, "lucky_item");
+                    } else if (showBooster && i==boosterIdx) {
+                        MLogs.d("Start booster");
+                        EventReporter.boostFrom(mActivity, "item_click");
                     }
                 }
             }
@@ -321,11 +337,16 @@ public class HomeFragment extends BaseFragment {
                     mDragController.startDrag(iv, iv, pkgGridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
                     return true;
                 } else {
-                    if(showLucky && i == appInfos.size()){
+                    int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
+                    int boosterIdx = appInfos.size();
+                    if(showLucky && i == luckIdx){
                         MLogs.d("Show lucky");
                         Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
                         startActivity(intent);
-                        EventReporter.homeGiftClick(mActivity, "lucky_item");
+                        EventReporter.homeGiftClick(mActivity, "lucky_item_long");
+                    } else if (showBooster && i==boosterIdx) {
+                        MLogs.d("Start booster");
+                        EventReporter.boostFrom(mActivity, "item_long_click");
                     }
                     return  false;
                 }
@@ -449,6 +470,7 @@ public class HomeFragment extends BaseFragment {
     private List<AdConfig> headerNativeAdConfigs ;
 
     private void initData(){
+        showBooster = RemoteConfig.getBoolean(CONFIG_SHOW_BOOSTER);
         new Thread(new Runnable() {
             @Override
             public void run() {
