@@ -18,8 +18,10 @@ import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
+import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.billing.BillingProvider;
 import com.polestar.multiaccount.component.AppLockMonitor;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
@@ -37,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import nativesdk.ad.common.AdSdk;
 import nativesdk.ad.common.app.Constants;
@@ -77,6 +80,26 @@ public class MApp extends Application {
         }
     }
 
+    private void initAd() {
+        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
+        String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
+        boolean av = "all".equals(conf) || "avz".equals(conf);
+        if (av) {
+            AdSdk.initialize(gDefault, AppConstants.AV_APP_ID, null );
+        }
+        FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
+            @Override
+            public boolean isAdFree() {
+                return PreferencesUtils.isAdFree();
+            }
+
+            @Override
+            public List<AdConfig> getAdConfigList(String slot) {
+                return RemoteConfig.getAdConfigList(slot);
+            }
+        });
+
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -90,16 +113,10 @@ public class MApp extends Application {
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 initRawData();
-                MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
-                String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
-                boolean av = "all".equals(conf) || "avz".equals(conf);
-                if (av) {
-                    AdSdk.initialize(gDefault, AppConstants.AV_APP_ID, null );
-                }
-               //
+                initAd();
             }
 
             @Override
@@ -161,13 +178,7 @@ public class MApp extends Application {
 //                virtualCore.addVisibleOutsidePackage("com.tencent.mm");
 //                virtualCore.addVisibleOutsidePackage("com.immomo.momo");
                 MLogs.d("Server process app onCreate done");
-                MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
-                String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
-                boolean av = "all".equals(conf) || "avz".equals(conf);
-                if (av) {
-                    AdSdk.initialize(gDefault, AppConstants.AV_APP_ID, null);
-                }
-                AppLockMonitor.getInstance();
+                initAd();
             }
         });
 

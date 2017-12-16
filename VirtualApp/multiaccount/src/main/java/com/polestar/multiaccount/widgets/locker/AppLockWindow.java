@@ -167,10 +167,10 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
-                .mainImageId(R.id.ad_cover_image)
+                .mainMediaId(R.id.ad_cover_image)
                 .iconImageId(R.id.ad_icon_image)
                 .callToActionId(R.id.ad_cta_text)
-                .privacyInformationIconImageId(R.id.ad_choices_image)
+                .privacyInformationId(R.id.ad_choices_image)
                 .build();
         View adView = ad.getAdView(viewBinder);
         if (adView != null) {

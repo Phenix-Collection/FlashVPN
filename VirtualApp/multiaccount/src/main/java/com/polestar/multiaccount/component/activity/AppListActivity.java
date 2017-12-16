@@ -233,10 +233,10 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.native_ad_applist)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
-                .mainImageId(R.id.ad_cover_image)
+                .mainMediaId(R.id.ad_cover_image)
                 .iconImageId(R.id.ad_icon_image)
                 .callToActionId(R.id.ad_cta_text)
-                .privacyInformationIconImageId(R.id.ad_choices_image)
+                .privacyInformationId(R.id.ad_choices_image)
                 .build();
         View adView = ad.getAdView(viewBinder);
         nativeAd = ad;

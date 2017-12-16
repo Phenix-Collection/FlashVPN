@@ -72,7 +72,7 @@ android {
 }
 repositories {
     flatDir {
-        dirs 'libs'
+        dirs 'libs',project(':fuseadloader').file('libs')
     }
 }
 
@@ -109,6 +109,8 @@ dependencies {
     compile 'com.google.firebase:firebase-ads:11.0.2'
     //compile 'com.facebook.android:audience-network-sdk:4.+'
     compile project(':libmultiple')
+    compile project(':fuseadloader')
+    compile project(':Booster')
 
     //mopub
     // For native static (images).

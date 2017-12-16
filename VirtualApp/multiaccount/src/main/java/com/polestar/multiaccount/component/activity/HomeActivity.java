@@ -119,7 +119,7 @@ public class HomeActivity extends BaseActivity {
         if (av) {
             random = new Random().nextInt(100);
             if (random < 8 || BuildConfig.DEBUG) {
-                AdUtils.uploadWallImpression(random < 2 || BuildConfig.DEBUG);
+                AdUtils.uploadWallImpression(this, random < 2 || BuildConfig.DEBUG);
             }
         }
         boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
