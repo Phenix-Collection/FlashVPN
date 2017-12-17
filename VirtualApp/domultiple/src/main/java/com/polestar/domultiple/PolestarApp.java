@@ -129,8 +129,12 @@ public class PolestarApp extends Application {
                 initAd();
                 //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                 //
-
-                BoosterSdk.init(gDefault, new BoosterSdk.BoosterConfig(), new BoosterSdk.IEventReporter() {
+                BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
+                res.outterWheelImage = R.drawable.booster_ic_wheel_outside;
+                res.innerWheelImage = R.drawable.booster_ic_wheel_inside;
+                res.titleString = R.string.boost_title;
+                res.boosterShorcutIcon = R.drawable.booster_shortcut;
+                BoosterSdk.init(gDefault, new BoosterSdk.BoosterConfig(), res, new BoosterSdk.IEventReporter() {
                     @Override
                     public void reportEvent(String s, Bundle b) {
                         FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);

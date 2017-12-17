@@ -408,7 +408,7 @@ public class AppLoadingActivity extends BaseActivity {
             FuseAdLoader.get(SLOT_APP_START_INTERSTITIAL, context).preloadAd();
         }
         if (needLoadNativeAd(true, null)) {
-            FuseAdLoader.get(SLOT_APP_START_NATIVE, context).preloadAd();
+            FuseAdLoader.get(SLOT_APP_START_NATIVE, context).setBannerAdSize(getBannerSize()).preloadAd();
         }
     }
 
