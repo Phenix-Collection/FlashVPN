@@ -97,6 +97,8 @@ public class MApp extends Application {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
+        FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
+        FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
     }
     @Override

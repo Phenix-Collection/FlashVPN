@@ -30,8 +30,7 @@
     </entry>
     <entry>
         <key>slot_app_lock</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>mp:e5cfa7539cc94b8285a326dadb3bde0c:0;ab_native_banner:ca-app-pub-5490912237269284/7955343852:0</value>
+        <value>mp:e5cfa7539cc94b8285a326dadb3bde0c:0;ab_banner:ca-app-pub-5490912237269284/7221115790:0:2;ab_native_banner:ca-app-pub-5490912237269284/7955343852:0</value>
     </entry>
     <entry>
         <key>slot_home_gift_interstitial_1026</key>
@@ -87,7 +86,7 @@
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
-        <value>mp:4a335084891b4a90a1cf695183336dde:0;fb:1700354860278115_1783453411968259:0;ab_native_banner:ca-app-pub-5490912237269284/1785458659:0</value>
+        <value>mp:4a335084891b4a90a1cf695183336dde:0;ab_native_banner:ca-app-pub-5490912237269284/1785458659:0</value>
     </entry>
     <entry>
         <key>fb_follow_page</key>
@@ -139,6 +138,18 @@
         <value>2</value>
     </entry>
     <entry>
+        <key>slot_app_start_native_freq_min</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_native_ramp_min</key>
+        <value>30</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_style</key>
+        <value>all</value>
+    </entry>
+    <entry>
         <key>slot_app_start</key>
         <value>ab_interstitial:ca-app-pub-5490912237269284/3423200657:0</value>
     </entry>
@@ -180,7 +191,11 @@
     </entry>
     <entry>
         <key>slot_boost_ad</key>
-        <value>ab_native_banner:ca-app-pub-5490912237269284/7540311850:0;mp:870113432aa049c0a9ccdf42d6bbb759:0</value>
+        <value>;mp:870113432aa049c0a9ccdf42d6bbb759:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
+    </entry>
+    <entry>
+        <key>slot_app_start_native</key>
+        <value>ab_banner:ca-app-pub-5490912237269284/2354257338:0;mp:4a335084891b4a90a1cf695183336dde:0</value>
     </entry>
     <!--
     <entry>

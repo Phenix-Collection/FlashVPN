@@ -250,6 +250,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     }
 
     public void dismiss() {
+        MLogs.d("LockWindow dismiss");
         if (mIsShowing && mPopupMenu != null && mWindow != null) {
             mBlurBackground.resetLayout();
             mAppLockPasswordLogic.onBeforeHide();

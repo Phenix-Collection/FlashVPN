@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="135dp">
+        android:layout_marginTop="100dp">
         <ImageView
             android:id="@+id/img_success_bg1"
             android:layout_width="150dp"
@@ -66,4 +66,15 @@
         android:layout_marginTop="5dp"
         android:textSize="16sp"
         android:textColor="#4A4A4A"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/ad_container"
+        android:layout_below="@id/txt_first_launch_tips"
+        android:orientation="vertical"
+        android:visibility="gone"></LinearLayout>
 </RelativeLayout>

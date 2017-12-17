@@ -69,12 +69,14 @@ public class AppLockMonitor {
                             }
                         }
                     case MSG_SHOW_LOCKER:
+                        MLogs.d("show locker ");
                         AppLockWindow window = (AppLockWindow) msg.obj;
                         if (window != null) {
                             window.show(!adFree);
                         }
                         break;
                     case MSG_HIDE_LOCKER:
+                        MLogs.d("dismiss locker ");
                         AppLockWindow locker = (AppLockWindow) msg.obj;
                         if (locker != null) {
                             locker.dismiss();
