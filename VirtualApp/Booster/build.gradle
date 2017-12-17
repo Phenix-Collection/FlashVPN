@@ -49,7 +49,7 @@ android {
 
 repositories {
     flatDir {
-        dirs 'libs'
+        dirs 'libs',project(':fuseadloader').file('libs')
     }
 }
 
