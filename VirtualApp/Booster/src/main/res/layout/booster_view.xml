@@ -82,14 +82,12 @@
                 android:id="@+id/boostersdk_wheel_outside"
                 android:layout_width="@dimen/cleanersdk_wheel_size"
                 android:layout_height="@dimen/cleanersdk_wheel_size"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/booster_ic_wheel_outside" />
+                android:layout_centerInParent="true" />
             <ImageView
                 android:id="@+id/boostersdk_wheel_inside"
                 android:layout_width="@dimen/cleanersdk_wheel_size"
                 android:layout_height="@dimen/cleanersdk_wheel_size"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/booster_ic_wheel_inside" />
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
 

@@ -138,9 +138,29 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
         }
     }
 
-    public static AdSize getBannerSize() {
-        return  new AdSize(320, 280);
+    public static int px2dip(Context context, float px) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
     }
+
+    public static int getScreenWidth(Context context){
+        DisplayMetrics metric = new DisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metric);
+        int width = metric.widthPixels;  // 屏幕宽度（像素）
+        int height = metric.heightPixels;
+        return width;
+    }
+
+    public AdSize getBannerSize() {
+        int dpWidth = px2dip(mContext, getScreenWidth(mContext));
+        dpWidth = Math.max(320, dpWidth*9/10);
+        return new AdSize(dpWidth, 300);
+    }
+
+//    public static AdSize getBannerSize() {
+//        return  new AdSize(320, 280);
+//    }
 
     public void loadAd() {
         final String slotId = mSlotId;
