@@ -24,42 +24,41 @@
         android:paddingTop="5dp">
 
         <ImageView
-            android:id="@+id/cleanersdk_icon"
+            android:id="@+id/boostersdk_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" />
 
         <TextView
-            android:id="@+id/cleanersdk_title"
+            android:id="@+id/boostersdk_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@id/cleanersdk_icon"
+            android:layout_toRightOf="@id/boostersdk_icon"
             android:textColor="#ffffff"
-            android:textSize="16sp"
-            tools:text="Cleaner" />
+            android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/cleanersdk_btn_close"
+            android:id="@+id/boostersdk_btn_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:src="@mipmap/booster_ic_close" />
 
         <ImageView
-            android:id="@+id/cleanersdk_btn_settings"
+            android:id="@+id/boostersdk_btn_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/cleanersdk_btn_close"
+            android:layout_toLeftOf="@+id/boostersdk_btn_close"
             android:src="@mipmap/booster_ic_settings"
             android:visibility="invisible"/>
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/cleanersdk_layout_click_area"
+        android:id="@+id/boostersdk_layout_click_area"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/cleanersdk_layout_cleaner_view_ad"
@@ -68,37 +67,37 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/cleanersdk_layout_wheel"
+            android:id="@+id/boostersdk_layout_wheel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:clipChildren="false">
 
             <com.google.android.gms.booster.view.NebulaAnimationLayout
-                android:id="@+id/cleanersdk_nebula_animation_layout"
+                android:id="@+id/boostersdk_nebula_animation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/cleanersdk_nebula_animation_size" />
 
             <ImageView
-                android:id="@+id/cleanersdk_wheel_inside"
+                android:id="@+id/boostersdk_wheel_outside"
+                android:layout_width="@dimen/cleanersdk_wheel_size"
+                android:layout_height="@dimen/cleanersdk_wheel_size"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/booster_ic_wheel_outside" />
+            <ImageView
+                android:id="@+id/boostersdk_wheel_inside"
                 android:layout_width="@dimen/cleanersdk_wheel_size"
                 android:layout_height="@dimen/cleanersdk_wheel_size"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/booster_ic_wheel_inside" />
 
-            <ImageView
-                android:id="@+id/cleanersdk_wheel_outside"
-                android:layout_width="@dimen/cleanersdk_wheel_size"
-                android:layout_height="@dimen/cleanersdk_wheel_size"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/booster_ic_wheel_outside" />
         </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layout_available"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cleanersdk_layout_wheel"
+            android:layout_below="@+id/boostersdk_layout_wheel"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -120,7 +119,7 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/cleanersdk_txt_available"
+                    android:id="@+id/boostersdk_txt_available"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/booster_available"
@@ -128,7 +127,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/cleanersdk_txt_available_memory"
+                    android:id="@+id/boostersdk_txt_available_memory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp" />

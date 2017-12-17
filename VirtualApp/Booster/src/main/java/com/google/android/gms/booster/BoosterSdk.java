@@ -44,19 +44,29 @@ public class BoosterSdk {
         public long unlockAdFirstInterval = 3*24*60*60*1000;
         public long unlockAdInterval = 8*60*60*1000;
         public int memoryThreshold = 70;
-
     }
 
+    //all res id
+    public static class BoosterRes {
+        public int titleString;
+        public int boosterShorcutIcon;
+        public int innerWheelImage;
+        public int outterWheelImage;
+    }
+
+
     static public BoosterConfig boosterConfig;
+    static public BoosterRes boosterRes;
 
     static Context sContext;
 
 
-    public static void init(Context context, BoosterConfig config, IEventReporter reporter) {
+    public static void init(Context context, BoosterConfig config, BoosterRes res, IEventReporter reporter) {
         BoosterLog.sReporter = reporter;
         sContext = context.getApplicationContext();
         // start init
         boosterConfig = config;
+        boosterRes = res;
         Booster.startInit(sContext);
     }
 
@@ -107,7 +117,8 @@ public class BoosterSdk {
         boolean dirty = false;
 
         do {
-            boolean maybeRemovedDetected = cleanShortcutCreated && !AndroidUtil.hasShortcut(sContext, BOOSTER_NAME);
+            boolean maybeRemovedDetected = cleanShortcutCreated && !AndroidUtil.hasShortcut(sContext,
+                    sContext.getResources().getString(BoosterSdk.boosterRes.titleString));
             if (maybeRemovedDetected) {
                 ed.putBoolean(PREF_KEY_BOOST_SHORTCUT_CREATED, false);
                 ed.putLong(PREF_KEY_LAST_BOOST_SHORTCUT_REMOVE_TIME, current);
@@ -123,11 +134,11 @@ public class BoosterSdk {
                 break;
 
             if (needUpdate)
-                AndroidUtil.delShortcut(sContext, BoosterShortcutActivity.class, BOOSTER_NAME);
+                AndroidUtil.delShortcut(sContext, BoosterShortcutActivity.class, sContext.getResources().getString(BoosterSdk.boosterRes.titleString));
             Intent shortcutIntent = new Intent(sContext, BoosterShortcutActivity.class);
             shortcutIntent.setAction(BoosterShortcutActivity.class.getName());
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            AndroidUtil.addShortcut(sContext, shortcutIntent, R.drawable.booster_shortcut, BOOSTER_NAME);
+            AndroidUtil.addShortcut(sContext, shortcutIntent, BoosterSdk.boosterRes.boosterShorcutIcon, sContext.getResources().getString(BoosterSdk.boosterRes.titleString));
 
             ed.putBoolean(PREF_KEY_BOOST_SHORTCUT_CREATED, true);
             if (needCreate) {

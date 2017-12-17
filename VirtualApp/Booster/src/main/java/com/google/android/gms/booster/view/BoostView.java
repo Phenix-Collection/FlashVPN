@@ -247,33 +247,35 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
 //        }
 
         mLayoutTitle = (ViewGroup) mLayoutCleanerView.findViewById(R.id.cleanersdk_layout_title);
-        mTitleIcon = (ImageView) mLayoutCleanerView.findViewById(R.id.cleanersdk_icon);
-        mTitleText = (TextView) mLayoutCleanerView.findViewById(R.id.cleanersdk_title);
+        mTitleIcon = (ImageView) mLayoutCleanerView.findViewById(R.id.boostersdk_icon);
+        mTitleText = (TextView) mLayoutCleanerView.findViewById(R.id.boostersdk_title);
         mTitleIcon.setVisibility(View.VISIBLE );
         mTitleIcon.setImageResource(AndroidUtil.getAppIconResId(mContext));
         mTitleText.setVisibility(View.VISIBLE );
-        mTitleText.setText(R.string.booster_cleaner);
+        mTitleText.setText(BoosterSdk.boosterRes.titleString);
 
-        mBtnSettings = (ImageView) mLayoutCleanerView.findViewById(R.id.cleanersdk_btn_settings);
+        mBtnSettings = (ImageView) mLayoutCleanerView.findViewById(R.id.boostersdk_btn_settings);
         mBtnSettings.setOnClickListener(this);
-        mBtnClose = (ImageView) mLayoutCleanerView.findViewById(R.id.cleanersdk_btn_close);
+        mBtnClose = (ImageView) mLayoutCleanerView.findViewById(R.id.boostersdk_btn_close);
         mBtnClose.setOnClickListener(this);
 
-        mLayoutClickArea = (ViewGroup) mLayoutCleanerView.findViewById(R.id.cleanersdk_layout_click_area);
+        mLayoutClickArea = (ViewGroup) mLayoutCleanerView.findViewById(R.id.boostersdk_layout_click_area);
         mLayoutClickArea.setOnClickListener(this);
 
-        mLayoutAnimationTop = (ViewGroup) mLayoutCleanerView.findViewById(R.id.cleanersdk_layout_wheel);
-        mNebulaAnimationLayout = (NebulaAnimationLayout) mLayoutCleanerView.findViewById(R.id.cleanersdk_nebula_animation_layout);
-        mWheelInside = (ImageView) mLayoutCleanerView.findViewById(R.id.cleanersdk_wheel_inside);
-        mWheelOutside = (ImageView) mLayoutCleanerView.findViewById(R.id.cleanersdk_wheel_outside);
+        mLayoutAnimationTop = (ViewGroup) mLayoutCleanerView.findViewById(R.id.boostersdk_layout_wheel);
+        mNebulaAnimationLayout = (NebulaAnimationLayout) mLayoutCleanerView.findViewById(R.id.boostersdk_nebula_animation_layout);
+        mWheelInside = (ImageView) mLayoutCleanerView.findViewById(R.id.boostersdk_wheel_inside);
+        mWheelInside.setImageResource(BoosterSdk.boosterRes.innerWheelImage);
+        mWheelOutside = (ImageView) mLayoutCleanerView.findViewById(R.id.boostersdk_wheel_outside);
+        mWheelOutside.setImageResource(BoosterSdk.boosterRes.outterWheelImage);
 
         if (!mShowTopAnimation)
             mLayoutAnimationTop.setVisibility(View.INVISIBLE);
 
         mLayoutAvailable = (ViewGroup) mLayoutCleanerView.findViewById(R.id.layout_available);
-        mTextAvailableMemory = (TextView) mLayoutCleanerView.findViewById(R.id.cleanersdk_txt_available_memory);
+        mTextAvailableMemory = (TextView) mLayoutCleanerView.findViewById(R.id.boostersdk_txt_available_memory);
         mTextPercent = (TextView) mLayoutCleanerView.findViewById(R.id.available_percentage_txt);
-        mTextAvailable = (TextView) mLayoutCleanerView.findViewById(R.id.cleanersdk_txt_available);
+        mTextAvailable = (TextView) mLayoutCleanerView.findViewById(R.id.boostersdk_txt_available);
         mTextAvailableMemory.setText(String.valueOf(AndroidUtil.getAvailMemory(mContext)) + "M");
 
         mLayoutRelease = (ViewGroup) mLayoutCleanerView.findViewById(R.id.cleanersdk_layout_release);
@@ -650,18 +652,18 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.cleanersdk_btn_settings) {
+        if (view.getId() == R.id.boostersdk_btn_settings) {
             closeImmediate();
             BoosterSdk.showSettings(mContext);
             return;
         }
 
-        if (view.getId() == R.id.cleanersdk_btn_close) {
+        if (view.getId() == R.id.boostersdk_btn_close) {
             closeByAnimation();
             return;
         }
 
-        if (view.getId() == R.id.cleanersdk_layout_click_area) {
+        if (view.getId() == R.id.boostersdk_layout_click_area) {
             closeByAnimation();
             return;
         }
