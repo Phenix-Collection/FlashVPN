@@ -18,15 +18,12 @@ import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.stub.VASettings;
-import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.billing.BillingProvider;
-import com.polestar.multiaccount.component.AppLockMonitor;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -45,7 +42,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 import nativesdk.ad.common.AdSdk;
-import nativesdk.ad.common.app.Constants;
 
 
 public class MApp extends Application {
@@ -120,7 +116,12 @@ public class MApp extends Application {
                 EventReporter.init(gDefault);
                 BillingProvider.get();
                 initAd();
-                BoosterSdk.init(gDefault, new BoosterSdk.BoosterConfig(), new BoosterSdk.IEventReporter() {
+                BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
+                res.titleString = R.string.booster_title;
+                res.boosterShorcutIcon = R.drawable.boost_icon;
+                res.innerWheelImage = R.drawable.boost_out_wheel;
+                res.outterWheelImage = R.drawable.boost_inner_wheel;
+                BoosterSdk.init(gDefault, new BoosterSdk.BoosterConfig(), res, new BoosterSdk.IEventReporter() {
                     @Override
                     public void reportEvent(String s, Bundle b) {
                         FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
