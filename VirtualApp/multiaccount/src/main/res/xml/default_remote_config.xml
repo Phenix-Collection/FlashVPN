@@ -179,7 +179,7 @@
     </entry>
     <entry>
         <key>allow_system_app</key>
-        <value>true</value>
+        <value>false</value>
     </entry>
     <entry>
         <key>conf_need_preload_start_ad</key>
