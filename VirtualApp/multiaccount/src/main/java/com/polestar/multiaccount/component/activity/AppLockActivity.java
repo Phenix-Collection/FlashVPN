@@ -74,7 +74,8 @@ public class AppLockActivity extends BaseActivity {
         }
         Intent intent = new Intent(context, AppLockActivity.class);
         intent.putExtra(Intent.EXTRA_PACKAGE_NAME, pkg);
-        intent.setFlags(FLAG_ACTIVITY_SINGLE_TOP|FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        intent.setFlags(FLAG_ACTIVITY_SINGLE_TOP|FLAG_ACTIVITY_NO_HISTORY
+                |FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS|FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
     public static AdSize getBannerSize() {
