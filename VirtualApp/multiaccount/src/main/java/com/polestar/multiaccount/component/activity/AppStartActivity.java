@@ -380,7 +380,7 @@ public class AppStartActivity extends BaseActivity {
 
         initData();
         initView();
-        if (needLoadNativeAd(false, appModel.getPackageName())) {
+        if (appModel != null && needLoadNativeAd(false, appModel.getPackageName())) {
             loadNativeAd();
         }
         EventReporter.reportActive(this, true);
