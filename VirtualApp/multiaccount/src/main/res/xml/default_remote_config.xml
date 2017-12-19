@@ -24,13 +24,13 @@
         <value>mp_interstitial:60045d2f3ebd4042af67f02d7563763e:0;ab_interstitial:ca-app-pub-5490912237269284/6199077857:0;mp:e910f1133e0a4e289d71166f5d1ca724:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
     </entry>
     <entry>
-        <key>slot_test</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>mp_interstitial:60045d2f3ebd4042af67f02d7563763e:0;ab_interstitial:ca-app-pub-5490912237269284/6199077857:0;mp:e910f1133e0a4e289d71166f5d1ca724:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
-    </entry>
-    <entry>
         <key>slot_app_lock</key>
         <value>mp:e5cfa7539cc94b8285a326dadb3bde0c:0;ab_banner:ca-app-pub-5490912237269284/7221115790:0:2;ab_native_banner:ca-app-pub-5490912237269284/7955343852:0</value>
+    </entry>
+    <entry>
+        <key>slot_test</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>ab_native_banner:ca-app-pub-5490912237269284/9104139147:0</value>
     </entry>
     <entry>
         <key>slot_home_gift_interstitial_1026</key>
@@ -102,6 +102,10 @@
     </entry>
     <entry>
         <key>default_lock_enable</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>conf_using_activity_lock</key>
         <value>true</value>
     </entry>
     <entry>

@@ -62,12 +62,13 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     private boolean mIsShowing;
 
     private AppLockPasswordLogic mAppLockPasswordLogic = null;
-
-    public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
 
     public AppLockWindow(String pkgName, Handler handler) {
         MLogs.d("AppLockWindow initialize for : " + pkgName);
+        if (AppLockMonitor.usingLockActivity()) {
+            return;
+        }
         mPkgName = pkgName;
         mHandler = handler;
 
