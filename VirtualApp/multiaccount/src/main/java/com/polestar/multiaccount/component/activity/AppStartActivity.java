@@ -342,7 +342,8 @@ public class AppStartActivity extends BaseActivity {
 
                 }
             });
-            mTxtTips.setText(String.format(getString(R.string.app_starting_tips), appModel.getName()));
+            String title = (data.customized) ? data.label : appModel.getName();
+            mTxtTips.setText(String.format(getString(R.string.app_starting_tips), title));
             if (PreferencesUtils.isFirstStart(appModel.getName())){
                 PreferencesUtils.setStarted(appModel.getName());
                 mFirstStartTips.setVisibility(View.VISIBLE);
