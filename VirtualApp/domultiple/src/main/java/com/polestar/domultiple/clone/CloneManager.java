@@ -60,9 +60,9 @@ public class CloneManager {
     private HashMap<String, PackageConfig> mPackageConfigMap = new HashMap<>();
     private HashMap<String, Integer> mPackageIndexMap = new HashMap<>();
 
-    private static String PACKAGE_CONFIG_VERSION_KEY = "PACKAGE_CONFIG_VERSION";
-    private static String PACKAGE_CONFIG_KEY = "PACKAGE_CONFIG";
-    private static String PACKAGE_DEFAULT_ALLOWED_COUNT_KEY = "PACKAGE_DEFAULT_ALLOWED_COUNT";
+    private static String PACKAGE_CONFIG_VERSION_KEY = "pkg_config_version";
+    private static String PACKAGE_CONFIG_KEY = "pkg_config";
+    private static String PACKAGE_DEFAULT_ALLOWED_COUNT_KEY = "pkg_default_allow_cnt";
 
     private static String PACKAGE_INDEX_PREFERENCE = "package_index";
 
