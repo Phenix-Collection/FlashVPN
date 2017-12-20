@@ -111,7 +111,19 @@ public class RemoteConfig {
                 //default cache time
                 cachTime = 15*60; //15min
             }
-            configList.add(new AdConfig(configs[0], configs[1], cachTime));
+            int bannerType = -1;
+            if (configs.length == 4) {
+                try {
+                    bannerType = Integer.valueOf(configs[3]);
+                } catch (Exception e){
+                    MLogs.e("Wrong config: " + config);
+                }
+            }
+            if (bannerType == -1){
+                configList.add(new AdConfig(configs[0], configs[1], cachTime));
+            } else {
+                configList.add(new AdConfig(configs[0], configs[1], cachTime, bannerType));
+            }
         }
         return configList;
     }
