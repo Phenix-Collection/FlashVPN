@@ -578,6 +578,7 @@ public class HomeFragment extends BaseFragment {
 //        updateModelIndex(itemPosition,appInfos.size() - 1);
         AppManager.uninstallApp(appModel.getPackageName());
         CommonUtils.removeShortCut(mActivity,appModel);
+        CustomizeAppData.removePerf(appModel.getPackageName());
         DbManager.deleteAppModel(mActivity, appModel);
         DbManager.notifyChanged();
         pkgGridAdapter.notifyDataSetChanged();

@@ -64,4 +64,11 @@ public class CustomizeAppData {
         editor.putString("label", label);
         editor.commit();
     }
+
+    public static void removePerf(String pkg) {
+        SharedPreferences settings = MApp.getApp().getSharedPreferences(AppConstants.CUSTOMIZE_PREF+pkg, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.clear().commit();
+        BitmapUtils.removeCustomIcon(MApp.getApp(), pkg);
+    }
 }

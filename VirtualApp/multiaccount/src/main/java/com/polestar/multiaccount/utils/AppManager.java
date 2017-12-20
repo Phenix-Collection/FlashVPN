@@ -14,6 +14,7 @@ import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.model.CustomizeAppData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +55,7 @@ public class AppManager {
         if (uninstalledApp != null && uninstalledApp.size() > 0) {
             for (AppModel model : uninstalledApp) {
                 CommonUtils.removeShortCut(context, model);
+                CustomizeAppData.removePerf(model.getPackageName());
                 uninstallApp(model.getPackageName());
             }
             DbManager.deleteAppModeList(context, uninstalledApp);

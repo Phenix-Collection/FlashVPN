@@ -34,6 +34,7 @@ import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
+import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.AnimatorHelper;
 import com.polestar.domultiple.utils.CommonUtils;
@@ -428,6 +429,9 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         mClonedList = cm.getClonedApps();
         if (result) {
             CommonUtils.removeShortCut(this, clonedApp);
+            // remove customized data
+            CustomizeAppData.removePerf(clonedApp.getPackageName(), clonedApp.getPkgUserId());
+
         }
         gridAdapter.notifyDataSetChanged(mClonedList);
     }

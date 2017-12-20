@@ -70,4 +70,12 @@ public class CustomizeAppData {
         editor.putString("label", label);
         editor.commit();
     }
+
+    public static void removePerf(String pkg, int userId) {
+        String sp = CloneManager.getCompatibleName(AppConstants.CUSTOMIZE_PREF + pkg, userId);
+        SharedPreferences settings = PolestarApp.getApp().getSharedPreferences(sp, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.clear().commit();
+        BitmapUtils.removeCustomIcon(PolestarApp.getApp(), pkg, userId);
+    }
 }

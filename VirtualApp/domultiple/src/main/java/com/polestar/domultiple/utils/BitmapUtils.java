@@ -172,4 +172,10 @@ public class BitmapUtils {
         String pathname = context.getFilesDir() +  AppConstants.ICON_FILE_PATH + "/" + pkg;
         return CloneManager.getCompatibleName(pathname, userId);
     }
+
+    public static void removeCustomIcon(Context context, String pkg, int userId) {
+        String path = getCustomIconPath(context, pkg, userId);
+        File file = new File(path);
+        file.delete();
+    }
 }

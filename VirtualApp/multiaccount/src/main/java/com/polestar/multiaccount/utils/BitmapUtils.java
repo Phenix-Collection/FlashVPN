@@ -165,4 +165,9 @@ public class BitmapUtils {
             e.printStackTrace();
         }
     }
+
+    public static void removeCustomIcon(Context context, String pkg) {
+        File file = new File(context.getFilesDir() +  AppConstants.ICON_FILE_PATH + "/" + pkg);
+        file.delete();
+    }
 }
