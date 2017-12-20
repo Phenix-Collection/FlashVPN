@@ -38,6 +38,13 @@
             android:name=".components.ui.CustomizeIconActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogActivityStyle"/>
+        <activity
+            android:name=".components.ui.AppLockActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.lody.virtual.vt"
+            android:process=":x"
+            android:theme="@style/AppTheme.Launcher"/>
 
         <receiver android:name=".components.receiver.CrashReceiver" android:exported="false">
             <intent-filter>
