@@ -19,6 +19,7 @@ public class AppConstants {
     public static final String EXTRA_FROM = "From where";
     public static final String VALUE_FROM_SHORTCUT = "From shortcut";
     public static final String VALUE_FROM_HOME = "From home";
+    public static final String EXTRA_CLONED_APP_USERID = "app_userid";
 
     public static final int APP_ICON_WIDTH = 50;//dp
     public static final int APP_ICON_RADIUS = 12;//dp
@@ -65,4 +66,6 @@ public class AppConstants {
 
     public final static String CONF_UPDATE_VERSION = "push_update_version";
     public final static String CONF_LATEST_VERSION = "current_version";
+
+    public final static int DEFAULT_ALLOWED_CLONE_COUNT = 1;
 }

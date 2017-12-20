@@ -108,7 +108,7 @@ public final class AppInstrumentation extends InstrumentationDelegate implements
     @Override
     public void callActivityOnResume(Activity activity) {
 //        VirtualCore.get().getComponentDelegate().beforeActivityResume(activity);
-        VirtualCore.get().notifyActivityBeforeResume(activity.getPackageName());
+        VirtualCore.get().notifyActivityBeforeResume(activity.getPackageName(), VUserHandle.myUserId());
         VActivityManager.get().onActivityResumed(activity);
         super.callActivityOnResume(activity);
         VirtualCore.get().getComponentDelegate().afterActivityResume(activity);
@@ -140,7 +140,7 @@ public final class AppInstrumentation extends InstrumentationDelegate implements
     @Override
     public void callActivityOnPause(Activity activity) {
 //        VirtualCore.get().getComponentDelegate().beforeActivityPause(activity);
-        VirtualCore.get().notifyActivityBeforePause(activity.getPackageName());
+        VirtualCore.get().notifyActivityBeforePause(activity.getPackageName(), VUserHandle.myUserId());
         super.callActivityOnPause(activity);
         VirtualCore.get().getComponentDelegate().afterActivityPause(activity);
     }

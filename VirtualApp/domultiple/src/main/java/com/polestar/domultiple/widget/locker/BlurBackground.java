@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.polestar.domultiple.db.CustomizeAppData;
-import com.polestar.domultiple.utils.CommonUtils;
 
 /**
  * Created by PolestarApp on 2017/7/23.
@@ -48,11 +47,11 @@ public class BlurBackground extends LinearLayout {
         mDefaultThemeLogic.setUseBigIcon(true, true);
     }
 
-    public void reloadWithTheme(String packageName) {
+    public void reloadWithTheme(String packageName, int userId) {
         if(TextUtils.isEmpty(packageName) ){
             return;
         }
-        CustomizeAppData data = CustomizeAppData.loadFromPref(packageName);
+        CustomizeAppData data = CustomizeAppData.loadFromPref(packageName, userId);
 //        mCenterIcon.setImageBitmap(data.getCustomIcon());
         mDefaultThemeLogic.setBackground(packageName, new BitmapDrawable( data.getCustomIcon()));
     }

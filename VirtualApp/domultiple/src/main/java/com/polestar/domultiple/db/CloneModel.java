@@ -179,4 +179,18 @@ public class CloneModel {
         }
         return null;
     }
+
+    // the original index
+    int getOriginalIndex() {
+        return index & 0xffff;
+    }
+
+    // the package user id
+    public int getPkgUserId() {
+        return (index >> 16) & 0xff;
+    }
+
+    public void formatIndex(int index, int userId) {
+        setIndex((index & 0xffff) | ((userId & 0xff) << 16));
+    }
 }

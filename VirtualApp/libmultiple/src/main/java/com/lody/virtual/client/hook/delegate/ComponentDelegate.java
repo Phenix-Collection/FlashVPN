@@ -16,12 +16,12 @@ public interface ComponentDelegate {
         }
 
         @Override
-        public void beforeActivityResume(String pkg) {
+        public void beforeActivityResume(String pkg, int userId) {
             // Empty
         }
 
         @Override
-        public void beforeActivityPause(String pkg) {
+        public void beforeActivityPause(String pkg, int userId) {
             // Empty
         }
 
@@ -66,7 +66,7 @@ public interface ComponentDelegate {
         }
 
         @Override
-        public boolean isNotificationEnabled(String pkg) {
+        public boolean isNotificationEnabled(String pkg, int userId) {
             return false;
         }
 
@@ -82,9 +82,9 @@ public interface ComponentDelegate {
 
     void beforeActivityCreate(Activity activity);
 
-    void beforeActivityResume(String pkg);
+    void beforeActivityResume(String pkg, int userId);
 
-    void beforeActivityPause(String pkg);
+    void beforeActivityPause(String pkg, int userId);
 
     void beforeActivityDestroy(Activity activity);
 
@@ -98,7 +98,7 @@ public interface ComponentDelegate {
 
     void onSendBroadcast(Intent intent);
 
-    boolean isNotificationEnabled(String pkg);
+    boolean isNotificationEnabled(String pkg, int userId);
 
     void reloadLockerSetting(String newKey, boolean adFree, long interval);
 }

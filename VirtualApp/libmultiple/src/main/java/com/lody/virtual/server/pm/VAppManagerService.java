@@ -686,13 +686,13 @@ public class VAppManagerService extends IAppManager.Stub {
         mPersistenceLayer.save();
     }
 
-    public void notifyActivityBeforeResume(String pkg){
+    public void notifyActivityBeforeResume(String pkg, int userId){
         VLog.d(TAG, "notifyActivityBeforeResume " + pkg);
-        VirtualCore.get().getComponentDelegate().beforeActivityResume(pkg);
+        VirtualCore.get().getComponentDelegate().beforeActivityResume(pkg, userId);
     }
-    public void  notifyActivityBeforePause(String pkg){
+    public void  notifyActivityBeforePause(String pkg, int userId){
         VLog.d(TAG, "notifyActivityBeforePause " + pkg);
-        VirtualCore.get().getComponentDelegate().beforeActivityPause(pkg);
+        VirtualCore.get().getComponentDelegate().beforeActivityPause(pkg, userId);
     }
     public void  reloadLockerSetting(String key, boolean adFree, long interval){
         VLog.d(TAG, "reloadLockerSetting ");

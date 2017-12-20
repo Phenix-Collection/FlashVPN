@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
+import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.MLogs;
@@ -98,7 +99,7 @@ public class AppLockMonitor {
         MLogs.d("initSetting");
         List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
         for (CloneModel model: list) {
-            modelHashMap.put(model.getPackageName(), model);
+            modelHashMap.put(CloneManager.getMapKey(model.getPackageName(), model.getPkgUserId()), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
                 hasAppLocked = true;
             }
@@ -120,7 +121,7 @@ public class AppLockMonitor {
         DBManager.resetSession();
         List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
         for (CloneModel model: list) {
-            modelHashMap.put(model.getPackageName(), model);
+            modelHashMap.put(model.getPackageName() + model.getPkgUserId(), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
                 MLogs.d(TAG, "hasAppLocked " + model.getPackageName());
                 hasAppLocked = true;
@@ -145,22 +146,23 @@ public class AppLockMonitor {
     }
 
 
-    public void onActivityResume(String pkg) {
-        MLogs.d(TAG, "onActivityResume " + pkg);
-        CloneModel model = modelHashMap.get(pkg);
+    public void onActivityResume(String pkg, int userId) {
+        String key = CloneManager.getMapKey(pkg, userId);
+        MLogs.d(TAG, "onActivityResume " + key);
+        CloneModel model = modelHashMap.get(key);
         if (model == null || pkg == null) {
             MLogs.logBug(TAG, "cannot find cloned model : " + pkg);
             return;
         }
         if (hasLocker() && model.getLockerState() != AppConstants.AppLockState.DISABLED) {
             MLogs.d(TAG, "Need lock app " + pkg);
-            if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(pkg))) {
+            if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(key))) {
                 //do lock
                 MLogs.d(TAG, "Do lock app " + pkg);
-                AppLockWindow appLockWindow = mAppLockWindows.get(pkg);
+                AppLockWindow appLockWindow = mAppLockWindows.get(key);
                 if (appLockWindow == null) {
-                    appLockWindow = new AppLockWindow(pkg, mHandler);
-                    mAppLockWindows.add(pkg,appLockWindow);
+                    appLockWindow = new AppLockWindow(pkg, userId, mHandler);
+                    mAppLockWindows.add(key, appLockWindow);
                 }
                 final AppLockWindow lockWindow = appLockWindow;
                 MLogs.d(TAG, "Do lock app 2" + pkg);
@@ -170,20 +172,21 @@ public class AppLockMonitor {
             }
         }
         //Remove the same object with send
-        mHandler.removeMessages(MSG_DELAY_LOCK_APP, model.getPackageName());
+        mHandler.removeMessages(MSG_DELAY_LOCK_APP, key);
         //mUnlockedForegroudPkg = pkg;
     }
 
-    public void onActivityPause(String pkg) {
+    public void onActivityPause(String pkg, int userId) {
+        String key = CloneManager.getMapKey(pkg, userId);
         MLogs.d(TAG, "onActivityPause " + pkg + " delay relock: " + relockDelay);
-        AppLockWindow window = mAppLockWindows.get(pkg);
-        CloneModel model = modelHashMap.get(pkg);
+        AppLockWindow window = mAppLockWindows.get(key);
+        CloneModel model = modelHashMap.get(key);
         if (window != null) {
             mHandler.removeMessages(MSG_SHOW_LOCKER, window);
             mHandler.removeMessages(MSG_HIDE_LOCKER, window);
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_HIDE_LOCKER, window), 500);
         }
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, model.getPackageName()),
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, key),
                 relockDelay);
     }
 }

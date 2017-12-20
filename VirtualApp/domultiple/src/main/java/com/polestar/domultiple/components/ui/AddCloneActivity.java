@@ -244,7 +244,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                     if (hostPkg.equals(pkgName)) {
                         continue;
                     }
-                    if (CloneManager.isAppInstalled(pkgName)) {
+                    if (!CloneManager.getInstance(AddCloneActivity.this).isAllowedToClone(pkgName)) {
                         continue;
                     }
                     if (!CloneManager.getInstance(AddCloneActivity.this).isClonable(pkgName)) {
@@ -270,6 +270,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
     public void onCloneClick(View view) {
         boolean selected = false;
         boolean hasLock = false;
+        CloneManager cm = CloneManager.getInstance(this);
         for (SelectGridAppItem item: hotAppList) {
             if( item.selected) {
                 CloneModel model = new CloneModel(item.pkg, this);
@@ -277,7 +278,9 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
                     model.setNotificationEnable(true);
                 }
-                CloneManager.getInstance(this).createClone(this, model);
+                model.setName(cm.getDefaultName(item.pkg));
+                int userId = cm.getNextAvailableUserId(item.pkg);
+                cm.createClone(this, model, userId);
                 selected = true;
             }
         }
@@ -287,7 +290,9 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 if (CommonUtils.isSocialApp(item.pkg)) {
                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
                 }
-                CloneManager.getInstance(this).createClone(this, model);
+                model.setName(cm.getDefaultName(item.pkg));
+                int userId = cm.getNextAvailableUserId(item.pkg);
+                cm.createClone(this, model, userId);
                 selected = true;
             }
         }

@@ -834,18 +834,18 @@ public final class VirtualCore {
         }
     }
 
-    public void notifyActivityBeforeResume(String pkg) {
+    public void notifyActivityBeforeResume(String pkg, int userId) {
         try {
-            getService().notifyActivityBeforeResume(pkg);
+            getService().notifyActivityBeforeResume(pkg, userId);
         } catch (Exception e) {
 
         }
 
     }
 
-    public void notifyActivityBeforePause(String pkg) {
+    public void notifyActivityBeforePause(String pkg, int userId) {
         try {
-            getService().notifyActivityBeforePause(pkg);
+            getService().notifyActivityBeforePause(pkg, userId);
         } catch (Exception e) {
 
         }

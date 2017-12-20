@@ -8,7 +8,7 @@ import com.lody.virtual.client.hook.base.MethodProxy;
 import com.lody.virtual.client.hook.utils.MethodParameterUtils;
 import com.lody.virtual.client.ipc.VNotificationManager;
 import com.lody.virtual.helper.utils.ArrayUtils;
-import com.lody.virtual.helper.utils.VLog;
+import com.lody.virtual.os.VUserHandle;
 
 import java.lang.reflect.Method;
 
@@ -32,7 +32,7 @@ class MethodProxies {
             if (getHostPkg().equals(pkg)) {
                 return method.invoke(who, args);
             }
-            if (!VirtualCore.get().getComponentDelegate().isNotificationEnabled(pkg)){
+            if (!VirtualCore.get().getComponentDelegate().isNotificationEnabled(pkg, VUserHandle.myUserId())){
                 return null;
             }
             int notificationIndex = ArrayUtils.indexOfFirst(args, Notification.class);
@@ -63,7 +63,7 @@ class MethodProxies {
             if (getHostPkg().equals(pkg)) {
                 return method.invoke(who, args);
             }
-            if (!VirtualCore.get().getComponentDelegate().isNotificationEnabled(pkg)){
+            if (!VirtualCore.get().getComponentDelegate().isNotificationEnabled(pkg, VUserHandle.myUserId())){
                 return null;
             }
             int notificationIndex = ArrayUtils.indexOfFirst(args, Notification.class);

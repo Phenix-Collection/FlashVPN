@@ -567,7 +567,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private int getPosForModel(final CloneModel model) {
         int i = 0;
         for (CloneModel c : mClonedList) {
-            if (c.getPackageName().equals(model.getPackageName())) {
+            if (c.getPackageName().equals(model.getPackageName()) &&
+                    c.getPkgUserId() == model.getPkgUserId()) {
                 return i;
             }
             i ++;
@@ -599,7 +600,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                                 view.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        CloneManager.getInstance(HomeActivity.this).deleteClone(HomeActivity.this, info.getPackageName());
+                                        CloneManager.getInstance(HomeActivity.this).deleteClone(HomeActivity.this, info);
                                     }
                                 }, 1000);
                                 break;

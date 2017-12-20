@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 
-import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.PreferencesUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +45,7 @@ public class MComponentDelegate implements ComponentDelegate {
     }
 
     @Override
-    public void beforeActivityResume(String pkg) {
+    public void beforeActivityResume(String pkg, int userId) {
         MLogs.d("beforeActivityResume " + pkg);
         //if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
             AppLockMonitor.getInstance().onActivityResume(pkg);
@@ -55,7 +53,7 @@ public class MComponentDelegate implements ComponentDelegate {
     }
 
     @Override
-    public void beforeActivityPause(String pkg) {
+    public void beforeActivityPause(String pkg, int userId) {
         MLogs.d("beforeActivityPause " + pkg);
        // if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
             AppLockMonitor.getInstance().onActivityPause(pkg);
@@ -93,7 +91,7 @@ public class MComponentDelegate implements ComponentDelegate {
     }
 
     @Override
-    public boolean isNotificationEnabled(String pkg) {
+    public boolean isNotificationEnabled(String pkg, int userId) {
         MLogs.d("isNotificationEnabled pkg: " + pkg + " " + pkgs.contains(pkg) );
         return pkgs.contains(pkg);
     }

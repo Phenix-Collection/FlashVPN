@@ -2,12 +2,12 @@ package com.polestar.domultiple.clone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -20,23 +20,25 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.os.VUserInfo;
+import com.lody.virtual.os.VUserManager;
 import com.lody.virtual.remote.InstallResult;
-import com.polestar.domultiple.BuildConfig;
+import com.lody.virtual.remote.InstalledAppInfo;
+import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
-import com.polestar.domultiple.utils.CommonUtils;
-import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
+import com.polestar.domultiple.utils.RemoteConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-
-import mirror.android.providers.Settings;
+import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * Created by PolestarApp on 2017/7/16.
@@ -53,7 +55,16 @@ public class CloneManager {
     private Handler mWorkHandler;
     private List<CloneModel> mPendingClones = new ArrayList<>();
     private static HashSet<String> blackList = new HashSet<>();
+    // key is package name or package name + userId
     private static HashMap<String, Long> mPackageLaunchTime = new HashMap<>();
+    private HashMap<String, PackageConfig> mPackageConfigMap = new HashMap<>();
+    private HashMap<String, Integer> mPackageIndexMap = new HashMap<>();
+
+    private static String PACKAGE_CONFIG_VERSION_KEY = "PACKAGE_CONFIG_VERSION";
+    private static String PACKAGE_CONFIG_KEY = "PACKAGE_CONFIG";
+    private static String PACKAGE_DEFAULT_ALLOWED_COUNT_KEY = "PACKAGE_DEFAULT_ALLOWED_COUNT";
+
+    private static String PACKAGE_INDEX_PREFERENCE = "package_index";
 
     public boolean hasPendingClones() {
         return mPendingClones.size() > 0;
@@ -91,6 +102,7 @@ public class CloneManager {
 //        new LoadClonedAppTask(context).execute();
     }
 
+    @Deprecated
     public void createClone(Context context, CloneModel appModel) {
         mPendingClones.add(appModel);
         mWorkHandler.post(new Runnable() {
@@ -121,6 +133,54 @@ public class CloneManager {
         });
     }
 
+    public void createClone(Context context, CloneModel appModel, int userId) {
+        mPendingClones.add(appModel);
+        mWorkHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    appModel.setClonedTime(System.currentTimeMillis());
+                    appModel.formatIndex(mClonedApps.size(), userId);
+                    InstalledAppInfo info = VirtualCore.get().getInstalledAppInfo(appModel.getPackageName(), 0);
+                    boolean success;
+                    if (info != null) {
+                        if (VUserManager.get().getUserInfo(userId) == null) {
+                            // user not exist, create it automatically.
+                            String nextUserName = "User " + (userId + 1);
+                            VUserInfo newUserInfo = VUserManager.get().createUser(nextUserName, VUserInfo.FLAG_ADMIN);
+                            if (newUserInfo == null) {
+                                throw new IllegalStateException();
+                            }
+                        }
+                        success = VirtualCore.get().installPackageAsUser(userId, appModel.getPackageName());
+                    } else {
+                        InstallResult result = VirtualCore.get().installPackage(appModel.getPackageName(), appModel.getApkPath(context),
+                                InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
+                        success = result.isSuccess;
+                    }
+
+                    if(success) {
+                        DBManager.insertCloneModel(context, appModel);
+                        mClonedApps.add(appModel);
+                        incPackageIndex(appModel.getPackageName());
+                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPendingClones.remove(appModel);
+                            if (loadedListener != null) {
+                                loadedListener.onInstalled(appModel, success);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Deprecated
     public void deleteClone(Context context, String packageName) {
         mWorkHandler.post(new Runnable() {
             @Override
@@ -152,16 +212,54 @@ public class CloneManager {
         });
     }
 
+    public void deleteClone(Context context, CloneModel model) {
+        deleteClone(context, model.getPackageName(), model.getPkgUserId());
+    }
+
+    public void deleteClone(Context context, String packageName, int userId) {
+        mWorkHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(!TextUtils.isEmpty(packageName)){
+                    CloneModel model = DBManager.queryCloneModelByPackageName(context,packageName, userId);
+                    if (model != null) {
+                        boolean res = VirtualCore.get().uninstallPackageAsUser(packageName, userId);
+                        if (res) {
+                            DBManager.deleteCloneModel(context,model);
+                            ListIterator<CloneModel> iter = mClonedApps.listIterator();
+                            while (iter.hasNext()) {
+                                CloneModel cm = iter.next();
+                                if (cm.getPackageName().equals(packageName) &&
+                                        cm.getPkgUserId() == userId) {
+                                    iter.remove();
+                                    break;
+                                }
+                            }
+                        }
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (loadedListener != null) {
+                                    loadedListener.onUnstalled(model, res);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
     private void loadClonedApp(Context context){
         List<CloneModel> tempList = DBManager.queryAppList(context);
         List<CloneModel> uninstalledApp = new ArrayList<>();
         for (CloneModel model : tempList) {
-            if (!VirtualCore.get().isAppInstalled(model.getPackageName())) {
+            if (!VirtualCore.get().isAppInstalledAsUser(model.getPkgUserId(), model.getPackageName())) {
                 uninstalledApp.add(model);
                 continue;
             }
             if (model.getCustomIcon() == null) {
-                CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName());
+                CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
                 Bitmap bmp = data.getCustomIcon();
                 //appIcon.setImageBitmap(bmp);
                 model.setCustomIcon(bmp);
@@ -206,7 +304,8 @@ public class CloneManager {
             blackList.add(ri.serviceInfo.applicationInfo.packageName);
             MLogs.logBug("Add black: " + ri.serviceInfo.applicationInfo.packageName);
         }
-
+        buildPackageConfigMap();
+        buildPackageIndexMap();
     }
 
     public List<CloneModel> getClonedApps(){
@@ -242,6 +341,7 @@ public class CloneManager {
         }
     }
 
+    @Deprecated
     public static void launchApp(String packageName) {
         //Check app version and trying to upgrade if necessary
         try {
@@ -254,6 +354,24 @@ public class CloneManager {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+    }
+
+    public static void launchApp(String packageName, int userId) {
+        //Check app version and trying to upgrade if necessary
+        try {
+            MLogs.d(TAG, "launchApp packageName = " + packageName);
+            mPackageLaunchTime.put(getMapKey(packageName, userId), System.currentTimeMillis());
+            Intent intent = VirtualCore.get().getLaunchIntent(packageName, userId);
+            VActivityManager.get().startActivity(intent, userId);
+        } catch (Exception e) {
+            MLogs.e(e);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    public static void launchApp(CloneModel model) {
+        launchApp(model.getPackageName(), model.getPkgUserId());
     }
 
     public boolean isClonable(String pkg) {
@@ -304,6 +422,7 @@ public class CloneManager {
         VirtualCore.get().reloadLockerSetting(key, adFree, interval);
     }
 
+    @Deprecated
     public final CloneModel getCloneModel(String packageName) {
         if (packageName == null) {
             return null;
@@ -323,14 +442,185 @@ public class CloneManager {
         return null;
     }
 
+    public final CloneModel getCloneModel(String packageName, int userId) {
+        if (packageName == null) {
+            return null;
+        }
+        if (mClonedApps.size() > 0) {
+            for (CloneModel model:mClonedApps) {
+                if (model.getPackageName().equals(packageName) &&
+                        model.getPkgUserId() == userId) {
+                    return model;
+                }
+            }
+        }
+        return DBManager.queryCloneModelByPackageName(mContext, packageName, userId);
+    }
+
+    @Deprecated
     public static boolean isAppRunning(String pkg) {
         return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId());
     }
 
+    public static boolean isAppRunning(String pkg, int userId) {
+        return VirtualCore.get().isAppRunning(pkg, userId);
+    }
+
+    @Deprecated
     public static boolean isAppLaunched(String pkg) {
         long time = mPackageLaunchTime.get(pkg) == null ? 0:  mPackageLaunchTime.get(pkg);
         return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId())
                 && ((System.currentTimeMillis()-time) < 60*60*1000);
     }
 
+    public static boolean isAppLaunched(String pkg, int userId) {
+        String key = getMapKey(pkg, userId);
+        long time = mPackageLaunchTime.get(key) == null ? 0:  mPackageLaunchTime.get(key);
+        return VirtualCore.get().isAppRunning(pkg, userId)
+                && ((System.currentTimeMillis()-time) < 60*60*1000);
+    }
+
+    public static boolean isAppLaunched(CloneModel model) {
+        return isAppLaunched(model.getPackageName(), model.getPkgUserId());
+    }
+
+    /*
+     * the configure format:
+     * pkg1:cnt1;pkg2:cnt2;pkg3:cnt3
+     */
+    public static List<PackageConfig> getPackageConfig() {
+        long version = RemoteConfig.getLong(PACKAGE_CONFIG_VERSION_KEY);
+        List<PackageConfig> list = new ArrayList<>();
+        String cfg = RemoteConfig.getString(PACKAGE_CONFIG_KEY);
+        if (!TextUtils.isEmpty(cfg)) {
+            String[] cfgs = cfg.split(";");
+            for (String c : cfgs) {
+                String[] s = c.split(":");
+                if (s.length != 2)
+                    continue;
+                PackageConfig pc = new PackageConfig();
+                pc.packageName = s[0];
+                pc.allowedCloneCount = Integer.parseInt(s[1]);
+                list.add(pc);
+            }
+        } else {
+            list.add(new PackageConfig("com.whatsapp", 5));
+            list.add(new PackageConfig("com.facebook.katana", 5));
+        }
+
+        return list;
+    }
+
+    public static int getDefaultAllowedCloneCount() {
+        long count = RemoteConfig.getLong(PACKAGE_DEFAULT_ALLOWED_COUNT_KEY);
+        return (count == 0) ? AppConstants.DEFAULT_ALLOWED_CLONE_COUNT : (int)count;
+    }
+
+    private void buildPackageConfigMap() {
+        List<PackageConfig> list = getPackageConfig();
+        for (PackageConfig cfg : list) {
+            mPackageConfigMap.put(cfg.packageName, cfg);
+        }
+    }
+
+    private int getAllowedCloneCount(String packageName) {
+        if (mPackageConfigMap.containsKey(packageName)) {
+            PackageConfig cfg = mPackageConfigMap.get(packageName);
+            return cfg.allowedCloneCount;
+        }
+        return getDefaultAllowedCloneCount();
+    }
+
+    public int getClonedCount(String packageName) {
+        InstalledAppInfo installedAppInfo = VirtualCore.get().getInstalledAppInfo(packageName, 0);
+        if (installedAppInfo != null) {
+            int[] userIds = installedAppInfo.getInstalledUsers();
+            return userIds != null ? userIds.length : 0;
+        }
+        return 0;
+    }
+
+    public boolean isAllowedToClone(String packageName) {
+        int allowed = getAllowedCloneCount(packageName);
+        int cloned = getClonedCount(packageName);
+        return allowed > cloned;
+    }
+
+    public int getNextAvailableUserId(String packageName) {
+        InstalledAppInfo installedAppInfo = VirtualCore.get().getInstalledAppInfo(packageName, 0);
+        if (installedAppInfo != null) {
+            int[] userIds = installedAppInfo.getInstalledUsers();
+            int nextUserId = userIds.length;
+        /*
+         * Input : userIds = {0, 1, 3}
+         * Output: nextUserId = 2
+         */
+            for (int i = 0; i < userIds.length; i++) {
+                if (userIds[i] != i) {
+                    nextUserId = i;
+                    break;
+                }
+            }
+            return nextUserId;
+        }
+        return 0;
+    }
+
+    // the name for new cloned app
+    public String getDefaultName(String packageName) {
+        PackageManager pm = mContext.getPackageManager();
+        try {
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+            CharSequence label = pm.getApplicationLabel(ai);
+            if (getAllowedCloneCount(packageName) > 1) {
+                int index = getPackageIndex(packageName);
+                return label + " " + (index + 1);
+            } else {
+                return label.toString();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // for compatible use
+    public static String getCompatibleName(String name, int userId) {
+        return (userId != 0) ? name + userId : name;
+    }
+
+    // the name store in database
+    public String getModelName(String pkg, int userId) {
+        CloneModel model = getCloneModel(pkg, userId);
+        if (model != null)
+            return model.getName();
+        return null;
+    }
+
+    public static String getMapKey(String pkg, int userId) {
+        return pkg + userId;
+    }
+
+    private void buildPackageIndexMap() {
+        SharedPreferences settings = PolestarApp.getApp().getSharedPreferences(PACKAGE_INDEX_PREFERENCE, Context.MODE_PRIVATE);
+        Map<String, ?> map = settings.getAll();
+        for (Map.Entry<String, ?> entry : map.entrySet()) {
+            mPackageIndexMap.put(entry.getKey(), Integer.parseInt(entry.getValue().toString()));
+        }
+    }
+
+    public int getPackageIndex(String pkg) {
+        if (mPackageIndexMap.containsKey(pkg))
+            return mPackageIndexMap.get(pkg);
+        return 0;
+    }
+
+    public void incPackageIndex(String pkg) {
+        int next = 1;
+        if (mPackageIndexMap.containsKey(pkg))
+            next = mPackageIndexMap.get(pkg) + 1;
+        mPackageIndexMap.put(pkg, next);
+        SharedPreferences settings = PolestarApp.getApp().getSharedPreferences(PACKAGE_INDEX_PREFERENCE, Context.MODE_PRIVATE);
+        settings.edit().putInt(pkg, next).commit();
+    }
 }

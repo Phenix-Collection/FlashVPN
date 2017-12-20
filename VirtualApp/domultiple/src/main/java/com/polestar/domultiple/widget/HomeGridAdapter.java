@@ -82,7 +82,8 @@ public class HomeGridAdapter extends BaseAdapter {
 
         CloneModel appModel = (CloneModel) getItem(i);
         if (appModel != null) {
-            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(),
+                    appModel.getPkgUserId());
 //            if (appModel.getCustomIcon() == null) {
 //            Bitmap bmp =
 //            appIcon.setImageBitmap(bmp);

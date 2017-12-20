@@ -27,6 +27,7 @@ import com.lody.virtual.helper.utils.BitmapUtils;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
+import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.db.CloneModel;
 
@@ -51,6 +52,7 @@ public class CommonUtils {
         actionIntent.setClassName(context.getPackageName(), AppLoadingActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
         actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
+        actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         createShortcut(context, actionIntent, appName, false, iconBitmap);
 //        iconBitmap.recycle();
@@ -62,6 +64,7 @@ public class CommonUtils {
         actionIntent.setClassName(context.getPackageName(), AppLoadingActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
         actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
+        actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         removeShortcut(context, actionIntent, appName);
     }

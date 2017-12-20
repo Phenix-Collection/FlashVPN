@@ -33,8 +33,8 @@ interface IAppManager {
     void clearAppRequestListener();
     IAppRequestListener getAppRequestListener();
 
-    void notifyActivityBeforeResume(String pkg);
-    void notifyActivityBeforePause(String pkg);
+    void notifyActivityBeforeResume(String pkg, int userId);
+    void notifyActivityBeforePause(String pkg, int userId);
     void reloadLockerSetting(String key, boolean adFree, long interval);
     void restart();
 }

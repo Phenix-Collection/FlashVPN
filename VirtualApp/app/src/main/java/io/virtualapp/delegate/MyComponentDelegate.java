@@ -5,9 +5,6 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
-import com.lody.virtual.helper.utils.Reflect;
-
-import java.io.File;
 
 
 public class MyComponentDelegate implements ComponentDelegate {
@@ -27,12 +24,12 @@ public class MyComponentDelegate implements ComponentDelegate {
     }
 
     @Override
-    public void beforeActivityResume(String pkg) {
+    public void beforeActivityResume(String pkg, int userId) {
 
     }
 
     @Override
-    public void beforeActivityPause(String pkg) {
+    public void beforeActivityPause(String pkg, int userId) {
 
     }
 
@@ -68,7 +65,7 @@ public class MyComponentDelegate implements ComponentDelegate {
     }
 
     @Override
-    public boolean isNotificationEnabled(String pkg) {
+    public boolean isNotificationEnabled(String pkg, int userId) {
         return false;
     }
 

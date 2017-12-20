@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
+import com.polestar.domultiple.clone.CloneManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,8 +29,9 @@ import java.io.IOException;
  */
 public class BitmapUtils {
 
-    public static Bitmap getCustomIcon(Context context, String pkg){
-        File file = new File(context.getFilesDir() +  AppConstants.ICON_FILE_PATH + "/" + pkg);
+    public static Bitmap getCustomIcon(Context context, String pkg, int userId) {
+        String pathname = getCustomIconPath(context, pkg, userId);
+        File file = new File(pathname);
         Bitmap bmp = null;
         if (file.exists()) {
             bmp = BitmapFactory.decodeFile(file.getPath());
@@ -164,5 +166,10 @@ public class BitmapUtils {
         {
             e.printStackTrace();
         }
+    }
+
+    public static String getCustomIconPath(Context context, String pkg, int userId) {
+        String pathname = context.getFilesDir() +  AppConstants.ICON_FILE_PATH + "/" + pkg;
+        return CloneManager.getCompatibleName(pathname, userId);
     }
 }

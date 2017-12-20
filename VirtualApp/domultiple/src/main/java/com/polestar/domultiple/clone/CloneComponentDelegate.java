@@ -8,13 +8,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 
-import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.MLogs;
-import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.widget.locker.AppLockMonitor;
 
 import java.util.HashSet;
@@ -34,7 +32,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
                 List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
                 for(CloneModel app:list) {
                     if (app.getNotificationEnable()) {
-                        pkgs.add(app.getPackageName());
+                	pkgs.add(CloneManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
                     }
                 }
             }
@@ -58,15 +56,15 @@ public class CloneComponentDelegate implements ComponentDelegate {
     }
 
     @Override
-    public void beforeActivityResume(String pkg) {
+    public void beforeActivityResume(String pkg, int userId) {
         MLogs.d("beforeActivityResume " + pkg);
-        AppLockMonitor.getInstance().onActivityResume(pkg);
+        AppLockMonitor.getInstance().onActivityResume(pkg, userId);
     }
 
     @Override
-    public void beforeActivityPause(String pkg) {
+    public void beforeActivityPause(String pkg, int userId) {
         MLogs.d("beforeActivityPause " + pkg);
-        AppLockMonitor.getInstance().onActivityPause(pkg);
+        AppLockMonitor.getInstance().onActivityPause(pkg, userId);
     }
 
     @Override
@@ -100,9 +98,10 @@ public class CloneComponentDelegate implements ComponentDelegate {
     }
 
     @Override
-    public boolean isNotificationEnabled(String pkg) {
-        MLogs.d("isNotificationEnabled pkg: " + pkg + " " + pkgs.contains(pkg) );
-        return pkgs.contains(pkg);
+    public boolean isNotificationEnabled(String pkg, int userId) {
+        String key = CloneManager.getMapKey(pkg, userId);
+        MLogs.d("isNotificationEnabled pkg: " + key + " " + pkgs.contains(key));
+        return pkgs.contains(key);
     }
 
     @Override

@@ -6,7 +6,8 @@ import com.polestar.domultiple.utils.MLogs;
 
 import org.greenrobot.greendao.database.Database;
 
-import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -37,12 +38,37 @@ public class DBManager {
 
     public static List<CloneModel> queryAppList(Context context) {
         CloneModelDao appModelDao = getDaoSession(context).getCloneModelDao();
-        return appModelDao.queryBuilder().orderAsc(CloneModelDao.Properties.Index).list();
+        List<CloneModel> list = appModelDao.queryBuilder().orderAsc(CloneModelDao.Properties.Index).list();
+        if (list != null)
+            Collections.sort(list, new Comparator<CloneModel>() {
+                @Override
+                public int compare(CloneModel o1, CloneModel o2) {
+                    if (o1 == o2)
+                        return 0;
+                    if (o1 == null || o2 == null) {
+                        return o1 == null ? -1 : 1;
+                    }
+                    return o1.getOriginalIndex() - o2.getOriginalIndex();
+                }
+            });
+        return list;
     }
 
     public static List<CloneModel> queryCloneModelByPackageName(Context context, String packageName) {
         CloneModelDao appModelDao = getDaoSession(context).getCloneModelDao();
         return appModelDao.queryBuilder().where(CloneModelDao.Properties.PackageName.eq(packageName)).list();
+    }
+
+    public static CloneModel queryCloneModelByPackageName(Context context, String packageName, int userId) {
+        CloneModelDao appModelDao = getDaoSession(context).getCloneModelDao();
+        List<CloneModel> list = appModelDao.queryBuilder().where(CloneModelDao.Properties.PackageName.eq(packageName)).list();
+        if (list != null) {
+            for (CloneModel cm : list) {
+                if (cm.getPkgUserId() == userId)
+                    return cm;
+            }
+        }
+        return null;
     }
 
     public static void insertCloneModel(Context context, CloneModel appModel) {

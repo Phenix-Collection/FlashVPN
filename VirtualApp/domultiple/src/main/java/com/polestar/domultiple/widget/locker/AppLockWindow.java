@@ -3,12 +3,10 @@ package com.polestar.domultiple.widget.locker;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,9 +25,9 @@ import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
+import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.ui.LockSecureQuestionActivity;
 import com.polestar.domultiple.db.CustomizeAppData;
-import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
@@ -51,6 +49,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
     private BlurBackground mBlurBackground;
 
     private String mPkgName;
+    private int mUserId;
     private Handler mHandler;
     private FloatWindow mWindow;
     private View mContentView;
@@ -70,8 +69,9 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
     public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
 
-    public AppLockWindow(String pkgName, Handler handler) {
+    public AppLockWindow(String pkgName, int userId, Handler handler) {
         mPkgName = pkgName;
+        mUserId = userId;
         mHandler = handler;
 
         mWindow = new FloatWindow(PolestarApp.getApp());
@@ -94,13 +94,13 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        AppLockWindow window = AppLockWindowManager.getInstance().get(mPkgName);
+                        AppLockWindow window = AppLockWindowManager.getInstance().get(CloneManager.getMapKey(mPkgName, mUserId));
                         if (window != null && window.isShowing()) {
                             window.dismiss();
                         }
                     }
                 }, 500);
-                mHandler.sendMessage(mHandler.obtainMessage(AppLockMonitor.MSG_PACKAGE_UNLOCKED, mPkgName));
+                mHandler.sendMessage(mHandler.obtainMessage(AppLockMonitor.MSG_PACKAGE_UNLOCKED, CloneManager.getMapKey(mPkgName, mUserId)));
             }
 
             @Override
@@ -124,24 +124,13 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
 
         mCenterIcon = (LockIconImageView) mContentView.findViewById(R.id.window_applock_icon);
         mCenterAppText = (TextView) mContentView.findViewById(R.id.window_applock_name);
-        PackageManager pm = PolestarApp.getApp().getPackageManager();
-        ApplicationInfo ai = null;
-        try {
-            ai = pm.getApplicationInfo(mPkgName, 0);
-        }catch (Exception e) {
-            MLogs.logBug(MLogs.getStackTraceString(e));
-        }
-        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName);
+        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
         mCenterIcon.setImageBitmap(data.getCustomIcon());
-        if ( ai != null) {
-            if (data.customized) {
-                CharSequence title = pm.getApplicationLabel(ai);
-                if (title != null) {
-                    mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.clone_label_tag),title));
-                }
-            } else {
-                mCenterAppText.setText(data.label);
-            }
+        if (!data.customized) {
+            mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.clone_label_tag),
+                    CloneManager.getInstance(PolestarApp.getApp()).getModelName(mPkgName, mUserId)));
+        } else {
+            mCenterAppText.setText(data.label);
         }
         MLogs.d("AppLockWindow initialized 1");
         mForgotPasswordTv = (TextView)mContentView.findViewById(R.id.forgot_password_tv);
@@ -259,7 +248,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemClickListener {
         if (!mIsShowing) {
             mIsShowing = true;
             mBlurBackground.init();
-            mBlurBackground.reloadWithTheme(mPkgName);
+            mBlurBackground.reloadWithTheme(mPkgName, mUserId);
             MLogs.d("LockWindow show ad" + showAd);
             mAppLockPasswordLogic.onShow();
             mWindow.show();

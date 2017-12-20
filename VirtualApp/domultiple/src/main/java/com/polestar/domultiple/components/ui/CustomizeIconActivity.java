@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 
+import com.lody.virtual.os.VUserHandle;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
@@ -46,13 +47,15 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
     private Drawable defaultIcon;
     private Bitmap customIcon;
     private ImageView iconImg;
+    private int userId;
     private static int MID_VALUE = 127;
 
-    public static void start(Activity activity, String pkg) {
+    public static void start(Activity activity, String pkg, int userId) {
         Intent intent = new Intent(activity, CustomizeIconActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         intent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, pkg);
+        intent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, userId);
 
         activity.startActivity(intent);
         activity.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
@@ -80,8 +83,9 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         });
         iconImg = (ImageView) findViewById(R.id.app_icon);
         pkg = getIntent().getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
+        userId = getIntent().getIntExtra(AppConstants.EXTRA_CLONED_APP_USERID, VUserHandle.myUserId());
         if (pkg != null) {
-            appModel = CloneManager.getInstance(this).getCloneModel(pkg);
+            appModel = CloneManager.getInstance(this).getCloneModel(pkg, userId);
         }
         if (appModel == null) {
             finish();
@@ -141,7 +145,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
     }
 
     public void initData() {
-        mData = CustomizeAppData.loadFromPref(pkg);
+        mData = CustomizeAppData.loadFromPref(pkg, userId);
         if (mData.label == null) {
             mData.label = String.format(getString(R.string.clone_label_tag),  appModel.getName());
         }
@@ -160,7 +164,8 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            BitmapUtils.saveBitmapToPNG(customIcon, dir.getPath() + "/" + pkg);
+            String pathname = BitmapUtils.getCustomIconPath(this, pkg, userId);
+            BitmapUtils.saveBitmapToPNG(customIcon, pathname);
         } catch (Exception e) {
             MLogs.logBug(MLogs.getStackTraceString(e));
         }

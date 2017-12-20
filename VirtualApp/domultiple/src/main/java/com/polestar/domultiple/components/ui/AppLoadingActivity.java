@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.os.VUserHandle;
+import com.lody.virtual.os.VUserManager;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -168,9 +170,9 @@ public class AppLoadingActivity extends BaseActivity {
         if (CloneManager.needUpgrade(packageName)) {
             CloneManager.killApp(packageName);
         } else {
-            if (CloneManager.isAppLaunched(packageName)) {
-                CloneManager.launchApp(packageName);
-                EventReporter.appStart(true, model.getLockerState() != AppConstants.AppLockState.DISABLED, "home", model.getPackageName());
+            if (CloneManager.isAppLaunched(model)) {
+                CloneManager.launchApp(model);
+                EventReporter.appStart(true, model.getLockerState() != AppConstants.AppLockState.DISABLED, "home", model.getPackageName(), model.getPkgUserId());
                 return;
             }
         }
@@ -180,6 +182,7 @@ public class AppLoadingActivity extends BaseActivity {
         intent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, packageName);
         intent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_HOME);
         intent.putExtra(EXTRA_FIRST_START, model.getLaunched() == 0);
+        intent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, model.getPkgUserId());
 
         activity.startActivity(intent);
         activity.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
@@ -191,8 +194,9 @@ public class AppLoadingActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             String packageName = intent.getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
+            int userId = intent.getIntExtra(AppConstants.EXTRA_CLONED_APP_USERID, VUserHandle.myUserId());
             from = intent.getStringExtra(AppConstants.EXTRA_FROM);
-            appModel = CloneManager.getInstance(this).getCloneModel(packageName);
+            appModel = CloneManager.getInstance(this).getCloneModel(packageName, userId);
             firstStart = intent.getBooleanExtra(EXTRA_FIRST_START, false);
             
         }
@@ -203,7 +207,7 @@ public class AppLoadingActivity extends BaseActivity {
         } else {
             needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
         }
-        EventReporter.appStart(CloneManager.isAppLaunched(appModel.getPackageName()), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName());
+        EventReporter.appStart(CloneManager.isAppLaunched(appModel), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName(), appModel.getPkgUserId());
         return true;
     }
 
@@ -218,7 +222,7 @@ public class AppLoadingActivity extends BaseActivity {
                 if (needDoUpGrade) {
                     CloneManager.upgradeApp(appModel.getPackageName());
                 }
-                CloneManager.launchApp(appModel.getPackageName());
+                CloneManager.launchApp(appModel);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -245,7 +249,7 @@ public class AppLoadingActivity extends BaseActivity {
 
 
         try{
-            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(), appModel.getPkgUserId());
             mImgAppIcon.setImageBitmap(data.getCustomIcon());
             ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImgAppIcon, "scaleX", 0.7f, 1.2f, 1.0f);
             ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImgAppIcon, "scaleY", 0.7f, 1.2f, 1.0f);

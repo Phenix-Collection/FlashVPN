@@ -50,12 +50,13 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("home_show", null);
     }
 
-    public static void appStart(boolean coldStart, boolean locker, String from, String pkg) {
+    public static void appStart(boolean coldStart, boolean locker, String from, String pkg, int userId) {
         Bundle bundle = new Bundle();
         bundle.putString("package", pkg);
         bundle.putBoolean("coldStart", coldStart);
         bundle.putBoolean("locker", locker);
         bundle.putString("from", from);
+        bundle.putInt("userId", userId);
         mFirebaseAnalytics.logEvent("app_start", bundle);
     }
 
