@@ -84,4 +84,10 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("general_event", bundle);
     }
 
+    public static void luckyClick(String from) {
+        Bundle bundle = new Bundle();
+        bundle.putString("from", from);
+        mFirebaseAnalytics.logEvent("lucky_click", bundle);
+    }
+
 }

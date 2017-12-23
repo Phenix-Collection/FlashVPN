@@ -1,6 +1,9 @@
 package com.polestar.domultiple.components.ui;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,8 +16,10 @@ import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.support.v7.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -82,6 +87,9 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private PopupMenu homeMenuPopup;
     private NarrowPromotionCard functionCard;
     private View mProgressBar;
+
+    private ImageView giftIconView;
+    private ImageView newTipDot;
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
     private boolean rateDialogShowed = false;
@@ -263,6 +271,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         if (mClonedList != null && gridAdapter != null) {
             gridAdapter.notifyDataSetChanged(mClonedList);
         }
+        showGiftIcon();
     }
 
     private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
@@ -315,9 +324,56 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         return false;
     }
 
+    public void onGiftClick(View view) {
+        Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
+        startActivity(intent);
+        PreferencesUtils.updateIconAdClickTime(HomeActivity.this);
+        EventReporter.luckyClick("home_icon_click");
+    }
+
+    private void showGiftIcon() {
+        giftIconView.setVisibility(View.VISIBLE);
+        newTipDot.setVisibility(View.INVISIBLE);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIconView, "scaleX", 0.7f, 1.4f, 1.0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIconView, "scaleY", 0.7f, 1.4f, 1.0f);
+        scaleX.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                long interval = System.currentTimeMillis() - PreferencesUtils.getLastIconAdClickTime(HomeActivity.this);
+                if (interval > 60 * 1000) {
+                    newTipDot.setVisibility(View.VISIBLE);
+                } else {
+                    newTipDot.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleX).with(scaleY);
+        animSet.setInterpolator(new BounceInterpolator());
+        animSet.setDuration(800).start();
+    }
+
+
     private void initView() {
         setContentView(R.layout.home_activity_layout);
         cloneGridView = (GridView) findViewById(R.id.clone_grid_view);
+        giftIconView = (ImageView) findViewById(R.id.gift_ad);
+        newTipDot = (ImageView) findViewById(R.id.newtip_dot);
         mProgressBar = findViewById(R.id.progressBar);
         gridAdapter = new HomeGridAdapter(this);
         cloneGridView.setAdapter(gridAdapter);
@@ -339,6 +395,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 } else if (showLucky && i == luckyIdx) {
                     Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
                     startActivity(intent);
+                    EventReporter.luckyClick("item_click");
                     MLogs.d("lucky clicked");
                 } else if (i == addIdx) {
                     MLogs.d("to add more clone");
@@ -350,12 +407,20 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int size = mClonedList == null? 0: mClonedList.size();
-                if (i >= size) {
+                int luckyIdx = size;
+                if (i < size) {
+                    DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
+                    mDragController.startDrag(iv, iv, gridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
+                    return true;
+                }  else if (showLucky && i == luckyIdx) {
+                    Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
+                    startActivity(intent);
+                    EventReporter.luckyClick("item_click_long");
+                    MLogs.d("lucky clicked");
+                    return true;
+                } else   {
                     return false;
                 }
-                DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
-                mDragController.startDrag(iv, iv, gridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
-                return true;
             }
         });
 

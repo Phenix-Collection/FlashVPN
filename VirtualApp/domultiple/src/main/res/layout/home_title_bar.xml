@@ -38,23 +38,46 @@
             android:paddingRight="5dp"
             android:onClick="onMenuClick"
             android:id="@+id/menu_more"
-            android:src="@drawable/more_dot"
-            android:background="@drawable/selector_title_button_bg"/>
+            android:src="@drawable/more_dot" />
         <ImageView
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
             android:layout_gravity="center_vertical|right|end"
             android:layout_toLeftOf="@id/menu_more"
             android:layout_toStartOf="@id/menu_more"
-            android:paddingLeft="5dp"
-            android:paddingEnd="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
             android:onClick="onBoosterClick"
             android:id="@+id/booster"
-            android:src="@drawable/icon_booster"
-            android:background="@drawable/selector_title_button_bg"/>
+            android:src="@drawable/icon_booster" />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:layout_gravity="center_vertical|right|end"
+            android:layout_toLeftOf="@id/booster"
+            android:layout_toStartOf="@id/booster"
+            android:paddingLeft="8dp"
+            android:paddingEnd="8dp"
+            android:paddingRight="10dp"
+            android:onClick="onGiftClick"
+            android:id="@+id/gift_ad"
+            android:src="@drawable/icon_gift_ad" />
+        <ImageView
+            android:id="@+id/newtip_dot"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_marginTop="20dp"
+            android:paddingRight="12dp"
+            android:paddingEnd="12dp"
+            android:layout_alignRight="@id/gift_ad"
+            android:layout_alignEnd="@id/gift_ad"
+            android:scaleType="fitCenter"
+            android:background="@drawable/new_tips_dot" />
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/action_bar"
