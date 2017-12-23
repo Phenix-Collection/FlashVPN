@@ -45,7 +45,7 @@
     <string name="settings">Settings</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="settings_right" translatable="false">2017 RiverStone Tech. All rights reserved</string>
+    <string name="settings_right" translatable="false">2018 RiverStone Tech. All rights reserved</string>
     <string name="toast_no_lucky">Sorry, no lucky content this time. Please try again later.</string>
     <string translatable="false" name="boost_title">Do Booster</string>
     <!-- app loading -->
