@@ -78,7 +78,9 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
 
     @Override
     public void onAdClicked(com.facebook.ads.Ad ad) {
-
+        if(adListener != null) {
+            adListener.onAdClicked(this);
+        }
     }
 
     @Override

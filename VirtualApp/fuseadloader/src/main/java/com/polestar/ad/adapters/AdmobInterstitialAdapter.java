@@ -78,6 +78,9 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
+                if (adLoadListener != null) {
+                    adLoadListener.onAdClicked(AdmobInterstitialAdapter.this);
+                }
             }
 
             @Override
@@ -88,6 +91,9 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
+                if (adLoadListener != null) {
+                    adLoadListener.onAdClosed(AdmobInterstitialAdapter.this);
+                }
             }
         });
 

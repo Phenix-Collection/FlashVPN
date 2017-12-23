@@ -6,8 +6,14 @@ import java.util.List;
  * Created by guojia on 2016/10/31.
  */
 
-public interface IAdLoadListener {
-    void onAdLoaded(IAdAdapter ad);
-    void onAdListLoaded(List<IAdAdapter> ads);
-    void onError(String error);
+public abstract class IAdLoadListener {
+    protected abstract void onAdLoaded(IAdAdapter ad);
+    protected void onAdClicked(IAdAdapter ad) {
+
+    }
+    protected void  onAdClosed(IAdAdapter ad) {
+
+    }
+    protected abstract void onAdListLoaded(List<IAdAdapter> ads);
+    protected abstract void onError(String error);
 }

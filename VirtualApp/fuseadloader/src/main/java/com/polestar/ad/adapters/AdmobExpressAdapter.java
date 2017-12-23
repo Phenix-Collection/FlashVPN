@@ -52,6 +52,9 @@ public class AdmobExpressAdapter  extends AdAdapter {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
+                if (mListener != null) {
+                    mListener.onAdClosed(AdmobExpressAdapter.this);
+                }
                 AdLog.d(TAG, "onAdClosed");
             }
 
@@ -73,6 +76,9 @@ public class AdmobExpressAdapter  extends AdAdapter {
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
+                if (mListener != null) {
+                    mListener.onAdClicked(AdmobExpressAdapter.this);
+                }
             }
 
             @Override

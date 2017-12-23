@@ -52,11 +52,17 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
 
     @Override
     public void onInterstitialClicked(MoPubInterstitial interstitial) {
+        if (mAdListener != null) {
+            mAdListener.onAdClicked(MopubInterstitialAdapter.this);
+        }
 
     }
 
     @Override
     public void onInterstitialDismissed(MoPubInterstitial interstitial) {
+        if (mAdListener != null) {
+            mAdListener.onAdClosed(MopubInterstitialAdapter.this);
+        }
 
     }
 

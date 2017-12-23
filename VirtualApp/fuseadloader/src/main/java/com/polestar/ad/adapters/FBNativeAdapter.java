@@ -54,20 +54,27 @@ public class FBNativeAdapter extends AdAdapter {
 
             @Override
             public void onError(com.facebook.ads.Ad ad, AdError adError) {
-                mListener.onError(adError.getErrorMessage());
+                if(mListener != null) {
+                    mListener.onError(adError.getErrorMessage());
+                }
                 stopMonitor();
             }
 
             @Override
             public void onAdLoaded(com.facebook.ads.Ad ad) {
                 mLoadedTime = System.currentTimeMillis();
-                mListener.onAdLoaded(FBNativeAdapter.this);
+                if(mListener != null) {
+                    mListener.onAdLoaded(FBNativeAdapter.this);
+                }
                 stopMonitor();
             }
 
             @Override
             public void onAdClicked(com.facebook.ads.Ad ad) {
                 //TODO
+                if (mListener != null) {
+                    mListener.onAdClicked(FBNativeAdapter.this);
+                }
             }
         });
         mRawAd.loadAd();

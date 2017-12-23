@@ -229,7 +229,7 @@ public class FuseAdLoader {
         return mNativeAdConfigList!=null && mNativeAdConfigList.size() > 0;
     }
 
-    abstract class IndexAdListener implements IAdLoadListener {
+    abstract class IndexAdListener extends IAdLoadListener {
         int index;
         public IndexAdListener(int index) {
             this.index = index;
