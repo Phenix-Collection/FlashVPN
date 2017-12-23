@@ -271,7 +271,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         if (mClonedList != null && gridAdapter != null) {
             gridAdapter.notifyDataSetChanged(mClonedList);
         }
-        showGiftIcon();
+        mProgressBar.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showGiftIcon();
+            }
+        }, 500);
     }
 
     private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
@@ -345,7 +350,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             @Override
             public void onAnimationEnd(Animator animator) {
                 long interval = System.currentTimeMillis() - PreferencesUtils.getLastIconAdClickTime(HomeActivity.this);
-                if (interval > 60 * 1000) {
+                if (interval > 24*60*60 * 1000) {
                     newTipDot.setVisibility(View.VISIBLE);
                 } else {
                     newTipDot.setVisibility(View.INVISIBLE);
