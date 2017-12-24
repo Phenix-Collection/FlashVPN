@@ -107,6 +107,10 @@
         <value>true</value>
     </entry>
     <entry>
+        <key>default_enable_quick_switch</key>
+        <value>true</value>
+    </entry>
+    <entry>
         <key>slot_boost_ad</key>
         <value>fb:1459853160757953_1567501253326476:0;mp:58664de38d5c46678988e90136d075fe:0;ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>
     </entry>
