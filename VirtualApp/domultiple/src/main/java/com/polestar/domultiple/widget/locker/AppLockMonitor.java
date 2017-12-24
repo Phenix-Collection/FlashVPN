@@ -1,5 +1,9 @@
 package com.polestar.domultiple.widget.locker;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -8,6 +12,7 @@ import android.text.TextUtils;
 import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.AppConstants;
+import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.ui.AppLockActivity;
@@ -41,11 +46,37 @@ public class AppLockMonitor {
     public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
     private final static String TAG = "AppLockMonitor";
 
+    private final static String ACTION_RELOAD_SETTING = BuildConfig.APPLICATION_ID + ".reload_lock";
+    private final static String EXTRA_NEW_KEY = "extra_new_key";
+    private final static String EXTRA_NEW_INTERVAL = "extra_new_interval";
+    private final static String EXTRA_AD_FREE = "extra_ad_free";
+
     private FuseAdLoader mAdLoader;
     private boolean hasAppLocked;
     private boolean adFree;
 
+    public static void updateSetting(String newKey, boolean adFree, long interval) {
+        Intent intent = new Intent(ACTION_RELOAD_SETTING);
+        intent.putExtra(EXTRA_NEW_KEY, newKey);
+        intent.putExtra(EXTRA_NEW_INTERVAL, interval);
+        intent.putExtra(EXTRA_AD_FREE, adFree);
+        PolestarApp.getApp().sendBroadcast(intent);
+    }
+
+    class ReloadSettingReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLogs.d("ReloadSettingReceiver onReceive");
+            reloadSetting (intent.getStringExtra(EXTRA_NEW_KEY),
+                    intent.getBooleanExtra(EXTRA_AD_FREE, false),
+                    intent.getLongExtra(EXTRA_NEW_INTERVAL, 3000));
+        }
+    }
+
     private AppLockMonitor() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_RELOAD_SETTING);
+        PolestarApp.getApp().registerReceiver(new ReloadSettingReceiver(), filter);
         mHandler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
@@ -124,7 +155,7 @@ public class AppLockMonitor {
         DBManager.resetSession();
         List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
         for (CloneModel model: list) {
-            modelHashMap.put(model.getPackageName() + model.getPkgUserId(), model);
+            modelHashMap.put(CloneManager.getMapKey(model.getPackageName(), model.getPkgUserId()), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
                 MLogs.d(TAG, "hasAppLocked " + model.getPackageName());
                 hasAppLocked = true;

@@ -225,8 +225,8 @@ public class AppLockActivity extends BaseActivity {
         CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
         mCenterIcon.setImageBitmap(data.getCustomIcon());
         if (!data.customized) {
-            mCenterAppText.setText(String.format(ResourcesUtil.getString(R.string.clone_label_tag),
-                    CloneManager.getInstance(PolestarApp.getApp()).getModelName(mPkgName, mUserId)));
+            mCenterAppText.setText(
+                    CloneManager.getInstance(PolestarApp.getApp()).getModelName(mPkgName, mUserId));
         } else {
             mCenterAppText.setText(data.label);
         }
