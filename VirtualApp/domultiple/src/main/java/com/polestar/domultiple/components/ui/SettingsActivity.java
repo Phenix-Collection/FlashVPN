@@ -17,6 +17,7 @@ import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.billing.BillingConstants;
 import com.polestar.domultiple.billing.BillingProvider;
+import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
@@ -31,6 +32,7 @@ import com.polestar.domultiple.widget.UpDownDialog;
 
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
+    private BlueSwitch quickSwitch;
     private BlueSwitch liteSwitch;
     private BlueSwitch adFreeSwitch;
     private boolean requestAdFree;
@@ -52,6 +54,19 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 PreferencesUtils.putBoolean(SettingsActivity.this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,shortCutSwich.isChecked());
+            }
+        });
+        quickSwitch = (BlueSwitch) findViewById(R.id.quick_switch_btn);
+        quickSwitch.setChecked(QuickSwitchNotification.isEnable());
+        quickSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (QuickSwitchNotification.isEnable()) {
+                    QuickSwitchNotification.disable();
+                }else {
+                    QuickSwitchNotification.enable();
+                };
+                quickSwitch.setChecked(QuickSwitchNotification.isEnable());
             }
         });
         liteSwitch = (BlueSwitch) findViewById(R.id.lite_switch_btn);

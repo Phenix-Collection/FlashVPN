@@ -144,7 +144,44 @@
 
         <include layout="@layout/setting_wide_splitter" />
         <!--android:text="@string/settings_more"-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:paddingLeft="22dp">
 
+            <com.polestar.domultiple.widget.BlueSwitch
+                android:id="@+id/quick_switch_btn"
+                android:layout_width="82.5dp"
+                android:layout_height="70dp"
+                android:layout_alignParentRight="true"
+                android:gravity="center_horizontal"
+                android:paddingBottom="28dp"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:paddingTop="28dp" />
+
+            <TextView
+                android:id="@+id/quick_switch_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:layout_toLeftOf="@id/quick_switch_btn"
+                android:text="@string/quick_switch_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/quick_switch_title"
+                android:layout_toLeftOf="@id/quick_switch_btn"
+                android:text="@string/quick_switch_desc"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+        <include layout="@layout/setting_line_splitter" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"

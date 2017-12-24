@@ -101,6 +101,9 @@
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
     <string name="settings_privacy_locker_content">Click to set privacy locker for cloned apps</string>
     <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
+    <!--quick switch-->
+    <string name="quick_switch_title">Quick Switch</string>
+    <string name="quick_switch_desc">Enable quick switch to cloned apps from notification bar</string>
     <!--gms-->
     <string name="settings_lite_mode">Enable lite mode for fewer memory and power usage</string>
     <string name="settings_lite_mode_title" translatable="false">Lite Mode</string>

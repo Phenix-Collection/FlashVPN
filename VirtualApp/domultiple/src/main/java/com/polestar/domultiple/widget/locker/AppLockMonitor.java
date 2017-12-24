@@ -10,10 +10,10 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.clone.CloneManager;
-import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.components.ui.AppLockActivity;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
+import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
@@ -52,6 +52,7 @@ public class AppLockMonitor {
                 switch (msg.what) {
                     case MSG_DELAY_LOCK_APP:
                         MLogs.d(TAG, "Package change to background, last foreground: " + mUnlockedForegroudPkg);
+                        QuickSwitchNotification.getInstance(VirtualCore.get().getContext()).updateLruPackages((String)msg.obj);
                         mUnlockedForegroudPkg = null;
                         break;
                     case MSG_PACKAGE_UNLOCKED:
@@ -74,8 +75,8 @@ public class AppLockMonitor {
                     case MSG_SHOW_LOCKER:
                         String key = (String) msg.obj;
                         try {
-                            String name = key.substring(0, key.length() - 1);
-                            int userId = Integer.valueOf(""+key.charAt(key.length() - 1));
+                            String name = CloneManager.getNameFromKey(key);
+                            int userId = CloneManager.getUserIdFromKey(key);
                             AppLockActivity.start(VirtualCore.get().getContext(), name, userId);
                         }catch (Exception ex) {
 

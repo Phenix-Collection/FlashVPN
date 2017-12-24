@@ -23,6 +23,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.billing.BillingProvider;
 import com.polestar.domultiple.clone.CloneApiDelegate;
 import com.polestar.domultiple.clone.CloneComponentDelegate;
+import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
@@ -180,6 +181,9 @@ public class PolestarApp extends Application {
                 VirtualCore.get().setComponentDelegate(delegate);
                 initAd();
                 AppLockMonitor.getInstance();
+                if (QuickSwitchNotification.getInstance(gDefault).isEnable()) {
+                    QuickSwitchNotification.getInstance(gDefault).updateLruPackages(null);
+                }
             }
         });
 

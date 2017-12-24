@@ -2,6 +2,7 @@ package com.google.android.gms.booster;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 public class BoosterShortcutActivity extends Activity {
 
@@ -9,7 +10,8 @@ public class BoosterShortcutActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Booster.startCleanShortcutClick(this.getApplicationContext(), "launcher");
+        String from = getIntent().getStringExtra(BoosterSdk.EXTRA_SHORTCUT_CLICK_FROM );
+        Booster.startCleanShortcutClick(this.getApplicationContext(), TextUtils.isEmpty(from)? "launcher":from);
 
         finish();
     }
