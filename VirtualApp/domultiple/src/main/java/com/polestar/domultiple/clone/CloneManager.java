@@ -597,8 +597,29 @@ public class CloneManager {
         return null;
     }
 
+    //DO NOT SAVE MAP KEY TO PERSISTENT FILE
     public static String getMapKey(String pkg, int userId) {
-        return pkg + userId;
+        return pkg + ":" + userId;
+    }
+
+    public static int getUserIdFromKey(String key) {
+        if (key != null) {
+            String arr[] = key.split(":");
+            if (arr.length == 2) {
+                return Integer.valueOf(arr[1]);
+            }
+        }
+        return 0;
+    }
+
+    public static String getNameFromKey(String key) {
+        if (key != null) {
+            String arr[] = key.split(":");
+            if (arr.length == 2) {
+                return arr[0];
+            }
+        }
+        return key;
     }
 
     private void buildPackageIndexMap() {
