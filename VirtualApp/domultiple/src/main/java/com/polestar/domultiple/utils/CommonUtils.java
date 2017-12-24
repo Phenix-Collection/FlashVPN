@@ -46,7 +46,7 @@ public class CommonUtils {
         PolestarApp.getApp().startActivity(intent);
     }
     public static void createShortCut(Context context, CloneModel appModel) {
-        Bitmap iconBitmap = createCustomIcon(context, appModel.getIconDrawable(context));
+        Bitmap iconBitmap = createCustomIcon(context, appModel.getIconDrawable(context), appModel.getPkgUserId());
         String appName = context.getResources().getString(R.string.clone_label_tag,appModel.getName());
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppLoadingActivity.class.getName());
@@ -282,8 +282,32 @@ public class CommonUtils {
         return false;
     }
 
+    public static int getRingIconId(int userId) {
+        switch (userId) {
+            case 0:
+                return R.mipmap.ring_icon;
+            case 1:
+                return R.mipmap.ring_icon_2;
+            case 2:
+                return R.mipmap.ring_icon_3;
+            case 3:
+                return R.mipmap.ring_icon_4;
+            case 4:
+                return R.mipmap.ring_icon_5;
+            case 5:
+                return R.mipmap.ring_icon_6;
+            case 6:
+                return R.mipmap.ring_icon_7;
+            case 7:
+                return R.mipmap.ring_icon_8;
+            case 8:
+                return R.mipmap.ring_icon_9;
+            default:
+                return R.mipmap.ring_icon;
+        }
+    }
 
-    public static Bitmap createCustomIcon(Context context, Drawable appIcon){
+    public static Bitmap createCustomIcon(Context context, Drawable appIcon, int userId){
         if(appIcon == null){
             return null;
         }
@@ -292,7 +316,7 @@ public class CommonUtils {
             int width = DisplayUtils.dip2px(context, AppConstants.APP_ICON_WIDTH);
             int padding = DisplayUtils.dip2px(context, AppConstants.APP_ICON_PADDING);
             shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
-            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ring_icon);
+            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), getRingIconId(userId));
             Canvas canvas = new Canvas(shortCutBitMap);
 
             Paint paint = new Paint();

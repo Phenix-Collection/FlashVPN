@@ -41,14 +41,14 @@ public class BitmapUtils {
         }
         try {
             Drawable defaultIcon = context.getPackageManager().getApplicationIcon(pkg);
-            return createBadgeIcon(context, defaultIcon);
+            return createBadgeIcon(context, defaultIcon, userId);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public static Bitmap createBadgeIcon(Context context, Drawable appIcon){
+    public static Bitmap createBadgeIcon(Context context, Drawable appIcon, int userId){
         if(appIcon == null){
             return null;
         }
@@ -57,7 +57,7 @@ public class BitmapUtils {
             int width = DisplayUtils.dip2px(context, AppConstants.APP_ICON_WIDTH);
             int padding = DisplayUtils.dip2px(context, AppConstants.APP_ICON_PADDING);
             shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
-            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ring_icon);
+            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), CommonUtils.getRingIconId(userId));
             Canvas canvas = new Canvas(shortCutBitMap);
 
             Paint paint = new Paint();
@@ -70,7 +70,11 @@ public class BitmapUtils {
             appIcon.setBounds(padding,padding,width - padding,width - padding);
             appIcon.draw(canvas);
 
+            //Bitmap numberBmp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_number_1);
             canvas.drawBitmap(Bitmap.createScaledBitmap(mShape,width,width,true),new Rect(0,0,width,width),new Rect(0,0,width,width),null);
+//            int numberWidth = DisplayUtils.dip2px(context, 10);
+//            canvas.drawBitmap(Bitmap.createScaledBitmap(numberBmp,numberWidth,numberWidth,true),
+//                    new Rect(0,width-numberWidth,numberWidth,width), new Rect(0,width-numberWidth,numberWidth,width),null);
         }catch (OutOfMemoryError error){
             error.printStackTrace();
             shortCutBitMap = null;

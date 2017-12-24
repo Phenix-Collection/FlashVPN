@@ -17,7 +17,7 @@ import com.polestar.domultiple.utils.CommonUtils;
 public class CloneApiDelegate implements IAppApiDelegate {
 
     @Override
-    public Bitmap createCloneTagedBitmap(String pkg, Bitmap icon) {
+    public Bitmap createCloneTagedBitmap(String pkg, Bitmap icon, int userId) {
         if (pkg == null && icon == null) {
             return null;
         }
@@ -30,10 +30,10 @@ public class CloneApiDelegate implements IAppApiDelegate {
                 e.printStackTrace();
             }
             if (drawable != null) {
-                return CommonUtils.createCustomIcon(PolestarApp.getApp(), drawable);
+                return CommonUtils.createCustomIcon(PolestarApp.getApp(), drawable, userId);
             }
         } else {
-            return CommonUtils.createCustomIcon(PolestarApp.getApp(), new BitmapDrawable(icon));
+            return CommonUtils.createCustomIcon(PolestarApp.getApp(), new BitmapDrawable(icon), userId);
         }
 
         return null;

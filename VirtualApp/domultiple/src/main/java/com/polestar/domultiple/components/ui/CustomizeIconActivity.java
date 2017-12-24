@@ -117,7 +117,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         MLogs.d("hue: " + hue  + " sat: " + sat + " lum: " + lum);
         customIcon = BitmapUtils.handleImageEffect(BitmapUtils.drawableToBitmap(defaultIcon), hue, sat,lum );
         if (mData.badge) {
-            customIcon = BitmapUtils.createBadgeIcon(this, new BitmapDrawable(customIcon));
+            customIcon = BitmapUtils.createBadgeIcon(this, new BitmapDrawable(customIcon), appModel.getPkgUserId());
         }
         iconImg.setImageBitmap(customIcon);
 

@@ -278,8 +278,16 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
                     model.setNotificationEnable(true);
                 }
-                model.setName(cm.getDefaultName(item.pkg));
+                //model.setName(cm.getDefaultName(item.pkg));
                 int userId = cm.getNextAvailableUserId(item.pkg);
+                PackageManager pm = getPackageManager();
+                try {
+                    ApplicationInfo ai = pm.getApplicationInfo(item.pkg, 0);
+                    CharSequence label = pm.getApplicationLabel(ai);
+                    model.setName(cm.getCompatibleName(""+label, userId));
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
                 cm.createClone(this, model, userId);
                 selected = true;
             }
@@ -290,8 +298,15 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 if (CommonUtils.isSocialApp(item.pkg)) {
                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
                 }
-                model.setName(cm.getDefaultName(item.pkg));
                 int userId = cm.getNextAvailableUserId(item.pkg);
+                PackageManager pm = getPackageManager();
+                try {
+                    ApplicationInfo ai = pm.getApplicationInfo(item.pkg, 0);
+                    CharSequence label = pm.getApplicationLabel(ai);
+                    model.setName(cm.getCompatibleName(""+label, userId));
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
                 cm.createClone(this, model, userId);
                 selected = true;
             }
