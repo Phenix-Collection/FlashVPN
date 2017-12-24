@@ -32,6 +32,7 @@ import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
+import com.polestar.domultiple.widget.locker.AppLockMonitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -419,7 +420,8 @@ public class CloneManager {
         String key = PreferencesUtils.getEncodedPatternPassword(PolestarApp.getApp());
         boolean adFree = PreferencesUtils.isAdFree();
         long interval = PreferencesUtils.getLockInterval();
-        VirtualCore.get().reloadLockerSetting(key, adFree, interval);
+        AppLockMonitor.updateSetting(key, adFree, interval);
+        //VirtualCore.get().reloadLockerSetting(key, adFree, interval);
     }
 
     @Deprecated
@@ -586,7 +588,7 @@ public class CloneManager {
 
     // for compatible use
     public static String getCompatibleName(String name, int userId) {
-        return (userId != 0) ? name + userId : name;
+        return (userId != 0) ? name + " " + (userId + 1): name + " +" ;
     }
 
     // the name store in database
