@@ -93,7 +93,7 @@ import mirror.com.android.internal.R_Hide;
                 Drawable drawable = icon.loadDrawable(appContext);
                 Bitmap bitmap = drawableToBitMap(drawable);
                     if (bitmap == null) {
-                        bitmap = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(appContext.getPackageName(), null);
+                        bitmap = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(appContext.getPackageName(), null, VirtualCore.get().myUserId());
                     }
                 mirror.android.graphics.drawable.Icon.mObj1.set(icon, bitmap);
                 mirror.android.graphics.drawable.Icon.mString1.set(icon, null);

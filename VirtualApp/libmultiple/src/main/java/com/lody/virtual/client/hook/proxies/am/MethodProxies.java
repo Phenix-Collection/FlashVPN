@@ -1635,7 +1635,7 @@ class MethodProxies {
                         }
 
                 if (VirtualCore.get().getAppApiDelegate() != null) {
-                    icon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(app.getPackageName(), icon);
+                    icon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(app.getPackageName(), icon, VirtualCore.get().myUserId());
                     label = VirtualCore.get().getAppApiDelegate().getCloneTagedLabel(label);
                 }
 
@@ -1816,7 +1816,8 @@ class MethodProxies {
                                 //noinspection deprecation
                                 Drawable iconDrawable = resources.getDrawable(resId);
                                 Bitmap newIcon = BitmapUtils.drawableToBitmap(iconDrawable);
-                                    newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(icon.packageName, newIcon);
+                                    newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(icon.packageName, newIcon,
+                                            VirtualCore.get().myUserId());
                                 if (newIcon != null) {
                                     intent.removeExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE);
                                     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, newIcon);
@@ -1830,7 +1831,8 @@ class MethodProxies {
                         try {
                             Bitmap origIcon = intent.getParcelableExtra(Intent.EXTRA_SHORTCUT_ICON);
                             if (origIcon != null && pkg != null && !TextUtils.equals(pkg, getHostPkg())){
-                                Bitmap newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(pkg, origIcon);
+                                Bitmap newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(pkg, origIcon,
+                                        VirtualCore.get().myUserId());
                                 if (newIcon != null) {
                                     intent.removeExtra(Intent.EXTRA_SHORTCUT_ICON);
                                     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, newIcon);
