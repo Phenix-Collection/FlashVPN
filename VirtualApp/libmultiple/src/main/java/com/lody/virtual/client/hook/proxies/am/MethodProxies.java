@@ -392,6 +392,11 @@ class MethodProxies {
         }
 
         @Override
+        public boolean isEnable() {
+            return VirtualCore.get().isServerProcess()? false :  super.isEnable();
+        }
+
+        @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             int intentIndex = ArrayUtils.indexOfObject(args, Intent.class, 1);
             if (intentIndex < 0) {
