@@ -41,6 +41,7 @@ import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
+import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.AnimatorHelper;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DisplayUtils;
@@ -501,7 +502,10 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             CommonUtils.removeShortCut(this, clonedApp);
             // remove customized data
             CustomizeAppData.removePerf(clonedApp.getPackageName(), clonedApp.getPkgUserId());
-
+            if (QuickSwitchNotification.isEnable()) {
+                QuickSwitchNotification.disable();
+                QuickSwitchNotification.enable();
+            }
         }
         gridAdapter.notifyDataSetChanged(mClonedList);
     }
