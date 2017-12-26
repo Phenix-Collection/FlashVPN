@@ -181,8 +181,8 @@ public class PolestarApp extends Application {
                 VirtualCore.get().setComponentDelegate(delegate);
                 initAd();
                 AppLockMonitor.getInstance();
-                if (QuickSwitchNotification.getInstance(gDefault).isEnable()) {
-                    QuickSwitchNotification.getInstance(gDefault).updateLruPackages(null);
+                if (QuickSwitchNotification.isEnable()) {
+                    QuickSwitchNotification.getInstance(gDefault).init();
                 }
             }
         });

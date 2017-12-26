@@ -27,7 +27,9 @@ import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.components.ui.HomeActivity;
+import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.CustomizeAppData;
+import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.MLogs;
@@ -37,6 +39,7 @@ import com.polestar.domultiple.utils.ResourcesUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 
 /**
@@ -78,12 +81,6 @@ public class QuickSwitchNotification {
         thread.start();
         workHandler = new Handler(thread.getLooper());
         mainHandler = new Handler(Looper.getMainLooper());
-        workHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                readLruKeys();
-            }
-        });
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_QUICK_SWITCH);
         intentFilter.addAction(ACTION_CANCEL_QUICK_SWITCH);
@@ -96,40 +93,58 @@ public class QuickSwitchNotification {
         mContext.registerReceiver(new SwitchIntentReceiver(), intentFilter);
     }
 
+    public void init() {
+        workHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                readLruKeys();
+                updateLruPackages(null);
+            }
+        });
+    }
     private void readLruKeys() {
         String data = PreferencesUtils.getString(mContext, "lru_pkg");
-        if (!TextUtils.isEmpty(data)) {
-            String arr[] = data.split(SPLIT);
-            if ( arr != null && arr.length != 0) {
-                for (String s: arr) {
-                    if (! TextUtils.isEmpty(s)) {
-                        String pkg = CloneManager.getNameFromKey(s);
-                        int userId = CloneManager.getUserIdFromKey(s);
-                        if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
-                            lruKeys.add(s);
+        synchronized (lruKeys) {
+            if (!TextUtils.isEmpty(data)) {
+                String arr[] = data.split(SPLIT);
+                if (arr != null && arr.length != 0) {
+                    for (String s : arr) {
+                        if (!TextUtils.isEmpty(s)) {
+                            String pkg = CloneManager.getNameFromKey(s);
+                            int userId = CloneManager.getUserIdFromKey(s);
+                            if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+                                lruKeys.add(s);
+                            }
                         }
                     }
                 }
             }
-        }
-        if (lruKeys.size() < LRU_PACKAGE_CNT) {
-            String hotCloneConf = RemoteConfig.getString(CONFIG_HOT_CLONE_LIST);
-            HashSet<String> hotCloneSet = new HashSet<>();
-            if(!TextUtils.isEmpty(hotCloneConf)) {
-                String[] arr = hotCloneConf.split(":");
-                for (String s: arr) {
-                    hotCloneSet.add(s);
-                    try {
-                        ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(s, 0);
-                        if (ai != null) {
-                            //hack for apps not cloned
-                            lruKeys.add(CloneManager.getMapKey(s, 999));
-                        }
-                        if (lruKeys.size() >= LRU_PACKAGE_CNT) {
-                            return;
-                        }
-                    } catch (Exception ex) {
+            if (lruKeys.size() <LRU_PACKAGE_CNT) {
+                List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
+                for(CloneModel app:list) {
+                        lruKeys.add(CloneManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
+                }
+            }
+            //Reserve one + slot iff not enough clones
+            if (lruKeys.size() < (LRU_PACKAGE_CNT - 1)) {
+                String hotCloneConf = RemoteConfig.getString(CONFIG_HOT_CLONE_LIST);
+                HashSet<String> hotCloneSet = new HashSet<>();
+                if (!TextUtils.isEmpty(hotCloneConf)) {
+                    String[] arr = hotCloneConf.split(":");
+                    for (String s : arr) {
+                        hotCloneSet.add(s);
+                        try {
+                            ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(s, 0);
+                            if (ai != null) {
+                                //hack for apps not cloned
+                                lruKeys.add(CloneManager.getMapKey(s, 999));
+                            }
+                            if (lruKeys.size() >= (LRU_PACKAGE_CNT-1)) {
+                                return;
+                            }
+                        } catch (Exception ex) {
 
+                        }
                     }
                 }
             }
@@ -195,8 +210,10 @@ public class QuickSwitchNotification {
 
     private void dumpLru() {
         if (BuildConfig.DEBUG) {
-            for (String s : lruKeys) {
-                MLogs.d(TAG, "LRU " + s);
+            synchronized (lruKeys) {
+                for (String s : lruKeys) {
+                    MLogs.d(TAG, "LRU " + s);
+                }
             }
         }
     }
@@ -221,47 +238,49 @@ public class QuickSwitchNotification {
         boostIntent.putExtra(BoosterSdk.EXTRA_SHORTCUT_CLICK_FROM, "notification");
         remoteViews.setOnClickPendingIntent(R.id.booster_icon,PendingIntent.getActivity(mContext, 0, boostIntent,0));
 
-        for (int i = 0; i < LRU_PACKAGE_CNT; i ++ ) {
-            if (lruKeys.size() <= i) {
+        synchronized (lruKeys) {
+            for (int i = 0; i < LRU_PACKAGE_CNT; i++) {
+                if (lruKeys.size() <= i) {
 
-            } else {
-                int titleId = getTitleIdForItem(i);
-                int iconId = getIconIdForItem(i);
-                if ( titleId != 0 && iconId !=0) {
-                    String mapKey = lruKeys.get(i);
-                    String pkg = CloneManager.getNameFromKey(mapKey);
-                    int userId = CloneManager.getUserIdFromKey(mapKey);
-                    if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
-                        CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
-                        remoteViews.setImageViewBitmap(iconId, data.getCustomIcon());
-                        if (!data.customized) {
-                            remoteViews.setTextViewText(titleId, String.format(ResourcesUtil.getString(R.string.clone_label_tag),
-                                    CloneManager.getInstance(PolestarApp.getApp()).getModelName(pkg, userId)));
-                        } else {
-                            remoteViews.setTextViewText(titleId, data.label);
-                        }
-                        Intent intent = new Intent(ACTION_QUICK_SWITCH);
-                        intent.addCategory(CATEGORY_NOTIFY + i);
-                        intent.putExtra(EXTRA_START_PACKAGE, pkg);
-                        intent.putExtra(EXTRA_START_USERID, userId);
-                        MLogs.d(TAG, "Pending intent pkg: " + pkg + " userId:" + userId);
-                        remoteViews.setOnClickPendingIntent(iconId,
-                                PendingIntent.getBroadcast(mContext, i, intent, PendingIntent.FLAG_UPDATE_CURRENT));
-                    } else {
-                        try {
-                            ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(pkg, 0);
-                            if (ai != null) {
-                                remoteViews.setImageViewBitmap(iconId, DisplayUtils.drawable2Bitmap(ai.loadIcon(mContext.getPackageManager())));
-                                remoteViews.setTextViewText(titleId, ai.loadLabel(mContext.getPackageManager()));
-                                Intent intent = new Intent(ACTION_QUICK_SWITCH);
-                                intent.addCategory(CATEGORY_NOTIFY + i);
-                                intent.putExtra(EXTRA_START_PACKAGE, pkg);
-                                intent.putExtra(EXTRA_START_USERID, userId);
-                                remoteViews.setOnClickPendingIntent(iconId,
-                                        PendingIntent.getBroadcast(mContext, i, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                } else {
+                    int titleId = getTitleIdForItem(i);
+                    int iconId = getIconIdForItem(i);
+                    if (titleId != 0 && iconId != 0) {
+                        String mapKey = lruKeys.get(i);
+                        String pkg = CloneManager.getNameFromKey(mapKey);
+                        int userId = CloneManager.getUserIdFromKey(mapKey);
+                        if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+                            CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
+                            remoteViews.setImageViewBitmap(iconId, data.getCustomIcon());
+                            if (!data.customized) {
+                                remoteViews.setTextViewText(titleId, String.format(ResourcesUtil.getString(R.string.clone_label_tag),
+                                        CloneManager.getInstance(PolestarApp.getApp()).getModelName(pkg, userId)));
+                            } else {
+                                remoteViews.setTextViewText(titleId, data.label);
                             }
-                        } catch (Exception ex) {
+                            Intent intent = new Intent(ACTION_QUICK_SWITCH);
+                            intent.addCategory(CATEGORY_NOTIFY + i);
+                            intent.putExtra(EXTRA_START_PACKAGE, pkg);
+                            intent.putExtra(EXTRA_START_USERID, userId);
+                            MLogs.d(TAG, "Pending intent pkg: " + pkg + " userId:" + userId);
+                            remoteViews.setOnClickPendingIntent(iconId,
+                                    PendingIntent.getBroadcast(mContext, i, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                        } else {
+                            try {
+                                ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(pkg, 0);
+                                if (ai != null) {
+                                    remoteViews.setImageViewBitmap(iconId, DisplayUtils.drawable2Bitmap(ai.loadIcon(mContext.getPackageManager())));
+                                    remoteViews.setTextViewText(titleId, ai.loadLabel(mContext.getPackageManager()));
+                                    Intent intent = new Intent(ACTION_QUICK_SWITCH);
+                                    intent.addCategory(CATEGORY_NOTIFY + i);
+                                    intent.putExtra(EXTRA_START_PACKAGE, pkg);
+                                    intent.putExtra(EXTRA_START_USERID, userId);
+                                    remoteViews.setOnClickPendingIntent(iconId,
+                                            PendingIntent.getBroadcast(mContext, i, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                                }
+                            } catch (Exception ex) {
 
+                            }
                         }
                     }
                 }
@@ -273,21 +292,27 @@ public class QuickSwitchNotification {
 
     public void updateLruPackages(String mapKey) {
         MLogs.d(TAG,"updateLruPackages " + mapKey);
-        if (lruKeys.contains(mapKey) ) {
-            return;
-        }
-        if (!TextUtils.isEmpty(mapKey)) {
-            if (lruKeys.size() < LRU_PACKAGE_CNT) {
-                lruKeys.add(mapKey);
-            } else {
-                lruKeys.remove(0);
-                lruKeys.add(mapKey);
+        synchronized (lruKeys) {
+            if (lruKeys.contains(mapKey)) {
+                return;
+            }
+            if (!TextUtils.isEmpty(mapKey)) {
+                if (lruKeys.size() < LRU_PACKAGE_CNT) {
+                    lruKeys.add(mapKey);
+                } else {
+                    lruKeys.remove(0);
+                    lruKeys.add(mapKey);
+                }
             }
         }
         workHandler.removeCallbacks(writeLruRunnable);
         workHandler.postDelayed(writeLruRunnable, 2000);
-
-        updateNotification();
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                updateNotification();
+            }
+        });
     }
 
     public static void enable(){
@@ -311,18 +336,7 @@ public class QuickSwitchNotification {
             if (intent.getAction().equals(ACTION_CANCEL_QUICK_SWITCH)) {
                 mgr.cancel(NOTIFY_ID);
             } else if (intent.getAction().equals(ACTION_ENABLE_QUICK_SWITCH)) {
-                workHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        readLruKeys();
-                        mainHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateNotification();
-                            }
-                        });
-                    }
-                });
+                init();
             } else {
                 String pkg = intent.getStringExtra(EXTRA_START_PACKAGE);
                 int userId = intent.getIntExtra(EXTRA_START_USERID, 0);
