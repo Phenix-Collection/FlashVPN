@@ -49,7 +49,7 @@ public class QuickSwitchNotification {
     private NotificationManager mgr;
     private Context mContext;
 
-    private ArrayList<String> lruKeys;
+    private final ArrayList<String> lruKeys = new ArrayList<>();
     private Handler workHandler;
     private Handler mainHandler;
     private static final String CONFIG_HOT_CLONE_LIST = "hot_clone_list";
@@ -97,7 +97,6 @@ public class QuickSwitchNotification {
     }
 
     private void readLruKeys() {
-        lruKeys = new ArrayList<>();
         String data = PreferencesUtils.getString(mContext, "lru_pkg");
         if (!TextUtils.isEmpty(data)) {
             String arr[] = data.split(SPLIT);
