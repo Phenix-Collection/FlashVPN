@@ -100,7 +100,7 @@
     </entry>
     <entry>
         <key>slot_app_start_style</key>
-        <value>all</value>
+        <value>interstitial</value>
     </entry>
     <entry>
         <key>conf_need_preload_start_ad</key>
