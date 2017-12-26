@@ -302,9 +302,9 @@ public class AppLoadingActivity extends BaseActivity {
 
         if (initData()) {
             initView();
-        }
-        if (needLoadNativeAd(false, appModel.getPackageName())) {
-            loadNativeAd();
+            if (needLoadNativeAd(false, appModel.getPackageName())) {
+                loadNativeAd();
+            }
         }
     }
 
