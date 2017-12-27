@@ -90,4 +90,9 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("lucky_click", bundle);
     }
 
+    public static void quickSwitchSetting(boolean enable) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("status", enable);
+        mFirebaseAnalytics.logEvent("quick_switch", bundle);
+    }
 }

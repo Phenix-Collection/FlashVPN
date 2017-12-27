@@ -32,6 +32,7 @@ import com.polestar.domultiple.db.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DisplayUtils;
+import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
@@ -320,6 +321,7 @@ public class QuickSwitchNotification {
         Intent intent = new Intent(ACTION_ENABLE_QUICK_SWITCH);
         intent.addCategory(CATEGORY_ENABLE);
         VirtualCore.get().getContext().sendBroadcast(intent);
+        EventReporter.quickSwitchSetting(true);
     }
 
     public static void disable() {
@@ -327,6 +329,7 @@ public class QuickSwitchNotification {
         Intent intent = new Intent(ACTION_CANCEL_QUICK_SWITCH);
         intent.addCategory(CATEGORY_ENABLE);
         VirtualCore.get().getContext().sendBroadcast(intent);
+        EventReporter.quickSwitchSetting(false);
     }
 
     class SwitchIntentReceiver extends BroadcastReceiver {
