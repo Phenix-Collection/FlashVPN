@@ -58,6 +58,7 @@ public class QuickSwitchNotification {
     private Handler mainHandler;
     private static final String CONFIG_HOT_CLONE_LIST = "hot_clone_list";
     private static final String PREF_QUICK_SWITCH_STATE = "quick_switch_state";
+    private static final int FAKE_USERID_FOR_UNCLONED = 999;
 
     private static final int LRU_PACKAGE_CNT = 4;
 
@@ -138,7 +139,7 @@ public class QuickSwitchNotification {
                             ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(s, 0);
                             if (ai != null) {
                                 //hack for apps not cloned
-                                lruKeys.add(CloneManager.getMapKey(s, 999));
+                                lruKeys.add(CloneManager.getMapKey(s, FAKE_USERID_FOR_UNCLONED));
                             }
                             if (lruKeys.size() >= (LRU_PACKAGE_CNT-1)) {
                                 return;
@@ -293,16 +294,18 @@ public class QuickSwitchNotification {
 
     public void updateLruPackages(String mapKey) {
         MLogs.d(TAG,"updateLruPackages " + mapKey);
-        synchronized (lruKeys) {
-            if (lruKeys.contains(mapKey)) {
-                return;
-            }
-            if (!TextUtils.isEmpty(mapKey)) {
-                if (lruKeys.size() < LRU_PACKAGE_CNT) {
-                    lruKeys.add(mapKey);
-                } else {
-                    lruKeys.remove(0);
-                    lruKeys.add(mapKey);
+        if (!TextUtils.isEmpty(mapKey)) {
+            synchronized (lruKeys) {
+                if (lruKeys.contains(mapKey)) {
+                    return;
+                }
+                if (!TextUtils.isEmpty(mapKey)) {
+                    if (lruKeys.size() < LRU_PACKAGE_CNT) {
+                        lruKeys.add(mapKey);
+                    } else {
+                        lruKeys.remove(0);
+                        lruKeys.add(mapKey);
+                    }
                 }
             }
         }
@@ -369,7 +372,14 @@ public class QuickSwitchNotification {
 //            Intent intent = new Intent(Intent.ACTION_MAIN);
 //            intent.addCategory(Intent.CATEGORY_LAUNCHER);
 //            intent.setPackage(pkg);
-            mContext.startActivity(intent);
+            if (intent != null) {
+                mContext.startActivity(intent);
+            } else {
+                synchronized (lruKeys) {
+                    lruKeys.remove(CloneManager.getMapKey(pkg, FAKE_USERID_FOR_UNCLONED));
+                    updateLruPackages(null);
+                }
+            }
         }
 
     }
