@@ -110,4 +110,7 @@
     <string name="submit_success">Obrigado por fornecer feedback!</string>
     <string name="terms_of_service">Termos de serviço</string>
     <string name="toast_no_lucky">Desculpe, nenhum conteúdo sortudo desta vez. Por favor, tente novamente mais tarde.</string>
+    <!--quick switch-->
+    <string name="quick_switch_title">Interruptor rápido</string>
+    <string name="quick_switch_desc">Permitir mudança rápida para aplicativos clonados da barra de notificação</string>
 </resources>

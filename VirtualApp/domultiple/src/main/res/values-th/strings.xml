@@ -110,4 +110,7 @@
     <string name="submit_success">ขอบคุณที่ให้ข้อเสนอแนะ!</string>
     <string name="terms_of_service">เงื่อนไขการให้บริการ</string>
     <string name="toast_no_lucky">ขออภัยไม่มีเนื้อหาที่โชคดีในขณะนี้ กรุณาลองใหม่อีกครั้งในภายหลัง.</string>
+    <!--quick switch-->
+    <string name="quick_switch_title">สวิตช์ด่วน</string>
+    <string name="quick_switch_desc">เปิดใช้งานการสลับไปที่แอปแบบโคลนจากแถบการแจ้งเตือนอย่างรวดเร็ว</string>
 </resources>

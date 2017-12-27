@@ -111,4 +111,7 @@
     <string name="submit_success">Terima kasih telah memberikan umpan balik!</string>
     <string name="terms_of_service">Ketentuan Layanan</string>
     <string name="toast_no_lucky">Maaf, tidak ada konten yang beruntung kali ini. Silakan coba lagi nanti.</string>
+    <!--quick switch-->
+    <string name="quick_switch_title">Cepat Beralih</string>
+    <string name="quick_switch_desc">Aktifkan pengalihan cepat ke aplikasi kloning dari bilah notifikasi</string>
 </resources>
