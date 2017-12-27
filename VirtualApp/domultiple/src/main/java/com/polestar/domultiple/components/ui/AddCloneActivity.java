@@ -104,9 +104,17 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
 
         View adView = mAd.getAdView(viewBinder);
         if (adView != null) {
-            adContainer.removeAllViews();
-            adContainer.addView(adView);
-            adContainer.setVisibility(View.VISIBLE);
+            try {
+                adContainer.removeAllViews();
+                adContainer.addView(adView);
+                adContainer.setVisibility(View.VISIBLE);
+            }catch (Exception ex){
+                //possiblely inflateNativeAd called twice
+//                #2799 java.lang.IllegalStateException
+//                The specified child already has a parent. You must call removeView() on the child's parent first.
+//
+//                com.polestar.domultiple.components.ui.AddCloneActivity.inflateNativeAd(AddCloneActivity.java)
+            }
         }
     }
 
