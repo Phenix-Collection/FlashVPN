@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.polestar.domultiple.R;
+import com.polestar.domultiple.clone.CloneManager;
+import com.polestar.domultiple.utils.BitmapUtils;
 import com.polestar.domultiple.utils.MLogs;
 
 import java.util.List;
@@ -58,7 +60,8 @@ public class SelectPkgGridAdapter  extends BaseAdapter{
 
         SelectGridAppItem appModel = (SelectGridAppItem) getItem(i);
         if (appModel != null) {
-            appIcon.setImageDrawable(appModel.icon);
+            appIcon.setImageBitmap(BitmapUtils.createBadgeIcon(mContext, appModel.icon,
+                    CloneManager.getInstance(mContext).getNextAvailableUserId(appModel.pkg)));
             appName.setText(appModel.name);
             if (appModel.selected ) {
                 cb.setImageResource(R.drawable.selectd);
