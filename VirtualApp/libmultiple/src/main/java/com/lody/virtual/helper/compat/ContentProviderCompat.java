@@ -41,10 +41,10 @@ public class ContentProviderCompat {
     }
 
     public static ContentProviderClient crazyAcquireContentProvider(Context context, Uri uri) {
-        ContentProviderClient client = acquireContentProviderClient(context, uri);
+        ContentProviderClient client = null;
         if (client == null) {
             int retry = 0;
-            while (retry < 5 && client == null) {
+            while (retry < 6 && client == null) {
                 SystemClock.sleep(100);
                 retry++;
                 try {
