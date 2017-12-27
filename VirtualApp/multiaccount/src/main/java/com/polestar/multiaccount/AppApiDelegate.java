@@ -15,7 +15,7 @@ import com.polestar.multiaccount.utils.BitmapUtils;
 public class AppApiDelegate implements IAppApiDelegate {
 
     @Override
-    public Bitmap createCloneTagedBitmap(String pkg, Bitmap icon) {
+    public Bitmap createCloneTagedBitmap(String pkg, Bitmap icon, int userId) {
         if (pkg == null && icon == null) {
             return null;
         }
