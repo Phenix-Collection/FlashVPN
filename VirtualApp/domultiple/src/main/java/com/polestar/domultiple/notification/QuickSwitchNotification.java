@@ -114,7 +114,7 @@ public class QuickSwitchNotification {
                         if (!TextUtils.isEmpty(s)) {
                             String pkg = CloneManager.getNameFromKey(s);
                             int userId = CloneManager.getUserIdFromKey(s);
-                            if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+                            if (!lruKeys.contains(s) && VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
                                 lruKeys.add(s);
                             }
                         }
@@ -124,7 +124,9 @@ public class QuickSwitchNotification {
             if (lruKeys.size() <LRU_PACKAGE_CNT) {
                 List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
                 for(CloneModel app:list) {
-                        lruKeys.add(CloneManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
+                    String key = CloneManager.getMapKey(app.getPackageName(), app.getPkgUserId());
+                    if (!lruKeys.contains(key))
+                        lruKeys.add(key);
                 }
             }
             //Reserve one + slot iff not enough clones
@@ -139,7 +141,10 @@ public class QuickSwitchNotification {
                             ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(s, 0);
                             if (ai != null) {
                                 //hack for apps not cloned
-                                lruKeys.add(CloneManager.getMapKey(s, FAKE_USERID_FOR_UNCLONED));
+                                String key = CloneManager.getMapKey(s, FAKE_USERID_FOR_UNCLONED);
+                                if (!lruKeys.contains(key)) {
+                                    lruKeys.add(key);
+                                }
                             }
                             if (lruKeys.size() >= (LRU_PACKAGE_CNT-1)) {
                                 return;
