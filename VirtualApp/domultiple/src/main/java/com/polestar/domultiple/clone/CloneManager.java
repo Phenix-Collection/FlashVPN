@@ -19,6 +19,7 @@ import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.os.VUserInfo;
 import com.lody.virtual.os.VUserManager;
@@ -255,9 +256,13 @@ public class CloneManager {
         List<CloneModel> tempList = DBManager.queryAppList(context);
         List<CloneModel> uninstalledApp = new ArrayList<>();
         for (CloneModel model : tempList) {
-            if (!VirtualCore.get().isAppInstalledAsUser(model.getPkgUserId(), model.getPackageName())) {
-                uninstalledApp.add(model);
-                continue;
+            try {
+                if (!VirtualCore.get().isAppInstalledAsUser(model.getPkgUserId(), model.getPackageName())) {
+                    uninstalledApp.add(model);
+                    continue;
+                }
+            }catch (Exception ex) {
+                MLogs.logBug(ex);
             }
             if (model.getCustomIcon() == null) {
                 CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
