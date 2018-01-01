@@ -74,7 +74,7 @@ public class QuickSwitchNotification {
     private static final String EXTRA_START_USERID = "extra_start_userid";
     private static final String CATEGORY_NOTIFY = "cat_notify";
     private static final String CATEGORY_ENABLE = "cat_enable";
-    private Notification lastNotification;
+    private boolean isInitialized = false;
 
     private QuickSwitchNotification(Context ctx){
         mContext = ctx;
@@ -100,6 +100,7 @@ public class QuickSwitchNotification {
             @Override
             public void run() {
                 readLruKeys();
+                isInitialized = true;
                 updateLruPackages(null);
             }
         });
@@ -293,12 +294,14 @@ public class QuickSwitchNotification {
                 }
             }
         }
-        lastNotification = notification;
         mgr.notify(NOTIFY_ID, notification);
     }
 
     public void updateLruPackages(String mapKey) {
         MLogs.d(TAG,"updateLruPackages " + mapKey);
+        if (! isInitialized ) {
+            return;
+        }
         if (!TextUtils.isEmpty(mapKey)) {
             synchronized (lruKeys) {
                 if (lruKeys.contains(mapKey)) {
@@ -325,7 +328,7 @@ public class QuickSwitchNotification {
     }
 
     public static void enable(){
-        PreferencesUtils.putInt(PolestarApp.getApp(), PREF_QUICK_SWITCH_STATE, 1);
+        PreferencesUtils.putInt(PolestarApp.getApp(), PREF_QUICK_SWITCH_STATE, STATE_ENABLE);
         Intent intent = new Intent(ACTION_ENABLE_QUICK_SWITCH);
         intent.addCategory(CATEGORY_ENABLE);
         VirtualCore.get().getContext().sendBroadcast(intent);
@@ -346,6 +349,7 @@ public class QuickSwitchNotification {
             MLogs.d(TAG, "onReceive " + intent);
             if (intent.getAction().equals(ACTION_CANCEL_QUICK_SWITCH)) {
                 mgr.cancel(NOTIFY_ID);
+                isInitialized = false;
             } else if (intent.getAction().equals(ACTION_ENABLE_QUICK_SWITCH)) {
                 init();
             } else {
@@ -398,6 +402,7 @@ public class QuickSwitchNotification {
     }
     public static boolean isEnable() {
         int state = getQuickSwitchState();
+        MLogs.d(TAG+" is enable state: " + state);
         if (state == STATE_NOT_SET) {
             return RemoteConfig.getBoolean("default_enable_quick_switch");
         } else {
