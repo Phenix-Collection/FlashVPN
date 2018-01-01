@@ -674,13 +674,13 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                                         public void onExplodeFinish(View v) {
                                         }
                                     });
+                                    view.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            CloneManager.getInstance(HomeActivity.this).deleteClone(HomeActivity.this, info);
+                                        }
+                                    }, 1000);
                                 }
-                                view.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        CloneManager.getInstance(HomeActivity.this).deleteClone(HomeActivity.this, info);
-                                    }
-                                }, 1000);
                                 break;
                         }
                     }
