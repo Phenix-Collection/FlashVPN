@@ -53,10 +53,10 @@ public class EventReporter {
     public static void appStart(boolean coldStart, boolean locker, String from, String pkg, int userId) {
         Bundle bundle = new Bundle();
         bundle.putString("package", pkg);
-        bundle.putBoolean("coldStart", coldStart);
-        bundle.putBoolean("locker", locker);
+        bundle.putString("coldStart", ""+coldStart);
+        bundle.putString("locker", ""+locker);
         bundle.putString("from", from);
-        bundle.putInt("userId", userId);
+        bundle.putString("userId", ""+userId);
         mFirebaseAnalytics.logEvent("app_start", bundle);
     }
 
@@ -92,7 +92,7 @@ public class EventReporter {
 
     public static void quickSwitchSetting(boolean enable) {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("status", enable);
+        bundle.putString("status", ""+enable);
         mFirebaseAnalytics.logEvent("quick_switch", bundle);
     }
 }
