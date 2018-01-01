@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
@@ -51,6 +52,7 @@ public class CloneHelper {
                     if (loadedListener != null) {
                         loadedListener.onInstalled(mClonedApps);
                     }
+                    GreyAttribute.checkAndClick(appModel.getPackageName());
                 }
             });
         }catch (Exception ex) {
