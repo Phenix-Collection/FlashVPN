@@ -60,8 +60,12 @@ public class SelectPkgGridAdapter  extends BaseAdapter{
 
         SelectGridAppItem appModel = (SelectGridAppItem) getItem(i);
         if (appModel != null) {
-            appIcon.setImageBitmap(BitmapUtils.createBadgeIcon(mContext, appModel.icon,
-                    CloneManager.getInstance(mContext).getNextAvailableUserId(appModel.pkg)));
+            int userId = CloneManager.getInstance(mContext).getNextAvailableUserId(appModel.pkg);
+            if (userId > 0) {
+                appIcon.setImageBitmap(BitmapUtils.createBadgeIcon(mContext, appModel.icon, userId));
+            } else {
+                appIcon.setImageDrawable(appModel.icon);
+            }
             appName.setText(appModel.name);
             if (appModel.selected ) {
                 cb.setImageResource(R.drawable.selectd);
