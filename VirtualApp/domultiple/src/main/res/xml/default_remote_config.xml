@@ -108,7 +108,7 @@
     </entry>
     <entry>
         <key>default_enable_quick_switch</key>
-        <value>false</value>
+        <value>true</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
