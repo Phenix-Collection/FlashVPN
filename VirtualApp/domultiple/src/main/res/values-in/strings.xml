@@ -112,6 +112,6 @@
     <string name="terms_of_service">Ketentuan Layanan</string>
     <string name="toast_no_lucky">Maaf, tidak ada konten yang beruntung kali ini. Silakan coba lagi nanti.</string>
     <!--quick switch-->
-    <string name="quick_switch_title">Cepat Beralih</string>
     <string name="quick_switch_desc">Aktifkan pengalihan cepat ke aplikasi kloning dari bilah notifikasi</string>
+    <string name="quick_switch_dialog_content">Quick Switch akan memudahkan Anda beralih di antara aplikasi kloning dari bilah pemberitahuan. Apakah Anda ingin mengaktifkannya sekarang?</string>
 </resources>

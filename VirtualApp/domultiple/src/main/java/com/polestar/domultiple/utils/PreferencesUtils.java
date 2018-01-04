@@ -316,6 +316,22 @@ public class PreferencesUtils {
         return getInt(PolestarApp.getApp(),"love_app", 0);
     }
 
+    public static int getGuideQuickSwitchTimes() {
+        return getInt(PolestarApp.getApp(),"guide_quick_switch_times", 0);
+    }
+
+    public static void setGuideQuickSwitchTimes(int times) {
+        putInt(PolestarApp.getApp(),"guide_quick_switch_times", times);
+    }
+
+    public static void updateLastGuideQuickSwitchTime() {
+        putLong(PolestarApp.getApp(),"guide_quick_switch_last", System.currentTimeMillis());
+    }
+
+    public static long getLastGuideQuickSwitchTime() {
+        return getLong(PolestarApp.getApp(),"guide_quick_switch_last", 0);
+    }
+
     public static void setRated(boolean b) {
         putBoolean(PolestarApp.getApp(),"is_rated", b);
     }

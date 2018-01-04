@@ -267,7 +267,11 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 }
             }, 60*1000);
         } else {
-            guideRateIfNeeded();
+            if (!guideRateIfNeeded()) {
+                guideQuickSwitchIfNeeded();
+            }
+            //保证每次弹框尽可能只会在启动分身后，回到主界面时做一次判断，而不包含从后台切到主界面的时候
+            startingPkg = null;
         }
         if (mClonedList != null && gridAdapter != null) {
             gridAdapter.notifyDataSetChanged(mClonedList);
@@ -285,7 +289,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private boolean guideRateIfNeeded() {
         if (startingPkg != null) {
             String pkg = startingPkg;
-            startingPkg = null;
+            //startingPkg = null;
             MLogs.d("Cloning package: " + pkg);
             if (PreferencesUtils.isRated()) {
                 return false;
@@ -328,6 +332,71 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             }
         }
         return false;
+    }
+
+    private static final String CONFIG_QUICK_SWITCH_INTERVAL = "guide_quick_switch_interval_s";
+    private static final String CONFIG_QUICK_SWITCH_TIMES = "guide_quick_switch_times";
+    private boolean guideQuickSwitchIfNeeded() {
+        if (startingPkg == null) {
+            MLogs.d("No starting package");
+            return false;
+        }
+        if (QuickSwitchNotification.isEnable()) {
+            MLogs.d("Already enabled quick switch");
+            return false;
+        }
+        long allowCnt = RemoteConfig.getLong(CONFIG_QUICK_SWITCH_TIMES);
+        int times = PreferencesUtils.getGuideQuickSwitchTimes();
+        if (times >= allowCnt) {
+            MLogs.d("Guide quick switch hit cnt");
+            return false;
+        }
+        if( System.currentTimeMillis() - PreferencesUtils.getLastGuideQuickSwitchTime()
+                < times*1000*RemoteConfig.getLong(CONFIG_QUICK_SWITCH_INTERVAL)) {
+            MLogs.d("not guide quick switch too frequent");
+            return false;
+        } else {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PreferencesUtils.updateLastGuideQuickSwitchTime();
+                    PreferencesUtils.setGuideQuickSwitchTimes(times + 1);
+                    showQuickSwitchDialog( );
+                }
+            }, 800);
+
+        }
+        return true;
+    }
+
+    private void showQuickSwitchDialog() {
+        EventReporter.generalClickEvent("quick_switch_dialog");
+        MLogs.d("showQuickSwitchDialog");
+        UpDownDialog.show(this, this.getResources().getString(R.string.quick_switch_title),
+                this.getResources().getString(R.string.quick_switch_dialog_content),
+                this.getResources().getString(R.string.no_thanks), this.getResources().getString(R.string.ok),
+                R.drawable.dialog_tag_congratulations, R.layout.dialog_up_down,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                QuickSwitchNotification.enable();
+                                EventReporter.generalClickEvent("quick_switch_dialog_go");
+                                break;
+                        }
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
     }
 
     public void onGiftClick(View view) {

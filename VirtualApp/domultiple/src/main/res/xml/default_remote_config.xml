@@ -108,7 +108,7 @@
     </entry>
     <entry>
         <key>default_enable_quick_switch</key>
-        <value>true</value>
+        <value>false</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
@@ -121,6 +121,14 @@
     <entry>
         <key>slot_boost_ad</key>
         <value>fb:1459853160757953_1567501253326476:0;mp:58664de38d5c46678988e90136d075fe:0;ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>
+    </entry>
+    <entry>
+        <key>guide_quick_switch_interval_s</key>
+        <value>129600</value>
+    </entry>
+    <entry>
+        <key>guide_quick_switch_times</key>
+        <value>3</value>
     </entry>
     <!--<entry>-->
         <!--<key>slot_boost_ad</key>-->

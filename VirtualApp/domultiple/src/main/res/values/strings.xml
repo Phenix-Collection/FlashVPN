@@ -102,8 +102,9 @@
     <string name="settings_privacy_locker_content">Click to set privacy locker for cloned apps</string>
     <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
     <!--quick switch-->
-    <string name="quick_switch_title">Quick Switch</string>
+    <string name="quick_switch_title" translatable="false">Quick Switch</string>
     <string name="quick_switch_desc">Enable quick switch to cloned apps from notification bar</string>
+    <string name="quick_switch_dialog_content">Quick switch will let you easily switch between cloned apps from notification bar. Would you like to enable it now?</string>
     <!--gms-->
     <string name="settings_lite_mode">Enable lite mode for fewer memory and power usage</string>
     <string name="settings_lite_mode_title" translatable="false">Lite Mode</string>
