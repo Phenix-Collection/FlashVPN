@@ -3,6 +3,7 @@ package com.polestar.multiaccount.component.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.activity.AppListActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.utils.AppManager;
+import com.polestar.multiaccount.utils.BitmapUtils;
 
 import java.util.List;
 
@@ -64,7 +67,13 @@ public class AppListAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.iconView.setImageDrawable(model.getIcon());
+        int userId = AppManager.getNextAvailableUserId(model.getPackageName());
+        Drawable icon = model.getIcon();
+        if (userId > 0) {
+            viewHolder.iconView.setImageBitmap(BitmapUtils.createBadgeIcon(mContext, icon, userId));
+        } else {
+            viewHolder.iconView.setImageDrawable(icon);
+        }
         viewHolder.nameView.setText(model.getName());
         viewHolder.description.setText(model.getDescription());
         viewHolder.cloneBtn.setText(R.string.btn_clone);

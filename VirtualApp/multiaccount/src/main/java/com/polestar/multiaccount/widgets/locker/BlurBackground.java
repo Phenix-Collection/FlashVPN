@@ -50,11 +50,11 @@ public class BlurBackground extends LinearLayout {
         mDefaultThemeLogic.setUseBigIcon(true, true);
     }
 
-    public void reloadWithTheme(String packageName) {
+    public void reloadWithTheme(String packageName, int userId) {
         if(TextUtils.isEmpty(packageName) || CommonUtils.getAppIcon(packageName)==null){
             return;
         }
-        mDefaultThemeLogic.setBackground(packageName, new BitmapDrawable(BitmapUtils.getCustomIcon(MApp.getApp(), packageName)));
+        mDefaultThemeLogic.setBackground(packageName, new BitmapDrawable(BitmapUtils.getCustomIcon(MApp.getApp(), packageName, userId)));
     }
 
     public void resetLayout() {

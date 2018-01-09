@@ -65,7 +65,8 @@ public class CustomizeSettingActivity extends BaseActivity {
                 if (convertView != null) {
                     ImageView iv = (ImageView) convertView.findViewById(R.id.item_icon);
                     TextView tv = (TextView) convertView.findViewById(R.id.item_name);
-                    CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName());
+                    CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(),
+                            model.getPkgUserId());
                     iv.setImageBitmap(data.getCustomIcon());
                     tv.setText(data.customized? data.label: model.getName());
                 }
@@ -79,7 +80,8 @@ public class CustomizeSettingActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 AppModel model = modelList.get(i);
                 if (model == null) return ;
-                CustomizeIconActivity.start(CustomizeSettingActivity.this, model.getPackageName());
+                CustomizeIconActivity.start(CustomizeSettingActivity.this, model.getPackageName(),
+                        model.getPkgUserId());
             }
         });
     }

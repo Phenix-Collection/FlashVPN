@@ -10,6 +10,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -39,13 +46,14 @@ public class CommonUtils {
         MApp.getApp().startActivity(intent);
     }
     public static void createShortCut(Context context, AppModel appModel) {
-        Bitmap iconBitmap = BitmapUtils.getCustomIcon(context, appModel.getPackageName());
-        CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+        Bitmap iconBitmap = BitmapUtils.getCustomIcon(context, appModel.getPackageName(), appModel.getPkgUserId());
+        CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(), appModel.getPkgUserId());
         String appName = data.label;
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppStartActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
         actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
+        actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         createShortcut(context, actionIntent, appName, false, iconBitmap);
 //        iconBitmap.recycle();
@@ -57,6 +65,7 @@ public class CommonUtils {
         actionIntent.setClassName(context.getPackageName(), AppStartActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
         actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
+        actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         removeShortcut(context, actionIntent, appName);
     }
@@ -260,6 +269,61 @@ public class CommonUtils {
             }
         }
         return false;
+    }
+
+    public static int getRingIconId(int userId) {
+        switch (userId) {
+            case 0:
+                return R.mipmap.ring_icon;
+            case 1:
+                return R.mipmap.ring_icon_2;
+            case 2:
+                return R.mipmap.ring_icon_3;
+            case 3:
+                return R.mipmap.ring_icon_4;
+            case 4:
+                return R.mipmap.ring_icon_5;
+            case 5:
+                return R.mipmap.ring_icon_6;
+            case 6:
+                return R.mipmap.ring_icon_7;
+            case 7:
+                return R.mipmap.ring_icon_8;
+            case 8:
+                return R.mipmap.ring_icon_9;
+            default:
+                return R.mipmap.ring_icon;
+        }
+    }
+
+    public static Bitmap createCustomIcon(Context context, Drawable appIcon, int userId){
+        if(appIcon == null){
+            return null;
+        }
+        Bitmap shortCutBitMap;
+        try{
+            int width = DisplayUtils.dip2px(context, AppConstants.APP_ICON_WIDTH);
+            int padding = DisplayUtils.dip2px(context, AppConstants.APP_ICON_PADDING);
+            shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
+            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), getRingIconId(userId));
+            Canvas canvas = new Canvas(shortCutBitMap);
+
+            Paint paint = new Paint();
+            paint.setColor(Color.TRANSPARENT);
+            final Rect rect = new Rect(0, 0, width, width);
+            final float roundPx = DisplayUtils.dip2px(context, AppConstants.APP_ICON_RADIUS);
+            canvas.drawRoundRect(new RectF(rect),roundPx,roundPx,paint);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+
+            appIcon.setBounds(padding,padding,width - padding,width - padding);
+            appIcon.draw(canvas);
+
+            canvas.drawBitmap(Bitmap.createScaledBitmap(mShape,width,width,true),new Rect(0,0,width,width),new Rect(0,0,width,width),null);
+        }catch (OutOfMemoryError error){
+            error.printStackTrace();
+            shortCutBitMap = null;
+        }
+        return shortCutBitMap;
     }
 
     public static Drawable getAppIcon(String packageName) {

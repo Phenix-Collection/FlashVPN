@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.constant.AppConstants;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.ResourcesUtil;
@@ -26,37 +27,36 @@ public class CustomizeAppData {
     public String label;
     public String pkg;
     public boolean customized;
+    public int userId;
+    public String spName;
 
     private CustomizeAppData() {
     }
 
-    public static  CustomizeAppData loadFromPref(String pkg) {
+    public static CustomizeAppData loadFromPref(String pkg, int userId) {
         CustomizeAppData data = new CustomizeAppData();
-        SharedPreferences settings = MApp.getApp().getSharedPreferences(AppConstants.CUSTOMIZE_PREF+pkg, Context.MODE_PRIVATE);
+        data.spName = AppManager.getCompatibleName(AppConstants.CUSTOMIZE_PREF + pkg, userId);
+        SharedPreferences settings = MApp.getApp().getSharedPreferences(data.spName, Context.MODE_PRIVATE);
         data.badge = settings.getBoolean("badge", true);
         data.hue = settings.getInt("hue", AppConstants.COLOR_MID_VALUE);
         data.sat = settings.getInt("sat", AppConstants.COLOR_MID_VALUE);
         data.light = settings.getInt("light", AppConstants.COLOR_MID_VALUE);
         data.label = settings.getString("label", null);
         data.pkg = pkg;
+        data.userId = userId;
         data.customized = data.label != null;
         if (TextUtils.isEmpty(data.label)) {
-            try{
-                PackageManager pm = MApp.getApp().getPackageManager();
-                ApplicationInfo ai = pm.getApplicationInfo(pkg, 0);
-                data.label = String.format(ResourcesUtil.getString(R.string.clone_label_tag),pm.getApplicationLabel(ai));
-            } catch (Exception ex) {
-                MLogs.logBug(ex);
-            }
+            data.label = String.format(ResourcesUtil.getString(R.string.clone_label_tag),
+                    AppManager.getModelName(pkg, userId));
         }
         return data;
     }
 
     public Bitmap getCustomIcon() {
-        return  BitmapUtils.getCustomIcon(MApp.getApp(), pkg);
+        return  BitmapUtils.getCustomIcon(MApp.getApp(), pkg, userId);
     }
     public void saveToPref() {
-        SharedPreferences settings = MApp.getApp().getSharedPreferences(AppConstants.CUSTOMIZE_PREF+pkg, Context.MODE_PRIVATE);
+        SharedPreferences settings = MApp.getApp().getSharedPreferences(spName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("badge", badge);
         editor.putInt("hue", hue);
@@ -65,10 +65,11 @@ public class CustomizeAppData {
         editor.commit();
     }
 
-    public static void removePerf(String pkg) {
-        SharedPreferences settings = MApp.getApp().getSharedPreferences(AppConstants.CUSTOMIZE_PREF+pkg, Context.MODE_PRIVATE);
+    public static void removePerf(String pkg, int userId) {
+        String sp = AppManager.getCompatibleName(AppConstants.CUSTOMIZE_PREF + pkg, userId);
+        SharedPreferences settings = MApp.getApp().getSharedPreferences(sp, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.clear().commit();
-        BitmapUtils.removeCustomIcon(MApp.getApp(), pkg);
+        BitmapUtils.removeCustomIcon(MApp.getApp(), pkg, userId);
     }
 }

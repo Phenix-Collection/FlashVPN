@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import com.lody.virtual.os.VUserHandle;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
@@ -25,6 +26,7 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.model.CustomizeAppData;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
+import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.MLogs;
 
@@ -48,13 +50,15 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
     private Drawable defaultIcon;
     private Bitmap customIcon;
     private ImageView iconImg;
+    private int userId;
     private static int MID_VALUE = 127;
 
-    public static void start(Activity activity, String pkg) {
+    public static void start(Activity activity, String pkg, int userId) {
         Intent intent = new Intent(activity, CustomizeIconActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         intent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, pkg);
+        intent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, userId);
 
         activity.startActivity(intent);
         activity.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
@@ -82,11 +86,9 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         });
         iconImg = (ImageView) findViewById(R.id.app_icon);
         pkg = getIntent().getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
+        userId = getIntent().getIntExtra(AppConstants.EXTRA_CLONED_APP_USERID, VUserHandle.myUserId());
         if (pkg != null) {
-            List<AppModel> appModels = DbManager.queryAppModelByPackageName(this, pkg);
-            if (appModels != null && appModels.size() > 0) {
-                appModel = appModels.get(0);
-            }
+            appModel = CloneHelper.getInstance(this).getAppModel(pkg, userId);
         }
         if (appModel == null) {
             finish();
@@ -118,7 +120,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         MLogs.d("hue: " + hue  + " sat: " + sat + " lum: " + lum);
         customIcon = BitmapUtils.handleImageEffect(BitmapUtils.drawableToBitmap(defaultIcon), hue, sat,lum );
         if (mData.badge) {
-            customIcon = BitmapUtils.createBadgeIcon(this, new BitmapDrawable(customIcon));
+            customIcon = BitmapUtils.createBadgeIcon(this, new BitmapDrawable(customIcon), appModel.getPkgUserId());
         }
         iconImg.setImageBitmap(customIcon);
 
@@ -146,7 +148,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
     }
 
     public void initData() {
-        mData = CustomizeAppData.loadFromPref(pkg);
+        mData = CustomizeAppData.loadFromPref(pkg, userId);
         if (mData.label == null) {
             mData.label = String.format(getString(R.string.clone_label_tag),  appModel.getName());
         }
@@ -165,7 +167,8 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            BitmapUtils.saveBitmapToPNG(customIcon, dir.getPath() + "/" + pkg);
+            String pathname = BitmapUtils.getCustomIconPath(this, pkg, userId);
+            BitmapUtils.saveBitmapToPNG(customIcon, pathname);
         } catch (Exception e) {
             MLogs.logBug(MLogs.getStackTraceString(e));
         }

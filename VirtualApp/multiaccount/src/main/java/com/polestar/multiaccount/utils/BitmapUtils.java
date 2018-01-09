@@ -28,8 +28,14 @@ import java.io.IOException;
  */
 public class BitmapUtils {
 
-    public static Bitmap getCustomIcon(Context context, String pkg){
-        File file = new File(context.getFilesDir() +  AppConstants.ICON_FILE_PATH + "/" + pkg);
+    @Deprecated
+    public static Bitmap getCustomIcon(Context context, String pkg) {
+        return getCustomIcon(context, pkg, 0);
+    }
+
+    public static Bitmap getCustomIcon(Context context, String pkg, int userId) {
+        String pathname = getCustomIconPath(context, pkg, userId);
+        File file = new File(pathname);
         Bitmap bmp = null;
         if (file.exists()) {
             bmp = BitmapFactory.decodeFile(file.getPath());
@@ -39,14 +45,14 @@ public class BitmapUtils {
         }
         try {
             Drawable defaultIcon = context.getPackageManager().getApplicationIcon(pkg);
-            return createBadgeIcon(context, defaultIcon);
+            return createBadgeIcon(context, defaultIcon, userId);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public static Bitmap createBadgeIcon(Context context, Drawable appIcon){
+    public static Bitmap createBadgeIcon(Context context, Drawable appIcon, int userId){
         if(appIcon == null){
             return null;
         }
@@ -55,7 +61,7 @@ public class BitmapUtils {
             int width = DisplayUtils.dip2px(context, AppConstants.APP_ICON_WIDTH);
             int padding = DisplayUtils.dip2px(context, AppConstants.APP_ICON_PADDING);
             shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
-            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ring_icon);
+            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), CommonUtils.getRingIconId(userId));
             Canvas canvas = new Canvas(shortCutBitMap);
 
             Paint paint = new Paint();
@@ -166,8 +172,14 @@ public class BitmapUtils {
         }
     }
 
-    public static void removeCustomIcon(Context context, String pkg) {
-        File file = new File(context.getFilesDir() +  AppConstants.ICON_FILE_PATH + "/" + pkg);
+    public static String getCustomIconPath(Context context, String pkg, int userId) {
+        String pathname = context.getFilesDir() +  AppConstants.ICON_FILE_PATH + "/" + pkg;
+        return AppManager.getCompatibleName(pathname, userId);
+    }
+
+    public static void removeCustomIcon(Context context, String pkg, int userId) {
+        String path = getCustomIconPath(context, pkg, userId);
+        File file = new File(path);
         file.delete();
     }
 }

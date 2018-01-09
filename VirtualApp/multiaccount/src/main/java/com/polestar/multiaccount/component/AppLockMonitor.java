@@ -13,6 +13,7 @@ import com.polestar.multiaccount.component.activity.AppLockActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.LockPatternUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
@@ -59,10 +60,11 @@ public class AppLockMonitor {
                         MLogs.d(TAG, "Package change to background, last foreground: " + mUnlockedForegroudPkg);
                         mUnlockedForegroudPkg = null;
                         break;
-                    case MSG_PACKAGE_UNLOCKED:
-                        String pkg = (String) msg.obj;
-                        MLogs.d(TAG, "Package was unlocked" + pkg);
-                        mUnlockedForegroudPkg = pkg;
+                    case MSG_PACKAGE_UNLOCKED: {
+                            String key = (String) msg.obj;
+                            MLogs.d(TAG, "Package was unlocked" + key);
+                            mUnlockedForegroudPkg = key;
+                        }
                         break;
                     case MSG_PRELOAD_AD:
                         if (!adFree && hasLocker()) {
@@ -76,7 +78,9 @@ public class AppLockMonitor {
                     case MSG_SHOW_LOCKER:
                         MLogs.d("show locker ");
                         if (usingLockActivity()) {
-                            AppLockActivity.start(VirtualCore.get().getContext(), (String) msg.obj);
+                            String key = (String) msg.obj;
+                            AppLockActivity.start(VirtualCore.get().getContext(), AppManager.getNameFromKey(key),
+                                    AppManager.getUserIdFromKey(key));
                         } else {
                             AppLockWindow window = (AppLockWindow) msg.obj;
                             if (window != null) {
@@ -115,7 +119,7 @@ public class AppLockMonitor {
         MLogs.d("initSetting");
         List<AppModel> list = DbManager.queryAppList(MApp.getApp());
         for (AppModel model: list) {
-            modelHashMap.put(model.getPackageName(), model);
+            modelHashMap.put(AppManager.getMapKey(model.getPackageName(), model.getPkgUserId()), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
                 hasAppLocked = true;
             }
@@ -137,7 +141,7 @@ public class AppLockMonitor {
         DbManager.resetSession();
         List<AppModel> list = DbManager.queryAppList(MApp.getApp());
         for (AppModel model: list) {
-            modelHashMap.put(model.getPackageName(), model);
+            modelHashMap.put(AppManager.getMapKey(model.getPackageName(), model.getPkgUserId()), model);
             if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
                 hasAppLocked = true;
             }
@@ -160,51 +164,54 @@ public class AppLockMonitor {
         return sInstance;
     }
 
-    public void unlocked(String pkg) {
-        mHandler.sendMessage(mHandler.obtainMessage(AppLockMonitor.MSG_PACKAGE_UNLOCKED, wrapMsgObj(pkg, null)));
+    public void unlocked(String pkg, int userId) {
+        String key = AppManager.getMapKey(pkg, userId);
+        mHandler.sendMessage(mHandler.obtainMessage(AppLockMonitor.MSG_PACKAGE_UNLOCKED, wrapMsgObj(key, null)));
     }
 
 
-    public void onActivityResume(String pkg) {
-        MLogs.d(TAG, "onActivityResume " + pkg);
-        AppModel model = modelHashMap.get(pkg);
+    public void onActivityResume(String pkg, int userId) {
+        String key = AppManager.getMapKey(pkg, userId);
+        MLogs.d(TAG, "onActivityResume " + key);
+        AppModel model = modelHashMap.get(key);
         if (model == null || pkg == null) {
-            MLogs.logBug(TAG, "cannot find cloned model : " + pkg);
+            MLogs.logBug(TAG, "cannot find cloned model : " + key);
             return;
         }
         if (model.getLockerState() != AppConstants.AppLockState.DISABLED
                 && hasLocker()) {
-            MLogs.d(TAG, "Need lock app " + pkg);
-            if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(pkg))) {
+            MLogs.d(TAG, "Need lock app " + key);
+            if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(key))) {
                 //do lock
-                MLogs.d(TAG, "Do lock app " + pkg);
-                AppLockWindow appLockWindow = mAppLockWindows.get(pkg);
+                MLogs.d(TAG, "Do lock app " + key);
+                AppLockWindow appLockWindow = mAppLockWindows.get(key);
                 if (appLockWindow == null) {
-                    appLockWindow = new AppLockWindow(pkg, mHandler);
-                    mAppLockWindows.add(pkg,appLockWindow);
+                    appLockWindow = new AppLockWindow(key, mHandler);
+                    mAppLockWindows.add(key,appLockWindow);
                 }
                 final AppLockWindow lockWindow = appLockWindow;
-                MLogs.d(TAG, "Do lock app 2" + pkg);
-                mHandler.removeMessages(MSG_SHOW_LOCKER, wrapMsgObj(pkg, lockWindow));
-                mHandler.removeMessages(MSG_HIDE_LOCKER,  wrapMsgObj(pkg, lockWindow));
-                mHandler.sendMessage(mHandler.obtainMessage(MSG_SHOW_LOCKER,  wrapMsgObj(pkg, appLockWindow)));
+                MLogs.d(TAG, "Do lock app 2" + key);
+                mHandler.removeMessages(MSG_SHOW_LOCKER, wrapMsgObj(key, lockWindow));
+                mHandler.removeMessages(MSG_HIDE_LOCKER,  wrapMsgObj(key, lockWindow));
+                mHandler.sendMessage(mHandler.obtainMessage(MSG_SHOW_LOCKER,  wrapMsgObj(key, appLockWindow)));
             }
         }
         //Remove the same object with send
-        mHandler.removeMessages(MSG_DELAY_LOCK_APP, model.getPackageName());
+        mHandler.removeMessages(MSG_DELAY_LOCK_APP, key);
         //mUnlockedForegroudPkg = pkg;
     }
 
-    public void onActivityPause(String pkg) {
-        MLogs.d(TAG, "onActivityPause " + pkg + " delay relock: " + relockDelay);
-        AppLockWindow window = mAppLockWindows.get(pkg);
-        AppModel model = modelHashMap.get(pkg);
+    public void onActivityPause(String pkg, int userId) {
+        String key = AppManager.getMapKey(pkg, userId);
+        MLogs.d(TAG, "onActivityPause " + key + " delay relock: " + relockDelay);
+        AppLockWindow window = mAppLockWindows.get(key);
+        AppModel model = modelHashMap.get(key);
         if (window != null) {
-            mHandler.removeMessages(MSG_SHOW_LOCKER,  wrapMsgObj(pkg, window));
-            mHandler.removeMessages(MSG_HIDE_LOCKER, wrapMsgObj(pkg, window));
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_HIDE_LOCKER, wrapMsgObj(pkg, window)), 500);
+            mHandler.removeMessages(MSG_SHOW_LOCKER,  wrapMsgObj(key, window));
+            mHandler.removeMessages(MSG_HIDE_LOCKER, wrapMsgObj(key, window));
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_HIDE_LOCKER, wrapMsgObj(key, window)), 500);
         }
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, model.getPackageName()),
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, key),
                 relockDelay);
     }
 

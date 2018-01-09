@@ -8,6 +8,8 @@ import com.polestar.multiaccount.pbinterface.PbObservable;
 import com.polestar.multiaccount.utils.MLogs;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class DbManager {
@@ -49,12 +51,37 @@ public class DbManager {
 
     public static List<AppModel> queryAppList(Context context) {
         AppModelDao appModelDao = getDaoSession(context).getAppModelDao();
-        return appModelDao.queryBuilder().orderAsc(AppModelDao.Properties.Index).list();
+        List<AppModel> list = appModelDao.queryBuilder().orderAsc(AppModelDao.Properties.Index).list();
+        if (list != null)
+            Collections.sort(list, new Comparator<AppModel>() {
+                @Override
+                public int compare(AppModel o1, AppModel o2) {
+                    if (o1 == o2)
+                        return 0;
+                    if (o1 == null || o2 == null) {
+                        return o1 == null ? -1 : 1;
+                    }
+                    return o1.getOriginalIndex() - o2.getOriginalIndex();
+                }
+            });
+        return list;
     }
 
     public static List<AppModel> queryAppModelByPackageName(Context context, String packageName) {
         AppModelDao appModelDao = getDaoSession(context).getAppModelDao();
         return appModelDao.queryBuilder().where(AppModelDao.Properties.PackageName.eq(packageName)).list();
+    }
+
+    public static AppModel queryAppModelByPackageName(Context context, String packageName, int userId) {
+        AppModelDao appModelDao = getDaoSession(context).getAppModelDao();
+        List<AppModel> list = appModelDao.queryBuilder().where(AppModelDao.Properties.PackageName.eq(packageName)).list();
+        if (list != null) {
+            for (AppModel cm : list) {
+                if (cm.getPkgUserId() == userId)
+                    return cm;
+            }
+        }
+        return null;
     }
 
     public static void insertAppModel(Context context, AppModel appModel) {

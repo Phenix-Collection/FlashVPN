@@ -37,6 +37,7 @@ import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.model.CustomizeAppData;
 import com.polestar.multiaccount.utils.AppManager;
+import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.EventReporter;
@@ -248,12 +249,12 @@ public class AppStartActivity extends BaseActivity {
         }
     }
 
-    public static void startAppStartActivity(Activity activity, String packageName) {
+    public static void startAppStartActivity(Activity activity, String packageName, int userId) {
         if (AppManager.needUpgrade(packageName)) {
             VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
         } else {
-            if (AppManager.isAppLaunched(packageName)) {
-                AppManager.launchApp(packageName);
+            if (AppManager.isAppLaunched(packageName, userId)) {
+                AppManager.launchApp(packageName, userId);
                 return;
             }
         }
@@ -262,6 +263,7 @@ public class AppStartActivity extends BaseActivity {
 //        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         intent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, packageName);
         intent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_HOME);
+        intent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, userId);
 
         activity.startActivity(intent);
         activity.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
@@ -275,12 +277,10 @@ public class AppStartActivity extends BaseActivity {
         if (intent != null) {
             String packageName = intent.getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
             from = intent.getStringExtra(AppConstants.EXTRA_FROM);
+            int userId = intent.getIntExtra(AppConstants.EXTRA_CLONED_APP_USERID, VUserHandle.myUserId());
 
             if (packageName != null) {
-                List<AppModel> appModels = DbManager.queryAppModelByPackageName(this, packageName);
-                if (appModels != null && appModels.size() > 0) {
-                    appModel = appModels.get(0);
-                }
+                appModel = DbManager.queryAppModelByPackageName(this, packageName, userId);
             }
         }
         if (appModel == null) {
@@ -302,7 +302,7 @@ public class AppStartActivity extends BaseActivity {
                 if (needDoUpGrade) {
                     AppManager.upgradeApp(appModel.getPackageName());
                 }
-                AppManager.launchApp(appModel.getPackageName());
+                AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -328,7 +328,7 @@ public class AppStartActivity extends BaseActivity {
 
 
         try{
-            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(), appModel.getPkgUserId());
             mImgAppIcon.setImageBitmap(data.getCustomIcon());
             ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImgAppIcon, "scaleX", 0.7f, 1.2f, 1.0f);
             ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImgAppIcon, "scaleY", 0.7f, 1.2f, 1.0f);
