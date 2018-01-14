@@ -48,7 +48,7 @@ public class MComponentDelegate implements ComponentDelegate {
     public void beforeActivityResume(String pkg, int userId) {
         MLogs.d("beforeActivityResume " + pkg);
         //if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
-            AppLockMonitor.getInstance().onActivityResume(pkg);
+            AppLockMonitor.getInstance().onActivityResume(pkg, userId);
         //}
     }
 
@@ -56,7 +56,7 @@ public class MComponentDelegate implements ComponentDelegate {
     public void beforeActivityPause(String pkg, int userId) {
         MLogs.d("beforeActivityPause " + pkg);
        // if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
-            AppLockMonitor.getInstance().onActivityPause(pkg);
+            AppLockMonitor.getInstance().onActivityPause(pkg, userId);
        // }
     }
 

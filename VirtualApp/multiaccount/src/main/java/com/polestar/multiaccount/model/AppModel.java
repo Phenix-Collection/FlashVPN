@@ -248,4 +248,18 @@ public class AppModel implements Parcelable {
     public void setUnEnable(boolean unEnable) {
         this.unEnable = unEnable;
     }
+
+    // the original index
+    public int getOriginalIndex() {
+        return index & 0xffff;
+    }
+
+    // the package user id
+    public int getPkgUserId() {
+        return (index >> 16) & 0xff;
+    }
+
+    public void formatIndex(int index, int userId) {
+        setIndex((index & 0xffff) | ((userId & 0xff) << 16));
+    }
 }

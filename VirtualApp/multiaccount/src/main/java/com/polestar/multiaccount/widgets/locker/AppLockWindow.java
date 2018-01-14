@@ -24,6 +24,7 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.AppLockMonitor;
 import com.polestar.multiaccount.component.activity.LockSecureQuestionActivity;
 import com.polestar.multiaccount.model.CustomizeAppData;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.MLogs;
@@ -48,6 +49,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     private BlurBackground mBlurBackground;
 
     private String mPkgName;
+    private int mUserId;
     private Handler mHandler;
     private FloatWindow mWindow;
     private View mContentView;
@@ -64,12 +66,13 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
     private AppLockPasswordLogic mAppLockPasswordLogic = null;
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
 
-    public AppLockWindow(String pkgName, Handler handler) {
-        MLogs.d("AppLockWindow initialize for : " + pkgName);
+    public AppLockWindow(String key, Handler handler) {
+        MLogs.d("AppLockWindow initialize for : " + key);
         if (AppLockMonitor.usingLockActivity()) {
             return;
         }
-        mPkgName = pkgName;
+        mPkgName = AppManager.getNameFromKey(key);
+        mUserId = AppManager.getUserIdFromKey(key);
         mHandler = handler;
 
         mWindow = new FloatWindow(MApp.getApp());
@@ -92,13 +95,13 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        AppLockWindow window = AppLockWindowManager.getInstance().get(mPkgName);
+                        AppLockWindow window = AppLockWindowManager.getInstance().get(key);
                         if (window != null && window.isShowing()) {
                             window.dismiss();
                         }
                     }
                 }, 500);
-                mHandler.sendMessage(mHandler.obtainMessage(AppLockMonitor.MSG_PACKAGE_UNLOCKED, mPkgName));
+                mHandler.sendMessage(mHandler.obtainMessage(AppLockMonitor.MSG_PACKAGE_UNLOCKED, key));
             }
 
             @Override
@@ -122,19 +125,11 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
 
         mCenterIcon = (FeedbackImageView) mContentView.findViewById(R.id.window_applock_icon);
         mCenterAppText = (TextView) mContentView.findViewById(R.id.window_applock_name);
-        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName);
+        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
         if (TextUtils.isEmpty(data.label)) {
-            PackageManager pm = MApp.getApp().getPackageManager();
-            ApplicationInfo ai = null;
-            try {
-                ai = pm.getApplicationInfo(mPkgName, 0);
-                CharSequence title = pm.getApplicationLabel(ai);
-                data.label = String.format(ResourcesUtil.getString(R.string.applock_window_title),title);
-            }catch (Exception e) {
-                MLogs.logBug(MLogs.getStackTraceString(e));
-            }
+            data.label = AppManager.getModelName(mPkgName, mUserId);
         }
-        Bitmap icon = BitmapUtils.getCustomIcon(MApp.getApp(), mPkgName);
+        Bitmap icon = BitmapUtils.getCustomIcon(MApp.getApp(), mPkgName, mUserId);
         if (icon != null) {
             mCenterIcon.setImageBitmap( icon);
         }
@@ -240,7 +235,7 @@ public class AppLockWindow implements PopupMenu.OnMenuItemSelectedListener {
             mIsShowing = true;
             MLogs.d("LockWindow show ad" + showAd);
             mBlurBackground.init();
-            mBlurBackground.reloadWithTheme(mPkgName);
+            mBlurBackground.reloadWithTheme(mPkgName, mUserId);
             mAppLockPasswordLogic.onShow();
             mWindow.show();
             if (showAd) {

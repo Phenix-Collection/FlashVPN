@@ -677,9 +677,9 @@ public class HomeActivity extends BaseActivity {
 
     }
 
-    public void startAppLaunchActivity(String packageName) {
+    public void startAppLaunchActivity(String packageName, int userId) {
         //AppLaunchActivity.startAppLaunchActivity(this, packageName, drawerBlurHelper.createBitmap());
-        AppStartActivity.startAppStartActivity(this, packageName);
+        AppStartActivity.startAppStartActivity(this, packageName, userId);
     }
 
     @Override

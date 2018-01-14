@@ -4,6 +4,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.lody.virtual.client.core.InstallStrategy;
+import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.os.VUserInfo;
+import com.lody.virtual.os.VUserManager;
+import com.lody.virtual.remote.InstallResult;
+import com.lody.virtual.remote.InstalledAppInfo;
 import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.db.DbManager;
@@ -11,6 +17,7 @@ import com.polestar.multiaccount.model.AppModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by yxx on 2016/8/29.
@@ -41,10 +48,12 @@ public class CloneHelper {
 
     public void installApp(Context context,AppModel appModel){
         try {
-            appModel.setClonedTime(System.currentTimeMillis());
-            appModel.setIndex(mClonedApps.size());
+            // moved to AppManager.installApp
+            // appModel.setClonedTime(System.currentTimeMillis());
+            // appModel.setIndex(mClonedApps.size());
             DbManager.insertAppModel(context, appModel);
             DbManager.notifyChanged();
+            AppManager.incPackageIndex(appModel.getPackageName());
             mClonedApps.add(appModel);
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
@@ -70,6 +79,30 @@ public class CloneHelper {
             if(mClonedApps.get(i).getPackageName().equals(packageName)){
                 mClonedApps.remove(i);
                 i --;
+            }
+        }
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (loadedListener != null) {
+                    loadedListener.onUnstalled(mClonedApps);
+                }
+            }
+        });
+    }
+
+    public void unInstallApp(Context context, String packageName, int userId) {
+        if (packageName != null) {
+            AppModel model = DbManager.queryAppModelByPackageName(context, packageName, userId);
+            AppManager.deleteApp(context, model);
+        }
+        ListIterator<AppModel> iter = mClonedApps.listIterator();
+        while (iter.hasNext()) {
+            AppModel cm = iter.next();
+            if (cm.getPackageName().equals(packageName) &&
+                    cm.getPkgUserId() == userId) {
+                iter.remove();
+                break;
             }
         }
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -113,9 +146,26 @@ public class CloneHelper {
 
     private CloneHelper(Context context){
         mClonedApps = new ArrayList<>();
+        AppManager.buildPackageConfigMap();
+        AppManager.buildPackageIndexMap();
     }
 
     public List<AppModel> getClonedApps(){
         return mClonedApps;
+    }
+
+    public final AppModel getAppModel(String packageName, int userId) {
+        if (packageName == null) {
+            return null;
+        }
+        if (mClonedApps.size() > 0) {
+            for (AppModel model:mClonedApps) {
+                if (model.getPackageName().equals(packageName) &&
+                        model.getPkgUserId() == userId) {
+                    return model;
+                }
+            }
+        }
+        return DbManager.queryAppModelByPackageName(MApp.getApp(), packageName, userId);
     }
 }

@@ -247,7 +247,8 @@ public class HomeFragment extends BaseFragment {
 
             AppModel appModel = (AppModel) getItem(i);
             if (appModel != null) {
-                CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+                CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(),
+                        appModel.getPkgUserId());
                 Bitmap bmp = data.getCustomIcon();
                 appIcon.setImageBitmap(bmp);
                 appModel.setCustomIcon(bmp);
@@ -302,14 +303,15 @@ public class HomeFragment extends BaseFragment {
                 int i =pos - pkgGridView.getGridItemStartOffset();
                 MLogs.d("onItemClick " + i);
                 if(i >= 0 && i < appInfos.size()){
+                    AppModel model = appInfos.get(i);
                     if(floatView.isIdle()){
-                        startAppLaunchActivity(appInfos.get(i).getPackageName());
+                        startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
                     }else{
                         floatView.restore();
                         floatView.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                startAppLaunchActivity(appInfos.get(i).getPackageName());
+                                startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
                             }
                         },100);
                     }
@@ -579,18 +581,18 @@ public class HomeFragment extends BaseFragment {
         appInfos.remove(appModel);
         EventReporter.deleteClonedApp(mActivity, appModel.getPackageName());
 //        updateModelIndex(itemPosition,appInfos.size() - 1);
-        AppManager.uninstallApp(appModel.getPackageName());
+        AppManager.uninstallApp(appModel.getPackageName(), appModel.getPkgUserId());
         CommonUtils.removeShortCut(mActivity,appModel);
-        CustomizeAppData.removePerf(appModel.getPackageName());
+        CustomizeAppData.removePerf(appModel.getPackageName(), appModel.getPkgUserId());
         DbManager.deleteAppModel(mActivity, appModel);
         DbManager.notifyChanged();
         pkgGridAdapter.notifyDataSetChanged();
         //adapter.deleteComplete();
     }
 
-    private void startAppLaunchActivity(String packageName){
+    private void startAppLaunchActivity(String packageName, int userId){
         if(mActivity instanceof  HomeActivity){
-            ((HomeActivity)mActivity).startAppLaunchActivity(packageName);
+            ((HomeActivity)mActivity).startAppLaunchActivity(packageName, userId);
         }
     }
 

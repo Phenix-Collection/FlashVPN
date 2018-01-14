@@ -27,6 +27,7 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.AppLockMonitor;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.model.CustomizeAppData;
+import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.DisplayUtils;
 import com.polestar.multiaccount.utils.EventReporter;
@@ -53,6 +54,7 @@ public class AppLockActivity extends BaseActivity {
     private BlurBackground mBlurBackground;
 
     private String mPkgName;
+    private int mUserId;
     private Handler mHandler;
     private TextView mForgotPasswordTv;
     private LinearLayout mAdInfoContainer;
@@ -65,15 +67,17 @@ public class AppLockActivity extends BaseActivity {
 
     private AppLockPasswordLogic mAppLockPasswordLogic = null;
 
+    public final static String EXTRA_USER_ID = "extra_clone_userid";
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
 
-    public static final void start(Context context, String pkg) {
-        MLogs.d("ApplockActivity start " + pkg);
+    public static final void start(Context context, String pkg, int userId) {
+        MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
         if (pkg == null) {
             return;
         }
         Intent intent = new Intent(context, AppLockActivity.class);
         intent.putExtra(Intent.EXTRA_PACKAGE_NAME, pkg);
+        intent.putExtra(EXTRA_USER_ID, userId);
         intent.setFlags(FLAG_ACTIVITY_SINGLE_TOP|FLAG_ACTIVITY_NO_HISTORY
                 |FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS|FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -158,6 +162,7 @@ public class AppLockActivity extends BaseActivity {
             mHandler = new Handler(Looper.getMainLooper());
         }
         mPkgName = getIntent().getStringExtra(Intent.EXTRA_PACKAGE_NAME);
+        mUserId = getIntent().getIntExtra(EXTRA_USER_ID, 0);
     }
 
     private void initToolbar() {
@@ -178,7 +183,7 @@ public class AppLockActivity extends BaseActivity {
                         finish();
                     }
                 }, 200);
-                AppLockMonitor.getInstance().unlocked(mPkgName);
+                AppLockMonitor.getInstance().unlocked(mPkgName, mUserId);
             }
 
             @Override
@@ -201,19 +206,11 @@ public class AppLockActivity extends BaseActivity {
 
         mCenterIcon = (FeedbackImageView) findViewById(R.id.window_applock_icon);
         mCenterAppText = (TextView) findViewById(R.id.window_applock_name);
-        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName);
+        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
         if (TextUtils.isEmpty(data.label)) {
-            PackageManager pm = MApp.getApp().getPackageManager();
-            ApplicationInfo ai = null;
-            try {
-                ai = pm.getApplicationInfo(mPkgName, 0);
-                CharSequence title = pm.getApplicationLabel(ai);
-                data.label = String.format(ResourcesUtil.getString(R.string.applock_window_title),title);
-            }catch (Exception e) {
-                MLogs.logBug(MLogs.getStackTraceString(e));
-            }
+            data.label = AppManager.getModelName(mPkgName, mUserId);
         }
-        Bitmap icon = BitmapUtils.getCustomIcon(MApp.getApp(), mPkgName);
+        Bitmap icon = BitmapUtils.getCustomIcon(MApp.getApp(), mPkgName, mUserId);
         if (icon != null) {
             mCenterIcon.setImageBitmap( icon);
         }
@@ -229,7 +226,7 @@ public class AppLockActivity extends BaseActivity {
         });
 
         mBlurBackground.init();
-        mBlurBackground.reloadWithTheme(mPkgName);
+        mBlurBackground.reloadWithTheme(mPkgName, mUserId);
         mAppLockPasswordLogic.onShow();
     }
 

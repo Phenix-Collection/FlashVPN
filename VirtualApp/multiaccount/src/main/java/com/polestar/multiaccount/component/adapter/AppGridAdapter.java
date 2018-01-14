@@ -1,6 +1,7 @@
 package com.polestar.multiaccount.component.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.utils.AppManager;
+import com.polestar.multiaccount.utils.BitmapUtils;
 
 import java.util.List;
 
@@ -17,9 +20,11 @@ public class AppGridAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private List<AppModel> mModels;
+    private Context mContext;
 
     public AppGridAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     public void setModels(List<AppModel> list) {
@@ -57,7 +62,13 @@ public class AppGridAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.iconView.setImageDrawable(model.getIcon());
+        int userId = AppManager.getNextAvailableUserId(model.getPackageName());
+        Drawable icon = model.getIcon();
+        if (userId > 0) {
+            viewHolder.iconView.setImageBitmap(BitmapUtils.createBadgeIcon(mContext, icon, userId));
+        } else {
+            viewHolder.iconView.setImageDrawable(icon);
+        }
         viewHolder.nameView.setText(model.getName());
         return convertView;
     }

@@ -21,9 +21,9 @@ public class AppApiDelegate implements IAppApiDelegate {
         }
         if (icon == null) {
             PackageManager pm = MApp.getApp().getPackageManager();
-            return BitmapUtils.getCustomIcon(MApp.getApp(), pkg);
+            return BitmapUtils.getCustomIcon(MApp.getApp(), pkg, userId);
         } else {
-            return BitmapUtils.createBadgeIcon(MApp.getApp(), new BitmapDrawable(icon));
+            return BitmapUtils.createBadgeIcon(MApp.getApp(), new BitmapDrawable(icon), userId);
         }
     }
 

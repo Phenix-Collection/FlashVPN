@@ -4,6 +4,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,6 +61,7 @@ import java.util.TimerTask;
 public class AppCloneActivity extends BaseActivity {
 
     private String mPkgName;
+    private int mUserId;
     private String mPkgLabel;
 
     private Button mBtnStart;
@@ -120,6 +123,8 @@ public class AppCloneActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             appModel = intent.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
+            mPkgName = appModel.getPackageName();
+            mUserId = AppManager.getNextAvailableUserId(mPkgName);
         }
         if (appModel == null) {
             Intent intentFail = new Intent();
@@ -133,19 +138,27 @@ public class AppCloneActivity extends BaseActivity {
                 public void run() {
                     boolean installed = false;
                     try{
-                        installed = AppManager.isAppInstalled(mPkgName);
+                        installed = AppManager.isAppInstalled(mPkgName, mUserId);
                     } catch (Exception e) {
                         MLogs.logBug(MLogs.getStackTraceString(e));
                     }
                     if (installed) {
-                        AppManager.uninstallApp(mPkgName);
+                        AppManager.uninstallApp(mPkgName, mUserId);
                         installed = false;
                         EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
                     }
                     MLogs.d("To install app " + mPkgName);
-                    isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel);
+                    isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel, mUserId);
                     isInstallDone = true;
                     if (isInstallSuccess) {
+                        PackageManager pm = getPackageManager();
+                        try {
+                            ApplicationInfo ai = pm.getApplicationInfo(mPkgName, 0);
+                            CharSequence label = pm.getApplicationLabel(ai);
+                            appModel.setName(AppManager.getCompatibleName("" + label, mUserId));
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -171,7 +184,6 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     private void initView() {
-        mPkgName = appModel.getPackageName();
         mPkgLabel = appModel.getName();
 
         mBtnStart = (Button) findViewById(R.id.btn_start);
@@ -214,14 +226,14 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     public void onAppIconClick(View view) {
-        CustomizeIconActivity.start(this, appModel.getPackageName());
+        CustomizeIconActivity.start(this, appModel.getPackageName(), mUserId);
     }
     @Override
     protected void onResume() {
         super.onResume();
         initSwitchStatus(false);
         if (mCloneSettingLayout.getVisibility() == View.VISIBLE) {
-            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName());
+            CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(), mUserId);
             ImageView icon = (ImageView) mCloneSettingLayout.findViewById(R.id.img_app_icon_done);
             icon.setImageBitmap(data.getCustomIcon());
             mTxtInstalled.setText(String.format(getString(R.string.clone_success), data.label));
@@ -455,12 +467,12 @@ public class AppCloneActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 //AppManager.launchApp(mPkgName);
-                AppStartActivity.startAppStartActivity(AppCloneActivity.this, mPkgName);
+                AppStartActivity.startAppStartActivity(AppCloneActivity.this, mPkgName, mUserId);
                 finish();
             }
         });
         //mImgSuccessBg.setVisibility(View.VISIBLE);
-        appModel.setCustomIcon(BitmapUtils.getCustomIcon(AppCloneActivity.this, mPkgName ));
+        appModel.setCustomIcon(BitmapUtils.getCustomIcon(AppCloneActivity.this, mPkgName, mUserId ));
         mImgAppIcon.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.INVISIBLE);
 
@@ -470,7 +482,7 @@ public class AppCloneActivity extends BaseActivity {
         mLayoutCancel.setVisibility(View.INVISIBLE);
         mTxtInstalling.setVisibility(View.INVISIBLE);
         mTxtAppLabel.setVisibility(View.INVISIBLE);
-        data = CustomizeAppData.loadFromPref(mPkgName);
+        data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
         mTxtInstalled.setText(String.format(getString(R.string.clone_success), data.label));
         showCloneSetting();
     }

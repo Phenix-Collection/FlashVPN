@@ -131,7 +131,7 @@ public class AppListUtils implements DataObserver {
                     e.printStackTrace();
                     continue;
                 }
-                if (isAlreadyClonedApp(packageInfo.packageName)) {
+                if (!AppManager.isAllowedToClone(packageInfo.packageName)) {
                     continue;
                 }
 
@@ -209,7 +209,7 @@ public class AppListUtils implements DataObserver {
 //            if ((resolveInfo.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM )!=0) {
 //                continue;
 //            }
-            if (isAlreadyClonedApp(pkgName)) {
+            if (!AppManager.isAllowedToClone(pkgName)) {
                 continue;
             }
             if (isPopularApp(pkgName)) {
@@ -248,6 +248,7 @@ public class AppListUtils implements DataObserver {
         }
     }
 
+    @Deprecated
     private boolean isAlreadyClonedApp(String packageName) {
         for (AppModel model : mClonedModels) {
             if (model.getPackageName().equals(packageName)) {

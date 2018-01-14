@@ -82,7 +82,7 @@ public class BasicPackageSwitchAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName());
+        CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
         viewHolder.iconView.setImageBitmap(data.getCustomIcon());
         viewHolder.nameView.setText(data.customized? data.label: model.getName());
         if (position == (getCount() - 1)) {
