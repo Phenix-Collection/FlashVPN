@@ -24,7 +24,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.grey.CloneAttributor;
+import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseFragment;
@@ -446,6 +446,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        GreyAttribute.checkAndClick(getActivity(),"com.kamagames.pokerist");
         if (appInfos.size() > 0) {
             pkgGridView.postDelayed(new Runnable() {
                 @Override
