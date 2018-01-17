@@ -206,3 +206,6 @@ public static java.lang.String TABLENAME;
 -keepclassmembers class com.mopub.mobileads.CustomEventBannerAdapter {!private !public !protected *;}
 -keep class * extends com.mopub.mobileads.CustomEventInterstitial {}
 -keep class * extends com.mopub.mobileads.CustomEventNative {}
+
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+ -dontwarn javax.annotation.Nullable
