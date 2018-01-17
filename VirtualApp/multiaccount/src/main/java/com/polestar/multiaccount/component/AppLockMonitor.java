@@ -18,8 +18,6 @@ import com.polestar.multiaccount.utils.LockPatternUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
-import com.polestar.multiaccount.widgets.locker.AppLockWindow;
-import com.polestar.multiaccount.widgets.locker.AppLockWindowManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,8 +47,6 @@ public class AppLockMonitor {
     private boolean hasAppLocked;
     private boolean adFree;
 
-    private AppLockWindowManager mAppLockWindows = AppLockWindowManager.getInstance();
-
     private AppLockMonitor() {
         mHandler = new Handler(Looper.getMainLooper()){
             @Override
@@ -77,25 +73,12 @@ public class AppLockMonitor {
                         }
                     case MSG_SHOW_LOCKER:
                         MLogs.d("show locker ");
-                        if (usingLockActivity()) {
-                            String key = (String) msg.obj;
-                            AppLockActivity.start(VirtualCore.get().getContext(), AppManager.getNameFromKey(key),
-                                    AppManager.getUserIdFromKey(key));
-                        } else {
-                            AppLockWindow window = (AppLockWindow) msg.obj;
-                            if (window != null) {
-                                window.show(!adFree);
-                            }
-                        }
+                        String key = (String) msg.obj;
+                        AppLockActivity.start(VirtualCore.get().getContext(), AppManager.getNameFromKey(key),
+                                AppManager.getUserIdFromKey(key));
                         break;
                     case MSG_HIDE_LOCKER:
                         MLogs.d("dismiss locker ");
-                        if (!usingLockActivity()) {
-                            AppLockWindow locker = (AppLockWindow) msg.obj;
-                            if (locker != null) {
-                                locker.dismiss();
-                            }
-                        }
                         break;
                 }
             }
@@ -112,9 +95,6 @@ public class AppLockMonitor {
         return RemoteConfig.getBoolean(CONFIG_USING_ACTIVITY_LOCK);
     }
 
-    private Object wrapMsgObj(String pkg, AppLockWindow window) {
-        return usingLockActivity() ? pkg: window;
-    }
     private void initSetting() {
         MLogs.d("initSetting");
         List<AppModel> list = DbManager.queryAppList(MApp.getApp());
@@ -127,7 +107,7 @@ public class AppLockMonitor {
         adFree = false;
         LockPatternUtils.setTempKey(PreferencesUtils.getEncodedPatternPassword(MApp.getApp()));
         mAdLoader = FuseAdLoader.get(CONFIG_SLOT_APP_LOCK, MApp.getApp());
-        mAdLoader.setBannerAdSize(AppLockWindow.getBannerSize());
+        mAdLoader.setBannerAdSize(AppLockActivity.getBannerSize());
         preloadAd();
     }
 
@@ -147,9 +127,6 @@ public class AppLockMonitor {
             }
         }
         preloadAd();
-        //if (this.adFree != adFree) {
-            mAppLockWindows.removeAll();
-        //}
         this.adFree = adFree;
         LockPatternUtils.setTempKey(newKey);
         if ( interval >= 3000) {
@@ -166,7 +143,7 @@ public class AppLockMonitor {
 
     public void unlocked(String pkg, int userId) {
         String key = AppManager.getMapKey(pkg, userId);
-        mHandler.sendMessage(mHandler.obtainMessage(AppLockMonitor.MSG_PACKAGE_UNLOCKED, wrapMsgObj(key, null)));
+        mHandler.sendMessage(mHandler.obtainMessage(AppLockMonitor.MSG_PACKAGE_UNLOCKED, key));
     }
 
 
@@ -184,16 +161,10 @@ public class AppLockMonitor {
             if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(key))) {
                 //do lock
                 MLogs.d(TAG, "Do lock app " + key);
-                AppLockWindow appLockWindow = mAppLockWindows.get(key);
-                if (appLockWindow == null) {
-                    appLockWindow = new AppLockWindow(key, mHandler);
-                    mAppLockWindows.add(key,appLockWindow);
-                }
-                final AppLockWindow lockWindow = appLockWindow;
                 MLogs.d(TAG, "Do lock app 2" + key);
-                mHandler.removeMessages(MSG_SHOW_LOCKER, wrapMsgObj(key, lockWindow));
-                mHandler.removeMessages(MSG_HIDE_LOCKER,  wrapMsgObj(key, lockWindow));
-                mHandler.sendMessage(mHandler.obtainMessage(MSG_SHOW_LOCKER,  wrapMsgObj(key, appLockWindow)));
+                mHandler.removeMessages(MSG_SHOW_LOCKER, key);
+                mHandler.removeMessages(MSG_HIDE_LOCKER,  key);
+                mHandler.sendMessage(mHandler.obtainMessage(MSG_SHOW_LOCKER,  key));
             }
         }
         //Remove the same object with send
@@ -204,12 +175,11 @@ public class AppLockMonitor {
     public void onActivityPause(String pkg, int userId) {
         String key = AppManager.getMapKey(pkg, userId);
         MLogs.d(TAG, "onActivityPause " + key + " delay relock: " + relockDelay);
-        AppLockWindow window = mAppLockWindows.get(key);
         AppModel model = modelHashMap.get(key);
-        if (window != null) {
-            mHandler.removeMessages(MSG_SHOW_LOCKER,  wrapMsgObj(key, window));
-            mHandler.removeMessages(MSG_HIDE_LOCKER, wrapMsgObj(key, window));
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_HIDE_LOCKER, wrapMsgObj(key, window)), 500);
+        if (model != null) {
+            mHandler.removeMessages(MSG_SHOW_LOCKER,  key);
+            mHandler.removeMessages(MSG_HIDE_LOCKER, key);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_HIDE_LOCKER, key), 500);
         }
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, key),
                 relockDelay);
