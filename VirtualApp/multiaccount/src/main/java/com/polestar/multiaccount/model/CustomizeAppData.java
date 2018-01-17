@@ -46,8 +46,9 @@ public class CustomizeAppData {
         data.userId = userId;
         data.customized = data.label != null;
         if (TextUtils.isEmpty(data.label)) {
-            data.label = String.format(ResourcesUtil.getString(R.string.clone_label_tag),
-                    AppManager.getModelName(pkg, userId));
+//            data.label = String.format(ResourcesUtil.getString(R.string.clone_label_tag),
+//                    AppManager.getModelName(pkg, userId));
+            data.label = AppManager.getModelName(pkg, userId);
         }
         return data;
     }
