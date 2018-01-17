@@ -448,7 +448,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        GreyAttribute.checkAndClick(getActivity(),"com.kamagames.pokerist");
+        //GreyAttribute.checkAndClick(getActivity(),"com.kamagames.pokerist");
         if (appInfos.size() > 0) {
             pkgGridView.postDelayed(new Runnable() {
                 @Override
