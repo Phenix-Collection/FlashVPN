@@ -129,6 +129,7 @@ public class MApp extends Application {
                         FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
                     }
                 });
+                instantcoffee.Builder.build(getApp(), "1516027773710659325298");
             }
 
             @Override
