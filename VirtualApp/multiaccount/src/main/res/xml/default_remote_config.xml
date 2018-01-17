@@ -201,6 +201,14 @@
         <key>slot_app_start_native</key>
         <value>ab_banner:ca-app-pub-5490912237269284/2354257338:0;mp:4a335084891b4a90a1cf695183336dde:0</value>
     </entry>
+    <entry>
+        <key>pkg_default_allow_cnt</key>
+        <value>6</value>
+    </entry>
+    <entry>
+        <key>pkg_config</key>
+        <value>5</value>
+    </entry>
     <!--
     <entry>
         <key>config_ad_load_timeout</key>
