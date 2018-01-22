@@ -66,7 +66,7 @@ public class VAccountManagerService extends IAccountManager.Stub {
 
     private static final AtomicReference<VAccountManagerService> sInstance = new AtomicReference<>();
     private static final long CHECK_IN_TIME = 30 * 24 * 60 * 1000L;
-    private static final String TAG = VAccountManagerService.class.getSimpleName();
+    private static final String TAG = "VAccount";
     private final SparseArray<List<VAccount>> accountsByUserId = new SparseArray<>();
     private final LinkedList<AuthTokenRecord> authTokenRecords = new LinkedList<>();
     private final LinkedHashMap<String, Session> mSessions = new LinkedHashMap<>();
@@ -80,6 +80,7 @@ public class VAccountManagerService extends IAccountManager.Stub {
     }
 
     public static void systemReady() {
+        VLog.d(TAG,"systemReady");
         VAccountManagerService service = new VAccountManagerService();
         service.readAllAccounts();
         sInstance.set(service);
@@ -585,11 +586,13 @@ public class VAccountManagerService extends IAccountManager.Stub {
     public void addAccount(int userId, final IAccountManagerResponse response, final String accountType,
                            final String authTokenType, final String[] requiredFeatures,
                            final boolean expectActivityLaunch, final Bundle optionsIn) {
+        VLog.d("VAccount", "Service addAccount:"+ accountType);
         if (response == null) throw new IllegalArgumentException("response is null");
         if (accountType == null) throw new IllegalArgumentException("accountType is null");
         AuthenticatorInfo info = getAuthenticatorInfo(accountType);
         if (info == null) {
             try {
+                VLog.d("VAccount", "No authenticator info "+ accountType);
                 response.onError(ERROR_CODE_BAD_ARGUMENTS, "account.type does not exist");
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -986,6 +989,7 @@ public class VAccountManagerService extends IAccountManager.Stub {
 
 
     public void refreshAuthenticatorCache(String packageName) {
+        VLog.d(TAG, "refreshAuthenticatorCache");
         cache.authenticators.clear();
         Intent intent = new Intent(AccountManager.ACTION_AUTHENTICATOR_INTENT);
         if (packageName != null) {

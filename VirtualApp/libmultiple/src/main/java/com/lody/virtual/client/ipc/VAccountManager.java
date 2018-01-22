@@ -13,6 +13,7 @@ import android.os.RemoteException;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.env.VirtualRuntime;
 import com.lody.virtual.client.stub.AmsTask;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.server.IAccountManager;
 
@@ -86,6 +87,7 @@ public class VAccountManager {
 
     public Account[] getAccounts(int userId, String type) {
         try {
+            VLog.logbug("VAccount", "getAccounts " + type);
             return getRemote().getAccounts(userId, type);
         } catch (RemoteException e) {
             return VirtualRuntime.crash(e);
@@ -94,6 +96,7 @@ public class VAccountManager {
 
     public Account[] getAccounts(String type) {
         try {
+            VLog.logbug("VAccount", "getAccounts " + type);
             return getRemote().getAccounts(VUserHandle.myUserId(), type);
         } catch (RemoteException e) {
             return VirtualRuntime.crash(e);
@@ -230,6 +233,7 @@ public class VAccountManager {
 
     public void getAccountsByFeatures(IAccountManagerResponse response, String type, String[] features) {
         try {
+            VLog.logbug("VAccount", "getAccountsByFeatures " + type);
             getRemote().getAccountsByFeatures(VUserHandle.myUserId(), response, type, features);
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -275,6 +279,7 @@ public class VAccountManager {
                                                    final String authTokenType, final String[] requiredFeatures,
                                                    final Bundle addAccountOptions,
                                                    final Activity activity, AccountManagerCallback<Bundle> callback, Handler handler) {
+        VLog.logbug("VAccount", "addAccount " + accountType);
         if (accountType == null) throw new IllegalArgumentException("accountType is null");
         final Bundle optionsIn = new Bundle();
         if (addAccountOptions != null) {
