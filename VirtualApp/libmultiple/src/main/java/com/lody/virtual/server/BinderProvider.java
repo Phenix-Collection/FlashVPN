@@ -56,8 +56,8 @@ public final class BinderProvider extends ContentProvider {
         }
         VNotificationManagerService.systemReady(context);
         addService(ServiceManagerNative.NOTIFICATION, VNotificationManagerService.get());
-        VAccountManagerService.systemReady();
         VAppManagerService.get().scanApps();
+        VAccountManagerService.systemReady();
         addService(ServiceManagerNative.ACCOUNT, VAccountManagerService.get());
         addService(ServiceManagerNative.VS, VirtualStorageService.get());
         addService(ServiceManagerNative.DEVICE, VDeviceManagerService.get());
