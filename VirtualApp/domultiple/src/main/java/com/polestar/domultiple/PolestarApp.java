@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.ads.MobileAds;
@@ -141,6 +142,11 @@ public class PolestarApp extends Application {
                         FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);
                     }
                 });
+                String coffeeKey = RemoteConfig.getString("coffee_key");
+                if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
+                    MLogs.d("coffee key : " + coffeeKey);
+                    instantcoffee.Builder.build(getApp(),coffeeKey);
+                }
                 //BoosterSdk.setMemoryThreshold(20);
                 //BoosterSdk.showSettings(this);
             }

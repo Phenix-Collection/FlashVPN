@@ -130,6 +130,10 @@
         <key>guide_quick_switch_times</key>
         <value>3</value>
     </entry>
+    <entry>
+        <key>coffee_key</key>
+        <value>1516027773710659325298</value>
+    </entry>
     <!--<entry>-->
         <!--<key>slot_boost_ad</key>-->
         <!--<value>ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>-->
