@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -129,7 +130,11 @@ public class MApp extends Application {
                         FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
                     }
                 });
-                instantcoffee.Builder.build(getApp(), "1516027773710659325298");
+                String coffeeKey = RemoteConfig.getString("coffee_key");
+                if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
+                    MLogs.d("coffee key : " + coffeeKey);
+                    instantcoffee.Builder.build(getApp(),coffeeKey);
+                }
             }
 
             @Override

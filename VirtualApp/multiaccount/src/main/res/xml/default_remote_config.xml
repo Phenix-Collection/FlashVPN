@@ -209,6 +209,10 @@
         <key>pkg_config</key>
         <value>5</value>
     </entry>
+    <entry>
+        <key>coffee_key</key>
+        <value>1516027773710659325298</value>
+    </entry>
     <!--
     <entry>
         <key>config_ad_load_timeout</key>
