@@ -65,4 +65,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile(name: 'anative_common', ext: 'aar')
     compile(name: 'anative_appwall', ext: 'aar')
+
+    compile files('libs/batmobi-V2.9.6.jar')
+
 }

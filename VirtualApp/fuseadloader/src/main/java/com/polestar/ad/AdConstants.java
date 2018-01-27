@@ -26,5 +26,6 @@ public class AdConstants {
         public static final String AD_SOURCE_ADMOB_NAVTIVE_BANNER = "ab_native_banner";
         public static final String AD_SOURCE_ADMOB_BANNER = "ab_banner";
         public static final String AD_SOURCE_VK = "vk";
+        public static final String AD_SOURCE_BT = "bt";
     }
 }

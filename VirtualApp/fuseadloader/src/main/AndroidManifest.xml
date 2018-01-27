@@ -10,6 +10,20 @@
         <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+
+        <!--batmobi start-->
+        <activity
+            android:name="com.batmobi.BatMobiActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <receiver android:name="com.batmobi.BatMobiBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <!--batmobi end-->
     </application>
 
 </manifest>

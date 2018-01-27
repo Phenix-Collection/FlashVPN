@@ -319,6 +319,8 @@ public class FuseAdLoader {
                 return new AdmobInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL:
                 return new MopubInterstitialAdapter(mContext, config.key);
+            case AdConstants.NativeAdType.AD_SOURCE_BT :
+                return new BtNativeAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_VK:
             default:
                 AdLog.e("not suppported source " + config.source);
@@ -327,11 +329,12 @@ public class FuseAdLoader {
     }
 
     static {
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL);
+//        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB);
+//        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT);
+//        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL);
