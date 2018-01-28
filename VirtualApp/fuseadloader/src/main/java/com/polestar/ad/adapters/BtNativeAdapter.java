@@ -19,6 +19,7 @@ import com.batmobi.IAdListener;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdViewBinder;
+import com.polestar.ad.R;
 import com.polestar.ad.view.StarLevelLayoutView;
 import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 
@@ -82,7 +83,7 @@ public class BtNativeAdapter extends AdAdapter {
             }
         };
         BatAdBuild.Builder builder = new BatAdBuild.Builder(mContext, mKey, BatAdType.NATIVE.getType(), btListener)
-                .setAdsNum(1).setCreatives(Ad.AD_CREATIVE_SIZE_320X200);
+                .setCreatives(Ad.AD_CREATIVE_SIZE_1200x627);
         BatmobiLib.load(builder.build());
         startMonitor();
     }
@@ -100,7 +101,7 @@ public class BtNativeAdapter extends AdAdapter {
 
     @Override
     public String getCoverImageUrl() {
-        return mRawAd == null ? null : mRawAd.getCreatives(Ad.AD_CREATIVE_SIZE_320X200).get(0);
+        return mRawAd == null ? null : mRawAd.getCreatives(Ad.AD_CREATIVE_SIZE_1200x627).get(0);
     }
 
     @Override
@@ -142,6 +143,7 @@ public class BtNativeAdapter extends AdAdapter {
     public void registerViewForInteraction(View view) {
         super.registerViewForInteraction(view);
         if (mBatNativeAd != null) {
+            AdLog.d("BT: registerView");
             mBatNativeAd.registerView(view, mRawAd);
         }
     }
@@ -162,8 +164,8 @@ public class BtNativeAdapter extends AdAdapter {
         if (adView != null) {
             BasicLazyLoadImageView  coverView = (BasicLazyLoadImageView) adView.findViewById(viewBinder.mainMediaId);
             if (coverView != null) {
-                coverView.setDefaultResource(0);
-                coverView.requestDisplayURL(getIconImageUrl());
+                coverView.setDefaultResource(R.drawable.native_default);
+                coverView.requestDisplayURL(getCoverImageUrl());
             }
             ImageView iconView = (ImageView) adView.findViewById(viewBinder.iconImageId);
             if (iconView instanceof BasicLazyLoadImageView) {
