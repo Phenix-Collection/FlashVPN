@@ -209,3 +209,5 @@ public static java.lang.String TABLENAME;
 
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
  -dontwarn javax.annotation.Nullable
+
+ -keep class com.batmobi.** { *; }

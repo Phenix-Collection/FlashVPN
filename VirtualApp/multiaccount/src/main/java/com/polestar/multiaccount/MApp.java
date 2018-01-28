@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
@@ -98,6 +99,7 @@ public class MApp extends Application {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
+        BatmobiLib.init(gDefault, "Y3DQZ6Z77SR3H1CESAAI6NUU");
         FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
         FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
