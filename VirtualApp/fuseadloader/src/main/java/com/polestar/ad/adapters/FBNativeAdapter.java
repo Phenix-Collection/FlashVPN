@@ -21,6 +21,9 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.view.StarLevelLayoutView;
 import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by guojia on 2016/10/31.
  */
@@ -192,6 +195,13 @@ public class FBNativeAdapter extends AdAdapter {
                 }
             }
             registerViewForInteraction(adView);
+            List<View> clickableViews = new ArrayList<>();
+            clickableViews.add(coverView);
+            clickableViews.add(iconView);
+            clickableViews.add(titleView);
+            clickableViews.add(subtitleView);
+            clickableViews.add(ctaView);
+            mRawAd.registerViewForInteraction(adView,clickableViews);
             LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(viewBinder.privacyInformationId);
             AdChoicesView adChoicesView = new AdChoicesView(mContext, mRawAd, true);
             adChoicesContainer.addView(adChoicesView);
