@@ -3,6 +3,7 @@ package com.lody.virtual.server.job;
 import android.annotation.TargetApi;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
+import android.app.job.JobWorkItem;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
@@ -177,9 +178,13 @@ public class VJobSchedulerService extends IJobScheduler.Stub {
         };
     }
 
-
     @Override
     public int schedule(JobInfo job) throws RemoteException {
+        fixupJob(job);
+        return mScheduler.schedule(job);
+    }
+
+    private void fixupJob(JobInfo job) {
         int vuid = VBinder.getCallingUid();
         int id = job.getId();
         ComponentName service = job.getService();
@@ -195,7 +200,6 @@ public class VJobSchedulerService extends IJobScheduler.Stub {
         saveJobs();
         mirror.android.app.job.JobInfo.jobId.set(job, config.virtualJobId);
         mirror.android.app.job.JobInfo.service.set(job, mJobProxyComponent);
-        return mScheduler.schedule(job);
     }
 
     private void saveJobs() {
@@ -300,6 +304,13 @@ public class VJobSchedulerService extends IJobScheduler.Stub {
                 saveJobs();
             }
         }
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public int enqueue(JobInfo job, JobWorkItem work) throws RemoteException {
+        fixupJob(job);
+        return mScheduler.enqueue(job, work);
     }
 
     @Override

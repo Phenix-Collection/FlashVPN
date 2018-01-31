@@ -1,6 +1,7 @@
 package com.lody.virtual.client.ipc;
 
 import android.app.job.JobInfo;
+import android.app.job.JobWorkItem;
 import android.os.IBinder;
 import android.os.RemoteException;
 
@@ -74,5 +75,14 @@ public class VJobScheduler {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    public int enqueue(JobInfo job, JobWorkItem work) {
+        try {
+            return getRemote().enqueue(job, work);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

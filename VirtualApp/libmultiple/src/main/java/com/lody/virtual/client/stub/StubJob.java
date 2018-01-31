@@ -6,6 +6,7 @@ import android.app.job.IJobCallback;
 import android.app.job.IJobService;
 import android.app.job.JobParameters;
 import android.app.job.JobScheduler;
+import android.app.job.JobWorkItem;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -137,6 +138,18 @@ public class StubJob extends Service {
         @Override
         public void acknowledgeStopMessage(int jobId, boolean reschedule) throws RemoteException {
             clientCallback.acknowledgeStopMessage(jobId, reschedule);
+        }
+
+        @Override
+        @TargetApi(Build.VERSION_CODES.O)
+        public JobWorkItem dequeueWork(int jobId) throws RemoteException {
+            return clientCallback.dequeueWork(jobId);
+        }
+
+        @Override
+        @TargetApi(Build.VERSION_CODES.O)
+        public boolean completeWork(int jobId, int workId) throws RemoteException {
+            return clientCallback.completeWork(jobId, workId);
         }
 
         @Override

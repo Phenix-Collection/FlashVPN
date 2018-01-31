@@ -2,6 +2,7 @@ package com.lody.virtual.client.hook.proxies.job;
 
 import android.annotation.TargetApi;
 import android.app.job.JobInfo;
+import android.app.job.JobWorkItem;
 import android.content.Context;
 import android.os.Build;
 
@@ -32,6 +33,9 @@ public class JobServiceStub extends BinderInvocationProxy {
 		addMethodProxy(new getAllPendingJobs());
 		addMethodProxy(new cancelAll());
 		addMethodProxy(new cancel());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			addMethodProxy(new enqueue());
+		}
 	}
 
 
@@ -87,6 +91,23 @@ public class JobServiceStub extends BinderInvocationProxy {
 		public Object call(Object who, Method method, Object... args) throws Throwable {
 			int jobId = (int) args[0];
 			VJobScheduler.get().cancel(jobId);
+			return 0;
+		}
+	}
+
+	// int enqueue(JobInfo job, JobWorkItem work);
+	private class enqueue extends MethodProxy {
+
+		@Override
+		public String getMethodName() {
+			return "enqueue";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			JobInfo job = (JobInfo) args[0];
+			JobWorkItem work = (JobWorkItem) args[1];
+			VJobScheduler.get().enqueue(job, work);
 			return 0;
 		}
 	}
