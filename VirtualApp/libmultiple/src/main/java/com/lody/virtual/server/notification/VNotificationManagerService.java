@@ -1,10 +1,17 @@
 package com.lody.virtual.server.notification;
 
+import android.annotation.TargetApi;
+import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
+import android.os.Parcel;
 import android.text.TextUtils;
 
+import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.helper.utils.VLog;
+import com.lody.virtual.remote.VParceledListSlice;
 import com.lody.virtual.server.INotificationManager;
 
 import java.util.ArrayList;
@@ -123,6 +130,218 @@ public class VNotificationManagerService extends INotificationManager.Stub {
             VLog.d(TAG, "cancel " + info.tag + " " + info.id);
             mNotificationManager.cancel(info.tag, info.id);
         }
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void createNotificationChannelGroups(String pkg, VParceledListSlice channelGroupList) {
+        List<NotificationChannelGroup> channelGroups = channelGroupList.getList();
+        List<NotificationChannelGroup> newGroups = fixupNotificationChannelGroups(channelGroups, pkg);
+        mNotificationManager.createNotificationChannelGroups(newGroups);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void createNotificationChannels(String pkg, VParceledListSlice channelsList) {
+        List<NotificationChannel> channels = channelsList.getList();
+        List<NotificationChannel> newChannels = fixupNotificationChannels(channels, pkg);
+        mNotificationManager.createNotificationChannels(newChannels);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public NotificationChannel getNotificationChannel(String pkg, String channelId) {
+        NotificationChannel channel = mNotificationManager.getNotificationChannel(fixupId(channelId, pkg));
+        return unFixupNotificationChannel(channel, pkg);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void deleteNotificationChannel(String pkg, String channelId) {
+        mNotificationManager.deleteNotificationChannel(fixupId(channelId, pkg));
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public VParceledListSlice getNotificationChannels(String pkg) {
+        List<NotificationChannel> channels = mNotificationManager.getNotificationChannels();
+        ArrayList<NotificationChannel> pkgChannels = new ArrayList<>();
+        for (NotificationChannel c : channels) {
+            if (c.getId().startsWith(pkg))
+                pkgChannels.add(c);
+        }
+        return new VParceledListSlice(unFixupNotificationChannels(pkgChannels, pkg));
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void deleteNotificationChannelGroup(String pkg, String channelGroupId) {
+        mNotificationManager.deleteNotificationChannelGroup(fixupId(channelGroupId, pkg));
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public VParceledListSlice getNotificationChannelGroups(String pkg) {
+        List<NotificationChannelGroup> groups = mNotificationManager.getNotificationChannelGroups();
+        ArrayList<NotificationChannelGroup> pkgGroups = new ArrayList<>();
+        for (NotificationChannelGroup g : groups) {
+            if (g.getId().startsWith(pkg))
+                pkgGroups.add(g);
+        }
+        return new VParceledListSlice(unFixupNotificationChannelGroups(pkgGroups, pkg));
+    }
+
+    private String fixupId(String id, String pkg) {
+        // TODO check the id length
+        String newId =  pkg + "@";
+        if (id != null)
+            newId += id;
+        return newId;
+    }
+
+    private String unFixupId(String id, String pkg) {
+        if (id == null || !id.startsWith(pkg))
+            return id;
+        // TODO check the id length
+        String newId = id.substring(pkg.length() + 1);
+        if (newId.length() == 0)
+            return null;
+        return newId;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private NotificationChannel replaceNotificationChannelId(NotificationChannel channel, String newId) {
+        Parcel in = Parcel.obtain();
+        Parcel out = Parcel.obtain();
+
+        channel.writeToParcel(in, 0);
+        in.setDataPosition(0);
+        if (in.readByte() != 0) {
+            String dummy = in.readString();
+        }
+        if (newId != null) {
+            out.writeByte((byte) 1);
+            out.writeString(newId);
+        } else {
+            out.writeByte((byte) 0);
+        }
+        out.appendFrom(in, in.dataPosition(), in.dataAvail());
+        out.setDataPosition(0);
+        NotificationChannel newChannel = Reflect.on(NotificationChannel.class).create(out).get();
+        in.recycle();
+        out.recycle();
+        return newChannel;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private NotificationChannel fixupNotificationChannel(NotificationChannel channel, String pkg) {
+        if (channel == null)
+            return null;
+
+        String id = channel.getId();
+        String newId = fixupId(id, pkg);
+
+        // fixup group id
+        String groupId = channel.getGroup();
+        if (groupId != null)
+            channel.setGroup(fixupId(groupId, pkg));
+
+        return replaceNotificationChannelId(channel, newId);
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private NotificationChannel unFixupNotificationChannel(NotificationChannel channel, String pkg) {
+        if (channel == null)
+            return null;
+
+        String id = channel.getId();
+        String newId = unFixupId(id, pkg);
+
+        // unfixup group id
+        String groupId = channel.getGroup();
+        channel.setGroup(unFixupId(groupId, pkg));
+
+        return replaceNotificationChannelId(channel, newId);
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private List<NotificationChannel> fixupNotificationChannels(List<NotificationChannel> channels, String pkg) {
+        if (channels == null || channels.size() == 0)
+            return channels;
+
+        ArrayList<NotificationChannel> newChannels = new ArrayList<>();
+        for (NotificationChannel channel : channels) {
+            newChannels.add(fixupNotificationChannel(channel, pkg));
+        }
+        return newChannels;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private List<NotificationChannel> unFixupNotificationChannels(List<NotificationChannel> channels, String pkg) {
+        if (channels == null || channels.size() == 0)
+            return channels;
+
+        ArrayList<NotificationChannel> newChannels = new ArrayList<>();
+        for (NotificationChannel channel : channels) {
+            newChannels.add(unFixupNotificationChannel(channel, pkg));
+        }
+        return newChannels;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private NotificationChannelGroup fixupNotificationChannelGroup(NotificationChannelGroup group, String pkg) {
+        if (group == null)
+            return null;
+
+        String id = group.getId();
+        CharSequence name = group.getName();
+        List<NotificationChannel> channels = group.getChannels();
+        NotificationChannelGroup newGroup = new NotificationChannelGroup(fixupId(id, pkg), name);
+        for (NotificationChannel channel : channels) {
+            NotificationChannel c = fixupNotificationChannel(channel, pkg);
+            Reflect.on(newGroup).call("addChannel", c);
+        }
+        return newGroup;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private NotificationChannelGroup unFixupNotificationChannelGroup(NotificationChannelGroup group, String pkg) {
+        if (group == null)
+            return null;
+
+        String id = group.getId();
+        CharSequence name = group.getName();
+        List<NotificationChannel> channels = group.getChannels();
+        NotificationChannelGroup newGroup = new NotificationChannelGroup(unFixupId(id, pkg), name);
+        for (NotificationChannel channel : channels) {
+            NotificationChannel c = unFixupNotificationChannel(channel, pkg);
+            Reflect.on(newGroup).call("addChannel", c);
+        }
+        return newGroup;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private List<NotificationChannelGroup> fixupNotificationChannelGroups(List<NotificationChannelGroup> groups, String pkg) {
+        if (groups == null || groups.size() == 0)
+            return groups;
+
+        ArrayList<NotificationChannelGroup> newGroups = new ArrayList<>();
+        for (NotificationChannelGroup group : groups) {
+            newGroups.add(fixupNotificationChannelGroup(group, pkg));
+        }
+        return newGroups;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private List<NotificationChannelGroup> unFixupNotificationChannelGroups(List<NotificationChannelGroup> groups, String pkg) {
+        if (groups == null || groups.size() == 0)
+            return groups;
+
+        ArrayList<NotificationChannelGroup> newGroups = new ArrayList<>();
+        for (NotificationChannelGroup group : groups) {
+            newGroups.add(unFixupNotificationChannelGroup(group, pkg));
+        }
+        return newGroups;
     }
 
     private static class NotificationInfo {

@@ -1,10 +1,14 @@
 package com.lody.virtual.client.ipc;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.remote.VParceledListSlice;
 import com.lody.virtual.server.INotificationManager;
 import com.lody.virtual.server.notification.NotificationCompat;
 
@@ -94,5 +98,71 @@ public class VNotificationManager {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void createNotificationChannelGroups(String pkg, VParceledListSlice channelGroupList) {
+        try {
+            getService().createNotificationChannelGroups(pkg, channelGroupList);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void createNotificationChannels(String pkg, VParceledListSlice channelsList) {
+        try {
+            getService().createNotificationChannels(pkg, channelsList);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public NotificationChannel getNotificationChannel(String pkg, String channelId) {
+        try {
+            return getService().getNotificationChannel(pkg, channelId);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void deleteNotificationChannel(String pkg, String channelId) {
+        try {
+            getService().deleteNotificationChannel(pkg, channelId);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public VParceledListSlice getNotificationChannels(String pkg) {
+        try {
+            return getService().getNotificationChannels(pkg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void deleteNotificationChannelGroup(String pkg, String channelGroupId) {
+        try {
+            getService().deleteNotificationChannelGroup(pkg, channelGroupId);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public VParceledListSlice getNotificationChannelGroups(String pkg) {
+        try {
+            return getService().getNotificationChannelGroups(pkg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
