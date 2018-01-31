@@ -211,3 +211,5 @@ public static java.lang.String TABLENAME;
 -keep class * extends com.mopub.mobileads.CustomEventInterstitial {}
 -keep class * extends com.mopub.mobileads.CustomEventNative {}
  -dontwarn javax.annotation.Nullable
+
+ -keep class com.batmobi.** { *; }

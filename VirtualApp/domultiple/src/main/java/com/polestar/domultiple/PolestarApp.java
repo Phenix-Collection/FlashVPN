@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
@@ -98,6 +99,7 @@ public class PolestarApp extends Application {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
+        BatmobiLib.init(gDefault, "7OO01FES0DJDJRSSETIBBULF");
     }
     @Override
     public void onCreate() {
