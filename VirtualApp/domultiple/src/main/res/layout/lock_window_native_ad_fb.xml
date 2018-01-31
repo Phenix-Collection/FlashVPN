@@ -100,8 +100,8 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/shape_round_corner_line"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="14sp"
                 android:textStyle="bold" />
