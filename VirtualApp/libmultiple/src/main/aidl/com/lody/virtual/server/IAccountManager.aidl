@@ -5,6 +5,7 @@ import android.accounts.Account;
 import android.accounts.AuthenticatorDescription;
 import android.os.Bundle;
 
+import java.util.Map;
 
 /**
  * Central application service that provides account management.
@@ -44,4 +45,34 @@ interface IAccountManager {
     void invalidateAuthToken(int userId, in String accountType, in String authToken);
     String peekAuthToken(int userId, in Account account, in String authTokenType);
 
+    /* for addOnAccountsUpdatedListener and removeOnAccountsUpdatedListener */
+    void registerAccountListener(int userId, in String[] accountTypes, String opPackageName);
+    void unregisterAccountListener(int userId, in String[] accountTypes, String opPackageName);
+
+    /* Add account in two steps. */
+    void startAddAccountSession(int userId, in IAccountManagerResponse response, String accountType,
+        String authTokenType, in String[] requiredFeatures, boolean expectActivityLaunch,
+        in Bundle options);
+
+    /* Update credentials in two steps. */
+    void startUpdateCredentialsSession(int userId, in IAccountManagerResponse response, in Account account,
+        String authTokenType, boolean expectActivityLaunch, in Bundle options);
+
+    /* Finish session started by startAddAccountSession(...) or startUpdateCredentialsSession(...)
+    for user */
+    void finishSessionAsUser(int userId, in IAccountManagerResponse response, in Bundle sessionBundle,
+        boolean expectActivityLaunch, in Bundle appInfo, int sysUserId);
+
+    /* Check if credentials update is suggested */
+    void isCredentialsUpdateSuggested(int userId, in IAccountManagerResponse response, in Account account,
+        String statusToken);
+
+    /* Returns Map<String, Integer> from package name to visibility with all values stored for given account */
+    Map getPackagesAndVisibilityForAccount(int userId, in Account account);
+    boolean addAccountExplicitlyWithVisibility(int userId, in Account account, String password, in Bundle extras,
+            in Map visibility);
+    boolean setAccountVisibility(int userId, in Account a, in String packageName, int newVisibility);
+    int getAccountVisibility(int userId, in Account a, in String packageName);
+    /* Type may be null returns Map <Account, Integer>*/
+    Map getAccountsAndVisibilityForPackage(int userId, in String packageName, in String accountType);
 }

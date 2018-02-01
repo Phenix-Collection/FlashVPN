@@ -5,7 +5,9 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorDescription;
 import android.accounts.IAccountManagerResponse;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -16,6 +18,8 @@ import com.lody.virtual.client.stub.AmsTask;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.server.IAccountManager;
+
+import java.util.Map;
 
 import static com.lody.virtual.helper.compat.AccountManagerCompat.KEY_ANDROID_PACKAGE_NAME;
 
@@ -294,5 +298,120 @@ public class VAccountManager {
                         requiredFeatures, activity != null, optionsIn);
             }
         }.start();
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void registerAccountListener(String[] accountTypes, String opPackageName) {
+        try {
+            getRemote().registerAccountListener(VUserHandle.myUserId(), accountTypes, opPackageName);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void unregisterAccountListener(String[] accountTypes, String opPackageName) {
+        try {
+            getRemote().unregisterAccountListener(VUserHandle.myUserId(), accountTypes, opPackageName);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void startAddAccountSession(IAccountManagerResponse response, String accountType,
+                                       String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch,
+                                       Bundle options) {
+        try {
+            getRemote().startAddAccountSession(VUserHandle.myUserId(), response, accountType,
+                    authTokenType, requiredFeatures, expectActivityLaunch, options);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void startUpdateCredentialsSession(IAccountManagerResponse response, Account account,
+                                              String authTokenType, boolean expectActivityLaunch, Bundle options) {
+        try {
+            getRemote().startUpdateCredentialsSession(VUserHandle.myUserId(), response, account, authTokenType,
+                    expectActivityLaunch, options);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void finishSessionAsUser(IAccountManagerResponse response, Bundle sessionBundle,
+                                    boolean expectActivityLaunch, Bundle appInfo, int userId) {
+        try {
+            getRemote().finishSessionAsUser(VUserHandle.myUserId(), response, sessionBundle,
+                    expectActivityLaunch, appInfo, userId);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void isCredentialsUpdateSuggested(IAccountManagerResponse response, Account account,
+                                             String statusToken) {
+        try {
+            getRemote().isCredentialsUpdateSuggested(VUserHandle.myUserId(), response, account, statusToken);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public Map getPackagesAndVisibilityForAccount(Account account) {
+        try {
+            getRemote().getPackagesAndVisibilityForAccount(VUserHandle.myUserId(), account);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public boolean addAccountExplicitlyWithVisibility(Account account, String password, Bundle extras,
+                                                      Map visibility) {
+        try {
+            getRemote().addAccountExplicitlyWithVisibility(VUserHandle.myUserId(), account, password,
+                    extras,
+                    visibility);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public boolean setAccountVisibility(Account account, String packageName, int newVisibility) {
+        try {
+            getRemote().setAccountVisibility(VUserHandle.myUserId(), account, packageName, newVisibility);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public int getAccountVisibility(Account account, String packageName) {
+        try {
+            getRemote().getAccountVisibility(VUserHandle.myUserId(), account, packageName);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public Map getAccountsAndVisibilityForPackage(String packageName, String accountType) {
+        try {
+            getRemote().getAccountsAndVisibilityForPackage(VUserHandle.myUserId(), packageName, accountType);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

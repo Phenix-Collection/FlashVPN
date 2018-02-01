@@ -6,6 +6,7 @@ import android.accounts.AuthenticatorDescription;
 import android.accounts.IAccountAuthenticator;
 import android.accounts.IAccountAuthenticatorResponse;
 import android.accounts.IAccountManagerResponse;
+import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcel;
@@ -73,7 +75,7 @@ public class VAccountManagerService extends IAccountManager.Stub {
     private final AuthenticatorCache cache = new AuthenticatorCache();
     private Context mContext = VirtualCore.get().getContext();
     private long lastAccountChangeTime = 0;
-
+    private final SparseArray<List<VAccountVisibility>> accountsVisibilitiesByUserId = new SparseArray<>();
 
     public static VAccountManagerService get() {
         return sInstance.get();
@@ -83,6 +85,7 @@ public class VAccountManagerService extends IAccountManager.Stub {
         VLog.d(TAG,"systemReady");
         VAccountManagerService service = new VAccountManagerService();
         service.readAllAccounts();
+        service.readAllAccountVisibilities();
         sInstance.set(service);
     }
 
@@ -720,6 +723,8 @@ public class VAccountManagerService extends IAccountManager.Stub {
                     iterator.remove();
                     saveAllAccounts();
                     sendAccountsChangedBroadcast(userId);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        removeAccountVisibility(userId, account);
                     return true;
                 }
             }
@@ -727,6 +732,25 @@ public class VAccountManagerService extends IAccountManager.Stub {
         return false;
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    private boolean removeAccountVisibility(int userId, Account account) {
+        List<VAccountVisibility> visibilities = accountsVisibilitiesByUserId.get(userId);
+        if (visibilities != null) {
+            Iterator<VAccountVisibility> iterator = visibilities.iterator();
+            while (iterator.hasNext()) {
+                VAccountVisibility visibility = iterator.next();
+                if (userId == visibility.userId
+                        && TextUtils.equals(visibility.name, account.name)
+                        && TextUtils.equals(account.type, visibility.type)) {
+                    iterator.remove();
+                    saveAllAccountVisibilities();
+                    sendAccountsChangedBroadcast(userId);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     public boolean accountAuthenticated(int userId, final Account account) {
@@ -792,11 +816,28 @@ public class VAccountManagerService extends IAccountManager.Stub {
                         }
                     }
                 }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    renameAccountVisibility(userId, accountToRename, newName);
                 sendAccountsChangedBroadcast(userId);
                 return newAccount;
             }
         }
         return accountToRename;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private boolean renameAccountVisibility(int userId, Account accountToRename, String newName) {
+        // TODO: Cancel Notification
+        synchronized (accountsVisibilitiesByUserId) {
+            VAccountVisibility visibility = getAccountVisibility(userId, accountToRename);
+            if (visibility != null) {
+                visibility.name = newName;
+                saveAllAccountVisibilities();
+                sendAccountsChangedBroadcast(userId);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -812,6 +853,104 @@ public class VAccountManagerService extends IAccountManager.Stub {
         }
     }
 
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void registerAccountListener(int userId, String[] accountTypes, String opPackageName) {
+        // TODO
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void unregisterAccountListener(int userId, String[] accountTypes, String opPackageName) {
+        // TODO
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void startAddAccountSession(int userId, IAccountManagerResponse response, String accountType,
+                                String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch,
+                                Bundle options) {
+        // TODO
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void startUpdateCredentialsSession(int userId, IAccountManagerResponse response, Account account,
+                                       String authTokenType, boolean expectActivityLaunch, Bundle options) {
+        // TODO
+    }
+
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void finishSessionAsUser(int userId, IAccountManagerResponse response, Bundle sessionBundle,
+                             boolean expectActivityLaunch, Bundle appInfo, int sysUserId) {
+        // TODO
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public void isCredentialsUpdateSuggested(int userId, IAccountManagerResponse response, Account account,
+                                      String statusToken) {
+        // TODO
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public Map getPackagesAndVisibilityForAccount(int userId, Account account) {
+        VAccountVisibility visibility = getAccountVisibility(userId, account);
+        if (visibility != null)
+            return visibility.visibility;
+        return null;
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public boolean addAccountExplicitlyWithVisibility(int userId, Account account, String password, Bundle extras,
+                                               Map visibility) {
+        if (account == null) throw new IllegalArgumentException("account is null");
+        boolean ret = insertAccountIntoDatabase(userId, account, password, extras);
+        insertAccountVisibilityIntoDatabase(userId, account, visibility);
+        return ret;
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public boolean setAccountVisibility(int userId, Account account, String packageName, int newVisibility) {
+        VAccountVisibility visibility = getAccountVisibility(userId, account);
+        if (visibility != null) {
+            visibility.visibility.put(packageName, newVisibility);
+            saveAllAccountVisibilities();
+            sendAccountsChangedBroadcast(userId);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    public int getAccountVisibility(int userId, Account account, String packageName) {
+        VAccountVisibility visibility = getAccountVisibility(userId, account);
+        if (visibility != null) {
+            if (visibility.visibility.containsKey(packageName))
+                return visibility.visibility.get(packageName);
+        }
+        return 0;
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.O)
+    // return the account and visibility: Map<Account, Integer>
+    public Map getAccountsAndVisibilityForPackage(int userId, String packageName, String accountType) {
+        Map<Account, Integer> result = new HashMap<>();
+        List<Account> accountList = getAccountList(userId, accountType);
+        for (Account account : accountList) {
+            VAccountVisibility visibility = getAccountVisibility(userId, account);
+            if (visibility != null && visibility.visibility.containsKey(packageName))
+                result.put(account, visibility.visibility.get(packageName));
+        }
+        return result;
+    }
 
     private String getCustomAuthToken(int userId, Account account, String authTokenType, String packageName) {
         AuthTokenRecord record = new AuthTokenRecord(userId, account, authTokenType, packageName);
@@ -876,6 +1015,25 @@ public class VAccountManagerService extends IAccountManager.Stub {
             accounts.add(vAccount);
             saveAllAccounts();
             sendAccountsChangedBroadcast(vAccount.userId);
+            return true;
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private boolean insertAccountVisibilityIntoDatabase(int userId, Account account, Map<String, Integer> visibility) {
+        if (account == null) {
+            return false;
+        }
+        synchronized (accountsVisibilitiesByUserId) {
+            VAccountVisibility accountVisibility = new VAccountVisibility(userId, account, visibility);
+            List<VAccountVisibility> visibilities = accountsVisibilitiesByUserId.get(userId);
+            if (visibilities == null) {
+                visibilities = new ArrayList<>();
+                accountsVisibilitiesByUserId.put(userId, visibilities);
+            }
+            visibilities.add(accountVisibility);
+            saveAllAccountVisibilities();
+            sendAccountsChangedBroadcast(accountVisibility.userId);
             return true;
         }
     }
@@ -987,6 +1145,95 @@ public class VAccountManagerService extends IAccountManager.Stub {
         return null;
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    private void saveAllAccountVisibilities() {
+        File visibilityFile = VEnvironment.getAccountVisibilityConfigFile();
+        Parcel dest = Parcel.obtain();
+        try {
+            dest.writeInt(1);
+            List<VAccountVisibility> visibilities = new ArrayList<>();
+            for (int i = 0; i < this.accountsVisibilitiesByUserId.size(); i++) {
+                List<VAccountVisibility> list = this.accountsVisibilitiesByUserId.valueAt(i);
+                if (list != null) {
+                    visibilities.addAll(list);
+                }
+            }
+            dest.writeInt(visibilities.size());
+            for (VAccountVisibility visibility : visibilities) {
+                visibility.writeToParcel(dest, 0);
+            }
+            dest.writeLong(lastAccountChangeTime);
+            FileOutputStream fileOutputStream = new FileOutputStream(visibilityFile);
+            fileOutputStream.write(dest.marshall());
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        dest.recycle();
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private void readAllAccountVisibilities() {
+        File visibilityFile = VEnvironment.getAccountVisibilityConfigFile();
+        if (visibilityFile.exists()) {
+            accountsVisibilitiesByUserId.clear();
+            Parcel dest = Parcel.obtain();
+            try {
+                FileInputStream is = new FileInputStream(visibilityFile);
+                byte[] bytes = new byte[(int) visibilityFile.length()];
+                int readLength = is.read(bytes);
+                is.close();
+                if (readLength != bytes.length) {
+                    throw new IOException(String.format(Locale.ENGLISH, "Expect length %d, but got %d.", bytes.length, readLength));
+                }
+                dest.unmarshall(bytes, 0, bytes.length);
+                dest.setDataPosition(0);
+                dest.readInt(); // skip the magic
+                int size = dest.readInt(); // the VAccount's size we need to read
+                boolean invalid = false;
+                while (size-- > 0) {
+                    VAccountVisibility visibility = new VAccountVisibility(dest);
+                    VLog.d(TAG, "Reading account visibility: " + visibility.type);
+                    VAccount account = getAccount(visibility.userId, visibility.name, visibility.type);
+                    if (account != null) {
+                        List<VAccountVisibility> visibilities = accountsVisibilitiesByUserId.get(visibility.userId);
+                        if (visibilities == null) {
+                            visibilities = new ArrayList<>();
+                            accountsVisibilitiesByUserId.put(visibility.userId, visibilities);
+                        }
+                        visibilities.add(visibility);
+                    } else {
+                        invalid = true;
+                    }
+                }
+                if (invalid) {
+                    saveAllAccountVisibilities();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                dest.recycle();
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private VAccountVisibility getAccountVisibility(int userId, String accountName, String accountType) {
+        List<VAccountVisibility> visibilities = accountsVisibilitiesByUserId.get(userId);
+        if (visibilities != null) {
+            for (VAccountVisibility visibility : visibilities) {
+                if (TextUtils.equals(visibility.name, accountName) && TextUtils.equals(visibility.type, accountType)) {
+                    return visibility;
+                }
+            }
+        }
+        return null;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private VAccountVisibility getAccountVisibility(int userId, Account account) {
+        return getAccountVisibility(userId, account.name, account.type);
+    }
 
     public void refreshAuthenticatorCache(String packageName) {
         VLog.d(TAG, "refreshAuthenticatorCache");

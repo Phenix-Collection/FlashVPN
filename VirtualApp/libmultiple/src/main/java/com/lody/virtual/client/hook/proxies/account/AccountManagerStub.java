@@ -2,7 +2,9 @@ package com.lody.virtual.client.hook.proxies.account;
 
 import android.accounts.Account;
 import android.accounts.IAccountManagerResponse;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.lody.virtual.client.hook.base.MethodProxy;
@@ -11,6 +13,7 @@ import com.lody.virtual.client.ipc.VAccountManager;
 import com.lody.virtual.helper.utils.VLog;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import mirror.android.accounts.IAccountManager;
 
@@ -63,6 +66,19 @@ public class AccountManagerStub extends BinderInvocationProxy {
 		addMethodProxy(new renameAccount());
 		addMethodProxy(new getPreviousName());
 		addMethodProxy(new renameSharedAccountAsUser());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			addMethodProxy(new registerAccountListener());
+			addMethodProxy(new unregisterAccountListener());
+			addMethodProxy(new startAddAccountSession());
+			addMethodProxy(new startUpdateCredentialsSession());
+			addMethodProxy(new finishSessionAsUser());
+			addMethodProxy(new isCredentialsUpdateSuggested());
+			addMethodProxy(new getPackagesAndVisibilityForAccount());
+			addMethodProxy(new addAccountExplicitlyWithVisibility());
+			addMethodProxy(new setAccountVisibility());
+			addMethodProxy(new getAccountVisibility());
+			addMethodProxy(new getAccountsAndVisibilityForPackage());
+		}
 	}
 
 	private static class getPassword extends MethodProxy {
@@ -597,6 +613,209 @@ public class AccountManagerStub extends BinderInvocationProxy {
 			String newName = (String) args[1];
 			int userId = (int) args[2];
 			return method.invoke(who, args);
+		}
+	}
+
+	// void registerAccountListener(String[] accountTypes, String opPackageName);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class registerAccountListener extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "registerAccountListener";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			String[] accountTypes = (String[]) args[0];
+			String opPackageName = (String) args[1];
+			Mgr.registerAccountListener(accountTypes, opPackageName);
+			return 0;
+		}
+	}
+
+	// void unregisterAccountListener(String[] accountTypes, String opPackageName);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class unregisterAccountListener extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "unregisterAccountListener";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			String[] accountTypes = (String[]) args[0];
+			String opPackageName = (String) args[1];
+			Mgr.unregisterAccountListener(accountTypes, opPackageName);
+			return 0;
+		}
+	}
+
+	// void startAddAccountSession(IAccountManagerResponse response, String accountType,
+	//							String authTokenType, String[] requiredFeatures, boolean expectActivityLaunch,
+	//							Bundle options);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class startAddAccountSession extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "startAddAccountSession";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			IAccountManagerResponse response = (IAccountManagerResponse) args[0];
+			String accountType = (String) args[1];
+			String authTokenType = (String) args[2];
+			String[] requiredFeatures = (String[]) args[3];
+			boolean expectActivityLaunch = (boolean) args[4];
+			Bundle options = (Bundle) args[5];
+			Mgr.startAddAccountSession(response, accountType, authTokenType, requiredFeatures,
+					expectActivityLaunch, options);
+			return 0;
+		}
+	}
+
+	//void startUpdateCredentialsSession(IAccountManagerResponse response, Account account,
+	//								   String authTokenType, boolean expectActivityLaunch, Bundle options);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class startUpdateCredentialsSession extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "startUpdateCredentialsSession";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			IAccountManagerResponse response = (IAccountManagerResponse) args[0];
+			Account account = (Account) args[1];
+			String authTokenType = (String) args[2];
+			boolean expectActivityLaunch = (boolean) args[3];
+			Bundle options = (Bundle) args[4];
+			Mgr.startUpdateCredentialsSession(response, account, authTokenType, expectActivityLaunch,
+					options);
+			return 0;
+		}
+	}
+
+	//void finishSessionAsUser(IAccountManagerResponse response, Bundle sessionBundle,
+	//						 boolean expectActivityLaunch, Bundle appInfo, int userId);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class finishSessionAsUser extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "finishSessionAsUser";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			IAccountManagerResponse response = (IAccountManagerResponse) args[0];
+			Bundle sessionBundle = (Bundle) args[1];
+			boolean expectActivityLaunch = (boolean) args[2];
+			Bundle appInfo = (Bundle) args[3];
+			int userId = (int) args[4];
+			Mgr.finishSessionAsUser(response, sessionBundle, expectActivityLaunch, appInfo, userId);
+			return 0;
+		}
+	}
+
+	//void isCredentialsUpdateSuggested(IAccountManagerResponse response, Account account,
+	//								  String statusToken);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class isCredentialsUpdateSuggested extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "isCredentialsUpdateSuggested";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			IAccountManagerResponse response = (IAccountManagerResponse) args[0];
+			Account account = (Account) args[1];
+			String statusToken = (String) args[2];
+			Mgr.isCredentialsUpdateSuggested(response, account, statusToken);
+			return 0;
+		}
+	}
+
+	// Map getPackagesAndVisibilityForAccount(Account account);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class getPackagesAndVisibilityForAccount extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "getPackagesAndVisibilityForAccount";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			Account account = (Account) args[0];
+			return Mgr.getPackagesAndVisibilityForAccount(account);
+		}
+	}
+
+	//boolean addAccountExplicitlyWithVisibility(Account account, String password, Bundle extras,
+	//										   Map visibility);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class addAccountExplicitlyWithVisibility extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "addAccountExplicitlyWithVisibility";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			Account account = (Account) args[0];
+			String password = (String) args[1];
+			Bundle extras = (Bundle) args[2];
+			Map visibility = (Map) args[3];
+			return Mgr.addAccountExplicitlyWithVisibility(account, password, extras, visibility);
+		}
+	}
+
+	// boolean setAccountVisibility(Account a, String packageName, int newVisibility);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class setAccountVisibility extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "setAccountVisibility";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			Account account = (Account) args[0];
+			String packageName = (String) args[1];
+			int newVisibility = (int) args[2];
+			return Mgr.setAccountVisibility(account, packageName, newVisibility);
+		}
+	}
+
+	// int getAccountVisibility(Account a, String packageName);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class getAccountVisibility extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "getAccountVisibility";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			Account account = (Account) args[0];
+			String packageName = (String) args[1];
+			return Mgr.getAccountVisibility(account, packageName);
+		}
+	}
+
+	//	Map getAccountsAndVisibilityForPackage(String packageName, String accountType);
+	@TargetApi(Build.VERSION_CODES.O)
+	private static class getAccountsAndVisibilityForPackage extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "getAccountsAndVisibilityForPackage";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			String packageName = (String) args[0];
+			String accountType = (String) args[1];
+			return Mgr.getAccountsAndVisibilityForPackage(packageName, accountType);
 		}
 	}
 }
