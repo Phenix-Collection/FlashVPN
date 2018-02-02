@@ -39,3 +39,5 @@ captures/
 
 # Keystore files
 *.jks
+
+VirtualApp/publish/360jiagubao_windows_64/jiagu/*
