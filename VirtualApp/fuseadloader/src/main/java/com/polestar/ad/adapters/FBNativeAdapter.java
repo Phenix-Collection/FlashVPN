@@ -196,11 +196,21 @@ public class FBNativeAdapter extends AdAdapter {
             }
             registerViewForInteraction(adView);
             List<View> clickableViews = new ArrayList<>();
-            clickableViews.add(coverView);
-            clickableViews.add(iconView);
-            clickableViews.add(titleView);
-            clickableViews.add(subtitleView);
-            clickableViews.add(ctaView);
+            if (coverView != null) {
+                clickableViews.add(coverView);
+            }
+            if (iconView != null) {
+                clickableViews.add(iconView);
+            }
+            if (titleView != null) {
+                clickableViews.add(titleView);
+            }
+            if (subtitleView != null) {
+                clickableViews.add(subtitleView);
+            }
+            if (ctaView != null) {
+                clickableViews.add(ctaView);
+            }
             mRawAd.registerViewForInteraction(adView,clickableViews);
             LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(viewBinder.privacyInformationId);
             AdChoicesView adChoicesView = new AdChoicesView(mContext, mRawAd, true);
