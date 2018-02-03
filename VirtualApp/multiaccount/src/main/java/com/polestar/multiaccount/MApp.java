@@ -126,7 +126,12 @@ public class MApp extends Application {
                 res.boosterShorcutIcon = R.drawable.boost_icon;
                 res.innerWheelImage = R.drawable.boost_out_wheel;
                 res.outterWheelImage = R.drawable.boost_inner_wheel;
-                BoosterSdk.init(gDefault, new BoosterSdk.BoosterConfig(), res, new BoosterSdk.IEventReporter() {
+                BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
+                boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval")*1000;
+                boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval")*1000;
+                boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
+                boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
                     @Override
                     public void reportEvent(String s, Bundle b) {
                         FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
