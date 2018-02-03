@@ -11,7 +11,7 @@ import com.google.android.gms.booster.util.AndroidUtil;
 
 public class BoosterSdk {
 
-    public static final boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     static final String PREF_NAME = "booster_config";
 
