@@ -27,6 +27,11 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
     }
 
     @Override
+    public boolean isInterstitialAd() {
+        return true;
+    }
+
+    @Override
     public void onInterstitialLoaded(MoPubInterstitial interstitial) {
         mLoadedTime = System.currentTimeMillis();
         if (mAdListener != null) {

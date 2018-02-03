@@ -43,6 +43,11 @@ public abstract class AdAdapter implements IAdAdapter {
     }
 
     @Override
+    public boolean isInterstitialAd() {
+        return false;
+    }
+
+    @Override
     public long getLoadedTime() {
         return mLoadedTime;
     }

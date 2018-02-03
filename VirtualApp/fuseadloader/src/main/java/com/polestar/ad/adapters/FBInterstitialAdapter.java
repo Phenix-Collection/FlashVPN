@@ -21,6 +21,11 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
 
 
     @Override
+    public boolean isInterstitialAd() {
+        return true;
+    }
+
+    @Override
     public void loadAd(int num, IAdLoadListener listener) {
         adListener = listener;
         if (listener == null) {

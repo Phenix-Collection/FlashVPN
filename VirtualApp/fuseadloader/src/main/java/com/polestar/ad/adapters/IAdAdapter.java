@@ -55,4 +55,6 @@ public interface IAdAdapter {
      * @param listener
      */
     void loadAd(int num, IAdLoadListener listener);
+
+    public boolean isInterstitialAd();
 }

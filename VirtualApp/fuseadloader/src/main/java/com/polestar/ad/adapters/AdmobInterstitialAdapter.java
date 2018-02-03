@@ -41,6 +41,11 @@ public class AdmobInterstitialAdapter extends AdAdapter {
     }
 
     @Override
+    public boolean isInterstitialAd() {
+        return true;
+    }
+
+    @Override
     public void show() {
         registerViewForInteraction(null);
         rawAd.show();
@@ -91,6 +96,7 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
+                AdLog.d("ad interstitial onAdClosed");
                 if (adLoadListener != null) {
                     adLoadListener.onAdClosed(AdmobInterstitialAdapter.this);
                 }
