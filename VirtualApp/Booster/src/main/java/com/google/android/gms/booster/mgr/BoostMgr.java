@@ -12,12 +12,17 @@ import android.telephony.TelephonyManager;
 import android.view.WindowManager;
 
 import com.google.android.gms.booster.BoosterActivity;
+import com.google.android.gms.booster.BoosterLog;
 import com.google.android.gms.booster.BoosterSdk;
 import com.google.android.gms.booster.util.AndroidUtil;
 import com.google.android.gms.booster.util.HandlerTimer;
 import com.google.android.gms.booster.util.TimeUtil;
-import java.lang.ref.WeakReference;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
 
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 
 public class BoostMgr {
@@ -29,20 +34,7 @@ public class BoostMgr {
     static final String PREF_KEY_LAST_TIME_DO_CLEAN = "last_time_do_clean";
 
 
-    static final String PREF_KEY_LAST_TIME_SHOW_UNLOCK_AD = "last_time_show_unlock_ad";
-    static final String PREF_KEY_DAILY_SHOW_UNLOCK_AD_DATE = "daily_show_unlock_ad_date";
-    static final String PREF_KEY_DAILY_SHOW_UNLOCK_AD_COUNT = "daily_show_unlock_ad_count";
-    static final String PREF_KEY_LAST_TIME_LOAD_UNLOCK_AD = "last_time_load_unlock_ad";
-
-
-    static final String PREF_KEY_DAILY_SHOW_INSTALL_AD_COUNT = "daily_show_install_ad_count";
-    static final String PREF_KEY_DAILY_SHOW_INSTALL_AD_DATE = "daily_show_install_ad_date";
-
-    static final String UNLOCK_AD = "unlock_ad";
-    static final String INSTALL_AD = "Install_ad";
-
-    static final long LOAD_UNLOCK_AD_INTERVAL = 1000L;
-
+    static final String PREF_KEY_LAST_TIME_SHOW_AUTO_AD = "last_time_show_auto_ad";
 
     private static BoostMgr sInstance;
 
@@ -200,19 +192,55 @@ public class BoostMgr {
         // stop poll preload ad
 
         if (!BoosterSdk.boosterConfig.isUnlockAd) {
+            BoosterLog.log("unlock not enabled");
             return;
         }
 
         if (checkShowUnlockAd()) {
+            //BoosterLog.log("unlock not good time");
+            doShowUnlockAd();
             return;
         }
+    }
 
-        clearCheckStartCleanerJob();
-        if (AndroidUtil.isBatteryPlugged(mContext)) {
-            postCheckStartCleanerJob(TimeUtil.SECOND * 1L);
-        } else {
-            postCheckStartCleanerJob(0);
-        }
+    private void doInstallAd() {
+        FuseAdLoader.get(BoosterSdk.boosterConfig.installAdSlot,mContext).loadAd(2, new IAdLoadListener() {
+            @Override
+            protected void onAdLoaded(IAdAdapter ad) {
+                ad.show();
+                updateAutoAdShowTime(mContext);
+            }
+
+            @Override
+            protected void onAdListLoaded(List<IAdAdapter> ads) {
+
+            }
+
+            @Override
+            protected void onError(String error) {
+
+            }
+        });
+    }
+    private void doShowUnlockAd(){
+        FuseAdLoader.get(BoosterSdk.boosterConfig.unlockAdSlot,mContext).loadAd(2, new IAdLoadListener() {
+            @Override
+            protected void onAdLoaded(IAdAdapter ad) {
+                BoosterLog.log("Unlock ad loaded");
+                ad.show();
+                updateAutoAdShowTime(mContext);
+            }
+
+            @Override
+            protected void onAdListLoaded(List<IAdAdapter> ads) {
+
+            }
+
+            @Override
+            protected void onError(String error) {
+
+            }
+        });
     }
 
     public void onShowBattery() {
@@ -274,40 +302,6 @@ public class BoostMgr {
     }
 
     private void preloadAd(final String chance) {
-
-        //TODO JJJJ
-//        if (AdAgent.getInstance().isHavaADCache(config.getSlotId())) {
-//            if (log.isDebugEnabled())
-//                log.debug("preloadAd ad cached" + " chance:" + chance);
-//            return;
-//        }
-
-        if (!checkPreload(chance))
-            return;
-
-        final long begin = System.currentTimeMillis();
-
-        //TODO JJJJ
-//        Ad ad = new Ad.Builder(mContext, config.getSlotId()).isPreLoad(true).build();
-//        AdAgent.getInstance().loadAd(mContext, ad, new OnAdLoadListener() {
-//            @Override
-//            public void onLoad(IAd iAd) {
-//                if (log.isDebugEnabled())
-//                    log.debug("preloadAd onLoad" + " chance:" + chance + " used:" + (System.currentTimeMillis() - begin) + "ms" + " cached:" + AdAgent.getInstance().isHavaADCache(config.getSlotId()));
-//            }
-//
-//            @Override
-//            public void onLoadFailed(AdError adError) {
-//                if (log.isDebugEnabled())
-//                    log.debug("preloadAd onLoadFailed" + " chance:" + chance + " used:" + (System.currentTimeMillis() - begin) + "ms");
-//            }
-//
-//            @Override
-//            public void onLoadInterstitialAd(WrapInterstitialAd wrapInterstitialAd) {
-//                if (log.isDebugEnabled())
-//                    log.debug("preloadAd onLoadInterstitialAd" + " chance:" + chance + " used:" + (System.currentTimeMillis() - begin) + "ms");
-//            }
-//        });
     }
 
     final Runnable mCheckStartCleanerJob = new Runnable() {
@@ -493,179 +487,78 @@ public class BoostMgr {
     }
 
 
-    public static long getLastTimeShowUnlockAd(Context context) {
-        return sp(context).getLong(PREF_KEY_LAST_TIME_SHOW_UNLOCK_AD, 0);
-    }
-
-    private static int onUnlockAdShow(Context context) {
-        String date = TimeUtil.dateNow();
-        SharedPreferences sp = sp(context);
-        String lastDate = sp.getString(PREF_KEY_DAILY_SHOW_UNLOCK_AD_DATE, null);
-        boolean sameDay = date.equals(lastDate);
-
-        final int count;
-        SharedPreferences.Editor e = sp.edit();
-        e.putLong(PREF_KEY_LAST_TIME_SHOW_UNLOCK_AD, System.currentTimeMillis());
-        if (sameDay) {
-            int lastCount = sp.getInt(PREF_KEY_DAILY_SHOW_UNLOCK_AD_COUNT, 0);
-            count = lastCount + 1;
-            e.putInt(PREF_KEY_DAILY_SHOW_UNLOCK_AD_COUNT, lastCount + 1);
-        } else {
-            count = 1;
-            e.putString(PREF_KEY_DAILY_SHOW_UNLOCK_AD_DATE, date);
-            e.putInt(PREF_KEY_DAILY_SHOW_UNLOCK_AD_COUNT, 1);
+    public static long getLastTimeShowAutoAd(Context context) {
+        long ret = sp(context).getLong(PREF_KEY_LAST_TIME_SHOW_AUTO_AD, 0);
+        if (ret == 0) {
+            //not showed, cold down for one interval
+            ret = System.currentTimeMillis();
+            sp(context).edit().putLong(PREF_KEY_LAST_TIME_SHOW_AUTO_AD, ret).apply();
         }
-        e.apply();
-
-        return count;
+        return ret;
     }
 
-    private static int getDailyShowUnlockAdCount(Context context) {
-        String date = TimeUtil.dateNow();
+    private static void updateAutoAdShowTime(Context context) {
         SharedPreferences sp = sp(context);
-        String lastDate = sp.getString(PREF_KEY_DAILY_SHOW_UNLOCK_AD_DATE, null);
-        boolean sameDay = date.equals(lastDate);
-        if (!sameDay)
-            return 0;
-
-        return sp.getInt(PREF_KEY_DAILY_SHOW_UNLOCK_AD_COUNT, 0);
-    }
-
-    private static int onInstallAdShow(Context context) {
-        String date = TimeUtil.dateNow();
-        SharedPreferences sp = sp(context);
-        String lastDate = sp.getString(PREF_KEY_DAILY_SHOW_INSTALL_AD_DATE, null);
-        boolean sameDay = date.equals(lastDate);
-
-        final int count;
         SharedPreferences.Editor e = sp.edit();
-        if (sameDay) {
-            int lastCount = sp.getInt(PREF_KEY_DAILY_SHOW_INSTALL_AD_COUNT, 0);
-            count = lastCount + 1;
-            e.putInt(PREF_KEY_DAILY_SHOW_INSTALL_AD_COUNT, lastCount + 1);
-        } else {
-            count = 1;
-            e.putString(PREF_KEY_DAILY_SHOW_INSTALL_AD_DATE, date);
-            e.putInt(PREF_KEY_DAILY_SHOW_INSTALL_AD_COUNT, 1);
-        }
+        e.putLong(PREF_KEY_LAST_TIME_SHOW_AUTO_AD, System.currentTimeMillis());
         e.apply();
-
-        return count;
-    }
-
-    private static int getDailyShowInstallAdCount(Context context) {
-        String date = TimeUtil.dateNow();
-        SharedPreferences sp = sp(context);
-        String lastDate = sp.getString(PREF_KEY_DAILY_SHOW_INSTALL_AD_DATE, null);
-        boolean sameDay = date.equals(lastDate);
-        if (!sameDay)
-            return 0;
-
-        return sp.getInt(PREF_KEY_DAILY_SHOW_INSTALL_AD_COUNT, 0);
     }
 
     public boolean checkShowUnlockAd() {
 
         Context context = mContext;
 
-        if (!BoosterSdk.boosterConfig.isInstallAd) {
+        if (!BoosterSdk.boosterConfig.isUnlockAd) {
             return false;
         }
 
-        long unlockAdFirstTimeInterval = BoosterSdk.boosterConfig.unlockAdFirstInterval;
+        long unlockAdFirstTimeInterval = BoosterSdk.boosterConfig.autoAdFirstInterval;
         long firstTimeInstall = AndroidUtil.getFirstInstallTime(context);
         long current = System.currentTimeMillis();
         if ((current - firstTimeInstall) < unlockAdFirstTimeInterval) {
+            BoosterLog.log("current " + current + " firstInstall: " + firstTimeInstall + " autoAdFirstInterval " + BoosterSdk.boosterConfig.autoAdFirstInterval);
             return false;
         }
 
-        long unLockAdTimeInterval = BoosterSdk.boosterConfig.unlockAdInterval;
-        long lastTimeShowUnlockAd = getLastTimeShowUnlockAd(context);
+        long unLockAdTimeInterval = BoosterSdk.boosterConfig.autoAdInterval;
+        long lastTimeShowUnlockAd = getLastTimeShowAutoAd(context);
         if ((current - lastTimeShowUnlockAd) < unLockAdTimeInterval) {
+            BoosterLog.log("current " + current + " lastTimeShowUnlockAd: " + lastTimeShowUnlockAd + " unLockAdTimeInterval " + unLockAdTimeInterval);
             return false;
         }
-        loadInterstitialAd(UNLOCK_AD, BoosterSdk.boosterConfig.unlockAdSlot, context);
-        setLastTimeLoadUnlockAd(context, current);
         return true;
     }
 
 
-    public void onInstall() {
-
-        checkShowInstallAd();
+    public void onInstall(String packageName) {
+        BoosterLog.log("onInstall " + packageName);
+        checkShowInstallAd(packageName);
     }
 
-    private void checkShowInstallAd() {
+    private void checkShowInstallAd(String packageName) {
         final Context context = mContext;
 
         if (!BoosterSdk.boosterConfig.isInstallAd) {
+            BoosterLog.log("Not allow install ad");
             return;
         }
 
-        int dailyInstallAdCountLimit = BoosterSdk.boosterConfig.installAdLimit;
-        int dailyInstallAdCount = getDailyShowInstallAdCount(context);
-        if (dailyInstallAdCount >= dailyInstallAdCountLimit) {
-            return;
-        }
-        loadInterstitialAd(INSTALL_AD, BoosterSdk.boosterConfig.installAdSlot, context);
-    }
 
-    private void loadInterstitialAd(final String str, final String slotId,  final Context context) {
-
-
-        final long begin = System.currentTimeMillis();
-        // TODO JJJJ
-//        Ad ad = new Ad.Builder(context, slotId).build();
-//        AdAgent.getInstance().loadAd(context, ad, new OnAdLoadListener() {
-//            @Override
-//            public void onLoad(IAd iAd) {
-//                if (log.isDebugEnabled())
-//                    log.debug("loadAd onLoad" + " used:" + (System.currentTimeMillis() - begin) + "ms");
-//            }
-//
-//            @Override
-//            public void onLoadFailed(AdError adError) {
-//                if (log.isDebugEnabled())
-//                    log.debug("loadAd onLoadFailed" + " used:" + (System.currentTimeMillis() - begin) + "ms");
-//            }
-//
-//            @Override
-//            public void onLoadInterstitialAd(WrapInterstitialAd wrapInterstitialAd) {
-//                if (log.isDebugEnabled())
-//                    log.debug("loadAd onLoadInterstitialAd" + " used:" + (System.currentTimeMillis() - begin) + "ms");
-//
-////                long used = System.currentTimeMillis() - begin;
-////                long presetTime = 3000L;
-////                boolean isOverTime = used > presetTime ? true : false;
-////                if (isOverTime) {
-////                    log.debug("loadAd onLoadInterstitialAdOvertime" + " used:" + (System.currentTimeMillis() - begin) + "ms" + " presetTime:" + presetTime + "ms");
-////                    return;
-////                }
-//
-//                if (str.equals(UNLOCK_AD)) {
-//                    onUnlockAdShow(context);
-//                } else {
-//                    onInstallAdShow(context);
-//                }
-//                wrapInterstitialAd.show();
-//            }
-//        });
-    }
-
-    public static void setLastTimeLoadUnlockAd(Context context, long current) {
-        sp(context).edit().putLong(PREF_KEY_LAST_TIME_LOAD_UNLOCK_AD, current).apply();
-    }
-
-    private static long getLastTimeLoadUnlockAd(Context context) {
-        return sp(context).getLong(PREF_KEY_LAST_TIME_LOAD_UNLOCK_AD, 0L);
-    }
-
-    private boolean isLoadUnlockAd() {
+        long installAdFirstTimeInterval = BoosterSdk.boosterConfig.autoAdFirstInterval;
+        long firstTimeInstall = AndroidUtil.getFirstInstallTime(context);
         long current = System.currentTimeMillis();
-        long lastTimeLoadUnlockAd = getLastTimeLoadUnlockAd(mContext);
-        if ((current - lastTimeLoadUnlockAd) < LOAD_UNLOCK_AD_INTERVAL) {
-            return true;
+        if ((current - firstTimeInstall) < installAdFirstTimeInterval) {
+            BoosterLog.log("In cold time current:" + current + " firstTimeInstall:"+firstTimeInstall + " interv:"+installAdFirstTimeInterval);
+            return;
         }
-        return false;
+
+        long installAdTimeInterval = BoosterSdk.boosterConfig.autoAdInterval;
+        long lastTimeShowUnlockAd = getLastTimeShowAutoAd(context);
+        if ((current - lastTimeShowUnlockAd) < installAdTimeInterval) {
+            BoosterLog.log("Dont show too much");
+            return ;
+        }
+
+        doInstallAd();
     }
 }

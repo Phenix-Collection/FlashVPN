@@ -14,7 +14,6 @@ public class BoosterSdk {
     public static final boolean DEBUG = true;
 
     static final String PREF_NAME = "booster_config";
-    static final String BOOSTER_NAME = "Do Booster";
 
     static final String PREF_KEY_BOOST_SHORTCUT_CREATED = "boost_shortcut_created";
     static final String PREF_KEY_BOOST_SHORTCUT_CREATE_COUNT = "boost_shortcut_create_count";
@@ -32,17 +31,16 @@ public class BoosterSdk {
         public String unlockAdSlot = "slot_unlock_ad";
         public boolean isAutoClean = false;
         public boolean isAutoCreateShortcut = true;
-        public boolean isInstallAd = false;
-        public boolean isUnlockAd = false;
+        public boolean isInstallAd = true;
+        public boolean isUnlockAd = true;
         public boolean isPreloadOnUnlock = false;
         public boolean allowPreloadAdTimer = false;
         public long preloadAdTimerInterval = 45*60*1000;
-        public int installAdLimit = 1;
         public int autoDismissTime = 30*1000;
         public long autoCreateInterval = 3*24*60*60*1000;
         public long autoCleanInterval = 5*60*60*1000;
-        public long unlockAdFirstInterval = 3*24*60*60*1000;
-        public long unlockAdInterval = 8*60*60*1000;
+        public long autoAdFirstInterval = 3*24*60*60*1000;
+        public long autoAdInterval = BuildConfig.DEBUG? 0: 8*60*60*1000;
         public int memoryThreshold = 70;
     }
 

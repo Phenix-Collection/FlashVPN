@@ -317,9 +317,12 @@ public class Booster extends Service {
 
             String action = intent != null ? intent.getAction() : null;
 
-            if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+            BoosterLog.log("OnReceive install");
+
+            if (Intent.ACTION_PACKAGE_ADDED.equals(action)
+                    && !intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
                 String packageName = intent.getDataString();
-                onInstall();
+                onInstall(packageName);
             }
         }
     };
@@ -337,15 +340,15 @@ public class Booster extends Service {
         filter.addAction(Battery.ACTION_BATTERY_KILL_LOCKSCREEN);
         AndroidUtil.safeRegisterBroadcastReceiver(this, mLockscreenReceiver, filter);
 
-        IntentFilter installFilter = new IntentFilter();
-        installFilter.addDataScheme("package");
-        installFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        AndroidUtil.safeRegisterBroadcastReceiver(this, mInstallReceiver, installFilter);
+//        IntentFilter installFilter = new IntentFilter();
+//        installFilter.addDataScheme("package");
+//        installFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+//        AndroidUtil.safeRegisterBroadcastReceiver(this, mInstallReceiver, installFilter);
     }
 
     private void unregisterLockscreenReceiver() {
         AndroidUtil.safeUnregisterBroadcastReceiver(this, mLockscreenReceiver);
-        AndroidUtil.safeUnregisterBroadcastReceiver(this, mInstallReceiver);
+      //  AndroidUtil.safeUnregisterBroadcastReceiver(this, mInstallReceiver);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -450,7 +453,7 @@ public class Booster extends Service {
     static final String CLEANER_NAME = "Do Booster";
 
 
-    private void onInstall() {
-        BoostMgr.getInstance(this).onInstall();
+    private void onInstall(String packageName) {
+        BoostMgr.getInstance(this).onInstall(packageName);
     }
 }
