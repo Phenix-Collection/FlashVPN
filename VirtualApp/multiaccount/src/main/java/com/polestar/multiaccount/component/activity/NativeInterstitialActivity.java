@@ -146,9 +146,7 @@ public class NativeInterstitialActivity extends Activity {
     }
 
     protected void fillInterstitialLayout(IAdAdapter ad) {
-        if (ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL) ||
-                ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL) ||
-                ad.getAdType().equals(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL)) {
+        if (ad.isInterstitialAd()) {
             if (!canceled) {
                 ad.show();
             }
