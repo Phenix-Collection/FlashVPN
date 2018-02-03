@@ -220,6 +220,7 @@ public class MApp extends Application {
             VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             MLogs.DEBUG = true;
             AdConstants.DEBUG = true;
+            BoosterSdk.DEBUG = true;
         }
         VLog.setKeyLogger(new VLog.IKeyLogger() {
             @Override
