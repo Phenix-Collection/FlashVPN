@@ -98,7 +98,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         }
         initData();
         labelText.setText(mData.label);
-        labelText.setSelection(mData.label.length());
+        labelText.setSelection(Math.min(mData.label.length(),36));
         updateView();
     }
 
