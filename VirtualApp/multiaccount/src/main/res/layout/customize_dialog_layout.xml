@@ -39,7 +39,7 @@
             android:id="@+id/app_label"
             android:textColor="@color/text_gray_dark"
             android:maxLines="1"
-            android:maxLength="30"
+            android:maxLength="36"
             android:textSize="16sp"
             android:inputType="textPersonName"/>
 
