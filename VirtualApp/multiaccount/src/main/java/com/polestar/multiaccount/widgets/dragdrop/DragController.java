@@ -1,6 +1,7 @@
 package com.polestar.multiaccount.widgets.dragdrop;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -227,7 +228,9 @@ public class DragController {
         mDragSource = source;
         mDragInfo = dragInfo;
 
-        mVibrator.vibrate(VIBRATE_DURATION);
+        if (mContext.checkCallingOrSelfPermission("android.permission.VIBRATE") == PackageManager.PERMISSION_GRANTED) {
+            mVibrator.vibrate(VIBRATE_DURATION);
+        }
 
         DragView dragView = mDragView = new DragView(mContext, b, sb, registrationX, registrationY,
                 textureLeft, textureTop, textureWidth, textureHeight);
