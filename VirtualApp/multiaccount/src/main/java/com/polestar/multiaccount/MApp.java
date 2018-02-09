@@ -127,10 +127,17 @@ public class MApp extends Application {
                 res.innerWheelImage = R.drawable.boost_out_wheel;
                 res.outterWheelImage = R.drawable.boost_inner_wheel;
                 BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
-                boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval")*1000;
-                boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval")*1000;
-                boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
-                boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                if (BuildConfig.DEBUG) {
+                    boosterConfig.autoAdFirstInterval = 0;
+                    boosterConfig.autoAdInterval = 0;
+                    boosterConfig.isUnlockAd = true;
+                    boosterConfig.isInstallAd = true;
+                } else {
+                    boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
+                    boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
+                    boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
+                    boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                }
                 BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
                     @Override
                     public void reportEvent(String s, Bundle b) {
