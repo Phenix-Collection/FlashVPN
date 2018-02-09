@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.booster.BoosterLog;
 import com.google.android.gms.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -133,12 +134,24 @@ public class PolestarApp extends Application {
                 initAd();
                 //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                 //
+                BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
+                if (BuildConfig.DEBUG) {
+                    boosterConfig.autoAdFirstInterval = 0;
+                    boosterConfig.autoAdInterval = 0;
+                    boosterConfig.isUnlockAd = true;
+                    boosterConfig.isInstallAd = true;
+                } else {
+                    boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
+                    boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
+                    boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
+                    boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                }
                 BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
                 res.outterWheelImage = R.drawable.booster_ic_wheel_outside;
                 res.innerWheelImage = R.drawable.booster_ic_wheel_inside;
                 res.titleString = R.string.boost_title;
                 res.boosterShorcutIcon = R.drawable.booster_shortcut;
-                BoosterSdk.init(gDefault, new BoosterSdk.BoosterConfig(), res, new BoosterSdk.IEventReporter() {
+                BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
                     @Override
                     public void reportEvent(String s, Bundle b) {
                         FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);
@@ -207,6 +220,7 @@ public class PolestarApp extends Application {
             VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             MLogs.DEBUG = true;
             AdConstants.DEBUG = true;
+            BoosterSdk.DEBUG = true;
         }
 
     }

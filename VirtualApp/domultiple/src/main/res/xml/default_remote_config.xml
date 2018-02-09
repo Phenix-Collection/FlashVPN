@@ -142,4 +142,31 @@
         <!--<key>slot_boost_ad</key>-->
         <!--<value>ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>-->
     <!--</entry>-->
+
+    <entry>
+        <key>slot_install_ad</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>ab_interstitial:ca-app-pub-5490912237269284/9975771994:0;bt_interstitial:12828_22050:0</value>
+    </entry>
+    <entry>
+        <key>slot_unlock_ad</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>ab_interstitial:ca-app-pub-5490912237269284/9975771994:0;bt_interstitial:12828_22050:0</value>
+    </entry>
+    <entry>
+        <key>auto_ad_first_interval</key>
+        <value>432000</value>
+    </entry>
+    <entry>
+        <key>auto_ad_interval</key>
+        <value>86400</value>
+    </entry>
+    <entry>
+        <key>allow_install_ad</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>allow_unlock_ad</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>
