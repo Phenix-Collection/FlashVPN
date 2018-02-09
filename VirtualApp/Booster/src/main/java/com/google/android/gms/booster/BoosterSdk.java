@@ -59,7 +59,8 @@ public class BoosterSdk {
     static Context sContext;
 
 
-    public static void init(Context context, BoosterConfig config, BoosterRes res, IEventReporter reporter) {
+
+    public synchronized static void init(Context context, BoosterConfig config, BoosterRes res, IEventReporter reporter) {
         BoosterLog.sReporter = reporter;
         sContext = context.getApplicationContext();
         // start init

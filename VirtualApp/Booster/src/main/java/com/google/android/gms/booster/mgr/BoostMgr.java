@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import com.google.android.gms.booster.BoosterActivity;
 import com.google.android.gms.booster.BoosterLog;
 import com.google.android.gms.booster.BoosterSdk;
+import com.google.android.gms.booster.WrapAdActivity;
 import com.google.android.gms.booster.util.AndroidUtil;
 import com.google.android.gms.booster.util.HandlerTimer;
 import com.google.android.gms.booster.util.TimeUtil;
@@ -207,7 +208,7 @@ public class BoostMgr {
         FuseAdLoader.get(BoosterSdk.boosterConfig.installAdSlot,mContext).loadAd(2, new IAdLoadListener() {
             @Override
             protected void onAdLoaded(IAdAdapter ad) {
-                ad.show();
+                WrapAdActivity.start(mContext, BoosterSdk.boosterConfig.installAdSlot);
                 updateAutoAdShowTime(mContext);
             }
 
@@ -227,7 +228,7 @@ public class BoostMgr {
             @Override
             protected void onAdLoaded(IAdAdapter ad) {
                 BoosterLog.log("Unlock ad loaded");
-                ad.show();
+                WrapAdActivity.start(mContext, BoosterSdk.boosterConfig.unlockAdSlot);
                 updateAutoAdShowTime(mContext);
             }
 
