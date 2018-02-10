@@ -1355,7 +1355,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
             r = findProcessLocked(info.processName, vuid);
 			}
             if (BROADCAST_NOT_STARTED_PKG && r == null
-                    && SpecialComponentList.canStartFromBroadcast(info.packageName)) {
+                    && SpecialComponentList.canStartFromBroadcast(info.packageName, intent.getAction())) {
                 int userId = getUserId(vuid);
                 VLog.d(TAG, "startProcess for " + intent.toString() + " userId " + userId);
                 if (userId != 0) {

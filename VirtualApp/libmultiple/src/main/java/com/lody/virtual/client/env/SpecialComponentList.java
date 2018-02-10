@@ -31,6 +31,7 @@ public final class SpecialComponentList {
     private static final HashSet<String> SPEC_SYSTEM_APP_LIST = new HashSet<>(3);
     private static final Set<String> SYSTEM_BROADCAST_ACTION = new HashSet<>(7);
     private static String PROTECT_ACTION_PREFIX = "_VA_protected_";
+    public static final String REFERRER_ACTION = "com.android.vending.INSTALL_REFERRER";
 
     private static final HashSet<String> IO_REDIRECT_BLACK_LIST = new HashSet<>(1);
 
@@ -51,6 +52,7 @@ public final class SpecialComponentList {
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_DISCONNECTED);
         SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_USER_PRESENT);
         SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_RECEIVED");
+        SYSTEM_BROADCAST_ACTION.add(REFERRER_ACTION);
         //SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_DELIVER");
         SYSTEM_BROADCAST_ACTION.add("android.net.wifi.STATE_CHANGE");
         //SYSTEM_BROADCAST_ACTION.add("android.net.wifi.SCAN_RESULTS");
@@ -125,11 +127,14 @@ public final class SpecialComponentList {
         return  true;
     }
 
-    public static boolean canStartFromBroadcast(String pkg) {
+    public static boolean canStartFromBroadcast(String pkg, String action) {
 //        if (GmsSupport.isGmsFamilyPackage(pkg)) {
 //            return true;
 //        }
         if (BROADCAST_START_WHITE_LIST.contains(pkg)) {
+            return true;
+        }
+        if ("com.android.vending.INSTALL_REFERRER".equals(action)){
             return true;
         }
         return false;
