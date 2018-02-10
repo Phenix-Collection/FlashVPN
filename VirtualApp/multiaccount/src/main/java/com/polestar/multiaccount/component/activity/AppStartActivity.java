@@ -79,6 +79,7 @@ public class AppStartActivity extends BaseActivity {
     private boolean hasShownAd;
     private boolean launched;
     private long loadingStart;
+    private boolean mFirstStart;
 
     public static boolean needLoadInterstitialAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
@@ -304,18 +305,27 @@ public class AppStartActivity extends BaseActivity {
                     AppManager.upgradeApp(appModel.getPackageName());
                 }
                 AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
-                if(GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName())){
-                    EventReporter.greyAttribute(AppStartActivity.this, appModel.getPackageName());
-                } else{
-                    MLogs.d("No refer for " + appModel.getPackageName());
+                if (mFirstStart) {
+                    GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
+                } else {
+                    if (!TextUtils.isEmpty(GreyAttribute.getReferrer(AppStartActivity.this, appModel.getPackageName()))){
+                        EventReporter.greyAttribute(AppStartActivity.this, appModel.getPackageName());
+                        GreyAttribute.putReferrer(AppStartActivity.this, appModel.getPackageName(), "");
+                    }
                 }
+                //if()){
+                //    EventReporter.greyAttribute(AppStartActivity.this, appModel.getPackageName());
+//                } else{
+//                    MLogs.d("No refer for " + appModel.getPackageName());
+//                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         MLogs.d("AppStart finish");
                         finish();
-                        GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
-                        GreyAttribute.putReferrer(AppStartActivity.this, appModel.getPackageName(), "");
+                        if (mFirstStart) {
+                            GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
+                        }
                     }
                 }, 4000);
             }
@@ -352,7 +362,8 @@ public class AppStartActivity extends BaseActivity {
             });
             String title = (data.customized) ? data.label : appModel.getName();
             mTxtTips.setText(String.format(getString(R.string.app_starting_tips), title));
-            if (PreferencesUtils.isFirstStart(appModel.getName())){
+            mFirstStart = PreferencesUtils.isFirstStart(appModel.getName());
+            if (mFirstStart){
                 PreferencesUtils.setStarted(appModel.getName());
                 mFirstStartTips.setVisibility(View.VISIBLE);
                 mFirstStartTips.setText(getString(R.string.first_start_tips));

@@ -365,6 +365,10 @@ public class PreferencesUtils {
         putLong(MApp.getApp(), name+"_first_start", System.currentTimeMillis());
     }
 
+    public static void resetStarted(String name) {
+        putLong(MApp.getApp(), name+"_first_start", -1);
+    }
+
     public static void setShortCutCreated() {
         putBoolean(MApp.getApp(),"super_clone_shortcut",true);
     }
