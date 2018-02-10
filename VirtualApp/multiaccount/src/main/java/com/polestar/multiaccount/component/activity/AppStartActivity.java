@@ -28,6 +28,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.BuildConfig;
 import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.R;
@@ -303,11 +304,18 @@ public class AppStartActivity extends BaseActivity {
                     AppManager.upgradeApp(appModel.getPackageName());
                 }
                 AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+                if(GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName())){
+                    EventReporter.greyAttribute(AppStartActivity.this, appModel.getPackageName());
+                } else{
+                    MLogs.d("No refer for " + appModel.getPackageName());
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         MLogs.d("AppStart finish");
                         finish();
+                        GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
+                        GreyAttribute.putReferrer(AppStartActivity.this, appModel.getPackageName(), "");
                     }
                 }, 4000);
             }

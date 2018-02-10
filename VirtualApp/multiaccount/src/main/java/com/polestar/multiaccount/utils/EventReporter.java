@@ -207,6 +207,12 @@ public class EventReporter {
         StatService.trackCustomKVEvent(context, "install_referrer", prop);
     }
 
+    public static void greyAttribute(Context context, String pkg) {
+        Properties prop = new Properties();
+        prop.setProperty("pkg", pkg);
+        StatService.trackCustomKVEvent(context, "grey_attribute", prop);
+    }
+
     public static void generalClickEvent(Context context, String event) {
         Properties prop = new Properties();
         prop.setProperty("event", event);

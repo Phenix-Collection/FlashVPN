@@ -32,6 +32,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -163,6 +164,7 @@ public class AppCloneActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
+                                GreyAttribute.checkAndClick(AppCloneActivity.this, appModel.getPackageName());
                                 isDBUpdated = true;
                             }
                         });

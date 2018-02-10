@@ -488,7 +488,6 @@ public class HomeFragment extends BaseFragment {
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
                         }
-
                     }
 
                     @Override
