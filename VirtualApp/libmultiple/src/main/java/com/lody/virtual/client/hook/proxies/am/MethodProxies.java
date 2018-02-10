@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -930,7 +931,13 @@ class MethodProxies {
                 VLog.logbug(TAG, "userid is " + userId);
                 return method.invoke(who, args);
             }
-            VLog.d(TAG, "for intent: " + service);
+            VLog.d(TAG, "for intent:  " + service);
+            if ("com.google.android.finsky.BIND_GET_INSTALL_REFERRER_SERVICE".equals(service.getAction())) {
+                service.setPackage(VirtualCore.get().getHostPkg());
+                service.setClassName(VirtualCore.get().getHostPkg(), "com.polestar.grey.GreyAttributeService");
+                service.setAction(VClientImpl.get().getCurrentPackage());
+                VLog.d(TAG, "redirect " + service);
+            }
             ServiceInfo serviceInfo = VirtualCore.get().resolveServiceInfo(service, userId);
             if (serviceInfo != null) {
                 if(BLOCK_COMPONENT_LIST.contains(serviceInfo.name)) {
@@ -1048,6 +1055,12 @@ class MethodProxies {
 
     static class PublishService extends MethodProxy {
 
+        class FakeReferrerBinder extends Binder {
+            @Override
+            public String getInterfaceDescriptor() {
+                return "FakeReferrerBinder";
+            }
+        };
         @Override
         public String getMethodName() {
             return "publishService";
@@ -1061,6 +1074,10 @@ class MethodProxies {
             }
             Intent intent = (Intent) args[1];
             IBinder service = (IBinder) args[2];
+//            if ("com.google.android.finsky.BIND_GET_INSTALL_REFERRER_SERVICE".equals(intent.getAction())
+//                    && service == null) {
+//                service = new FakeReferrerBinder();
+//            }
             VActivityManager.get().publishService(token, intent, service);
             return 0;
         }
