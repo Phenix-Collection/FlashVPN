@@ -48,11 +48,12 @@ public class WrapAdActivity extends Activity {
                     BoosterLog.log("activity " + activity.getComponentName());
                     if (Build.VERSION.SDK_INT >= 21) {
                         activity.finishAndRemoveTask();
+                        finishAndRemoveTask();
                     } else {
                         activity.finish();
+                        finish();
                     }
                 }
-                finishAndRemoveTask();
             }
 
             @Override
@@ -63,11 +64,12 @@ public class WrapAdActivity extends Activity {
                     BoosterLog.log("activity " + activity.getComponentName());
                     if (Build.VERSION.SDK_INT >= 21) {
                         activity.finishAndRemoveTask();
+                        finishAndRemoveTask();
                     } else {
                         activity.finish();
+                        finish();
                     }
                 }
-                finishAndRemoveTask();
             }
 
             @Override
@@ -78,11 +80,12 @@ public class WrapAdActivity extends Activity {
                     BoosterLog.log("activity " + activity.getComponentName());
                     if (Build.VERSION.SDK_INT >= 21) {
                         activity.finishAndRemoveTask();
+                        finishAndRemoveTask();
                     } else {
                         activity.finish();
+                        finish();
                     }
                 }
-                finishAndRemoveTask();
             }
         });
         String slot = getIntent().getStringExtra(EXTRA_AD_SLOT);
