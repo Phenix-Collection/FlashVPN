@@ -160,7 +160,7 @@ public class CloneHelper {
         }
         if (mClonedApps.size() > 0) {
             for (AppModel model:mClonedApps) {
-                if (model.getPackageName().equals(packageName) &&
+                if (model!= null && model.getPackageName().equals(packageName) &&
                         model.getPkgUserId() == userId) {
                     return model;
                 }

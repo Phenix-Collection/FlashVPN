@@ -455,7 +455,7 @@ public class CloneManager {
         }
         if (mClonedApps.size() > 0) {
             for (CloneModel model:mClonedApps) {
-                if (model.getPackageName().equals(packageName) &&
+                if (model!= null && model.getPackageName().equals(packageName) &&
                         model.getPkgUserId() == userId) {
                     return model;
                 }
