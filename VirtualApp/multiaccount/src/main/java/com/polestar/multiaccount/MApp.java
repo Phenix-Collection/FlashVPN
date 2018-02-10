@@ -16,6 +16,7 @@ import com.google.android.gms.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lody.virtual.client.VClientImpl;
+import com.lody.virtual.client.core.CrashHandler;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
@@ -216,7 +217,14 @@ public class MApp extends Application {
 
         try {
             // init exception handler and bugly before attatchBaseContext and appOnCreate
-            setDefaultUncaughtExceptionHandler(this);
+            final MAppCrashHandler ch = new MAppCrashHandler(this, Thread.getDefaultUncaughtExceptionHandler());
+            Thread.setDefaultUncaughtExceptionHandler(ch);
+            VirtualCore.get().setCrashHandler(new CrashHandler() {
+                @Override
+                public void handleUncaughtException(Thread t, Throwable e) {
+                    ch.uncaughtException(t, e);
+                }
+            });
             initBugly(gDefault);
         }catch (Exception e){
             e.printStackTrace();
@@ -301,9 +309,6 @@ public class MApp extends Application {
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
         }
-    }
-    private void setDefaultUncaughtExceptionHandler(Context context) {
-        Thread.setDefaultUncaughtExceptionHandler(new MAppCrashHandler(context, Thread.getDefaultUncaughtExceptionHandler()));
     }
 
     private void initRawData() {
