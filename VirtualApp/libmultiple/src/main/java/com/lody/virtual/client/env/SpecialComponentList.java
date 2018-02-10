@@ -52,7 +52,7 @@ public final class SpecialComponentList {
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_POWER_DISCONNECTED);
         SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_USER_PRESENT);
         SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_RECEIVED");
-        SYSTEM_BROADCAST_ACTION.add(REFERRER_ACTION);
+        //SYSTEM_BROADCAST_ACTION.add(REFERRER_ACTION);
         //SYSTEM_BROADCAST_ACTION.add("android.provider.Telephony.SMS_DELIVER");
         SYSTEM_BROADCAST_ACTION.add("android.net.wifi.STATE_CHANGE");
         //SYSTEM_BROADCAST_ACTION.add("android.net.wifi.SCAN_RESULTS");
@@ -134,7 +134,7 @@ public final class SpecialComponentList {
         if (BROADCAST_START_WHITE_LIST.contains(pkg)) {
             return true;
         }
-        if ("com.android.vending.INSTALL_REFERRER".equals(action)){
+        if (action != null && action.contains("com.android.vending.INSTALL_REFERRER")){
             return true;
         }
         return false;

@@ -1781,9 +1781,11 @@ class MethodProxies {
 
             } else if (BadgerManager.handleBadger(intent)) {
                 return null;
-            } else if (SpecialComponentList.REFERRER_ACTION.equals(intent.getAction())) {
-                return intent;
-            }else {
+            }
+//            else if (SpecialComponentList.REFERRER_ACTION.equals(intent.getAction())) {
+//                return intent;
+//            }
+            else {
                 return ComponentUtils.redirectBroadcastIntent(intent, VUserHandle.myUserId());
             }
             return intent;
