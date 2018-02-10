@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -32,6 +33,7 @@ import nativesdk.ad.common.common.network.data.FetchAdResult;
 import nativesdk.ad.common.common.utils.L;
 import nativesdk.ad.common.common.utils.Utils;
 import nativesdk.ad.common.database.AdInfo;
+import nativesdk.ad.common.task.AdReportTrueClickTask;
 import nativesdk.ad.common.utils.DeviceUtil;
 import nativesdk.ad.common.utils.PreferenceUtils;
 import nativesdk.ad.common.utils.UrlUtils;
@@ -49,6 +51,8 @@ public class GreyAttributeService extends Service {
             "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&adpkg={adpkg}&req_type=3&market=google"
                     + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                     "reqId={reqid}&maid={maid}&gpid={gpid}";
+
+    private Handler mainHandler;
 
     class FakeReferrerBinder extends IGetInstallReferrerService.Stub{
         String pkg;
@@ -83,6 +87,9 @@ public class GreyAttributeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        if (mainHandler == null) {
+            mainHandler = new Handler();
+        }
         if (GreyAttribute.ACTION_CLICK.equals(intent.getAction())) {
             final String pkg = intent.getStringExtra(Intent.EXTRA_PACKAGE_NAME);
             new Thread(new Runnable() {
@@ -224,7 +231,7 @@ public class GreyAttributeService extends Service {
     }
 
     //return referrer
-    private  String doClick(AdInfo adInfo) {
+    private  String doClick(final AdInfo adInfo) {
         long jumpStartTime = System.currentTimeMillis();
         int redirectCount = 0;
         try {
@@ -242,6 +249,16 @@ public class GreyAttributeService extends Service {
                         String s = parms.get("referrer");
                         if (s != null) {
                             s = s.replace("%3D", "=").replace("%26", "&");
+                        }
+                        if (!TextUtils.isEmpty(adInfo.noticeUrl)) {
+                            final String url = adInfo.noticeUrl + "&preclk=" + 2 + "&rf=" + Constants.ReferType.FROM_CLKURL + "&prejpres=1";
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new AdReportTrueClickTask(GreyAttributeService.this, url, 0, false, adInfo.campaignid, "unknown", -1, SOURCE_ID).execute();
+                                }
+                            });
+
                         }
                         return s;
                     } else {
