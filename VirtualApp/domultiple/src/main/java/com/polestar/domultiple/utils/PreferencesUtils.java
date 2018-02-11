@@ -377,6 +377,10 @@ public class PreferencesUtils {
         return getLong(PolestarApp.getApp(), name+"_first_start", -1) == -1;
     }
 
+    public static void resetStarted(String name) {
+        putLong(PolestarApp.getApp(), name+"_first_start", -1);
+    }
+
     public static void setStarted(String name) {
         putLong(PolestarApp.getApp(), name+"_first_start", System.currentTimeMillis());
     }

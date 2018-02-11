@@ -41,6 +41,7 @@ import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.SelectGridAppItem;
 import com.polestar.domultiple.widget.SelectPkgGridAdapter;
+import com.polestar.grey.GreyAttribute;
 
 import org.w3c.dom.Text;
 
@@ -296,6 +297,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
+                GreyAttribute.checkAndClick(AddCloneActivity.this, model.getPackageName());
                 cm.createClone(this, model, userId);
                 selected = true;
             }
@@ -315,6 +317,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
+                GreyAttribute.checkAndClick(AddCloneActivity.this, model.getPackageName());
                 cm.createClone(this, model, userId);
                 selected = true;
             }

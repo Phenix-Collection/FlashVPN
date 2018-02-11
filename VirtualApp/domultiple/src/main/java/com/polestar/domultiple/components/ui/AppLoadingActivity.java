@@ -44,6 +44,7 @@ import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
+import com.polestar.grey.GreyAttribute;
 
 import java.util.HashSet;
 import java.util.List;
@@ -222,11 +223,22 @@ public class AppLoadingActivity extends BaseActivity {
                 if (needDoUpGrade) {
                     CloneManager.upgradeApp(appModel.getPackageName());
                 }
+                if (firstStart) {
+                    GreyAttribute.sendAttributor(AppLoadingActivity.this, appModel.getPackageName());
+                } else {
+                    if (!TextUtils.isEmpty(GreyAttribute.getReferrer(AppLoadingActivity.this, appModel.getPackageName()))){
+                        EventReporter.greyAttribute(AppLoadingActivity.this, appModel.getPackageName());
+                        GreyAttribute.putReferrer(AppLoadingActivity.this, appModel.getPackageName(), "");
+                    }
+                }
                 CloneManager.launchApp(appModel);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         MLogs.d("AppStart finish");
+                        if (firstStart) {
+                            GreyAttribute.sendAttributor(AppLoadingActivity.this, appModel.getPackageName());
+                        }
                         finish();
                     }
                 }, 4000);
@@ -265,7 +277,8 @@ public class AppLoadingActivity extends BaseActivity {
             });
             String title = (data.customized) ? data.label : appModel.getName();
             mTxtTips.setText(String.format(getString(R.string.app_starting_tips), title));
-            if (PreferencesUtils.isFirstStart(appModel.getName())){
+            firstStart = PreferencesUtils.isFirstStart(appModel.getName());
+            if (firstStart){
                 PreferencesUtils.setStarted(appModel.getName());
                 mFirstStartTips.setVisibility(View.VISIBLE);
                 mFirstStartTips.setText(getString(R.string.first_start_tips));

@@ -746,6 +746,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                                     view.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
+                                            PreferencesUtils.resetStarted(info.getName());
                                             CloneManager.getInstance(HomeActivity.this).deleteClone(HomeActivity.this, info);
                                         }
                                     }, 1000);

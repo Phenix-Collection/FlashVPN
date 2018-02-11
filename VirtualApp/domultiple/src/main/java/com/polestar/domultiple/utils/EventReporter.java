@@ -11,6 +11,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.polestar.domultiple.PolestarApp;
 
+import java.util.Properties;
+
 /**
  * Created by PolestarApp on 8/2/16.
  */
@@ -58,6 +60,12 @@ public class EventReporter {
         bundle.putString("from", from);
         bundle.putString("userId", ""+userId);
         mFirebaseAnalytics.logEvent("app_start", bundle);
+    }
+
+    public static void greyAttribute(Context context, String pkg) {
+        Bundle prop = new Bundle();
+        prop.putString("pkg", pkg);
+        mFirebaseAnalytics.logEvent("grey_attribute", prop);
     }
 
     public static void reportCrash(Throwable ex, String packageName, boolean forground) {
