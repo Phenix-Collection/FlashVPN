@@ -128,7 +128,7 @@ public class GreyAttributeService extends Service {
             String aid = DeviceUtil.getAndroidId(ctx);
             String ua = URLEncoder.encode(PreferenceUtils.getUserAgent(ctx), "UTF-8");
             String gpid = DeviceUtil.getGoogleAdvertisingId(ctx);
-            String reqUrl = FETCH_URL.replace("{adpkg}", "com.yygames.ggplay.lzgtw").replace("{devId}", devId).replace("{mypkg}", mypkg)
+            String reqUrl = FETCH_URL.replace("{adpkg}", pkg).replace("{devId}", devId).replace("{mypkg}", mypkg)
                     .replace("{ua}", ua).replace("{lang}", lang).replace("{reqid}", reqId).replace("{maid}", aid)
                     .replace("{gpid}", gpid);
 
