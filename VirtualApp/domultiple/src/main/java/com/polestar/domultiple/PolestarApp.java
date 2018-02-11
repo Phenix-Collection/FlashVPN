@@ -16,6 +16,7 @@ import com.google.android.gms.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lody.virtual.client.VClientImpl;
+import com.lody.virtual.client.core.CrashHandler;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.stub.VASettings;
@@ -210,7 +211,14 @@ public class PolestarApp extends Application {
 
         try {
             // asyncInit exception handler and bugly before attatchBaseContext and appOnCreate
-            setDefaultUncaughtExceptionHandler(this);
+            final MAppCrashHandler ch = new MAppCrashHandler(this, Thread.getDefaultUncaughtExceptionHandler());
+            Thread.setDefaultUncaughtExceptionHandler(ch);
+            VirtualCore.get().setCrashHandler(new CrashHandler() {
+                @Override
+                public void handleUncaughtException(Thread t, Throwable e) {
+                    ch.uncaughtException(t, e);
+                }
+            });
             initBugly(gDefault);
         }catch (Exception e){
             e.printStackTrace();
