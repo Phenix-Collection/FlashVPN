@@ -18,7 +18,12 @@ public class GreyAttribute {
     private static final String TAG = "GreyAttribute";
     public static final String ACTION_CLICK = "act_click";
     public static final String ACTION_ATTRIBUTE = "act_attribute";
-    //TODO get from remote config
+    //TODO get from remote config;
+
+    public static void init(String source) {
+        GreyAttributeService.init(source);
+
+    }
 
     public static boolean putReferrer(Context context , String pkg, String value ) {
         SharedPreferences settings = context.getSharedPreferences(pkg, Context.MODE_PRIVATE);

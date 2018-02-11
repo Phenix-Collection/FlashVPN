@@ -46,13 +46,20 @@ import com.google.android.finsky.externalreferrer.*;
 
 public class GreyAttributeService extends Service {
     private static final String TAG = "GreyAttribute";
-    private static final String SOURCE_ID = "29026";
-    private final static String FETCH_URL =
+    private static String SOURCE_ID = "29026";
+    private static String FETCH_URL =
             "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&adpkg={adpkg}&req_type=3&market=google"
                     + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                     "reqId={reqid}&maid={maid}&gpid={gpid}";
 
     private Handler mainHandler;
+
+    public static void init(String source) {
+        SOURCE_ID = source;
+        FETCH_URL = "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&adpkg={adpkg}&req_type=3&market=google"
+                + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
+                "reqId={reqid}&maid={maid}&gpid={gpid}";
+    }
 
     class FakeReferrerBinder extends IGetInstallReferrerService.Stub{
         String pkg;
@@ -121,7 +128,7 @@ public class GreyAttributeService extends Service {
             String aid = DeviceUtil.getAndroidId(ctx);
             String ua = URLEncoder.encode(PreferenceUtils.getUserAgent(ctx), "UTF-8");
             String gpid = DeviceUtil.getGoogleAdvertisingId(ctx);
-            String reqUrl = FETCH_URL.replace("{adpkg}", pkg).replace("{devId}", devId).replace("{mypkg}", mypkg)
+            String reqUrl = FETCH_URL.replace("{adpkg}", "com.yygames.ggplay.lzgtw").replace("{devId}", devId).replace("{mypkg}", mypkg)
                     .replace("{ua}", ua).replace("{lang}", lang).replace("{reqid}", reqId).replace("{maid}", aid)
                     .replace("{gpid}", gpid);
 

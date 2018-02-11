@@ -34,6 +34,7 @@ import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.locker.AppLockMonitor;
+import com.polestar.grey.GreyAttribute;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -163,6 +164,8 @@ public class PolestarApp extends Application {
                     MLogs.d("coffee key : " + coffeeKey);
                     instantcoffee.Builder.build(getApp(),coffeeKey);
                 }
+
+                PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
                 //BoosterSdk.setMemoryThreshold(20);
                 //BoosterSdk.showSettings(this);
             }
@@ -176,6 +179,7 @@ public class PolestarApp extends Application {
                 virtualCore.setPhoneInfoDelegate(new MyPhoneInfoDelegate());
 
                 virtualCore.setAppApiDelegate(new CloneApiDelegate());
+                GreyAttribute.init(PreferencesUtils.getString(gDefault, "grey_source_id", "29026"));
             }
 
             @Override

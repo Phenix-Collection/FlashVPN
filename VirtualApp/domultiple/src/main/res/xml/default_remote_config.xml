@@ -169,4 +169,8 @@
         <key>allow_unlock_ad</key>
         <value>true</value>
     </entry>
+    <entry>
+        <key>grey_source_id</key>
+        <value>29087</value>
+    </entry>
 </defaultsMap>
