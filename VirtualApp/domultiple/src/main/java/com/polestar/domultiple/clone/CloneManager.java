@@ -72,6 +72,10 @@ public class CloneManager {
         return mPendingClones.size() > 0;
     }
 
+    public void clearPendingClones() {
+        mPendingClones.clear();
+    }
+
     public interface OnClonedAppChangListener {
         void onInstalled(CloneModel clonedApp, boolean result);
 

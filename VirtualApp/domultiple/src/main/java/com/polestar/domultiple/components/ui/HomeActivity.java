@@ -264,6 +264,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 @Override
                 public void run() {
                     mProgressBar.setVisibility(View.GONE);
+                    mClonedList = cm.getClonedApps();
+                    gridAdapter.notifyDataSetChanged(mClonedList);
                 }
             }, 60*1000);
         } else {
@@ -551,10 +553,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     @Override
     public void onInstalled(CloneModel clonedApp, boolean result) {
         mClonedList = cm.getClonedApps();
+        MLogs.d("onInstalled: " + clonedApp.getPackageName());
         if (result && PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
             CommonUtils.createShortCut(this, clonedApp);
         }
         if (!CloneManager.getInstance(this).hasPendingClones()) {
+            MLogs.d("onInstalled still has pending clones.");
             mProgressBar.setVisibility(View.GONE);
             CloneManager.reloadLockerSetting();
             long gate = RemoteConfig.getLong(CONF_LUCKY_GATE);

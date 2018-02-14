@@ -280,6 +280,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         boolean selected = false;
         boolean hasLock = false;
         CloneManager cm = CloneManager.getInstance(this);
+        cm.clearPendingClones();
         for (SelectGridAppItem item: hotAppList) {
             if( item.selected) {
                 CloneModel model = new CloneModel(item.pkg, this);
