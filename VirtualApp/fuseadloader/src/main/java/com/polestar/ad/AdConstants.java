@@ -15,9 +15,9 @@ public class AdConstants {
     }
 
     public static final class NativeAdType {
-        public static final String AD_SOURCE_ADMOB_INSTALL = "ab_install";
-        public static final String AD_SOURCE_ADMOB_CONTENT = "ab_content";
-        public static final String AD_SOURCE_ADMOB = "ab";
+        public static final String AD_SOURCE_ADMOB_INSTALL = "adm_install";
+        public static final String AD_SOURCE_ADMOB_CONTENT = "adm_content";
+        public static final String AD_SOURCE_ADMOB = "adm";
         public static final String AD_SOURCE_FACEBOOK = "fb";
         public static final String AD_SOURCE_MOPUB = "mp";
         public static final String AD_SOURCE_FACEBOOK_INTERSTITIAL = "fb_interstitial";

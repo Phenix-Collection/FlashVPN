@@ -2,16 +2,30 @@ package com.polestar.ad.adapters;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
-
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.polestar.ad.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.VideoOptions;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.NativeAdView;
 import com.google.android.gms.ads.formats.NativeAppInstallAd;
+import com.google.android.gms.ads.formats.NativeAppInstallAdView;
 import com.google.android.gms.ads.formats.NativeContentAd;
+import com.google.android.gms.ads.formats.NativeContentAdView;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.AdViewBinder;
+import com.polestar.ad.view.StarLevelLayoutView;
+import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 
 
 /**
@@ -73,6 +87,13 @@ public class AdmobNativeAdapter extends AdAdapter {
             });
         }
 
+        VideoOptions videoOptions = new VideoOptions.Builder()
+                .setStartMuted(true)
+                .build();
+        NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                .setVideoOptions(videoOptions).setRequestMultipleImages(false).setReturnUrlsForImageAssets(true)
+                .build();
+        builder.withNativeAdOptions(adOptions);
         builder.withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int i) {
@@ -181,10 +202,10 @@ public class AdmobNativeAdapter extends AdAdapter {
     @Override
     public String getTitle() {
         if (mRawAd instanceof NativeAppInstallAd) {
-            return ((NativeAppInstallAd) mRawAd).getHeadline().toString();
+            return ((NativeAppInstallAd) mRawAd).getHeadline() != null ? ((NativeAppInstallAd) mRawAd).getHeadline().toString() : null;
         }
         if (mRawAd instanceof NativeContentAd) {
-            return((NativeContentAd) mRawAd).getHeadline().toString();
+            return ((NativeContentAd) mRawAd).getHeadline() != null ? ((NativeContentAd) mRawAd).getHeadline().toString() : null;
         }
         return null;
     }
@@ -214,6 +235,104 @@ public class AdmobNativeAdapter extends AdAdapter {
     protected void onTimeOut() {
         if (mListener != null) {
             mListener.onError("TIME_OUT");
+        }
+    }
+
+    @Override
+    public View getAdView(AdViewBinder viewBinder) {
+        View actualAdView = LayoutInflater.from(mContext).inflate(viewBinder.layoutId, null);
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        adView.setLayoutParams(params);
+        NativeAdView nativeAdView = null;
+        if (actualAdView != null) {
+            ImageView coverView = (ImageView) actualAdView.findViewById(viewBinder.mainMediaId);
+            ImageView iconView = (ImageView) actualAdView.findViewById(viewBinder.iconImageId);
+            if (coverView instanceof BasicLazyLoadImageView) {
+                BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
+                lazyLoadImageView.setDefaultResource(R.drawable.native_default);
+                lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+            }
+            if (iconView instanceof BasicLazyLoadImageView) {
+                BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) iconView;
+                lazyLoadImageView.setDefaultResource(0);
+                lazyLoadImageView.requestDisplayURL(getIconImageUrl());
+            }
+
+            TextView titleView = (TextView) actualAdView.findViewById(viewBinder.titleId);
+            titleView.setText(getTitle());
+            TextView subtitleView = (TextView) actualAdView.findViewById(viewBinder.textId);
+            subtitleView.setText(getBody());
+            TextView ctaView = (TextView) actualAdView.findViewById(viewBinder.callToActionId);
+            ctaView.setText(getCallToActionText());
+
+            StarLevelLayoutView starLevelLayout = null;
+            if (viewBinder.starLevelLayoutId != -1) {
+                starLevelLayout = (StarLevelLayoutView) actualAdView.findViewById(viewBinder.starLevelLayoutId);
+                if (starLevelLayout != null && getStarRating() != 0) {
+                    starLevelLayout.setRating((int) getStarRating());
+                }
+            }
+            if (mRawAd instanceof NativeContentAd) {
+                nativeAdView = new NativeContentAdView(mContext);
+                NativeContentAdView adView = (NativeContentAdView) nativeAdView;
+                adView.setCallToActionView(ctaView);
+                adView.setHeadlineView(titleView);
+                adView.setLogoView(iconView);
+                adView.setBodyView(subtitleView);
+                adView.setImageView(coverView);
+            } else if (mRawAd instanceof NativeAppInstallAd) {
+                nativeAdView = new NativeAppInstallAdView(mContext);
+                NativeAppInstallAdView adView = (NativeAppInstallAdView) nativeAdView;
+                adView.setCallToActionView(ctaView);
+                adView.setHeadlineView(titleView);
+                adView.setIconView(iconView);
+                adView.setBodyView(subtitleView);
+                adView.setImageView(coverView);
+                if (starLevelLayout != null) {
+                    adView.setStarRatingView(starLevelLayout);
+                }
+            } else {
+                return null;
+            }
+            // Google native ad view renders the AdChoices icon in one of the four corners of
+            // its view. If a margin is specified on the actual ad view, the AdChoices view
+            // might be rendered outside the actual ad view. Moving the margins from the
+            // actual ad view to Google native ad view will make sure that the AdChoices icon
+            // is being rendered within the bounds of the actual ad view.
+            registerViewForInteraction(actualAdView);
+            FrameLayout.LayoutParams googleNativeAdViewParams = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            AdLog.d("admob:" + actualAdView.toString());
+            ViewGroup.MarginLayoutParams actualViewParams = (ViewGroup.MarginLayoutParams) actualAdView.getLayoutParams();
+            if (actualViewParams != null) {
+                googleNativeAdViewParams.setMargins(actualViewParams.leftMargin,
+                        actualViewParams.topMargin,
+                        actualViewParams.rightMargin,
+                        actualViewParams.bottomMargin);
+
+                nativeAdView.setLayoutParams(googleNativeAdViewParams);
+                actualViewParams.setMargins(0, 0, 0, 0);
+            }
+            nativeAdView.addView(actualAdView);
+            nativeAdView.setNativeAd(mRawAd);
+            return nativeAdView;
+        }
+        return null;
+    }
+
+    @Override
+    public void registerViewForInteraction(View view) {
+        super.registerViewForInteraction(view);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (mRawAd instanceof NativeContentAd){
+            ((NativeContentAd) mRawAd).destroy();
+        }
+        if (mRawAd instanceof NativeAppInstallAd){
+            ((NativeAppInstallAd) mRawAd).destroy();
         }
     }
 }
