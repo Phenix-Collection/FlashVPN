@@ -67,6 +67,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/ad_container"
             android:visibility="gone"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:background="@color/white"
             android:orientation="vertical">
 
         </LinearLayout>

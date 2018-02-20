@@ -8,8 +8,6 @@
     <!--android:layout_height="10px" />-->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
         android:layout_height="wrap_content">
 
         <com.polestar.imageloader.widget.BasicLazyLoadImageView
@@ -44,8 +42,6 @@
     </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/native_ad_transparent_black"
@@ -58,11 +54,13 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:layout_weight="0"
             android:scaleType="centerCrop" />
 
         <LinearLayout
-            android:layout_width="212dp"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
+            android:layout_weight="1"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
@@ -94,9 +92,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:orientation="vertical">
 
             <TextView

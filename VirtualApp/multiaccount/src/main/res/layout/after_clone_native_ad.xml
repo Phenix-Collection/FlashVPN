@@ -18,14 +18,16 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="4dp"
+                android:layout_weight="0"
                 android:layout_marginTop="8dp"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
-                android:layout_width="212dp"
+                android:layout_width="wrap_content"
                 android:layout_height="55dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_weight="1"
                 android:layout_marginTop="4dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
@@ -45,6 +47,7 @@
                     android:id="@+id/ad_subtitle_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:lines="2"
                     android:text="this is sub"
@@ -54,9 +57,13 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
                 android:orientation="vertical">
 
                 <TextView
