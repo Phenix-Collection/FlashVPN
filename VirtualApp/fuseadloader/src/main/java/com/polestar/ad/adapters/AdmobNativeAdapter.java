@@ -2,6 +2,7 @@ package com.polestar.ad.adapters;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,10 +176,10 @@ public class AdmobNativeAdapter extends AdAdapter {
     @Override
     public String getBody() {
         if (mRawAd instanceof NativeAppInstallAd) {
-            return ((NativeAppInstallAd) mRawAd).getBody().toString();
+            return((NativeAppInstallAd) mRawAd).getBody()!=null?((NativeAppInstallAd) mRawAd).getBody().toString():null;
         }
         if (mRawAd instanceof NativeContentAd) {
-            return((NativeContentAd) mRawAd).getBody().toString();
+            return((NativeContentAd) mRawAd).getBody()!=null?((NativeContentAd) mRawAd).getBody().toString():null;
         }
         return  null;
     }
@@ -186,10 +187,10 @@ public class AdmobNativeAdapter extends AdAdapter {
     @Override
     public String getSubtitle() {
         if (mRawAd instanceof NativeAppInstallAd) {
-            return ((NativeAppInstallAd) mRawAd).getBody().toString();
+            return((NativeAppInstallAd) mRawAd).getBody()!=null?((NativeAppInstallAd) mRawAd).getBody().toString():null;
         }
         if (mRawAd instanceof NativeContentAd) {
-            return((NativeContentAd) mRawAd).getBody().toString();
+            return((NativeContentAd) mRawAd).getBody()!=null?((NativeContentAd) mRawAd).getBody().toString():null;
         }
         return null;
     }
@@ -284,7 +285,9 @@ public class AdmobNativeAdapter extends AdAdapter {
                     coverView.setVisibility(View.GONE);
                     adView.setMediaView(mediaView);
                 } else {
-                    mediaView.setVisibility(View.GONE);
+                    if (mediaView != null) {
+                        mediaView.setVisibility(View.GONE);
+                    }
                     adView.setImageView(coverView);
                     if (coverView instanceof BasicLazyLoadImageView) {
                         BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
@@ -307,7 +310,9 @@ public class AdmobNativeAdapter extends AdAdapter {
                     coverView.setVisibility(View.GONE);
                     adView.setMediaView(mediaView);
                 } else {
-                    if(mediaView!=null) mediaView.setVisibility(View.GONE);
+                    if(mediaView !=null ) {
+                        mediaView.setVisibility(View.GONE);
+                    }
                     adView.setImageView(coverView);
                     if (coverView instanceof BasicLazyLoadImageView) {
                         BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
