@@ -9,6 +9,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.VideoController;
+import com.google.android.gms.ads.formats.MediaView;
 import com.polestar.ad.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
@@ -247,11 +250,6 @@ public class AdmobNativeAdapter extends AdAdapter {
         if (actualAdView != null) {
             ImageView coverView = (ImageView) actualAdView.findViewById(viewBinder.mainMediaId);
             ImageView iconView = (ImageView) actualAdView.findViewById(viewBinder.iconImageId);
-            if (coverView instanceof BasicLazyLoadImageView) {
-                BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
-                lazyLoadImageView.setDefaultResource(R.drawable.native_default);
-                lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
-            }
             if (iconView instanceof BasicLazyLoadImageView) {
                 BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) iconView;
                 lazyLoadImageView.setDefaultResource(0);
@@ -264,6 +262,8 @@ public class AdmobNativeAdapter extends AdAdapter {
             subtitleView.setText(getBody());
             TextView ctaView = (TextView) actualAdView.findViewById(viewBinder.callToActionId);
             ctaView.setText(getCallToActionText());
+
+            MediaView mediaView = (MediaView) actualAdView.findViewById(viewBinder.subMediaId);
 
             StarLevelLayoutView starLevelLayout = null;
             if (viewBinder.starLevelLayoutId != -1) {
@@ -279,7 +279,19 @@ public class AdmobNativeAdapter extends AdAdapter {
                 adView.setHeadlineView(titleView);
                 adView.setLogoView(iconView);
                 adView.setBodyView(subtitleView);
-                adView.setImageView(coverView);
+                VideoController vc = ((NativeContentAd) mRawAd).getVideoController();
+                if (vc.hasVideoContent() && mediaView != null) {
+                    coverView.setVisibility(View.GONE);
+                    adView.setMediaView(mediaView);
+                } else {
+                    mediaView.setVisibility(View.GONE);
+                    adView.setImageView(coverView);
+                    if (coverView instanceof BasicLazyLoadImageView) {
+                        BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
+                        lazyLoadImageView.setDefaultResource(R.drawable.native_default);
+                        lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+                    }
+                }
             } else if (mRawAd instanceof NativeAppInstallAd) {
                 nativeAdView = new NativeAppInstallAdView(mContext);
                 NativeAppInstallAdView adView = (NativeAppInstallAdView) nativeAdView;
@@ -287,9 +299,21 @@ public class AdmobNativeAdapter extends AdAdapter {
                 adView.setHeadlineView(titleView);
                 adView.setIconView(iconView);
                 adView.setBodyView(subtitleView);
-                adView.setImageView(coverView);
                 if (starLevelLayout != null) {
                     adView.setStarRatingView(starLevelLayout);
+                }
+                VideoController vc = ((NativeAppInstallAd) mRawAd).getVideoController();
+                if (vc.hasVideoContent() && mediaView != null) {
+                    coverView.setVisibility(View.GONE);
+                    adView.setMediaView(mediaView);
+                } else {
+                    if(mediaView!=null) mediaView.setVisibility(View.GONE);
+                    adView.setImageView(coverView);
+                    if (coverView instanceof BasicLazyLoadImageView) {
+                        BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
+                        lazyLoadImageView.setDefaultResource(R.drawable.native_default);
+                        lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+                    }
                 }
             } else {
                 return null;

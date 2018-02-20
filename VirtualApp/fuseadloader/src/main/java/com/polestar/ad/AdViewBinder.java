@@ -17,6 +17,7 @@ public class AdViewBinder {
         private int textId;
         private int callToActionId;
         private int mainMediaId;
+        private int subMediaId;
         private int iconImageId = -1;
         private int privacyInformationId;
         private int starLevelLayoutId = -1;
@@ -49,6 +50,12 @@ public class AdViewBinder {
         @NonNull
         public final Builder mainMediaId(final int mediaLayoutId) {
             this.mainMediaId = mediaLayoutId;
+            return this;
+        }
+
+        @NonNull
+        public final Builder subMediaId(final int mediaLayoutId) {
+            this.subMediaId = mediaLayoutId;
             return this;
         }
 
@@ -93,6 +100,7 @@ public class AdViewBinder {
     public final int textId;
     public final int callToActionId;
     public final int mainMediaId;
+    public final int subMediaId;
     public final int iconImageId;
     public final int privacyInformationId;
     public final int starLevelLayoutId;
@@ -107,6 +115,7 @@ public class AdViewBinder {
         this.iconImageId = builder.iconImageId;
         this.privacyInformationId = builder.privacyInformationId;
         this.starLevelLayoutId = builder.starLevelLayoutId;
+        this.subMediaId = builder.subMediaId;
         this.extras = builder.extras;
     }
 }
