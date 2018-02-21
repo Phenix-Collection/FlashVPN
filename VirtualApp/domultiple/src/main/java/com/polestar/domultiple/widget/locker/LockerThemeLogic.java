@@ -16,6 +16,7 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.polestar.domultiple.R;
@@ -121,7 +122,12 @@ public class LockerThemeLogic {
                     }
                     if (android.os.Build.VERSION.SDK_INT >= 11) {
                         if (mIconBounceIndex == BOUNCE_LENGTH) {
-                            callViewSetLeft(mAppIconView, 0);
+                            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)mAppIconView.getLayoutParams();
+                            int left = 0;
+                            if (params != null) {
+                                left = params.leftMargin;
+                            }
+                            callViewSetLeft(mAppIconView, left);
                             mAppIconView = null;
                             return;
                         }
