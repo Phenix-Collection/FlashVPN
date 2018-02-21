@@ -229,7 +229,7 @@ public class AdmobNativeAdapter extends AdAdapter {
             return((NativeAppInstallAd) mRawAd).getCallToAction() != null? ((NativeAppInstallAd) mRawAd).getCallToAction().toString() : null;
         }
         if (mRawAd instanceof NativeContentAd) {
-            return((NativeContentAd) mRawAd).getCallToAction() != null? ((NativeAppInstallAd) mRawAd).getCallToAction().toString() : null;
+            return((NativeContentAd) mRawAd).getCallToAction() != null? ((NativeContentAd) mRawAd).getCallToAction().toString() : null;
         }
         return null;
     }
