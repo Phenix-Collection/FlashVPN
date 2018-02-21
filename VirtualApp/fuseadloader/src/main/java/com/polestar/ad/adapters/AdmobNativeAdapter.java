@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.VideoController;
 import com.google.android.gms.ads.formats.MediaView;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.polestar.ad.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
@@ -78,7 +79,11 @@ public class AdmobNativeAdapter extends AdAdapter {
             builder.forContentAd(new NativeContentAd.OnContentAdLoadedListener() {
                 @Override
                 public void onContentAdLoaded(NativeContentAd nativeContentAd) {
-                    postOnAdLoaded(nativeContentAd);
+                    if (isValidAd(nativeContentAd)) {
+                        postOnAdLoaded(nativeContentAd);
+                    } else {
+                        postOnAdLoadFail(999);
+                    }
                 }
             });
         }
@@ -86,7 +91,11 @@ public class AdmobNativeAdapter extends AdAdapter {
             builder.forAppInstallAd(new NativeAppInstallAd.OnAppInstallAdLoadedListener() {
                 @Override
                 public void onAppInstallAdLoaded(NativeAppInstallAd nativeAppInstallAd) {
-                    postOnAdLoaded(nativeAppInstallAd);
+                    if (isValidAd(nativeAppInstallAd)) {
+                        postOnAdLoaded(nativeAppInstallAd);
+                    } else {
+                        postOnAdLoadFail(999);
+                    }
                 }
             });
         }
@@ -217,10 +226,10 @@ public class AdmobNativeAdapter extends AdAdapter {
     @Override
     public String getCallToActionText() {
         if (mRawAd instanceof NativeAppInstallAd) {
-            return ((NativeAppInstallAd) mRawAd).getCallToAction().toString();
+            return((NativeAppInstallAd) mRawAd).getCallToAction() != null? ((NativeAppInstallAd) mRawAd).getCallToAction().toString() : null;
         }
         if (mRawAd instanceof NativeContentAd) {
-            return((NativeContentAd) mRawAd).getCallToAction().toString();
+            return((NativeContentAd) mRawAd).getCallToAction() != null? ((NativeAppInstallAd) mRawAd).getCallToAction().toString() : null;
         }
         return null;
     }
@@ -240,6 +249,23 @@ public class AdmobNativeAdapter extends AdAdapter {
         if (mListener != null) {
             mListener.onError("TIME_OUT");
         }
+    }
+
+    private boolean isValidAd(NativeAd ad) {
+        if ( ad instanceof NativeContentAd) {
+            NativeContentAd contentAd = (NativeContentAd) ad;
+            return (contentAd.getHeadline() != null && contentAd.getBody() != null
+                    && contentAd.getImages() != null && contentAd.getImages().size() > 0
+                    && contentAd.getImages().get(0) != null && contentAd.getLogo() != null
+                    && contentAd.getCallToAction() != null);
+        } else if (ad instanceof NativeAppInstallAd){
+            NativeAppInstallAd appInstallAd = (NativeAppInstallAd) ad;
+            return (appInstallAd.getHeadline() != null && appInstallAd.getBody() != null
+                    && appInstallAd.getImages() != null && appInstallAd.getImages().size() > 0
+                    && appInstallAd.getImages().get(0) != null && appInstallAd.getIcon() != null
+                    && appInstallAd.getCallToAction() != null);
+        }
+        return false;
     }
 
     @Override
