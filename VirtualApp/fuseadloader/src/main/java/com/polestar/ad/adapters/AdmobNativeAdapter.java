@@ -256,13 +256,13 @@ public class AdmobNativeAdapter extends AdAdapter {
             NativeContentAd contentAd = (NativeContentAd) ad;
             return (contentAd.getHeadline() != null && contentAd.getBody() != null
                     && contentAd.getImages() != null && contentAd.getImages().size() > 0
-                    && contentAd.getImages().get(0) != null && contentAd.getLogo() != null
+                    && contentAd.getImages().get(0) != null
                     && contentAd.getCallToAction() != null);
         } else if (ad instanceof NativeAppInstallAd){
             NativeAppInstallAd appInstallAd = (NativeAppInstallAd) ad;
             return (appInstallAd.getHeadline() != null && appInstallAd.getBody() != null
                     && appInstallAd.getImages() != null && appInstallAd.getImages().size() > 0
-                    && appInstallAd.getImages().get(0) != null && appInstallAd.getIcon() != null
+                    && appInstallAd.getImages().get(0) != null
                     && appInstallAd.getCallToAction() != null);
         }
         return false;
