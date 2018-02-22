@@ -5,6 +5,8 @@ import android.content.IIntentReceiver;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.component.receiver.ReferrerReceiver;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.tencent.bugly.crashreport.BuglyLog;
@@ -20,15 +22,18 @@ import java.util.Properties;
 public class EventReporter {
 
     private static final String APP_KEY = "AP546TPUIQ4X";
+    private static FirebaseAnalytics mFirebaseAnalytics;
+
 
     public static void init(Context context) {
         //StatConfig.init(context);
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(MApp.getApp());
         StatConfig.setDebugEnable(!AppConstants.IS_RELEASE_VERSION);
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         String referChannel = PreferencesUtils.getInstallChannel();
         StatConfig.setInstallChannel(context, referChannel == null? channel : referChannel);
         StatConfig.setAutoExceptionCaught(true);
+        mFirebaseAnalytics.setUserProperty("channel", channel);
         MLogs.e("MTA channel: " + channel + " refer: " + referChannel);
 
         try {
