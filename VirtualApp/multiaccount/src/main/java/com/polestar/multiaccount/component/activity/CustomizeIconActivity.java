@@ -92,12 +92,14 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         }
         if (appModel == null) {
             finish();
+            return;
         }
         try {
             defaultIcon = getPackageManager().getApplicationIcon(pkg);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             finish();
+            return;
         }
         initData();
         labelText.setText(mData.label);
