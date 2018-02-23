@@ -1059,11 +1059,13 @@ public class VActivityManagerService extends IActivityManager.Stub {
 			int N = mPidsSelfLocked.size();
 			boolean using = false;
 			while (N-- > 0) {
-				ProcessRecord r = mPidsSelfLocked.valueAt(N);
-				if (r!= null && r.vpid == vpid) {
-					using = true;
-					break;
-				}
+                if (mPidsSelfLocked.valueAt(N) instanceof ProcessRecord) {
+                    ProcessRecord r = mPidsSelfLocked.valueAt(N);
+                    if (r!= null && r.vpid == vpid) {
+                        using = true;
+                        break;
+                    }
+                }
 			}
 			if (using) {
 				continue;
@@ -1076,10 +1078,12 @@ public class VActivityManagerService extends IActivityManager.Stub {
             int N = mPidsSelfLocked.size();
             boolean using = false;
             while (N-- > 0) {
-                ProcessRecord r = mPidsSelfLocked.valueAt(N);
-                if (r!= null && r.vpid == vpid) {
-                    using = true;
-                    break;
+                if (mPidsSelfLocked.valueAt(N) instanceof ProcessRecord) {
+                    ProcessRecord r = mPidsSelfLocked.valueAt(N);
+                    if (r != null && r.vpid == vpid) {
+                        using = true;
+                        break;
+                    }
                 }
             }
             if (using) {
