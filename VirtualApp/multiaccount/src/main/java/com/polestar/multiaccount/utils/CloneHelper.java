@@ -54,7 +54,9 @@ public class CloneHelper {
             DbManager.insertAppModel(context, appModel);
             DbManager.notifyChanged();
             AppManager.incPackageIndex(appModel.getPackageName());
-            mClonedApps.add(appModel);
+            synchronized (mClonedApps) {
+                mClonedApps.add(appModel);
+            }
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
@@ -75,10 +77,13 @@ public class CloneHelper {
             List<AppModel> models = DbManager.queryAppModelByPackageName(context,packageName);
             AppManager.deleteApp(context,models);
         }
-        for (int i = 0;i >= 0 && i < mClonedApps.size();i ++){
-            if(mClonedApps.get(i).getPackageName().equals(packageName)){
-                mClonedApps.remove(i);
-                i --;
+        synchronized (mClonedApps) {
+            ListIterator<AppModel> iter = mClonedApps.listIterator();
+            while (iter.hasNext()) {
+                AppModel cm = iter.next();
+                if (cm.getPackageName().equals(packageName) ) {
+                    iter.remove();
+                }
             }
         }
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -96,13 +101,15 @@ public class CloneHelper {
             AppModel model = DbManager.queryAppModelByPackageName(context, packageName, userId);
             AppManager.deleteApp(context, model);
         }
-        ListIterator<AppModel> iter = mClonedApps.listIterator();
-        while (iter.hasNext()) {
-            AppModel cm = iter.next();
-            if (cm.getPackageName().equals(packageName) &&
-                    cm.getPkgUserId() == userId) {
-                iter.remove();
-                break;
+        synchronized (mClonedApps) {
+            ListIterator<AppModel> iter = mClonedApps.listIterator();
+            while (iter.hasNext()) {
+                AppModel cm = iter.next();
+                if (cm.getPackageName().equals(packageName) &&
+                        cm.getPkgUserId() == userId) {
+                    iter.remove();
+                    break;
+                }
             }
         }
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -118,8 +125,10 @@ public class CloneHelper {
     public void preLoadClonedApp(Context context){
         List<AppModel> tempList = AppManager.getClonedApp(context);
         if(tempList != null){
-            mClonedApps.clear();
-            mClonedApps.addAll(tempList);
+            synchronized (mClonedApps) {
+                mClonedApps.clear();
+                mClonedApps.addAll(tempList);
+            }
         }
         isPreLoad = true;
     }
@@ -128,8 +137,10 @@ public class CloneHelper {
         if(!isPreLoad){
             List<AppModel> tempList = AppManager.getClonedApp(context);
             if(tempList != null){
-                mClonedApps.clear();
-                mClonedApps.addAll(tempList);
+                synchronized (mClonedApps) {
+                    mClonedApps.clear();
+                    mClonedApps.addAll(tempList);
+                }
             }
         }
         isPreLoad = false;
@@ -158,11 +169,13 @@ public class CloneHelper {
         if (packageName == null) {
             return null;
         }
-        if (mClonedApps.size() > 0) {
-            for (AppModel model:mClonedApps) {
-                if (model!= null && model.getPackageName().equals(packageName) &&
-                        model.getPkgUserId() == userId) {
-                    return model;
+        synchronized (mClonedApps){
+            if (mClonedApps.size() > 0) {
+                for (AppModel model : mClonedApps) {
+                    if (model != null && model.getPackageName().equals(packageName) &&
+                            model.getPkgUserId() == userId) {
+                        return model;
+                    }
                 }
             }
         }
