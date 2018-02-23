@@ -93,9 +93,11 @@ public class GreyAttributeService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
         if (mainHandler == null) {
             mainHandler = new Handler();
+        }
+        if ( intent == null) {
+            return START_NOT_STICKY;
         }
         if (GreyAttribute.ACTION_CLICK.equals(intent.getAction())) {
             final String pkg = intent.getStringExtra(Intent.EXTRA_PACKAGE_NAME);
@@ -103,8 +105,10 @@ public class GreyAttributeService extends Service {
                 @Override
                 public void run() {
                     doCheckAndClick(GreyAttributeService.this, pkg);
+                    stopSelf();
                 }
             }, "check-click").start();
+            return START_REDELIVER_INTENT;
         } else if(GreyAttribute.ACTION_ATTRIBUTE.equals(intent.getAction())){
             final String pkg = intent.getStringExtra(Intent.EXTRA_PACKAGE_NAME);
             String refer = GreyAttribute.getReferrer(this,pkg);
@@ -114,6 +118,7 @@ public class GreyAttributeService extends Service {
                 br.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
                 br.setPackage(pkg);
                 sendBroadcast(br);
+                return START_NOT_STICKY;
             }
         }
         return START_NOT_STICKY;
