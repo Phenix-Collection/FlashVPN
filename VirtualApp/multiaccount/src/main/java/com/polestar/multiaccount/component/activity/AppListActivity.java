@@ -193,8 +193,13 @@ public class AppListActivity extends BaseActivity implements DataObserver {
      */
     @Override
     public void onChanged() {
-        mAppListAdapter.notifyDataSetChanged();
-        mAppGridAdapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAppListAdapter.notifyDataSetChanged();
+                mAppGridAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
