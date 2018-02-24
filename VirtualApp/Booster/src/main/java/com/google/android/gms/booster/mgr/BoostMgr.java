@@ -23,7 +23,9 @@ import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 
 public class BoostMgr {
@@ -38,6 +40,13 @@ public class BoostMgr {
     static final String PREF_KEY_LAST_TIME_SHOW_AUTO_AD = "last_time_show_auto_ad";
 
     private static BoostMgr sInstance;
+    private static final int AUTO_AD_HISTORY_ACTIVITY_INSTALL = 11;
+    private static final int OK_INSTALL = 10;
+    private static final int NO_FILL_INSTALL = 12;
+    private static final int AUTO_AD_HISTORY_ACTIVITY_UNLOCK = 21;
+    private static final int OK_UNLOCK = 20;
+    private static final int NO_FILL_UNLOCK = 22;
+
 
     public static BoostMgr getInstance(Context context) {
         if (sInstance != null)
@@ -208,6 +217,7 @@ public class BoostMgr {
         FuseAdLoader.get(BoosterSdk.boosterConfig.installAdSlot,mContext).loadAd(2, new IAdLoadListener() {
             @Override
             protected void onAdLoaded(IAdAdapter ad) {
+                BoosterLog.autoAdShow(OK_INSTALL);
                 WrapAdActivity.start(mContext, BoosterSdk.boosterConfig.installAdSlot);
                 updateAutoAdShowTime(mContext);
             }
@@ -219,15 +229,91 @@ public class BoostMgr {
 
             @Override
             protected void onError(String error) {
-
+                BoosterLog.autoAdShow(NO_FILL_INSTALL);
             }
         });
     }
+
+    public static Activity getHistoryActivity() {
+        try {
+            Class activityThreadClass = Class.forName("android.app.ActivityThread");
+            Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
+            Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
+            activitiesField.setAccessible(true);
+
+            Map<Object, Object> activities = (Map<Object, Object>) activitiesField.get(activityThread);
+            if (activities == null)
+                return null;
+
+            for (Object activityRecord : activities.values()) {
+                Class activityRecordClass = activityRecord.getClass();
+                Field activityField = activityRecordClass.getDeclaredField("activity");
+                activityField.setAccessible(true);
+                Activity activity = (Activity) activityField.get(activityRecord);
+                return activity;
+            }
+        }catch (Throwable ex) {
+            return  null;
+        }
+
+        return null;
+    }
+
+    public static Activity getActivity() {
+        try {
+            Class activityThreadClass = Class.forName("android.app.ActivityThread");
+            Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
+            Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
+            activitiesField.setAccessible(true);
+
+            Map<Object, Object> activities = (Map<Object, Object>) activitiesField.get(activityThread);
+            if (activities == null)
+                return null;
+
+            for (Object activityRecord : activities.values()) {
+                Class activityRecordClass = activityRecord.getClass();
+                Field pausedField = activityRecordClass.getDeclaredField("paused");
+                pausedField.setAccessible(true);
+                if (!pausedField.getBoolean(activityRecord)) {
+                    Field activityField = activityRecordClass.getDeclaredField("activity");
+                    activityField.setAccessible(true);
+                    Activity activity = (Activity) activityField.get(activityRecord);
+                    return activity;
+                }
+            }
+        }catch (Throwable ex) {
+            return  null;
+        }
+
+        return null;
+    }
+    private void finishAndRemoveRecent() {
+        Activity activity = getActivity();
+        BoosterLog.log("finishAndRemoveRecent");
+        if (activity != null) {
+            BoosterLog.log("activity " + activity.getComponentName());
+            if (Build.VERSION.SDK_INT >= 21) {
+                activity.finishAndRemoveTask();
+            } else {
+                activity.finish();
+            }
+        }
+
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            finishAndRemoveTask();
+//        } else {
+//            finish();
+//        }
+    }
+
     private void doShowUnlockAd(){
-        FuseAdLoader.get(BoosterSdk.boosterConfig.unlockAdSlot,mContext).loadAd(2, new IAdLoadListener() {
+        FuseAdLoader.get(BoosterSdk.boosterConfig.unlockAdSlot,mContext).loadAd(2, 3000, new IAdLoadListener() {
             @Override
             protected void onAdLoaded(IAdAdapter ad) {
                 BoosterLog.log("Unlock ad loaded");
+                //startMonitor();
+                //ad.show();
+                BoosterLog.autoAdShow(OK_UNLOCK);
                 WrapAdActivity.start(mContext, BoosterSdk.boosterConfig.unlockAdSlot);
                 updateAutoAdShowTime(mContext);
             }
@@ -239,7 +325,7 @@ public class BoostMgr {
 
             @Override
             protected void onError(String error) {
-
+                BoosterLog.autoAdShow(NO_FILL_UNLOCK);
             }
         });
     }
@@ -527,6 +613,12 @@ public class BoostMgr {
             BoosterLog.log("current " + current + " lastTimeShowUnlockAd: " + lastTimeShowUnlockAd + " unLockAdTimeInterval " + unLockAdTimeInterval);
             return false;
         }
+
+        if (getHistoryActivity() != null) {
+            BoosterLog.log("current has acitivity: " + getHistoryActivity());
+            BoosterLog.autoAdShow(AUTO_AD_HISTORY_ACTIVITY_UNLOCK);
+            return false;
+        }
         return true;
     }
 
@@ -560,6 +652,10 @@ public class BoostMgr {
             return ;
         }
 
+        if (getHistoryActivity() != null) {
+            BoosterLog.autoAdShow(AUTO_AD_HISTORY_ACTIVITY_INSTALL);
+            return;
+        }
         doInstallAd();
     }
 }

@@ -2,10 +2,12 @@ package com.google.android.gms.booster;
 
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.booster.mgr.HomeListener;
@@ -25,6 +27,7 @@ public class WrapAdActivity extends Activity {
 
     private final static String EXTRA_AD_SLOT = "ad_slot";
     private HomeListener mHomeListener;
+    private Handler mHandler;
 
     public static void start(Context context, String slot) {
         BoosterLog.log("WrapAdActivity start for " + slot);
@@ -33,23 +36,36 @@ public class WrapAdActivity extends Activity {
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+
     }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BoosterLog.log("WrapAdActivity onCreate");
-        mHomeListener = new HomeListener(this);
+        mHandler = new Handler();
+        mHomeListener = new HomeListener(this.getApplication());
         mHomeListener.startListen(new HomeListener.KeyFun() {
             @Override
             public void home() {
                 BoosterLog.log("home_key");
                 finishAndRemoveRecent();
+                mHomeListener.stopListen();
             }
 
             @Override
             public void recent() {
                 BoosterLog.log("recent");
                 finishAndRemoveRecent();
+                mHomeListener.stopListen();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_HOME);
+                        startActivity(intent);
+                    }
+                }, 0);
+
             }
 
             @Override
@@ -58,6 +74,63 @@ public class WrapAdActivity extends Activity {
                 finishAndRemoveRecent();
             }
         });
+
+        getApplication().registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                BoosterLog.log("onActivityResumed " + activity);
+                if(activity.getComponentName().getClassName().contains("com.google.android.gms.ads.AdActivity")
+                        ||activity.getComponentName().getClassName().contains("com.batmobi.BatMobiActivity")
+                        || activity.getComponentName().getClassName().contains(WrapAdActivity.class.getSimpleName())) {
+                    return;
+                } else {
+                    if (mHomeListener != null) {
+                        BoosterLog.log("stopListen");
+                        mHomeListener.stopListen();
+                        getApplication().unregisterActivityLifecycleCallbacks(this);
+                    }
+                }
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                BoosterLog.log("onActivityPaused " + activity);
+                if(activity.getComponentName().getClassName().contains("")
+                        ||activity.getComponentName().getClassName().contains("")) {
+                    if (mHomeListener != null) {
+                        BoosterLog.log("stopListen");
+                        mHomeListener.stopListen();
+                        getApplication().unregisterActivityLifecycleCallbacks(this);
+                    }
+                }
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+
         String slot = getIntent().getStringExtra(EXTRA_AD_SLOT);
         FuseAdLoader.get(slot, this).loadAd(2, new IAdLoadListener() {
             @Override
@@ -83,9 +156,6 @@ public class WrapAdActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mHomeListener != null) {
-            mHomeListener.stopListen();
-        }
     }
 
     public static Activity getActivity() {
@@ -135,4 +205,14 @@ public class WrapAdActivity extends Activity {
             finish();
         }
     }
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            finishAndRemoveTask();
+//        } else {
+//            finish();
+//        }
+//    }
 }

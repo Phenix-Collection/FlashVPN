@@ -28,4 +28,10 @@ public class BoosterLog {
         bundle.putString("from", from);
         reportEvent("boost_from", bundle);
     }
+
+    public static void autoAdShow(int status) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("status", status);
+        reportEvent("auto_ad_status", bundle);
+    }
 }

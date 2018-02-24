@@ -28,16 +28,18 @@ public class HomeListener {
         mKeyFun = keyFun;
     }
     public void stopListen() {
-        if (mContext != null )
+        if (mContext != null && mKeyFun!=null)
             mContext.unregisterReceiver(mHomeBtnReceiver);
         else
             BoosterLog.log(  "mContext is null and stopListen fail");
+        mKeyFun = null;
     }
 
     class HomeBtnReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            BoosterLog.log("onReceive " + intent);
             if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
                 String reason = intent.getStringExtra("reason");
                 if (reason != null) {
