@@ -43,49 +43,19 @@ public class WrapAdActivity extends Activity {
             @Override
             public void home() {
                 BoosterLog.log("home_key");
-                Activity activity = getActivity();
-                if (activity != null) {
-                    BoosterLog.log("activity " + activity.getComponentName());
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        activity.finishAndRemoveTask();
-                        finishAndRemoveTask();
-                    } else {
-                        activity.finish();
-                        finish();
-                    }
-                }
+                finishAndRemoveRecent();
             }
 
             @Override
             public void recent() {
                 BoosterLog.log("recent");
-                Activity activity = getActivity();
-                if (activity != null) {
-                    BoosterLog.log("activity " + activity.getComponentName());
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        activity.finishAndRemoveTask();
-                        finishAndRemoveTask();
-                    } else {
-                        activity.finish();
-                        finish();
-                    }
-                }
+                finishAndRemoveRecent();
             }
 
             @Override
             public void longHome() {
                 BoosterLog.log("longHome");
-                Activity activity = getActivity();
-                if (activity != null) {
-                    BoosterLog.log("activity " + activity.getComponentName());
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        activity.finishAndRemoveTask();
-                        finishAndRemoveTask();
-                    } else {
-                        activity.finish();
-                        finish();
-                    }
-                }
+                finishAndRemoveRecent();
             }
         });
         String slot = getIntent().getStringExtra(EXTRA_AD_SLOT);
@@ -95,6 +65,7 @@ public class WrapAdActivity extends Activity {
                 if (ad.isInterstitialAd()) {
                     ad.show();
                 }
+                finishAndRemoveRecent();
             }
 
             @Override
@@ -104,7 +75,7 @@ public class WrapAdActivity extends Activity {
 
             @Override
             protected void onError(String error) {
-
+                finishAndRemoveRecent();
             }
         });
     }
@@ -144,5 +115,24 @@ public class WrapAdActivity extends Activity {
         }
 
         return null;
+    }
+
+    private void finishAndRemoveRecent() {
+        Activity activity = getActivity();
+        BoosterLog.log("finishAndRemoveRecent");
+        if (activity != null) {
+            BoosterLog.log("activity " + activity.getComponentName());
+            if (Build.VERSION.SDK_INT >= 21) {
+                activity.finishAndRemoveTask();
+            } else {
+                activity.finish();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            finishAndRemoveTask();
+        } else {
+            finish();
+        }
     }
 }
