@@ -5,6 +5,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent"
             android:excludeFromRecents="true"
+            android:autoRemoveFromRecents="true"
             android:multiprocess="true" />
 
         <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
@@ -16,6 +17,7 @@
         <activity
             android:name="com.batmobi.BatMobiActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"/>
         <receiver android:name="com.batmobi.BatMobiBroadcastReceiver">
             <intent-filter>
