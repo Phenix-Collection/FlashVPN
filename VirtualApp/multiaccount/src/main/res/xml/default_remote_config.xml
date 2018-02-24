@@ -96,7 +96,7 @@
     </entry>
     <entry>
         <key>home_native_prior_time</key>
-        <value>2000</value>
+        <value>1500</value>
     </entry>
     <entry>
         <key>home_show_lucky_rate</key>
@@ -144,7 +144,7 @@
     </entry>
     <entry>
         <key>slot_app_lock_protect_time</key>
-        <value>0</value>
+        <value>300</value>
     </entry>
     <entry>
         <key>home_preload_applist_gate</key>
