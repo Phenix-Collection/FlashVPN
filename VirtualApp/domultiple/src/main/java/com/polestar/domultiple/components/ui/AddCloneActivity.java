@@ -131,7 +131,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         adLoader.setBannerAdSize(getBannerAdSize());
         if (adLoader.hasValidAdSource()) {
             mAd = null;
-            adLoader.loadAd(2, new IAdLoadListener() {
+            adLoader.loadAd(2,1000, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     mAd = ad;

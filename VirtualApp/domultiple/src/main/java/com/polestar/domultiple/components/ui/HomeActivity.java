@@ -234,7 +234,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         }
         if (adLoader.hasValidAdSource()) {
             adLoader.setBannerAdSize(getBannerAdSize());
-            adLoader.loadAd(2, new IAdLoadListener() {
+            adLoader.loadAd(2, 2000, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     inflateNativeAdView(ad);

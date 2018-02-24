@@ -18,6 +18,10 @@
         <value>3600000</value>
     </entry>
     <entry>
+        <key>slot_app_lock_protect_time</key>
+        <value>500</value>
+    </entry>
+    <entry>
         <key>hot_clone_list</key>
         <value>com.facebook.orca:com.whatsapp:com.facebook.katana:com.bbm:com.imo.android.imoim:com.bsb.hike:com.supercell.clashofclans:com.instagram.android:com.facebook.lite:com.supercell.clashroyale:jp.naver.line.android</value>
     </entry>
