@@ -143,8 +143,16 @@ public class FuseAdLoader {
         IAdAdapter ad = getValidCache();
         if (ad == null ) {
             //need load next or no fill;
+            AdLog.d("No valid ad returned");
             if (idx == mNativeAdConfigList.size() - 1) {
-                if (mListener != null) {
+                boolean betterLoading = false;
+                for (int i = idx - 1; i >= 0; i--) {
+                    if (isLoading(i)){
+                        betterLoading = true;
+                        break;
+                    }
+                }
+                if (!betterLoading && mListener != null) {
                     mListener.onError("No Fill");
                     mListener = null;
                 }
@@ -159,9 +167,11 @@ public class FuseAdLoader {
                     break;
                 }
             }
+            AdLog.d("loaded index: " + idx + " i: " + i + " wait: " + (now-mProtectOverTime));
             if (now >= mProtectOverTime || i < 0) {
                 if (mListener != null) {
                     mAdReturned = true;
+                    AdLog.d(mSlot + " return to " + mListener);
                     mListener.onAdLoaded(ad);
                     mListener = null;
                 }
@@ -205,6 +215,7 @@ public class FuseAdLoader {
     }
 
     public void loadAd(int burstNum, IAdLoadListener listener) {
+        AdLog.d("load " + mSlot + " listen: " + listener);
         loadAd(burstNum, 0 , listener);
     }
 
@@ -236,7 +247,7 @@ public class FuseAdLoader {
         }
     }
     private boolean loadNextNativeAd() {
-        int idx = nextLoadingIdx();
+        final int idx = nextLoadingIdx();
         if (idx < 0 || idx >= mNativeAdConfigList.size()) {
             AdLog.d(mSlot + " tried to load all source . Index : " + idx);
             return false;
@@ -245,6 +256,7 @@ public class FuseAdLoader {
             AdLog.d(mSlot + " already loading . Index : " + idx);
             return false;
         }
+        AdLog.d("loadNextNativeAd for " + idx);
         markLoading(idx);
         AdConfig config = mNativeAdConfigList.get(idx);
         if (hasValidCache(config)) {
@@ -263,7 +275,7 @@ public class FuseAdLoader {
             @Override
             public void onAdLoaded(IAdAdapter ad) {
                 mNativeAdCache.put(mNativeAdConfigList.get(index).key, ad);
-                AdLog.d(mSlot + " ad loaded " + ad.getAdType());
+                AdLog.d(mSlot + " ad loaded " + ad.getAdType() + " index: " + index);
                 if (ad.getCoverImageUrl() != null) {
                     AdLog.d("preload " + ad.getCoverImageUrl());
                     ImageLoader.getInstance().doPreLoad(mContext, ad.getCoverImageUrl());
