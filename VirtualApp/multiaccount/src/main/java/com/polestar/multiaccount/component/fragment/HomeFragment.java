@@ -566,7 +566,7 @@ public class HomeFragment extends BaseFragment {
                 }
             });
         }
-        view.postDelayed(new Runnable() {
+        pkgGridView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 deleteApp(appModel);
