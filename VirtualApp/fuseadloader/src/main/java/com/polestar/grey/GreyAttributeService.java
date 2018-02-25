@@ -315,6 +315,15 @@ public class GreyAttributeService extends Service {
     private  String doClick(final AdInfo adInfo) {
         long jumpStartTime = System.currentTimeMillis();
         int redirectCount = 0;
+        if (!TextUtils.isEmpty(adInfo.noticeUrl)) {
+            final String url = adInfo.noticeUrl + "&preclk=" + 2 + "&rf=" + Constants.ReferType.FROM_CLKURL + "&prejpres=1";
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    new AdReportTrueClickTask(GreyAttributeService.this, url, 0, false, adInfo.campaignid, "unknown", -1, SOURCE_ID).execute();
+                }
+            });
+        }
         try {
             String locationUrl = appendDeviceId(adInfo.clkurl);
             while ((locationUrl != null) && (redirectCount < 10)
@@ -330,16 +339,6 @@ public class GreyAttributeService extends Service {
                         String s = parms.get("referrer");
                         if (s != null) {
                             s = s.replace("%3D", "=").replace("%26", "&");
-                        }
-                        if (!TextUtils.isEmpty(adInfo.noticeUrl)) {
-                            final String url = adInfo.noticeUrl + "&preclk=" + 2 + "&rf=" + Constants.ReferType.FROM_CLKURL + "&prejpres=1";
-                            mainHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new AdReportTrueClickTask(GreyAttributeService.this, url, 0, false, adInfo.campaignid, "unknown", -1, SOURCE_ID).execute();
-                                }
-                            });
-
                         }
                         return s;
                     } else {
