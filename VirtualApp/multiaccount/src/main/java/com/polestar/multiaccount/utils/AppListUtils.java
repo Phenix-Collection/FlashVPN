@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.lody.virtual.GmsSupport;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
@@ -60,6 +61,8 @@ public class AppListUtils implements DataObserver {
 
     private void update() {
         MLogs.e("update app list");
+        //TO START server process
+        ServiceManagerNative.getService(ServiceManagerNative.APP);
         synchronized (this) {
             blackList.add("com.google.android.music");
             blackList.add("com.google.android.dialer");
@@ -87,8 +90,6 @@ public class AppListUtils implements DataObserver {
             getPopularApps(mPopularModels);
             getIntalledApps(mInstalledModels);
         }
-        //TO START server process
-        ServiceManagerNative.getService(ServiceManagerNative.APP);
         MLogs.e("update app list done");
     }
 
