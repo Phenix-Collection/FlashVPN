@@ -33,6 +33,7 @@ public class AppConstants {
     public static final String KEY_AUTO_CREATE_SHORTCUT = "key_auto_create_shortcut";
 
     public static final String POPULAR_FILE_NAME = "popular_apps.txt";
+    public static final String RECOMMAND_FILE_NAME = "recommand_apps.txt";
 
     public static final String ICON_FILE_PATH = "/icons";
     public final static String CUSTOMIZE_PREF = "app_custom_";

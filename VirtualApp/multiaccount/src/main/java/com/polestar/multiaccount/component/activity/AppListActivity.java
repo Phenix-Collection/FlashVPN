@@ -44,12 +44,16 @@ import java.util.List;
 public class AppListActivity extends BaseActivity implements DataObserver {
     private TextView mTextPopular;
     private TextView mTextMore;
+    private TextView mTextRecommand;
     private FixedListView mListView;
+    private FixedListView mRecommandListView;
     private FixedGridView mGradView;
     private AppListAdapter mAppListAdapter;
+    private AppListAdapter mRecommandListAdapter;
     private AppGridAdapter mAppGridAdapter;
     private List<AppModel> mPopularModels;
     private List<AppModel> mInstalledModels;
+    private List<AppModel> mRecommandModels;
     private Context mContext;
     private LinearLayout adContainer;
     private FuseAdLoader mNativeAdLoader;
@@ -94,25 +98,38 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         setTitle(getResources().getString(R.string.clone_apps_title));
 
         mTextPopular = (TextView) findViewById(R.id.text_popular);
+        mTextRecommand = (TextView) findViewById(R.id.text_recommand);
         mTextMore = (TextView) findViewById(R.id.text_more);
         mListView = (FixedListView) findViewById(R.id.app_list_popular);
+        mRecommandListView = (FixedListView) findViewById(R.id.app_list_recommand);
         mGradView = (FixedGridView) findViewById(R.id.app_list_more);
 
         mTextMore.setVisibility(View.INVISIBLE);
 
         mAppListAdapter = new AppListAdapter(mContext);
+        mRecommandListAdapter = new AppListAdapter(mContext);
         mAppGridAdapter = new AppGridAdapter(mContext);
         mListView.setAdapter(mAppListAdapter);
+        mRecommandListView.setAdapter(mRecommandListAdapter);
         mGradView.setAdapter(mAppGridAdapter);
 
         mPopularModels = AppListUtils.getInstance(this).getPopularModels();
         mInstalledModels = AppListUtils.getInstance(this).getInstalledModels();
+        mRecommandModels = AppListUtils.getInstance(this).getRecommandModels();
 
         if (mPopularModels == null || mPopularModels.size() == 0) {
             mTextPopular.setVisibility(View.GONE);
             mListView.setVisibility(View.GONE);
         } else {
             mAppListAdapter.setModels(mPopularModels);
+        }
+
+        if (mRecommandModels == null || mRecommandModels.size() == 0) {
+            mTextRecommand.setVisibility(View.GONE);
+            mRecommandListView.setVisibility(View.GONE);
+        } else {
+            mTextRecommand.setVisibility(View.VISIBLE);
+            mRecommandListAdapter.setModels(mRecommandModels);
         }
 
         if (mInstalledModels == null || mInstalledModels.size() == 0) {
@@ -146,6 +163,16 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent data = new Intent();
                 data.putExtra(AppConstants.EXTRA_APP_MODEL, mPopularModels.get(position));
+                setResult(Activity.RESULT_OK, data);
+                finish();
+            }
+        });
+
+        mRecommandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent data = new Intent();
+                data.putExtra(AppConstants.EXTRA_APP_MODEL, mRecommandModels.get(i));
                 setResult(Activity.RESULT_OK, data);
                 finish();
             }
