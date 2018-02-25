@@ -134,6 +134,7 @@ public class AppCloneActivity extends BaseActivity {
             setResult(RESULT_OK, intentFail);
             finish();
         } else {
+            GreyAttribute.checkAndClick(AppCloneActivity.this, appModel.getPackageName());
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -164,7 +165,6 @@ public class AppCloneActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
-                                GreyAttribute.checkAndClick(AppCloneActivity.this, appModel.getPackageName());
                                 isDBUpdated = true;
                             }
                         });
