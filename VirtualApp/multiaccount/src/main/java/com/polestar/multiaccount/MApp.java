@@ -27,6 +27,7 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.billing.BillingProvider;
+import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.component.LocalActivityLifecycleCallBacks;
 import com.polestar.multiaccount.component.MComponentDelegate;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -150,6 +151,7 @@ public class MApp extends Application {
                     MLogs.d("coffee key : " + coffeeKey);
                     instantcoffee.Builder.build(getApp(),coffeeKey);
                 }
+                PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
             }
 
             @Override
@@ -161,6 +163,7 @@ public class MApp extends Application {
                 virtualCore.setPhoneInfoDelegate(new MyPhoneInfoDelegate());
 
                 virtualCore.setAppApiDelegate(new AppApiDelegate());
+                GreyAttribute.init(PreferencesUtils.getString(gDefault, "grey_source_id", "29026"));
             }
 
             @Override
