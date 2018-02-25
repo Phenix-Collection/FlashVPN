@@ -1763,7 +1763,8 @@ class MethodProxies {
                 VLog.logbug("BroadcastIntent", "action is blocked " + intent);
                 return  0;
             }
-            if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")) {
+            if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")
+                    || intent.getAction().equals("act_pkg_ready")) {
                 return method.invoke(who, args);
             }
             intent.setDataAndType(intent.getData(), type);
