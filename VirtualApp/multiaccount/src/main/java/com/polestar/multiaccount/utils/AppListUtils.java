@@ -10,6 +10,7 @@ import android.os.Process;
 import android.text.TextUtils;
 
 import com.lody.virtual.GmsSupport;
+import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.constant.AppConstants;
@@ -37,6 +38,7 @@ public class AppListUtils implements DataObserver {
     private static AppListUtils sInstance;
     private List<AppModel> mPopularModels = new ArrayList<>();
     private List<AppModel> mInstalledModels = new ArrayList<>();
+    private List<AppModel> mRecommandModels = new ArrayList<>();
     private List<AppModel> mClonedModels;
     private Context mContext;
     private static HashSet<String> blackList = new HashSet<>();
@@ -89,10 +91,45 @@ public class AppListUtils implements DataObserver {
             mClonedModels = DbManager.queryAppList(mContext);
             getPopularApps(mPopularModels);
             getIntalledApps(mInstalledModels);
+            loadRecommandAppsFromFile(mRecommandModels);
+            loadRecommandAppsFromAds();
         }
         MLogs.e("update app list done");
     }
 
+    private void loadRecommandAppsFromAds() {
+        ArrayList<String> availPkgs = new ArrayList<>();
+        for (AppModel model: mInstalledModels) {
+            if (!VirtualCore.get().isAppInstalled(model.getPackageName())) {
+                availPkgs.add(model.getPackageName());
+            }
+        }
+        GreyAttribute.getAdPackages(mContext, new GreyAttribute.IAdPackageLoadCallback() {
+            @Override
+            public void onAdPackageListReady(List<String> packages, List<String> des) {
+                mRecommandModels.clear();
+                for (int i = 0; i < packages.size(); i++){
+                    PackageInfo packageInfo = null;
+                    PackageManager pm = mContext.getPackageManager();
+                    try {
+                        packageInfo = pm.getPackageInfo(packages.get(i), 0);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if (packageInfo != null) {
+                        AppModel model = new AppModel(mContext, packageInfo);
+                        model.setDescription(des.get(i));
+                        mRecommandModels.add(model);
+                    }
+                }
+                writeRecommandAppsToFile(mRecommandModels);
+            }
+        }, availPkgs);
+    }
+
+    public List<AppModel> getRecommandModels() {
+        return mRecommandModels;
+    }
     public List<AppModel> getPopularModels() {
         synchronized (this) {
             return mPopularModels;
@@ -105,6 +142,69 @@ public class AppListUtils implements DataObserver {
         }
     }
 
+    private void writeRecommandAppsToFile(List<AppModel> list) {
+        if (list == null) {
+            return;
+        }
+        try{
+            JSONArray jarr = new JSONArray();
+            for(AppModel model: list) {
+                JSONObject jobj = new JSONObject();
+                jobj.put("package_name",model.getPackageName());
+                jobj.put("description", model.getDescription());
+                jarr.put(jobj);
+            }
+            String localFilePath = mContext.getApplicationContext().getFilesDir().toString();
+            String path = localFilePath + "/" + AppConstants.RECOMMAND_FILE_NAME;
+            FileUtils.writeToFile(path, jarr.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadRecommandAppsFromFile(List<AppModel> list) {
+        if (list == null) {
+            return;
+        } else {
+            list.clear();
+        }
+        String str = FileUtils.readFromFile(mContext.getFilesDir().toString() + "/" + AppConstants.RECOMMAND_FILE_NAME);
+        if (str == null) {
+            return;
+        }
+        try {
+            JSONArray jarr = new JSONArray(str);
+            int length = jarr.length();
+            for (int i = 0; i < length; i++) {
+                JSONObject jobj = (JSONObject) jarr.get(i);
+                String pName = jobj.getString("package_name");
+                if (!isAppInstalled(pName)) {
+                    continue;
+                }
+                String description = jobj.getString("description");
+                PackageInfo packageInfo = null;
+                try {
+                    packageInfo = mContext.getPackageManager().getPackageInfo(pName, 0);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+                if (!AppManager.isAllowedToClone(packageInfo.packageName)) {
+                    continue;
+                }
+
+                if (VirtualCore.get().isAppInstalled(packageInfo.packageName)) {
+                    continue;
+                }
+
+                AppModel model = new AppModel(mContext, packageInfo);
+                model.setDescription(description);
+                list.add(model);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     private void getPopularApps(List<AppModel> list) {
         if (list == null) {
             return;
