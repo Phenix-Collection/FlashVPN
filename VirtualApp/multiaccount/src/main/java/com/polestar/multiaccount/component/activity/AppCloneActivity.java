@@ -134,7 +134,9 @@ public class AppCloneActivity extends BaseActivity {
             setResult(RESULT_OK, intentFail);
             finish();
         } else {
-            GreyAttribute.checkAndClick(AppCloneActivity.this, appModel.getPackageName());
+            if (mUserId == 0) {
+                GreyAttribute.checkAndClick(AppCloneActivity.this, appModel.getPackageName());
+            }
             new Thread(new Runnable() {
                 @Override
                 public void run() {
