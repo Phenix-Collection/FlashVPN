@@ -144,11 +144,11 @@ public class CloneManager {
         mWorkHandler.post(new Runnable() {
             @Override
             public void run() {
+                boolean success = false;
                 try {
                     appModel.setClonedTime(System.currentTimeMillis());
                     appModel.formatIndex(mClonedApps.size(), userId);
                     InstalledAppInfo info = VirtualCore.get().getInstalledAppInfo(appModel.getPackageName(), 0);
-                    boolean success;
                     if (info != null) {
                         if (VUserManager.get().getUserInfo(userId) == null) {
                             // user not exist, create it automatically.
@@ -170,17 +170,19 @@ public class CloneManager {
                         mClonedApps.add(appModel);
                         incPackageIndex(appModel.getPackageName());
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    boolean finalSuccess = success;
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             mPendingClones.remove(appModel);
                             if (loadedListener != null) {
-                                loadedListener.onInstalled(appModel, success);
+                                loadedListener.onInstalled(appModel, finalSuccess);
                             }
                         }
                     });
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         });
