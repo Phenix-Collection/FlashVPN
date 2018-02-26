@@ -195,7 +195,8 @@ public class AppManager {
                 String nextUserName = "User " + (userId + 1);
                 VUserInfo newUserInfo = VUserManager.get().createUser(nextUserName, VUserInfo.FLAG_ADMIN);
                 if (newUserInfo == null) {
-                    throw new IllegalStateException();
+                    MLogs.e(TAG, "create user failure");
+                    return false;
                 }
             }
             success = VirtualCore.get().installPackageAsUser(userId, appModel.getPackageName());
