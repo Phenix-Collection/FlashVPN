@@ -243,6 +243,20 @@
         <key>coffee_key</key>
         <value>1516027773710659325298</value>
     </entry>
+    <entry>
+        <key>conf_preclone_attr_delay</key>
+        <value>30000</value>
+    </entry>
+    <entry>
+        <key>conf_max_recommend_apps</key>
+        <value>10</value>
+    </entry>
+    <entry>
+        <key>conf_preclone_pkg_ctl</key>
+        <!-- * is to match all package, except the pkg specified in conf; random 0~100, 0 is off -->
+        <!-- <value>*:100;a.b.c:random;</value> -->
+        <value>*:100</value>
+    </entry>
     <!--
     <entry>
         <key>config_ad_load_timeout</key>

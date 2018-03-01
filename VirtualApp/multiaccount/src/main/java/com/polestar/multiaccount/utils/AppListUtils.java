@@ -42,6 +42,7 @@ public class AppListUtils implements DataObserver {
     private List<AppModel> mClonedModels;
     private Context mContext;
     private static HashSet<String> blackList = new HashSet<>();
+    private static final String CONF_MAX_RECOMMEND = "conf_max_recommend_apps";
 
     public static synchronized AppListUtils getInstance(Context context) {
         if (sInstance == null) {
@@ -108,7 +109,7 @@ public class AppListUtils implements DataObserver {
             @Override
             public void onAdPackageListReady(List<String> packages, List<String> des) {
                 mRecommandModels.clear();
-                for (int i = 0; i < packages.size(); i++){
+                for (int i = 0; i < packages.size() && i < RemoteConfig.getLong(CONF_MAX_RECOMMEND); i++){
                     PackageInfo packageInfo = null;
                     PackageManager pm = mContext.getPackageManager();
                     try {
