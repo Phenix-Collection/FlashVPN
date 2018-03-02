@@ -104,9 +104,9 @@ dependencies {
     //compile 'com.google.code.gson:gson:2.3.1'
     //ad
     //firebase messaging/notifications
-    compile 'com.google.firebase:firebase-core:11.0.2'
-    compile 'com.google.firebase:firebase-config:11.0.2'
-    compile 'com.google.firebase:firebase-ads:11.0.2'
+    compile 'com.google.firebase:firebase-core:11.8.0'
+    compile 'com.google.firebase:firebase-config:11.8.0'
+    compile 'com.google.firebase:firebase-ads:11.8.0'
     //compile 'com.facebook.android:audience-network-sdk:4.+'
     compile project(':libmultiple')
     compile project(':fuseadloader')
