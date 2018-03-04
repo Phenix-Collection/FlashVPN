@@ -225,6 +225,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             public void run() {
                 mAppListAdapter.notifyDataSetChanged();
                 mAppGridAdapter.notifyDataSetChanged();
+                mRecommandListAdapter.notifyDataSetChanged();
             }
         });
     }

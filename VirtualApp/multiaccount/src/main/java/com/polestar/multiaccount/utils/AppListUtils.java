@@ -98,10 +98,19 @@ public class AppListUtils implements DataObserver {
         MLogs.e("update app list done");
     }
 
+    public boolean isCloned(String pkg) {
+        for (AppModel model: mClonedModels) {
+            if (model.getPackageName().equals(pkg)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void loadRecommandAppsFromAds() {
         ArrayList<String> availPkgs = new ArrayList<>();
         for (AppModel model: mInstalledModels) {
-            if (!VirtualCore.get().isAppInstalled(model.getPackageName())) {
+            if (!isCloned(model.getPackageName())) {
                 availPkgs.add(model.getPackageName());
             }
         }
@@ -123,6 +132,7 @@ public class AppListUtils implements DataObserver {
                         mRecommandModels.add(model);
                     }
                 }
+                notifyChanged();
                 writeRecommandAppsToFile(mRecommandModels);
             }
         }, availPkgs);
@@ -194,7 +204,7 @@ public class AppListUtils implements DataObserver {
                     continue;
                 }
 
-                if (VirtualCore.get().isAppInstalled(packageInfo.packageName)) {
+                if (isCloned(packageInfo.packageName)) {
                     continue;
                 }
 
