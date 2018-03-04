@@ -1,8 +1,15 @@
 package com.polestar.multiaccount.component;
 
+import android.app.AlarmManager;
+import android.app.Application;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -12,18 +19,25 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.lody.virtual.Build;
+import com.lody.virtual.GmsSupport;
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.remote.InstalledAppInfo;
 import com.polestar.grey.GreyAttribute;
 import com.polestar.multiaccount.BuildConfig;
+import com.polestar.multiaccount.MApp;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppListUtils;
+import com.polestar.multiaccount.utils.AppManager;
+import com.polestar.multiaccount.utils.CloneHelper;
 import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by guojia on 2018/2/25.
@@ -31,16 +45,65 @@ import java.util.List;
 
 public class PreCloneService extends Service {
     private static String ACTION_PRE_CLONE = "act_pre_clone";
+    private static String ACTION_DO_ATTRI = "act_do_attri";
+    private static String ACTION_DO_CLEAN = "act_do_clean";
+    private static String ACTION_DO_ACTIVATE = "act_do_activate";
 
     private Handler mWorkHandler;
-    private final String CONF_PKG_CTL = "conf_preclone_pkg_ctl";
-    private final String CONF_ATTRIBUTE_DELAY = "conf_preclone_attr_delay";
+    private static final String CONF_PKG_CTL = "conf_preclone_pkg_ctl";
+    private static final String CONF_ATTRIBUTE_DELAY = "conf_preclone_attr_delay";
+    private static final String CONF_PRECLONE_INTERVAL = "conf_preclone_interval_day";
     private static HashMap<String, Integer> mPkgConf;
     private int myRandom;
 
+    private static long  getLastPreCloneTime(){
+        return PreferencesUtils.getLong(MApp.getApp(), "last_pre_clone_time");
+    }
+
+    private static void updateLastPreCloneTime() {
+        PreferencesUtils.putLong(MApp.getApp(), "last_pre_clone_time", System.currentTimeMillis());
+    }
+
+    private static long getLastCleanTime() {
+        return PreferencesUtils.getLong(MApp.getApp(), "last_clone_clean_time");
+    }
+
+    private static void updateLastCleanTime() {
+        PreferencesUtils.putLong(MApp.getApp(), "last_clone_clean_time",System.currentTimeMillis());
+    }
+
     public static void tryPreClone(Context ctx){
+        ConnectivityManager manager = (ConnectivityManager) ctx
+                .getApplicationContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+
+        if (networkinfo == null || !networkinfo.isAvailable()) {
+            return;
+        }
+        if (System.currentTimeMillis() - getLastPreCloneTime()
+                > RemoteConfig.getLong(CONF_PRECLONE_INTERVAL)*24*3600*1000
+                || BuildConfig.DEBUG) {
+            MLogs.d("tryPreClone");
+            Intent intent = new Intent(ctx, PreCloneService.class);
+            intent.setAction(ACTION_PRE_CLONE);
+            ctx.startService(intent);
+        }
+    }
+
+    public static void tryClean(Context ctx){
+        if (System.currentTimeMillis() - getLastCleanTime() > 24*3600*1000
+                || BuildConfig.DEBUG) {
+            MLogs.d("tryClean");
+            Intent intent = new Intent(ctx, PreCloneService.class);
+            intent.setAction(ACTION_DO_CLEAN);
+            ctx.startService(intent);
+        }
+    }
+
+    public static void tryActivate(Context ctx){
         Intent intent = new Intent(ctx, PreCloneService.class);
-        intent.setAction(ACTION_PRE_CLONE);
+        intent.setAction(ACTION_DO_ACTIVATE);
         ctx.startService(intent);
     }
 
@@ -93,6 +156,7 @@ public class PreCloneService extends Service {
     }
 
     private List<AppModel> doPreClone(List<AppModel> list) {
+        updateLastPreCloneTime();
         if(list == null || list.size() == 0) {
             return null;
         }
@@ -122,27 +186,73 @@ public class PreCloneService extends Service {
         return result;
     }
 
-    private void doAttri(List<AppModel> modelList){
-        for(AppModel model: modelList){
+    private void doAttri(List<String> modelList){
+        for(String pkg: modelList){
+            GreyAttribute.sendAttributor(this, pkg);
+        }
+    }
 
+    private void cleanPkg() {
+        updateLastCleanTime();
+        List<InstalledAppInfo> list = VirtualCore.get().getInstalledApps(0);
+        if(list == null || list.size() ==0) return;
+        for(InstalledAppInfo info:list) {
+            if(GmsSupport.isGmsFamilyPackage(info.packageName)) {
+                continue;
+            }
+            PackageInfo ai = info.getPackageInfo(0);
+            if (ai == null) continue;
+            MLogs.d("pkg " + ai.packageName + " current: " + System.currentTimeMillis() + " install: " + ai.firstInstallTime);
+            if (System.currentTimeMillis() - ai.firstInstallTime > RemoteConfig.getLong("conf_pkg_clean_hour")*3600*1000){
+                                if (!CloneHelper.getInstance(this).isCloned(ai.packageName)){
+                    MLogs.d("Clean legacy pkg: " + ai.packageName);
+                    VirtualCore.get().uninstallPackage(ai.packageName);
+                }
+            }
         }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) return START_NOT_STICKY;
+        MLogs.d("onStart: " + intent);
         if (ACTION_PRE_CLONE.equals(intent.getAction())) {
             List<AppModel> appModelList = AppListUtils.getInstance(this).getRecommandModels();
             mWorkHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     List<AppModel> attriList = doPreClone(appModelList);
-                    try {
-                        Thread.sleep(RemoteConfig.getLong(CONF_ATTRIBUTE_DELAY));
-                    }catch (Throwable ex){
-
+                    if (attriList == null || attriList.size() == 0){
+                        return ;
                     }
-                    doAttri(attriList);
+                    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    int random = new Random().nextInt(30);
+                    Intent intent = new Intent(ACTION_DO_ATTRI);
+                    intent.setClass(PreCloneService.this, PreCloneService.this.getClass());
+                    MLogs.d("To Start Service :" + intent);
+                    ArrayList<String> pkgList = new ArrayList<String>();
+                    for (AppModel model:attriList){
+                        pkgList.add(model.getPackageName());
+                    }
+                    intent.putStringArrayListExtra(Intent.EXTRA_PACKAGE_NAME, pkgList);
+                    am.set(AlarmManager.RTC, System.currentTimeMillis() + RemoteConfig.getLong(CONF_ATTRIBUTE_DELAY)+ random*1000,
+                            PendingIntent.getService(PreCloneService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    stopSelf();
+                }
+            });
+            return START_REDELIVER_INTENT;
+        } else if (ACTION_DO_ATTRI.equals(intent.getAction())) {
+            List<String> list = intent.getStringArrayListExtra(Intent.EXTRA_PACKAGE_NAME);
+            if(list != null) {
+                doAttri(list);
+                stopSelf();
+            }
+            return START_REDELIVER_INTENT;
+        } else if (ACTION_DO_CLEAN.equals(intent.getAction())) {
+            mWorkHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    cleanPkg();
                     stopSelf();
                 }
             });
