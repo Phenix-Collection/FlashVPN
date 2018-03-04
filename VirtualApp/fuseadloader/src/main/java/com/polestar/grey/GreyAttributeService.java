@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 
 import java.io.BufferedInputStream;
@@ -109,6 +110,7 @@ public class GreyAttributeService extends Service {
         if ( intent == null) {
             return START_NOT_STICKY;
         }
+        AdLog.d(TAG, intent);
         if (GreyAttribute.ACTION_CLICK.equals(intent.getAction())) {
             final String pkg = intent.getStringExtra(Intent.EXTRA_PACKAGE_NAME);
             new Thread(new Runnable() {
@@ -158,9 +160,9 @@ public class GreyAttributeService extends Service {
             }
             Gson gson = new Gson();
             FetchAdResult ads = gson.fromJson(ret, FetchAdResult.class);
+            ArrayList<String> retList = new ArrayList<>();
+            ArrayList<String> descList = new ArrayList<>();
             if (!FetchAdResult.isFailed(ads)) {
-                ArrayList<String> retList = new ArrayList<>();
-                ArrayList<String> descList = new ArrayList<>();
                 for (FetchAdResult.Ad data : ads.ads.a) {
                     AdInfo info = new AdInfo(data, Constants.ApxAdType.APPWALL);
                     if (availableList.contains(info.pkgname)) {
@@ -171,14 +173,14 @@ public class GreyAttributeService extends Service {
                         AdLog.d(TAG, "No Hit: " + info.pkgname);
                     }
                 }
-                Intent intent = new Intent(GreyAttribute.ACTION_PACKAGE_READY);
-                intent.putStringArrayListExtra(GreyAttribute.EXTRA_PACKAGE_LIST, retList);
-                intent.putStringArrayListExtra(GreyAttribute.EXTRA_PACKAGE_DESC_LIST, descList);
-                intent.setPackage(getPackageName());
-                sendBroadcast(intent);
             } else {
                 AdLog.d(TAG, "failed to load");
             }
+            Intent intent = new Intent(GreyAttribute.ACTION_PACKAGE_READY);
+            intent.putStringArrayListExtra(GreyAttribute.EXTRA_PACKAGE_LIST, retList);
+            intent.putStringArrayListExtra(GreyAttribute.EXTRA_PACKAGE_DESC_LIST, descList);
+            intent.setPackage(getPackageName());
+            sendBroadcast(intent);
         }catch (Throwable throwable){
 
         }
@@ -217,13 +219,18 @@ public class GreyAttributeService extends Service {
                 FetchAdResult ads = gson.fromJson(ret, FetchAdResult.class);
                 if (!FetchAdResult.isFailed(ads)) {
                     List<AdInfo> adInfoList = new ArrayList<AdInfo>();
+                    int i = 0;
                     for (FetchAdResult.Ad data : ads.ads.a) {
                         AdInfo info = new AdInfo(data, Constants.ApxAdType.APPWALL);
-                        AdLog.d(TAG, "AdInfo: " + info.clkurl);
+                        AdLog.d(TAG, "Ad click url: " + i++ + " id : "  + data.campaignID+ info.clkurl);
                         String referrer = doClick(info);
                         if (referrer != null) {
                             AdLog.d(TAG, "referrer: " + referrer);
                             GreyAttribute.putReferrer(this, pkg, referrer);
+                            break;
+                        } else if (AdConstants.DEBUG){
+                            AdLog.d(TAG, "referrer: google-adw" );
+                            GreyAttribute.putReferrer(this, pkg, "google-adw");
                             break;
                         }
 
@@ -368,6 +375,7 @@ public class GreyAttributeService extends Service {
             httpUrlConnection.setInstanceFollowRedirects(false);
             httpUrlConnection.setRequestProperty("User-Agent", PreferenceUtils.getUserAgent(this));
             int responseCode = httpUrlConnection.getResponseCode();
+            AdLog.d("GreyAttribute", "response: " + responseCode);
             if (responseCode == 404) {
                 return null;
             }
@@ -412,10 +420,13 @@ public class GreyAttributeService extends Service {
                             return "http://" + url.getHost() + "/" + location;
                         }
                     }
+                } else {
+                    AdLog.d("GreyAttribute", "fail: " + builder.toString());
                 }
             }
             return null;
         } catch (Exception e) {
+            AdLog.d("GreyAttribute", "fail: " + e);
             return null;
         } catch (Error e) {
             return null;

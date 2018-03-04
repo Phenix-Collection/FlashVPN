@@ -63,7 +63,6 @@ public class GreyAttribute {
     }
     //send referrer to package
     public static void sendAttributor(final Context ctx,String pkg) {
-
         Intent intent = new Intent(ctx, GreyAttributeService.class);
         intent.putExtra(Intent.EXTRA_PACKAGE_NAME, pkg);
         intent.setAction(ACTION_ATTRIBUTE);
@@ -83,15 +82,15 @@ public class GreyAttribute {
         ctx.startService(intent);
 
         IntentFilter filter = new IntentFilter(ACTION_PACKAGE_READY);
-        ctx.registerReceiver(new BroadcastReceiver() {
+        ctx.getApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 ArrayList<String> list = intent.getStringArrayListExtra(EXTRA_PACKAGE_LIST);
                 ArrayList<String> desclist = intent.getStringArrayListExtra(EXTRA_PACKAGE_DESC_LIST);
                 if (list != null && desclist != null) {
                     cb.onAdPackageListReady(list, desclist);
-                    ctx.unregisterReceiver(this);
                 }
+                ctx.getApplicationContext().unregisterReceiver(this);
             }
         }, filter);
     }
