@@ -30,6 +30,7 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
+import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
@@ -178,6 +179,7 @@ public class PreCloneService extends Service {
                 }
             } else {
                 GreyAttribute.checkAndClick(this, model.getPackageName());
+                EventReporter.greyAttribute(this, "pre_clone", model.getPackageName());
                 VirtualCore.get().installPackage(model.getPackageName(), model.getApkPath(),
                         InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
                 result.add(model);
@@ -188,6 +190,7 @@ public class PreCloneService extends Service {
 
     private void doAttri(List<String> modelList){
         for(String pkg: modelList){
+            EventReporter.greyAttribute(this, "pre_clone_attri", pkg);
             GreyAttribute.sendAttributor(this, pkg);
         }
     }

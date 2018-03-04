@@ -309,7 +309,7 @@ public class AppStartActivity extends BaseActivity {
                     GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
                 } else {
                     if (!TextUtils.isEmpty(GreyAttribute.getReferrer(AppStartActivity.this, appModel.getPackageName()))){
-                        EventReporter.greyAttribute(AppStartActivity.this, appModel.getPackageName());
+                        EventReporter.greyAttribute(AppStartActivity.this, "app_launch_attri", appModel.getPackageName());
                         GreyAttribute.putReferrer(AppStartActivity.this, appModel.getPackageName(), "");
                     }
                 }
