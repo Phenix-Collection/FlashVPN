@@ -165,6 +165,11 @@ public class CloneHelper {
         return mClonedApps;
     }
 
+    public boolean isCloned(String pkg) {
+        List<AppModel> list = DbManager.queryAppModelByPackageName(MApp.getApp(), pkg);
+        return list != null && list.size() != 0;
+    }
+
     public final AppModel getAppModel(String packageName, int userId) {
         if (packageName == null) {
             return null;
