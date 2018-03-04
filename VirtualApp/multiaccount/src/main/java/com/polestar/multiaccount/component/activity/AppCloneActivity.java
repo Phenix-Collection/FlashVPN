@@ -39,6 +39,7 @@ import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.db.DbManager;
 import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.model.CustomizeAppData;
+import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 import com.polestar.multiaccount.utils.CloneHelper;
@@ -125,7 +126,6 @@ public class AppCloneActivity extends BaseActivity {
         if (intent != null) {
             appModel = intent.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
             mPkgName = appModel.getPackageName();
-            mUserId = AppManager.getNextAvailableUserId(mPkgName);
         }
         if (appModel == null) {
             Intent intentFail = new Intent();
@@ -134,7 +134,9 @@ public class AppCloneActivity extends BaseActivity {
             setResult(RESULT_OK, intentFail);
             finish();
         } else {
-            if (mUserId == 0) {
+            mUserId = AppListUtils.getInstance(this).isCloned(appModel.getPackageName())?
+                    AppManager.getNextAvailableUserId(appModel.getPackageName()):0;
+            if (mUserId == 0 && TextUtils.isEmpty(GreyAttribute.getReferrer(this, appModel.getPackageName()))) {
                 GreyAttribute.checkAndClick(AppCloneActivity.this, appModel.getPackageName());
             }
             new Thread(new Runnable() {
@@ -146,13 +148,16 @@ public class AppCloneActivity extends BaseActivity {
                     } catch (Exception e) {
                         MLogs.logBug(MLogs.getStackTraceString(e));
                     }
-                    if (installed) {
-                        AppManager.uninstallApp(mPkgName, mUserId);
+                    if (!installed) {
+                        //AppManager.uninstallApp(mPkgName, mUserId);
                         installed = false;
-                        EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
+                        //EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
+                        MLogs.d("To install app " + mPkgName);
+                        isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel, mUserId);
+                    } else {
+                        isInstallSuccess = true;
+                        MLogs.d("Hit pre clone pkg " + mPkgName);
                     }
-                    MLogs.d("To install app " + mPkgName);
-                    isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel, mUserId);
                     isInstallDone = true;
                     if (isInstallSuccess) {
                         PackageManager pm = getPackageManager();

@@ -16,6 +16,7 @@ import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.activity.AppListActivity;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.model.AppModel;
+import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.BitmapUtils;
 
@@ -67,7 +68,8 @@ public class AppListAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        int userId = AppManager.getNextAvailableUserId(model.getPackageName());
+        int userId = AppListUtils.getInstance(mContext).isCloned(model.getPackageName())?
+                AppManager.getNextAvailableUserId(model.getPackageName()):0;
         Drawable icon = model.getIcon();
         if (userId > 0) {
             viewHolder.iconView.setImageBitmap(BitmapUtils.createBadgeIcon(mContext, icon, userId));
