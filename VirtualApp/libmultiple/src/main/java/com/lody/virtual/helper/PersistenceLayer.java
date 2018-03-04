@@ -52,6 +52,7 @@ public abstract class PersistenceLayer {
             writePersistenceData(p);
             FileOutputStream fos = new FileOutputStream(mPersistenceFile);
             fos.write(p.marshall());
+            fos.flush();
             fos.close();
         } catch (Exception e) {
             e.printStackTrace();
