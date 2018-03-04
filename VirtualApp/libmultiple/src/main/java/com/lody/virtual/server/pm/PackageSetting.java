@@ -4,7 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseArray;
 
+import com.lody.virtual.os.VEnvironment;
 import com.lody.virtual.remote.InstalledAppInfo;
+
+import java.io.File;
 
 /**
  * @author Lody
@@ -45,6 +48,9 @@ public class PackageSetting implements Parcelable {
         this.dependSystem = in.readByte() != 0;
         this.appId = in.readInt();
         //noinspection unchecked
+        File lib = new File(libPath);
+        this.firstInstallTime = lib.lastModified();
+        this.lastUpdateTime = lib.lastModified();
         this.userState = in.readSparseArray(PackageUserState.class.getClassLoader());
         this.skipDexOpt = in.readByte() != 0;
     }
