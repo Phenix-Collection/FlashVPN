@@ -92,7 +92,10 @@ public class ServiceConnectionDelegate extends IServiceConnection.Stub {
         if (delegateService != null) {
             name = delegateService.getComponent();
             service = delegateService.getService();
-            IBinder proxy = ProxyServiceFactory.getProxyService(VClientImpl.get().getCurrentApplication(), name, service);
+            Context context = VClientImpl.get().getCurrentApplication();
+            if (context == null)
+                context = VirtualCore.get().getContext();
+            IBinder proxy = ProxyServiceFactory.getProxyService(context, name, service);
             if (proxy != null) {
                 service = proxy;
             }
