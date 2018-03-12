@@ -99,9 +99,11 @@ public class AppListUtils implements DataObserver {
     }
 
     public boolean isCloned(String pkg) {
-        for (AppModel model: mClonedModels) {
-            if (model.getPackageName().equals(pkg)) {
-                return true;
+        if (mClonedModels != null) {
+            for (AppModel model : mClonedModels) {
+                if (model.getPackageName().equals(pkg)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -358,16 +360,6 @@ public class AppListUtils implements DataObserver {
             MLogs.e(pName + " is not installed.");
             return false;
         }
-    }
-
-    @Deprecated
-    private boolean isAlreadyClonedApp(String packageName) {
-        for (AppModel model : mClonedModels) {
-            if (model.getPackageName().equals(packageName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean isPopularApp(String packageName) {
