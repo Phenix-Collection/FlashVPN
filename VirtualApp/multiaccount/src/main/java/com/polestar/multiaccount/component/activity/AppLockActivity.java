@@ -154,7 +154,9 @@ public class AppLockActivity extends BaseActivity {
         super.onResume();
         initData();
         initView();
-        loadNative();
+        if (!PreferencesUtils.isAdFree()) {
+            loadNative();
+        }
     }
 
     private void initData() {
