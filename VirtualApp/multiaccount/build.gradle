@@ -83,13 +83,13 @@ dependencies {
     //compile 'com.tencent.bugly:nativecrashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     //Android Lib
-    compile 'com.android.support:appcompat-v7:25.+'
+    compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.melnykov:floatingactionbutton:1.3.0'
-    compile 'com.android.support:recyclerview-v7:25.+'
-    compile 'com.android.support:percent:25.+'
+    compile 'com.android.support:recyclerview-v7:25.4.0'
+    compile 'com.android.support:percent:25.4.0'
 
 
-    compile 'com.android.support:design:25.+'
+    compile 'com.android.support:design:25.4.0'
     compile 'org.greenrobot:greendao:3.0.1'
     //compile 'com.google.code.gson:gson:2.3.1'
 
@@ -112,26 +112,22 @@ dependencies {
     compile project(':fuseadloader')
     compile project(':Booster')
 
-    //mopub
-    // For native static (images).
-    compile('com.mopub:mopub-sdk-native-static:4.9.0@aar') {
-        transitive = true
-    }
-    // For native video. This will automatically also include native static
-    compile('com.mopub:mopub-sdk-native-video:4.9.0@aar') {
-        transitive = true
-    }
-
-    // For interstitials
-    compile('com.mopub:mopub-sdk-interstitial:4.9.0@aar') {
-        transitive = true
-    }
-
     compile 'com.android.billingclient:billing:dp-1'
 
     //Avazu
     compile 'com.google.code.gson:gson:2.8.0'
     compile(name: 'anative_common', ext: 'aar')
     compile(name: 'anative_appwall', ext: 'aar')
+
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion '25.4.0'
+                }
+            }
+        }
+    }
 }
 apply plugin: 'com.google.gms.google-services'

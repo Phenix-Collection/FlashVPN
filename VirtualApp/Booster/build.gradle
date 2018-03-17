@@ -58,11 +58,6 @@ dependencies {
 
     //compile(name: 'commonsdk-library-release', ext: 'aar')
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.makeramen:roundedimageview:2.2.1'
-    compile 'com.google.firebase:firebase-ads:9.6.0'
-    compile 'com.google.android.gms:play-services-ads:9.2.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     //compile ':fuseadloader'
     compile project(':fuseadloader')
 }
