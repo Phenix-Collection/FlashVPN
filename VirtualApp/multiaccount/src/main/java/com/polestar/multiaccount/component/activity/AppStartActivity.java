@@ -117,7 +117,7 @@ public class AppStartActivity extends BaseActivity {
             return false;
         }
         String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
-        if (!("native".equals(style) || "all".equals(style))) {
+        if (!("native".equals(style) || "all".equals(style) || BuildConfig.DEBUG)) {
             return false;
         }
         long interval = RemoteConfig.getLong(CONFIG_APP_START_NATIVE_AD_FREQ)*60*1000;
