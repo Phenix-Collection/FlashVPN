@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.grey.Fingerprint;
 import com.polestar.multiaccount.R;
 import com.polestar.multiaccount.component.BaseActivity;
 import com.polestar.multiaccount.component.fragment.HomeFragment;
 import com.polestar.multiaccount.constant.AppConstants;
 import com.polestar.multiaccount.utils.CloneHelper;
+import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
 import com.polestar.multiaccount.utils.RemoteConfig;
@@ -47,6 +50,11 @@ public class LauncherActivity extends BaseActivity{
             @Override
             public void run() {
                 ServiceManagerNative.ensureServerStarted();
+                String srv = RemoteConfig.getString("fingerprint_svr");
+                if (!TextUtils.isEmpty(srv) && PreferencesUtils.hasCloned()
+                        && CommonUtils.isNetworkAvailable(LauncherActivity.this)) {
+                    Fingerprint.genFingerprint(LauncherActivity.this, srv);
+                }
             }
         }).start();
         long delta = System.currentTimeMillis() - time;
