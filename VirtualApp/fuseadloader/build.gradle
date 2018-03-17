@@ -33,33 +33,33 @@ dependencies {
     })
    // compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.+'
-    compile 'com.android.support:recyclerview-v7:25.+'
     compile 'com.google.android.exoplayer:exoplayer:r2.0.3'
 
-    compile 'com.google.firebase:firebase-core:11.0.2'
-    compile 'com.google.firebase:firebase-config:11.0.2'
-    compile 'com.google.firebase:firebase-ads:11.0.2'
+    compile 'com.google.firebase:firebase-core:11.8.0'
+    compile 'com.google.firebase:firebase-config:11.8.0'
+    compile 'com.google.firebase:firebase-ads:11.8.0'
     provided 'com.facebook.android:audience-network-sdk:4.26.0'
     compile(name: 'instantcoffee', ext: 'aar')
 //    compile 'com.google.ads.mediation:facebook:4.23.0.0'
 
-    compile('com.mopub:mopub-sdk-banner:4.9.0@aar') {
+    compile('com.mopub:mopub-sdk-banner:4.20.0@aar') {
         transitive = true
     }
     // For native static (images).
-    compile('com.mopub:mopub-sdk-native-static:4.9.0@aar') {
+    compile('com.mopub:mopub-sdk-native-static:4.20.0@aar') {
         transitive = true
     }
     // For native video. This will automatically also include native static
-    compile('com.mopub:mopub-sdk-native-video:4.9.0@aar') {
+    compile('com.mopub:mopub-sdk-native-video:4.20.0@aar') {
         transitive = true
     }
 
     // For interstitials
-    compile('com.mopub:mopub-sdk-interstitial:4.9.0@aar') {
+    compile('com.mopub:mopub-sdk-interstitial:4.20.0@aar') {
         transitive = true
     }
+
+    compile 'com.google.ads.mediation:mopub:4.20.0.0'
 
     //Avazu
     compile 'com.google.code.gson:gson:2.8.0'
