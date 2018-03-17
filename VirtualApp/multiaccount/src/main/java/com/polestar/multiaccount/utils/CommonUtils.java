@@ -181,6 +181,17 @@ public class CommonUtils {
         return false;
     }
 
+    public static boolean isNetworkAvailable(Context ctx) {
+
+        ConnectivityManager manager = (ConnectivityManager) ctx
+                .getApplicationContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+
+        return !(networkinfo == null || !networkinfo.isAvailable());
+    }
+
+
     public static long getCurrentVersionCode(Context context) {
         long version = 0;
         try {

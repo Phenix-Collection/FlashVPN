@@ -30,6 +30,7 @@ import com.polestar.multiaccount.model.AppModel;
 import com.polestar.multiaccount.utils.AppListUtils;
 import com.polestar.multiaccount.utils.AppManager;
 import com.polestar.multiaccount.utils.CloneHelper;
+import com.polestar.multiaccount.utils.CommonUtils;
 import com.polestar.multiaccount.utils.EventReporter;
 import com.polestar.multiaccount.utils.MLogs;
 import com.polestar.multiaccount.utils.PreferencesUtils;
@@ -74,12 +75,8 @@ public class PreCloneService extends Service {
     }
 
     public static void tryPreClone(Context ctx){
-        ConnectivityManager manager = (ConnectivityManager) ctx
-                .getApplicationContext().getSystemService(
-                        Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
 
-        if (networkinfo == null || !networkinfo.isAvailable()) {
+        if (!CommonUtils.isNetworkAvailable(ctx)) {
             return;
         }
         if (System.currentTimeMillis() - getLastPreCloneTime()
