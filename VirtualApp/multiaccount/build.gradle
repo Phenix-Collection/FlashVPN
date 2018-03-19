@@ -119,6 +119,8 @@ dependencies {
     compile(name: 'anative_common', ext: 'aar')
     compile(name: 'anative_appwall', ext: 'aar')
 
+    compile 'com.android.support:multidex:1.0.1'
+
     configurations.all {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
             def requested = details.requested

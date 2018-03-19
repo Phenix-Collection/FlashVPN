@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ import java.util.List;
 import nativesdk.ad.common.AdSdk;
 
 
-public class MApp extends Application {
+public class MApp extends MultiDexApplication {
 
     private static MApp gDefault;
 
