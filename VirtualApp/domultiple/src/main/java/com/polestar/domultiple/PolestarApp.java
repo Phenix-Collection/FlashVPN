@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -46,7 +47,7 @@ import nativesdk.ad.common.AdSdk;
  * Created by PolestarApp on 2017/7/15.
  */
 
-public class PolestarApp extends Application {
+public class PolestarApp extends MultiDexApplication {
 
     private static PolestarApp gDefault;
 
