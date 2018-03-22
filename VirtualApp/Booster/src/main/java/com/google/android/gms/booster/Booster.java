@@ -159,7 +159,7 @@ public class Booster extends Service {
 
         registerLockscreenReceiver();
 
-        schedule(this);
+        //schedule(this);
     }
 
     @Override
