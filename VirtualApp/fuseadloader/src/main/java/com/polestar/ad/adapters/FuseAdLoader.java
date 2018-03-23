@@ -201,6 +201,15 @@ public class FuseAdLoader {
         return null;
     }
 
+    public boolean hasValidCache() {
+        for (AdConfig config: mNativeAdConfigList) {
+            if (hasValidCache(config)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean hasValidCache(AdConfig config) {
         IAdAdapter cache = mNativeAdCache.get(config.key);
         if (cache != null) {
