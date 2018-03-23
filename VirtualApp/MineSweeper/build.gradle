@@ -1,0 +1,83 @@
+apply plugin: 'com.android.application'
+
+def releaseTime() {
+    return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
+}
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.polestar.minesweeperclassic"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    signingConfigs {
+        myConfig {
+            storeFile file("C:\\Marc\\VirtualApp\\VirtualApp\\publish\\test.keystore")
+            storePassword "123456"
+            keyAlias "test.keystore"
+            keyPassword "123456"
+        }
+    }
+
+    productFlavors {
+        develop {
+            versionCode 9999
+            versionName '9999'
+            manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
+        }
+        play {
+            versionCode 2020
+            versionName "2.0.20.${releaseTime()}"
+            manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
+        }
+    }
+
+    buildTypes {
+        debug {
+            jniDebuggable false
+        }
+        release {
+            signingConfig signingConfigs.myConfig
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs',project(':fuseadloader').file('libs')
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'] )
+    compile 'com.tencent.bugly:crashreport:2.6.5'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:support-v4:25.4.0'
+    compile 'com.android.support:support-vector-drawable:25.4.0'
+
+    //firebase messaging/notifications
+    compile 'com.google.firebase:firebase-core:11.8.0'
+    compile 'com.google.firebase:firebase-config:11.8.0'
+
+    compile project(':fuseadloader')
+    compile project(':Booster')
+}
+// ADD THIS AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'

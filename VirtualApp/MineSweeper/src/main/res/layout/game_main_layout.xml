@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TableLayout
+        android:id="@+id/table_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <FrameLayout
+            android:id="@+id/head_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="50.0dip"
+            android:background="@drawable/background"
+            android:padding="6.0dip">
+
+            <Button
+                android:id="@+id/ButtonMineFlag"
+                android:layout_width="38.0dip"
+                android:layout_height="38.0dip"
+                android:layout_gravity="center|right"
+                android:layout_marginRight="95.0dip"
+                android:background="@drawable/flagmineswitcher_mine"
+                android:onClick="onMineFlagSwitch"/>
+
+            <Button
+                android:id="@+id/reset_button"
+                android:layout_width="38.0dip"
+                android:layout_height="38.0dip"
+                android:layout_gravity="center"
+                android:background="@drawable/smile"
+                android:onClick="onReset"
+                android:drawingCacheQuality="auto" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="38.0dip"
+                android:layout_gravity="center|left"
+                android:background="@drawable/cborder"
+                android:orientation="horizontal"
+                android:padding="2.0dip">
+
+                <ImageView
+                    android:id="@+id/left_flag_num3"
+                    android:layout_width="20.0dip"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/c0" />
+
+                <ImageView
+                    android:id="@+id/left_flag_num2"
+                    android:layout_width="20.0dip"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/c0" />
+
+                <ImageView
+                    android:id="@+id/left_flag_num1"
+                    android:layout_width="20.0dip"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/c0" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/ButtonSetting"
+                android:layout_width="38.0dip"
+                android:layout_height="38.0dip"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="80.0dip"
+                android:background="@drawable/settings_icon"
+                android:onClick="onSettingClick"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="38.0dip"
+                android:layout_gravity="center|right"
+                android:background="@drawable/cborder"
+                android:orientation="horizontal"
+                android:padding="2.0dip">
+
+                <ImageView
+                    android:id="@+id/time_num4"
+                    android:layout_width="20.0dip"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/c0" />
+
+                <ImageView
+                    android:id="@+id/time_num3"
+                    android:layout_width="20.0dip"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/c0" />
+
+                <ImageView
+                    android:id="@+id/czz"
+                    android:layout_width="10.0dip"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/czz" />
+
+                <ImageView
+                    android:id="@+id/time_num2"
+                    android:layout_width="20.0dip"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/c0" />
+
+                <ImageView
+                    android:id="@+id/time_num1"
+                    android:layout_width="20.0dip"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/c0" />
+            </LinearLayout>
+        </FrameLayout>
+    </TableLayout>
+</RelativeLayout>

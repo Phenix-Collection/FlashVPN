@@ -1,0 +1,108 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#40000000"
+    android:orientation="vertical" >
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/close_report_layout"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:background="@drawable/close_shape" >-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:src="@drawable/report_close" />-->
+    <!--</RelativeLayout>-->
+
+    <RelativeLayout
+        android:id="@+id/report_layout_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/label_img"
+            android:background="@drawable/icon_congratulation"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop = "true"
+            android:layout_width="35dp"
+            android:layout_height="35dp">
+        </ImageView>
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/label_img"
+            android:layout_toRightOf="@id/label_img"
+            android:layout_margin="5dp"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:text="Congratulations"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_img"
+            android:orientation="vertical">
+            <TextView
+                android:id = "@+id/report_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.5"
+                android:textColor="@color/report_detail_color"
+                android:text="Mine Cleared: 100 \n Steps: 100 \n Time Cost: 100s"
+                android:textSize="14sp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="100dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="OK"
+                    android:gravity="center"
+                    android:background="@drawable/text_button_shape"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/white"
+                    android:onClick="onConfirm"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:background="@drawable/text_button_shape"
+                    android:text="Try again"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:onClick="onAgain"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>

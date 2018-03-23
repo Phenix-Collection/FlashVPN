@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_gray"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="22dp"
+            android:text="@string/settings_game"
+            android:textColor="@color/text_gray_light"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:onClick="onDifficultyClick"
+            android:background="@color/white"
+            android:paddingLeft="22dp">
+
+            <TextView
+                android:id="@+id/difficulty_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="18dp"
+                android:layout_alignParentLeft="true"
+                android:text="@string/settings_difficulty"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/difficulty_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/difficulty_title"
+                android:text="Easy"
+                android:textColor="@color/text_gray_light"
+                android:textSize="14sp" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:paddingLeft="22dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/cell_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/text_gray_dark"
+                android:textSize = "15sp"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginTop="10.0dip"
+                android:text="Cell Size"/>
+
+            <SeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginTop="10.0dip"
+                android:layout_toRightOf="@id/cell_size"
+                android:progressBackgroundTint="@color/colorPrimaryDark"
+                android:max="100" />
+
+            <TableLayout
+                android:id="@+id/mine_table"
+                android:layout_below="@id/seek_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginTop="10.0dip"
+                android:layout_centerHorizontal="true"
+                android:gravity="center">
+
+                <TableRow
+                    android:id="@+id/mine_table_row1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/mine_button1"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+
+                    <Button
+                        android:id="@+id/mine_button2"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+
+                    <Button
+                        android:id="@+id/mine_button3"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/mine_table_row2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/mine_button4"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+
+                    <Button
+                        android:id="@+id/mine_button5"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+
+                    <Button
+                        android:id="@+id/mine_button6"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/mine_table_row3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/mine_button7"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+
+                    <Button
+                        android:id="@+id/mine_button8"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+
+                    <Button
+                        android:id="@+id/mine_button9"
+                        android:layout_width="30.0dip"
+                        android:layout_height="30.0dip"
+                        android:background="@drawable/button" />
+                </TableRow>
+            </TableLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="22dp"
+            android:text="@string/settings_more"
+            android:textColor="@color/text_gray_light"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:onClick="onRateUsClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/settings_rate_us"
+            android:background="@color/white"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+
+
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#cccccc" />-->
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:onClick="onPrivacyPolicyClick"-->
+            <!--android:paddingLeft="22dp"-->
+            <!--android:paddingRight="22dp"-->
+            <!--android:background="@color/white"-->
+            <!--android:text="@string/settings_privacy_policy"-->
+            <!--android:textColor="@color/text_gray_dark"-->
+            <!--android:textSize="15sp" />-->
+
+
+
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#cccccc" />-->
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:onClick="onTermsClick"-->
+            <!--android:paddingLeft="22dp"-->
+            <!--android:paddingRight="22dp"-->
+            <!--android:text="@string/settings_terms_of_service"-->
+            <!--android:background="@color/white"-->
+            <!--android:textColor="@color/text_gray_dark"-->
+            <!--android:textSize="15sp" />-->
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/version_info"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/text_gray_light"
+        android:gravity="center_horizontal"
+        android:textSize="13sp" />
+</RelativeLayout>

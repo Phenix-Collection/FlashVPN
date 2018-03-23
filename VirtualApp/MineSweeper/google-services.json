@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "949545048525",
+    "firebase_url": "https://mine-sweeper-35c37.firebaseio.com",
+    "project_id": "mine-sweeper-35c37",
+    "storage_bucket": "mine-sweeper-35c37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949545048525:android:954650effd3d0751",
+        "android_client_info": {
+          "package_name": "com.polestar.minesweeperclassic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "949545048525-lga4p6qcbmucajaklpajn0ec6obvv812.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMpbSwtB4Yst1XQFd0Pp1IPPkBYkAusuA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

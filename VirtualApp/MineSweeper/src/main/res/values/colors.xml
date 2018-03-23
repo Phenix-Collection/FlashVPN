@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#1e1f2b</color>
+    <color name="title_bar_bg">#4164ef</color>
+    <color name="white">#ffffff</color>
+    <color name="light_gray">#F6F6F6</color>
+    <color name="text_gray_dark">#3f3f3f</color>
+    <color name="text_gray_light">#a6a6a6</color>
+    <color name="report_detail_color">#0ba5fe</color>
+    <color name="text_button_color">#4884d2</color>
+    <color name="colorAccent">#5999ff</color>
+
+    <color name="gray">#A9A5A3</color>
+    <color name="dialog_guide_button_negative_text">#ff454545</color>
+    <color name="dialog_guide_button_positive_text">#ff2dbbfb</color>
+    <color name="dialog_guide_button_press_bg">#22dddddd</color>
+    <color name="dialog_guide_content_text">#ff454545</color>
+    <color name="dialog_guide_high_light_content_text">#ff2dbbfb</color>
+    <color name="dialog_guide_title_text">#ff454545</color>
+    <color name="custom_dialog_bg">#8bb8ef</color>
+</resources>

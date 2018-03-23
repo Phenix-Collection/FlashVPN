@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">Mine Sweeper Classic</string>
+    <string name="congratulation">Congratulations</string>
+    <string name="report_detail_mine_clear">"Mine Cleared: "</string>
+    <string name="report_detail_difficulty">"Difficulty: "</string>
+    <string name="report_detail_time_cost">"Time Cost: "</string>
+    <string name="report_detail_steps">"Steps: "</string>
+    <string name="settings_label">"Settings"</string>
+    <string name="settings_game">"Game"</string>
+    <string name="settings_more">"More"</string>
+    <string name="settings_difficulty">"Difficulty"</string>
+    <string name="settings_privacy_policy">"Privacy Policy"</string>
+    <string name="settings_terms_of_service">"Terms of Service"</string>
+    <string name="settings_feed_back">"Feedback"</string>
+    <string name="settings_rate_us">"Rate Us"</string>
+    <string name="difficulty_easy">"Easy"</string>
+    <string name="difficulty_normal">"Normal"</string>
+    <string name="difficulty_hard">"Hard"</string>
+    <string name="settings_right">" Enjoy wonderful time every day!"</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="feedback">Feedback</string>
+
+    <string name="dialog_rating_us_content">Enjoy playing Mine Sweeper?</string>
+    <string name="dialog_feedback_content">Would you kindly give us some feedback to help improve it?</string>
+    <string name="not_really">Not Really</string>
+    <string name="no_thanks">No, thanks</string>
+    <string name="dialog_love_title">Love Mine Sweeper</string>
+    <string name="dialog_love_content">Would you mind give us a 5-star rating on the Play Store? It will inspire us and we appreciate your support!</string>
+    <string name="remind_me_later">Remind me later</string>
+    <string name="star_rating">Go 5-star rating now</string>
+    <string name="yes">Yes</string>
+    <string name="ok">OK</string>
+
+    <!-- feedback -->
+    <string name="feedback_hint">Please tell us the detail about the problem you met , and please tell us the steps to reproduce it and better with screenshot.</string>
+    <string name="button_submit">Submit</string>
+    <string name="submit_success">Thanks for providing feedback!</string>
+    <string name="feedback_no_description">Description can not be empty!</string>
+    <string name="feedback_go_faq">Click here to check our handy FAQ.</string>
+    <string name="extra_feedback_decription">We will resolve the issue for you ASAP and appreciate your help to improve the product!</string>
+
+
+    <string-array name="arr_difficulty">
+        <item>Easy</item>
+        <item>Normal</item>
+        <item>Hard</item>
+    </string-array>
+</resources>

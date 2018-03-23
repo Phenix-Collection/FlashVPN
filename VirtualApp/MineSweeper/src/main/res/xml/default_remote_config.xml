@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>rating_interval</key>
+        <value>72</value>
+        <!--<value>xhour</value>-->
+    </entry>
+    <entry>
+        <key>rating_game_gate</key>
+        <value>3</value>
+    </entry>
+</defaultsMap>
