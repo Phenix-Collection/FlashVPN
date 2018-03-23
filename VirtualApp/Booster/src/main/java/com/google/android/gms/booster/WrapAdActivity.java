@@ -66,6 +66,15 @@ public class WrapAdActivity extends Activity {
                     }
                 }, 0);
 
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_HOME);
+                        startActivity(intent);
+                    }
+                }, 500);
+
             }
 
             @Override
