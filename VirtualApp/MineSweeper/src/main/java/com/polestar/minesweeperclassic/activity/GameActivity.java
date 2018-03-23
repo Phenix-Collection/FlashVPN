@@ -15,17 +15,23 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.minesweeperclassic.R;
+import com.polestar.minesweeperclassic.Service.DaemonService;
 import com.polestar.minesweeperclassic.utils.DisplayUtils;
 import com.polestar.minesweeperclassic.utils.EventReporter;
 import com.polestar.minesweeperclassic.utils.MLogs;
 import com.polestar.minesweeperclassic.utils.PreferenceUtils;
+import com.polestar.minesweeperclassic.utils.RemoteConfig;
 import com.polestar.minesweeperclassic.widget.MineCell;
 import com.polestar.minesweeperclassic.widget.RateDialog;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -64,6 +70,11 @@ public class GameActivity extends Activity{
 
     private Button resetButton;
 
+    private final static String SLOT_GAME_INTERSTITIAL = "slot_game";
+    private final static String AD_INTERVAL = "ad_interval";
+    private static int mResetTimes ;
+    private int adInterval ;
+    private FuseAdLoader adLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,13 @@ public class GameActivity extends Activity{
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
+        adInterval = (int) RemoteConfig.getLong(AD_INTERVAL);
+        if (adLoader == null) {
+            adLoader = FuseAdLoader.get(SLOT_GAME_INTERSTITIAL, this.getApplication());
+        }
+        if (adInterval != 0) {
+            adLoader.preloadAd();
+        }
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -87,6 +105,7 @@ public class GameActivity extends Activity{
         initView();
         EventReporter.homeShow(this);
         EventReporter.newGame(this, PreferenceUtils.getDifficulty(), numOfMine);
+        DaemonService.startup(this);
     }
 
     private void initData() {
@@ -155,7 +174,30 @@ public class GameActivity extends Activity{
     }
 
     public void onReset(View view) {
+        if ( adInterval != 0 && (mResetTimes ++ % adInterval) == 0) {
+            if (adLoader.hasValidCache()) {
+                adLoader.loadAd(1, new IAdLoadListener() {
+                    @Override
+                    protected void onAdLoaded(IAdAdapter ad) {
+                        ad.show();
+                    }
+
+                    @Override
+                    protected void onAdListLoaded(List<IAdAdapter> ads) {
+
+                    }
+
+                    @Override
+                    protected void onError(String error) {
+
+                    }
+                });
+            }
+        }
         doReset();
+        if (adInterval != 0) {
+            adLoader.preloadAd();
+        }
     }
 
     private void doReset() {

@@ -103,8 +103,8 @@ public class MApp extends MultiDexApplication {
             }
         });
         BatmobiLib.init(gDefault, "Y3DQZ6Z77SR3H1CESAAI6NUU");
-        FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
-        FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
+        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
+        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
     }
     @Override

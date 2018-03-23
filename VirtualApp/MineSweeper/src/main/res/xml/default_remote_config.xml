@@ -9,4 +9,45 @@
         <key>rating_game_gate</key>
         <value>3</value>
     </entry>
+    <entry>
+        <key>slot_test</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>bt:12808_34855:0</value>
+    </entry>
+    <entry>
+        <key>slot_game</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+    </entry>
+    <entry>
+        <key>ad_interval</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>5</value>
+    </entry>
+    <entry>
+        <key>slot_install_ad</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+    </entry>
+    <entry>
+        <key>slot_unlock_ad</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+    </entry>
+    <entry>
+        <key>auto_ad_first_interval</key>
+        <value>432000</value>
+    </entry>
+    <entry>
+        <key>auto_ad_interval</key>
+        <value>86400</value>
+    </entry>
+    <entry>
+        <key>allow_install_ad</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>allow_unlock_ad</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>
