@@ -10,6 +10,7 @@ import com.polestar.minesweeperclassic.activity.FeedbackActivity;
 import com.polestar.minesweeperclassic.activity.SettingsActivity;
 import com.polestar.minesweeperclassic.utils.CommonUtils;
 import com.polestar.minesweeperclassic.utils.EventReporter;
+import com.polestar.minesweeperclassic.utils.MLogs;
 import com.polestar.minesweeperclassic.utils.PreferenceUtils;
 import com.polestar.minesweeperclassic.utils.RemoteConfig;
 
@@ -46,7 +47,7 @@ public class RateDialog {
                         3*RemoteConfig.getLong(CONFIG_RATING_INTERVAL);
             }
             if (count >= RemoteConfig.getLong(CONFIG_RATING_GAME_GATE)
-                    && (current - PreferenceUtils.getRateDialogTime(MApp.getApp())) > interval) {
+                    && (current - PreferenceUtils.getRateDialogTime(MApp.getApp())) > interval*3600*1000) {
                 return true;
             }
         }
@@ -60,8 +61,10 @@ public class RateDialog {
                 interval = PreferenceUtils.getLoveApp() == 1? RemoteConfig.getLong(CONFIG_RATING_INTERVAL) :
                         3*RemoteConfig.getLong(CONFIG_RATING_INTERVAL);
             }
+            MLogs.d("Count: " + count + " interval: " + interval
+                    + " last: " + PreferenceUtils.getRateDialogTime(MApp.getApp()));
             if (count >= RemoteConfig.getLong(CONFIG_RATING_GAME_GATE)
-                    && (current - PreferenceUtils.getRateDialogTime(MApp.getApp())) > interval) {
+                    && (current - PreferenceUtils.getRateDialogTime(MApp.getApp())) > interval*3600*1000) {
                 return true;
             }
         }
