@@ -8,7 +8,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.polestar.minesweeperclassic"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -40,10 +40,12 @@ android {
     buildTypes {
         debug {
             jniDebuggable false
+            multiDexEnabled true
         }
         release {
             signingConfig signingConfigs.myConfig
             minifyEnabled true
+            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -76,8 +78,21 @@ dependencies {
     compile 'com.google.firebase:firebase-core:11.8.0'
     compile 'com.google.firebase:firebase-config:11.8.0'
 
+    compile 'com.android.support:multidex:1.0.1'
+
     compile project(':fuseadloader')
     compile project(':Booster')
+
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion '25.4.0'
+                }
+            }
+        }
+    }
 }
 // ADD THIS AT THE BOTTOM
 apply plugin: 'com.google.gms.google-services'
