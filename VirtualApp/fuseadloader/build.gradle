@@ -38,7 +38,7 @@ dependencies {
     compile 'com.google.firebase:firebase-core:11.8.0'
     compile 'com.google.firebase:firebase-config:11.8.0'
     compile 'com.google.firebase:firebase-ads:11.8.0'
-    provided 'com.facebook.android:audience-network-sdk:4.26.0'
+    provided 'com.facebook.android:audience-network-sdk:4.27.1'
     compile(name: 'instantcoffee', ext: 'aar')
 //    compile 'com.google.ads.mediation:facebook:4.23.0.0'
 
@@ -60,6 +60,7 @@ dependencies {
     }
 
     compile 'com.google.ads.mediation:mopub:4.20.0.0'
+    compile 'com.google.ads.mediation:facebook:4.27.1.0'
 
     //Avazu
     compile 'com.google.code.gson:gson:2.8.0'

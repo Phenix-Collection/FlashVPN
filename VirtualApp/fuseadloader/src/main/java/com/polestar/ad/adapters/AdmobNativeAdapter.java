@@ -1,6 +1,7 @@
 package com.polestar.ad.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.ads.mediation.facebook.FacebookAdapter;
 import com.google.android.gms.ads.VideoController;
 import com.google.android.gms.ads.formats.MediaView;
 import com.google.android.gms.ads.formats.NativeAd;
@@ -196,9 +198,17 @@ public class AdmobNativeAdapter extends AdAdapter {
     @Override
     public String getSubtitle() {
         if (mRawAd instanceof NativeAppInstallAd) {
+            Bundle extras = ((NativeAppInstallAd) mRawAd).getExtras();
+            if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
+                return extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET,"");
+            }
             return((NativeAppInstallAd) mRawAd).getBody()!=null?((NativeAppInstallAd) mRawAd).getBody().toString():null;
         }
         if (mRawAd instanceof NativeContentAd) {
+            Bundle extras = ((NativeContentAd) mRawAd).getExtras();
+            if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
+                return extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET,"");
+            }
             return((NativeContentAd) mRawAd).getBody()!=null?((NativeContentAd) mRawAd).getBody().toString():null;
         }
         return null;
