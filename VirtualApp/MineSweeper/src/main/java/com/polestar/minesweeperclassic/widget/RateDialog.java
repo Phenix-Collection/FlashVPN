@@ -41,7 +41,7 @@ public class RateDialog {
             int count = PreferenceUtils.getGameCount();
             long interval;
             if(PreferenceUtils.getLoveApp() == 0) {
-                interval = RemoteConfig.getLong(CONFIG_RATING_INTERVAL);
+                interval = 0;
             } else {
                 interval = PreferenceUtils.getLoveApp() == 1? RemoteConfig.getLong(CONFIG_RATING_INTERVAL) :
                         3*RemoteConfig.getLong(CONFIG_RATING_INTERVAL);
@@ -56,7 +56,7 @@ public class RateDialog {
             int count = PreferenceUtils.getGameCount();
             long interval;
             if(PreferenceUtils.getLoveApp() == 0) {
-                interval = RemoteConfig.getLong(CONFIG_RATING_INTERVAL);
+                interval = 0;
             } else {
                 interval = PreferenceUtils.getLoveApp() == 1? RemoteConfig.getLong(CONFIG_RATING_INTERVAL) :
                         3*RemoteConfig.getLong(CONFIG_RATING_INTERVAL);
@@ -125,7 +125,12 @@ public class RateDialog {
                                 break;
                         }
                     }
-                });
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                PreferenceUtils.setLoveApp(false);
+            }
+        });
 
     }
 }

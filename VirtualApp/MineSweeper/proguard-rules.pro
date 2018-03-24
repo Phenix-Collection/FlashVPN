@@ -1,6 +1,6 @@
 # Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
-# in C:\Users\doriscoco\AppData\Local\Android\Sdk/tools/proguard/proguard-android.txt
+# in D:\Android\sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
 # directive in build.gradle.
 #
@@ -15,6 +15,14 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+#-keepattributes SourceFile,LineNumberTable
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
@@ -187,3 +195,21 @@ public static java.lang.String TABLENAME;
 -keep class android.support.v4.** { *; }
 -dontwarn com.mobvista.**
 -keep class **.R$* { public static final int mobvista*; }
+
+-keep class nativesdk.ad.adsdk.** {*;}
+-dontwarn nativesdk.ad.adsdk.**
+-keep class nativesdk.ad.adsdkcore.** {*;}
+-dontwarn nativesdk.ad.adsdkcore.**
+-keep class com.google.gson.** {*;}
+-dontwarn com.google.gson.**
+
+-keepclassmembers class com.mopub.** { public *; }
+-keep public class com.mopub.**
+-keep public class android.webkit.JavascriptInterface {}
+-keep class * extends com.mopub.mobileads.CustomEventBanner {}
+-keepclassmembers class com.mopub.mobileads.CustomEventBannerAdapter {!private !public !protected *;}
+-keep class * extends com.mopub.mobileads.CustomEventInterstitial {}
+-keep class * extends com.mopub.mobileads.CustomEventNative {}
+ -dontwarn javax.annotation.Nullable
+
+ -keep class com.batmobi.** { *; }
