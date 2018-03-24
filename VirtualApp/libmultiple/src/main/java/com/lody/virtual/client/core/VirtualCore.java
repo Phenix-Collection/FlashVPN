@@ -26,7 +26,6 @@ import com.lody.virtual.client.env.Constants;
 import com.lody.virtual.client.env.VirtualRuntime;
 import com.lody.virtual.client.fixer.ContextFixer;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
-import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.hook.delegate.TaskDescriptionDelegate;
 import com.lody.virtual.client.ipc.LocalProxyUtils;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
@@ -92,7 +91,6 @@ public final class VirtualCore {
     private PackageInfo hostPkgInfo;
     private int systemPid;
     private ConditionVariable initLock = new ConditionVariable();
-    private PhoneInfoDelegate phoneInfoDelegate;
     private ComponentDelegate componentDelegate;
     private TaskDescriptionDelegate taskDescriptionDelegate;
     private IAppApiDelegate appApiDelegate;
@@ -138,14 +136,6 @@ public final class VirtualCore {
 
     public void setComponentDelegate(ComponentDelegate delegate) {
         this.componentDelegate = delegate;
-    }
-
-    public PhoneInfoDelegate getPhoneInfoDelegate() {
-        return phoneInfoDelegate;
-    }
-
-    public void setPhoneInfoDelegate(PhoneInfoDelegate phoneInfoDelegate) {
-        this.phoneInfoDelegate = phoneInfoDelegate;
     }
 
     public void setCrashHandler(CrashHandler handler) {

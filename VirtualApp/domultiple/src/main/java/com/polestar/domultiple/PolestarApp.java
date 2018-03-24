@@ -1,7 +1,6 @@
 package com.polestar.domultiple;
 
 import android.app.ActivityManager;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,14 +11,12 @@ import android.util.Log;
 
 import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.booster.BoosterLog;
 import com.google.android.gms.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.CrashHandler;
 import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.hook.delegate.PhoneInfoDelegate;
 import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.AdConfig;
@@ -177,7 +174,6 @@ public class PolestarApp extends MultiDexApplication {
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
                 delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
-                virtualCore.setPhoneInfoDelegate(new MyPhoneInfoDelegate());
 
                 virtualCore.setAppApiDelegate(new CloneApiDelegate());
                 GreyAttribute.init(PreferencesUtils.getString(gDefault, "grey_source_id", "29026"));
@@ -318,27 +314,5 @@ public class PolestarApp extends MultiDexApplication {
         // close auto report, manual control
         MLogs.e("bugly channel: " + channel + " referrer: "+ referChannel);
         CrashReport.closeCrashReport();
-    }
-
-    class MyPhoneInfoDelegate implements PhoneInfoDelegate {
-
-        @Override
-        public String getDeviceId(String oldDeviceId, int userId) {
-            return oldDeviceId;
-        }
-
-        @Override
-        public String getBluetoothAddress(String oldAddress, int userId) {
-            return oldAddress;
-        }
-
-        @Override
-        public String getMacAddress(String oldMacAddress, int userId) {
-            if (oldMacAddress == null || oldMacAddress.startsWith("00-00-00-00-00-00") ){
-                return "00:00:08:76:54:32";
-            }
-            return oldMacAddress;
-        }
-
     }
 }
