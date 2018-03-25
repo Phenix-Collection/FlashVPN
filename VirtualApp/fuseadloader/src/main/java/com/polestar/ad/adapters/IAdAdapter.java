@@ -1,5 +1,7 @@
 package com.polestar.ad.adapters;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 
 import com.polestar.ad.AdViewBinder;
@@ -57,4 +59,8 @@ public interface IAdAdapter {
     void loadAd(int num, IAdLoadListener listener);
 
     public boolean isInterstitialAd();
+
+    void resume(Activity activity);
+    void pause(Activity activity);
+    void destroy(Activity activity);
 }

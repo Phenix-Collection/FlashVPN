@@ -1,6 +1,7 @@
 package com.polestar.ad.adapters;
 
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -141,5 +142,18 @@ public abstract class AdAdapter implements IAdAdapter {
     @Override
     public View getAdView(AdViewBinder viewBinder) {
         return null;
+    }
+
+    @Override
+    public void resume(Activity activity){
+
+    }
+    @Override
+    public void pause(Activity activity){
+
+    }
+    @Override
+    public void destroy(Activity activity){
+
     }
 }
