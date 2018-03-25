@@ -16,7 +16,4 @@ public abstract class IAdLoadListener {
     }
     protected abstract void onAdListLoaded(List<IAdAdapter> ads);
     protected abstract void onError(String error);
-    protected void onRewarded(IAdAdapter ad) {
-
-    }
 }

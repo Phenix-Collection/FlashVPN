@@ -22,7 +22,6 @@ public class AdConstants {
         public static final String AD_SOURCE_MOPUB = "mp";
         public static final String AD_SOURCE_FACEBOOK_INTERSTITIAL = "fb_interstitial";
         public static final String AD_SOURCE_ADMOB_INTERSTITIAL = "ab_interstitial";
-        public static final String AD_SOURCE_ADMOB_REWARD_VIDEO = "adm_reward";
         public static final String AD_SOURCE_BT_INTERSTITIAL = "bt_interstitial";
         public static final String AD_SOURCE_MOPUB_INTERSTITIAL = "mp_interstitial";
         public static final String AD_SOURCE_ADMOB_NAVTIVE_BANNER = "ab_native_banner";

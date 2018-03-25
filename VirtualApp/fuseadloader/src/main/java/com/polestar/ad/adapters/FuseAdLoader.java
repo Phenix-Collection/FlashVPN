@@ -167,7 +167,7 @@ public class FuseAdLoader {
                     break;
                 }
             }
-            AdLog.d("loaded index: " + idx + " i: " + i + " wait: " + (now-mProtectOverTime) + " listener: " + mListener);
+            AdLog.d("loaded index: " + idx + " i: " + i + " wait: " + (now-mProtectOverTime));
             if (now >= mProtectOverTime || i < 0) {
                 if (mListener != null) {
                     mAdReturned = true;
@@ -344,8 +344,7 @@ public class FuseAdLoader {
                 return new MopubInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_BT :
                 return new BtNativeAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_REWARD_VIDEO:
-                return new AdmobRewardVideoAdapter(mContext, config.key);
+            case AdConstants.NativeAdType.AD_SOURCE_VK:
             default:
                 AdLog.e("not suppported source " + config.source);
                 return null;
@@ -357,7 +356,6 @@ public class FuseAdLoader {
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_REWARD_VIDEO);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT);
