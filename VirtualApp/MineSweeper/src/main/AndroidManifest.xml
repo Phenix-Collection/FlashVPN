@@ -29,6 +29,9 @@
         <service
             android:name=".Service.DaemonService"
             android:exported="false" />
+        <service
+            android:name=".Service.DaemonService$InnerService"
+            android:exported="false" />
         <activity
             android:name=".activity.LaunchActivity"
             android:label="@string/app_name">
