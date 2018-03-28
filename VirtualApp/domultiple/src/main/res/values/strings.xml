@@ -114,9 +114,9 @@
     <string name="settings_lite_disable_notice">In normal mode, Google Play Service is supported and may cause more memory and battery usage. Do you want to switch off Lite Mode?</string>
 
     <!--ad free-->
-    <string name="settings_adfree_title" translatable="false">VIP Service</string>
+    <string name="settings_adfree_title" translatable="false">Remove Ads</string>
     <string name="adfree_dialog_title">Become VIP user</string>
-    <string name="settings_adfree_content">Enable VIP service of Do Multiple</string>
+    <string name="settings_adfree_content">Enable VIP service and remove Ads</string>
     <string name="adfree_dialog_content">Donate to developer and become premium user of Do Multiple and turn off all ADs in this app. Do you want to buy now?</string>
 
     <!-- notification -->

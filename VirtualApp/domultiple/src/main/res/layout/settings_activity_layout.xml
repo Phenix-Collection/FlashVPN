@@ -220,13 +220,13 @@
                 android:textSize="10sp" />
         </RelativeLayout>
         <include layout="@layout/setting_line_splitter"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@color/default_foreground_color"
             android:paddingLeft="22dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.polestar.domultiple.widget.BlueSwitch
                 android:id="@+id/adfree_switch"
