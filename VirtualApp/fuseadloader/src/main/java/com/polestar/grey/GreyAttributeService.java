@@ -344,9 +344,9 @@ public class GreyAttributeService extends Service {
                         adInfo.loadedclickurl = locationUrl;
                         adInfo.preclickTime = System.currentTimeMillis();
                         String s = parms.get("referrer");
-                        if (s != null) {
-                            s = s.replace("%3D", "=").replace("%26", "&");
-                        }
+//                        if (s != null) {
+//                            s = s.replace("%3D", "=").replace("%26", "&");
+//                        }
                         return s;
                     } else {
                         return null;
