@@ -179,7 +179,7 @@
     </entry>
     <entry>
         <key>auto_hide_shortcut</key>
-        <value>true</value>
+        <value>false</value>
     </entry>
     <entry>
         <key>first_hide_shortcut_hour</key>
