@@ -37,8 +37,8 @@ android {
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 2016
-            versionName "2.0.16.${releaseTime()}"
+            versionCode 2017
+            versionName "2.0.17.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
@@ -84,11 +84,11 @@ dependencies {
     compile 'org.greenrobot:greendao:3.0.1'
     compile 'com.tencent.bugly:crashreport:2.6.5'
 
-    compile 'com.google.firebase:firebase-core:11.0.2'
-    compile 'com.google.firebase:firebase-config:11.0.2'
-    compile 'com.google.firebase:firebase-crash:11.0.2'
+    compile 'com.google.firebase:firebase-core:11.8.0'
+    compile 'com.google.firebase:firebase-config:11.8.0'
+    compile 'com.google.firebase:firebase-crash:11.8.0'
     compile 'com.android.billingclient:billing:dp-1'
-    compile 'com.facebook.android:audience-network-sdk:4.26.1'
+    compile 'com.facebook.android:audience-network-sdk:4.27.1'
 
     compile 'com.android.support:multidex:1.0.1'
 
