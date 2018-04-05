@@ -1,18 +1,22 @@
 package com.polestar.domultiple.components.ui;
 
-import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.booster.util.AndroidUtil;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.AppConstants;
+import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
+import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
@@ -24,10 +28,12 @@ import com.polestar.domultiple.utils.RemoteConfig;
 public class SplashActivity extends BaseActivity {
 
     private static boolean created;
+    public final static String EXTRA_FROM_SHORTCUT = "extra_from_shortcut";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MLogs.d(this.getClass().getName() +" launching from intent: " +getIntent());
         long time = System.currentTimeMillis();
         setContentView(R.layout.splash_activity_layout);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
@@ -54,23 +60,32 @@ public class SplashActivity extends BaseActivity {
             }
         }, 2500 - delta);
 
+        if (getIntent().getBooleanExtra(EXTRA_FROM_SHORTCUT, false)) {
+            MLogs.d("Launching from shortcut");
+            if (AndroidUtil.hasShortcut(this)) {
+                PreferencesUtils.setAbleToDetectShortcut(true);
+                long install = CommonUtils.getInstallTime(PolestarApp.getApp(),this.getPackageName());
+                long firstHideHour = RemoteConfig.getLong("first_hide_shortcut_hour");
+                if ( RemoteConfig.getBoolean("auto_hide_shortcut") &&
+                        (System.currentTimeMillis() - install) > firstHideHour*3600) {
+                    hide();
+                }
+            } else {
+                PreferencesUtils.setAbleToDetectShortcut(false);
+                MLogs.d("Failed to detect shortcut!");
+            }
+        }
     }
 
-
-    public void createShortCut(){
-        //创建快捷方式的Intent
-        Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-        //不允许重复创建
-        shortcutintent.putExtra("duplicate", false);
-        //需要现实的名称
-        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
-        //快捷图片
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher);
-        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-        //点击快捷图片，运行的程序主入口
-        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(getApplicationContext() , SplashActivity.class));
-        //发送广播。OK
-        sendBroadcast(shortcutintent);
+    private void hide(){
+        MLogs.d("Has shortcut, hide icon");
+        PackageManager pm = getPackageManager();
+        if (pm.getComponentEnabledSetting(new ComponentName(this, SplashActivity.class))
+          != PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+            MLogs.d("disable activity");
+            pm.setComponentEnabledSetting(new ComponentName(this, SplashActivity.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        }
     }
 
     @Override
@@ -84,9 +99,9 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void enterHome(){
-        if(!PreferencesUtils.isShortCutCreated() && !created) {
+        if(!AndroidUtil.hasShortcut(this)) {
             PreferencesUtils.setShortCutCreated();
-            createShortCut();
+            CommonUtils.createLaunchShortcut(this);
             created = true;
         }
         HomeActivity.enter(this, needUpdate());

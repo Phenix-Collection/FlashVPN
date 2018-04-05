@@ -389,6 +389,22 @@ public class PreferencesUtils {
         putBoolean(PolestarApp.getApp(),"super_clone_shortcut",true);
     }
 
+    public static void setAbleToDetectShortcut(boolean able) {
+        putBoolean(PolestarApp.getApp(),"able_detect_shortcut",able);
+    }
+
+    public static boolean isAbleToDetectShortcut() {
+        return getBoolean(PolestarApp.getApp(), "able_detect_shortcut", false);
+    }
+
+    public static void updateAutoShortcutTime() {
+        putLong(PolestarApp.getApp(), "auto_shortcut_time", System.currentTimeMillis());
+    }
+
+    public static long getAutoShortcutTime() {
+        return getLong(PolestarApp.getApp(), "auto_shortcut_time", 0);
+    }
+
     public static boolean isShortCutCreated() {
         return getBoolean(PolestarApp.getApp(),"super_clone_shortcut",false)
                 || hasShownCloneGuide(PolestarApp.getApp());

@@ -22,6 +22,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Parcelable;
 
 import com.lody.virtual.helper.utils.BitmapUtils;
 import com.polestar.domultiple.AppConstants;
@@ -29,6 +30,8 @@ import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
+import com.polestar.domultiple.components.ui.ShortcutActivity;
+import com.polestar.domultiple.components.ui.SplashActivity;
 import com.polestar.domultiple.db.CloneModel;
 
 import java.util.HashSet;
@@ -45,6 +48,36 @@ public class CommonUtils {
         intent.addCategory(Intent.CATEGORY_HOME);
         PolestarApp.getApp().startActivity(intent);
     }
+
+    public static void createLaunchShortcut(Context context){
+        MLogs.d("create shortcut");
+        Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        //不允许重复创建
+        shortcutintent.putExtra("duplicate", false);
+        //需要现实的名称
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name));
+        //快捷图片
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(context.getApplicationContext(), R.mipmap.ic_launcher);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+        //点击快捷图片，运行的程序主入口
+        Intent extra =  new Intent(context.getApplicationContext() , ShortcutActivity.class);
+        extra.putExtra(SplashActivity.EXTRA_FROM_SHORTCUT, true);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, extra);
+        //发送广播。OK
+        context.sendBroadcast(shortcutintent);
+    }
+
+    public static void hide(Context context) {
+        MLogs.d("Has shortcut, hide icon");
+        PackageManager pm = context.getPackageManager();
+        if (pm.getComponentEnabledSetting(new ComponentName(context, SplashActivity.class))
+                != PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+            MLogs.d("disable activity");
+            pm.setComponentEnabledSetting(new ComponentName(context, SplashActivity.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        }
+    }
+
     public static void createShortCut(Context context, CloneModel appModel) {
         Bitmap iconBitmap = createCustomIcon(context, appModel.getIconDrawable(context), appModel.getPkgUserId());
         String appName = context.getResources().getString(R.string.clone_label_tag,appModel.getName());

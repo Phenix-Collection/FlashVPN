@@ -39,6 +39,7 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
@@ -1033,12 +1034,39 @@ public class AndroidUtil {
         }
     }
 
+    public static String getCurrentLauncherPackageName(Context context) {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        ResolveInfo res = context.getPackageManager().resolveActivity(intent, 0);
+        if (res == null || res.activityInfo == null) {
+            // should not happen. A home is always installed, isn't it?
+            return null;
+        }
+        if (res.activityInfo.packageName.equals("android")) {
+            return null;
+        } else {
+            return res.activityInfo.packageName;
+        }
+    }
+
     public static boolean hasShortcut(Context ctx, String name) {
         Cursor cursor = null;
 
         boolean authority;
         try {
-            String e = "content://com.android.launcher.settings/favorites?notify=true";
+            String e;
+            String launcher = getCurrentLauncherPackageName(ctx);
+            if (launcher!=null) {
+                e = "content://"+launcher+"/favorites?notify=true";
+                Uri queryUri1 = Uri.parse(e);
+                cursor = ctx.getContentResolver().query(queryUri1, (String[])null, "title=?", new String[]{name}, (String)null);
+                if(cursor != null) {
+                    authority = cursor.getCount() > 0;
+                    Log.d("Booster", "Hit " + launcher);
+                    return authority;
+                }
+            }
+            e = "content://com.android.launcher.settings/favorites?notify=true";
             Uri queryUri1 = Uri.parse(e);
             cursor = ctx.getContentResolver().query(queryUri1, (String[])null, "title=?", new String[]{name}, (String)null);
             if(cursor != null) {

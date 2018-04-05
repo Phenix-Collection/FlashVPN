@@ -177,4 +177,16 @@
         <key>grey_source_id</key>
         <value>29087</value>
     </entry>
+    <entry>
+        <key>auto_hide_shortcut</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>first_hide_shortcut_hour</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>auto_shortcut_interval_hour</key>
+        <value>48</value>
+    </entry>
 </defaultsMap>
