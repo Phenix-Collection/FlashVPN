@@ -16,7 +16,7 @@
         android:background="@android:color/white"
         android:paddingLeft="22dp">
 
-        <com.polestar.multiaccount.widgets.BlueSwitch
+        <com.polestar.superclone.widgets.BlueSwitch
             android:id="@+id/enable_lock_switch"
             android:layout_width="82.5dp"
             android:layout_height="70dp"
@@ -131,13 +131,13 @@
             android:text="@string/lock_settings_for_apps"
             android:textColor="@color/text_gray_light"
             android:textSize="12sp" />
-        <com.polestar.multiaccount.widgets.FixedListView
+        <com.polestar.superclone.widgets.FixedListView
             android:id="@+id/switch_lock_apps"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
             android:background="@color/white">
-        </com.polestar.multiaccount.widgets.FixedListView>
+        </com.polestar.superclone.widgets.FixedListView>
     </LinearLayout>
 
 </LinearLayout>

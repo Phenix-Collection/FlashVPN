@@ -84,7 +84,7 @@
                 android:textColor="#343434"
                 android:textSize="21sp" />
 
-            <com.polestar.multiaccount.widgets.StarLevelLayoutView
+            <com.polestar.superclone.widgets.StarLevelLayoutView
                 android:id="@+id/star_level_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

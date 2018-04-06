@@ -13,7 +13,7 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        applicationId 'com.polestar.multiaccount'
+        applicationId 'com.polestar.superclone'
         minSdkVersion 16
         targetSdkVersion 21
         ndk {
@@ -39,8 +39,8 @@ android {
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 2071
-            versionName "2.0.71.${releaseTime()}"
+            versionCode 3001
+            versionName "3.0.01.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }

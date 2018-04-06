@@ -20,9 +20,7 @@ import com.android.billingclient.api.Purchase.PurchasesResult;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails.SkuDetailsResult;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.lody.virtual.helper.utils.VLog;
-import com.polestar.multiaccount.MApp;
-import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.superclone.utils.MLogs;
 
 import java.io.IOException;
 import java.util.ArrayList;

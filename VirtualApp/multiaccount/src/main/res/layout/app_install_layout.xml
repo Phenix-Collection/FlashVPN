@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context="com.polestar.multiaccount.component.activity.AppCloneActivity">
+    tools:context="com.polestar.superclone.component.activity.AppCloneActivity">
 
     <Button
         android:id="@+id/btn_start"
@@ -173,7 +173,7 @@
                     android:textSize="18sp"
                     android:text="@string/enable_notification"/>
 
-                <com.polestar.multiaccount.widgets.BlueSwitch
+                <com.polestar.superclone.widgets.BlueSwitch
                     android:id="@+id/notification_swichbtn"
                     android:layout_alignRight="@id/line_divider1"
                     android:layout_alignBottom="@id/line_divider1"
@@ -192,7 +192,7 @@
                     android:textSize="18sp"
                     android:text="@string/enable_lock_settings_title"/>
 
-                <com.polestar.multiaccount.widgets.BlueSwitch
+                <com.polestar.superclone.widgets.BlueSwitch
                     android:id="@+id/locker_swichbtn"
                     android:layout_alignRight="@id/line_divider2"
                     android:layout_alignBottom="@id/line_divider2"
@@ -211,7 +211,7 @@
                     android:textSize="18sp"
                     android:text="Create Shortcut"/>
 
-                <com.polestar.multiaccount.widgets.BlueSwitch
+                <com.polestar.superclone.widgets.BlueSwitch
                     android:id="@+id/shortcut_swichbtn"
                     android:layout_alignRight="@id/line_divider2"
                     android:layout_alignBottom="@id/clone_finish_icon"

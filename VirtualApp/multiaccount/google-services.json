@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "524446703992",
-    "firebase_url": "https://multiaccount-70bd6.firebaseio.com",
-    "project_id": "multiaccount-70bd6",
-    "storage_bucket": "multiaccount-70bd6.appspot.com"
+    "project_number": "235393634473",
+    "firebase_url": "https://superclone-pro.firebaseio.com",
+    "project_id": "superclone-pro",
+    "storage_bucket": "superclone-pro.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:524446703992:android:b66327b991b1a860",
+        "mobilesdk_app_id": "1:235393634473:android:5ebd8fbc2206d085",
         "android_client_info": {
-          "package_name": "com.polestar.multiaccount"
+          "package_name": "com.polestar.superclone"
         }
       },
       "oauth_client": [
         {
-          "client_id": "524446703992-nrfc43u05vquchdc3igjj5bjp3p6gah9.apps.googleusercontent.com",
+          "client_id": "235393634473-uhtp5kgqh046br836gs8ka3hs991j4h4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyARAaPOpvP-hTliBR0Xf_DtdxMCQn2NbNg"
+          "current_key": "AIzaSyAnqYYw07Svpdr_yZXdxf_69kL4dQu1bcs"
         }
       ],
       "services": {

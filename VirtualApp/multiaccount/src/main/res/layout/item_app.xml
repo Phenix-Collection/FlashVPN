@@ -10,7 +10,7 @@
             android:orientation="vertical"
             android:gravity="center|center_horizontal|center_vertical">
 
-                <com.polestar.multiaccount.widgets.dragdrop.DragImageView
+                <com.polestar.superclone.widgets.dragdrop.DragImageView
                     android:id="@+id/app_icon"
                     android:layout_width="60dp"
                     android:layout_height="60dp"

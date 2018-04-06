@@ -21,7 +21,7 @@
         android:layout_toLeftOf="@id/item_notification_icon"
         android:textColor="@color/primary_dark_material_dark"/>
 
-    <com.polestar.multiaccount.widgets.BlueSwitch
+    <com.polestar.superclone.widgets.BlueSwitch
         android:id="@+id/item_notification_switch"
         android:layout_width="82.5dp"
         android:layout_height="80dp"
@@ -31,7 +31,7 @@
         android:paddingBottom="33dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true">
-    </com.polestar.multiaccount.widgets.BlueSwitch>
+    </com.polestar.superclone.widgets.BlueSwitch>
 
     <View
         android:id="@+id/item_divider"

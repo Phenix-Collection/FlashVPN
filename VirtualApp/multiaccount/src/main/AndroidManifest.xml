@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.polestar.multiaccount">
+    package="com.polestar.superclone">
 
     <!--MTA 授权-->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -98,7 +98,7 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.polestar.multiaccount.launch"
+            android:taskAffinity="com.polestar.superclone.launch"
             android:theme="@style/AppTheme.Launcher"/>
 
         <activity
@@ -128,14 +128,14 @@
         <meta-data android:name="CHANNEL_TID" android:value="${CHANNEL_TID_VALUE}"/>
 
 
-        <receiver android:name="com.polestar.multiaccount.component.receiver.CrashReceiver" android:exported="true">
+        <receiver android:name="com.polestar.superclone.component.receiver.CrashReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="appclone.intent.action.SHOW_CRASH_DIALOG"/>
             </intent-filter>
         </receiver>
 
         <receiver
-            android:name="com.polestar.multiaccount.component.receiver.ReferrerReceiver"
+            android:name="com.polestar.superclone.component.receiver.ReferrerReceiver"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
@@ -157,18 +157,18 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.polestar.multiaccount.wake" />
+                <action android:name="com.polestar.superclone.wake" />
             </intent-filter>
         </receiver>
 
         <provider
             android:name="com.tencent.mid.api.MidProvider"
-            android:authorities="com.polestar.multiaccount.TENCENT.MID.V3"
+            android:authorities="com.polestar.superclone.TENCENT.MID.V3"
             android:exported="true" >
         </provider>
 
         <activity
-            android:name="com.polestar.multiaccount.component.activity.NativeInterstitialActivity"
+            android:name="com.polestar.superclone.component.activity.NativeInterstitialActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 

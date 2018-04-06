@@ -99,7 +99,7 @@
     <string name="settings_terms_text">Terms of Service and Privacy Policy</string>
     <string name="settings_follow_us">Follow us on Facebook Page</string>
     <string name="settings_join_us">Join Our Community</string>
-    <string name="settings_right" translatable="false">com.polestar.multiaccount Polestar Applab All rights reserved</string>
+    <string name="settings_right" translatable="false">Polestar Applab All rights reserved</string>
 
     <array name="navigationItem">
         <item name="navigation_notifications">Privacy Locker</item>

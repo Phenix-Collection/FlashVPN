@@ -7,7 +7,7 @@ package com.polestar.billing;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import com.polestar.multiaccount.utils.MLogs;
+import com.polestar.superclone.utils.MLogs;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;

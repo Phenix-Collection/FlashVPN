@@ -41,7 +41,7 @@
                 android:textColor="@color/gray"
                 android:textSize="10sp"/>
 
-            <com.polestar.multiaccount.widgets.BlueSwitch
+            <com.polestar.superclone.widgets.BlueSwitch
                 android:id="@+id/switch_notification_dotspace"
                 android:layout_width="82.5dp"
                 android:layout_height="70dp"
@@ -50,7 +50,7 @@
                 android:paddingRight="22dp"
                 android:paddingTop="28dp"
                 android:layout_alignParentRight="true">
-            </com.polestar.multiaccount.widgets.BlueSwitch>
+            </com.polestar.superclone.widgets.BlueSwitch>
 
         </RelativeLayout>
 
@@ -64,13 +64,13 @@
             android:textColor="@color/text_gray_light"
             android:textSize="12sp" />
 
-        <com.polestar.multiaccount.widgets.FixedListView
+        <com.polestar.superclone.widgets.FixedListView
             android:id="@+id/switch_notifications_apps"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
             android:background="@color/white">
-        </com.polestar.multiaccount.widgets.FixedListView>
+        </com.polestar.superclone.widgets.FixedListView>
 
     </LinearLayout>
 

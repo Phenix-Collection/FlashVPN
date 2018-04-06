@@ -6,15 +6,13 @@ package com.polestar.billing;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
 import com.lody.virtual.client.core.VirtualCore;
-import com.polestar.multiaccount.MApp;
-import com.polestar.multiaccount.utils.AppManager;
-import com.polestar.multiaccount.utils.MLogs;
-import com.polestar.multiaccount.utils.PreferencesUtils;
+import com.polestar.superclone.MApp;
+import com.polestar.superclone.utils.AppManager;
+import com.polestar.superclone.utils.MLogs;
 
 import java.util.List;
 
