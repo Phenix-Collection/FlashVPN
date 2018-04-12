@@ -14,19 +14,20 @@
         <TextView
             android:id="@+id/text_popular"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
+            android:paddingLeft="16dp"
             android:text="@string/anative_content_popular"
-            android:textColor="@color/text_gray_light"
-            android:textSize="12sp"/>
+            android:textColor="@color/text_gray_medium"
+            android:textSize="14sp"/>
 
         <com.polestar.superclone.widgets.FixedListView
             android:id="@+id/app_list_popular"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:divider="@null"
+            android:dividerHeight="0.5dp"
+            android:divider="#FFDDDDDD"
             android:layoutAnimation="@anim/app_list_anim_layout"
             android:paddingBottom="11dp">
         </com.polestar.superclone.widgets.FixedListView>
@@ -34,19 +35,20 @@
         <TextView
             android:id="@+id/text_recommand"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
+            android:paddingLeft="16dp"
             android:text="@string/anative_content_recommend"
-            android:textColor="@color/text_gray_light"
-            android:textSize="12sp"/>
+            android:textColor="@color/text_gray_medium"
+            android:textSize="14sp"/>
 
         <com.polestar.superclone.widgets.FixedListView
             android:id="@+id/app_list_recommand"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:divider="@null"
+            android:dividerHeight="0.5dp"
+            android:divider="#FFDDDDDD"
             android:layoutAnimation="@anim/app_list_anim_layout"
             android:paddingBottom="11dp">
         </com.polestar.superclone.widgets.FixedListView>
@@ -55,12 +57,12 @@
             android:id="@+id/sponsor_text"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
+            android:paddingLeft="16dp"
             android:text="@string/sponsor_text"
-            android:textColor="@color/text_gray_light"
-            android:textSize="12sp"/>
+            android:textColor="@color/text_gray_medium"
+            android:textSize="14sp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,12 +76,12 @@
         <TextView
             android:id="@+id/text_more"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:text="@string/more_apps"
-            android:textColor="@color/text_gray_light"
-            android:textSize="12sp"/>
+            android:textColor="@color/text_gray_medium"
+            android:textSize="14sp"/>
 
         <com.polestar.superclone.widgets.FixedGridView
             android:id="@+id/app_list_more"

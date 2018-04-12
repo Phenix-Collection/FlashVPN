@@ -3,12 +3,33 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/launcher_bg"
     android:layout_height="match_parent"
-    android:background="#3770df">
+    android:background="#5952C0">
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_marginTop="90dp"
-        android:src="@mipmap/launch_logo"
-        android:scaleType="centerInside"
-        android:layout_height="wrap_content" />
+        android:layout_width="154dp"
+        android:layout_marginTop="120dp"
+        android:src="@mipmap/icon_logo"
+        android:scaleType="fitXY"
+        android:layout_height="154dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/logo"/>
 
+    <ImageView
+        android:layout_width="178dp"
+        android:layout_height="18dp"
+        android:layout_below="@id/logo"
+        android:layout_marginTop="35dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/splash_text"
+        android:id="@+id/slogan"/>
+
+    <TextView
+        android:layout_below="@id/slogan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_centerHorizontal="true"
+        android:text="Powered by Polestar Applab"
+        android:textColor="#FFFFFFFF"
+        android:textSize="12sp"
+        />
 </RelativeLayout>
