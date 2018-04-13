@@ -172,7 +172,6 @@ public class HomeActivity extends BaseActivity {
         giftIconLayout.setVisibility(View.GONE);
 
         iconAdLayout = (RelativeLayout)findViewById(R.id.icon_ad);
-        wallButtonLayout = (RelativeLayout)findViewById(R.id.wall_button);
 
         navigationList.setAdapter(new NavigationAdapter(this));
 //        int width = DisplayUtils.getScreenWidth(this);
@@ -220,19 +219,7 @@ public class HomeActivity extends BaseActivity {
 
 
     private void showGiftIcon() {
-        int iconId = new Random().nextInt(3);
-        int giftRes;
-        switch (iconId) {
-            case 0:
-                giftRes = R.drawable.ring_ad;
-                break;
-            case 1:
-                giftRes = R.drawable.egg_ad;
-                break;
-            default:
-                giftRes = R.drawable.ad_taged_gift_icon;
-                break;
-        }
+        int giftRes = R.drawable.gift_ad;
         giftIconView.setImageResource(giftRes);
         giftIconView.setVisibility(View.VISIBLE);
         giftIconLayout.setVisibility(View.VISIBLE);
@@ -468,7 +455,6 @@ public class HomeActivity extends BaseActivity {
     private void hideAd() {
         giftIconLayout.setVisibility(View.GONE);
         giftIconView.setVisibility(View.GONE);
-        wallButtonLayout.setVisibility(View.GONE);
         if (mHomeFragment != null) {
             mHomeFragment.hideAd();
         }
