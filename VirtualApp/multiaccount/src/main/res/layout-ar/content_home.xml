@@ -24,6 +24,7 @@
                     android:layout_height="56dp"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
+                    android:id="@+id/menu_btn"
                     android:onClick="onNavigationClick"
                     android:background="@drawable/selector_setting_theme2">
 
@@ -38,11 +39,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/menu_btn"
+                    android:layout_marginRight="16dp"
                     android:text="@string/app_alias_name"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="19sp" />
                 <RelativeLayout
                     android:layout_width="48dp"
                     android:layout_height="56dp"
@@ -87,7 +89,7 @@
                             android:layout_marginTop="2dp"
                             android:layout_marginBottom="2dp"
                             android:scaleType="fitXY"
-                            android:src="@drawable/ad_taged_gift_icon" />
+                            android:src="@drawable/gift_ad" />
 
                         <RelativeLayout
                             android:id="@+id/gift_new_tip"
@@ -107,13 +109,6 @@
                         </RelativeLayout>
 
                     </RelativeLayout>
-                    <RelativeLayout
-                        android:id="@+id/wall_button"
-                        android:layout_width="28dp"
-                        android:layout_marginTop="17dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_height="23dp" />
                 </RelativeLayout>
 
 

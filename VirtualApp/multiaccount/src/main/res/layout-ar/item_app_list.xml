@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/item_app_name"
         android:layout_below="@id/item_app_name"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_toRightOf="@id/btn_clone"
         android:textColor="@color/text_gray_light"
         android:textSize="10sp"/>
