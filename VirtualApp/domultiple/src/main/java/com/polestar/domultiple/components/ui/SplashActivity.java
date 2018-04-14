@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
-import com.google.android.gms.booster.util.AndroidUtil;
+import com.polestar.booster.util.AndroidUtil;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.AppConstants;

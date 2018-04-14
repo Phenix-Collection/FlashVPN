@@ -16,9 +16,8 @@ import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
-import com.google.android.gms.booster.BoosterSdk;
-import com.google.android.gms.booster.BoosterShortcutActivity;
-import com.lody.virtual.Build;
+import com.polestar.booster.BoosterSdk;
+import com.polestar.booster.BoosterShortcutActivity;
 import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
