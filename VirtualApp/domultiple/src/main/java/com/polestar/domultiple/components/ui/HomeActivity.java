@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.booster.BoosterSdk;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
@@ -609,7 +610,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     }
 
     public void onBoosterClick(View view) {
-        //BoosterSdk.startClean(this, "home");
+        BoosterSdk.startClean(this, "home");
         //HomeBoostActivity.start(this, HomeBoostActivity.FROM_HOME);
     }
 
