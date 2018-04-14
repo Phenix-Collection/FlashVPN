@@ -9,9 +9,9 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
-import com.google.android.gms.booster.util.AndroidUtil;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
+//import com.polestar.booster.util.AndroidUtil;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
@@ -62,18 +62,18 @@ public class SplashActivity extends BaseActivity {
 
         if (getIntent().getBooleanExtra(EXTRA_FROM_SHORTCUT, false)) {
             MLogs.d("Launching from shortcut");
-            if (AndroidUtil.hasShortcut(this)) {
-                PreferencesUtils.setAbleToDetectShortcut(true);
-                long install = CommonUtils.getInstallTime(PolestarApp.getApp(),this.getPackageName());
-                long firstHideHour = RemoteConfig.getLong("first_hide_shortcut_hour");
-                if ( RemoteConfig.getBoolean("auto_hide_shortcut") &&
-                        (System.currentTimeMillis() - install) > firstHideHour*3600) {
-                    hide();
-                }
-            } else {
-                PreferencesUtils.setAbleToDetectShortcut(false);
-                MLogs.d("Failed to detect shortcut!");
-            }
+//            if (AndroidUtil.hasShortcut(this)) {
+//                PreferencesUtils.setAbleToDetectShortcut(true);
+//                long install = CommonUtils.getInstallTime(PolestarApp.getApp(),this.getPackageName());
+//                long firstHideHour = RemoteConfig.getLong("first_hide_shortcut_hour");
+//                if ( RemoteConfig.getBoolean("auto_hide_shortcut") &&
+//                        (System.currentTimeMillis() - install) > firstHideHour*3600) {
+//                    hide();
+//                }
+//            } else {
+//                PreferencesUtils.setAbleToDetectShortcut(false);
+//                MLogs.d("Failed to detect shortcut!");
+//            }
         }
     }
 
@@ -99,11 +99,11 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void enterHome(){
-        if(!AndroidUtil.hasShortcut(this)) {
-            PreferencesUtils.setShortCutCreated();
-            CommonUtils.createLaunchShortcut(this);
-            created = true;
-        }
+//        if(!AndroidUtil.hasShortcut(this)) {
+//            PreferencesUtils.setShortCutCreated();
+//            CommonUtils.createLaunchShortcut(this);
+//            created = true;
+//        }
         HomeActivity.enter(this, needUpdate());
         finish();
     }

@@ -15,10 +15,6 @@ import android.os.Looper;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-
-import com.google.android.gms.booster.BoosterSdk;
-import com.google.android.gms.booster.BoosterShortcutActivity;
-import com.lody.virtual.Build;
 import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
@@ -240,11 +236,11 @@ public class QuickSwitchNotification {
         notification.flags = Notification.FLAG_NO_CLEAR|Notification.FLAG_ONGOING_EVENT;
         notification.priority = Notification.PRIORITY_MAX;
 
-        Intent boostIntent = new Intent(mContext, BoosterShortcutActivity.class);
-        boostIntent.setAction(BoosterShortcutActivity.class.getName());
-        boostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        boostIntent.putExtra(BoosterSdk.EXTRA_SHORTCUT_CLICK_FROM, "notification");
-        remoteViews.setOnClickPendingIntent(R.id.booster_icon,PendingIntent.getActivity(mContext, 0, boostIntent,0));
+//        Intent boostIntent = new Intent(mContext, BoosterShortcutActivity.class);
+//        boostIntent.setAction(BoosterShortcutActivity.class.getName());
+//        boostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        boostIntent.putExtra(BoosterSdk.EXTRA_SHORTCUT_CLICK_FROM, "notification");
+//        remoteViews.setOnClickPendingIntent(R.id.booster_icon,PendingIntent.getActivity(mContext, 0, boostIntent,0));
 
         synchronized (lruKeys) {
             for (int i = 0; i < LRU_PACKAGE_CNT; i++) {

@@ -9,9 +9,9 @@ import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.batmobi.BatmobiLib;
+//import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.booster.BoosterSdk;
+//import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lody.virtual.client.VClientImpl;
@@ -100,7 +100,7 @@ public class PolestarApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
-        BatmobiLib.init(gDefault, "7OO01FES0DJDJRSSETIBBULF");
+        //BatmobiLib.init(gDefault, "7OO01FES0DJDJRSSETIBBULF");
     }
     @Override
     public void onCreate() {
@@ -134,29 +134,29 @@ public class PolestarApp extends MultiDexApplication {
                 initAd();
                 //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                 //
-                BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
-                if (BuildConfig.DEBUG) {
-                    boosterConfig.autoAdFirstInterval = 0;
-                    boosterConfig.autoAdInterval = 0;
-                    boosterConfig.isUnlockAd = true;
-                    boosterConfig.isInstallAd = true;
-                } else {
-                    boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
-                    boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
-                    boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
-                    boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
-                }
-                BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
-                res.outterWheelImage = R.drawable.booster_ic_wheel_outside;
-                res.innerWheelImage = R.drawable.booster_ic_wheel_inside;
-                res.titleString = R.string.boost_title;
-                res.boosterShorcutIcon = R.drawable.booster_shortcut;
-                BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
-                    @Override
-                    public void reportEvent(String s, Bundle b) {
-                        FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);
-                    }
-                });
+//                BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
+//                if (BuildConfig.DEBUG) {
+//                    boosterConfig.autoAdFirstInterval = 0;
+//                    boosterConfig.autoAdInterval = 0;
+//                    boosterConfig.isUnlockAd = true;
+//                    boosterConfig.isInstallAd = true;
+//                } else {
+//                    boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
+//                    boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
+//                    boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
+//                    boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+//                }
+//                BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
+//                res.outterWheelImage = R.drawable.booster_ic_wheel_outside;
+//                res.innerWheelImage = R.drawable.booster_ic_wheel_inside;
+//                res.titleString = R.string.boost_title;
+//                res.boosterShorcutIcon = R.drawable.booster_shortcut;
+//                BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
+//                    @Override
+//                    public void reportEvent(String s, Bundle b) {
+//                        FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);
+//                    }
+//                });
                 String coffeeKey = RemoteConfig.getString("coffee_key");
                 if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
                     MLogs.d("coffee key : " + coffeeKey);
@@ -229,7 +229,7 @@ public class PolestarApp extends MultiDexApplication {
             VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             MLogs.DEBUG = true;
             AdConstants.DEBUG = true;
-            BoosterSdk.DEBUG = true;
+            //BoosterSdk.DEBUG = true;
         }
 
     }
