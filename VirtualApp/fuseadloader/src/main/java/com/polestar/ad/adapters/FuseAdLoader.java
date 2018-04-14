@@ -338,12 +338,12 @@ public class FuseAdLoader {
                 return new FBInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL:
                 return new AdmobInterstitialAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL:
-                return new BtInterstitialAdapter(mContext, config.key);
+//            case AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL:
+//                return new BtInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL:
                 return new MopubInterstitialAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_BT :
-                return new BtNativeAdapter(mContext, config.key);
+//            case AdConstants.NativeAdType.AD_SOURCE_BT :
+//                return new BtNativeAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_VK:
             default:
                 AdLog.e("not suppported source " + config.source);
