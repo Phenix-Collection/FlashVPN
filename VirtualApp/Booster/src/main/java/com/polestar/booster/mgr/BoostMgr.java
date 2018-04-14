@@ -208,7 +208,7 @@ public class BoostMgr {
 
         if (checkShowUnlockAd()) {
             //BoosterLog.log("unlock not good time");
-           // doShowUnlockAd();
+            doShowUnlockAd();
             return;
         }
     }
