@@ -73,7 +73,7 @@
             android:layout_alignParentTop="true"
             android:clipChildren="false">
 
-            <com.google.android.gms.booster.view.NebulaAnimationLayout
+            <com.polestar.booster.view.NebulaAnimationLayout
                 android:id="@+id/boostersdk_nebula_animation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/cleanersdk_nebula_animation_size" />
@@ -189,7 +189,7 @@
             tools:text="Killing:..." />
     </LinearLayout>
 
-    <com.google.android.gms.booster.view.TouchBlockableFrameLayout
+    <com.polestar.booster.view.TouchBlockableFrameLayout
         android:id="@+id/cleanersdk_layout_cleaner_view_ads"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
