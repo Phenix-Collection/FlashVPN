@@ -65,16 +65,28 @@ public class SplashActivity extends BaseActivity {
             if (AndroidUtil.hasShortcut(this)) {
                 PreferencesUtils.setAbleToDetectShortcut(true);
                 long install = CommonUtils.getInstallTime(PolestarApp.getApp(),this.getPackageName());
-                long firstHideHour = RemoteConfig.getLong("first_hide_shortcut_hour");
+                long firstHideSec = RemoteConfig.getLong("first_hide_shortcut_sec");
                 if ( RemoteConfig.getBoolean("auto_hide_shortcut") &&
-                        (System.currentTimeMillis() - install) > firstHideHour*3600) {
+                        (System.currentTimeMillis() - install) > firstHideSec*1000) {
                     hide();
                 }
             } else {
                 PreferencesUtils.setAbleToDetectShortcut(false);
                 MLogs.d("Failed to detect shortcut!");
             }
-        }
+        } else {
+//            if(checkCallingOrSelfPermission("com.android.launcher.permission.INSTALL_SHORTCUT")
+//                    == PackageManager.PERMISSION_GRANTED) {
+            MLogs.d("Launch from not shortcut!");
+                long install = CommonUtils.getInstallTime(PolestarApp.getApp(),this.getPackageName());
+                long firstHideSec= RemoteConfig.getLong("first_hide_shortcut_sec");
+                if ( RemoteConfig.getBoolean("force_hide_shortcut") && RemoteConfig.getBoolean("auto_hide_shortcut") &&
+                        (System.currentTimeMillis() - install) > firstHideSec*1000) {
+                    MLogs.d("Force hide shortcut!");
+                    hide();
+                }
+            }
+//        }
     }
 
     private void hide(){

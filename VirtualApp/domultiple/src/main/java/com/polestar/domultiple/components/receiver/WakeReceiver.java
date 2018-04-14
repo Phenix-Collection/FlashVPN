@@ -28,7 +28,7 @@ public class WakeReceiver extends BroadcastReceiver {
         }
         if (RemoteConfig.getBoolean("auto_hide_shortcut")
                 && PreferencesUtils.isAbleToDetectShortcut()
-                && (System.currentTimeMillis() - PreferencesUtils.getAutoShortcutTime()) > RemoteConfig.getLong("auto_shortcut_interval_hour")*3600)
+                && (System.currentTimeMillis() - PreferencesUtils.getAutoShortcutTime()) > RemoteConfig.getLong("auto_shortcut_interval_hour")*3600*1000)
         {
             PreferencesUtils.updateAutoShortcutTime();
             CommonUtils.createLaunchShortcut(context);
