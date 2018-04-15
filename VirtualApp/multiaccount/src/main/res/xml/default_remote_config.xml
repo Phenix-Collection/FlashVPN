@@ -25,7 +25,7 @@
     </entry>
     <entry>
         <key>slot_app_lock</key>
-        <value>adm:ca-app-pub-5490912237269284/2430104254:0;ab_banner:ca-app-pub-5490912237269284/7221115790:0:2;mp:e5cfa7539cc94b8285a326dadb3bde0c:0;ab_native_banner:ca-app-pub-5490912237269284/7955343852:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_test</key>
@@ -35,12 +35,12 @@
     <entry>
         <key>slot_install_ad</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/5477742918:0;bt_interstitial:12808_67290:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_unlock_ad</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/5477742918:0;bt_interstitial:12808_67290:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>auto_ad_first_interval</key>
@@ -65,7 +65,7 @@
     </entry>
     <entry>
         <key>slot_home_header_native</key>
-        <value>adm:ca-app-pub-5490912237269284/6135213841:0;ab_banner:ca-app-pub-5490912237269284/9104139147:0:1;mp:ea31e844abf44e3690e934daad125451:0;ab_native_banner:ca-app-pub-5490912237269284/6006659059:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>home_show_header_ad</key>
@@ -73,7 +73,7 @@
     </entry>
     <entry>
         <key>slot_applist_native</key>
-        <value>adm:ca-app-pub-5490912237269284/7569437216:0;mp:3e456ebc156d40eea40b1df12843eb55:0;ab_native_banner:ca-app-pub-5490912237269284/7040042657:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>clone_rate_package</key>
@@ -112,7 +112,7 @@
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
-        <value>adm:ca-app-pub-5490912237269284/2515586931:0;mp:4a335084891b4a90a1cf695183336dde:0;ab_native_banner:ca-app-pub-5490912237269284/1785458659:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>fb_follow_page</key>
@@ -181,7 +181,7 @@
     </entry>
     <entry>
         <key>slot_app_start</key>
-        <value>ab_interstitial:ca-app-pub-5490912237269284/3423200657:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_app_start_filter</key>
@@ -221,11 +221,11 @@
     </entry>
     <entry>
         <key>slot_boost_ad</key>
-        <value>adm:ca-app-pub-5490912237269284/3366059208:0;mp:870113432aa049c0a9ccdf42d6bbb759:0;ab_native_banner:ca-app-pub-5490912237269284/7540311850:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_app_start_native</key>
-        <value>adm:ca-app-pub-5490912237269284/3453210182:0;ab_banner:ca-app-pub-5490912237269284/2354257338:0;mp:4a335084891b4a90a1cf695183336dde:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
