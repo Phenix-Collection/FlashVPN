@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.booster.BoosterSdk;
+import com.polestar.booster.BoosterSdk;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;

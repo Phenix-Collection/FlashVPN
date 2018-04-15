@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.booster.BoosterSdk;
+import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lody.virtual.client.VClientImpl;

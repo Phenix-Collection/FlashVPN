@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.google.android.gms.booster.mgr.BoostMgr;
+import com.polestar.booster.mgr.BoostMgr;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.helper.utils.VLog;
 import com.polestar.superclone.db.DbManager;

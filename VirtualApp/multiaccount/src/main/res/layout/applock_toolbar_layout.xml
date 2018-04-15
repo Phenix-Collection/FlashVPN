@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@mipmap/ic_launcher"
+        android:background="@mipmap/ic_launcher_trans"
         android:id="@+id/lock_bar_icon"
         android:layout_gravity="center"
         android:layout_marginLeft="6dp"/>
