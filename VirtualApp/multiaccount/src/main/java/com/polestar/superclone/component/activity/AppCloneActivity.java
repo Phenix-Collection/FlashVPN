@@ -121,11 +121,10 @@ public class AppCloneActivity extends BaseActivity {
         }
     };
 
-    private void initData() {
+    private boolean initData() {
         Intent intent = getIntent();
         if (intent != null) {
             appModel = intent.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
-            mPkgName = appModel.getPackageName();
         }
         if (appModel == null) {
             Intent intentFail = new Intent();
@@ -133,7 +132,9 @@ public class AppCloneActivity extends BaseActivity {
             intentFail.putExtra(AppConstants.EXTRA_APP_MODEL, appModel);
             setResult(RESULT_OK, intentFail);
             finish();
+            return false;
         } else {
+            mPkgName = appModel.getPackageName();
             mUserId = AppListUtils.getInstance(this).isCloned(appModel.getPackageName())?
                     AppManager.getNextAvailableUserId(appModel.getPackageName()):0;
             if (mUserId == 0 && TextUtils.isEmpty(GreyAttribute.getReferrer(this, appModel.getPackageName()))) {
@@ -190,6 +191,7 @@ public class AppCloneActivity extends BaseActivity {
                 }
             }).start();
         }
+        return true;
     }
 
     private void initView() {
@@ -369,7 +371,7 @@ public class AppCloneActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_install_layout);
-        initData();
+        if(!initData()) return;
         initView();
         initAd();
 
