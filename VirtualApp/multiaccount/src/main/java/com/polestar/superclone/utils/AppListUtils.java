@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -349,7 +350,13 @@ public class AppListUtils implements DataObserver {
             }
         }
 
-        Collections.sort(list, (lhs, rhs) -> COLLATOR.compare(lhs.getName(), rhs.getName()));
+       // Collections.sort(list, (lhs, rhs) -> COLLATOR.compare(lhs.getName(), rhs.getName()));
+        Collections.sort(list, new Comparator<AppModel>() {
+            @Override
+            public int compare(AppModel lhs, AppModel rhs) {
+                return COLLATOR.compare(lhs.getName(), rhs.getName());
+            }
+        });
     }
 
     private boolean isAppInstalled(String pName) {
