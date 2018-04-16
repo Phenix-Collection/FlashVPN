@@ -100,7 +100,7 @@ public class MApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
-        BatmobiLib.init(gDefault, "Y3DQZ6Z77SR3H1CESAAI6NUU");
+        BatmobiLib.init(gDefault, "8W4OBQJHMXNI1TM9TGZAK4HF");
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
