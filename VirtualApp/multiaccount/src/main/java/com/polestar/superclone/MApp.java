@@ -83,7 +83,7 @@ public class MApp extends MultiDexApplication {
     }
 
     private void initAd() {
-        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8477604259");
+        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8640815381");
         String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
         boolean av = "all".equals(conf) || "avz".equals(conf);
         if (av) {

@@ -61,7 +61,7 @@ public class HomeActivity extends BaseActivity {
     private boolean isInterstitialAdLoaded;
     private boolean autoShowInterstitial;
 
-    private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial_1026";
+    private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_home_gift_interstitial";
     //private static final String SLOT_HOME_GIFT_INTERSTITIAL = "slot_test";
     private static final String CONFIG_AUTO_SHOW_INTERSTITIAL = "auto_home_interstitial_rate";
     private static final String CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL = "auto_home_interstitial_interval";
