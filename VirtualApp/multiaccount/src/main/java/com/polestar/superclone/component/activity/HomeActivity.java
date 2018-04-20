@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
@@ -147,7 +148,12 @@ public class HomeActivity extends BaseActivity {
                                 break;
                             case LeftRightDialog.RIGHT_BUTTON:
                                 dialogInterface.dismiss();
-                                CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                String forceUpdateUrl = RemoteConfig.getString("force_update_to");
+                                if (!TextUtils.isEmpty(forceUpdateUrl)) {
+                                    CommonUtils.jumpToUrl(HomeActivity.this,forceUpdateUrl);
+                                } else {
+                                    CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                }
                                 EventReporter.generalClickEvent(HomeActivity.this, "update_go");
                                 break;
                         }

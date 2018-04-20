@@ -22,6 +22,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
@@ -110,6 +111,12 @@ public class CommonUtils {
         return isInstallShortcut;
     }
 
+    public static void jumpToUrl(Context context, String url){
+        if (!TextUtils.isEmpty(url)) {
+            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+            context.startActivity(viewIntent);
+        }
+    }
 
     public static void jumpToMarket(Context context, String packageName) {
         try {
