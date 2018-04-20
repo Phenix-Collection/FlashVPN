@@ -32,7 +32,7 @@ public final class BillingConstants {
 
     private static final String[] IN_APP_SKUS = {SKU_AD_FREE};
 
-    public static final String BILL_KEY = "[__T_|WXTq}g~}\u007FQ/a&TWGSPWWYUWG.W[__TUq]UWGSW|gPy#E/n";
+    public static final String BILL_KEY = "[__T_|WXTq}g~}\u007FQ/a&TWGSPWWYUWG.W[__TUq]UWGSW\u007F {ASuz'LNgLD]efn&XNQ~~P9P='pT~woSw/#\u007F\\ l`";
 
     private BillingConstants(){}
 

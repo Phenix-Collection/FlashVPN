@@ -79,8 +79,8 @@ public class BillingManager implements PurchasesUpdatedListener {
         void onPurchasesUpdated(List<Purchase> purchases);
     }
 
-    private static final String KEY = " A~qWZNyq&spcRoldO\"W!z==P[T/{`_!=D%E`\"QX f%]DEt";
-    private static final String KEY2 = "z]FCUbBUz^RW q#Q9wAlCc'`Uy.zQ$WeN=aZa. _aQy'XreR! Gsl=&E~lwa{YN!=\\Sq ~xXCRCxn@=RS_fOrauw/o|l]Dpx{GyUZawUuG_Wy_d$F!LN$^@Nf|_DrnG_RWGWT";
+    private static final String KEY = "we=\\\"e~SnrU|}gCwX.rc&\\O#SY9\"\u007F }sdw RE$z[DQd'9fs.ocU@%PRe9\\r/f\"UYT=f~O\"uN%G_[f%P\"ztUSq ";
+    private static final String KEY2 = ".Q.S_^UB^yo#n'_OwGXU_o\u007F^ \"\u007F}CTf!&&{=&uqp#ez@]SB\"n$n=B\\NX[SaP\"U\\wtu}uLdB%s`ZC \"DLpg@GzsLxPlR#DcG_RWGWT";
     private static String hash = null;
     private static String getKey() {
         if (hash == null) {
