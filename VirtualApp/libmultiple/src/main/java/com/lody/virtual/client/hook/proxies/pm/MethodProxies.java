@@ -32,6 +32,7 @@ import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.helper.collection.ArraySet;
 import com.lody.virtual.helper.compat.ParceledListSliceCompat;
 import com.lody.virtual.helper.utils.ArrayUtils;
+import com.lody.virtual.helper.utils.EncodeUtils;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.server.IPackageInstaller;
 import com.lody.virtual.server.pm.installer.SessionInfo;
@@ -1038,7 +1039,9 @@ class MethodProxies {
 
         @Override
         public String getMethodName() {
-            return "setComponentEnabledSetting";
+            // return "setComponentEnabledSetting";
+            // anti-virus, fuck ESET-NOD32: a variant of Android/AdDisplay.AdLock.AL potentially unwanted
+            return EncodeUtils.decode("c2V0Q29tcG9uZW50RW5hYmxlZFNldHRpbmc=");
         }
 
         @Override

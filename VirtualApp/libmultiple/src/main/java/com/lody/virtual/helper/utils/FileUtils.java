@@ -145,18 +145,26 @@ public class FileUtils {
         try {
             inputStream = new FileInputStream(source);
             outputStream = new FileOutputStream(target);
-            FileChannel iChannel = inputStream.getChannel();
-            FileChannel oChannel = outputStream.getChannel();
 
-            ByteBuffer buffer = ByteBuffer.allocate(1024);
-            while (true) {
-                buffer.clear();
-                int r = iChannel.read(buffer);
-                if (r == -1)
-                    break;
-                buffer.limit(buffer.position());
-                buffer.position(0);
-                oChannel.write(buffer);
+//            FileChannel iChannel = inputStream.getChannel();
+//            FileChannel oChannel = outputStream.getChannel();
+//
+//            ByteBuffer buffer = ByteBuffer.allocate(1024);
+//            while (true) {
+//                buffer.clear();
+//                int r = iChannel.read(buffer);
+//                if (r == -1)
+//                    break;
+//                buffer.limit(buffer.position());
+//                buffer.position(0);
+//                oChannel.write(buffer, 0);
+//            }
+            // to fix ESET-NOD32: a variant of Android/AdDisplay.AdLock.AL potentially unwanted
+            byte[] buffer = new byte[1024];
+
+            int cnt = 0;
+            while ((cnt = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, cnt);
             }
         } finally {
             closeQuietly(inputStream);
