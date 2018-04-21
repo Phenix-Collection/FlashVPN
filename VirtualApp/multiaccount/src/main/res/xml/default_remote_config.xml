@@ -6,7 +6,7 @@
     </entry>
     <entry>
         <key>quit_rating_interval</key>
-        <value>168</value>
+        <value>72</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -78,7 +78,7 @@
     <entry>
         <key>clone_rate_package</key>
         <!--off to close; * for all; package:package: -->
-        <value>off</value>
+        <value>com.facebook.orca:com.whatsapp</value>
     </entry>
     <entry>
         <key>clone_rate_interval</key>
