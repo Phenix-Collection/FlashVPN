@@ -17,6 +17,7 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VJobScheduler;
 import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.utils.Singleton;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VBinder;
 import com.lody.virtual.os.VEnvironment;
 import com.lody.virtual.server.IJobScheduler;
@@ -234,13 +235,19 @@ public class VJobSchedulerService extends IJobScheduler.Stub {
             int len = fis.read(bytes);
             fis.close();
             if (len != bytes.length) {
-                throw new IOException("Unable to read job config.");
+                // for anti-virus DrWeb Tool.SilentInstaller.7.origin
+                // throw new IOException("Unable to read job config.");
+                VLog.e(TAG, "Unable to read job config.");
+                return;
             }
             p.unmarshall(bytes, 0, bytes.length);
             p.setDataPosition(0);
             int version = p.readInt();
             if (version != JOB_FILE_VERSION) {
-                throw new IOException("Bad version of job file: " + version);
+                // for anti-virus DrWeb Tool.SilentInstaller.7.origin
+                // throw new IOException("Bad version of job file: " + version);
+                VLog.e(TAG, "Bad version of job file: " + version);
+                return;
             }
             if (!mJobStore.isEmpty()) {
                 mJobStore.clear();

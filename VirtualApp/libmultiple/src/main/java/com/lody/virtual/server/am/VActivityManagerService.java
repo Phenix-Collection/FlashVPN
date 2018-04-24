@@ -59,6 +59,7 @@ import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
 import com.lody.virtual.server.secondary.BinderDelegateService;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -1287,7 +1288,8 @@ public class VActivityManagerService extends IActivityManager.Stub {
         if (user != null) {
             intent.putExtra("_VA_|_user_id_", user.getIdentifier());
         }
-        VLog.logbug(TAG, "sendBroadcast: " + intent);
+        // fix anti-virus: DrWeb Tool.SilentInstaller.7.origin
+        // VLog.logbug(TAG, "sendBroadcast: " + intent);
         context.sendBroadcast(intent);
     }
 
