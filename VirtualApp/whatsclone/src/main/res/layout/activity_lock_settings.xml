@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray"
+    android:orientation="vertical">
+
+    <include layout="@layout/setting_wide_splitter"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@android:color/white"
+        android:paddingLeft="22dp">
+
+        <mochat.multiple.parallel.whatsclone.widgets.BlueSwitch
+            android:id="@+id/enable_lock_switch"
+            android:layout_width="82.5dp"
+            android:layout_height="70dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="28dp"
+            android:gravity="center_horizontal"
+            android:layout_alignParentRight="true"/>
+
+        <TextView
+            android:id="@+id/enable_lock_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:layout_marginTop="18dp"
+            android:layout_toLeftOf="@id/enable_lock_switch"
+            android:text="@string/enable_lock_settings_title"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/enable_lock_title"
+            android:layout_toLeftOf="@id/enable_lock_switch"
+            android:text="@string/enable_lock_settings_content"
+            android:textColor="@color/text_gray_light"
+            android:textSize="10sp" />
+    </RelativeLayout>
+    <include layout="@layout/setting_line_splitter"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@android:color/white"
+        android:paddingLeft="22dp">
+
+        <Spinner
+            android:id="@+id/lock_interval_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+            android:gravity="center_horizontal"
+            android:layout_alignParentRight="true"
+            android:entries="@array/arr_lock_interval"/>
+
+        <TextView
+            android:id="@+id/lock_interval_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:layout_marginTop="18dp"
+            android:layout_toLeftOf="@id/lock_interval_spinner"
+            android:text="@string/lock_interval_settings_title"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lock_interval_title"
+            android:layout_toLeftOf="@id/lock_interval_spinner"
+            android:text="@string/lock_interval_settings_content"
+            android:textColor="@color/text_gray_light"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/locker_detailed_settings">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:onClick="onPasswordSettingClick"
+            android:paddingLeft="22dp">
+
+            <TextView
+                android:id="@+id/pwd_setting_tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/password_setting_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pwd_setting_tv_title"
+                android:text="@string/password_setting_content"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="22dp"
+            android:text="@string/lock_settings_for_apps"
+            android:textColor="@color/text_gray_light"
+            android:textSize="12sp" />
+        <mochat.multiple.parallel.whatsclone.widgets.FixedListView
+            android:id="@+id/switch_lock_apps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:background="@color/white">
+        </mochat.multiple.parallel.whatsclone.widgets.FixedListView>
+    </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/title_bar_bg" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/title_bar_layout">
+    <ImageView
+        android:id="@+id/navigation_bar"
+        android:src="@drawable/back_btn"
+        android:paddingTop="20dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:paddingBottom="20dp"
+        android:layout_width="wrap_content"
+        android:scaleType="centerCrop"
+        android:onClick="onNavigationClick"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextStyle_Activity_Title"
+        android:layout_toRightOf="@id/navigation_bar"
+        android:layout_width="wrap_content"
+        android:paddingTop="16dp"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

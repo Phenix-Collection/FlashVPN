@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:background="@color/light_gray"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:fadingEdge="vertical"
+        android:background="@color/light_gray"
+        android:paddingBottom="20dp"
+        android:clipToPadding="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_Q1_title"
+                android:textSize="16sp"
+                android:textColor="#00aab8"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/text_Q1_content_2"
+                android:textSize="@dimen/faq_content_size"
+                android:textColor="@color/faq_content_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_Q2_title"
+                android:textSize="@dimen/faq_title_size"
+                android:textColor="@color/faq_title_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/text_Q2_content"
+                android:textSize="@dimen/faq_content_size"
+                android:textColor="@color/faq_content_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_Q3_title"
+                android:textSize="@dimen/faq_title_size"
+                android:textColor="@color/faq_title_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/text_Q3_content"
+                android:textSize="@dimen/faq_content_size"
+                android:textColor="@color/faq_content_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_Q4_title"
+                android:textSize="@dimen/faq_title_size"
+                android:textColor="@color/faq_title_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/text_Q4_content"
+                android:textSize="@dimen/faq_content_size"
+                android:textColor="@color/faq_content_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_Q5_title"
+                android:textSize="@dimen/faq_title_size"
+                android:textColor="@color/faq_title_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/text_Q5_content"
+                android:textSize="@dimen/faq_content_size"
+                android:textColor="@color/faq_content_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_Q6_title"
+                android:textSize="@dimen/faq_title_size"
+                android:textColor="@color/faq_title_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/text_Q6_content"
+                android:textSize="@dimen/faq_content_size"
+                android:textColor="@color/faq_content_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_Q7_title"
+                android:textSize="@dimen/faq_title_size"
+                android:textColor="@color/faq_title_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/text_Q7_content"
+                android:textSize="@dimen/faq_content_size"
+                android:textColor="@color/faq_content_color"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/shape_setting_bar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/setting_page_shape_height"-->
+        <!--android:layout_below="@id/navi_bar"-->
+        <!--android:background="@drawable/titlebar_shadow"-->
+        <!--android:orientation="vertical" />-->
+    <!--<ListView
+    android:id="@+id/faq_list_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
+    </ListView>-->
+
+</RelativeLayout>

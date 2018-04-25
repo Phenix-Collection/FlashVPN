@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/light_gray"
+                android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_feedback"
+        android:layout_width="315dp"
+        android:layout_height="140dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:background="@color/white"
+        android:hint="@string/feedback_hint"
+        android:textColorHint="@color/gray"
+        android:paddingLeft="7dp"
+        android:textSize="13sp"
+        android:gravity="top"
+        android:paddingTop="9dp"/>
+    <TextView
+        android:id="@+id/tv_go_faq"
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/et_feedback"
+        android:layout_marginTop="10dp" />
+    <Button
+        android:id="@+id/bt_submit"
+        android:layout_width="315dp"
+        android:layout_height="42dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_go_faq"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/submit_button"
+        android:text="@string/button_submit"
+        android:textAllCaps="false"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/tv_extra_description"
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/bt_submit"
+        android:layout_marginTop="15dp"
+        android:text="@string/extra_feedback_decription"/>
+
+</RelativeLayout>
+

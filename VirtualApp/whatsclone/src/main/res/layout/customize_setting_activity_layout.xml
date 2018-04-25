@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="22dp"
+            android:text="@string/customize_setting_desc"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="14sp" />
+
+        <mochat.multiple.parallel.whatsclone.widgets.FixedListView
+            android:id="@+id/customize_apps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:background="@color/white">
+        </mochat.multiple.parallel.whatsclone.widgets.FixedListView>
+
+    </LinearLayout>
+
+</ScrollView>
+

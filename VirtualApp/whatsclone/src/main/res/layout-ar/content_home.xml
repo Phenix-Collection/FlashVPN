@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/content_home"
+        android:layout_height="match_parent"
+        android:background="@color/theme_color2">
+
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/divider_light_gray"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:id="@+id/layout_setting"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_alignParentTop="true"
+                android:background="@color/theme_color2">
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/menu_btn"
+                    android:onClick="onNavigationClick"
+                    android:background="@drawable/selector_setting_theme2">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:id="@+id/image_navigation"
+
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/menu_icon" />
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/menu_btn"
+                    android:layout_marginRight="16dp"
+                    android:text="@string/app_alias_name"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="56dp"
+                    android:id="@+id/lock_setting"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:onClick="onLockSettingClick"
+                    android:background="@drawable/selector_setting_theme2">
+                    <ImageView
+                        android:src="@drawable/lock_setting_icon"
+                        android:id="@+id/lock_setting_icon"
+                        android:layout_width="23dp"
+                        android:layout_marginTop="17dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_height="23dp" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="56dp"
+                    android:id="@+id/icon_ad"
+                    android:layout_toRightOf="@id/lock_setting"
+                    android:layout_alignParentTop="true"
+                    android:onClick="onIconAdClick"
+                    android:background="@drawable/selector_setting_theme2">
+                    <RelativeLayout
+                        android:id="@+id/gift_icon_layout"
+                        android:layout_width="28dp"
+                        android:layout_height="27dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_alignParentLeft="true" >
+
+                        <!-- Click on the icon -->
+
+                        <ImageView
+                            android:id="@+id/gift_icon"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/gift_ad" />
+
+                        <RelativeLayout
+                            android:id="@+id/gift_new_tip"
+                            android:layout_width="6dp"
+                            android:layout_height="6dp"
+                            android:layout_alignParentRight="true"
+                            android:visibility="invisible"
+                            android:gravity="right" >
+
+                            <ImageView
+                                android:id="@+id/newtip_iv"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/mobvista_wall_new_tip" />
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_setting" >
+                <FrameLayout
+                    android:id="@+id/frag_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+            </LinearLayout>
+            <!--android:layout_above="@id/image_bottom"-->
+        </android.support.percent.PercentRelativeLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/blur_forground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+
+    </FrameLayout>
+</FrameLayout>

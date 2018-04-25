@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "711759563898",
+    "firebase_url": "https://whats-clone-ac806.firebaseio.com",
+    "project_id": "whats-clone-ac806",
+    "storage_bucket": "whats-clone-ac806.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711759563898:android:a1468bd35ffae299",
+        "android_client_info": {
+          "package_name": "mochat.multiple.parallel.whatsclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711759563898-v96talqp7mi6cnl4aa82uh1lempucq0a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7CnrnLFhuHBUe0u3DuM0zPRcDZnsKOUc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

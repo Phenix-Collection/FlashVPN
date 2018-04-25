@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="horizontal">
+
+    <mochat.multiple.parallel.whatsclone.widgets.WheelView
+        android:id="@+id/month"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        app:itemNumber="3"
+        app:lineColor="@color/theme_color2"
+        app:lineHeight="2dp"
+        app:maskHeight="32dp"
+        app:noEmpty="true"
+        app:normalTextColor="#777"
+        app:normalTextSize="12sp"
+        app:selectedTextColor="#ff000000"
+        app:selectedTextSize="18sp"
+        app:unitHeight="50dp" />
+
+    <mochat.multiple.parallel.whatsclone.widgets.WheelView
+        android:id="@+id/day"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        app:itemNumber="3"
+        app:lineColor="@color/theme_color2"
+        app:lineHeight="2dp"
+        app:maskHeight="32dp"
+        app:noEmpty="true"
+        app:normalTextColor="#777"
+        app:normalTextSize="12sp"
+        app:selectedTextColor="#ff000000"
+        app:selectedTextSize="18sp"
+        app:unitHeight="50dp" />
+
+</LinearLayout>

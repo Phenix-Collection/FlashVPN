@@ -1,0 +1,8 @@
+[{"name":"facebook", "package_name":"com.facebook.katana", "type":"social", "description":"Enjoy double social accounts with the most popular application."},
+{"name":"line", "package_name":"jp.naver.line.android", "type":"social", "description":"Over 300 million users over the world."},
+{"name":"imo", "package_name":"com.imo.android.imoim", "type":"social", "description":"Enjoy free chat and call everywhere."},
+{"name":"facebook messenger", "package_name":"com.facebook.orca", "type":"social", "description":"Separate your work and life with two accounts, enjoy!"},
+{"name":"instagram", "package_name":"com.instagram.android", "type":"social", "description":"Most popular photo sharing application"},
+{"name":"whatsapp", "package_name":"com.whatsapp", "type":"social", "description":"Clone it to have two accounts online meanwhile."},
+{"name":"clash of clans", "package_name":"com.supercell.clashofclans", "type":"game", "description":"Fight for the realm! Speed up level upgrade with super clone!"},
+{"name":"clash royale", "package_name":"com.supercell.clashroyale", "type":"game", "description":"Over 500 million players over the world. Clone it to have more fun now!"}]

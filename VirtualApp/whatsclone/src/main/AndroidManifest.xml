@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="mochat.multiple.parallel.whatsclone">
+
+    <!--MTA 授权-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+
+    <!--Bugly-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <!-- 添加快捷方式 -->
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <!-- 移除快捷方式 -->
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
+    <!-- 查询快捷方式 -->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <application
+        android:name=".MApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".component.activity.LauncherActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".component.activity.AppListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".component.activity.NotificationActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".component.activity.FeedbackActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".component.activity.LockSettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".component.activity.LockPasswordSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".component.activity.LockSecureQuestionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".component.activity.FaqActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".component.activity.WebViewActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+        android:name=".component.activity.SettingsActivity"
+        android:screenOrientation="portrait"/>
+        <activity
+        android:name=".component.activity.AboutActivity"
+        android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".component.activity.CustomizeSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".component.activity.CustomizeIconActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivityStyle"/>
+        <activity
+            android:name=".component.activity.AppCloneActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher"/>
+        <activity
+            android:name=".component.activity.HomeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name=".component.activity.AppStartActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="mochat.multiple.parallel.whatsclone.launch"
+            android:theme="@style/AppTheme.Launcher"/>
+
+        <activity
+            android:name=".component.activity.AppLockActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.lody.virtual.vt"
+            android:process=":x"
+            android:theme="@style/AppTheme.Launcher"/>
+
+        <service android:name=".component.PreCloneService" android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+        <receiver android:name=".component.receiver.PackageChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+
+        <meta-data android:name="CHANNEL_NAME" android:value="${CHANNEL_NAME_VALUE}"/>
+        <meta-data android:name="CHANNEL_TID" android:value="${CHANNEL_TID_VALUE}"/>
+
+
+        <receiver android:name=".component.receiver.CrashReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="appclone.intent.action.SHOW_CRASH_DIALOG"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".component.receiver.ReferrerReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".component.receiver.WakeReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="mochat.multiple.parallel.whatsclone.wake" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="com.tencent.mid.api.MidProvider"
+            android:authorities="mochat.multiple.parallel.whatsclone.TENCENT.MID.V3"
+            android:exported="true" >
+        </provider>
+
+        <activity
+            android:name=".component.activity.NativeInterstitialActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent"
+            android:multiprocess="true" />
+
+        <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+    </application>
+
+</manifest>

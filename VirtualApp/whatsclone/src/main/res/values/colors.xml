@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#141725</color>
+    <color name="colorPrimaryDark">#141725</color>
+    <color name="colorPrimaryTranslucent">#00000000</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent_white">#beffffff</color>
+    <color name="black">#000000</color>
+    <color name="gray">#A9A5A3</color>
+    <color name="gray_drawer">#B3000000</color>
+    <color name="divider_gray">#D0CCC7</color>
+    <color name="divider_light_gray">#FFFAFAFA</color>
+    <color name="light_gray">#F6F6F6</color>
+    <color name="title_bar_bg">#FF4B57C0</color>
+    <color name="title_bar_text_color">#FFFFFF</color>
+    <color name="main_blue">#3490FB</color>
+    <color name="lucky_red">#fd7921</color>
+    <color name="diglog_btn_gray">#BBBBBB</color>
+    <color name="diglog_text_gray">#BEBFC5</color>
+    <color name="text_gray_dark">#FF333333</color>
+    <color name="text_gray_light">#57333333</color>
+    <color name="text_gray_medium">#AD333333</color>
+    <color name="about_text_light">#dedcdc</color>
+    <color name="tenPercentTranslucentWhite">#26ffffff</color>
+    <color name="tenPercentTranslucentBlack">#26000000</color>
+    <color name="halfTranslucentBlack">#26000000</color>
+
+    <color name="add_app_color">#48d27f</color>
+    <color name="left_right_anim_color">#4B57C0</color>
+    <color name="dialog_right_btn_color">#E2E22d</color>
+    <color name="dialog_divide_color">#e8e8e8</color>
+    <color name="theme_color2">#4B57C0</color>
+    <color name="native_cta_color">#4B57C0</color>
+    <color name="clone_activity_start_btn">#4164ef</color>
+    <color name="clone_activity_start_btn_pressed">#2542b4</color>
+    <color name="launch_page_color">#5183e6</color>
+    <color name="theme_text_color">#FF4A4A4A</color>
+    <color name="grid_line">#d3d3d3</color>
+    <color name="grid_pressed">#b7b7b7</color>
+    <color name="grid_bg">#e8e8e8</color>
+    <color name="faq_title_color">#00aab8</color>
+    <color name="faq_content_color">#4a4a4a</color>
+    <color name="clone_text_color">#4a4a4a</color>
+
+    <color name="native_ad_text_white">#ffffff</color>
+    <color name="native_ad_transparent_black">#64000000</color>
+    <color name="ad_calltoaction">#E2E22d</color>
+
+    <color name="guidetooltip_background">#626262</color>
+    <color name="guidetooltip_arrow">#626262</color>
+
+    <color name="applock_lockpattern_pattern_path_light">#FF4A4A4A</color>
+    <color name="applock_lockpattern_pattern_path_white_light">#FFFFFFFF</color>
+    <color name="applock_lockpattern_pattern_path_green_light">#05f1f9</color>
+    <color name="applock_lockpattern_pattern_path_red_light">#FFEC4F62</color>
+    <color name="applock_change_password_mode_text_color">#39b549</color>
+    <color name="applock_antiharass_item_color_gray">#8d8d8d</color>
+    <color name="applock_passcode_warning_text_color">#FFF96E79</color>
+
+    <color name="applock_scanresult_item_title">#7f7f7f</color>
+
+    <color name="dialog_guide_button_negative_text">#ff454545</color>
+    <color name="dialog_guide_button_positive_text">#ff2dbbfb</color>
+    <color name="dialog_guide_button_press_bg">#22dddddd</color>
+    <color name="dialog_guide_content_text">#ff454545</color>
+    <color name="dialog_guide_high_light_content_text">#ff2dbbfb</color>
+    <color name="dialog_guide_title_text">#ff454545</color>
+    <color name="custom_dialog_bg">#8bb8ef</color>
+    <color name="delete_text_color">#f0eb0729</color>
+    <color name="shortcut_text_color">#f048d27f</color>
+</resources>

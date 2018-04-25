@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_gray"
+        android:orientation="vertical">
+
+        <include layout="@layout/setting_wide_splitter"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:paddingLeft="5dp"-->
+            <!--android:paddingRight="22dp"-->
+            <!--android:text="@string/settings_general"-->
+            <!--android:textColor="@color/text_gray_light"-->
+            <!--android:textSize="12sp" />-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:paddingLeft="22dp">
+
+            <mochat.multiple.parallel.whatsclone.widgets.BlueSwitch
+                android:id="@+id/shortcut_swichbtn"
+                android:layout_width="82.5dp"
+                android:layout_height="70dp"
+                android:layout_alignParentRight="true"
+                android:gravity="center_horizontal"
+                android:paddingBottom="28dp"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:paddingTop="28dp" />
+
+            <TextView
+                android:id="@+id/shortcut_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:layout_toLeftOf="@id/shortcut_swichbtn"
+                android:text="@string/settings_shortcut_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shortcut_title"
+                android:layout_toLeftOf="@id/shortcut_swichbtn"
+                android:text="@string/settings_shortcut_content"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/setting_line_splitter" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:onClick="onPrivacyLockerClick"
+            android:paddingLeft="22dp">
+
+            <TextView
+                android:id="@+id/lock_setting_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/lock_settings_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lock_setting_title"
+                android:text="@string/settings_privacy_locker_content"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/setting_line_splitter" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:onClick="onNotificationSettingClick"
+            android:paddingLeft="22dp">
+
+            <TextView
+                android:id="@+id/notification_setting_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/notifications"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/notification_setting_title"
+                android:text="@string/settings_notification_content"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+
+        <include layout="@layout/setting_line_splitter" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:onClick="onCustomizeClick"
+            android:paddingLeft="22dp">
+
+            <TextView
+                android:id="@+id/customize_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/customize_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customize_title"
+                android:text="@string/customize_setting_desc"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/setting_wide_splitter" />
+        <!--android:text="@string/settings_more"-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:paddingLeft="22dp">
+
+            <mochat.multiple.parallel.whatsclone.widgets.BlueSwitch
+                android:id="@+id/gms_switch_btn"
+                android:layout_width="82.5dp"
+                android:layout_height="70dp"
+                android:layout_alignParentRight="true"
+                android:gravity="center_horizontal"
+                android:paddingBottom="28dp"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:paddingTop="28dp" />
+
+            <TextView
+                android:id="@+id/gms_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:layout_toLeftOf="@id/gms_switch_btn"
+                android:text="@string/settings_gms_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/gms_title"
+                android:layout_toLeftOf="@id/gms_switch_btn"
+                android:text="@string/settings_gms"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+        <include layout="@layout/setting_line_splitter" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:paddingLeft="22dp">
+
+            <mochat.multiple.parallel.whatsclone.widgets.BlueSwitch
+                android:id="@+id/adfree_switch"
+                android:layout_width="82.5dp"
+                android:layout_height="70dp"
+                android:layout_alignParentRight="true"
+                android:gravity="center_horizontal"
+                android:paddingBottom="28dp"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:paddingTop="28dp" />
+
+            <TextView
+                android:id="@+id/adfree_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:layout_toLeftOf="@id/adfree_switch"
+                android:text="@string/settings_adfree_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/adfree_title"
+                android:layout_toLeftOf="@id/adfree_switch"
+                android:text="@string/settings_adfree_content"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+        <include layout="@layout/setting_wide_splitter"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:onClick="onFeedbackClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/feedback"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+        <include layout="@layout/setting_line_splitter" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:onClick="onFaqClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/faq"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+        <include layout="@layout/setting_line_splitter" />
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:onClick="onAboutClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/about"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp"
+            android:layout_marginBottom="20dp"/>
+
+    </LinearLayout>
+</ScrollView>

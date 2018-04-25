@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/native_interstitial_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#ffffff"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.polestar.imageloader.widget.BasicLazyLoadImageView
+                android:id="@+id/ad_cover_image"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:scaleType="fitXY" />
+            <TextView
+                android:id="@+id/ad_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|left"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:background="@color/native_ad_transparent_black"
+                android:ellipsize="end"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:text="AD"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/native_ad_text_white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.polestar.imageloader.widget.BasicLazyLoadImageView
+                android:id="@+id/ad_choices_image"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="top|right"
+                android:scaleType="fitXY" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ad_cover_image"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-15dp"
+                android:background="@drawable/native_interstitial_white_bg" >
+
+                <com.polestar.imageloader.widget.BasicLazyLoadImageView
+                    android:id="@+id/ad_icon_image"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="20dp"
+                    android:scaleType="fitXY" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/ad_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:singleLine="true"
+                android:textColor="#343434"
+                android:textSize="21sp" />
+
+            <mochat.multiple.parallel.whatsclone.widgets.StarLevelLayoutView
+                android:id="@+id/star_level_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/ad_subtitle_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:textColor="#343434"
+                android:textSize="11sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f2f2f2" >
+
+                <TextView
+                    android:id="@+id/ad_cta_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/native_interstitial_cta"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:textSize="20dp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,107 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/native_ad_layout_root"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom">
+
+        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+            android:id="@+id/ad_icon_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="2dp"
+
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ad_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="this is title"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/text_gray_dark"
+                android:lines="1"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/ad_subtitle_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="this is sub"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp"
+                android:lines="2" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+            android:id="@+id/ad_cover_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"/>
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="top|left"-->
+            <!--android:src="@drawable/ad_icon_new"/>-->
+        <TextView
+            android:id="@+id/ad_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="AD"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/native_ad_text_white"
+            android:background="@color/native_ad_transparent_black"
+            android:layout_gravity="top|left"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textStyle="bold"
+            android:textSize="12sp" />
+
+        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+            android:id="@+id/ad_choices_image"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="top|right"
+            android:scaleType="fitXY"/>
+    </FrameLayout>
+    <TextView
+        android:id="@+id/ad_cta_text"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:text="install"
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:textColor="@color/white"
+        android:background="@drawable/shape_call_to_action_back"
+        android:textSize="16sp"
+        android:maxLines="1" />
+</LinearLayout>
