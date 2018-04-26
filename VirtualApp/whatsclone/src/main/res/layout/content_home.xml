@@ -11,7 +11,7 @@
 
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
-            android:background="@color/divider_light_gray"
+            android:background="@color/theme_color2"
             android:layout_height="match_parent">
             <RelativeLayout
                 android:id="@+id/layout_setting"
@@ -29,10 +29,10 @@
                     android:background="@drawable/selector_setting_theme2">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="12dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:id="@+id/image_navigation"
-
+                        android:scaleType="fitXY"
                         android:layout_centerInParent="true"
                         android:src="@drawable/menu_icon" />
                 </RelativeLayout>
@@ -43,6 +43,7 @@
                     android:layout_toRightOf="@id/menu_btn"
                     android:layout_marginLeft="16dp"
                     android:text="@string/app_alias_name"
+                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="19sp" />
                 <RelativeLayout

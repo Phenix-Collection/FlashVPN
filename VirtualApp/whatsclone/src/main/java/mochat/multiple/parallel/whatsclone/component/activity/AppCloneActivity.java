@@ -67,15 +67,13 @@ public class AppCloneActivity extends BaseActivity {
     private String mPkgLabel;
 
     private Button mBtnStart;
-    private RelativeLayout mLayoutInstalling;
-    private RelativeLayout mLayoutCancel;
+    private Button mBtnCancel;
     private TextView mTxtAppLabel;
     private ImageView mImgAppIcon;
     private ImageView mImgSuccessBg;
     private TextView mTxtInstalling;
     private TextView mTxtInstalled;
     private ProgressBar mProgressBar;
-    private TextView mTitleText;
     private BlueSwitch mShortcutSwitch;
     private BlueSwitch mLockerSwitch;
     private BlueSwitch mNotificationSwitch;
@@ -97,7 +95,6 @@ public class AppCloneActivity extends BaseActivity {
     private AppModel appModel;
     private boolean isInstallSuccess;
     private boolean isInstallDone;
-    private boolean isCanceled;
     private boolean adReady;
     private IAdAdapter nativeAd;
     private boolean animateEnd;
@@ -195,12 +192,11 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     private void initView() {
+        setTitle(getString(R.string.clone_apps_title));
         mPkgLabel = appModel.getName();
 
         mBtnStart = (Button) findViewById(R.id.btn_start);
-        mLayoutInstalling = (RelativeLayout) findViewById(R.id.layout_installing);
-        mLayoutCancel = (RelativeLayout) findViewById(R.id.layout_title);
-        mTitleText = (TextView)mLayoutCancel.findViewById(R.id.title_text);
+        mBtnCancel = (Button) findViewById(R.id.btn_cancel);
         mTxtAppLabel = (TextView) findViewById(R.id.txt_app_name);
         mImgAppIcon = (ImageView) findViewById(R.id.img_app_icon);
         mImgSuccessBg = (ImageView) findViewById(R.id.img_success_bg);
@@ -209,7 +205,8 @@ public class AppCloneActivity extends BaseActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.circularProgressbar);
         nativeAdContainer = (LinearLayout) findViewById(R.id.ad_container);
 
-        mBtnStart.setVisibility(View.INVISIBLE);
+        mBtnStart.setVisibility(View.GONE);
+        mBtnCancel.setVisibility(View.VISIBLE);
 
         mTxtAppLabel.setText(mPkgLabel);
         appModel.setIcon(appModel.initDrawable(this));
@@ -221,14 +218,6 @@ public class AppCloneActivity extends BaseActivity {
 
         mProgressBar.setSecondaryProgress(100);
         mProgressBar.setProgress(0);
-        mLayoutCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cleanBeforeFinish();
-                finish();
-            }
-        });
-        setImmerseLayout(mTitleText);
 
         mShortcutSwitch = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
         mLockerSwitch = (BlueSwitch) findViewById(R.id.locker_swichbtn);
@@ -490,7 +479,6 @@ public class AppCloneActivity extends BaseActivity {
         //mLayoutCancel.startAnimation(installingFadeOut);
 
         //mTxtInstalling.setVisibility(View.INVISIBLE);
-        mLayoutCancel.setVisibility(View.INVISIBLE);
         mTxtInstalling.setVisibility(View.INVISIBLE);
         mTxtAppLabel.setVisibility(View.INVISIBLE);
         data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
@@ -532,6 +520,7 @@ public class AppCloneActivity extends BaseActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 mBtnStart.setVisibility(View.VISIBLE);
+                mBtnCancel.setVisibility(View.GONE);
                 animateEnd = true;
                 showAdIfNeeded();
             }
@@ -548,12 +537,13 @@ public class AppCloneActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        isCanceled = true;
+        cleanBeforeFinish();
+        finish();
     }
 
     @Override
     protected boolean useCustomTitleBar() {
-        return false;
+        return true;
     }
 
 

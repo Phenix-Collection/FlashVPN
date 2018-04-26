@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/title_bar_bg" android:layout_width="match_parent"
+    android:background="@color/theme_color2" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/title_bar_layout">
     <ImageView
         android:id="@+id/navigation_bar"
         android:src="@drawable/back_btn"
         android:paddingTop="20dp"
-        android:paddingLeft="13dp"
-        android:paddingRight="13dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:paddingBottom="20dp"
         android:layout_width="wrap_content"
         android:scaleType="centerCrop"
@@ -19,6 +19,7 @@
         style="@style/TextStyle_Activity_Title"
         android:layout_toRightOf="@id/navigation_bar"
         android:layout_width="wrap_content"
-        android:paddingTop="16dp"
+        android:layout_alignBottom="@id/navigation_bar"
+        android:paddingBottom="21dp"
         android:layout_height="wrap_content" />
 </RelativeLayout>

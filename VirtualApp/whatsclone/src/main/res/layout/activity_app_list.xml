@@ -2,13 +2,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/light_gray"
+            android:background="@color/theme_color2"
             android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:descendantFocusability="blocksDescendants"
+        android:background="#32ffffff"
         android:orientation="vertical">
 
         <TextView
@@ -18,16 +19,16 @@
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:text="@string/anative_content_popular"
-            android:textColor="@color/text_gray_medium"
+            android:textColor="@color/white"
             android:textSize="14sp"/>
 
         <mochat.multiple.parallel.whatsclone.widgets.FixedListView
             android:id="@+id/app_list_popular"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@color/theme_color2"
             android:dividerHeight="0.5dp"
-            android:divider="#FFDDDDDD"
+            android:divider="#32ffffff"
             android:layoutAnimation="@anim/app_list_anim_layout"
             android:paddingBottom="11dp">
         </mochat.multiple.parallel.whatsclone.widgets.FixedListView>
@@ -39,16 +40,16 @@
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:text="@string/anative_content_recommend"
-            android:textColor="@color/text_gray_medium"
+            android:textColor="@color/white"
             android:textSize="14sp"/>
 
         <mochat.multiple.parallel.whatsclone.widgets.FixedListView
             android:id="@+id/app_list_recommand"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@color/theme_color2"
             android:dividerHeight="0.5dp"
-            android:divider="#FFDDDDDD"
+            android:divider="#32ffffff"
             android:layoutAnimation="@anim/app_list_anim_layout"
             android:paddingBottom="11dp">
         </mochat.multiple.parallel.whatsclone.widgets.FixedListView>
@@ -61,7 +62,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:text="@string/sponsor_text"
-            android:textColor="@color/text_gray_medium"
+            android:textColor="@color/white"
             android:textSize="14sp"/>
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,7 +71,7 @@
             android:visibility="gone"
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
-            android:background="@color/white"
+            android:background="@color/theme_color2"
             android:orientation="vertical">
         </LinearLayout>
         <TextView
@@ -80,14 +81,14 @@
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:text="@string/more_apps"
-            android:textColor="@color/text_gray_medium"
+            android:textColor="@color/white"
             android:textSize="14sp"/>
 
         <mochat.multiple.parallel.whatsclone.widgets.FixedGridView
             android:id="@+id/app_list_more"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@color/theme_color2"
             android:gravity="center"
             android:layoutAnimation="@anim/grid_list_anim_layout"
             android:numColumns="4"

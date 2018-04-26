@@ -1,5 +1,3 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true"
-          android:drawable="@drawable/start_button_pressed" />
-    <item android:drawable="@drawable/start_button_normal" />
+    <item android:drawable="@drawable/clone_button" />
 </selector>

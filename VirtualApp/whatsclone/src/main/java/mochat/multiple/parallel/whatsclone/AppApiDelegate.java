@@ -28,7 +28,7 @@ public class AppApiDelegate implements IAppApiDelegate {
 
     @Override
     public String getCloneTagedLabel(String label) {
-        return label == null? MApp.getApp().getResources().getString(R.string.app_alias_name) :
+        return label == null? MApp.getApp().getResources().getString(R.string.app_name) :
                 MApp.getApp().getResources().getString(R.string.clone_label_tag, label);
     }
 }

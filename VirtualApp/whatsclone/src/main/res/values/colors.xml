@@ -30,7 +30,8 @@
     <color name="left_right_anim_color">#4B57C0</color>
     <color name="dialog_right_btn_color">#E2E22d</color>
     <color name="dialog_divide_color">#e8e8e8</color>
-    <color name="theme_color2">#4B57C0</color>
+    <color name="theme_color2">#242C52</color>
+    <color name="theme_color_pressed">#1b223f</color>
     <color name="native_cta_color">#4B57C0</color>
     <color name="clone_activity_start_btn">#4164ef</color>
     <color name="clone_activity_start_btn_pressed">#2542b4</color>
@@ -47,8 +48,8 @@
     <color name="native_ad_transparent_black">#64000000</color>
     <color name="ad_calltoaction">#E2E22d</color>
 
-    <color name="guidetooltip_background">#626262</color>
-    <color name="guidetooltip_arrow">#626262</color>
+    <color name="guidetooltip_background">#32FFFFFF</color>
+    <color name="guidetooltip_arrow">#32FFFFFF</color>
 
     <color name="applock_lockpattern_pattern_path_light">#FF4A4A4A</color>
     <color name="applock_lockpattern_pattern_path_white_light">#FFFFFFFF</color>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/theme_color2"
     tools:context="mochat.multiple.parallel.whatsclone.component.activity.AppCloneActivity">
 
     <Button
@@ -16,7 +16,21 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
         android:textColor="#FFFFFF"
-        android:background="@drawable/start_button_selector"/>
+        android:background="@drawable/start_button_selector"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="270dp"
+        android:layout_height="45dp"
+        android:text="@string/cancel"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:textColor="@color/white"
+        android:background="@drawable/cancel_button"
+        android:visibility="gone"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -27,32 +41,12 @@
             android:id="@+id/layout_installing"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <RelativeLayout
-                android:id="@+id/layout_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/selector_install_cancel">
-                <TextView
-                    android:id="@+id/title_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_centerInParent="true"
-                    android:text="@string/cancel"
-                    android:textSize="20sp"
-                    android:textColor="@color/clone_text_color"/>
-            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/layout_install"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/layout_title"
                 android:layout_marginTop="55dp">
                 <ImageView
                     android:id="@+id/img_success_bg"
@@ -91,7 +85,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_centerHorizontal="true"
                 android:text="@string/app_name"
-                android:textColor="@color/clone_text_color"
+                android:textColor="@color/white"
                 android:textSize="24sp"/>
 
             <TextView
@@ -103,7 +97,7 @@
                 android:layout_centerHorizontal="true"
                 android:text="@string/cloning_tips"
                 android:gravity="center"
-                android:textColor="@color/clone_text_color"
+                android:textColor="@color/white"
                 android:textSize="16sp"/>
 
             <RelativeLayout
@@ -111,7 +105,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:layout_below="@+id/layout_title"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:visibility="gone">

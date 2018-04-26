@@ -32,7 +32,7 @@
         android:layout_alignTop="@id/item_app_icon"
         android:layout_toLeftOf="@id/btn_clone"
         android:layout_toRightOf="@id/item_app_icon"
-        android:textColor="@color/text_gray_dark"
+        android:textColor="@color/white"
         android:textSize="@dimen/title_bar_title_size"/>
 
     <TextView
@@ -43,7 +43,7 @@
         android:layout_below="@id/item_app_name"
         android:layout_marginTop="4dp"
         android:layout_toLeftOf="@id/btn_clone"
-        android:textColor="@color/text_gray_light"
+        android:textColor="#CCFFFFFF"
         android:textSize="10sp"/>
 
 </RelativeLayout>
