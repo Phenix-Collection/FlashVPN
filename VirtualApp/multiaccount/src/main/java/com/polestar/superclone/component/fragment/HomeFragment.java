@@ -190,7 +190,8 @@ public class HomeFragment extends BaseFragment {
             int ret = 0;
             if (appModel != null ) {
                 for (AppModel m : appInfos) {
-                    if (m.getPackageName().equals(appModel.getPackageName())) {
+                    if (m.getPackageName().equals(appModel.getPackageName())
+                            && m.getPkgUserId() == appModel.getPkgUserId()) {
                         return ret;
                     }
                     ret++;
