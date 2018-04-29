@@ -547,7 +547,7 @@ class MethodProxies {
         private Uri processUri(Uri in) {
             Uri.Builder builder = new Uri.Builder();
             if (in != null) {
-                builder.scheme("content").authority(VirtualCore.get().getHostPkg() + ".ProxyContentProvider").appendPath(in.getAuthority());
+                builder.scheme("content").authority(VirtualCore.get().getHostPkg() + ".ProxyCP").appendPath(in.getAuthority());
                 for (String s:in.getPathSegments()) {
                     builder.appendPath(s);
                 }

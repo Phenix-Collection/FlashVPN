@@ -23,8 +23,8 @@ import java.util.List;
  * Created by guojia on 2017/7/1.
  */
 
-public class ProxyContentProvider extends ContentProvider {
-    private static final String TAG = "ProxyContentProvider";
+public class ProxyCP extends ContentProvider {
+    private static final String TAG = "ProxyCP";
     @Override
     public boolean onCreate() {
         VLog.d(TAG, "onCreate");
