@@ -18,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -50,7 +51,7 @@ import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
 import mochat.multiple.parallel.whatsclone.utils.ToastUtils;
-import mochat.multiple.parallel.whatsclone.widgets.BlueSwitch;
+import mochat.multiple.parallel.whatsclone.widgets.RoundSwitch;
 
 import java.util.List;
 import java.util.Timer;
@@ -74,9 +75,10 @@ public class AppCloneActivity extends BaseActivity {
     private TextView mTxtInstalling;
     private TextView mTxtInstalled;
     private ProgressBar mProgressBar;
-    private BlueSwitch mShortcutSwitch;
-    private BlueSwitch mLockerSwitch;
-    private BlueSwitch mNotificationSwitch;
+    private RoundSwitch mShortcutSwitch;
+    private RoundSwitch mLockerSwitch;
+    private RoundSwitch mNotificationSwitch;
+    private RoundSwitch mCustomizeSwitch;
 
     private Timer mTimer = new Timer();
     private static final double INIT_PROGRESS_THRESHOLD = 50.0;
@@ -219,9 +221,10 @@ public class AppCloneActivity extends BaseActivity {
         mProgressBar.setSecondaryProgress(100);
         mProgressBar.setProgress(0);
 
-        mShortcutSwitch = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
-        mLockerSwitch = (BlueSwitch) findViewById(R.id.locker_swichbtn);
-        mNotificationSwitch = (BlueSwitch) findViewById(R.id.notification_swichbtn);
+        mShortcutSwitch = (RoundSwitch) findViewById(R.id.shortcut_swichbtn);
+        mLockerSwitch = (RoundSwitch) findViewById(R.id.locker_swichbtn);
+        mNotificationSwitch = (RoundSwitch) findViewById(R.id.notification_swichbtn);
+        mCustomizeSwitch = (RoundSwitch) findViewById(R.id.custommize_swichbtn);
         initSwitchStatus(true);
     }
 
@@ -232,13 +235,18 @@ public class AppCloneActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         initSwitchStatus(false);
+        updateCustomizedView();
+    }
+
+    private void updateCustomizedView() {
         if (mCloneSettingLayout.getVisibility() == View.VISIBLE) {
             CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(), mUserId);
             ImageView icon = (ImageView) mCloneSettingLayout.findViewById(R.id.img_app_icon_done);
             icon.setImageBitmap(data.getCustomIcon());
             mTxtInstalled.setText(String.format(getString(R.string.clone_success), data.label));
+            mTxtInstalled.setVisibility(View.VISIBLE);
+            mCustomizeSwitch.setChecked(data.customized);
         }
-
     }
 
     private void initSwitchStatus(boolean firstTime) {
@@ -262,6 +270,17 @@ public class AppCloneActivity extends BaseActivity {
             }
         });
         mNotificationSwitch.setChecked(appModel.isNotificationEnable());
+        mCustomizeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if (checked) {
+                    onAppIconClick(mCustomizeSwitch);
+                } else{
+                    CustomizeAppData.removePerf(appModel.getPackageName(), appModel.getPkgUserId());
+                    updateCustomizedView();
+                }
+            }
+        });
     }
 
     private void doSwitchStateChange() {
@@ -315,7 +334,6 @@ public class AppCloneActivity extends BaseActivity {
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
                 .mainMediaId(R.id.ad_cover_image)
-                .iconImageId(R.id.ad_icon_image)
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
                 .build();
@@ -323,6 +341,11 @@ public class AppCloneActivity extends BaseActivity {
         if (adView != null) {
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
+            View split = findViewById(R.id.ad_split);
+            if (split != null) {
+                split.setVisibility(View.VISIBLE);
+            }
+            nativeAdContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -483,6 +506,7 @@ public class AppCloneActivity extends BaseActivity {
         mTxtAppLabel.setVisibility(View.INVISIBLE);
         data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
         mTxtInstalled.setText(String.format(getString(R.string.clone_success), data.label));
+        mTxtInstalled.setVisibility(View.VISIBLE);
         showCloneSetting();
     }
 

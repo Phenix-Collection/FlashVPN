@@ -238,7 +238,7 @@
     </string-array>
 
     <!-- customize -->
-    <string name="customize_title">Customization</string>
+    <string name="customize_title">Customize</string>
     <string name="customize_setting_desc">Click to customize icon and label for clones</string>
     <string name="saturation">Saturation</string>
     <string name="light">Lightness</string>

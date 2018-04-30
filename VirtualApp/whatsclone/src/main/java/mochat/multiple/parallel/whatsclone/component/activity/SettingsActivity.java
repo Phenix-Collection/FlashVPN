@@ -17,16 +17,16 @@ import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
-import mochat.multiple.parallel.whatsclone.widgets.BlueSwitch;
+import mochat.multiple.parallel.whatsclone.widgets.RoundSwitch;
 import mochat.multiple.parallel.whatsclone.widgets.UpDownDialog;
 
 /**
  * Created by yxx on 2016/7/29.
  */
 public class SettingsActivity extends BaseActivity {
-    private BlueSwitch shortCutSwich;
-    private BlueSwitch gmsSwitch;
-    private BlueSwitch adFreeSwitch;
+    private RoundSwitch shortCutSwich;
+    private RoundSwitch gmsSwitch;
+    private RoundSwitch adFreeSwitch;
 
     private boolean requestAdFree;
 
@@ -42,7 +42,7 @@ public class SettingsActivity extends BaseActivity {
     private void initView() {
         setTitle(getString(R.string.settings));
 
-        shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
+        shortCutSwich = (RoundSwitch) findViewById(R.id.shortcut_swichbtn);
         shortCutSwich.setChecked(PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,false));
         shortCutSwich.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +50,7 @@ public class SettingsActivity extends BaseActivity {
                 PreferencesUtils.putBoolean(SettingsActivity.this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,shortCutSwich.isChecked());
             }
         });
-        gmsSwitch = (BlueSwitch) findViewById(R.id.gms_switch_btn);
+        gmsSwitch = (RoundSwitch) findViewById(R.id.gms_switch_btn);
         gmsSwitch.setChecked(PreferencesUtils.isGMSEnable());
         DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener(){
             @Override
@@ -100,7 +100,7 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
-        adFreeSwitch = (BlueSwitch) findViewById(R.id.adfree_switch);
+        adFreeSwitch = (RoundSwitch) findViewById(R.id.adfree_switch);
         adFreeSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

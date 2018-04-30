@@ -16,9 +16,9 @@
                 android:thicknessRatio="9.23">
 
                 <gradient
-                    android:startColor="#D5E7EB"
-                    android:endColor="#D5E7EB"
-                    android:centerColor="#D5E7EB"
+                    android:startColor="#6e0ebfd6"
+                    android:endColor="#6e0ebfd6"
+                    android:centerColor="#6e0ebfd6"
                     android:type="sweep" />
             </shape>
         </rotate>
@@ -35,9 +35,9 @@
                 android:useLevel="true"
                 android:thicknessRatio="9.23">
                 <gradient
-                    android:startColor="#87C5CF"
-                    android:endColor="#87C5CF"
-                    android:centerColor="#87C5CF"
+                    android:startColor="#0ebfd6"
+                    android:endColor="#0ebfd6"
+                    android:centerColor="#0ebfd6"
                     android:type="sweep" />
             </shape>
         </rotate>

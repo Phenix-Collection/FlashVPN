@@ -12,14 +12,14 @@ import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.db.DbManager;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
-import mochat.multiple.parallel.whatsclone.widgets.BlueSwitch;
+import mochat.multiple.parallel.whatsclone.widgets.RoundSwitch;
 import mochat.multiple.parallel.whatsclone.widgets.FixedListView;
 
 import java.util.List;
 
 public class NotificationActivity extends BaseActivity {
 
-    private BlueSwitch mMasterSwitch;
+    private RoundSwitch mMasterSwitch;
     private FixedListView mListView;
     private BasicPackageSwitchAdapter mNotificationAdapter;
     private List<AppModel> mClonedModels;
@@ -45,7 +45,7 @@ public class NotificationActivity extends BaseActivity {
     private void initView() {
         setTitle(getString(R.string.notifications));
 
-        mMasterSwitch = (BlueSwitch) findViewById(R.id.switch_notification_dotspace);
+        mMasterSwitch = (RoundSwitch) findViewById(R.id.switch_notification_dotspace);
         mListView = (FixedListView) findViewById(R.id.switch_notifications_apps);
         mNotificationAdapter = new BasicPackageSwitchAdapter(mContext);
         mNotificationAdapter.setOnCheckStatusChangedListener(new BasicPackageSwitchAdapter.OnCheckStatusChangedListener() {
@@ -69,7 +69,7 @@ public class NotificationActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String pName = mContext.getPackageName();
-                boolean val = ((BlueSwitch) v).isChecked();
+                boolean val = ((RoundSwitch) v).isChecked();
                 PreferencesUtils.putBoolean(mContext, AppConstants.KEY_SERVER_PUSH, val);
                 if (val) {
                     mListView.setVisibility(View.VISIBLE);

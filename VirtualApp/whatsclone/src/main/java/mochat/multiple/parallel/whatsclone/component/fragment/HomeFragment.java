@@ -190,7 +190,8 @@ public class HomeFragment extends BaseFragment {
             int ret = 0;
             if (appModel != null ) {
                 for (AppModel m : appInfos) {
-                    if (m.getPackageName().equals(appModel.getPackageName())) {
+                    if (m.getPackageName().equals(appModel.getPackageName())
+                            && m.getPkgUserId() == appModel.getPkgUserId()) {
                         return ret;
                     }
                     ret++;
@@ -557,6 +558,7 @@ public class HomeFragment extends BaseFragment {
         if (appModel == null) return;
         appModel.setUnEnable(true);
         pkgGridAdapter.notifyDataSetChanged();
+        MLogs.d("Position: "+ pkgGridAdapter.getPosition(appModel) + " offset: "+ pkgGridView.getGridItemStartOffset());
         View view = pkgGridView.getChildAt(pkgGridAdapter.getPosition(appModel) + pkgGridView.getGridItemStartOffset());
         if(view != null) {
             mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {

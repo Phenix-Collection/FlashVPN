@@ -32,17 +32,19 @@
     <color name="dialog_divide_color">#e8e8e8</color>
     <color name="theme_color2">#242C52</color>
     <color name="theme_color_pressed">#1b223f</color>
-    <color name="native_cta_color">#4B57C0</color>
+    <color name="native_cta_color">#36BC84</color>
+    <color name="cancel_btn_color">#33FFFFFF</color>
+    <color name="switch_off_color">#CCCCCC</color>
     <color name="clone_activity_start_btn">#4164ef</color>
     <color name="clone_activity_start_btn_pressed">#2542b4</color>
     <color name="launch_page_color">#5183e6</color>
-    <color name="theme_text_color">#FF4A4A4A</color>
+    <color name="theme_text_color">#FFFFFFFF</color>
     <color name="grid_line">#d3d3d3</color>
     <color name="grid_pressed">#b7b7b7</color>
     <color name="grid_bg">#e8e8e8</color>
     <color name="faq_title_color">#00aab8</color>
-    <color name="faq_content_color">#4a4a4a</color>
-    <color name="clone_text_color">#4a4a4a</color>
+    <color name="faq_content_color">#ffffff</color>
+    <color name="clone_text_color">#ffffff</color>
 
     <color name="native_ad_text_white">#ffffff</color>
     <color name="native_ad_transparent_black">#64000000</color>

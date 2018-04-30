@@ -10,7 +10,6 @@
         android:background="@color/light_gray"
         android:orientation="vertical">
 
-        <include layout="@layout/setting_wide_splitter"/>
         <!--<TextView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="30dp"-->
@@ -27,16 +26,13 @@
             android:background="@android:color/white"
             android:paddingLeft="22dp">
 
-            <mochat.multiple.parallel.whatsclone.widgets.BlueSwitch
+            <mochat.multiple.parallel.whatsclone.widgets.RoundSwitch
                 android:id="@+id/shortcut_swichbtn"
-                android:layout_width="82.5dp"
-                android:layout_height="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:paddingBottom="28dp"
-                android:paddingLeft="22dp"
-                android:paddingRight="22dp"
-                android:paddingTop="28dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp" />
 
             <TextView
                 android:id="@+id/shortcut_title"
@@ -153,16 +149,13 @@
             android:background="@android:color/white"
             android:paddingLeft="22dp">
 
-            <mochat.multiple.parallel.whatsclone.widgets.BlueSwitch
+            <mochat.multiple.parallel.whatsclone.widgets.RoundSwitch
                 android:id="@+id/gms_switch_btn"
-                android:layout_width="82.5dp"
-                android:layout_height="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:paddingBottom="28dp"
-                android:paddingLeft="22dp"
-                android:paddingRight="22dp"
-                android:paddingTop="28dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp" />
 
             <TextView
                 android:id="@+id/gms_title"
@@ -191,16 +184,13 @@
             android:background="@android:color/white"
             android:paddingLeft="22dp">
 
-            <mochat.multiple.parallel.whatsclone.widgets.BlueSwitch
+            <mochat.multiple.parallel.whatsclone.widgets.RoundSwitch
                 android:id="@+id/adfree_switch"
-                android:layout_width="82.5dp"
-                android:layout_height="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:paddingBottom="28dp"
-                android:paddingLeft="22dp"
-                android:paddingRight="22dp"
-                android:paddingTop="28dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"  />
 
             <TextView
                 android:id="@+id/adfree_title"
