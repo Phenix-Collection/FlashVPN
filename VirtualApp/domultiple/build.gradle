@@ -37,8 +37,8 @@ android {
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 2021
-            versionName "2.0.21.${releaseTime()}"
+            versionCode 2022
+            versionName "2.0.22.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
