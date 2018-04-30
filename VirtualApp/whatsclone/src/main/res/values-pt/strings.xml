@@ -26,11 +26,11 @@
     <string name="delete_dialog_content">A remoção deste aplicativo clonado significa a exclusão de todos os seus dados.</string>
     <string name="delete_dialog_left">Cancelar</string>
     <string name="delete_dialog_right">Excluir</string>
-    <string name="dialog_rating_us_content">Gostou de usar aplicativo Super Clone?</string>
+    <string name="dialog_rating_us_content">Gostou de usar aplicativo WhatsClone?</string>
     <string name="dialog_feedback_content">Você poderia nos dar algum feedback?</string>
     <string name="not_really">Na verdade não</string>
     <string name="no_thanks">Não, obrigado</string>
-    <string name="dialog_love_title">Love Super Clone</string>
+    <string name="dialog_love_title">Love WhatsClone</string>
     <string name="dialog_love_content">Você se importaria de nos dar uma classificação de 5 estrelas na Play Store? Ele vai nos inspirar e nós apreciamos o seu apoio!</string>
     <string name="remind_me_later">Me lembre depois</string>
     <string name="star_rating">Classificação de 5 estrelas</string>
@@ -81,16 +81,16 @@
 
     <string name="crash_hint">Lamentamos, mas ocorreu algum erro e vamos corrigi-lo em breve.</string>
 
-    <string name="text_Q1_title">Q1: Por que não consigo receber notificações de mensagens de aplicativos habilitados para Super Clone?</string>
-    <string name="text_Q1_content_2">A1:Certifique-se de que o Super Clone tenha acesso à rede</string>
-    <string name="text_Q2_title">Q2: O Super Clone coletará e usará minhas informações privadas??</string>
-    <string name="text_Q2_content">A2: Não, o Super Clone só irá coletar pequenas quantidades de seus "dados públicos" (por exemplo, Avatar, nickname etc), e estes só serão usados em seu dispositivo para criar uma melhor experiência de usuário para você. O Super Clone promete que nenhum dos seus dados pessoais será coletado ou usado.</string>
-    <string name="text_Q3_title">Q3:Por que o consumo de armazenamento do Super Clone está aumentando?</string>
-    <string name="text_Q3_content">A3: Todas as subcontas adicionadas no seu dispositivo são listadas por padrão em Super Clone pelo sistema operacional Android. Por exemplo, quando você adiciona uma subconta do Facebook ao seu dispositivo, todo o armazenamento usado para sua segunda conta do Facebook (app) está listado em Super Clone. Portanto, o consumo de armazenamento listado para Super Clone aparecerá para aumentar significativamente quando você adicionar mais sub-contas. Tenha certeza de que o consumo de armazenamento de Super Clone em si não está realmente aumentando muito.</string>
-    <string name="text_Q4_title">Q4: Por que o Super Clone usou tanto espaço de armazenamento?</string>
-    <string name="text_Q4_content">A4: Todas as subcontas adicionadas no seu dispositivo são listadas por padrão em Super Clone pelo sistema operacional Android. A grande quantidade de consumo de armazenamento listada em Super Clone é o armazenamento total total usado para todas as subcontas que você adicionou. Super Clone em si usa pouco armazenamento.</string>
+    <string name="text_Q1_title">Q1: Por que não consigo receber notificações de mensagens de aplicativos habilitados para WhatsClone?</string>
+    <string name="text_Q1_content_2">A1:Certifique-se de que o WhatsClone tenha acesso à rede</string>
+    <string name="text_Q2_title">Q2: O WhatsClone coletará e usará minhas informações privadas??</string>
+    <string name="text_Q2_content">A2: Não, o WhatsClone só irá coletar pequenas quantidades de seus "dados públicos" (por exemplo, Avatar, nickname etc), e estes só serão usados em seu dispositivo para criar uma melhor experiência de usuário para você. O WhatsClone promete que nenhum dos seus dados pessoais será coletado ou usado.</string>
+    <string name="text_Q3_title">Q3:Por que o consumo de armazenamento do WhatsClone está aumentando?</string>
+    <string name="text_Q3_content">A3: Todas as subcontas adicionadas no seu dispositivo são listadas por padrão em WhatsClone pelo sistema operacional Android. Por exemplo, quando você adiciona uma subconta do Facebook ao seu dispositivo, todo o armazenamento usado para sua segunda conta do Facebook (app) está listado em WhatsClone. Portanto, o consumo de armazenamento listado para WhatsClone aparecerá para aumentar significativamente quando você adicionar mais sub-contas. Tenha certeza de que o consumo de armazenamento de WhatsClone em si não está realmente aumentando muito.</string>
+    <string name="text_Q4_title">Q4: Por que o WhatsClone usou tanto espaço de armazenamento?</string>
+    <string name="text_Q4_content">A4: Todas as subcontas adicionadas no seu dispositivo são listadas por padrão em WhatsClone pelo sistema operacional Android. A grande quantidade de consumo de armazenamento listada em WhatsClone é o armazenamento total total usado para todas as subcontas que você adicionou. WhatsClone em si usa pouco armazenamento.</string>
     <string name="text_Q5_title">Q5: Como a função de bloqueio de privacidade protege minha privacidade?</string>
-    <string name="text_Q5_content">A5: Uma senha é necessária para acessar Aplicativos particulares cada vez que você acordar o dispositivo. Além disso, todos os aplicativos particulares são instalados no Super Clone e, portanto, todos os dados de aplicativos particulares não são acessíveis por nenhum programa externo.</string>
+    <string name="text_Q5_content">A5: Uma senha é necessária para acessar Aplicativos particulares cada vez que você acordar o dispositivo. Além disso, todos os aplicativos particulares são instalados no WhatsClone e, portanto, todos os dados de aplicativos particulares não são acessíveis por nenhum programa externo.</string>
 
     <string name="clone_label_tag">%s+</string>
 
@@ -172,10 +172,10 @@
     <string name="settings_adfree_title">Remover propagandas</string>
     <string name="settings_adfree_content">Desativar anúncios no aplicativo</string>
     <string name="adfree_dialog_title">Remover propagandas</string>
-    <string name="adfree_dialog_content">Seja um usuário premium do Super Clone e desative todos os ADs neste aplicativo. Você quer comprar agora?</string>
-    <string name="text_Q6_content">A6: Verifique se você ativou o armário para este aplicativo e concede permissão ao Super Clone para mostrar a janela flutuante. Por exemplo, no dispositivo Xiaomi, Configurações-> Gerenciamento de aplicativos-> Super Clone-> Controle de permissão-> Janela flutuante.</string>
+    <string name="adfree_dialog_content">Seja um usuário premium do WhatsClone e desative todos os ADs neste aplicativo. Você quer comprar agora?</string>
+    <string name="text_Q6_content">A6: Verifique se você ativou o armário para este aplicativo e concede permissão ao WhatsClone para mostrar a janela flutuante. Por exemplo, no dispositivo Xiaomi, Configurações-> Gerenciamento de aplicativos-> WhatsClone-> Controle de permissão-> Janela flutuante.</string>
     <string name="text_Q6_title">Q6: Por que o armário de privacidade não aparece quando o lançamento do aplicativo?</string>
-    <string name="text_Q7_content">A7: Verifique se você concedeu essas permissões ao Super Clone na configuração do seu sistema.</string>
+    <string name="text_Q7_content">A7: Verifique se você concedeu essas permissões ao WhatsClone na configuração do seu sistema.</string>
     <string name="text_Q7_title">Q7: Por que o atalho não pode ser criado ou a câmera, o local não funciona?</string>
     <string name="lock_interval_settings_content">O intervalo para bloquear o aplicativo novamente depois de deixá-lo</string>
     <string name="lock_interval_settings_title">Intervalo de bloqueio</string>
@@ -188,7 +188,7 @@
     <string name="update_dialog_right">Atualizar</string>
     <string name="update_dialog_title">Atualizar</string>
     <string name="update_dialog_left">Ignorar</string>
-    <string name="update_dialog_content">Nova versão está chegando! Melhoramos muito a última versão %s. Gostaria de atualizar o seu Super Clone agora?</string>
+    <string name="update_dialog_content">Nova versão está chegando! Melhoramos muito a última versão %s. Gostaria de atualizar o seu WhatsClone agora?</string>
     <string name="check_update"><u>Checar atualização</u></string>
     <string name="saturation">Saturação</string>
     <string name="about">Sobre</string>

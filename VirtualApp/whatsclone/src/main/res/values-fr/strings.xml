@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Paramètres</string>
-    <string name="adfree_dialog_content">Devenez l\'utilisateur premium de Super Clone et désactivez tous les AD dans cette application. Voulez-vous acheter maintenant?</string>
+    <string name="adfree_dialog_content">Devenez l\'utilisateur premium de WhatsClone et désactivez tous les AD dans cette application. Voulez-vous acheter maintenant?</string>
     <string name="adfree_dialog_title">Mettre à jour vers la version gratuite de l\'annonce</string>
     <string name="al_btn_finish">Confirmer</string>
     <string name="al_btn_next">Prochain</string>
@@ -35,19 +35,19 @@
     <string name="toast_shortcut_added">Raccourci ajouté</string>
     <string name="toast_no_lucky">Désolé, pas de contenu chanceux cette fois. Veuillez réessayer plus tard.</string>
     <string name="text_Q7_title">Q7: Pourquoi le raccourci ne peut pas être créé ou la caméra, l\'emplacement ne fonctionne-t-il pas?</string>
-    <string name="text_Q7_content">A7: Vérifiez si vous avez accordé ces autorisations à Super Clone dans votre configuration système.</string>
+    <string name="text_Q7_content">A7: Vérifiez si vous avez accordé ces autorisations à WhatsClone dans votre configuration système.</string>
     <string name="text_Q6_title">Q6: Pourquoi le casier de confidentialité ne s\'affiche pas lors du lancement de l\'application?</string>
-    <string name="text_Q6_content">A6: vérifiez si vous avez activé le casier pour cette application et autorisez Super Clone à afficher la fenêtre flottante. Par exemple, sur le périphérique Xiaomi, Paramètres-> Gestion des applications-> Super Clone-> Contrôle des autorisations-> Fenêtre flottante.</string>
-    <string name="text_Q5_title">Q5: Comment la fonction privée de Super Clone fonctionne-t-elle protégeant ma vie privée?</string>
-    <string name="text_Q5_content">A5: un mot de passe est nécessaire pour accéder aux applications privées chaque fois que vous réveillez votre appareil. En outre, toutes les applications privées sont installées sur Super Clone et, par conséquent, toutes les données des applications privées ne sont accessibles par aucun programme externe.</string>
-    <string name="text_Q4_title">Q4: Pourquoi Super Clone a-t-il utilisé autant d\'espace de stockage?</string>
-    <string name="text_Q4_content">A4: Tous les sous-comptes ajoutés sur votre appareil sont par défaut répertoriés sous Super Clone par le système d\'exploitation Android. La grande quantité de consommation de stockage indiquée sous Super Clone est la totalité de la mémoire totale utilisée pour tous les sous-comptes que vous avez ajoutés. Super Clone utilise lui-même peu de stockage.</string>
-    <string name="text_Q3_title">Q3: Pourquoi la consommation de stockage de Super Clone augmente-t-elle?</string>
-    <string name="text_Q3_content">A3: Tous les sous-comptes ajoutés sur votre appareil sont par défaut répertoriés sous Super Clone par le système d\'exploitation Android. Par exemple, lorsque vous ajoutez un sous-compte Facebook à votre appareil, tout le stockage utilisé pour votre deuxième compte Facebook (application) est répertorié sous Super Clone. Par conséquent, la consommation de stockage répertoriée pour Super Clone semblera augmenter considérablement lorsque vous ajoutez plus de sous-comptes. Soyez assuré que la consommation de stockage de Super Clone elle-même ne augmente pas beaucoup.</string>
-    <string name="text_Q2_title">Q2: Super Clone va-t-il collecter et utiliser mes informations privées?</string>
-    <string name="text_Q1_content_2">A1: assurez-vous que Super Clone a un accès réseau</string>
-    <string name="text_Q1_title">Q1: Pourquoi je ne peux pas recevoir de notifications de messages des applications activées par Super Clone?</string>
-    <string name="text_Q2_content">A2: Non, Super Clone ne recueillera que de petites quantités de vos \"données publiques\" (par exemple Avatar, surnom, etc.), et cela ne sera utilisé que dans votre appareil pour créer une meilleure expérience utilisateur pour vous. Super Clone promet qu\'aucune de vos données privées ne sera collectée ou utilisée.</string>
+    <string name="text_Q6_content">A6: vérifiez si vous avez activé le casier pour cette application et autorisez WhatsClone à afficher la fenêtre flottante. Par exemple, sur le périphérique Xiaomi, Paramètres-> Gestion des applications-> WhatsClone-> Contrôle des autorisations-> Fenêtre flottante.</string>
+    <string name="text_Q5_title">Q5: Comment la fonction privée de WhatsClone fonctionne-t-elle protégeant ma vie privée?</string>
+    <string name="text_Q5_content">A5: un mot de passe est nécessaire pour accéder aux applications privées chaque fois que vous réveillez votre appareil. En outre, toutes les applications privées sont installées sur WhatsClone et, par conséquent, toutes les données des applications privées ne sont accessibles par aucun programme externe.</string>
+    <string name="text_Q4_title">Q4: Pourquoi WhatsClone a-t-il utilisé autant d\'espace de stockage?</string>
+    <string name="text_Q4_content">A4: Tous les sous-comptes ajoutés sur votre appareil sont par défaut répertoriés sous WhatsClone par le système d\'exploitation Android. La grande quantité de consommation de stockage indiquée sous WhatsClone est la totalité de la mémoire totale utilisée pour tous les sous-comptes que vous avez ajoutés. WhatsClone utilise lui-même peu de stockage.</string>
+    <string name="text_Q3_title">Q3: Pourquoi la consommation de stockage de WhatsClone augmente-t-elle?</string>
+    <string name="text_Q3_content">A3: Tous les sous-comptes ajoutés sur votre appareil sont par défaut répertoriés sous WhatsClone par le système d\'exploitation Android. Par exemple, lorsque vous ajoutez un sous-compte Facebook à votre appareil, tout le stockage utilisé pour votre deuxième compte Facebook (application) est répertorié sous WhatsClone. Par conséquent, la consommation de stockage répertoriée pour WhatsClone semblera augmenter considérablement lorsque vous ajoutez plus de sous-comptes. Soyez assuré que la consommation de stockage de WhatsClone elle-même ne augmente pas beaucoup.</string>
+    <string name="text_Q2_title">Q2: WhatsClone va-t-il collecter et utiliser mes informations privées?</string>
+    <string name="text_Q1_content_2">A1: assurez-vous que WhatsClone a un accès réseau</string>
+    <string name="text_Q1_title">Q1: Pourquoi je ne peux pas recevoir de notifications de messages des applications activées par WhatsClone?</string>
+    <string name="text_Q2_content">A2: Non, WhatsClone ne recueillera que de petites quantités de vos \"données publiques\" (par exemple Avatar, surnom, etc.), et cela ne sera utilisé que dans votre appareil pour créer une meilleure expérience utilisateur pour vous. WhatsClone promet qu\'aucune de vos données privées ne sera collectée ou utilisée.</string>
     <string name="submit_success">Merci d\'avoir répondu!</string>
     <string name="start">Début</string>
     <string name="star_rating">Go 5 étoiles maintenant</string>
@@ -125,8 +125,8 @@
     <string name="delete_dialog_content">En supprimant cette application clonée, vous devez supprimer toutes ses données.</string>
     <string name="dialog_feedback_content">Souhaitez-vous nous donner quelques commentaires pour l\'améliorer?</string>
     <string name="dialog_love_content">Voulez-vous nous donner une note de 5 étoiles sur Play Store? Cela nous inspirera et nous apprécions votre soutien!</string>
-    <string name="dialog_love_title">Love Super Clone</string>
-    <string name="dialog_rating_us_content">Utilisez l\'application Super Clone?</string>
+    <string name="dialog_love_title">Love WhatsClone</string>
+    <string name="dialog_rating_us_content">Utilisez l\'application WhatsClone?</string>
     <string name="enable_lock_settings_content">Basculer pour activer ou désactiver la fonctionnalité de casier de confidentialité</string>
     <string name="enable_lock_settings_title">Casier de confidentialité</string>
     <string name="enable_notification">Activer la notification</string>
@@ -143,7 +143,7 @@
     <string name="update_dialog_title">Mettre à jour</string>
     <string name="update_dialog_right">Mettre à jour</string>
     <string name="update_dialog_left">Ignorer</string>
-    <string name="update_dialog_content">Une nouvelle version arrive! Nous avons beaucoup amélioré la dernière version %s. Voulez-vous mettre à jour votre Super Clone maintenant?</string>
+    <string name="update_dialog_content">Une nouvelle version arrive! Nous avons beaucoup amélioré la dernière version %s. Voulez-vous mettre à jour votre WhatsClone maintenant?</string>
     <string name="crash_hint">Désolé, des erreurs se produisent, et nous allons le réparer dans la prochaine version.</string>
     <string name="clone_error"></string>
     <string name="check_update"><u>Vérifier la mise à jour</u></string>
