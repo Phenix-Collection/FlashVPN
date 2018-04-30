@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/title_bar_bg">
+    android:background="@color/theme_color2">
 
     <ImageView
         android:layout_width="120dp"
@@ -19,7 +19,7 @@
         android:layout_marginTop="20dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="@string/app_name"
+        android:text="@string/app_alias_name"
         android:textAllCaps="true"
         android:textColor="@color/white"/>
     <TextView
@@ -48,7 +48,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
-        android:onClick="onJoinUsClick">
+        android:onClick="onJoinUsClick"
+        android:id="@+id/join_us">
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"

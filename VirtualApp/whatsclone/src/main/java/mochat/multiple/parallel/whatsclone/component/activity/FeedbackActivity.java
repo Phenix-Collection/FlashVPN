@@ -104,8 +104,8 @@ public class FeedbackActivity extends BaseActivity {
 
                 Intent data=new Intent(Intent.ACTION_SENDTO);
                 data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
-                data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about SuperClone-Pro");
-                String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "Super Clone version: " + BuildConfig.VERSION_NAME
+                data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about WhatsClone");
+                String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "WhatsClone version: " + BuildConfig.VERSION_NAME
                         + "\n" + "Model info: " + Build.FINGERPRINT + "\nGMS state: " + PreferencesUtils.isGMSEnable() + "\n";
                 for (InstalledAppInfo appInfo: VirtualCore.get().getInstalledApps(0)) {
                     String pkgInfo = "\n Package: " + appInfo.packageName + " path: " + appInfo.apkPath;

@@ -11,13 +11,13 @@
         android:layout_marginRight="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:background="@color/white"
+        android:background="@color/theme_color2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_gray_dark"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginTop="10dp"
@@ -37,7 +37,7 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:id="@+id/app_label"
-            android:textColor="@color/text_gray_dark"
+            android:textColor="@color/white"
             android:maxLines="1"
             android:maxLength="36"
             android:textSize="16sp"
@@ -51,7 +51,7 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_gray_dark"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:text="@string/hue"/>
             <SeekBar
@@ -71,7 +71,7 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_gray_dark"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:text="@string/saturation"/>
             <SeekBar
@@ -91,7 +91,7 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_gray_dark"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:text="@string/light"/>
             <SeekBar
@@ -112,15 +112,14 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_gray_dark"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:text="@string/badge"/>
 
-            <CheckBox
-                android:id="@+id/badge_checkbox"
+            <mochat.multiple.parallel.whatsclone.widgets.RoundSwitch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/checkbox_selector"/>
+                android:id="@+id/badge_checkbox"/>
         </LinearLayout>
 
         <LinearLayout
@@ -134,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/al_btn_reset"
                 android:textSize="16sp"
-                android:textColor="@color/clone_activity_start_btn"
+                android:textColor="@color/white"
                 android:layout_weight="1"
                 android:onClick="onReset"/>
 
@@ -143,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
                 android:textSize="16sp"
-                android:textColor="@color/clone_activity_start_btn"
+                android:textColor="@color/white"
                 android:onClick="onCancel"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
@@ -153,7 +152,7 @@
                 android:text="@string/ok"
                 android:textSize="16sp"
                 android:onClick="onConfirm"
-                android:textColor="@color/clone_activity_start_btn"
+                android:textColor="@color/white"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
         </LinearLayout>

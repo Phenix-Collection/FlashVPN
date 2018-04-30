@@ -271,7 +271,7 @@ public class MApp extends MultiDexApplication {
             //1. innerContext = null, internal error in Pb
             if (VirtualCore.get() != null
                     && (VirtualCore.get().isMainProcess() )) {
-                MLogs.logBug("Super Clone main app exception, exit.");
+                MLogs.logBug("Whats Clone main app exception, exit.");
                 pkg = "main";
                 tag = AppConstants.CrashTag.MAPP_CRASH;
                 //CrashReport.setUserSceneTag(context, AppConstants.CrashTag.MAPP_CRASH);

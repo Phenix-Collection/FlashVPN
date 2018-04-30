@@ -26,6 +26,7 @@ import mochat.multiple.parallel.whatsclone.utils.BitmapUtils;
 import mochat.multiple.parallel.whatsclone.utils.CloneHelper;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
+import mochat.multiple.parallel.whatsclone.widgets.RoundSwitch;
 
 import java.io.File;
 
@@ -39,7 +40,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
     private SeekBar seekBarSat;
     private SeekBar seekBarLight;
     private EditText labelText;
-    private CheckBox badgeCheckBox;
+    private RoundSwitch badgeCheckBox;
     private String pkg;
     private CustomizeAppData mData;
     private AppModel appModel;
@@ -72,7 +73,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         seekBarLight.setOnSeekBarChangeListener(this);
         seekBarSat.setOnSeekBarChangeListener(this);
         labelText = (EditText) findViewById(R.id.app_label);
-        badgeCheckBox = (CheckBox) findViewById(R.id.badge_checkbox);
+        badgeCheckBox = (RoundSwitch) findViewById(R.id.badge_checkbox);
         badgeCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

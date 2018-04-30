@@ -29,6 +29,7 @@ import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
 
 public class AboutActivity extends BaseActivity {
     private String fbUrl;
+    private String googleUrl;
     private TextView termsTxt;
     private TextView versionTxt;
     @Override
@@ -41,6 +42,12 @@ public class AboutActivity extends BaseActivity {
             View view = findViewById(R.id.follow_us);
             view.setVisibility(View.INVISIBLE);
            // followTv.setVisibility(View.INVISIBLE);
+        }
+        googleUrl = RemoteConfig.getString("google_follow_page");
+        if (TextUtils.isEmpty(googleUrl) || googleUrl.equals("off")) {
+            View view = findViewById(R.id.join_us);
+            view.setVisibility(View.INVISIBLE);
+            // followTv.setVisibility(View.INVISIBLE);
         }
         termsTxt = (TextView) findViewById(R.id.terms_txt);
         versionTxt = (TextView) findViewById(R.id.version_info);
@@ -91,7 +98,7 @@ public class AboutActivity extends BaseActivity {
 
     public void onJoinUsClick(View view) {
         try {
-            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://plus.google.com/communities/104830818454731991305"));
+            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(googleUrl));
 //                intent.putExtra("START_OUTTER_APP_FLAG",true);
             startActivity(intent);
             EventReporter.generalClickEvent(this, "join_us_click");
