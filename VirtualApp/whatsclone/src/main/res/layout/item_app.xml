@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/selector_grid_app">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@mipmap/more_dot"
+            android:id="@+id/item_detail"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center|center_horizontal|center_vertical">
+            android:layout_marginTop="35dp"
+            android:gravity="center_horizontal">
 
-                <mochat.multiple.parallel.whatsclone.widgets.dragdrop.DragImageView
+                <ImageView
                     android:id="@+id/app_icon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:scaleType="centerCrop" />
 
@@ -26,9 +33,19 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/white"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="12dp"
                     android:layout_marginBottom="5dp"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
+
+                <ImageView
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:id="@+id/new_dot"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/shape_new_dot"
+                    android:layout_marginBottom="8dp"
+                    />
         </LinearLayout>
 
 </RelativeLayout>

@@ -7,7 +7,7 @@
 
     <string name="appwall_title">Discover</string>
     <string name="feel_lucky" translatable="false">Feel Lucky</string>
-    <string name="booster_title" translatable="false">Super Boost</string>
+    <string name="booster_title" translatable="false">RAM Optimize</string>
 
     <string name="action_settings">Settings</string>
     <string name="most_popular_apps">Most Popular</string>
@@ -16,6 +16,7 @@
     <string name="btn_clone">Clone</string>
     <string name="start">Start</string>
     <string name="about">About</string>
+    <string name="add_app">Add</string>
     <string name="cancel">Cancel</string>
     <string name="cloning">Cloning...</string>
     <string name="cloning_tips">%s is being cloned ...</string>
@@ -24,6 +25,7 @@
     <string name="first_start_tips">It may take a little longer for the first start.</string>
     <string name="upgrade_start_tips">It may take a little longer as this app was just upgraded.</string>
     <string name="clone_success">%s is ready. Enjoy it now!</string>
+    <string name="delete">Delete</string>
 
     <!-- nav menu -->
     <string name="notifications">Notifications</string>
@@ -80,7 +82,6 @@
     <!-- settings -->
     <string name="settings_shortcut_title">Shortcut</string>
     <string name="check_update"><u>Check Update</u></string>
-    <string name="create_shortcut">Create Shortcut</string>
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
     <string name="settings_gms">Enable Google Play service for clones</string>
     <string name="settings_gms_title">Google Play Service</string>

@@ -6,8 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,6 +33,7 @@ import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.BaseFragment;
 import mochat.multiple.parallel.whatsclone.component.activity.AppListActivity;
 import mochat.multiple.parallel.whatsclone.component.activity.AppStartActivity;
+import mochat.multiple.parallel.whatsclone.component.activity.CustomizeIconActivity;
 import mochat.multiple.parallel.whatsclone.component.activity.HomeActivity;
 import mochat.multiple.parallel.whatsclone.component.activity.NativeInterstitialActivity;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
@@ -46,15 +51,9 @@ import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
 import mochat.multiple.parallel.whatsclone.widgets.LeftRightDialog;
-import mochat.multiple.parallel.whatsclone.widgets.CustomFloatView;
 import mochat.multiple.parallel.whatsclone.widgets.GridAppCell;
 import mochat.multiple.parallel.whatsclone.widgets.HeaderGridView;
 import mochat.multiple.parallel.whatsclone.widgets.TutorialGuides;
-import mochat.multiple.parallel.whatsclone.widgets.dragdrop.DragController;
-import mochat.multiple.parallel.whatsclone.widgets.dragdrop.DragImageView;
-import mochat.multiple.parallel.whatsclone.widgets.dragdrop.DragLayer;
-import mochat.multiple.parallel.whatsclone.widgets.dragdrop.DragSource;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -68,17 +67,14 @@ public class HomeFragment extends BaseFragment {
     private HeaderGridView pkgGridView;
     private PackageGridAdapter pkgGridAdapter;
     private List<AppModel> appInfos = new ArrayList<>();
-    private CustomFloatView floatView;
+    private PopupMenu menuPopup;
     private ExplosionField mExplosionField;
-    private DragController mDragController;
-    private DragLayer mDragLayer;
     private LinearLayout nativeAdContainer;
 
     private IAdAdapter nativeAd;
 
     private FuseAdLoader mNativeAdLoader;
     private FuseAdLoader mApplistAdLoader;
-    private View mLockSettingIcon;
     private static final String CONFIG_HOME_NATIVE_PRIOR_TIME = "home_native_prior_time";
     private static final String CONFIG_HOME_SHOW_LUCKY_RATE = "home_show_lucky_rate";
     private static final String CONFIG_HOME_PRELOAD_APPLIST_GATE= "home_preload_applist_gate";
@@ -122,7 +118,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_home, null);
-        mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
@@ -137,53 +132,66 @@ public class HomeFragment extends BaseFragment {
         if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(CONFIG_NEED_PRELOAD_LOADING)) {
             AppStartActivity.preloadAd(mActivity);
         }
-        mDragController = new DragController(mActivity);
-        mDragController.setDragListener(mDragListener);
-        mDragController.setWindowToken(contentView.getWindowToken());
-        mDragLayer.setDragController(mDragController);
         return contentView;
     }
-
-    DragController.DragListener mDragListener = new DragController.DragListener() {
-        @Override
-        public void onDragStart(DragSource source, Object info, int dragAction) {
-            MLogs.d("onDragStart");
-            floatView.animToExpand();
-            mDragController.addDropTarget(floatView);
+    private class ItemDetailListener implements View.OnClickListener {
+        int idx;
+        ItemDetailListener(int i) {
+            idx = i;
         }
 
         @Override
-        public void onDragEnd(DragSource source, Object info, int action) {
-            MLogs.d("onDragEnd + " + floatView.getSelectedState());
-            switch (floatView.getSelectedState()) {
-                case CustomFloatView.SELECT_BTN_LEFT:
-                    EventReporter.addShortCut(mActivity, ((AppModel) info).getPackageName());
-                    CommonUtils.createShortCut(mActivity,((AppModel) info));
-                    floatView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
-                            //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
-                        }
-                    },CustomFloatView.ANIM_DURATION / 2);
-                    break;
-                case CustomFloatView.SELECT_BTN_RIGHT:
-                    pkgGridAdapter.notifyDataSetChanged();
-                    floatView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showDeleteDialog((AppModel) info);
-                        }
-                    },CustomFloatView.ANIM_DURATION / 2);
-                    break;
-                default:
-                    break;
+        public void onClick(View more) {
+            if (menuPopup == null) {
+                menuPopup = new PopupMenu(getActivity(), more);
+                menuPopup.inflate(R.menu.item_detail_menu);
             }
-            floatView.animToIdel();
-            mDragController.removeDropTarget(floatView);
-        }
-    };
+            //菜单项的监听
+            menuPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    AppModel model = (AppModel) pkgGridAdapter.getItem(idx);
+                    switch (menuItem.getItemId()) {
+                        case R.id.item_shortcut:
+                            if (model != null){
+                                CommonUtils.createShortCut(mActivity,(model));
+                                more.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
+                                        //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+                                    }
+                                },500);
+                            }
+                            break;
+                        case R.id.item_customize:
+                            if (model != null) {
+                                CustomizeIconActivity.start(getActivity(), model.getPackageName(), model.getPkgUserId());
+                            }
+                            break;
+                        case R.id.item_delete:
+                            if (model != null){
+                                showDeleteDialog( model);
+                            }
+                            break;
+                    }
+                    return true;
+                }
+            });
+            try {
+                MenuPopupHelper menuHelper = new MenuPopupHelper(getActivity(), (MenuBuilder) menuPopup.getMenu(), more);
+                //menuHelper.setForceShowIcon(true);
+                menuHelper.show();
+//            Field field = menuPopup.getClass().getDeclaredField("mPopup");
+//            field.setAccessible(true);
+//            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(menuPopup);
+//            mHelper.setForceShowIcon(true);
+            } catch (Exception e) {
+                MLogs.logBug(MLogs.getStackTraceString(e));
+            }
 
+        }
+    }
     private class PackageGridAdapter extends BaseAdapter {
 
         public int getPosition(AppModel appModel) {
@@ -202,6 +210,7 @@ public class HomeFragment extends BaseFragment {
         @Override
         public int getCount() {
             int size = appInfos == null ? 0 : appInfos.size();
+            size ++ ;//add
             if (showBooster ) {
                 size ++;
                 //for booster icon
@@ -209,11 +218,11 @@ public class HomeFragment extends BaseFragment {
             if (showLucky) {
                 size ++;
             }
-            if ( size < 15 ) {
+            if ( size < 12 ) {
                 if (adShowed) {
-                    size = 15;
+                    size = 12;
                 } else {
-                    size = 18;
+                    size = 15;
                 }
 
             } else {
@@ -244,6 +253,9 @@ public class HomeFragment extends BaseFragment {
 
             ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
             TextView appName = (TextView) view.findViewById(R.id.app_name);
+            ImageView detail = (ImageView) view.findViewById(R.id.item_detail);
+            ImageView newDot = (ImageView) view.findViewById(R.id.new_dot);
+            detail.setOnClickListener(new ItemDetailListener(i));
 
             AppModel appModel = (AppModel) getItem(i);
             if (appModel != null) {
@@ -253,17 +265,27 @@ public class HomeFragment extends BaseFragment {
                 appIcon.setImageBitmap(bmp);
                 appModel.setCustomIcon(bmp);
                 appName.setText(data.customized? data.label: appModel.getName());
+                if (CustomizeAppData.hasLaunched(appModel.getPackageName(), appModel.getPkgUserId())) {
+                    newDot.setVisibility(View.INVISIBLE);
+                }
             } else {
+                detail.setVisibility(View.GONE);
+                newDot.setVisibility(View.INVISIBLE);
                 int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
                 int boosterIdx = appInfos.size();
+                int addIdx = showLucky? luckIdx + 1: luckIdx;
                 if (showLucky && i == luckIdx) {
                     appIcon.setImageResource(R.drawable.icon_feel_lucky);
                     appName.setText(R.string.feel_lucky);
                     appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                     appName.setTextColor(getResources().getColor(R.color.lucky_red));
+                    newDot.setBackgroundResource(R.color.lucky_red);
                 } else if(showBooster && i == boosterIdx) {
                     appIcon.setImageResource(R.drawable.boost_icon);
                     appName.setText(R.string.booster_title);
+                } else if (i == addIdx) {
+                    appIcon.setImageResource(R.mipmap.icon_add_more);
+                    appName.setText(R.string.add_app);
                 }
             }
 
@@ -277,24 +299,11 @@ public class HomeFragment extends BaseFragment {
         nativeAdContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         nativeAdContainer.setOrientation(LinearLayout.VERTICAL);
 
-        mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
         pkgGridView = (HeaderGridView) contentView.findViewById(R.id.grid_app);
         pkgGridView.addHeaderView(nativeAdContainer);
         pkgGridAdapter = new PackageGridAdapter();
 //        pkgGridView.setLayoutAnimation(getGridLayoutAnimController());
         pkgGridView.setAdapter(pkgGridAdapter);
-
-        floatView = (CustomFloatView) contentView.findViewById(R.id.addApp_btn);
-        floatView.startBreath();
-
-        floatView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAppListActivity();
-                PreferencesUtils.setCloneGuideShowed(mActivity);
-                EventReporter.homeAdd(mActivity);
-            }
-        });
 
         pkgGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -304,20 +313,11 @@ public class HomeFragment extends BaseFragment {
                 MLogs.d("onItemClick " + i);
                 if(i >= 0 && i < appInfos.size()){
                     AppModel model = appInfos.get(i);
-                    if(floatView.isIdle()){
-                        startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
-                    }else{
-                        floatView.restore();
-                        floatView.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
-                            }
-                        },100);
-                    }
+                    startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
                 }else{
                     int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
                     int boosterIdx = appInfos.size();
+                    int addIdx = showLucky? luckIdx + 1: luckIdx;
                     if(showLucky && i == luckIdx){
                         MLogs.d("Show lucky");
                         Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
@@ -326,6 +326,10 @@ public class HomeFragment extends BaseFragment {
                     } else if (showBooster && i==boosterIdx) {
                         MLogs.d("Start booster");
                         BoosterSdk.startClean(mActivity, "home_item");
+                    } else if (i == addIdx) {
+                        startAppListActivity();
+                        PreferencesUtils.setCloneGuideShowed(mActivity);
+                        EventReporter.homeAdd(mActivity);
                     }
                 }
             }
@@ -336,22 +340,29 @@ public class HomeFragment extends BaseFragment {
                 int i = pos - pkgGridView.getGridItemStartOffset();
                 MLogs.d("onItemLongClick " + i);
                 if (pkgGridAdapter.getItem(i) != null) {
-                    DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
-                    mDragController.startDrag(iv, iv, pkgGridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
+                    ImageView more = (ImageView)view.findViewById(R.id.item_detail);
+                    if (more != null) {
+                        more.performClick();
+                    }
                     return true;
                 } else {
                     int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
                     int boosterIdx = appInfos.size();
+                    int addIdx = showLucky? luckIdx + 1: luckIdx;
                     if(showLucky && i == luckIdx){
                         MLogs.d("Show lucky");
                         Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
                         startActivity(intent);
-                        EventReporter.homeGiftClick(mActivity, "lucky_item_long");
+                        EventReporter.homeGiftClick(mActivity, "lucky_item");
                     } else if (showBooster && i==boosterIdx) {
                         MLogs.d("Start booster");
-                        BoosterSdk.startClean(mActivity, "home_item_long");
+                        BoosterSdk.startClean(mActivity, "home_item");
+                    } else if (i == addIdx) {
+                        startAppListActivity();
+                        PreferencesUtils.setCloneGuideShowed(mActivity);
+                        EventReporter.homeAdd(mActivity);
                     }
-                    return  false;
+                    return true;
                 }
 
             }
@@ -365,30 +376,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     private TutorialGuides.Builder mTutorialBuilder;
-
-    private void showCloneAppGuide(){
-        //TutorialGuidesUtils.removeOnGlobalLayoutListener(pkgGridView,this);
-        try {
-            String text = getString(R.string.start_tips);
-            mTutorialBuilder = new TutorialGuides.Builder(mActivity);
-
-            mTutorialBuilder.anchorView(floatView);
-            mTutorialBuilder.defaultMaxWidth(true);
-            mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
-                @Override
-                public void onShow(TutorialGuides tooltip) {
-                    PreferencesUtils.setCloneGuideShowed(mActivity);
-                }
-            });
-            mTutorialBuilder.text(text)
-                    .gravity(Gravity.TOP)
-                    .build()
-                    .show();
-        }catch (Exception e){
-            MLogs.e("error to show guides");
-            MLogs.e(e);
-        }
-    }
 
     private TutorialGuides longClickGuide = null;
     private void showLongClickItemGuide(){
@@ -449,17 +436,8 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         //GreyAttribute.checkAndClick(getActivity(),"com.kamagames.pokerist");
-        if (appInfos.size() > 0) {
-            pkgGridView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mActivity != null) {
-                        if (appInfos.size() > 0 && !PreferencesUtils.hasShownLongClickGuide(mActivity)) {
-                            showLongClickItemGuide();
-                        }
-                    }
-                }
-            }, 1500);
+        if (menuPopup != null) {
+            menuPopup.dismiss();
         }
         if (PreferencesUtils.isAdFree()) {
             hideAd();
@@ -517,15 +495,6 @@ public class HomeFragment extends BaseFragment {
                         }
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
-                        }
-                        if (!PreferencesUtils.hasShownCloneGuide(mActivity) && (clonedApp == null || clonedApp.size() == 0)) {
-                            pkgGridView.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showCloneAppGuide();
-                                }
-                            }, 1000);
-
                         }
                     }
                 });
@@ -599,12 +568,6 @@ public class HomeFragment extends BaseFragment {
 
     public void showFromBottom(){
         AnimatorHelper.verticalShowFromBottom(contentView);
-        floatView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                floatView.startRote();
-            }
-        },AnimatorHelper.DURATION_NORMAL);
     }
 
     public void hideToBottom(){

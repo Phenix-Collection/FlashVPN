@@ -361,9 +361,9 @@ public class AppStartActivity extends BaseActivity {
             });
             String title = (data.customized) ? data.label : appModel.getName();
             mTxtTips.setText(String.format(getString(R.string.app_starting_tips), title));
-            mFirstStart = PreferencesUtils.isFirstStart(appModel.getName());
+            mFirstStart = !CustomizeAppData.hasLaunched(appModel.getPackageName(), appModel.getPkgUserId());
             if (mFirstStart){
-                PreferencesUtils.setStarted(appModel.getName());
+                CustomizeAppData.setLaunched(appModel.getPackageName(), appModel.getPkgUserId());
                 mFirstStartTips.setVisibility(View.VISIBLE);
                 mFirstStartTips.setText(getString(R.string.first_start_tips));
             }else if(needDoUpGrade) {

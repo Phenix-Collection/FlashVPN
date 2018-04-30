@@ -1,16 +1,21 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/title_bar_bg</item>
+        <item name="colorPrimary">@color/theme_color2</item>
         <item name="colorPrimaryDark">@color/main_blue</item>
-        <item name="colorAccent">@color/title_bar_bg</item>
+        <item name="colorAccent">@color/theme_color2</item>
         <item name="android:listViewStyle">@style/CustomListViewStyle</item>
         <item name="android:gridViewStyle">@style/CustomListViewStyle</item>
+        <item name="android:popupMenuStyle">@style/CustomPopupMenuStyle</item>
         <item name="android:screenOrientation">portrait</item>
         <item name="android:windowAnimationStyle">@style/activityAnimationStyle</item>
 
     </style>
 
+    <style name="CustomPopupMenuStyle" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@color/theme_color_pressed</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
     <style name="CustomListViewStyle" parent="Widget.AppCompat.ListView">
         <item name="android:listSelector">@drawable/app_pressed_selector</item>
     </style>
@@ -18,6 +23,7 @@
     <style name="AppTheme.FullScreenAndTranslucent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:popupMenuStyle">@style/CustomPopupMenuStyle</item>
         <item name="android:windowFullscreen">true</item>
     </style>
     <style name="AppTheme.FullScreen">
@@ -27,6 +33,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@style/animation_translucent_translate</item>
+        <item name="android:popupMenuStyle">@style/CustomPopupMenuStyle</item>
         <!--<item name="android:windowBackground">@android:color/holo_green_light</item>-->
     </style>
 
@@ -140,7 +147,9 @@
     <style name="AppTheme2" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item></style>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:popupMenuStyle">@style/CustomPopupMenuStyle</item>
+    </style>
 
     <style name="DialogActivityStyle">
         <item name="android:windowBackground">@android:color/transparent</item>

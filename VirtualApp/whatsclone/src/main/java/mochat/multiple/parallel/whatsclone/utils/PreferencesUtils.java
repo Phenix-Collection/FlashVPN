@@ -357,14 +357,6 @@ public class PreferencesUtils {
         return getLong(c, "last_icon_ad_click",-1);
     }
 
-    public static boolean isFirstStart(String name) {
-        return getLong(MApp.getApp(), name+"_first_start", -1) == -1;
-    }
-
-    public static void setStarted(String name) {
-        putLong(MApp.getApp(), name+"_first_start", System.currentTimeMillis());
-    }
-
     public static void resetStarted(String name) {
         putLong(MApp.getApp(), name+"_first_start", -1);
     }

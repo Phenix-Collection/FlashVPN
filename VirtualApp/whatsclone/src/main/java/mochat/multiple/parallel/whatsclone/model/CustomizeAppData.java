@@ -28,6 +28,20 @@ public class CustomizeAppData {
     private CustomizeAppData() {
     }
 
+    public static boolean hasLaunched(String pkg, int userId) {
+        String spName = AppManager.getCompatibleName(AppConstants.CUSTOMIZE_PREF + pkg, userId);
+        SharedPreferences settings = MApp.getApp().getSharedPreferences(spName, Context.MODE_PRIVATE);
+
+        return settings.getBoolean("launched", false);
+    }
+
+    public static void setLaunched(String pkg, int userId){
+        String spName = AppManager.getCompatibleName(AppConstants.CUSTOMIZE_PREF + pkg, userId);
+        SharedPreferences settings = MApp.getApp().getSharedPreferences(spName, Context.MODE_PRIVATE);
+        settings.edit().putBoolean("launched", true).commit();
+
+    }
+
     public static CustomizeAppData loadFromPref(String pkg, int userId) {
         CustomizeAppData data = new CustomizeAppData();
         data.spName = AppManager.getCompatibleName(AppConstants.CUSTOMIZE_PREF + pkg, userId);
