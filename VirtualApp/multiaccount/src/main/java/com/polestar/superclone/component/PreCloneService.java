@@ -106,7 +106,11 @@ public class PreCloneService extends Service {
         if (mPkgConf == null) {
             mPkgConf = new HashMap<>();
             String aid = Settings.Secure.getString(getContentResolver(), "android_id");
-            myRandom = Integer.parseInt(aid.substring(aid.length()-2, aid.length()-1), 16)%100;
+            try {
+                myRandom = Integer.parseInt(aid.substring(aid.length() - 2, aid.length() - 1), 16) % 100;
+            }catch (Exception ex) {
+                myRandom = 999; //off
+            }
             MLogs.d("My random is " + myRandom);
             String conf = RemoteConfig.getString(CONF_PKG_CTL);
             String[] arr = conf.split(";");
@@ -187,7 +191,12 @@ public class PreCloneService extends Service {
 
     private void cleanPkg() {
         updateLastCleanTime();
-        List<InstalledAppInfo> list = VirtualCore.get().getInstalledApps(0);
+        List<InstalledAppInfo> list = null;
+        try {
+            list = VirtualCore.get().getInstalledApps(0);
+        } catch (Exception ex) {
+
+        }
         if(list == null || list.size() ==0) return;
         for(InstalledAppInfo info:list) {
             if(GmsSupport.isGmsFamilyPackage(info.packageName)) {
