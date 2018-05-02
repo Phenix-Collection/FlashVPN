@@ -103,7 +103,7 @@ public class FeedbackActivity extends BaseActivity {
                 }
 
                 Intent data=new Intent(Intent.ACTION_SENDTO);
-                data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
+                data.setData(Uri.parse("mailto:doriscoco.studio@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about WhatsClone");
                 String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "WhatsClone version: " + BuildConfig.VERSION_NAME
                         + "\n" + "Model info: " + Build.FINGERPRINT + "\nGMS state: " + PreferencesUtils.isGMSEnable() + "\n";
