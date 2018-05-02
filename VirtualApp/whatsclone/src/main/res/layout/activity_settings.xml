@@ -9,30 +9,24 @@
         android:layout_height="match_parent"
         android:background="@color/light_gray"
         android:orientation="vertical">
-
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:paddingLeft="5dp"-->
-            <!--android:paddingRight="22dp"-->
-            <!--android:text="@string/settings_general"-->
-            <!--android:textColor="@color/text_gray_light"-->
-            <!--android:textSize="12sp" />-->
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@android:color/white"
-            android:paddingLeft="22dp">
+            android:paddingLeft="22dp"
+            android:paddingStart="22dp"
+            >
 
             <mochat.multiple.parallel.whatsclone.widgets.RoundSwitch
                 android:id="@+id/shortcut_swichbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="16dp" />
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                />
 
             <TextView
                 android:id="@+id/shortcut_title"
@@ -41,6 +35,7 @@
                 android:layout_marginBottom="13dp"
                 android:layout_marginTop="18dp"
                 android:layout_toLeftOf="@id/shortcut_swichbtn"
+                android:layout_toStartOf="@id/shortcut_swichbtn"
                 android:text="@string/settings_shortcut_title"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="15sp" />
@@ -50,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/shortcut_title"
                 android:layout_toLeftOf="@id/shortcut_swichbtn"
+                android:layout_toStartOf="@id/shortcut_swichbtn"
                 android:text="@string/settings_shortcut_content"
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp" />
@@ -62,7 +58,9 @@
             android:layout_height="70dp"
             android:background="@android:color/white"
             android:onClick="onPrivacyLockerClick"
-            android:paddingLeft="22dp">
+            android:paddingLeft="22dp"
+            android:paddingStart="22dp"
+            >
 
             <TextView
                 android:id="@+id/lock_setting_title"
@@ -90,7 +88,9 @@
             android:layout_height="70dp"
             android:background="@android:color/white"
             android:onClick="onNotificationSettingClick"
-            android:paddingLeft="22dp">
+            android:paddingLeft="22dp"
+            android:paddingStart="22dp"
+            >
 
             <TextView
                 android:id="@+id/notification_setting_title"
@@ -119,7 +119,9 @@
             android:layout_height="70dp"
             android:background="@android:color/white"
             android:onClick="onCustomizeClick"
-            android:paddingLeft="22dp">
+            android:paddingLeft="22dp"
+            android:paddingStart="22dp"
+            >
 
             <TextView
                 android:id="@+id/customize_title"
@@ -147,15 +149,20 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@android:color/white"
-            android:paddingLeft="22dp">
+            android:paddingLeft="22dp"
+            android:paddingStart="22dp"
+            >
 
             <mochat.multiple.parallel.whatsclone.widgets.RoundSwitch
                 android:id="@+id/gms_switch_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="16dp" />
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                />
 
             <TextView
                 android:id="@+id/gms_title"
@@ -164,6 +171,7 @@
                 android:layout_marginBottom="13dp"
                 android:layout_marginTop="18dp"
                 android:layout_toLeftOf="@id/gms_switch_btn"
+                android:layout_toStartOf="@id/gms_switch_btn"
                 android:text="@string/settings_gms_title"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="15sp" />
@@ -173,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/gms_title"
                 android:layout_toLeftOf="@id/gms_switch_btn"
+                android:layout_toStartOf="@id/gms_switch_btn"
                 android:text="@string/settings_gms"
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp" />
@@ -183,6 +192,7 @@
             android:layout_height="70dp"
             android:background="@android:color/white"
             android:paddingLeft="22dp"
+            android:paddingStart="22dp"
             android:visibility="gone">
 
             <mochat.multiple.parallel.whatsclone.widgets.RoundSwitch
@@ -190,8 +200,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"  />
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                />
 
             <TextView
                 android:id="@+id/adfree_title"
@@ -200,6 +213,7 @@
                 android:layout_marginBottom="13dp"
                 android:layout_marginTop="18dp"
                 android:layout_toLeftOf="@id/adfree_switch"
+                android:layout_toStartOf="@id/adfree_switch"
                 android:text="@string/settings_adfree_title"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="15sp" />
@@ -209,6 +223,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/adfree_title"
                 android:layout_toLeftOf="@id/adfree_switch"
+                android:layout_toStartOf="@id/adfree_switch"
                 android:text="@string/settings_adfree_content"
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp" />

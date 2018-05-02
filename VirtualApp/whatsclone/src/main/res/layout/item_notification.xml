@@ -10,6 +10,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/notification_item_margin"
         android:layout_marginLeft="@dimen/notification_item_margin"/>
 
     <TextView
@@ -20,7 +21,9 @@
         android:textSize="@dimen/title_bar_title_size"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:layout_toRightOf="@id/item_notification_icon"
+        android:layout_toEndOf="@id/item_notification_icon"
         android:textColor="@color/primary_dark_material_dark"/>
 
     <mochat.multiple.parallel.whatsclone.widgets.RoundSwitch
@@ -28,7 +31,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true">
     </mochat.multiple.parallel.whatsclone.widgets.RoundSwitch>
 

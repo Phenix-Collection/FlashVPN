@@ -6,7 +6,9 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:paddingTop="8dp"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:src="@mipmap/more_dot"
             android:id="@+id/item_detail"/>
@@ -15,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="40dp"
             android:gravity="center_horizontal">
 
                 <ImageView
@@ -42,7 +44,7 @@
                     android:layout_height="5dp"
                     android:id="@+id/new_dot"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/shape_new_dot"
                     android:layout_marginBottom="8dp"
                     />

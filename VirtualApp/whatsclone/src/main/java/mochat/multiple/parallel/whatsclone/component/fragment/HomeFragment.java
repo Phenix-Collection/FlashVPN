@@ -447,6 +447,14 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (menuPopup != null) {
+            menuPopup.dismiss();
+        }
+    }
+
     private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
     public static final String SLOT_HOME_HEADER_NATIVE = "slot_home_header_native";
     private List<AdConfig> headerNativeAdConfigs ;

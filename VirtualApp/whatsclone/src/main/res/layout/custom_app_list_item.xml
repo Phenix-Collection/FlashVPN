@@ -23,7 +23,7 @@
         android:textColor="@color/primary_dark_material_dark"/>
 
     <ImageView
-        android:src="@drawable/forward"
+        android:src="@mipmap/forward"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginRight="10dp"

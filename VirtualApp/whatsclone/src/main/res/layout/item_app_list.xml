@@ -9,9 +9,12 @@
         android:layout_width="75dp"
         android:layout_height="32dp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/clone_button"
         android:focusable="false"
         android:textAllCaps="false"
@@ -22,16 +25,20 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"/>
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"/>
 
     <TextView
         android:id="@+id/item_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_alignTop="@id/item_app_icon"
         android:layout_toLeftOf="@id/btn_clone"
+        android:layout_toStartOf="@id/btn_clone"
         android:layout_toRightOf="@id/item_app_icon"
+        android:layout_toEndOf="@id/item_app_icon"
         android:textColor="@color/white"
         android:textSize="@dimen/title_bar_title_size"/>
 
@@ -40,9 +47,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/item_app_name"
+        android:layout_alignStart="@id/item_app_name"
         android:layout_below="@id/item_app_name"
         android:layout_marginTop="4dp"
         android:layout_toLeftOf="@id/btn_clone"
+        android:layout_toStartOf="@id/btn_clone"
         android:textColor="#CCFFFFFF"
         android:textSize="10sp"/>
 

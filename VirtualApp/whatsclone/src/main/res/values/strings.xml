@@ -25,7 +25,6 @@
     <string name="first_start_tips">It may take a little longer for the first start.</string>
     <string name="upgrade_start_tips">It may take a little longer as this app was just upgraded.</string>
     <string name="clone_success">%s is ready. Enjoy it now!</string>
-    <string name="delete">Delete</string>
 
     <!-- nav menu -->
     <string name="notifications">Notifications</string>
@@ -81,6 +80,7 @@
 
     <!-- settings -->
     <string name="settings_shortcut_title">Shortcut</string>
+    <string name="create_shortcut">Create shortcut</string>
     <string name="check_update"><u>Check Update</u></string>
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
     <string name="settings_gms">Enable Google Play service for clones</string>
