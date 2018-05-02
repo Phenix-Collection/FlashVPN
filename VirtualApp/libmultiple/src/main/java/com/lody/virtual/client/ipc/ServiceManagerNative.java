@@ -61,6 +61,9 @@ public class ServiceManagerNative {
     }
 
     private static void linkBinderDied(final IBinder binder) {
+        if (binder == null) {
+            VLog.logbug(TAG, "linkBinderDied null");
+        }
         IBinder.DeathRecipient deathRecipient = new IBinder.DeathRecipient() {
             @Override
             public void binderDied() {
