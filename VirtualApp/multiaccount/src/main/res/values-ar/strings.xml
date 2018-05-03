@@ -193,4 +193,5 @@
     <string name="check_update"><u>تحقق من التحديث</u></string>
     <string name="saturation">التشبع</string>
     <string name="about">حول</string>
+    <string name="clone_success">%s جاهز. استمتع بها الآن!</string>
 </resources>

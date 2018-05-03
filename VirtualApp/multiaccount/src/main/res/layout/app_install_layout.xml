@@ -209,7 +209,7 @@
                     android:layout_marginBottom="5dp"
                     android:textColor="@color/clone_text_color"
                     android:textSize="18sp"
-                    android:text="Create Shortcut"/>
+                    android:text="@string/create_shortcut"/>
 
                 <com.polestar.superclone.widgets.BlueSwitch
                     android:id="@+id/shortcut_swichbtn"
