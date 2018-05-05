@@ -18,7 +18,7 @@ import java.util.Properties;
  */
 public class EventReporter {
 
-    private static final String APP_KEY = "Aqc1105890917";
+    private static final String APP_KEY = "AS6TU2K9RD6X";
     private static FirebaseAnalytics mFirebaseAnalytics;
 
 
