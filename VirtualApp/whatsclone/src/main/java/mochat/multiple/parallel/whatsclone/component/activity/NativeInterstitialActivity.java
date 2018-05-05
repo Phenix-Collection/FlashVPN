@@ -43,7 +43,7 @@ public class NativeInterstitialActivity extends Activity {
     private NativeExpressAdView mAdmobExpressView;
     private LinearLayout mAdContainer;
 
-    private static final String CONFIG_SLOT_HOME_LUCKY = "slot_home_lucky_new";
+    public static final String CONFIG_SLOT_HOME_LUCKY = "slot_home_lucky_new";
     //private static final String CONFIG_SLOT_HOME_LUCKY = "slot_test";
 
     private static final int MSG_TIMEOUT = 1;

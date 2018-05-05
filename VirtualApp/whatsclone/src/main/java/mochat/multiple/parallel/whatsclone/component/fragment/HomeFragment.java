@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -494,6 +495,7 @@ public class HomeFragment extends BaseFragment {
                         long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
                         showLucky = (!PreferencesUtils.isAdFree())
                                 && PreferencesUtils.hasCloned()
+                                && !TextUtils.isEmpty(RemoteConfig.getString(NativeInterstitialActivity.CONFIG_SLOT_HOME_LUCKY))
                                 && new Random().nextInt(100) < luckyRate ;
                         if (!showLucky) {
                             MLogs.d("Not show lucky. Rate: " + luckyRate);

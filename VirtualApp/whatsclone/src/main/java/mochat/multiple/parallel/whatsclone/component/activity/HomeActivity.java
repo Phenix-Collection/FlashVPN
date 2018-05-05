@@ -54,8 +54,6 @@ public class HomeActivity extends BaseActivity {
     private HomeFragment mHomeFragment;
     private DrawerLayout drawer;
     private ListView navigationList;
-    private View navigationLayout;
-    private TextView appNameTv;
     private ImageView giftIconView;
     private FuseAdLoader adLoader;
     private boolean isAutoInterstitialShown;
@@ -82,9 +80,7 @@ public class HomeActivity extends BaseActivity {
     private static final String CONFIG_AVAZU_IMP_RATE = "avazu_imp_rate";
 
     private String cloningPackage;
-    private RelativeLayout iconAdLayout;
     private RelativeLayout giftIconLayout;
-    private RelativeLayout wallButtonLayout;
     private IAdAdapter interstitialAd;
     private boolean av;
     private Handler mainHandler;
@@ -170,14 +166,10 @@ public class HomeActivity extends BaseActivity {
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         navigationList = (ListView) findViewById(R.id.navigation_list);
-        navigationLayout = findViewById(R.id.navigation_layout);
-        appNameTv = (TextView) findViewById(R.id.app_name);
         giftIconView = (ImageView) findViewById(R.id.gift_icon);
         giftIconLayout = (RelativeLayout) findViewById(R.id.gift_icon_layout);
         giftIconView.setVisibility(View.GONE);
         giftIconLayout.setVisibility(View.GONE);
-
-        iconAdLayout = (RelativeLayout)findViewById(R.id.icon_ad);
 
         navigationList.setAdapter(new NavigationAdapter(this));
 //        int width = DisplayUtils.getScreenWidth(this);
@@ -281,7 +273,9 @@ public class HomeActivity extends BaseActivity {
             giftIconView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showGiftIcon();
+                    if (!TextUtils.isEmpty(RemoteConfig.getString(NativeInterstitialActivity.CONFIG_SLOT_HOME_LUCKY))) {
+                        showGiftIcon();
+                    }
                 }
             },800);
             if (autoShowInterstitial && !isAutoInterstitialShown) {

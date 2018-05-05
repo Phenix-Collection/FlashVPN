@@ -21,7 +21,7 @@
     <entry>
         <key>slot_home_lucky_new</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/4428427963:0</value>
+        <value></value>
     </entry>
     <entry>
         <key>slot_app_lock</key>
@@ -61,7 +61,7 @@
     <entry>
         <key>slot_home_gift_interstitial</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/4428427963:0</value>
+        <value></value>
     </entry>
     <entry>
         <key>slot_home_header_native</key>
@@ -112,7 +112,7 @@
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
-        <value>adm:ca-app-pub-5490912237269284/9767082843:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>fb_follow_page</key>
@@ -221,7 +221,7 @@
     </entry>
     <entry>
         <key>slot_boost_ad</key>
-        <value>adm:ca-app-pub-5490912237269284/6729989417:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_app_start_native</key>
