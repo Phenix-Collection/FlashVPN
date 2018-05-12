@@ -73,6 +73,7 @@ public class AppStartActivity extends BaseActivity {
     private static final String CONFIG_APP_START_NATIVE_AD_RAMP = "slot_app_start_native_ramp_min";
     private static final String CONFIG_APP_START_AD_FILTER = "slot_app_start_filter";
     private static final String CONFIG_APP_START_AD_STYLE = "slot_app_start_style"; //native,interstitial,all
+    public final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
     private static HashSet<String> filterPkgs ;
     private static final long INTERSTITIAL_SHOW_DELAY = 2000;
     private boolean hasShownAd;
@@ -83,6 +84,9 @@ public class AppStartActivity extends BaseActivity {
     public static boolean needLoadInterstitialAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
             return false;
+        }
+        if (BuildConfig.DEBUG) {
+            return true;
         }
         String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
         if (!("interstitial".equals(style) || "all".equals(style))) {
@@ -108,12 +112,15 @@ public class AppStartActivity extends BaseActivity {
             }
         }
         MLogs.d("needLoad start app ad: " + need);
-        return (need && (!filterPkgs.contains(pkg) || pkg ==null)) || BuildConfig.DEBUG;
+        return (need && (!filterPkgs.contains(pkg) || pkg ==null));
     }
 
     public static boolean needLoadNativeAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
             return false;
+        }
+        if (BuildConfig.DEBUG) {
+            return true;
         }
         String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
         if (!("native".equals(style) || "all".equals(style) || BuildConfig.DEBUG)) {
@@ -139,7 +146,7 @@ public class AppStartActivity extends BaseActivity {
             }
         }
         MLogs.d("needLoad start app ad: " + need);
-        return (need && (!filterPkgs.contains(pkg) || pkg ==null)) || BuildConfig.DEBUG;
+        return (need && (!filterPkgs.contains(pkg) || pkg ==null)) ;
     }
 
     public static AdSize getBannerSize() {
@@ -222,6 +229,7 @@ public class AppStartActivity extends BaseActivity {
                 public void onAdLoaded(IAdAdapter ad) {
                     updateShowTime(false);
                     inflateNativeAd(ad);
+                    mAdLoader.preloadAd();
                 }
 
                 @Override
@@ -232,6 +240,7 @@ public class AppStartActivity extends BaseActivity {
                 @Override
                 public void onError(String error) {
                     MLogs.d(SLOT_APP_START_NATIVE + " load error:" + error);
+                    mAdLoader.preloadAd();
                 }
             });
         }

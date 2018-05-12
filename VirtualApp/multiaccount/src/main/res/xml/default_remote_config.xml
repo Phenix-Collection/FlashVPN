@@ -25,7 +25,7 @@
     </entry>
     <entry>
         <key>slot_app_lock</key>
-        <value>null</value>
+        <value>ab_banner:ca-app-pub-5490912237269284/6761645550:0:2;adm:ca-app-pub-5490912237269284/9930734372:0</value>
     </entry>
     <entry>
         <key>slot_test</key>
@@ -73,7 +73,7 @@
     </entry>
     <entry>
         <key>slot_applist_native</key>
-        <value>null</value>
+        <value>adm:ca-app-pub-5490912237269284/9383939461:0</value>
     </entry>
     <entry>
         <key>clone_rate_package</key>
@@ -112,7 +112,7 @@
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
-        <value>null</value>
+        <value>adm:ca-app-pub-5490912237269284/9767082843:0</value>
     </entry>
     <entry>
         <key>fb_follow_page</key>
@@ -181,7 +181,7 @@
     </entry>
     <entry>
         <key>slot_app_start</key>
-        <value>null</value>
+        <value>fb_interstitial:2132315560388455_2141488576137820:0;ab_interstitial:ca-app-pub-5490912237269284/4589889732:0</value>
     </entry>
     <entry>
         <key>slot_app_start_filter</key>
@@ -225,7 +225,7 @@
     </entry>
     <entry>
         <key>slot_app_start_native</key>
-        <value>null</value>
+        <value>ab_banner:ca-app-pub-5490912237269284/4945112956:0:2;bt:13276_24244:0</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>

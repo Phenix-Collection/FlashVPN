@@ -82,7 +82,7 @@ public class HomeFragment extends BaseFragment {
     private static final String CONFIG_HOME_NATIVE_PRIOR_TIME = "home_native_prior_time";
     private static final String CONFIG_HOME_SHOW_LUCKY_RATE = "home_show_lucky_rate";
     private static final String CONFIG_HOME_PRELOAD_APPLIST_GATE= "home_preload_applist_gate";
-    private final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
+
     private final static String CONFIG_SHOW_BOOSTER = "conf_show_booster_in_home";
 
     private boolean showLucky;
@@ -134,7 +134,7 @@ public class HomeFragment extends BaseFragment {
                 && (!PreferencesUtils.isAdFree())) {
             loadHeadNativeAd();
         }
-        if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(CONFIG_NEED_PRELOAD_LOADING)) {
+        if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
             AppStartActivity.preloadAd(mActivity);
         }
         mDragController = new DragController(mActivity);

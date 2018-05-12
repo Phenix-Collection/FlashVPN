@@ -29,6 +29,7 @@ import com.polestar.billing.BillingProvider;
 import com.polestar.grey.GreyAttribute;
 import com.polestar.superclone.component.LocalActivityLifecycleCallBacks;
 import com.polestar.superclone.component.MComponentDelegate;
+import com.polestar.superclone.component.activity.AppStartActivity;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.MLogs;
@@ -151,6 +152,11 @@ public class MApp extends MultiDexApplication {
                     instantcoffee.Builder.build(getApp(),coffeeKey);
                 }
                 PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
+
+                //Do some ad preload
+                if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
+                    AppStartActivity.preloadAd(gDefault);
+                }
             }
 
             @Override
