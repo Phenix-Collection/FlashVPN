@@ -104,7 +104,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     private String startingPkg;
     private final static String EXTRA_NEED_UPDATE = "extra_need_update";
-    private final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
+
     private Handler mainHandler;
     public static void enter(Activity activity, boolean needUpdate) {
         MLogs.d("Enter home: update: " + needUpdate);
@@ -186,7 +186,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     private void loadAd() {
         loadEmbedNative();
-        if (RemoteConfig.getBoolean(CONFIG_NEED_PRELOAD_LOADING)) {
+        if (RemoteConfig.getBoolean(AppLoadingActivity.CONFIG_NEED_PRELOAD_LOADING) && !PreferencesUtils.isAdFree()) {
             AppLoadingActivity.preloadAd(this);
         }
     }

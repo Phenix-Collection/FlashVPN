@@ -25,6 +25,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.billing.BillingProvider;
 import com.polestar.domultiple.clone.CloneApiDelegate;
 import com.polestar.domultiple.clone.CloneComponentDelegate;
+import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
@@ -166,6 +167,9 @@ public class PolestarApp extends MultiDexApplication {
                 PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
                 //BoosterSdk.setMemoryThreshold(20);
                 //BoosterSdk.showSettings(this);
+                if (RemoteConfig.getBoolean(AppLoadingActivity.CONFIG_NEED_PRELOAD_LOADING) && !PreferencesUtils.isAdFree()) {
+                    AppLoadingActivity.preloadAd(getApp());
+                }
             }
 
             @Override

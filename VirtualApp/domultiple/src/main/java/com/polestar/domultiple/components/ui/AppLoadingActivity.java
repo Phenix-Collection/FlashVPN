@@ -82,6 +82,7 @@ public class AppLoadingActivity extends BaseActivity {
     private static final String CONFIG_APP_START_AD_STYLE = "slot_app_start_style"; //native,interstitial,all
     private static final String CONFIG_APP_START_NATIVE_AD_FREQ = "slot_app_start_native_freq_min";
     private static final String CONFIG_APP_START_NATIVE_AD_RAMP = "slot_app_start_native_ramp_min";
+    public final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
     private static final long INTERSTITIAL_SHOW_DELAY = 2000;
     private static HashSet<String> filterPkgs ;
     private boolean hasShownInterstitialAd;
