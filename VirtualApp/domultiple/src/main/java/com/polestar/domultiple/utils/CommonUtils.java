@@ -67,17 +67,6 @@ public class CommonUtils {
         context.sendBroadcast(shortcutintent);
     }
 
-    public static void hide(Context context) {
-        MLogs.d("Has shortcut, hide icon");
-        PackageManager pm = context.getPackageManager();
-        if (pm.getComponentEnabledSetting(new ComponentName(context, SplashActivity.class))
-                != PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
-            MLogs.d("disable activity");
-            pm.setComponentEnabledSetting(new ComponentName(context, SplashActivity.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        }
-    }
-
     public static void createShortCut(Context context, CloneModel appModel) {
         Bitmap iconBitmap = createCustomIcon(context, appModel.getIconDrawable(context), appModel.getPkgUserId());
         String appName = context.getResources().getString(R.string.clone_label_tag,appModel.getName());

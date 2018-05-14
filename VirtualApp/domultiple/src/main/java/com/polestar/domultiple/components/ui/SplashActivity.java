@@ -64,40 +64,11 @@ public class SplashActivity extends BaseActivity {
             MLogs.d("Launching from shortcut");
             if (AndroidUtil.hasShortcut(this)) {
                 PreferencesUtils.setAbleToDetectShortcut(true);
-                long install = CommonUtils.getInstallTime(PolestarApp.getApp(),this.getPackageName());
-                long firstHideSec = RemoteConfig.getLong("first_hide_shortcut_sec");
-                if ( RemoteConfig.getBoolean("auto_hide_shortcut") &&
-                        (System.currentTimeMillis() - install) > firstHideSec*1000) {
-                    hide();
-                }
             } else {
                 PreferencesUtils.setAbleToDetectShortcut(false);
                 MLogs.d("Failed to detect shortcut!");
             }
-        } else {
-//            if(checkCallingOrSelfPermission("com.android.launcher.permission.INSTALL_SHORTCUT")
-//                    == PackageManager.PERMISSION_GRANTED) {
-            MLogs.d("Launch from not shortcut!");
-                long install = CommonUtils.getInstallTime(PolestarApp.getApp(),this.getPackageName());
-                long firstHideSec= RemoteConfig.getLong("first_hide_shortcut_sec");
-                if ( RemoteConfig.getBoolean("force_hide_shortcut") && RemoteConfig.getBoolean("auto_hide_shortcut") &&
-                        (System.currentTimeMillis() - install) > firstHideSec*1000) {
-                    MLogs.d("Force hide shortcut!");
-                    hide();
-                }
-            }
-//        }
-    }
-
-    private void hide(){
-        MLogs.d("Has shortcut, hide icon");
-        PackageManager pm = getPackageManager();
-        if (pm.getComponentEnabledSetting(new ComponentName(this, SplashActivity.class))
-          != PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
-            MLogs.d("disable activity");
-            pm.setComponentEnabledSetting(new ComponentName(this, SplashActivity.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        }
+        } //        }
     }
 
     @Override
@@ -111,7 +82,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void enterHome(){
-        if(!AndroidUtil.hasShortcut(this)) {
+        if(!PreferencesUtils.isShortCutCreated() ){
             PreferencesUtils.setShortCutCreated();
             CommonUtils.createLaunchShortcut(this);
             created = true;

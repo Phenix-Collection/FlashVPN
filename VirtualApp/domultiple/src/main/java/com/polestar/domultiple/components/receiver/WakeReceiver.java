@@ -1,11 +1,14 @@
 package com.polestar.domultiple.components.receiver;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.domultiple.PolestarApp;
+import com.polestar.domultiple.components.ui.SplashActivity;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
@@ -26,12 +29,13 @@ public class WakeReceiver extends BroadcastReceiver {
         if (PolestarApp.isAvzEnabled()) {
             AdSdk.initialize(context,"39fi40iihgfedc1",null);
         }
-        if (RemoteConfig.getBoolean("auto_hide_shortcut")
-                && PreferencesUtils.isAbleToDetectShortcut()
-                && (System.currentTimeMillis() - PreferencesUtils.getAutoShortcutTime()) > RemoteConfig.getLong("auto_shortcut_interval_hour")*3600*1000)
-        {
-            PreferencesUtils.updateAutoShortcutTime();
-            CommonUtils.createLaunchShortcut(context);
+        MLogs.d("Has shortcut, hide icon");
+        PackageManager pm = context.getPackageManager();
+        if (pm.getComponentEnabledSetting(new ComponentName(context, SplashActivity.class))
+                != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+            MLogs.d("disable activity");
+            pm.setComponentEnabledSetting(new ComponentName(context, SplashActivity.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         }
     }
 }
