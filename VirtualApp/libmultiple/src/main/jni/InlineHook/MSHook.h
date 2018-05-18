@@ -11,7 +11,7 @@ extern "C" {
 int findSymbol(const char *name, const char *libn,
                unsigned long *addr);
 int inlineHook(const char *soname, const char *symbol, void *replace_func, void **old_func);
-int inlineHookDirect(unsigned int addr, void *replace_func, void **old_func);
+int inlineHookDirect(uintptr_t addr, void *replace_func, void **old_func);
 
 #ifdef __cplusplus
 }

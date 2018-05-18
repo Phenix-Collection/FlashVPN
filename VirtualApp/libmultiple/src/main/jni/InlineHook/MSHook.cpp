@@ -23,7 +23,7 @@ int findSymbol(const char *name, const char *libn,
     return find_name(getpid(), name, libn, addr);
 }
 
-int inlineHookDirect(unsigned int addr, void *replace_func, void **old_func) {
+int inlineHookDirect(uintptr_t addr, void *replace_func, void **old_func) {
     if (addr == 0) {
         return -1;
     }
