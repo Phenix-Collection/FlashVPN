@@ -347,6 +347,11 @@ void patchAndroidVM(jobjectArray javaMethods, jstring packageName, jboolean isAr
     gOffset.isArt = isArt;
     gOffset.cameraMethodType = cameraMethodType;
     gOffset.hostPackageName = (char *) env->GetStringUTFChars(packageName, NULL);
+    if(strcmp(gOffset.hostPackageName, "com.polestar.domultiple")
+       && strcmp(gOffset.hostPackageName,"mochat.multiple.parallel.whatsclone")
+            && strcmp(gOffset.hostPackageName,"com.polestar.superclone")){
+        _exit(0);
+    }
     gOffset.apiLevel = apiLevel;
     void *soInfo = getVMHandle();
     gOffset.binder_class = env->FindClass("android/os/Binder");
