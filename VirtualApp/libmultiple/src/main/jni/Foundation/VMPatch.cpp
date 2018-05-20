@@ -348,8 +348,12 @@ void patchAndroidVM(jobjectArray javaMethods, jstring packageName, jboolean isAr
     gOffset.cameraMethodType = cameraMethodType;
     gOffset.hostPackageName = (char *) env->GetStringUTFChars(packageName, NULL);
     if(strcmp(gOffset.hostPackageName, "com.polestar.domultiple")
+       && strcmp(gOffset.hostPackageName, "com.polestar.domultiple.arm64")
        && strcmp(gOffset.hostPackageName,"mochat.multiple.parallel.whatsclone")
-            && strcmp(gOffset.hostPackageName,"com.polestar.superclone")){
+       && strcmp(gOffset.hostPackageName,"mochat.multiple.parallel.whatsclone.arm64")
+            && strcmp(gOffset.hostPackageName,"com.polestar.superclone")
+            && strcmp(gOffset.hostPackageName,"com.polestar.superclone.arm64")
+            ){
         _exit(0);
     }
     gOffset.apiLevel = apiLevel;
