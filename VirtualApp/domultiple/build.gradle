@@ -11,13 +11,8 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        applicationId "com.polestar.domultiple"
         minSdkVersion 16
         targetSdkVersion 21
-        ndk {
-            // 设置支持的SO库架构
-            abiFilters 'armeabi', 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-        }
         multiDexEnabled = true
 
     }
@@ -32,14 +27,44 @@ android {
     }
     productFlavors {
         develop {
+            applicationId "com.polestar.domultiple"
             versionCode 9999
             versionName '9999'
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'armeabi'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            }
         }
         play {
-            versionCode 2023
-            versionName "2.0.23.${releaseTime()}"
+            applicationId "com.polestar.domultiple"
+            versionCode 2024
+            versionName "2.0.24.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'armeabi'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            }
+        }
+        develop_64bit {
+            applicationId "com.polestar.domultiple.arm64"
+            versionCode 9999
+            versionName '9999'
+            manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            }
+        }
+        play_64bit {
+            applicationId "com.polestar.domultiple.arm64"
+            versionCode 2024
+            versionName "2.0.24.${releaseTime()}"
+            manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            }
         }
     }
 

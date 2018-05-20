@@ -36,6 +36,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009795743183:android:035e7f18291a1d81",
+        "android_client_info": {
+          "package_name": "com.polestar.domultiple.arm64"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009795743183-l1u5c78f34cgncg7tsnm6okisviqejuf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFciVd1Q2mfo_B8ZlExl1DHeEhsxfJvTE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

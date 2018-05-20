@@ -1,13 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
-    package="com.polestar.domultiple">
+    package="com.polestar.domultiple"
+>
 
     <application android:allowBackup="true" android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true" android:theme="@style/AppTheme"
-        android:name=".PolestarApp">
+        android:name="com.polestar.domultiple.PolestarApp">
         <activity
-            android:name=".components.ui.SplashActivity"
+            android:name="com.polestar.domultiple.components.ui.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
@@ -17,50 +17,50 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".components.ui.ShortcutActivity"
+            android:name="com.polestar.domultiple.components.ui.ShortcutActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher"
             android:exported="true">
         </activity>
-        <activity android:name=".components.ui.HomeActivity" android:screenOrientation="portrait" android:launchMode="singleTask"/>
-        <activity android:name=".components.ui.AddCloneActivity" android:screenOrientation="portrait" android:exported="false"/>
-        <activity android:name=".components.ui.NotificationActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.FaqActivity" android:screenOrientation="portrait" android:exported="false"/>
-        <activity android:name=".components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.LockSecureQuestionActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.LockSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.AboutActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.NativeInterstitialActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name=".components.ui.AppLoadingActivity" android:screenOrientation="portrait" android:exported="true"
+        <activity android:name="com.polestar.domultiple.components.ui.HomeActivity" android:screenOrientation="portrait" android:launchMode="singleTask"/>
+        <activity android:name="com.polestar.domultiple.components.ui.AddCloneActivity" android:screenOrientation="portrait" android:exported="false"/>
+        <activity android:name="com.polestar.domultiple.components.ui.NotificationActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.FaqActivity" android:screenOrientation="portrait" android:exported="false"/>
+        <activity android:name="com.polestar.domultiple.components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.LockSecureQuestionActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.LockSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.AboutActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.NativeInterstitialActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="com.polestar.domultiple.components.ui.AppLoadingActivity" android:screenOrientation="portrait" android:exported="true"
             android:excludeFromRecents="true"
             android:launchMode="singleTop" />
         <activity
-            android:name=".components.ui.CustomizeSettingActivity"
+            android:name="com.polestar.domultiple.components.ui.CustomizeSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".components.ui.CustomizeIconActivity"
+            android:name="com.polestar.domultiple.components.ui.CustomizeIconActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogActivityStyle"/>
         <activity
-            android:name=".components.ui.AppLockActivity"
+            android:name="com.polestar.domultiple.components.ui.AppLockActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.lody.virtual.vt"
             android:process=":x"
             android:theme="@style/AppTheme.Launcher"/>
 
-        <receiver android:name=".components.receiver.CrashReceiver" android:exported="false">
+        <receiver android:name="com.polestar.domultiple.components.receiver.CrashReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="appclone.intent.action.SHOW_CRASH_DIALOG"/>
             </intent-filter>
         </receiver>
 
         <receiver
-            android:name=".components.receiver.ReferReceiver"
+            android:name="com.polestar.domultiple.components.receiver.ReferReceiver"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
@@ -69,7 +69,7 @@
         </receiver>
 
         <receiver
-            android:name=".components.receiver.WakeReceiver"
+            android:name="com.polestar.domultiple.components.receiver.WakeReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -83,7 +83,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.polestar.domultiple.wake" />
+                <action android:name="${applicationId}.wake" />/>
             </intent-filter>
         </receiver>
     </application>
