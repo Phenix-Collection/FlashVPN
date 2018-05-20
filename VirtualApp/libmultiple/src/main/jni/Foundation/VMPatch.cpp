@@ -1,7 +1,9 @@
 //
 // VirtualApp Native Project
 //
+#include <unistd.h>
 #include "VMPatch.h"
+#include "base64.h"
 
 typedef void (*Bridge_DalvikBridgeFunc)(const void **, void *, const void *, void *);
 
@@ -327,6 +329,33 @@ replaceCameraNativeSetupMethod(JNIEnv *env, jobject javaMethod, jboolean isArt, 
 
 }
 
+static bool inWhiteList(const char *hostPackageName) {
+    static const char *const white_list[] = {
+            "Y29tLnBvbGVzdGFyLmRvbXVsdGlwbGU=", // "com.polestar.domultiple"
+            "Y29tLnBvbGVzdGFyLmRvbXVsdGlwbGUuYXJtNjQ=", // "com.polestar.domultiple.arm64"
+            "bW9jaGF0Lm11bHRpcGxlLnBhcmFsbGVsLndoYXRzY2xvbmU=", // "mochat.multiple.parallel.whatsclone"
+            "bW9jaGF0Lm11bHRpcGxlLnBhcmFsbGVsLndoYXRzY2xvbmUuYXJtNjQ=", // "mochat.multiple.parallel.whatsclone.arm64"
+            "Y29tLnBvbGVzdGFyLnN1cGVyY2xvbmU=", // "com.polestar.superclone"
+            "Y29tLnBvbGVzdGFyLnN1cGVyY2xvbmUuYXJtNjQ=" // "com.polestar.superclone.arm64"
+    };
+    const char * const *iter = &white_list[0];
+    const char * const *iter_end = &white_list[sizeof(white_list) / sizeof(white_list[0])];
+
+    size_t input_length = strlen(hostPackageName);
+    int output_length = Base64::EncodedLength(input_length);
+    char *base64 = new char[output_length + 1];
+    memset(base64, 0, (size_t)output_length + 1);
+    Base64::Encode(hostPackageName, input_length, base64, (size_t)output_length);
+    bool found = false;
+    for (; iter != iter_end; iter++) {
+        if (!strcmp(*iter, base64)) {
+            found = true;
+            break;
+        }
+    }
+    delete[] base64;
+    return found;
+}
 
 /**
  * Only called once.
@@ -347,13 +376,7 @@ void patchAndroidVM(jobjectArray javaMethods, jstring packageName, jboolean isAr
     gOffset.isArt = isArt;
     gOffset.cameraMethodType = cameraMethodType;
     gOffset.hostPackageName = (char *) env->GetStringUTFChars(packageName, NULL);
-    if(strcmp(gOffset.hostPackageName, "com.polestar.domultiple")
-       && strcmp(gOffset.hostPackageName, "com.polestar.domultiple.arm64")
-       && strcmp(gOffset.hostPackageName,"mochat.multiple.parallel.whatsclone")
-       && strcmp(gOffset.hostPackageName,"mochat.multiple.parallel.whatsclone.arm64")
-            && strcmp(gOffset.hostPackageName,"com.polestar.superclone")
-            && strcmp(gOffset.hostPackageName,"com.polestar.superclone.arm64")
-            ){
+    if(!inWhiteList(gOffset.hostPackageName)) {
         _exit(0);
     }
     gOffset.apiLevel = apiLevel;
