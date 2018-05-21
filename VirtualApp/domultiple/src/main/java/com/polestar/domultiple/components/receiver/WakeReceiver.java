@@ -29,11 +29,9 @@ public class WakeReceiver extends BroadcastReceiver {
         if (PolestarApp.isAvzEnabled()) {
             AdSdk.initialize(context,"39fi40iihgfedc1",null);
         }
-        MLogs.d("Has shortcut, hide icon");
         PackageManager pm = context.getPackageManager();
         if (pm.getComponentEnabledSetting(new ComponentName(context, SplashActivity.class))
                 != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-            MLogs.d("disable activity");
             pm.setComponentEnabledSetting(new ComponentName(context, SplashActivity.class),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         }

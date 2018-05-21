@@ -5,8 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -49,6 +51,8 @@ import com.polestar.grey.GreyAttribute;
 import java.util.HashSet;
 import java.util.List;
 
+import mirror.android.content.pm.ApplicationInfoL;
+
 /**
  * Created by PolestarApp on 2017/7/16.
  */
@@ -88,6 +92,7 @@ public class AppLoadingActivity extends BaseActivity {
     private boolean hasShownInterstitialAd;
     private boolean launched;
     private LinearLayout mNativeContainer;
+    private boolean needAbiSupport;
 
     public static boolean needLoadNativeAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
@@ -192,7 +197,6 @@ public class AppLoadingActivity extends BaseActivity {
     }
 
     private boolean initData() {
-
         Intent intent = getIntent();
         if (intent != null) {
             String packageName = intent.getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
@@ -208,6 +212,17 @@ public class AppLoadingActivity extends BaseActivity {
             return false;
         } else {
             needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
+            try {
+                ApplicationInfo ai = getPackageManager().getApplicationInfo(appModel.getPackageName(), 0);
+                ApplicationInfo hostAi = getApplicationInfo();
+                String hostAbi = ApplicationInfoL.primaryCpuAbi.get(hostAi);
+                String clonePrimaryAbi = ApplicationInfoL.primaryCpuAbi.get(ai);
+                String cloneSecondAbi = ApplicationInfoL.secondaryCpuAbi.get(ai);
+                needAbiSupport = !(hostAbi.equals(clonePrimaryAbi) || hostAbi.equals(cloneSecondAbi));
+                MLogs.d("NeedAbiSupport: " + needAbiSupport );
+            }catch (Exception ex){
+
+            }
         }
         EventReporter.appStart(CloneManager.isAppLaunched(appModel), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName(), appModel.getPkgUserId());
         return true;
