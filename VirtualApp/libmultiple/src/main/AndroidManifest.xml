@@ -1344,6 +1344,7 @@
         <service android:name="com.polestar.clone.StubService$S48" android:process=":p48" />
         <service android:name="com.polestar.clone.StubService$S49" android:process=":p49" />
 
+        <service android:name="com.polestar.clone.CloneAgentService" android:exported="true" />
         <provider
             android:name="com.polestar.clone.ProxyCP"
             android:authorities="${applicationId}.ProxyCP"
