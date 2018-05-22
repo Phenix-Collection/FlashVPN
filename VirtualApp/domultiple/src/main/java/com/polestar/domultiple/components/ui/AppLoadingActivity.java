@@ -33,6 +33,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.clone.CloneAgent64;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
@@ -211,7 +212,6 @@ public class AppLoadingActivity extends BaseActivity {
             finish();
             return false;
         } else {
-            needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
             try {
                 ApplicationInfo ai = getPackageManager().getApplicationInfo(appModel.getPackageName(), 0);
                 ApplicationInfo hostAi = getApplicationInfo();
@@ -219,13 +219,44 @@ public class AppLoadingActivity extends BaseActivity {
                 String clonePrimaryAbi = ApplicationInfoL.primaryCpuAbi.get(ai);
                 String cloneSecondAbi = ApplicationInfoL.secondaryCpuAbi.get(ai);
                 needAbiSupport = !(hostAbi.equals(clonePrimaryAbi) || hostAbi.equals(cloneSecondAbi));
-                MLogs.d("NeedAbiSupport: " + needAbiSupport );
+                MLogs.d("NeedAbiSupport: " + needAbiSupport + "host: " + hostAbi + " pri: " + clonePrimaryAbi + " sec: " + cloneSecondAbi);
             }catch (Exception ex){
 
             }
+            needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
         }
         EventReporter.appStart(CloneManager.isAppLaunched(appModel), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName(), appModel.getPkgUserId());
         return true;
+    }
+
+    private void doLaunchMyself(){
+        // Todo: if app is already launched, just switch it to front, no need re-launch
+        if (needDoUpGrade) {
+            CloneManager.upgradeApp(appModel.getPackageName());
+        }
+        if (firstStart) {
+            GreyAttribute.sendAttributor(AppLoadingActivity.this, appModel.getPackageName());
+        } else {
+            if (!TextUtils.isEmpty(GreyAttribute.getReferrer(AppLoadingActivity.this, appModel.getPackageName()))){
+                EventReporter.greyAttribute(AppLoadingActivity.this, appModel.getPackageName());
+                GreyAttribute.putReferrer(AppLoadingActivity.this, appModel.getPackageName(), "");
+            }
+        }
+        CloneManager.launchApp(appModel);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MLogs.d("AppStart finish");
+                if (firstStart) {
+                    GreyAttribute.sendAttributor(AppLoadingActivity.this, appModel.getPackageName());
+                }
+                finish();
+            }
+        }, 4000);
+    }
+
+    private void doLaunchFromAgent() {
+
     }
 
     private void doLaunch(){
@@ -235,29 +266,28 @@ public class AppLoadingActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Todo: if app is already launched, just switch it to front, no need re-launch
-                if (needDoUpGrade) {
-                    CloneManager.upgradeApp(appModel.getPackageName());
-                }
-                if (firstStart) {
-                    GreyAttribute.sendAttributor(AppLoadingActivity.this, appModel.getPackageName());
-                } else {
-                    if (!TextUtils.isEmpty(GreyAttribute.getReferrer(AppLoadingActivity.this, appModel.getPackageName()))){
-                        EventReporter.greyAttribute(AppLoadingActivity.this, appModel.getPackageName());
-                        GreyAttribute.putReferrer(AppLoadingActivity.this, appModel.getPackageName(), "");
-                    }
-                }
-                CloneManager.launchApp(appModel);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        MLogs.d("AppStart finish");
-                        if (firstStart) {
-                            GreyAttribute.sendAttributor(AppLoadingActivity.this, appModel.getPackageName());
+                if(!needAbiSupport) {
+                    doLaunchMyself();
+                } else{
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CloneAgent64 agent = new CloneAgent64(AppLoadingActivity.this);
+                            if(agent.hasSupport()) {
+                                if(agent.isCloned(appModel.getPackageName(), appModel.getPkgUserId())) {
+                                    if (agent.isNeedUpgrade(appModel.getPackageName())) {
+                                        agent.upgradeApp(appModel.getPackageName());
+                                    }
+                                } else {
+                                    agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
+                                }
+                                agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+                            } else{
+                                //Guide download support package
+                            }
                         }
-                        finish();
-                    }
-                }, 4000);
+                    }).start();
+                }
             }
         }, 500);
     }
