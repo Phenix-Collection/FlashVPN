@@ -4,7 +4,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ApplicationInfo;
 import android.os.IBinder;
+import android.os.Looper;
 
 import com.lody.virtual.helper.utils.VLog;
 
@@ -12,6 +14,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import mirror.android.content.pm.ApplicationInfoL;
+
 /**
  * Created by guojia on 2018/5/23.
  */
@@ -19,6 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class CloneAgent64 {
     private ICloneAgent iCloneAgent;
     private Context mContext;
+    private static final String TAG = "CloneAgent";
 //    static private CloneAgent64 sInstance;
 //
 //    static public synchronized CloneAgent64 getsInstance(Context context) {
@@ -114,9 +120,27 @@ public class CloneAgent64 {
         }
     };
 
+    static public boolean needArm64Support(Context context, String pkg){
+        try {
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(pkg, 0);
+            String clonePrimaryAbi = ApplicationInfoL.primaryCpuAbi.get(ai);
+            String cloneSecondAbi = ApplicationInfoL.secondaryCpuAbi.get(ai);
+            VLog.d(TAG, "NeedAbiSupport: " +  " pri: " + clonePrimaryAbi + " sec: " + cloneSecondAbi);
+            if (!clonePrimaryAbi.contains("armeabi") && !cloneSecondAbi.contains("armeabi")) {
+                return true;
+            }
+        }catch (Exception ex){
+
+        }
+        return false;
+    }
+
     private ICloneAgent getAgent() {
         if (iCloneAgent != null) {
             return  iCloneAgent;
+        }
+        if (Looper.getMainLooper() == Looper.myLooper()) {
+            throw new RuntimeException("Cannot getAgent in main thread!");
         }
         ComponentName comp = new ComponentName(mContext.getPackageName()+".arm64", CloneAgentService.class.getName());
         Intent intent = new Intent();
