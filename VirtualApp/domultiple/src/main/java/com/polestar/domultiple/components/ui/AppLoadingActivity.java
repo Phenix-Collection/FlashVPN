@@ -212,17 +212,7 @@ public class AppLoadingActivity extends BaseActivity {
             finish();
             return false;
         } else {
-            try {
-                ApplicationInfo ai = getPackageManager().getApplicationInfo(appModel.getPackageName(), 0);
-                ApplicationInfo hostAi = getApplicationInfo();
-                String hostAbi = ApplicationInfoL.primaryCpuAbi.get(hostAi);
-                String clonePrimaryAbi = ApplicationInfoL.primaryCpuAbi.get(ai);
-                String cloneSecondAbi = ApplicationInfoL.secondaryCpuAbi.get(ai);
-                needAbiSupport = !(hostAbi.equals(clonePrimaryAbi) || hostAbi.equals(cloneSecondAbi));
-                MLogs.d("NeedAbiSupport: " + needAbiSupport + "host: " + hostAbi + " pri: " + clonePrimaryAbi + " sec: " + cloneSecondAbi);
-            }catch (Exception ex){
-
-            }
+            needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
         }
         EventReporter.appStart(CloneManager.isAppLaunched(appModel), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName(), appModel.getPkgUserId());
@@ -256,7 +246,24 @@ public class AppLoadingActivity extends BaseActivity {
     }
 
     private void doLaunchFromAgent() {
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CloneAgent64 agent = new CloneAgent64(AppLoadingActivity.this);
+                if(agent.hasSupport()) {
+                    if(agent.isCloned(appModel.getPackageName(), appModel.getPkgUserId())) {
+                        if (agent.isNeedUpgrade(appModel.getPackageName())) {
+                            agent.upgradeApp(appModel.getPackageName());
+                        }
+                    } else {
+                        agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
+                    }
+                    agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+                } else{
+                    //Guide download support package
+                }
+            }
+        }).start();
     }
 
     private void doLaunch(){
@@ -269,27 +276,16 @@ public class AppLoadingActivity extends BaseActivity {
                 if(!needAbiSupport) {
                     doLaunchMyself();
                 } else{
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            CloneAgent64 agent = new CloneAgent64(AppLoadingActivity.this);
-                            if(agent.hasSupport()) {
-                                if(agent.isCloned(appModel.getPackageName(), appModel.getPkgUserId())) {
-                                    if (agent.isNeedUpgrade(appModel.getPackageName())) {
-                                        agent.upgradeApp(appModel.getPackageName());
-                                    }
-                                } else {
-                                    agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
-                                }
-                                agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
-                            } else{
-                                //Guide download support package
-                            }
-                        }
-                    }).start();
+                    doLaunchFromAgent();
                 }
             }
         }, 500);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 15000);
     }
 
     private void initView() {

@@ -126,7 +126,13 @@ public class CloneAgent64 {
             String clonePrimaryAbi = ApplicationInfoL.primaryCpuAbi.get(ai);
             String cloneSecondAbi = ApplicationInfoL.secondaryCpuAbi.get(ai);
             VLog.d(TAG, "NeedAbiSupport: " +  " pri: " + clonePrimaryAbi + " sec: " + cloneSecondAbi);
-            if (!clonePrimaryAbi.contains("armeabi") && !cloneSecondAbi.contains("armeabi")) {
+            if (clonePrimaryAbi == null) {
+                return false;
+            }
+            if (clonePrimaryAbi.contains("armeabi")) {
+                return false;
+            }
+            if (cloneSecondAbi == null || !cloneSecondAbi.contains("armeabi")) {
                 return true;
             }
         }catch (Exception ex){

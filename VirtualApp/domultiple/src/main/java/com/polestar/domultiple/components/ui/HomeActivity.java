@@ -34,6 +34,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.clone.CloneAgent64;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
@@ -752,6 +753,15 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                                         public void run() {
                                             PreferencesUtils.resetStarted(info.getName());
                                             CloneManager.getInstance(HomeActivity.this).deleteClone(HomeActivity.this, info);
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    CloneAgent64 agent64 = new CloneAgent64(HomeActivity.this);
+                                                    if(agent64.hasSupport() && agent64.isCloned(info.getPackageName(),info.getPkgUserId())) {
+                                                        agent64.deleteClone(info.getPackageName(), info.getPkgUserId());
+                                                    }
+                                                }
+                                            }).start();
                                         }
                                     }, 1000);
                                 }

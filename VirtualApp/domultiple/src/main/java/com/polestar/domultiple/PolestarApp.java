@@ -3,6 +3,7 @@ package com.polestar.domultiple;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -56,6 +57,29 @@ public class PolestarApp extends MultiDexApplication {
     public static boolean isAvzEnabled() {
         String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
         return  "all".equals(conf) || "avz".equals(conf);
+    }
+
+    public static boolean isSupportPkg() {
+        return getApp().getPackageName().endsWith("arm64");
+    }
+    public static boolean isPrimaryPkgExist() {
+        if(isSupportPkg()) {
+            try{
+                ApplicationInfo ai = getApp().getPackageManager().getApplicationInfo(getApp().getPackageName().replace(".arm64",""),0);
+                if (ai != null) {
+                    return true;
+                }
+            }catch(Exception ex){
+
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean needAd() {
+        return !(isSupportPkg() && isPrimaryPkgExist());
     }
 
     public static boolean isOpenLog(){
@@ -132,43 +156,45 @@ public class PolestarApp extends MultiDexApplication {
                 //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
-                initAd();
-                //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
-                //
-                BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
-                if (BuildConfig.DEBUG) {
-                    boosterConfig.autoAdFirstInterval = 0;
-                    boosterConfig.autoAdInterval = 0;
-                    boosterConfig.isUnlockAd = true;
-                    boosterConfig.isInstallAd = true;
-                } else {
-                    boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
-                    boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
-                    boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
-                    boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
-                }
-                BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
-                res.outterWheelImage = R.drawable.booster_ic_wheel_outside;
-                res.innerWheelImage = R.drawable.booster_ic_wheel_inside;
-                res.titleString = R.string.boost_title;
-                res.boosterShorcutIcon = R.drawable.booster_shortcut;
-                BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
-                    @Override
-                    public void reportEvent(String s, Bundle b) {
-                        FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);
+                if (needAd()) {
+                    initAd();
+                    //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
+                    //
+                    BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
+                    if (BuildConfig.DEBUG) {
+                        boosterConfig.autoAdFirstInterval = 0;
+                        boosterConfig.autoAdInterval = 0;
+                        boosterConfig.isUnlockAd = true;
+                        boosterConfig.isInstallAd = true;
+                    } else {
+                        boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
+                        boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
+                        boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
+                        boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
                     }
-                });
-                String coffeeKey = RemoteConfig.getString("coffee_key");
-                if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
-                    MLogs.d("coffee key : " + coffeeKey);
-                    instantcoffee.Builder.build(getApp(),coffeeKey);
-                }
+                    BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
+                    res.outterWheelImage = R.drawable.booster_ic_wheel_outside;
+                    res.innerWheelImage = R.drawable.booster_ic_wheel_inside;
+                    res.titleString = R.string.boost_title;
+                    res.boosterShorcutIcon = R.drawable.booster_shortcut;
+                    BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
+                        @Override
+                        public void reportEvent(String s, Bundle b) {
+                            FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);
+                        }
+                    });
+                    String coffeeKey = RemoteConfig.getString("coffee_key");
+                    if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
+                        MLogs.d("coffee key : " + coffeeKey);
+                        instantcoffee.Builder.build(getApp(), coffeeKey);
+                    }
 
-                PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
-                //BoosterSdk.setMemoryThreshold(20);
-                //BoosterSdk.showSettings(this);
-                if (RemoteConfig.getBoolean(AppLoadingActivity.CONFIG_NEED_PRELOAD_LOADING) && !PreferencesUtils.isAdFree()) {
-                    AppLoadingActivity.preloadAd(getApp());
+                    PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
+                    //BoosterSdk.setMemoryThreshold(20);
+                    //BoosterSdk.showSettings(this);
+                    if (RemoteConfig.getBoolean(AppLoadingActivity.CONFIG_NEED_PRELOAD_LOADING) && !PreferencesUtils.isAdFree()) {
+                        AppLoadingActivity.preloadAd(getApp());
+                    }
                 }
             }
 
