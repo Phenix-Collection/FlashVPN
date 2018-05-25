@@ -62,6 +62,23 @@ public class PolestarApp extends MultiDexApplication {
     public static boolean isSupportPkg() {
         return getApp().getPackageName().endsWith("arm64");
     }
+
+    public static boolean isSupportPkgExist() {
+        if (isSupportPkg()) {
+            return  true;
+        } else {
+            try{
+                ApplicationInfo ai = getApp().getPackageManager().getApplicationInfo(getApp().getPackageName()+ ".arm64",0);
+                if (ai != null) {
+                    return true;
+                }
+            }catch(Exception ex){
+
+            }
+            return false;
+        }
+    }
+
     public static boolean isPrimaryPkgExist() {
         if(isSupportPkg()) {
             try{

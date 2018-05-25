@@ -652,6 +652,10 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                     case R.id.item_share:
                         CommonUtils.shareWithFriends(HomeActivity.this);
                         break;
+                    case R.id.item_arm64:
+                        Intent intent = new Intent(HomeActivity.this, Arm64Activity.class);
+                        startActivity(intent);
+                        break;
                 }
                 return true;
             }

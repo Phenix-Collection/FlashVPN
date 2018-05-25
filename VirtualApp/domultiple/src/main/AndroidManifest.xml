@@ -42,6 +42,9 @@
             android:name="com.polestar.domultiple.components.ui.CustomizeSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name="com.polestar.domultiple.components.ui.Arm64Activity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name="com.polestar.domultiple.components.ui.CustomizeIconActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogActivityStyle"/>

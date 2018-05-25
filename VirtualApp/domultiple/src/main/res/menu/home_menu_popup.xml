@@ -41,4 +41,9 @@
         android:title="@string/settings"
         android:icon="@drawable/icon_setting_small"
         />
+    <item
+        android:id="@+id/item_arm64"
+        android:title="@string/arm64_support"
+        android:icon="@drawable/icon_arm64"
+        />
 </menu>

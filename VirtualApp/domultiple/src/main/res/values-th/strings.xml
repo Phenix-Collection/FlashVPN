@@ -113,4 +113,5 @@
     <!--quick switch-->
     <string name="quick_switch_desc">เปิดใช้งานการสลับไปที่แอปแบบโคลนจากแถบการแจ้งเตือนอย่างรวดเร็ว</string>
     <string name="quick_switch_dialog_content">Quick Switch จะช่วยให้คุณสามารถสลับระหว่างแอปโคลนจากแถบการแจ้งเตือนได้อย่างง่ายดาย คุณต้องการเปิดใช้งานเดี๋ยวนี้หรือไม่?</string>
+    <string name="arm64_support">การสนับสนุน 64 บิต</string>
 </resources>

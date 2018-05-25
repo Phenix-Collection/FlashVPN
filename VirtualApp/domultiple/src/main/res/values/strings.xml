@@ -43,6 +43,9 @@
     <string name="join_us">Join Community</string>
     <string name="follow_us" translatable="false">Follow Us</string>
     <string name="settings">Settings</string>
+    <string name="arm64_support">64bit Support</string>
+    <string name="install_arm64_support">If you meet crash or hang while opening cloned apps, it could due to the missing of 64bit support libraries. Please try install the 64bit support package to solve the issues.</string>
+    <string name="installed_arm64_support">The 64bit support package is already installed.</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="settings_right" translatable="false">2018 RiverStone Tech. All rights reserved</string>

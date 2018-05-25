@@ -113,4 +113,5 @@
     <!--quick switch-->
     <string name="quick_switch_desc">Permitir mudança rápida para aplicativos clonados da barra de notificação</string>
     <string name="quick_switch_dialog_content">O Quick Switch permite que você alterne facilmente entre os aplicativos clonados da barra de notificação. Gostaria de habilitá-lo agora?</string>
+    <string name="arm64_support">Suporte 64bit</string>
 </resources>
