@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
@@ -47,6 +48,8 @@ import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
+import com.polestar.domultiple.widget.ExplosionField;
+import com.polestar.domultiple.widget.UpDownDialog;
 import com.polestar.grey.GreyAttribute;
 
 import java.util.HashSet;
@@ -243,6 +246,16 @@ public class AppLoadingActivity extends BaseActivity {
                 finish();
             }
         }, 4000);
+        finishIfTimeout();
+    }
+
+    private void finishIfTimeout(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 15000);
     }
 
     private void doLaunchFromAgent() {
@@ -259,8 +272,34 @@ public class AppLoadingActivity extends BaseActivity {
                         agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
                     }
                     agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+                    finishIfTimeout();
                 } else{
                     //Guide download support package
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            UpDownDialog.show(AppLoadingActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
+                                    getString(R.string.no_thanks), getString(R.string.anative_install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            switch (i) {
+                                                case UpDownDialog.NEGATIVE_BUTTON:
+                                                    doLaunchMyself();
+                                                    break;
+                                                case UpDownDialog.POSITIVE_BUTTON:
+                                                    CommonUtils.jumpToMarket(AppLoadingActivity.this, getPackageName()+".arm64");
+                                                    break;
+                                            }
+                                        }
+                                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialogInterface) {
+                                    doLaunchMyself();
+                                }
+                            });
+                        }
+                    });
+
                 }
             }
         }).start();
@@ -280,12 +319,6 @@ public class AppLoadingActivity extends BaseActivity {
                 }
             }
         }, 500);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 15000);
     }
 
     private void initView() {

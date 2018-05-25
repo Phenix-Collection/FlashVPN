@@ -20,6 +20,8 @@
     <string name="toast_shortcut_added">Shortcut added</string>
     <string name="toast_shortcut_invalid">Shortcut is invalid</string>
     <string name="delete_dialog_title">Caution</string>
+    <string name="arm64_dialog_title">Note</string>
+    <string name="arm64_dialog_content">Detected 64bit libraries in %s. Suggest install 64bit support packages if meet error. Do you want to install now?</string>
     <string name="delete_dialog_content">Delete clone will totally remove its data. Do you want to continue?</string>
     <string name="yes">Yes</string>
     <string name="notification">Notification</string>
