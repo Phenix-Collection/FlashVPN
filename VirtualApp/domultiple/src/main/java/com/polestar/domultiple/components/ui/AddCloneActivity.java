@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
+import com.lody.virtual.client.core.VirtualCore;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -294,7 +295,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 try {
                     ApplicationInfo ai = pm.getApplicationInfo(item.pkg, 0);
                     CharSequence label = pm.getApplicationLabel(ai);
-                    model.setName(cm.getCompatibleName(""+label, userId));
+                    model.setName(VirtualCore.getCompatibleName(""+label, userId));
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -314,7 +315,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 try {
                     ApplicationInfo ai = pm.getApplicationInfo(item.pkg, 0);
                     CharSequence label = pm.getApplicationLabel(ai);
-                    model.setName(cm.getCompatibleName(""+label, userId));
+                    model.setName(VirtualCore.getCompatibleName(""+label, userId));
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }

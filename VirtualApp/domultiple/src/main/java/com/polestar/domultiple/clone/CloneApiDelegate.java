@@ -16,28 +16,6 @@ import com.polestar.domultiple.utils.CommonUtils;
 
 public class CloneApiDelegate implements IAppApiDelegate {
 
-    @Override
-    public Bitmap createCloneTagedBitmap(String pkg, Bitmap icon, int userId) {
-        if (pkg == null && icon == null) {
-            return null;
-        }
-        if (icon == null) {
-            PackageManager pm = PolestarApp.getApp().getPackageManager();
-            Drawable drawable = null;
-            try {
-                drawable = pm.getApplicationIcon(pkg);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-            if (drawable != null) {
-                return CommonUtils.createCustomIcon(PolestarApp.getApp(), drawable, userId);
-            }
-        } else {
-            return CommonUtils.createCustomIcon(PolestarApp.getApp(), new BitmapDrawable(icon), userId);
-        }
-
-        return null;
-    }
 
     @Override
     public String getCloneTagedLabel(String label) {

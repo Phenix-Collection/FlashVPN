@@ -7,11 +7,13 @@ package com.polestar.domultiple.clone;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.graphics.Bitmap;
 
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.widget.locker.AppLockMonitor;
 

@@ -26,10 +26,6 @@ public class AppConstants {
     public static final int APP_ICON_RADIUS = 12;//dp
     public static final int APP_ICON_PADDING = 5;//dp
 
-    public static final String ICON_FILE_PATH = "/icons";
-    public final static String CUSTOMIZE_PREF = "app_custom_";
-    public final static int COLOR_MID_VALUE = 127;
-
 
     public static final String PREFERENCE_NAME = "DoMultiple-pref";
     public static final String KEY_AUTO_CREATE_SHORTCUT = "key_auto_create_shortcut";

@@ -24,15 +24,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
 
-import com.lody.virtual.helper.utils.BitmapUtils;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
-import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.components.ui.ShortcutActivity;
 import com.polestar.domultiple.components.ui.SplashActivity;
 import com.polestar.domultiple.db.CloneModel;
+import com.polestar.clone.CustomizeAppData;
 
 import java.util.HashSet;
 import java.util.List;
@@ -68,8 +67,9 @@ public class CommonUtils {
     }
 
     public static void createShortCut(Context context, CloneModel appModel) {
-        Bitmap iconBitmap = createCustomIcon(context, appModel.getIconDrawable(context), appModel.getPkgUserId());
-        String appName = context.getResources().getString(R.string.clone_label_tag,appModel.getName());
+        CustomizeAppData customizeAppData = CustomizeAppData.loadFromPref(appModel.getPackageName(), appModel.getPkgUserId());
+        Bitmap iconBitmap = customizeAppData.getCustomIcon();
+        String appName = customizeAppData.label;
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppLoadingActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
@@ -327,36 +327,6 @@ public class CommonUtils {
             default:
                 return R.mipmap.ring_icon;
         }
-    }
-
-    public static Bitmap createCustomIcon(Context context, Drawable appIcon, int userId){
-        if(appIcon == null){
-            return null;
-        }
-        Bitmap shortCutBitMap;
-        try{
-            int width = DisplayUtils.dip2px(context, AppConstants.APP_ICON_WIDTH);
-            int padding = DisplayUtils.dip2px(context, AppConstants.APP_ICON_PADDING);
-            shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
-            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), getRingIconId(userId));
-            Canvas canvas = new Canvas(shortCutBitMap);
-
-            Paint paint = new Paint();
-            paint.setColor(Color.TRANSPARENT);
-            final Rect rect = new Rect(0, 0, width, width);
-            final float roundPx = DisplayUtils.dip2px(context, AppConstants.APP_ICON_RADIUS);
-            canvas.drawRoundRect(new RectF(rect),roundPx,roundPx,paint);
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
-
-            appIcon.setBounds(padding,padding,width - padding,width - padding);
-            appIcon.draw(canvas);
-
-            canvas.drawBitmap(Bitmap.createScaledBitmap(mShape,width,width,true),new Rect(0,0,width,width),new Rect(0,0,width,width),null);
-        }catch (OutOfMemoryError error){
-            error.printStackTrace();
-            shortCutBitMap = null;
-        }
-        return shortCutBitMap;
     }
 
     public static Drawable getAppIcon(String packageName) {

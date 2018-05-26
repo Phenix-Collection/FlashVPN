@@ -40,7 +40,7 @@ import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.db.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.AnimatorHelper;

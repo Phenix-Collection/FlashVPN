@@ -5,11 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -28,7 +26,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdSize;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.os.VUserHandle;
-import com.lody.virtual.os.VUserManager;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -41,21 +38,18 @@ import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.db.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
-import com.polestar.domultiple.widget.ExplosionField;
 import com.polestar.domultiple.widget.UpDownDialog;
 import com.polestar.grey.GreyAttribute;
 
 import java.util.HashSet;
 import java.util.List;
-
-import mirror.android.content.pm.ApplicationInfoL;
 
 /**
  * Created by PolestarApp on 2017/7/16.

@@ -1,7 +1,6 @@
 package com.polestar.domultiple.widget;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,7 @@ import android.widget.TextView;
 
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.db.CustomizeAppData;
-import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.clone.CustomizeAppData;
 
 import java.util.ArrayList;
 import java.util.List;

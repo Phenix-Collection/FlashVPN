@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.db.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 
 import java.util.List;
 

@@ -19,7 +19,6 @@ import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.ipc.VActivityManager;
 import com.lody.virtual.client.ipc.VPackageManager;
-import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.os.VUserInfo;
 import com.lody.virtual.os.VUserManager;
@@ -28,7 +27,7 @@ import com.lody.virtual.remote.InstalledAppInfo;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.db.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
@@ -595,11 +594,6 @@ public class CloneManager {
             e.printStackTrace();
         }
         return null;
-    }
-
-    // for compatible use
-    public static String getCompatibleName(String name, int userId) {
-        return (userId != 0) ? name + " " + (userId + 1): name + " +" ;
     }
 
     // the name store in database

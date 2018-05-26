@@ -22,13 +22,12 @@ import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.db.CustomizeAppData;
-import com.polestar.domultiple.utils.BitmapUtils;
+import com.polestar.clone.CustomizeAppData;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by PolestarApp on 2017/7/29.
@@ -162,7 +161,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         mData.label = text;
         mData.saveToPref();
         try{
-            File dir = new File(getFilesDir() + AppConstants.ICON_FILE_PATH );
+            File dir = new File(getFilesDir() + BitmapUtils.ICON_FILE_PATH );
             if (!dir.exists()) {
                 dir.mkdirs();
             }

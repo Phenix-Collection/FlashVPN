@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -19,6 +18,7 @@ import android.widget.RemoteViews;
 import com.polestar.booster.BoosterSdk;
 import com.polestar.booster.BoosterShortcutActivity;
 import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
@@ -27,9 +27,8 @@ import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.components.ui.HomeActivity;
 import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.db.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
-import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
@@ -276,7 +275,7 @@ public class QuickSwitchNotification {
                             try {
                                 ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(pkg, 0);
                                 if (ai != null) {
-                                    remoteViews.setImageViewBitmap(iconId, DisplayUtils.drawable2Bitmap(ai.loadIcon(mContext.getPackageManager())));
+                                    remoteViews.setImageViewBitmap(iconId, BitmapUtils.drawableToBitmap(ai.loadIcon(mContext.getPackageManager())));
                                     remoteViews.setTextViewText(titleId, ai.loadLabel(mContext.getPackageManager()));
                                     Intent intent = new Intent(ACTION_QUICK_SWITCH);
                                     intent.addCategory(CATEGORY_NOTIFY + i);

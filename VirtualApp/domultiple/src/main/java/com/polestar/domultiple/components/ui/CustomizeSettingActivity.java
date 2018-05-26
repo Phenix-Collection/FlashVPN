@@ -13,10 +13,8 @@ import android.widget.TextView;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
-import com.polestar.domultiple.db.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.utils.MLogs;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

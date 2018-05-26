@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
-import com.polestar.domultiple.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.domultiple.utils.MLogs;
 
 import java.util.List;

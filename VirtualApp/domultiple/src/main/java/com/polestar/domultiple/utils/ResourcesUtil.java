@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
+import com.polestar.clone.BitmapUtils;
 import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
 
@@ -111,7 +112,7 @@ public class ResourcesUtil {
     }
 
     public static Bitmap getBitmap(int resId){
-        return DisplayUtils.drawable2Bitmap(getDrawable(resId));
+        return BitmapUtils.drawableToBitmap( getDrawable(resId));
     }
 
 }
