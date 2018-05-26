@@ -20,6 +20,7 @@ import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -56,15 +57,13 @@ import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.compat.ActivityManagerCompat;
 import com.lody.virtual.helper.compat.BuildCompat;
 import com.lody.virtual.helper.utils.ArrayUtils;
-import com.lody.virtual.helper.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import com.lody.virtual.helper.utils.ComponentUtils;
-import com.lody.virtual.helper.utils.DrawableUtils;
 import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.os.VUserInfo;
 import com.lody.virtual.remote.AppTaskInfo;
-import com.lody.virtual.server.am.BroadcastSystem;
 import com.lody.virtual.server.interfaces.IAppRequestListener;
 import com.polestar.clone.StubService;
 
@@ -73,7 +72,6 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -1650,17 +1648,16 @@ class MethodProxies {
                         if (label == null) {
                             label = app.getApplicationInfo().loadLabel(app.getPackageManager()).toString();
                         }
-
-                if (VirtualCore.get().getAppApiDelegate() != null) {
-                    icon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(app.getPackageName(), icon, VirtualCore.get().myUserId());
-                    label = VirtualCore.get().getAppApiDelegate().getCloneTagedLabel(label);
-                }
-
                         if (icon == null) {
                             Drawable drawable = app.getApplicationInfo().loadIcon(app.getPackageManager());
                             if (drawable != null) {
-                                icon = DrawableUtils.drawableToBitMap(drawable);
+                                icon = BitmapUtils.drawableToBitmap(drawable);
                             }
+                        }
+                        icon = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), new BitmapDrawable(icon), VirtualCore.get().myUserId());
+                        if (VirtualCore.get().getAppApiDelegate() != null) {
+
+                            label = VirtualCore.get().getAppApiDelegate().getCloneTagedLabel(label);
                         }
                         td = new ActivityManager.TaskDescription(label, icon, td.getPrimaryColor());
                     } catch (Throwable e) {
@@ -1837,9 +1834,14 @@ class MethodProxies {
                             if (resId > 0) {
                                 //noinspection deprecation
                                 Drawable iconDrawable = resources.getDrawable(resId);
-                                Bitmap newIcon = BitmapUtils.drawableToBitmap(iconDrawable);
-                                    newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(icon.packageName, newIcon,
-                                            VirtualCore.get().myUserId());
+                                if (iconDrawable == null) {
+                                    try{
+                                        iconDrawable = VirtualCore.get().getUnHookPackageManager().getApplicationIcon(pkg);
+                                    }catch (Exception ex) {
+
+                                    }
+                                }
+                                Bitmap newIcon = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), iconDrawable, VUserHandle.myUserId());
                                 if (newIcon != null) {
                                     intent.removeExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE);
                                     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, newIcon);
@@ -1853,8 +1855,8 @@ class MethodProxies {
                         try {
                             Bitmap origIcon = intent.getParcelableExtra(Intent.EXTRA_SHORTCUT_ICON);
                             if (origIcon != null && pkg != null && !TextUtils.equals(pkg, getHostPkg())){
-                                Bitmap newIcon = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(pkg, origIcon,
-                                        VirtualCore.get().myUserId());
+                                Bitmap newIcon = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), new BitmapDrawable(origIcon),
+                                        VUserHandle.myUserId());
                                 if (newIcon != null) {
                                     intent.removeExtra(Intent.EXTRA_SHORTCUT_ICON);
                                     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, newIcon);

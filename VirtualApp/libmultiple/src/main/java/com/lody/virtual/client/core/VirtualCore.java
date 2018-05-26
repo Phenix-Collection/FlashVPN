@@ -37,7 +37,7 @@ import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.ipc.VirtualStorageManager;
 import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.compat.BundleCompat;
-import com.lody.virtual.helper.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.InstallResult;
@@ -870,4 +870,9 @@ public final class VirtualCore {
 		VNotificationManager.get().clearRemoteInterface();
 		VPackageManager.get().clearRemoteInterface();
 	}
+
+    // for compatible use
+    public static String getCompatibleName(String name, int userId) {
+        return (userId != 0) ? name + " " + (userId + 1): name + " +" ;
+    }
 }

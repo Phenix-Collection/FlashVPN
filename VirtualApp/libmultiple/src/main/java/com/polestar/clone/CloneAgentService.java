@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
+import android.os.Parcel;
 
 import com.lody.virtual.client.core.InstallStrategy;
 import com.lody.virtual.client.core.VirtualCore;
@@ -16,6 +20,8 @@ import com.lody.virtual.os.VUserInfo;
 import com.lody.virtual.os.VUserManager;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.remote.InstalledAppInfo;
+
+import java.io.File;
 
 /**
  * Created by guojia on 2018/5/23.
@@ -100,6 +106,27 @@ public class CloneAgentService extends Service {
                 VLog.logbug(TAG, ex.toString());
             }
             return false;
+        }
+
+        public void syncSetting(String pkg, int userId, CustomizeAppData data) {
+            data.saveToPref();
+            if (data.customized) {
+                try{
+                    File dir = new File(getFilesDir() + BitmapUtils.ICON_FILE_PATH );
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    String pathname = BitmapUtils.getCustomIconPath(CloneAgentService.this, pkg, userId);
+                    Drawable defaultIcon = getPackageManager().getApplicationIcon(pkg);
+                    Bitmap customIcon = BitmapUtils.handleImageEffect(BitmapUtils.drawableToBitmap(defaultIcon), data.hue, data.sat,data.light );
+                    if (data.badge) {
+                        customIcon = BitmapUtils.createBadgeIcon(CloneAgentService.this, new BitmapDrawable(customIcon), data.userId);
+                    }
+                    BitmapUtils.saveBitmapToPNG(customIcon, pathname);
+                } catch (Exception e) {
+                    VLog.logbug(TAG, e.toString());
+                }
+            }
         }
     }
 }

@@ -19,6 +19,8 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.helper.utils.OSUtils;
 import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.helper.utils.VLog;
+import com.lody.virtual.os.VUserHandle;
+import com.polestar.clone.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,10 +93,10 @@ import mirror.com.android.internal.R_Hide;
             } else {
                 try {
                 Drawable drawable = icon.loadDrawable(appContext);
-                Bitmap bitmap = drawableToBitMap(drawable);
-                    if (bitmap == null) {
-                        bitmap = VirtualCore.get().getAppApiDelegate().createCloneTagedBitmap(appContext.getPackageName(), null, VirtualCore.get().myUserId());
+                    if (drawable == null) {
+                        drawable = VirtualCore.get().getUnHookPackageManager().getApplicationIcon(appContext.getPackageName());
                     }
+                Bitmap bitmap = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), drawable, VUserHandle.myUserId());
                 mirror.android.graphics.drawable.Icon.mObj1.set(icon, bitmap);
                 mirror.android.graphics.drawable.Icon.mString1.set(icon, null);
                 mirror.android.graphics.drawable.Icon.mType.set(icon, mirror.android.graphics.drawable.Icon.TYPE_BITMAP);

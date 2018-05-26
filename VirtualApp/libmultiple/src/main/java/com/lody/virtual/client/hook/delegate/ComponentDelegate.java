@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 
 public interface ComponentDelegate {
 
