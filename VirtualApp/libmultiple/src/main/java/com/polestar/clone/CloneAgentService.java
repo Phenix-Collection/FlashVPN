@@ -108,7 +108,11 @@ public class CloneAgentService extends Service {
             return false;
         }
 
-        public void syncSetting(String pkg, int userId, CustomizeAppData data) {
+        public void syncGlobalSetting(String lockKey, int lockInterval, boolean adFree, boolean quickSwitch){
+            VirtualCore.get().getComponentDelegate().reloadSetting(lockKey, adFree, lockInterval , quickSwitch);
+        }
+
+        public void syncPackageSetting(String pkg, int userId, CustomizeAppData data) {
             data.saveToPref();
             if (data.customized) {
                 try{

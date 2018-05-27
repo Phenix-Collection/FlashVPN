@@ -35,6 +35,5 @@ interface IAppManager {
 
     void notifyActivityBeforeResume(String pkg, int userId);
     void notifyActivityBeforePause(String pkg, int userId);
-    void reloadLockerSetting(String key, boolean adFree, long interval);
     void restart();
 }

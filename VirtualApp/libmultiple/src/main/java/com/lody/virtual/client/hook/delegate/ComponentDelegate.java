@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Intent;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 
 public interface ComponentDelegate {
 
@@ -72,7 +71,7 @@ public interface ComponentDelegate {
         }
 
         @Override
-        public void reloadLockerSetting(String key, boolean adFree, long in) {
+        public void reloadSetting(String lockKey, boolean adFree, long lockInterval, boolean quickSwitch) {
 
         }
     };
@@ -101,5 +100,5 @@ public interface ComponentDelegate {
 
     boolean isNotificationEnabled(String pkg, int userId);
 
-    void reloadLockerSetting(String newKey, boolean adFree, long interval);
+    void reloadSetting(String lockKey, boolean adFree, long lockInterval, boolean quickSwitch);
 }

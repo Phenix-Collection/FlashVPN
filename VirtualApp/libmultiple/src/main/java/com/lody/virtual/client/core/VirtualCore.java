@@ -842,15 +842,6 @@ public final class VirtualCore {
 
     }
 
-	public void reloadLockerSetting(String key, boolean adFree, long interval){
-        try {
-			getService().reloadLockerSetting(key, adFree, interval);
-		}catch (Exception e){
-            VLog.logbug(VLog.VTAG, VLog.getStackTraceString(e));
-        }
-
-    }
-
 	synchronized public void restart() {
 		try {
 			getService().restart();

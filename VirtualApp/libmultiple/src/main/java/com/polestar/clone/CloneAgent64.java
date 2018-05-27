@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.os.Looper;
 
@@ -141,14 +142,30 @@ public class CloneAgent64 {
         return false;
     }
 
+    public void syncPackageSetting(String pkg, int userId, CustomizeAppData data) {
+        try{
+            if(getAgent()!= null){
+                getAgent().syncPackageSetting(pkg, userId, data);
+            }
+        }catch (Exception ex){
+
+        }
+    }
+
     private ICloneAgent getAgent() {
         if (iCloneAgent != null) {
             return  iCloneAgent;
         }
+        String supportPkg = mContext.getPackageName()+".arm64";
+        try{
+            ApplicationInfo ai = mContext.getPackageManager().getApplicationInfo(supportPkg, 0);
+        }catch (PackageManager.NameNotFoundException ex) {
+            return  null;
+        }
         if (Looper.getMainLooper() == Looper.myLooper()) {
             throw new RuntimeException("Cannot getAgent in main thread!");
         }
-        ComponentName comp = new ComponentName(mContext.getPackageName()+".arm64", CloneAgentService.class.getName());
+        ComponentName comp = new ComponentName(supportPkg, CloneAgentService.class.getName());
         Intent intent = new Intent();
         intent.setComponent(comp);
         VLog.d("CloneAgent", "bindService intent "+ intent);
@@ -175,6 +192,7 @@ public class CloneAgent64 {
         }
         return iCloneAgent;
     }
+
     public CloneAgent64(Context context) {
         mContext = context;
     }

@@ -14,6 +14,7 @@ interface ICloneAgent {
     boolean isNeedUpgrade(String pkg);
     void upgradeApp(String pkg);
     boolean isCloned(String pkg, int userId);
-    void syncSetting(String pkg, int userId, in CustomizeAppData data);
+    void syncPackageSetting(String pkg, int userId, in CustomizeAppData data);
+    void syncGlobalSetting(String lockKey, int lockInterval, boolean adFree, boolean quickSwitch);
 }
 

@@ -694,10 +694,6 @@ public class VAppManagerService extends IAppManager.Stub {
         VLog.d(TAG, "notifyActivityBeforePause " + pkg);
         VirtualCore.get().getComponentDelegate().beforeActivityPause(pkg, userId);
     }
-    public void  reloadLockerSetting(String key, boolean adFree, long interval){
-        VLog.d(TAG, "reloadLockerSetting ");
-        VirtualCore.get().getComponentDelegate().reloadLockerSetting(key, adFree, interval);
-    }
 
     public void restart() {
         VLog.logbug(TAG, "restart...");
