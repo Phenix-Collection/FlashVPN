@@ -18,6 +18,7 @@ import android.widget.SeekBar;
 
 
 import com.lody.virtual.os.VUserHandle;
+import com.polestar.clone.CloneAgent64;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
@@ -170,6 +171,14 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         } catch (Exception e) {
             MLogs.logBug(MLogs.getStackTraceString(e));
         }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CloneAgent64 agent64 = new CloneAgent64(CustomizeIconActivity.this);
+                agent64.syncPackageSetting(mData.pkg, mData.userId, mData);
+            }
+        }).start();
+
         if (appModel.getLockerState() != AppConstants.AppLockState.DISABLED) {
             CloneManager.reloadLockerSetting();
         }

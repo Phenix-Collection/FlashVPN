@@ -1,20 +1,28 @@
 package com.polestar.domultiple.widget.locker;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.helper.utils.VLog;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
+import com.polestar.domultiple.IAppMonitor;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.clone.CloneManager;
+import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.components.ui.AppLockActivity;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
@@ -25,14 +33,23 @@ import com.polestar.domultiple.utils.RemoteConfig;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by PolestarApp on 2017/1/4.
  */
 
 public class AppLockMonitor {
+    //lock interval 之内解过锁的不再锁
+    //前后台切换超过lock interval的算一次switch
+    //广告、界面相关逻辑移到AppMonitorService
 
-    private String mUnlockedForegroudPkg;
+    private String mLastForegroundPkg;
+    private long mLastForegroundTime = 0;
+    private String mUnlockedForegroundPkg;
     private static AppLockMonitor sInstance = null;
     private HashMap<String , CloneModel> modelHashMap = new HashMap<>();
     private Handler mHandler;
@@ -40,8 +57,8 @@ public class AppLockMonitor {
     private final static int MSG_DELAY_LOCK_APP = 0;
     public final static int MSG_PACKAGE_UNLOCKED = 1;
     public final static int MSG_PRELOAD_AD = 2;
-    public final static int MSG_SHOW_LOCKER = 3;
-    public final static int MSG_HIDE_LOCKER = 4;
+    public final static int MSG_APP_FOREGROUND = 3;
+    public final static int MSG_APP_BACKGROUND = 4;
     public final static String CONFIG_APPLOCK_PRELOAD_INTERVAL = "applock_preload_interval";
     public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
     private final static String TAG = "AppLockMonitor";
@@ -54,6 +71,7 @@ public class AppLockMonitor {
     private FuseAdLoader mAdLoader;
     private boolean hasAppLocked;
     private boolean adFree;
+    private IAppMonitor uiAgent;
 
     public static void updateSetting(String newKey, boolean adFree, long interval) {
         Intent intent = new Intent(ACTION_RELOAD_SETTING);
@@ -82,14 +100,14 @@ public class AppLockMonitor {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case MSG_DELAY_LOCK_APP:
-                        MLogs.d(TAG, "Package change to background, last foreground: " + mUnlockedForegroudPkg);
+                        MLogs.d(TAG, "Package change to background, last foreground: " + mUnlockedForegroundPkg);
                         QuickSwitchNotification.getInstance(VirtualCore.get().getContext()).updateLruPackages((String)msg.obj);
-                        mUnlockedForegroudPkg = null;
+                        mUnlockedForegroundPkg = null;
                         break;
                     case MSG_PACKAGE_UNLOCKED:
                         String pkg = (String) msg.obj;
                         MLogs.d(TAG, "Package was unlocked" + pkg);
-                        mUnlockedForegroudPkg = pkg;
+                        mUnlockedForegroundPkg = pkg;
                         break;
                     case MSG_PRELOAD_AD:
                         if (!adFree && hasLocker()) {
@@ -103,17 +121,29 @@ public class AppLockMonitor {
                                 mHandler.sendEmptyMessageDelayed(MSG_PRELOAD_AD, interval);
                             }
                         }
-                    case MSG_SHOW_LOCKER:
+                    case MSG_APP_FOREGROUND:
                         String key = (String) msg.obj;
                         try {
                             String name = CloneManager.getNameFromKey(key);
                             int userId = CloneManager.getUserIdFromKey(key);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try{
+                                        if(getAgent() != null) {
+                                            getAgent().onAppLock(name, userId);
+                                        }
+                                    }catch (Exception ex) {
+                                        MLogs.logBug(ex);
+                                    }
+                                }
+                            }).start();
                             AppLockActivity.start(VirtualCore.get().getContext(), name, userId);
                         }catch (Exception ex) {
 
                         }
                         break;
-                    case MSG_HIDE_LOCKER:
+                    case MSG_APP_BACKGROUND:
                         break;
                 }
             }
@@ -122,7 +152,8 @@ public class AppLockMonitor {
     }
 
     private boolean hasLocker() {
-        return hasAppLocked && !TextUtils.isEmpty(LockPatternUtils.getTempKey());
+        return (hasAppLocked || PolestarApp.isSupportPkg())
+                && !TextUtils.isEmpty(LockPatternUtils.getTempKey());
     }
     private void preloadAd() {
         mHandler.removeMessages(MSG_PRELOAD_AD);
@@ -131,18 +162,20 @@ public class AppLockMonitor {
 
     private void initSetting() {
         MLogs.d("initSetting");
-        List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
-        for (CloneModel model: list) {
-            modelHashMap.put(CloneManager.getMapKey(model.getPackageName(), model.getPkgUserId()), model);
-            if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
-                hasAppLocked = true;
+        if (!PolestarApp.isSupportPkg()) {
+            List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
+            for (CloneModel model : list) {
+                modelHashMap.put(CloneManager.getMapKey(model.getPackageName(), model.getPkgUserId()), model);
+                if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
+                    hasAppLocked = true;
+                }
             }
+            adFree = false;
+            mAdLoader = FuseAdLoader.get(CONFIG_SLOT_APP_LOCK, PolestarApp.getApp());
+            mAdLoader.setBannerAdSize(AppLockActivity.getBannerSize());
+            preloadAd();
         }
-        adFree = false;
-        mAdLoader = FuseAdLoader.get(CONFIG_SLOT_APP_LOCK, PolestarApp.getApp());
-        mAdLoader.setBannerAdSize(AppLockActivity.getBannerSize());
         LockPatternUtils.setTempKey(PreferencesUtils.getEncodedPatternPassword(PolestarApp.getApp()));
-        preloadAd();
     }
 
     public FuseAdLoader getAdLoader(){
@@ -152,16 +185,18 @@ public class AppLockMonitor {
     public void reloadSetting(String newKey, boolean adFree, long interval) {
         MLogs.d(TAG, "reloadSetting adfree:" + adFree + " tmpkey: " + newKey);
         modelHashMap.clear();
-        DBManager.resetSession();
-        List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
-        for (CloneModel model: list) {
-            modelHashMap.put(CloneManager.getMapKey(model.getPackageName(), model.getPkgUserId()), model);
-            if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
-                MLogs.d(TAG, "hasAppLocked " + model.getPackageName());
-                hasAppLocked = true;
+        if (!PolestarApp.isSupportPkg()) {
+            DBManager.resetSession();
+            List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
+            for (CloneModel model : list) {
+                modelHashMap.put(CloneManager.getMapKey(model.getPackageName(), model.getPkgUserId()), model);
+                if (model.getLockerState() != AppConstants.AppLockState.DISABLED) {
+                    MLogs.d(TAG, "hasAppLocked " + model.getPackageName());
+                    hasAppLocked = true;
+                }
             }
+            preloadAd();
         }
-        preloadAd();
         this.adFree = adFree;
         LockPatternUtils.setTempKey(newKey);
         if ( interval >= 3000) {
@@ -190,17 +225,32 @@ public class AppLockMonitor {
         }
         if (hasLocker() && model.getLockerState() != AppConstants.AppLockState.DISABLED) {
             MLogs.d(TAG, "Need lock app " + pkg);
-            if (mUnlockedForegroudPkg == null || (!mUnlockedForegroudPkg.equals(key))) {
+            if (mUnlockedForegroundPkg == null || (!mUnlockedForegroundPkg.equals(key))) {
                 //do lock
                 MLogs.d(TAG, "Do lock app " + pkg);
-                mHandler.removeMessages(MSG_SHOW_LOCKER, key);
-                mHandler.removeMessages(MSG_HIDE_LOCKER, key);
-                mHandler.sendMessage(mHandler.obtainMessage(MSG_SHOW_LOCKER, key));
+                mHandler.removeMessages(MSG_APP_FOREGROUND, key);
+                mHandler.removeMessages(MSG_APP_BACKGROUND, key);
+                mHandler.sendMessage(mHandler.obtainMessage(MSG_APP_FOREGROUND, key));
             }
         }
         //Remove the same object with send
         mHandler.removeMessages(MSG_DELAY_LOCK_APP, key);
-        //mUnlockedForegroudPkg = pkg;
+        if (!key.equals(mLastForegroundPkg)
+                || (System.currentTimeMillis() - mLastForegroundTime) > relockDelay) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (getAgent() != null) {
+                            getAgent().onAppSwitchForeground(pkg, userId);
+                        }
+                    }catch (Exception ex){
+                        MLogs.logBug(ex);
+                    }
+                }
+            }).start();
+        }
+        //mUnlockedForegroundPkg = pkg;
     }
 
     public void onActivityPause(String pkg, int userId) {
@@ -208,11 +258,73 @@ public class AppLockMonitor {
         MLogs.d(TAG, "onActivityPause " + pkg + " delay relock: " + relockDelay);
         CloneModel model = modelHashMap.get(key);
         if (model != null) {
-            mHandler.removeMessages(MSG_SHOW_LOCKER, key);
-            mHandler.removeMessages(MSG_HIDE_LOCKER, key);
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_HIDE_LOCKER, key), 500);
+            mHandler.removeMessages(MSG_APP_FOREGROUND, key);
+            mHandler.removeMessages(MSG_APP_BACKGROUND, key);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_APP_BACKGROUND, key), 500);
         }
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_LOCK_APP, key),
                 relockDelay);
+        mLastForegroundPkg = CloneManager.getMapKey(pkg, userId);
+        mLastForegroundTime = System.currentTimeMillis();
     }
+
+    private IAppMonitor getAgent() {
+        if (uiAgent != null) {
+            return  uiAgent;
+        }
+        String targetPkg = PolestarApp.getApp().getPackageName();
+        if (targetPkg.endsWith(".arm64")) {
+            targetPkg = targetPkg.replace(".arm64","");
+        }
+        try{
+            ApplicationInfo ai = PolestarApp.getApp().getPackageManager().getApplicationInfo(targetPkg, 0);
+        }catch (PackageManager.NameNotFoundException ex) {
+            return  null;
+        }
+        if (Looper.getMainLooper() == Looper.myLooper()) {
+            throw new RuntimeException("Cannot getAgent in main thread!");
+        }
+        ComponentName comp = new ComponentName(targetPkg, AppMonitorService.class.getName());
+        Intent intent = new Intent();
+        intent.setComponent(comp);
+        VLog.d("CloneAgent", "bindService intent "+ intent);
+        syncQueue.clear();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    syncQueue.put(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 5000);
+        PolestarApp.getApp().bindService(intent,
+                agentServiceConnection,
+                Context.BIND_AUTO_CREATE);
+        try {
+            syncQueue.take();
+        }catch (Exception ex) {
+
+        }
+        return uiAgent;
+    }
+
+    private final BlockingQueue<Integer> syncQueue = new LinkedBlockingQueue<Integer>(1);
+    ServiceConnection agentServiceConnection = new ServiceConnection() {
+        @Override public void onServiceConnected(ComponentName name, IBinder service) {
+            try {
+                uiAgent = IAppMonitor.Stub.asInterface(service);
+                syncQueue.put(1);
+            } catch (InterruptedException e) {
+                // will never happen, since the queue starts with one available slot
+            }
+            VLog.d("CloneAgent", "connected "+ name);
+        }
+        @Override public void onServiceDisconnected(ComponentName name) {
+            uiAgent = null;
+        }
+    };
 }

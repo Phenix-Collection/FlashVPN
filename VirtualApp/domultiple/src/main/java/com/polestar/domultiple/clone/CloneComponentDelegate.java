@@ -10,11 +10,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.clone.BitmapUtils;
 import com.polestar.domultiple.utils.MLogs;
+import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.widget.locker.AppLockMonitor;
 
 import java.util.HashSet;
@@ -103,11 +105,23 @@ public class CloneComponentDelegate implements ComponentDelegate {
     public boolean isNotificationEnabled(String pkg, int userId) {
         String key = CloneManager.getMapKey(pkg, userId);
         MLogs.d("isNotificationEnabled pkg: " + key + " " + pkgs.contains(key));
-        return pkgs.contains(key);
+        if ( pkgs.contains(key) ) {
+            return  true;
+        } else if(PolestarApp.isSupportPkg()) {
+            CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
+            if (data.isNotificationEnable) {
+                pkgs.add(key);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public void reloadLockerSetting(String newKey, boolean adFree, long interval) {
-       AppLockMonitor.getInstance().reloadSetting(newKey, adFree, interval);
+    public void reloadSetting(String lockKey, boolean adFree, long lockInterval, boolean quickSwitch) {
+        PreferencesUtils.setEncodedPatternPassword(PolestarApp.getApp(),lockKey);
+        PreferencesUtils.setAdFree(true);
+        PreferencesUtils.setLockInterval(lockInterval);
+       AppLockMonitor.getInstance().reloadSetting(lockKey, adFree, lockInterval);
     }
 }

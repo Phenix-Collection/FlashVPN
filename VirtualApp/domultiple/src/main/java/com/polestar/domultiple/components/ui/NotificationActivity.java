@@ -6,7 +6,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.polestar.clone.CloneAgent64;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.AppConstants;
+import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
@@ -15,8 +18,6 @@ import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.widget.BlueSwitch;
 import com.polestar.domultiple.widget.FixedListView;
 import com.polestar.domultiple.widget.PackageSwitchListAdapter;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -58,6 +59,18 @@ public class NotificationActivity extends BaseActivity {
             public void onCheckStatusChangedListener(CloneModel model, boolean status) {
                 model.setNotificationEnable(status);
                 DBManager.updateCloneModel(mContext, model);
+                if (PolestarApp.isSupportPkgExist()) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CloneAgent64 agent64 = new CloneAgent64(NotificationActivity.this);
+                            CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
+                            data.isNotificationEnable = status;
+                            data.saveToPref();
+                            agent64.syncPackageSetting(model.getPackageName(), model.getPkgUserId(),data);
+                        }
+                    }).start();
+                }
 //                DBManager.notifyChanged();
             }
         });
@@ -84,6 +97,21 @@ public class NotificationActivity extends BaseActivity {
                 } else {
                     for (CloneModel model: mClonedModels) {
                         model.setNotificationEnable(false);
+                    }
+                    if (PolestarApp.isSupportPkgExist()) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CloneAgent64 agent64 = new CloneAgent64(NotificationActivity.this);
+                                for (CloneModel model: mClonedModels) {
+                                    model.setNotificationEnable(false);
+                                    CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
+                                    data.isNotificationEnable = false;
+                                    data.saveToPref();
+                                    agent64.syncPackageSetting(model.getPackageName(), model.getPkgUserId(),data);
+                                }
+                            }
+                        }).start();
                     }
                     mNotificationAdapter.notifyDataSetChanged();
                     mListView.setVisibility(View.INVISIBLE);
