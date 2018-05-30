@@ -65,12 +65,14 @@ public class AppMonitorService extends Service {
                 case MSG_DELAY_LOCK_APP:
                     QuickSwitchNotification.getInstance(VirtualCore.get().getContext()).updateLruPackages((String)msg.obj);
                     lastUnlockKey = null;
+                    MLogs.d("relock lastUnlockKey " + lastUnlockKey);
                     break;
             }
         }
     };
     public static void unlocked(String pkg, int userId) {
         lastUnlockKey = CloneManager.getMapKey(pkg,userId);
+        MLogs.d("unlocked lastUnlockKey " + lastUnlockKey);
     }
 
     @Override
@@ -183,17 +185,18 @@ public class AppMonitorService extends Service {
             CloneModel model = CloneManager.getInstance(AppMonitorService.this).getCloneModel(pkg, userId);
             boolean locked = false;
             String key = CloneManager.getMapKey(pkg, userId);
+            MLogs.d(TAG, "key unlockKey: " + key + " vs " + lastUnlockKey);
             if(model.getLockerState()!= AppConstants.AppLockState.DISABLED
                     && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
                 if (!key.equals(lastUnlockKey)){
                     AppLockActivity.start(AppMonitorService.this, pkg, userId);
                     locked = true;
                 } else {
-                    mainHandler.removeMessages(MSG_DELAY_LOCK_APP, key);
+                    mainHandler.removeMessages(MSG_DELAY_LOCK_APP);
                 }
             }
             if (!locked && needLoadCoverAd(false, pkg)) {
-                loadAd(pkg, userId);
+               // loadAd(pkg, userId);
             }
 
         }
