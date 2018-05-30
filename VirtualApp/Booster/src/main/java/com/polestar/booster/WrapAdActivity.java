@@ -143,7 +143,7 @@ public class WrapAdActivity extends Activity {
         String slot = getIntent().getStringExtra(EXTRA_AD_SLOT);
         FuseAdLoader.get(slot, this).loadAd(2, new IAdLoadListener() {
             @Override
-            protected void onAdLoaded(IAdAdapter ad) {
+            public void onAdLoaded(IAdAdapter ad) {
                 if (ad.isInterstitialAd()) {
                     ad.show();
                 }
@@ -151,12 +151,22 @@ public class WrapAdActivity extends Activity {
             }
 
             @Override
-            protected void onAdListLoaded(List<IAdAdapter> ads) {
+            public void onAdClicked(IAdAdapter ad) {
 
             }
 
             @Override
-            protected void onError(String error) {
+            public void onAdClosed(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdListLoaded(List<IAdAdapter> ads) {
+
+            }
+
+            @Override
+            public void onError(String error) {
                 finishAndRemoveRecent();
             }
         });

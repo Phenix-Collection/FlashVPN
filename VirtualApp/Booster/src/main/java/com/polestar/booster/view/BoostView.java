@@ -184,6 +184,16 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
             }
 
             @Override
+            public void onAdClicked(IAdAdapter ad) {
+                
+            }
+
+            @Override
+            public void onAdClosed(IAdAdapter ad) {
+
+            }
+
+            @Override
             public void onError(String error) {
 
             }

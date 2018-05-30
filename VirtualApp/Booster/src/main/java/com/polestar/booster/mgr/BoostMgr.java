@@ -216,19 +216,29 @@ public class BoostMgr {
     private void doInstallAd() {
         FuseAdLoader.get(BoosterSdk.boosterConfig.installAdSlot,mContext).loadAd(2, new IAdLoadListener() {
             @Override
-            protected void onAdLoaded(IAdAdapter ad) {
+            public void onAdLoaded(IAdAdapter ad) {
                 BoosterLog.autoAdShow(OK_INSTALL);
                 WrapAdActivity.start(mContext, BoosterSdk.boosterConfig.installAdSlot);
                 updateAutoAdShowTime(mContext);
             }
 
             @Override
-            protected void onAdListLoaded(List<IAdAdapter> ads) {
+            public void onAdListLoaded(List<IAdAdapter> ads) {
 
             }
 
             @Override
-            protected void onError(String error) {
+            public void onAdClicked(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdClosed(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onError(String error) {
                 BoosterLog.autoAdShow(NO_FILL_INSTALL);
             }
         });
@@ -309,7 +319,7 @@ public class BoostMgr {
     private void doShowUnlockAd(){
         FuseAdLoader.get(BoosterSdk.boosterConfig.unlockAdSlot,mContext).loadAd(2, 3000, new IAdLoadListener() {
             @Override
-            protected void onAdLoaded(IAdAdapter ad) {
+            public void onAdLoaded(IAdAdapter ad) {
                 BoosterLog.log("Unlock ad loaded");
                 //startMonitor();
                 //ad.show();
@@ -319,12 +329,22 @@ public class BoostMgr {
             }
 
             @Override
-            protected void onAdListLoaded(List<IAdAdapter> ads) {
+            public void onAdListLoaded(List<IAdAdapter> ads) {
 
             }
 
             @Override
-            protected void onError(String error) {
+            public void onAdClicked(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdClosed(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onError(String error) {
                 BoosterLog.autoAdShow(NO_FILL_UNLOCK);
             }
         });
