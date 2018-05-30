@@ -17,8 +17,6 @@ import com.polestar.ad.AdLog;
 
 public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdListener {
     private InterstitialAd interstitialAd;
-    private IAdLoadListener adListener;
-
 
     @Override
     public boolean isInterstitialAd() {
@@ -95,7 +93,11 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
 
     @Override
     public void onInterstitialDismissed(com.facebook.ads.Ad ad) {
-
+        AdLog.d("onInterstitialDismissed");
+        if (adListener != null) {
+            AdLog.d("call onAdClockedcc " + adListener);
+            adListener.onAdClosed(this);
+        }
     }
 
 

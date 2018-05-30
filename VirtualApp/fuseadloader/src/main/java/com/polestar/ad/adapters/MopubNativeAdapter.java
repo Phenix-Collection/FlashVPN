@@ -24,7 +24,6 @@ public class MopubNativeAdapter extends AdAdapter {
     private Context mContext;
     private String adUnit;
     private RequestParameters parameters;
-    private IAdLoadListener mListener;
     private MoPubNative moPubNative;
     private NativeAd rawAd;
     private MoPubAdRendererProxy rendererProxy;
@@ -56,7 +55,7 @@ public class MopubNativeAdapter extends AdAdapter {
 
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
-        mListener = listener;
+        adListener = listener;
         AdLog.d("Mopub loadAd " + listener);
         moPubNative = new MoPubNative(mContext, this.adUnit, new MoPubNative.MoPubNativeNetworkListener() {
             @Override
@@ -64,8 +63,8 @@ public class MopubNativeAdapter extends AdAdapter {
                 AdLog.d("Mopub onNativeLoad " );
                 rawAd = nativeAd;
                 mLoadedTime = System.currentTimeMillis();
-                if (mListener != null) {
-                    mListener.onAdLoaded(MopubNativeAdapter.this);
+                if (adListener != null) {
+                    adListener.onAdLoaded(MopubNativeAdapter.this);
                 }
                 stopMonitor();
             }
@@ -73,8 +72,8 @@ public class MopubNativeAdapter extends AdAdapter {
             @Override
             public void onNativeFail(NativeErrorCode errorCode) {
                 AdLog.d("Mopub  onNativeFail " + errorCode.toString() );
-                if (mListener != null) {
-                    mListener.onError(errorCode.toString());
+                if (adListener != null) {
+                    adListener.onError(errorCode.toString());
                 }
                 stopMonitor();
             }
@@ -129,8 +128,8 @@ public class MopubNativeAdapter extends AdAdapter {
 
     @Override
     protected void onTimeOut() {
-        if (mListener != null) {
-            mListener.onError("TIME_OUT");
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
         }
     }
 }

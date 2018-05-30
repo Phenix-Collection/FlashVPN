@@ -15,7 +15,6 @@ import com.polestar.ad.AdLog;
 
 public class MopubInterstitialAdapter extends AdAdapter implements MoPubInterstitial.InterstitialAdListener {
     private MoPubInterstitial mInterstitial;
-    private IAdLoadListener mAdListener;
     private Context mContext;
     private String key;
 
@@ -34,8 +33,8 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
     @Override
     public void onInterstitialLoaded(MoPubInterstitial interstitial) {
         mLoadedTime = System.currentTimeMillis();
-        if (mAdListener != null) {
-            mAdListener.onAdLoaded(this);
+        if (adListener != null) {
+            adListener.onAdLoaded(this);
         }
         stopMonitor();
         AdLog.d("Mopub interstitial loaded");
@@ -44,8 +43,8 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
     @Override
     public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
         AdLog.d("Mopub interstitial load error: " + errorCode);
-        if (mAdListener != null) {
-            mAdListener.onError("" + errorCode);
+        if (adListener != null) {
+            adListener.onError("" + errorCode);
         }
         stopMonitor();
     }
@@ -57,16 +56,16 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
 
     @Override
     public void onInterstitialClicked(MoPubInterstitial interstitial) {
-        if (mAdListener != null) {
-            mAdListener.onAdClicked(MopubInterstitialAdapter.this);
+        if (adListener != null) {
+            adListener.onAdClicked(MopubInterstitialAdapter.this);
         }
 
     }
 
     @Override
     public void onInterstitialDismissed(MoPubInterstitial interstitial) {
-        if (mAdListener != null) {
-            mAdListener.onAdClosed(MopubInterstitialAdapter.this);
+        if (adListener != null) {
+            adListener.onAdClosed(MopubInterstitialAdapter.this);
         }
 
     }
@@ -78,7 +77,7 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
 
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
-        mAdListener = listener;
+        adListener = listener;
         if (listener == null) {
             AdLog.e("Not set listener!");
             return;
@@ -87,7 +86,7 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
             mKey = "24534e1901884e398f1253216226017e";
         }
         if (!(mContext instanceof Activity) ){
-            mAdListener.onError("No activity context found!");
+            adListener.onError("No activity context found!");
             return;
         }
         mInterstitial = new MoPubInterstitial((Activity)mContext, key);
@@ -111,8 +110,8 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
 
     @Override
     protected void onTimeOut() {
-        if (mAdListener != null) {
-            mAdListener.onError("TIME_OUT");
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
         }
     }
 }

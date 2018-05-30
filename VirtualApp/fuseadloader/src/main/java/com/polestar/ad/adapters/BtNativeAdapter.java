@@ -30,7 +30,6 @@ import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 public class BtNativeAdapter extends AdAdapter {
 
     private Context mContext;
-    private IAdLoadListener mListener;
     private Ad mRawAd = null;
     private BatNativeAd mBatNativeAd = null;
 
@@ -41,7 +40,7 @@ public class BtNativeAdapter extends AdAdapter {
 
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
-        mListener = listener;
+        adListener = listener;
         AdLog.d("BtNativeAdapter loadAd " + listener);
         IAdListener btListener = new IAdListener(){
             @Override
@@ -49,10 +48,10 @@ public class BtNativeAdapter extends AdAdapter {
                 mLoadedTime = System.currentTimeMillis();
                 mBatNativeAd = (BatNativeAd) o;
                 mRawAd = mBatNativeAd.getAds().get(0);
-                if(mBatNativeAd != null && mRawAd != null && mListener != null) {
-                    mListener.onAdLoaded(BtNativeAdapter.this);
-                } else if (mListener != null) {
-                    mListener.onError("No available ad");
+                if(mBatNativeAd != null && mRawAd != null && adListener != null) {
+                    adListener.onAdLoaded(BtNativeAdapter.this);
+                } else if (adListener != null) {
+                    adListener.onError("No available ad");
                 }
                 stopMonitor();
                 AdLog.d("BT: onAdLoadFinish");
@@ -60,8 +59,8 @@ public class BtNativeAdapter extends AdAdapter {
 
             @Override
             public void onAdError(AdError adError) {
-                if(mListener != null) {
-                    mListener.onError(adError.getMsg());
+                if(adListener != null) {
+                    adListener.onError(adError.getMsg());
                 }
                 stopMonitor();
                 AdLog.d("BT: onAdError " + adError.getMsg());
@@ -193,8 +192,8 @@ public class BtNativeAdapter extends AdAdapter {
 
     @Override
     protected void onTimeOut() {
-        if (mListener != null) {
-            mListener.onError("TIME_OUT");
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
         }
     }
 }

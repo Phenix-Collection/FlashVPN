@@ -110,8 +110,9 @@ public class FuseAdLoader {
                         IAdAdapter cache = getValidCache();
                         if (cache != null) {
                             mAdReturned = true;
+                            cache.setAdListener(mListener);
                             mListener.onAdLoaded(cache);
-                            mListener = null;
+                            //mListener = null;
                         }
                     }
                 }
@@ -154,7 +155,7 @@ public class FuseAdLoader {
                 }
                 if (!betterLoading && mListener != null) {
                     mListener.onError("No Fill");
-                    mListener = null;
+                    //mListener = null;
                 }
             } else {
                 loadNextNativeAd();
@@ -172,8 +173,9 @@ public class FuseAdLoader {
                 if (mListener != null) {
                     mAdReturned = true;
                     AdLog.d(mSlot + " return to " + mListener);
+                    ad.setAdListener(mListener);
                     mListener.onAdLoaded(ad);
-                    mListener = null;
+                    //mListener = null;
                 }
             } else {
                 AdLog.d("Wait for protect time over");
@@ -249,11 +251,52 @@ public class FuseAdLoader {
         return mNativeAdConfigList!=null && mNativeAdConfigList.size() > 0;
     }
 
-    abstract class IndexAdListener extends IAdLoadListener {
+    class IndexAdListener implements IAdLoadListener {
         int index;
         public IndexAdListener(int index) {
             this.index = index;
         }
+        @Override
+        public void onAdLoaded(IAdAdapter ad) {
+            mNativeAdCache.put(mNativeAdConfigList.get(index).key, ad);
+            AdLog.d(mSlot + " ad loaded " + ad.getAdType() + " index: " + index);
+            if (ad.getCoverImageUrl() != null) {
+                AdLog.d("preload " + ad.getCoverImageUrl());
+                ImageLoader.getInstance().doPreLoad(mContext, ad.getCoverImageUrl());
+            }
+            if (ad.getIconImageUrl() != null) {
+                AdLog.d("preload " + ad.getIconImageUrl());
+                ImageLoader.getInstance().doPreLoad(mContext, ad.getIconImageUrl());
+            }
+            finishLoading(index);
+        }
+
+        @Override
+        public void onAdClicked(IAdAdapter ad) {
+            if(mListener != null) {
+                mListener.onAdClicked(ad);
+            }
+        }
+
+        @Override
+        public void onAdClosed(IAdAdapter ad) {
+            if(mListener != null) {
+                AdLog.d("Ad closed");
+                mListener.onAdClosed(ad);
+            }
+        }
+
+        @Override
+        public void onAdListLoaded(List<IAdAdapter> ads) {
+            //not support list yet
+        }
+
+        @Override
+        public void onError(String error) {
+            finishLoading(index);
+            AdLog.e("Load current source " + mNativeAdConfigList.get(index).source + " error : " + error);
+        }
+
     }
     private boolean loadNextNativeAd() {
         final int idx = nextLoadingIdx();
@@ -280,33 +323,7 @@ public class FuseAdLoader {
             return false;
         }
         AdLog.d(mSlot + " start load for : " + config.source + " index : " + idx );
-        loader.loadAd(1, new IndexAdListener(idx) {
-            @Override
-            public void onAdLoaded(IAdAdapter ad) {
-                mNativeAdCache.put(mNativeAdConfigList.get(index).key, ad);
-                AdLog.d(mSlot + " ad loaded " + ad.getAdType() + " index: " + index);
-                if (ad.getCoverImageUrl() != null) {
-                    AdLog.d("preload " + ad.getCoverImageUrl());
-                    ImageLoader.getInstance().doPreLoad(mContext, ad.getCoverImageUrl());
-                }
-                if (ad.getIconImageUrl() != null) {
-                    AdLog.d("preload " + ad.getIconImageUrl());
-                    ImageLoader.getInstance().doPreLoad(mContext, ad.getIconImageUrl());
-                }
-                finishLoading(index);
-            }
-
-            @Override
-            public void onAdListLoaded(List<IAdAdapter> ads) {
-                //not support list yet
-            }
-
-            @Override
-            public void onError(String error) {
-                finishLoading(index);
-                AdLog.e("Load current source " + mNativeAdConfigList.get(index).source + " error : " + error);
-            }
-        });
+        loader.loadAd(1, new IndexAdListener(idx));
         return false;
     }
 

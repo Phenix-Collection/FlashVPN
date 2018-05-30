@@ -22,7 +22,6 @@ public class AdmobBannerAdapter extends AdAdapter {
     private Context mContext;
     private AdSize mSize;
     private final static String TAG = "AdmobBannerAdapter";
-    private IAdLoadListener mListener;
 
     public AdmobBannerAdapter(Context context, String key, AdSize bannerSize) {
         mContext = context;
@@ -54,8 +53,8 @@ public class AdmobBannerAdapter extends AdAdapter {
             public void onAdClosed() {
                 super.onAdClosed();
                 AdLog.d(TAG, "onAdClosed");
-                if (mListener != null) {
-                    mListener.onAdClosed(AdmobBannerAdapter.this);
+                if (adListener != null) {
+                    adListener.onAdClosed(AdmobBannerAdapter.this);
                 }
             }
 
@@ -64,8 +63,8 @@ public class AdmobBannerAdapter extends AdAdapter {
                 super.onAdFailedToLoad(i);
                 AdLog.d(TAG, "onAdFailedToLoad " + i);
                 stopMonitor();
-                if (mListener != null) {
-                    mListener.onError("ErrorCode " + i);
+                if (adListener != null) {
+                    adListener.onError("ErrorCode " + i);
                 }
             }
 
@@ -77,8 +76,8 @@ public class AdmobBannerAdapter extends AdAdapter {
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                if (mListener != null) {
-                    mListener.onAdClicked(AdmobBannerAdapter.this);
+                if (adListener != null) {
+                    adListener.onAdClicked(AdmobBannerAdapter.this);
                 }
             }
 
@@ -88,8 +87,8 @@ public class AdmobBannerAdapter extends AdAdapter {
                 mLoadedTime = System.currentTimeMillis();
                 stopMonitor();
                 super.onAdLoaded();
-                if (mListener != null) {
-                    mListener.onAdLoaded(AdmobBannerAdapter.this);
+                if (adListener != null) {
+                    adListener.onAdLoaded(AdmobBannerAdapter.this);
                 }
             }
         });
@@ -97,7 +96,7 @@ public class AdmobBannerAdapter extends AdAdapter {
 
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
-        mListener = listener;
+        adListener = listener;
         AdLog.d("loadAdmobNativeExpress");
         startMonitor();
         if (AdConstants.DEBUG) {
@@ -126,8 +125,8 @@ public class AdmobBannerAdapter extends AdAdapter {
 
     @Override
     protected void onTimeOut() {
-        if (mListener != null) {
-            mListener.onError("TIME_OUT");
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
         }
     }
 }

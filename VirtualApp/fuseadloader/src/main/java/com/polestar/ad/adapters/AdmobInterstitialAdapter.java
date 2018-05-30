@@ -16,7 +16,6 @@ import com.polestar.ad.AdLog;
 
 public class AdmobInterstitialAdapter extends AdAdapter {
     private InterstitialAd rawAd;
-    private IAdLoadListener adLoadListener;
     private Context mContext;
     private String key;
 
@@ -53,7 +52,7 @@ public class AdmobInterstitialAdapter extends AdAdapter {
 
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
-        adLoadListener = listener;
+        adListener = listener;
         if (listener == null){
             AdLog.e("listener is null!!");
             return;
@@ -64,8 +63,8 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                if (adLoadListener != null) {
-                    adLoadListener.onError("ErrorCode: " + i);
+                if (adListener != null) {
+                    adListener.onError("ErrorCode: " + i);
                 }
                 stopMonitor();
             }
@@ -74,8 +73,8 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             public void onAdLoaded() {
                 super.onAdLoaded();
                 mLoadedTime = System.currentTimeMillis();
-                if (adLoadListener != null) {
-                    adLoadListener.onAdLoaded(AdmobInterstitialAdapter.this);
+                if (adListener != null) {
+                    adListener.onAdLoaded(AdmobInterstitialAdapter.this);
                 }
                 stopMonitor();
             }
@@ -83,8 +82,8 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                if (adLoadListener != null) {
-                    adLoadListener.onAdClicked(AdmobInterstitialAdapter.this);
+                if (adListener != null) {
+                    adListener.onAdClicked(AdmobInterstitialAdapter.this);
                 }
             }
 
@@ -97,8 +96,8 @@ public class AdmobInterstitialAdapter extends AdAdapter {
             public void onAdClosed() {
                 super.onAdClosed();
                 AdLog.d("ad interstitial onAdClosed");
-                if (adLoadListener != null) {
-                    adLoadListener.onAdClosed(AdmobInterstitialAdapter.this);
+                if (adListener != null) {
+                    adListener.onAdClosed(AdmobInterstitialAdapter.this);
                 }
             }
         });
@@ -118,8 +117,8 @@ public class AdmobInterstitialAdapter extends AdAdapter {
 
     @Override
     protected void onTimeOut() {
-        if (adLoadListener != null) {
-            adLoadListener.onError("TIME_OUT");
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
         }
     }
 }

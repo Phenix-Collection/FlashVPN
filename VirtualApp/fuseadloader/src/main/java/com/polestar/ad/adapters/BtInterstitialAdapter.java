@@ -22,7 +22,6 @@ import com.polestar.ad.AdUtils;
 
 public class BtInterstitialAdapter extends AdAdapter  {
     private BatInterstitialAd rawAd;
-    private IAdLoadListener adLoadListener;
     private Context mContext;
 
     public BtInterstitialAdapter(Context context, String key) {
@@ -59,7 +58,7 @@ public class BtInterstitialAdapter extends AdAdapter  {
 
     @Override
     public void loadAd(int num, IAdLoadListener listener) {
-        adLoadListener = listener;
+        adListener = listener;
         if (listener == null){
             AdLog.e("listener is null!!");
             return;
@@ -77,9 +76,9 @@ public class BtInterstitialAdapter extends AdAdapter  {
                         }
                         if (obj instanceof BatInterstitialAd) {
                             rawAd = (BatInterstitialAd) obj;
-                            if (adLoadListener != null) {
+                            if (adListener != null) {
                                 AdLog.d("Message:onAdLoadFinish");
-                                adLoadListener.onAdLoaded(BtInterstitialAdapter.this);
+                                adListener.onAdLoaded(BtInterstitialAdapter.this);
                             }
                         }
                         stopMonitor();
@@ -88,8 +87,8 @@ public class BtInterstitialAdapter extends AdAdapter  {
                     @Override
                     public void onAdError(AdError error) {
                         AdLog.d("Message:onAdError " + error);
-                        if (adLoadListener != null) {
-                            adLoadListener.onError(error.getMsg());
+                        if (adListener != null) {
+                            adListener.onError(error.getMsg());
                         }
                         stopMonitor();
                     }
@@ -97,8 +96,8 @@ public class BtInterstitialAdapter extends AdAdapter  {
                     @Override
                     public void onAdClosed() {
                         AdLog.d("Message:onAdClosed");
-                        if (adLoadListener != null) {
-                            adLoadListener.onAdClosed(BtInterstitialAdapter.this);
+                        if (adListener != null) {
+                            adListener.onAdClosed(BtInterstitialAdapter.this);
                         }
                     }
 
@@ -111,8 +110,8 @@ public class BtInterstitialAdapter extends AdAdapter  {
                     @Override
                     public void onAdClicked() {
                         AdLog.d("Message:onAdClicked");
-                        if (adLoadListener != null) {
-                            adLoadListener.onAdClicked(BtInterstitialAdapter.this);
+                        if (adListener != null) {
+                            adListener.onAdClicked(BtInterstitialAdapter.this);
                         }
                     }
                 });
@@ -123,8 +122,8 @@ public class BtInterstitialAdapter extends AdAdapter  {
 
     @Override
     protected void onTimeOut() {
-        if (adLoadListener != null) {
-            adLoadListener.onError("TIME_OUT");
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
         }
     }
 }

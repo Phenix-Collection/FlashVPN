@@ -43,7 +43,6 @@ public class AdmobNativeAdapter extends AdAdapter {
 
     private String mFilter;
     private Context mContext;
-    private IAdLoadListener mListener;
 
     private com.google.android.gms.ads.formats.NativeAd mRawAd;
 
@@ -61,7 +60,7 @@ public class AdmobNativeAdapter extends AdAdapter {
             AdLog.e("listener not set.");
             return;
         }
-        mListener = listener;
+        adListener = listener;
         if (num > 1) {
             AdLog.d("Admob not support load for more than 1 ads. Only return 1 ad");
         }
@@ -133,15 +132,15 @@ public class AdmobNativeAdapter extends AdAdapter {
     private void postOnAdLoaded(com.google.android.gms.ads.formats.NativeAd ad) {
         mRawAd = ad;
         mLoadedTime = System.currentTimeMillis();
-        if (mListener != null) {
-            mListener.onAdLoaded(this);
+        if (adListener != null) {
+            adListener.onAdLoaded(this);
         }
         stopMonitor();
     }
 
     private void postOnAdLoadFail(int i) {
-        if (mListener != null) {
-            mListener.onError("" + i);
+        if (adListener != null) {
+            adListener.onError("" + i);
         }
         stopMonitor();
     }
@@ -256,8 +255,8 @@ public class AdmobNativeAdapter extends AdAdapter {
 
     @Override
     protected void onTimeOut() {
-        if (mListener != null) {
-            mListener.onError("TIME_OUT");
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
         }
     }
 

@@ -20,6 +20,8 @@ public abstract class AdAdapter implements IAdAdapter {
     protected long mLoadedTime = -1;
     protected int mShowCount = 0;
     protected long LOAD_TIMEOUT = 10*1000;
+    protected IAdLoadListener adListener;
+
 
     protected Handler mHandler = new Handler(Looper.myLooper()) ;
 
@@ -40,6 +42,11 @@ public abstract class AdAdapter implements IAdAdapter {
 
     protected void onTimeOut() {
 
+    }
+
+    @Override
+    public void setAdListener(IAdLoadListener listener) {
+        adListener = listener;
     }
 
     @Override

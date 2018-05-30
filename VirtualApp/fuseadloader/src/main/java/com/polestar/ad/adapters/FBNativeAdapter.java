@@ -32,7 +32,6 @@ public class FBNativeAdapter extends AdAdapter {
 
     private com.facebook.ads.NativeAd mRawAd ;
     private Context mContext;
-    private IAdLoadListener mListener;
 
     public FBNativeAdapter(Context context, String key) {
         mContext = context;
@@ -48,7 +47,7 @@ public class FBNativeAdapter extends AdAdapter {
             AdLog.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
         }
         mRawAd = new com.facebook.ads.NativeAd(mContext, mKey);
-        mListener = listener;
+        adListener = listener;
         mRawAd.setAdListener(new AdListener() {
             @Override
             public void onLoggingImpression(com.facebook.ads.Ad ad) {
@@ -57,8 +56,8 @@ public class FBNativeAdapter extends AdAdapter {
 
             @Override
             public void onError(com.facebook.ads.Ad ad, AdError adError) {
-                if(mListener != null) {
-                    mListener.onError(adError.getErrorMessage());
+                if(adListener != null) {
+                    adListener.onError(adError.getErrorMessage());
                 }
                 stopMonitor();
             }
@@ -66,8 +65,8 @@ public class FBNativeAdapter extends AdAdapter {
             @Override
             public void onAdLoaded(com.facebook.ads.Ad ad) {
                 mLoadedTime = System.currentTimeMillis();
-                if(mListener != null) {
-                    mListener.onAdLoaded(FBNativeAdapter.this);
+                if(adListener != null) {
+                    adListener.onAdLoaded(FBNativeAdapter.this);
                 }
                 stopMonitor();
             }
@@ -75,8 +74,8 @@ public class FBNativeAdapter extends AdAdapter {
             @Override
             public void onAdClicked(com.facebook.ads.Ad ad) {
                 //TODO
-                if (mListener != null) {
-                    mListener.onAdClicked(FBNativeAdapter.this);
+                if (adListener != null) {
+                    adListener.onAdClicked(FBNativeAdapter.this);
                 }
             }
         });
@@ -221,8 +220,8 @@ public class FBNativeAdapter extends AdAdapter {
 
     @Override
     protected void onTimeOut() {
-        if (mListener != null) {
-            mListener.onError("TIME_OUT");
+        if (adListener != null) {
+            adListener.onError("TIME_OUT");
         }
     }
 }

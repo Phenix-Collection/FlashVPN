@@ -57,4 +57,6 @@ public interface IAdAdapter {
     void loadAd(int num, IAdLoadListener listener);
 
     public boolean isInterstitialAd();
+
+    void setAdListener(IAdLoadListener listener);
 }
