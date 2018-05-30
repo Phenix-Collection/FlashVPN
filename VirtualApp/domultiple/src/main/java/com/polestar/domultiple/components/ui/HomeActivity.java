@@ -247,6 +247,16 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 }
 
                 @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onError(String error) {
                     MLogs.e(SLOT_HOME_NATIVE + " load error: " + error);
                 }

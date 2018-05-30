@@ -52,10 +52,16 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.lody.virtual.vt"
-            android:process=":x"
             android:theme="@style/AppTheme.Launcher"/>
 
-        <service android:name="com.polestar.domultiple.components.AppMonitorService" android:process=":x" android:exported="true" />
+        <activity
+            android:name="com.polestar.domultiple.components.ui.WrapCoverAdActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.lody.virtual.vt"
+            android:theme="@style/AppTheme.Launcher"/>
+
+        <service android:name="com.polestar.domultiple.components.AppMonitorService" android:exported="true" />
 
         <receiver android:name="com.polestar.domultiple.components.receiver.CrashReceiver" android:exported="false">
             <intent-filter>

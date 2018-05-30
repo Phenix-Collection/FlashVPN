@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -37,6 +38,7 @@ import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
+import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.utils.CommonUtils;
@@ -74,20 +76,14 @@ public class AppLoadingActivity extends BaseActivity {
 
     private static final String EXTRA_FIRST_START = "first_start";
 
-    private FuseAdLoader mInterstitialAdLoader;
     private FuseAdLoader mNativeAdLoader;
-    private static final String SLOT_APP_START_INTERSTITIAL = "slot_app_start";
     private static final String SLOT_APP_START_NATIVE = "slot_app_start_native";
-    private static final String CONFIG_APP_START_AD_FREQ = "slot_app_start_freq_hour";
-    private static final String CONFIG_APP_START_AD_RAMP = "slot_app_start_ramp_hour";
     private static final String CONFIG_APP_START_AD_FILTER = "slot_app_start_filter";
     private static final String CONFIG_APP_START_AD_STYLE = "slot_app_start_style"; //native,interstitial,all
     private static final String CONFIG_APP_START_NATIVE_AD_FREQ = "slot_app_start_native_freq_min";
     private static final String CONFIG_APP_START_NATIVE_AD_RAMP = "slot_app_start_native_ramp_min";
     public final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
-    private static final long INTERSTITIAL_SHOW_DELAY = 2000;
     private static HashSet<String> filterPkgs ;
-    private boolean hasShownInterstitialAd;
     private boolean launched;
     private LinearLayout mNativeContainer;
     private boolean needAbiSupport;
@@ -102,7 +98,7 @@ public class AppLoadingActivity extends BaseActivity {
         }
         long interval = RemoteConfig.getLong(CONFIG_APP_START_NATIVE_AD_FREQ)*60*1000;
         long ramp = RemoteConfig.getLong(CONFIG_APP_START_NATIVE_AD_RAMP)*60*1000;
-        long last = getLastShowTime(false);
+        long last = getLastShowTime();
         if (last == 0 && TextUtils.isEmpty(pkg)) {
             return false;
         }
@@ -123,50 +119,13 @@ public class AppLoadingActivity extends BaseActivity {
         return (need && (!filterPkgs.contains(pkg) || pkg ==null)) || BuildConfig.DEBUG;
     }
 
-    public static boolean needLoadInterstitialAd(boolean preload, String pkg) {
-        if (PreferencesUtils.isAdFree()) {
-            return false;
-        }
-        String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
-        if (!("interstitial".equals(style) || "all".equals(style))) {
-            return false;
-        }
-        long interval = RemoteConfig.getLong(CONFIG_APP_START_AD_FREQ)*60*60*1000;
-        long ramp = RemoteConfig.getLong(CONFIG_APP_START_AD_RAMP)*60*60*1000;
-        long last = getLastShowTime(true);
-        if (last == 0 && TextUtils.isEmpty(pkg)) {
-            return false;
-        }
-        long actualLast = last == 0? CommonUtils.getInstallTime(PolestarApp.getApp(), PolestarApp.getApp().getPackageName()): last;
-        long delta =
-                preload? System.currentTimeMillis() - actualLast + 15*60*1000: System.currentTimeMillis()-actualLast;
-        boolean need =  last == 0? delta > ramp: delta > interval;
-        if (filterPkgs == null) {
-            filterPkgs = new HashSet<>();
-            String[] arr = RemoteConfig.getString(CONFIG_APP_START_AD_FILTER).split(":");
-            if(arr !=null) {
-                for (String s : arr) {
-                    filterPkgs.add(s);
-                }
-            }
-        }
-        MLogs.d("needLoad start app ad: " + need);
-        return (need && (!filterPkgs.contains(pkg)||pkg == null)) || BuildConfig.DEBUG;
+    private static long getLastShowTime() {
+        return PreferencesUtils.getLong(PolestarApp.getApp(), "app_start_last_native", 0);
     }
 
+    private static void updateShowTime() {
 
-
-    private static long getLastShowTime(boolean interstitial) {
-        return interstitial? PreferencesUtils.getLong(PolestarApp.getApp(), "app_start_last", 0)
-                : PreferencesUtils.getLong(PolestarApp.getApp(), "app_start_last_native", 0);
-    }
-
-    private static void updateShowTime(boolean interstitial) {
-        if (interstitial) {
-            PreferencesUtils.putLong(PolestarApp.getApp(), "app_start_last", System.currentTimeMillis());
-        } else {
-            PreferencesUtils.putLong(PolestarApp.getApp(), "app_start_last_native", System.currentTimeMillis());
-        }
+        PreferencesUtils.putLong(PolestarApp.getApp(), "app_start_last_native", System.currentTimeMillis());
     }
 
 
@@ -211,6 +170,9 @@ public class AppLoadingActivity extends BaseActivity {
         } else {
             needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
+        }
+        if (AppMonitorService.needLoadCoverAd(true, appModel.getPackageName())) {
+            AppMonitorService.preloadCoverAd();
         }
         EventReporter.appStart(CloneManager.isAppLaunched(appModel), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName(), appModel.getPkgUserId());
         return true;
@@ -436,17 +398,26 @@ public class AppLoadingActivity extends BaseActivity {
     private void loadNativeAd(){
         mNativeAdLoader = FuseAdLoader.get(SLOT_APP_START_NATIVE, this);
         mNativeAdLoader.setBannerAdSize(getBannerSize());
-        hasShownInterstitialAd = false;
         if(mNativeAdLoader.hasValidAdSource()){
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
-                    updateShowTime(false);
+                    updateShowTime();
                     inflateNativeAd(ad);
                 }
 
                 @Override
                 public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                }
+
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
 
                 }
 
@@ -473,77 +444,15 @@ public class AppLoadingActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (!hasShownInterstitialAd && needLoadInterstitialAd(false, appModel.getPackageName())) {
-            loadInterstitialAd();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //not have ad loaded
-                    if (!hasShownInterstitialAd) {
-                        doLaunch();
-                    }
-                }
-                //wait 4000ms
-            }, 3000);
-        } else {
-            doLaunch();
-        }
+        doLaunch();
     }
 
     public static void preloadAd(Context context) {
-        if (needLoadInterstitialAd(true, null)) {
-            FuseAdLoader.get(SLOT_APP_START_INTERSTITIAL, context).preloadAd();
-        }
         if (needLoadNativeAd(true, null)) {
             FuseAdLoader.get(SLOT_APP_START_NATIVE, context).setBannerAdSize(getBannerSize()).preloadAd();
         }
     }
 
-    private long loadingStart = 0;
-    public void loadInterstitialAd() {
-        mInterstitialAdLoader = FuseAdLoader.get(SLOT_APP_START_INTERSTITIAL, this);
-        hasShownInterstitialAd = false;
-        loadingStart = System.currentTimeMillis();
-        if(mInterstitialAdLoader.hasValidAdSource()){
-            mInterstitialAdLoader.loadAd(1, new IAdLoadListener() {
-                @Override
-                public void onAdLoaded(IAdAdapter ad) {
-                    if (!launched && !PreferencesUtils.isAdFree()) {
-                        long delta = System.currentTimeMillis() - loadingStart;
-                        if (delta < 0) {
-                            ad.show();
-                            EventReporter.generalClickEvent("app_start_ad_show");
-                            MLogs.d("Show app start ad");
-                            hasShownInterstitialAd = true;
-                            updateShowTime(true);
-                        } else {
-                            mNativeContainer.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ad.show();
-                                    EventReporter.generalClickEvent("app_start_ad_show");
-                                    MLogs.d("Show app start ad");
-                                    hasShownInterstitialAd = true;
-                                    updateShowTime(true);
-                                }
-                            }, INTERSTITIAL_SHOW_DELAY - delta);
-                        }
-                    }
-                }
-
-                @Override
-                public void onAdListLoaded(List<IAdAdapter> ads) {
-
-                }
-
-                @Override
-                public void onError(String error) {
-                    MLogs.d(SLOT_APP_START_INTERSTITIAL + " load error:" + error);
-                    doLaunch();
-                }
-            });
-        }
-    }
 
     @Override
     public void onStop() {

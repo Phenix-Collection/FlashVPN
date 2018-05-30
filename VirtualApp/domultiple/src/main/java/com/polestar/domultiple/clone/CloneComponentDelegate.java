@@ -6,21 +6,39 @@ package com.polestar.domultiple.clone;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
 
+import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
+import com.lody.virtual.helper.utils.VLog;
+import com.lody.virtual.os.VUserHandle;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.clone.CustomizeAppData;
+import com.polestar.domultiple.IAppMonitor;
 import com.polestar.domultiple.PolestarApp;
+import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
-import com.polestar.clone.BitmapUtils;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
-import com.polestar.domultiple.widget.locker.AppLockMonitor;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by PolestarApp on 2016/12/16.
@@ -29,6 +47,7 @@ import java.util.List;
 public class CloneComponentDelegate implements ComponentDelegate {
 
     private HashSet<String> pkgs = new HashSet<>();
+
     public void asyncInit() {
         new Thread(new Runnable() {
             @Override
@@ -39,6 +58,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
                 	pkgs.add(CloneManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
                     }
                 }
+                uiAgent = getAgent();
             }
         }).start();
 
@@ -61,14 +81,10 @@ public class CloneComponentDelegate implements ComponentDelegate {
 
     @Override
     public void beforeActivityResume(String pkg, int userId) {
-        MLogs.d("beforeActivityResume " + pkg);
-        AppLockMonitor.getInstance().onActivityResume(pkg, userId);
     }
 
     @Override
     public void beforeActivityPause(String pkg, int userId) {
-        MLogs.d("beforeActivityPause " + pkg);
-        AppLockMonitor.getInstance().onActivityPause(pkg, userId);
     }
 
     @Override
@@ -83,11 +99,91 @@ public class CloneComponentDelegate implements ComponentDelegate {
 
     @Override
     public void afterActivityResume(Activity activity) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getAgent().onAppSwitchForeground(activity.getPackageName(), VUserHandle.myUserId());
+                }catch (Exception ex) {
 
+                }
+            }
+        }).start();
     }
+
+    IAppMonitor uiAgent;
+    private IAppMonitor getAgent() {
+        if (uiAgent != null) {
+            return  uiAgent;
+        }
+        String targetPkg = PolestarApp.getApp().getPackageName();
+        if (targetPkg.endsWith(".arm64")) {
+            targetPkg = targetPkg.replace(".arm64","");
+        }
+        try{
+            ApplicationInfo ai = PolestarApp.getApp().getPackageManager().getApplicationInfo(targetPkg, 0);
+        }catch (PackageManager.NameNotFoundException ex) {
+            return  null;
+        }
+        if (Looper.getMainLooper() == Looper.myLooper()) {
+            throw new RuntimeException("Cannot getAgent in main thread!");
+        }
+        ComponentName comp = new ComponentName(targetPkg, AppMonitorService.class.getName());
+        Intent intent = new Intent();
+        intent.setComponent(comp);
+        VLog.d("CloneAgent", "bindService intent "+ intent);
+        syncQueue.clear();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    syncQueue.put(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 5000);
+        PolestarApp.getApp().bindService(intent,
+                agentServiceConnection,
+                Context.BIND_AUTO_CREATE);
+        try {
+            syncQueue.take();
+        }catch (Exception ex) {
+
+        }
+        return uiAgent;
+    }
+
+    private final BlockingQueue<Integer> syncQueue = new LinkedBlockingQueue<Integer>(1);
+    ServiceConnection agentServiceConnection = new ServiceConnection() {
+        @Override public void onServiceConnected(ComponentName name, IBinder service) {
+            try {
+                uiAgent = IAppMonitor.Stub.asInterface(service);
+                syncQueue.put(1);
+            } catch (InterruptedException e) {
+                // will never happen, since the queue starts with one available slot
+            }
+            VLog.d("CloneAgent", "connected "+ name);
+        }
+        @Override public void onServiceDisconnected(ComponentName name) {
+            uiAgent = null;
+        }
+    };
 
     @Override
     public void afterActivityPause(Activity activity) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getAgent().onAppSwitchBackground(activity.getPackageName(), VUserHandle.myUserId());
+                }catch (Exception ex) {
+
+                }
+            }
+        }).start();
 
     }
 
@@ -122,6 +218,6 @@ public class CloneComponentDelegate implements ComponentDelegate {
         PreferencesUtils.setEncodedPatternPassword(PolestarApp.getApp(),lockKey);
         PreferencesUtils.setAdFree(true);
         PreferencesUtils.setLockInterval(lockInterval);
-       AppLockMonitor.getInstance().reloadSetting(lockKey, adFree, lockInterval);
+       //AppLockMonitor.getInstance().reloadSetting(lockKey, adFree, lockInterval);
     }
 }

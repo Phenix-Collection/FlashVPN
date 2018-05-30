@@ -21,11 +21,11 @@ import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.clone.CustomizeAppData;
+import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
-import com.polestar.domultiple.widget.locker.AppLockMonitor;
 import com.polestar.domultiple.widget.locker.AppLockPasswordLogic;
 import com.polestar.domultiple.widget.locker.BlurBackground;
 import com.polestar.domultiple.widget.locker.LockIconImageView;
@@ -60,6 +60,7 @@ public class AppLockActivity extends BaseActivity {
 
     public final static String EXTRA_USER_ID = "extra_clone_userid";
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
+    public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
 
     public static final void start(Context context, String pkg, int userId) {
         MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
@@ -119,7 +120,7 @@ public class AppLockActivity extends BaseActivity {
         }
     }
     private void loadNative(){
-        final FuseAdLoader adLoader = AppLockMonitor.getInstance().getAdLoader();
+        final FuseAdLoader adLoader = FuseAdLoader.get(CONFIG_SLOT_APP_LOCK, PolestarApp.getApp());
         adLoader.setBannerAdSize(getBannerSize());
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
@@ -131,6 +132,16 @@ public class AppLockActivity extends BaseActivity {
                         inflatNativeAd(ad);
                         //loadAdmobNativeExpress();
                         adLoader.loadAd(1, null);
+
+                }
+
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
 
                 }
 
@@ -193,7 +204,7 @@ public class AppLockActivity extends BaseActivity {
                         finish();
                     }
                 }, 200);
-                AppLockMonitor.getInstance().unlocked(mPkgName, mUserId);
+                AppMonitorService.unlocked(mPkgName, mUserId);
             }
 
             @Override

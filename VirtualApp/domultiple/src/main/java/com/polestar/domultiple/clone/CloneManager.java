@@ -32,7 +32,6 @@ import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
-import com.polestar.domultiple.widget.locker.AppLockMonitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -430,7 +429,7 @@ public class CloneManager {
         String key = PreferencesUtils.getEncodedPatternPassword(PolestarApp.getApp());
         boolean adFree = PreferencesUtils.isAdFree();
         long interval = PreferencesUtils.getLockInterval();
-        AppLockMonitor.updateSetting(key, adFree, interval);
+        //AppLockMonitor.updateSetting(key, adFree, interval);
         //VirtualCore.get().reloadLockerSetting(key, adFree, interval);
     }
 
