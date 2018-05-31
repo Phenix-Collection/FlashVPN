@@ -196,7 +196,7 @@ public class AppMonitorService extends Service {
                 }
             }
             if (!locked && needLoadCoverAd(false, pkg)) {
-               // loadAd(pkg, userId);
+               loadAd(pkg, userId);
             }
 
         }

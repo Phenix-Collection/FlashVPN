@@ -84,9 +84,9 @@ public class AppLoadingActivity extends BaseActivity {
     private static final String CONFIG_APP_START_NATIVE_AD_RAMP = "slot_app_start_native_ramp_min";
     public final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
     private static HashSet<String> filterPkgs ;
-    private boolean launched;
     private LinearLayout mNativeContainer;
     private boolean needAbiSupport;
+    private Handler mainHandler;
 
     public static boolean needLoadNativeAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
@@ -192,7 +192,7 @@ public class AppLoadingActivity extends BaseActivity {
             }
         }
         CloneManager.launchApp(appModel);
-        new Handler().postDelayed(new Runnable() {
+        mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 MLogs.d("AppStart finish");
@@ -206,12 +206,12 @@ public class AppLoadingActivity extends BaseActivity {
     }
 
     private void finishIfTimeout(){
-        new Handler().postDelayed(new Runnable() {
+        mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 finish();
             }
-        }, 15000);
+        }, 10000);
     }
 
     private void doLaunchFromAgent() {
@@ -257,15 +257,13 @@ public class AppLoadingActivity extends BaseActivity {
                     });
 
                 }
+                agent.destroy();
             }
         }).start();
     }
 
     private void doLaunch(){
-        MLogs.d("doLaunch " + launched);
-        if (launched) return;
-        launched = true;
-        new Handler().postDelayed(new Runnable() {
+        mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if(!needAbiSupport) {
@@ -340,7 +338,7 @@ public class AppLoadingActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mainHandler = new Handler();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         setContentView(R.layout.app_loading_activity);
 
@@ -431,6 +429,7 @@ public class AppLoadingActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
+        finish();
     }
 
     @Override

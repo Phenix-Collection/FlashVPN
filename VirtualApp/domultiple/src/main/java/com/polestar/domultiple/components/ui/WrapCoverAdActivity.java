@@ -13,6 +13,7 @@ import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.booster.BoosterLog;
 import com.polestar.booster.WrapAdActivity;
 import com.polestar.booster.mgr.HomeListener;
+import com.polestar.clone.CloneAgent64;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.utils.MLogs;
@@ -33,7 +34,7 @@ public class WrapCoverAdActivity extends Activity {
     private final static String EXTRA_AD_SLOT = "ad_slot";
     private final static String EXTRA_PACKAGE = "start_pkg";
     private final static String EXTRA_USERID = "start_userId";
-
+    private final static String TAG = "AppMonitor";
     public static void start(Context context, String slot, String pkg, int userId) {
         Intent intent = new Intent(context, WrapCoverAdActivity.class);
         intent.putExtra(EXTRA_AD_SLOT, slot);
@@ -59,9 +60,24 @@ public class WrapCoverAdActivity extends Activity {
 
             @Override
             public void onAdClosed(IAdAdapter ad) {
-                MLogs.d("woriiir");
-                MLogs.d(WrapCoverAdActivity.class.getName() + " onAdClosed");
-                CloneManager.launchApp(pkg, userId);
+                MLogs.d(TAG, " onCoverAdClosed");
+                if(!CloneAgent64.needArm64Support(WrapCoverAdActivity.this,pkg)) {
+                    CloneManager.launchApp(pkg, userId);
+                } else {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CloneAgent64 agent64 = new CloneAgent64(WrapCoverAdActivity.this);
+                            if (agent64.hasSupport() && agent64.isCloned(pkg, userId)) {
+                                MLogs.d(TAG, " launch from agent");
+                                agent64.launchApp(pkg, userId);
+                            } else {
+                                CloneManager.launchApp(pkg,userId);
+                            }
+                            agent64.destroy();
+                        }
+                    }).start();
+                }
                 AppMonitorService.onCoverAdClosed(pkg, userId);
                 finish();
             }

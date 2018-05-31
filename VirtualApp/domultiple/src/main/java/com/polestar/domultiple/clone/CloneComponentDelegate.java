@@ -52,10 +52,12 @@ public class CloneComponentDelegate implements ComponentDelegate {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
-                for(CloneModel app:list) {
-                    if (app.getNotificationEnable()) {
-                	pkgs.add(CloneManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
+                if(!PolestarApp.isSupportPkg()) {
+                    List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
+                    for (CloneModel app : list) {
+                        if (app.getNotificationEnable()) {
+                            pkgs.add(CloneManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
+                        }
                     }
                 }
                 uiAgent = getAgent();
@@ -121,8 +123,9 @@ public class CloneComponentDelegate implements ComponentDelegate {
             targetPkg = targetPkg.replace(".arm64","");
         }
         try{
-            ApplicationInfo ai = PolestarApp.getApp().getPackageManager().getApplicationInfo(targetPkg, 0);
+            ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(targetPkg, 0);
         }catch (PackageManager.NameNotFoundException ex) {
+            MLogs.logBug(ex.toString());
             return  null;
         }
         if (Looper.getMainLooper() == Looper.myLooper()) {
@@ -131,7 +134,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
         ComponentName comp = new ComponentName(targetPkg, AppMonitorService.class.getName());
         Intent intent = new Intent();
         intent.setComponent(comp);
-        VLog.d("CloneAgent", "bindService intent "+ intent);
+        VLog.d("AppMonitor", "bindService intent "+ intent);
         syncQueue.clear();
         TimerTask task = new TimerTask() {
             @Override
@@ -145,7 +148,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
         };
         Timer timer = new Timer();
         timer.schedule(task, 5000);
-        PolestarApp.getApp().bindService(intent,
+        VirtualCore.get().getContext().bindService(intent,
                 agentServiceConnection,
                 Context.BIND_AUTO_CREATE);
         try {
