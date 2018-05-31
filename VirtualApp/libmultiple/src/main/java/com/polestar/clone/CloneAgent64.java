@@ -23,7 +23,7 @@ import mirror.android.content.pm.ApplicationInfoL;
  */
 
 public class CloneAgent64 {
-    private ICloneAgent iCloneAgent;
+    private static ICloneAgent iCloneAgent;
     private Context mContext;
     private static final String TAG = "CloneAgent";
 //    static private CloneAgent64 sInstance;
@@ -46,12 +46,14 @@ public class CloneAgent64 {
     }
 
     public boolean hasSupport() {
+        boolean ret = false;
         try {
-            return getAgent() != null;
+            ret = getAgent() != null;
         } catch (Exception ex){
 
         }
-        return false;
+        VLog.d(TAG, "hasSupport: " + ret);
+        return ret;
     }
 
     public void deleteClone(String pkg, int userId){
@@ -105,8 +107,8 @@ public class CloneAgent64 {
         return false;
     }
 
-    private final BlockingQueue<Integer> syncQueue = new LinkedBlockingQueue<Integer>(1);
-    ServiceConnection agentServiceConnection = new ServiceConnection() {
+    private static final BlockingQueue<Integer> syncQueue = new LinkedBlockingQueue<Integer>(1);
+    private static ServiceConnection agentServiceConnection = new ServiceConnection() {
         @Override public void onServiceConnected(ComponentName name, IBinder service) {
             try {
                 iCloneAgent = ICloneAgent.Stub.asInterface(service);
@@ -118,6 +120,11 @@ public class CloneAgent64 {
         }
         @Override public void onServiceDisconnected(ComponentName name) {
             iCloneAgent = null;
+        }
+
+        @Override
+        public void onBindingDied(ComponentName name) {
+
         }
     };
 
@@ -181,7 +188,7 @@ public class CloneAgent64 {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 5000);
+        timer.schedule(task, 8000);
         mContext.bindService(intent,
                 agentServiceConnection,
                 Context.BIND_AUTO_CREATE);
@@ -195,5 +202,11 @@ public class CloneAgent64 {
 
     public CloneAgent64(Context context) {
         mContext = context;
+    }
+
+    public void destroy() {
+//        if (iCloneAgent != null ) {
+//            mContext.unbindService(agentServiceConnection);
+//        }
     }
 }
