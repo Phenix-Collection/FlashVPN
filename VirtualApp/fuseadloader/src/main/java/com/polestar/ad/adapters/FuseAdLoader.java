@@ -63,7 +63,12 @@ public class FuseAdLoader {
     private FuseAdLoader(String slot, Context context) {
         this.mContext = context;
         mSlot = slot;
-        List<AdConfig> adSources = configFetcher.getAdConfigList(mSlot);
+        List<AdConfig> adSources ;
+        if (configFetcher != null ) {
+           adSources = configFetcher.getAdConfigList(mSlot);
+        }  else {
+            adSources = new ArrayList<>(0);
+        }
         addAdConfigList(adSources);
     }
 
