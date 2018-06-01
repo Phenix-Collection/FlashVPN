@@ -48,6 +48,10 @@ public class SettingsActivity extends BaseActivity {
 
     private void initView() {
         setTitle(getString(R.string.settings));
+        TextView rateUs = (TextView) findViewById(R.id.rate_us_txt);
+        if(!RemoteConfig.getBoolean("show_rate_menu")) {
+            rateUs.setVisibility(View.GONE);
+        }
         shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
         shortCutSwich.setChecked(PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,false));
         shortCutSwich.setOnClickListener(new View.OnClickListener() {

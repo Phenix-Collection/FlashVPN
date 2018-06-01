@@ -629,7 +629,11 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         View more = findViewById(R.id.menu_more);
         if (homeMenuPopup == null) {
             homeMenuPopup = new PopupMenu(this, more);
-            homeMenuPopup.inflate(R.menu.home_menu_popup);
+            if (RemoteConfig.getBoolean("show_rate_menu")) {
+                homeMenuPopup.inflate(R.menu.home_menu_popup);
+            } else {
+                homeMenuPopup.inflate(R.menu.home_menu_popup_norate);
+            }
         }
         //菜单项的监听
         homeMenuPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

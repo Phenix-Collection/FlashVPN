@@ -31,6 +31,11 @@
         <value>com.facebook.orca:com.whatsapp</value>
     </entry>
     <entry>
+        <key>show_rate_menu</key>
+        <!-- if not love should wait for hours -->
+        <value>false</value>
+    </entry>
+    <entry>
         <key>clone_rate_interval</key>
         <!-- if not love should wait for hours -->
         <value>720</value>
