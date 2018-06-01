@@ -2,9 +2,11 @@ package com.polestar.domultiple;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -29,6 +31,7 @@ import com.polestar.domultiple.clone.CloneApiDelegate;
 import com.polestar.domultiple.clone.CloneComponentDelegate;
 import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
+import com.polestar.domultiple.components.ui.SplashActivity;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
@@ -167,6 +170,10 @@ public class PolestarApp extends MultiDexApplication {
             public void onMainProcess() {
                 MLogs.d("Main process create");
 
+                if(isSupportPkg()) {
+                    getApp().getPackageManager().setComponentEnabledSetting(new ComponentName(getApp(), SplashActivity.class.getName()),
+                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                }
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 //ImageLoaderUtil.asyncInit(gDefault);
@@ -233,6 +240,10 @@ public class PolestarApp extends MultiDexApplication {
             @Override
             public void onServerProcess() {
                 MLogs.d("Server process create");
+                if(isSupportPkg()) {
+                    getApp().getPackageManager().setComponentEnabledSetting(new ComponentName(getApp(), SplashActivity.class.getName()),
+                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                }
                 try {
                     VirtualCore.get().setAppRequestListener(new VirtualCore.AppRequestListener() {
                         @Override
