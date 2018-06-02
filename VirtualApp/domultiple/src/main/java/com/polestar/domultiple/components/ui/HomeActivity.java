@@ -54,6 +54,7 @@ import com.polestar.domultiple.widget.DropableLinearLayout;
 import com.polestar.domultiple.widget.ExplosionField;
 import com.polestar.domultiple.widget.HomeGridAdapter;
 import com.polestar.domultiple.widget.NarrowPromotionCard;
+import com.polestar.domultiple.widget.RateDialog;
 import com.polestar.domultiple.widget.UpDownDialog;
 import com.polestar.domultiple.widget.dragdrop.DragController;
 import com.polestar.domultiple.widget.dragdrop.DragImageView;
@@ -660,8 +661,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                         showRateDialog(RATE_FROM_MENU, "");
                         break;
                     case R.id.item_feedback:
-                        Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
-                        startActivity(feedback);
+                        FeedbackActivity.start(HomeActivity.this, 0);
                         break;
                     case R.id.item_share:
                         CommonUtils.shareWithFriends(HomeActivity.this);
@@ -812,74 +812,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             rateDialogShowed= true;
         }
         PreferencesUtils.updateRateDialogTime(this);
-        String title = RATE_AFTER_CLONE.equals(from) ? getString(R.string.congratulations) : getString(R.string.like_it);
-        UpDownDialog.show(this, title,
-                getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
-                getString(R.string.yes), R.drawable.dialog_tag_congratulations,
-                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case UpDownDialog.NEGATIVE_BUTTON:
-                                PreferencesUtils.setLoveApp(false);
-                                UpDownDialog.show(HomeActivity.this, getString(R.string.feedback),
-                                        getString(R.string.dialog_feedback_content),
-                                        getString(R.string.no_thanks),
-                                        getString(R.string.ok), R.drawable.dialog_tag_comment,
-                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                switch (which) {
-                                                    case UpDownDialog.POSITIVE_BUTTON:
-                                                        Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
-                                                        startActivity(feedback);
-                                                        EventReporter.reportRate("not_love_go_fb", from);
-                                                        break;
-                                                    case UpDownDialog.NEGATIVE_BUTTON:
-                                                        EventReporter.reportRate("not_love_not_fb", from);
-                                                        break;
-                                                }
-                                            }
-                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialogInterface) {
-                                        EventReporter.reportRate("not_love_cancel_fb", from);
-                                    }
-                                });
-                                break;
-                            case UpDownDialog.POSITIVE_BUTTON:
-                                PreferencesUtils.setLoveApp(true);
-                                UpDownDialog.show(HomeActivity.this, getString(R.string.dialog_love_title),
-                                        getString(R.string.dialog_love_content),
-                                        getString(R.string.remind_me_later),
-                                        getString(R.string.star_rating), R.drawable.dialog_tag_love,
-                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                switch (which) {
-                                                    case UpDownDialog.POSITIVE_BUTTON:
-                                                        PreferencesUtils.setRated(true);
-                                                        CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
-                                                        EventReporter.reportRate("love_rate", from);
-                                                        break;
-                                                    case UpDownDialog.NEGATIVE_BUTTON:
-                                                        EventReporter.reportRate("love_not_rate", from);
-                                                        break;
-                                                }
-                                            }
-                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialogInterface) {
-                                        EventReporter.reportRate("love_cancel_rate", from);
-                                    }
-                                });
-                                break;
-                        }
-                    }
-                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+        String s = from+"_"+pkg;
+        RateDialog rateDialog = new RateDialog(this, s);
+        rateDialog.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
-                EventReporter.reportRate("cancel_rate", from);
+                EventReporter.reportRate(s+"_cancel", s);
             }
         });
     }

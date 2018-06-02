@@ -43,8 +43,7 @@ public class Arm64Activity extends BaseActivity {
 
     public void onButtonClick(View v){
         if (isInstalled) {
-            Intent feedback = new Intent(Arm64Activity.this, FeedbackActivity.class);
-            startActivity(feedback);
+            FeedbackActivity.start(this, 0);
         } else {
             CommonUtils.jumpToMarket(this, getPackageName()+".arm64");
         }

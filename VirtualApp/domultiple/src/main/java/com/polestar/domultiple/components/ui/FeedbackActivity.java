@@ -33,12 +33,19 @@ public class FeedbackActivity extends BaseActivity {
     private EditText mEtFeedback;
     private Button mBtSubmit;
     private TextView mGoFAQ;
+    private static final String EXTRA_RATING = "extra_rating";
+    private int rating;
 
-
+    public static void start(Context activity, int rating) {
+        Intent intent = new Intent(activity, FeedbackActivity.class);
+        intent.putExtra(FeedbackActivity.EXTRA_RATING, rating);
+        activity.startActivity(intent);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+        rating = getIntent().getIntExtra(EXTRA_RATING, 0);
         mContext = this;
         initView();
     }
@@ -104,7 +111,7 @@ public class FeedbackActivity extends BaseActivity {
                 Intent data=new Intent(Intent.ACTION_SENDTO);
                 data.setData(Uri.parse("mailto:riverstone.app@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about Do Multiple");
-                String fullContent = content + "\n\n\n\n"  + "Additional Info for Debug: \n" + "App version: " + BuildConfig.VERSION_NAME
+                String fullContent = content + "\n\n\n\n"  + "Additional Info for Debug: \n" + "Rating: "+ rating + "\n"+ "App version: " + BuildConfig.VERSION_NAME
                         + "\n" + "Model info: " + Build.FINGERPRINT + "\nOS Version: " + Build.VERSION.SDK_INT + "\nLite Mode: " + PreferencesUtils.isLiteMode() + "\n";
                 for (InstalledAppInfo appInfo: VirtualCore.get().getInstalledApps(0)) {
                     String pkgInfo = "\n Clone: " + appInfo.packageName + " source: " + appInfo.apkPath;

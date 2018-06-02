@@ -24,6 +24,7 @@ import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.BlueSwitch;
+import com.polestar.domultiple.widget.RateDialog;
 import com.polestar.domultiple.widget.UpDownDialog;
 
 /**
@@ -184,74 +185,11 @@ public class SettingsActivity extends BaseActivity {
 
     private void showRateDialog(){
         PreferencesUtils.updateRateDialogTime(this);
-        String title = getString(R.string.like_it);
-        UpDownDialog.show(this, title,
-                getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
-                getString(R.string.yes), R.drawable.dialog_tag_congratulations,
-                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case UpDownDialog.NEGATIVE_BUTTON:
-                                PreferencesUtils.setLoveApp(false);
-                                UpDownDialog.show(SettingsActivity.this, getString(R.string.feedback),
-                                        getString(R.string.dialog_feedback_content),
-                                        getString(R.string.no_thanks),
-                                        getString(R.string.ok), R.drawable.dialog_tag_comment,
-                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                switch (which) {
-                                                    case UpDownDialog.POSITIVE_BUTTON:
-                                                        Intent feedback = new Intent(SettingsActivity.this, FeedbackActivity.class);
-                                                        startActivity(feedback);
-                                                        EventReporter.reportRate("not_love_go_fb", "settings");
-                                                        break;
-                                                    case UpDownDialog.NEGATIVE_BUTTON:
-                                                        EventReporter.reportRate("not_love_not_fb", "settings");
-                                                        break;
-                                                }
-                                            }
-                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialogInterface) {
-                                        EventReporter.reportRate("not_love_cancel_fb", "settings");
-                                    }
-                                });
-                                break;
-                            case UpDownDialog.POSITIVE_BUTTON:
-                                PreferencesUtils.setLoveApp(true);
-                                UpDownDialog.show(SettingsActivity.this, getString(R.string.dialog_love_title),
-                                        getString(R.string.dialog_love_content),
-                                        getString(R.string.remind_me_later),
-                                        getString(R.string.star_rating), R.drawable.dialog_tag_love,
-                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                switch (which) {
-                                                    case UpDownDialog.POSITIVE_BUTTON:
-                                                        PreferencesUtils.setRated(true);
-                                                        CommonUtils.jumpToMarket(SettingsActivity.this, getPackageName());
-                                                        EventReporter.reportRate("love_rate", "settings");
-                                                        break;
-                                                    case UpDownDialog.NEGATIVE_BUTTON:
-                                                        EventReporter.reportRate("love_not_rate", "settings");
-                                                        break;
-                                                }
-                                            }
-                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialogInterface) {
-                                        EventReporter.reportRate("love_cancel_rate", "settings");
-                                    }
-                                });
-                                break;
-                        }
-                    }
-                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+        RateDialog rateDialog = new RateDialog(this, "settings" );
+        rateDialog.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
-                EventReporter.reportRate("cancel_rate", "settings");
+                EventReporter.reportRate("settings_cancel", "settings");
             }
         });
     }
