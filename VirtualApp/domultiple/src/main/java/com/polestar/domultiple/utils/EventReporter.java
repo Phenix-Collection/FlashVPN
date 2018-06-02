@@ -86,6 +86,12 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("rate", bundle);
     }
 
+    public static void reportArm64(String pkg, String status) {
+        Bundle bundle = new Bundle();
+        bundle.putString("status", status+ "_" + pkg);
+        mFirebaseAnalytics.logEvent("arm64", bundle);
+    }
+
     public static void generalClickEvent(String event) {
         Bundle bundle = new Bundle();
         bundle.putString("event", event);

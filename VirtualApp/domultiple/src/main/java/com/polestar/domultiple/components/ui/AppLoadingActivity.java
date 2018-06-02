@@ -231,6 +231,7 @@ public class AppLoadingActivity extends BaseActivity {
                     finishIfTimeout();
                 } else{
                     //Guide download support package
+                    EventReporter.reportArm64(appModel.getPackageName(), "start");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -240,10 +241,12 @@ public class AppLoadingActivity extends BaseActivity {
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             switch (i) {
                                                 case UpDownDialog.NEGATIVE_BUTTON:
+                                                    EventReporter.reportArm64(appModel.getPackageName(), "cancel");
                                                     doLaunchMyself();
                                                     break;
                                                 case UpDownDialog.POSITIVE_BUTTON:
                                                     CommonUtils.jumpToMarket(AppLoadingActivity.this, getPackageName()+".arm64");
+                                                    EventReporter.reportArm64(appModel.getPackageName(), "go");
                                                     break;
                                             }
                                         }
