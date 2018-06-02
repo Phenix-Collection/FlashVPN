@@ -169,11 +169,6 @@ public class PolestarApp extends MultiDexApplication {
             @Override
             public void onMainProcess() {
                 MLogs.d("Main process create");
-
-                if(isSupportPkg()) {
-                    getApp().getPackageManager().setComponentEnabledSetting(new ComponentName(getApp(), SplashActivity.class.getName()),
-                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-                }
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 //ImageLoaderUtil.asyncInit(gDefault);
@@ -240,10 +235,6 @@ public class PolestarApp extends MultiDexApplication {
             @Override
             public void onServerProcess() {
                 MLogs.d("Server process create");
-                if(isSupportPkg()) {
-                    getApp().getPackageManager().setComponentEnabledSetting(new ComponentName(getApp(), SplashActivity.class.getName()),
-                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-                }
                 try {
                     VirtualCore.get().setAppRequestListener(new VirtualCore.AppRequestListener() {
                         @Override

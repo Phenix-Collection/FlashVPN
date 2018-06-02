@@ -37,7 +37,7 @@ public class SplashActivity extends BaseActivity {
         long time = System.currentTimeMillis();
         setContentView(R.layout.splash_activity_layout);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
-        if (!PreferencesUtils.isAdFree()) {
+        if (!PreferencesUtils.isAdFree() && !PolestarApp.isSupportPkg()) {
             FuseAdLoader adLoader = FuseAdLoader.get(HomeActivity.SLOT_HOME_NATIVE, this.getApplicationContext());
             adLoader.setBannerAdSize(HomeActivity.getBannerAdSize());
             adLoader.preloadAd();
@@ -60,15 +60,17 @@ public class SplashActivity extends BaseActivity {
             }
         }, 2500 - delta);
 
-        if (getIntent().getBooleanExtra(EXTRA_FROM_SHORTCUT, false)) {
-            MLogs.d("Launching from shortcut");
-            if (AndroidUtil.hasShortcut(this)) {
-                PreferencesUtils.setAbleToDetectShortcut(true);
-            } else {
-                PreferencesUtils.setAbleToDetectShortcut(false);
-                MLogs.d("Failed to detect shortcut!");
+        if(!PolestarApp.isSupportPkg()) {
+            if (getIntent().getBooleanExtra(EXTRA_FROM_SHORTCUT, false)) {
+                MLogs.d("Launching from shortcut");
+                if (AndroidUtil.hasShortcut(this)) {
+                    PreferencesUtils.setAbleToDetectShortcut(true);
+                } else {
+                    PreferencesUtils.setAbleToDetectShortcut(false);
+                    MLogs.d("Failed to detect shortcut!");
+                }
             }
-        } //        }
+        }//        }
     }
 
     @Override
@@ -82,12 +84,17 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void enterHome(){
-        if(!PreferencesUtils.isShortCutCreated() ){
-            PreferencesUtils.setShortCutCreated();
-            CommonUtils.createLaunchShortcut(this);
-            created = true;
+        if(PolestarApp.isSupportPkg()) {
+            getPackageManager().setComponentEnabledSetting(new ComponentName(this, SplashActivity.class.getName()),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        } else {
+            if (!PreferencesUtils.isShortCutCreated()) {
+                PreferencesUtils.setShortCutCreated();
+                CommonUtils.createLaunchShortcut(this);
+                created = true;
+            }
+            HomeActivity.enter(this, needUpdate());
         }
-        HomeActivity.enter(this, needUpdate());
         finish();
     }
 

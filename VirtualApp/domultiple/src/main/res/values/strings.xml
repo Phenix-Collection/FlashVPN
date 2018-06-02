@@ -36,7 +36,7 @@
     <string name="dialog_love_title" translatable="false">Love Do Multiple</string>
     <string name="dialog_love_content">Would you mind give us a 5-star rating on the Play Store? It will inspire us and we appreciate your support!</string>
     <string name="remind_me_later">Remind me later</string>
-    <string name="star_rating">Go 5-star rating now</string>
+    <string name="star_rating">Go 5-star rating</string>
     <string name="feedback">Feedback</string>
     <string name="ad_free">Remove Ads</string>
     <string name="share">Share</string>
