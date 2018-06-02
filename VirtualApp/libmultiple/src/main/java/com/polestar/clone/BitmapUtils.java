@@ -17,6 +17,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.helper.utils.VLog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -114,7 +115,7 @@ public class BitmapUtils {
     }
 
     public static int getRingIconId(Context paramContext, int userId) {
-        return paramContext.getResources().getIdentifier(userId == 0? "ring_icon" : "ring_icon_"+userId,
+        return paramContext.getResources().getIdentifier(userId == 0? "ring_icon" : "ring_icon_"+(userId+1),
                 "mipmap", paramContext.getPackageName());
     }
 
