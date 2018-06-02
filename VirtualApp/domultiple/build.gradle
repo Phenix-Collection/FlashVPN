@@ -38,8 +38,8 @@ android {
         }
         play {
             applicationId "com.polestar.domultiple"
-            versionCode 2024
-            versionName "2.0.24.${releaseTime()}"
+            versionCode 2031
+            versionName "2.0.31.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             ndk {
                 // 设置支持的SO库架构
@@ -58,8 +58,8 @@ android {
         }
         play_64bit {
             applicationId "com.polestar.domultiple.arm64"
-            versionCode 2024
-            versionName "2.0.24.${releaseTime()}"
+            versionCode 2031
+            versionName "2.0.31.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             ndk {
                 // 设置支持的SO库架构
