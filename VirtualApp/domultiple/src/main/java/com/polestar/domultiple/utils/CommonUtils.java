@@ -137,10 +137,12 @@ public class CommonUtils {
         try {
             Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("market://details?id=" + packageName));
 //            viewIntent.putExtra("START_OUTTER_APP_FLAG", true);
+            viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(viewIntent);
         } catch (Exception e) {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName));
 //            i.putExtra("START_OUTTER_APP_FLAG", true);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         }
     }

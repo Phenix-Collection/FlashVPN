@@ -127,7 +127,7 @@ public class RateDialog {
             @Override
             public void onClick(View view) {
                 if (rating == 5) {
-                    CommonUtils.jumpToMarket(PolestarApp.getApp(), PolestarApp.getApp().getPackageName());
+                    CommonUtils.jumpToMarket(activity, activity.getPackageName());
                     PreferencesUtils.setLoveApp(true);
                     PreferencesUtils.setRated(true);
                     EventReporter.reportRate(from + "_" + rating, from);
