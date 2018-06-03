@@ -109,7 +109,6 @@ public class HomeActivity extends BaseActivity {
         av = "all".equals(conf) || "avz".equals(conf);
         long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);
         int random = new Random().nextInt(100);
-        random = new Random().nextInt(100);
         long interval = System.currentTimeMillis() - PreferencesUtils.getAutoInterstialTime();
         autoShowInterstitial = (!PreferencesUtils.isAdFree() && random < RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL)
                 && (interval > RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL))) || BuildConfig.DEBUG;
@@ -252,6 +251,16 @@ public class HomeActivity extends BaseActivity {
         //adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
         if (adLoader.hasValidAdSource()) {
             adLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     isInterstitialAdLoaded = true;

@@ -427,6 +427,16 @@ public class HomeFragment extends BaseFragment {
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_HOME_NATIVE_PRIOR_TIME), new IAdLoadListener() {
                 @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     nativeAd = ad;
                     inflateNativeAd(ad);

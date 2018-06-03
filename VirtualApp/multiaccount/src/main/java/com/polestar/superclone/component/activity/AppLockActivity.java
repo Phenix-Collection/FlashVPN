@@ -24,7 +24,7 @@ import com.polestar.superclone.component.AppLockMonitor;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.model.CustomizeAppData;
 import com.polestar.superclone.utils.AppManager;
-import com.polestar.superclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
@@ -110,6 +110,16 @@ public class AppLockActivity extends BaseActivity {
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (adLoader != null) {
             adLoader.loadAd(2, RemoteConfig.getLong(CONFIG_SLOT_APP_LOCK_PROTECT_TIME), new IAdLoadListener() {
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     MLogs.d("Applock native ad loaded. showing ");

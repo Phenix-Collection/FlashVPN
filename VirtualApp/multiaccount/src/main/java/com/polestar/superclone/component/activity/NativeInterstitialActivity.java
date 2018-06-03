@@ -124,6 +124,16 @@ public class NativeInterstitialActivity extends Activity {
     public void fuseLoadNative() {
         mFuseLoader.loadAd(1, new IAdLoadListener() {
             @Override
+            public void onAdClicked(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdClosed(IAdAdapter ad) {
+
+            }
+
+            @Override
             public void onAdLoaded(IAdAdapter ad) {
                 hideLoadding();
                 fillInterstitialLayout(ad);

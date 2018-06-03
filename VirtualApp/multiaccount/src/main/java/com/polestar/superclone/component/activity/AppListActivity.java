@@ -247,6 +247,16 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         if (mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_APPLIST_NATIVE_PRIOR_TIME), new IAdLoadListener() {
                 @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdLoaded(IAdAdapter ad) {
                    inflateNativeAdView(ad);
                 }

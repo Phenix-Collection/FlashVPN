@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.utils.AppManager;
-import com.polestar.superclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 
 /**
  * Created by guojia on 2017/7/29.

@@ -18,7 +18,7 @@ import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.AppManager;
-import com.polestar.superclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 
 import java.util.List;
 

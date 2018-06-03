@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.polestar.superclone.MApp;
-import com.polestar.superclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.utils.CommonUtils;
 
 

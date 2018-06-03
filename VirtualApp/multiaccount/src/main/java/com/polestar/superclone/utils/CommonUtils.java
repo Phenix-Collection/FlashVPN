@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.activity.AppStartActivity;
@@ -286,61 +287,6 @@ public class CommonUtils {
             }
         }
         return false;
-    }
-
-    public static int getRingIconId(int userId) {
-        switch (userId) {
-            case 0:
-                return R.mipmap.ring_icon;
-            case 1:
-                return R.mipmap.ring_icon_2;
-            case 2:
-                return R.mipmap.ring_icon_3;
-            case 3:
-                return R.mipmap.ring_icon_4;
-            case 4:
-                return R.mipmap.ring_icon_5;
-            case 5:
-                return R.mipmap.ring_icon_6;
-            case 6:
-                return R.mipmap.ring_icon_7;
-            case 7:
-                return R.mipmap.ring_icon_8;
-            case 8:
-                return R.mipmap.ring_icon_9;
-            default:
-                return R.mipmap.ring_icon;
-        }
-    }
-
-    public static Bitmap createCustomIcon(Context context, Drawable appIcon, int userId){
-        if(appIcon == null){
-            return null;
-        }
-        Bitmap shortCutBitMap;
-        try{
-            int width = DisplayUtils.dip2px(context, AppConstants.APP_ICON_WIDTH);
-            int padding = DisplayUtils.dip2px(context, AppConstants.APP_ICON_PADDING);
-            shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
-            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), getRingIconId(userId));
-            Canvas canvas = new Canvas(shortCutBitMap);
-
-            Paint paint = new Paint();
-            paint.setColor(Color.TRANSPARENT);
-            final Rect rect = new Rect(0, 0, width, width);
-            final float roundPx = DisplayUtils.dip2px(context, AppConstants.APP_ICON_RADIUS);
-            canvas.drawRoundRect(new RectF(rect),roundPx,roundPx,paint);
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
-
-            appIcon.setBounds(padding,padding,width - padding,width - padding);
-            appIcon.draw(canvas);
-
-            canvas.drawBitmap(Bitmap.createScaledBitmap(mShape,width,width,true),new Rect(0,0,width,width),new Rect(0,0,width,width),null);
-        }catch (OutOfMemoryError error){
-            error.printStackTrace();
-            shortCutBitMap = null;
-        }
-        return shortCutBitMap;
     }
 
     public static Drawable getAppIcon(String packageName) {

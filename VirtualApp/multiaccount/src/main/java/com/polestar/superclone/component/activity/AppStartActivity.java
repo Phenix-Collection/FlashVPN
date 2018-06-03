@@ -168,6 +168,16 @@ public class AppStartActivity extends BaseActivity {
         if(mAdLoader.hasValidAdSource()){
             mAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     if (!launched && !PreferencesUtils.isAdFree()) {
                         long delta = System.currentTimeMillis() - loadingStart;
@@ -225,6 +235,16 @@ public class AppStartActivity extends BaseActivity {
         mAdLoader = FuseAdLoader.get(SLOT_APP_START_NATIVE, this).setBannerAdSize(getBannerSize());
         if(mAdLoader.hasValidAdSource()){
             mAdLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     updateShowTime(false);

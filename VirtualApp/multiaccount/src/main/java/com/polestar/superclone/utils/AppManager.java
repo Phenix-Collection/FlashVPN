@@ -17,6 +17,7 @@ import com.lody.virtual.os.VUserManager;
 import com.lody.virtual.remote.InstallResult;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.InstalledAppInfo;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
@@ -240,7 +241,7 @@ public class AppManager {
         String key = PreferencesUtils.getEncodedPatternPassword(MApp.getApp());
         boolean adFree = PreferencesUtils.isAdFree();
         long interval = PreferencesUtils.getLockInterval();
-        VirtualCore.get().reloadLockerSetting(key, adFree, interval);
+       // VirtualCore.get().reloadLockerSetting(key, adFree, interval);
     }
 
     @Deprecated

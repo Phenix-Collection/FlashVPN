@@ -167,7 +167,7 @@ public class AppLockMonitor {
             }
         }
         //Remove the same object with send
-        mHandler.removeMessages(MSG_DELAY_LOCK_APP, key);
+        mHandler.removeMessages(MSG_DELAY_LOCK_APP);
         //mUnlockedForegroudPkg = pkg;
     }
 

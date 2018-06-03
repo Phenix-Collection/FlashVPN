@@ -22,7 +22,7 @@ import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.model.CustomizeAppData;
 import com.polestar.superclone.utils.AppManager;
-import com.polestar.superclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;

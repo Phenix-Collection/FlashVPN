@@ -41,7 +41,7 @@ import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.model.CustomizeAppData;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.AppManager;
-import com.polestar.superclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.DisplayUtils;
@@ -346,6 +346,16 @@ public class AppCloneActivity extends BaseActivity {
         //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_AD_AFTER_CLONE_PROTECT_TIME), new IAdLoadListener() {
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     adReady = true;
