@@ -38,7 +38,7 @@ import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
-import com.polestar.superclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.clone.BitmapUtils;

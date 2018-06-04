@@ -22,7 +22,7 @@ import com.polestar.superclone.MApp;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
-import com.polestar.superclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.model.PackageConfig;
 
 import java.util.ArrayList;

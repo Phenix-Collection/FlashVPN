@@ -17,10 +17,11 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.lody.virtual.os.VUserHandle;
+import com.polestar.clone.CloneAgent64;
 import com.polestar.superclone.R;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
-import com.polestar.superclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.utils.CloneHelper;
@@ -173,6 +174,13 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         if (appModel.getLockerState() != AppConstants.AppLockState.DISABLED) {
             AppManager.reloadLockerSetting();
         }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CloneAgent64 agent64 = new CloneAgent64(CustomizeIconActivity.this);
+                agent64.syncPackageSetting(mData.pkg, mData.userId, mData);
+            }
+        }).start();
         finish();
     }
 

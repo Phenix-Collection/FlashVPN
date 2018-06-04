@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.polestar.superclone.R;
 import com.polestar.superclone.model.AppModel;
-import com.polestar.superclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.widgets.BlueSwitch;
 
 import java.util.List;

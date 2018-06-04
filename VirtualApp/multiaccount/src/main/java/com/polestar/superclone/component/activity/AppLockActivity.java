@@ -22,7 +22,7 @@ import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.AppMonitorService;
 import com.polestar.superclone.component.BaseActivity;
-import com.polestar.superclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.utils.DisplayUtils;

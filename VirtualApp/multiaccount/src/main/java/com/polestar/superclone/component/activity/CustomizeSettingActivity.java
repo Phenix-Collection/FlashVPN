@@ -14,7 +14,7 @@ import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
-import com.polestar.superclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.utils.MLogs;
 
 import java.util.List;

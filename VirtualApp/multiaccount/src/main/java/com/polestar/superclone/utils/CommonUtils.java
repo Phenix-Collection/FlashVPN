@@ -30,7 +30,7 @@ import com.polestar.superclone.R;
 import com.polestar.superclone.component.activity.AppStartActivity;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
-import com.polestar.superclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 
 import java.util.HashSet;
 import java.util.List;

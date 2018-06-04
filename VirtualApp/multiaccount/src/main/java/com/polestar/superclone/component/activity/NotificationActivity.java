@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.polestar.clone.CloneAgent64;
+import com.polestar.clone.CustomizeAppData;
+import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.component.adapter.BasicPackageSwitchAdapter;
@@ -53,6 +56,18 @@ public class NotificationActivity extends BaseActivity {
             public void onCheckStatusChangedListener(AppModel model, boolean status) {
                 model.setNotificationEnable(status);
                 DbManager.updateAppModel(mContext, model);
+                if (MApp.isSupportPkgExist()) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CloneAgent64 agent64 = new CloneAgent64(NotificationActivity.this);
+                            CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
+                            data.isNotificationEnable = status;
+                            data.saveToPref();
+                            agent64.syncPackageSetting(model.getPackageName(), model.getPkgUserId(),data);
+                        }
+                    }).start();
+                }
 //                DbManager.notifyChanged();
             }
         });
@@ -79,6 +94,21 @@ public class NotificationActivity extends BaseActivity {
                     }
                     mNotificationAdapter.notifyDataSetChanged();
                     mListView.setVisibility(View.INVISIBLE);
+                }
+                if (MApp.isSupportPkgExist()) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CloneAgent64 agent64 = new CloneAgent64(NotificationActivity.this);
+                            for (AppModel model: mClonedModels) {
+                                model.setNotificationEnable(false);
+                                CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
+                                data.isNotificationEnable = false;
+                                data.saveToPref();
+                                agent64.syncPackageSetting(model.getPackageName(), model.getPkgUserId(),data);
+                            }
+                        }
+                    }).start();
                 }
             }
         });

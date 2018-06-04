@@ -22,6 +22,7 @@ import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.MLogs;
+import com.polestar.superclone.utils.PreferencesUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -144,6 +145,9 @@ public class MComponentDelegate implements ComponentDelegate {
 
     @Override
     public void reloadSetting(String lockKey, boolean adFree, long lockInterval, boolean quickSwitch) {
+        PreferencesUtils.setEncodedPatternPassword(MApp.getApp(),lockKey);
+        PreferencesUtils.setAdFree(adFree);
+        PreferencesUtils.setLockInterval(lockInterval);
     }
 
     private IAppMonitor getAgent() {
