@@ -219,7 +219,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
     @Override
     public void reloadSetting(String lockKey, boolean adFree, long lockInterval, boolean quickSwitch) {
         PreferencesUtils.setEncodedPatternPassword(PolestarApp.getApp(),lockKey);
-        PreferencesUtils.setAdFree(true);
+        PreferencesUtils.setAdFree(adFree);
         PreferencesUtils.setLockInterval(lockInterval);
        //AppLockMonitor.getInstance().reloadSetting(lockKey, adFree, lockInterval);
     }
