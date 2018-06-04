@@ -158,8 +158,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     public void onFeedbackClick(View view) {
-        Intent intent = new Intent(this, FeedbackActivity.class);
-        startActivity(intent);
+        FeedbackActivity.start(this, 0);
     }
 
     public void onFaqClick(View view) {

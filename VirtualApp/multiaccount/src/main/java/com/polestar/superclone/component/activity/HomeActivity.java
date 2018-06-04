@@ -42,6 +42,7 @@ import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.widgets.LeftRightDialog;
+import com.polestar.superclone.widgets.RateDialog;
 import com.polestar.superclone.widgets.UpDownDialog;
 import com.polestar.superclone.utils.RemoteConfig;
 
@@ -54,8 +55,6 @@ public class HomeActivity extends BaseActivity {
     private HomeFragment mHomeFragment;
     private DrawerLayout drawer;
     private ListView navigationList;
-    private View navigationLayout;
-    private TextView appNameTv;
     private ImageView giftIconView;
     private FuseAdLoader adLoader;
     private boolean isAutoInterstitialShown;
@@ -84,7 +83,6 @@ public class HomeActivity extends BaseActivity {
     private String cloningPackage;
     private RelativeLayout iconAdLayout;
     private RelativeLayout giftIconLayout;
-    private RelativeLayout wallButtonLayout;
     private IAdAdapter interstitialAd;
     private boolean av;
     private Handler mainHandler;
@@ -169,8 +167,6 @@ public class HomeActivity extends BaseActivity {
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         navigationList = (ListView) findViewById(R.id.navigation_list);
-        navigationLayout = findViewById(R.id.navigation_layout);
-        appNameTv = (TextView) findViewById(R.id.app_name);
         giftIconView = (ImageView) findViewById(R.id.gift_icon);
         giftIconLayout = (RelativeLayout) findViewById(R.id.gift_icon_layout);
         giftIconView.setVisibility(View.GONE);
@@ -575,8 +571,7 @@ public class HomeActivity extends BaseActivity {
                 break;
             case 3:
                 EventReporter.menuFeedback(this);
-                Intent feedback = new Intent(this, FeedbackActivity.class);
-                startActivity(feedback);
+                FeedbackActivity.start(this, 0);
                 break;
             case 4:
                 showRateDialog(RATE_FROM_MENU, null);
@@ -613,66 +608,14 @@ public class HomeActivity extends BaseActivity {
         }
         EventReporter.reportRate(this,"start", from);
         PreferencesUtils.updateRateDialogTime(this);
-        String title = RATE_AFTER_CLONE.equals(from) ? getString(R.string.congratulations) : getString(R.string.rate_us);
-        UpDownDialog.show(this, title,
-                getString(R.string.dialog_rating_us_content), getString(R.string.not_really),
-                getString(R.string.yes), R.drawable.dialog_tag_congratulations,
-                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case UpDownDialog.NEGATIVE_BUTTON:
-                                PreferencesUtils.setLoveApp(false);
-                                if (!RATE_AFTER_CLONE.equals(from)) {
-                                    EventReporter.loveCloneApp(HomeActivity.this, false, from );
-                                } else {
-                                    EventReporter.loveCloneApp(HomeActivity.this, false,pkg);
-                                }
-                                UpDownDialog.show(HomeActivity.this, getString(R.string.feedback),
-                                        getString(R.string.dialog_feedback_content),
-                                        getString(R.string.no_thanks),
-                                        getString(R.string.ok), R.drawable.dialog_tag_comment,
-                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                switch (which) {
-                                                    case UpDownDialog.POSITIVE_BUTTON:
-                                                        EventReporter.reportRate(HomeActivity.this, "go_faq", from);
-                                                        Intent feedback = new Intent(HomeActivity.this, FeedbackActivity.class);
-                                                        startActivity(feedback);
-                                                        break;
-                                                }
-                                            }
-                                        });
-                                break;
-                            case UpDownDialog.POSITIVE_BUTTON:
-                                PreferencesUtils.setLoveApp(true);
-                                if (!RATE_AFTER_CLONE.equals(from)) {
-                                    EventReporter.loveCloneApp(HomeActivity.this, true, from );
-                                } else {
-                                    EventReporter.loveCloneApp(HomeActivity.this, true,pkg);
-                                }
-                                UpDownDialog.show(HomeActivity.this, getString(R.string.dialog_love_title),
-                                        getString(R.string.dialog_love_content),
-                                        getString(R.string.remind_me_later),
-                                        getString(R.string.star_rating), R.drawable.dialog_tag_love,
-                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                switch (which) {
-                                                    case UpDownDialog.POSITIVE_BUTTON:
-                                                        EventReporter.reportRate(HomeActivity.this, "go_rating",from);
-                                                        PreferencesUtils.setRated(true);
-                                                        CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
-                                                        break;
-                                                }
-                                            }
-                                        });
-                                break;
-                        }
-                    }
-                });
-
+        String s = from+"_"+pkg;
+        RateDialog rateDialog = new RateDialog(this, s);
+        rateDialog.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                EventReporter.reportRate(HomeActivity.this, s+"_cancel", s);
+            }
+        });
     }
 
     public void startAppLaunchActivity(String packageName, int userId) {
