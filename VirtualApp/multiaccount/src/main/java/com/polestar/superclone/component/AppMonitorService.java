@@ -46,11 +46,13 @@ public class AppMonitorService extends Service {
     private static final String CONFIG_APP_START_AD_RAMP = "slot_app_start_ramp_hour";
     private static final String CONFIG_APP_START_AD_FILTER = "slot_app_start_filter";
     private static final String CONFIG_APP_START_AD_STYLE = "slot_app_start_style"; //native,interstitial,all
+    public final static String CONFIG_APPLOCK_PRELOAD_INTERVAL = "applock_preload_interval";
     private static HashSet<String> filterPkgs ;
 
     private static String lastUnlockKey;
 
     private final static int MSG_DELAY_LOCK_APP = 0;
+    private final static int MSG_PRELOAD_AD = 1;
 
     private AppMonitor appMonitor;
 
@@ -63,9 +65,24 @@ public class AppMonitorService extends Service {
                     lastUnlockKey = null;
                     MLogs.d("relock lastUnlockKey " + lastUnlockKey);
                     break;
+                case MSG_PRELOAD_AD:
+                    if (!PreferencesUtils.isAdFree() && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
+                        FuseAdLoader.get(AppLockActivity.CONFIG_SLOT_APP_LOCK,AppMonitorService.this).loadAd(1, null);
+                        long interval = RemoteConfig.getLong(CONFIG_APPLOCK_PRELOAD_INTERVAL);
+                        MLogs.d("Applocker schedule next ad at " + interval);
+                        if (interval >= 15*60*000) {
+                            mainHandler.sendEmptyMessageDelayed(MSG_PRELOAD_AD, interval);
+                        }
+                    }
+                    break;
             }
         }
     };
+
+    private void preloadAd() {
+        mainHandler.removeMessages(MSG_PRELOAD_AD);
+        mainHandler.sendEmptyMessage(MSG_PRELOAD_AD);
+    }
     public static void unlocked(String pkg, int userId) {
         lastUnlockKey = AppManager.getMapKey(pkg,userId);
         MLogs.d("unlocked lastUnlockKey " + lastUnlockKey);
@@ -76,6 +93,7 @@ public class AppMonitorService extends Service {
         super.onCreate();
         CloneHelper.getInstance(this);
         appMonitor = new AppMonitor();
+        preloadAd();
     }
 
     public static boolean needLoadCoverAd(boolean preload, String pkg) {
