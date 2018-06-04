@@ -34,7 +34,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".component.activity.LauncherActivity"
+            android:name="com.polestar.superclone.component.activity.LauncherActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
@@ -45,56 +45,56 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".component.activity.AppListActivity"
+            android:name="com.polestar.superclone.component.activity.AppListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.NotificationActivity"
+            android:name="com.polestar.superclone.component.activity.NotificationActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.FeedbackActivity"
+            android:name="com.polestar.superclone.component.activity.FeedbackActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.LockSettingsActivity"
+            android:name="com.polestar.superclone.component.activity.LockSettingsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.LockPasswordSettingActivity"
+            android:name="com.polestar.superclone.component.activity.LockPasswordSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.LockSecureQuestionActivity"
+            android:name="com.polestar.superclone.component.activity.LockSecureQuestionActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.FaqActivity"
+            android:name="com.polestar.superclone.component.activity.FaqActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.WebViewActivity"
+            android:name="com.polestar.superclone.component.activity.WebViewActivity"
             android:screenOrientation="portrait"/>
         <activity
-        android:name=".component.activity.SettingsActivity"
+        android:name="com.polestar.superclone.component.activity.SettingsActivity"
         android:screenOrientation="portrait"/>
         <activity
-        android:name=".component.activity.AboutActivity"
+        android:name="com.polestar.superclone.component.activity.AboutActivity"
         android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".component.activity.CustomizeSettingActivity"
+            android:name="com.polestar.superclone.component.activity.CustomizeSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".component.activity.CustomizeIconActivity"
+            android:name="com.polestar.superclone.component.activity.CustomizeIconActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogActivityStyle"/>
         <activity
-            android:name=".component.activity.AppCloneActivity"
+            android:name="com.polestar.superclone.component.activity.AppCloneActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher"/>
         <activity
-            android:name=".component.activity.HomeActivity"
+            android:name="com.polestar.superclone.component.activity.HomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             />
 
         <activity
-            android:name=".component.activity.AppStartActivity"
+            android:name="com.polestar.superclone.component.activity.AppStartActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -102,19 +102,27 @@
             android:theme="@style/AppTheme.Launcher"/>
 
         <activity
-            android:name=".component.activity.AppLockActivity"
+            android:name="com.polestar.superclone.component.activity.AppLockActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.lody.virtual.vt"
-            android:process=":x"
             android:theme="@style/AppTheme.Launcher"/>
 
-        <service android:name=".component.PreCloneService" android:exported="false" />
+        <activity
+            android:name="com.polestar.superclone.component.activity.WrapCoverAdActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.lody.virtual.vt"
+            android:theme="@style/AppTheme.Launcher"/>
+
+        <service android:name="com.polestar.superclone.component.AppMonitorService" android:exported="true" />
+
+        <service android:name="com.polestar.superclone.component.PreCloneService" android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
-        <receiver android:name=".component.receiver.PackageChangeReceiver" >
+        <receiver android:name="com.polestar.superclone.component.receiver.PackageChangeReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
@@ -144,7 +152,7 @@
         </receiver>
 
         <receiver
-            android:name=".component.receiver.WakeReceiver"
+            android:name="com.polestar.superclone.component.receiver.WakeReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

@@ -3,6 +3,7 @@ package com.polestar.superclone;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -27,6 +28,7 @@ import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.billing.BillingProvider;
 import com.polestar.grey.GreyAttribute;
+import com.polestar.superclone.component.AppMonitorService;
 import com.polestar.superclone.component.LocalActivityLifecycleCallBacks;
 import com.polestar.superclone.component.MComponentDelegate;
 import com.polestar.superclone.component.activity.AppStartActivity;
@@ -63,6 +65,46 @@ public class MApp extends MultiDexApplication {
             Log.d(MLogs.DEFAULT_TAG, "log opened by file");
         }
         return  ret;
+    }
+
+    public static boolean isSupportPkg() {
+        return getApp().getPackageName().endsWith("arm64");
+    }
+
+    public static boolean isSupportPkgExist() {
+        if (isSupportPkg()) {
+            return  true;
+        } else {
+            try{
+                ApplicationInfo ai = getApp().getPackageManager().getApplicationInfo(getApp().getPackageName()+ ".arm64",0);
+                if (ai != null) {
+                    return true;
+                }
+            }catch(Exception ex){
+
+            }
+            return false;
+        }
+    }
+
+    public static boolean isPrimaryPkgExist() {
+        if(isSupportPkg()) {
+            try{
+                ApplicationInfo ai = getApp().getPackageManager().getApplicationInfo(getApp().getPackageName().replace(".arm64",""),0);
+                if (ai != null) {
+                    return true;
+                }
+            }catch(Exception ex){
+
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean needAd() {
+        return !(isSupportPkg() && isPrimaryPkgExist());
     }
 
     @Override
@@ -122,40 +164,45 @@ public class MApp extends MultiDexApplication {
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
-                initAd();
-                BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
-                res.titleString = R.string.booster_title;
-                res.boosterShorcutIcon = R.drawable.boost_icon;
-                res.innerWheelImage = R.drawable.boost_out_wheel;
-                res.outterWheelImage = R.drawable.boost_inner_wheel;
-                BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
-                if (BuildConfig.DEBUG) {
-                    boosterConfig.autoAdFirstInterval = 0;
-                    boosterConfig.autoAdInterval = 0;
-                    boosterConfig.isUnlockAd = true;
-                    boosterConfig.isInstallAd = true;
-                } else {
-                    boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
-                    boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
-                    boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
-                    boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
-                }
-                BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
-                    @Override
-                    public void reportEvent(String s, Bundle b) {
-                        FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
+                if (needAd()) {
+                    initAd();
+                    BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
+                    res.titleString = R.string.booster_title;
+                    res.boosterShorcutIcon = R.drawable.boost_icon;
+                    res.innerWheelImage = R.drawable.boost_out_wheel;
+                    res.outterWheelImage = R.drawable.boost_inner_wheel;
+                    BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
+                    if (BuildConfig.DEBUG) {
+                        boosterConfig.autoAdFirstInterval = 0;
+                        boosterConfig.autoAdInterval = 0;
+                        boosterConfig.isUnlockAd = true;
+                        boosterConfig.isInstallAd = true;
+                    } else {
+                        boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
+                        boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
+                        boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
+                        boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
                     }
-                });
-                String coffeeKey = RemoteConfig.getString("coffee_key");
-                if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
-                    MLogs.d("coffee key : " + coffeeKey);
-                    instantcoffee.Builder.build(getApp(),coffeeKey);
-                }
-                PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
+                    BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
+                        @Override
+                        public void reportEvent(String s, Bundle b) {
+                            FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
+                        }
+                    });
+                    String coffeeKey = RemoteConfig.getString("coffee_key");
+                    if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
+                        MLogs.d("coffee key : " + coffeeKey);
+                        instantcoffee.Builder.build(getApp(), coffeeKey);
+                    }
+                    PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
 
-                //Do some ad preload
-                if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
-                    AppStartActivity.preloadAd(gDefault);
+                    //Do some ad preload
+                    if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
+                        AppStartActivity.preloadAd(gDefault);
+                        if (AppMonitorService.needLoadCoverAd(true, null)) {
+                            AppMonitorService.preloadCoverAd();
+                        }
+                    }
                 }
             }
 
@@ -163,7 +210,7 @@ public class MApp extends MultiDexApplication {
             public void onVirtualProcess() {
                 MLogs.d("Virtual process create");
                 MComponentDelegate delegate = new MComponentDelegate();
-                delegate.init();
+                delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
 
                 virtualCore.setAppApiDelegate(new AppApiDelegate());
@@ -205,7 +252,7 @@ public class MApp extends MultiDexApplication {
                 RemoteConfig.init();
                 MLogs.d("Server process app onCreate 0");
                 MComponentDelegate delegate = new MComponentDelegate();
-                delegate.init();
+                delegate.asyncInit();
                 MLogs.d("Server process app onCreate 1");
                 VirtualCore.get().setComponentDelegate(delegate);
                 MLogs.d("Server process app onCreate 2");
@@ -223,7 +270,7 @@ public class MApp extends MultiDexApplication {
         });
 
         try {
-            // init exception handler and bugly before attatchBaseContext and appOnCreate
+            // asyncInit exception handler and bugly before attatchBaseContext and appOnCreate
             final MAppCrashHandler ch = new MAppCrashHandler(this, Thread.getDefaultUncaughtExceptionHandler());
             Thread.setDefaultUncaughtExceptionHandler(ch);
             VirtualCore.get().setCrashHandler(new CrashHandler() {

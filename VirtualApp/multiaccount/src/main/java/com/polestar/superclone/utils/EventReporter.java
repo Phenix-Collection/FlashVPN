@@ -1,6 +1,7 @@
 package com.polestar.superclone.utils;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.superclone.MApp;
@@ -23,7 +24,7 @@ public class EventReporter {
 
 
     public static void init(Context context) {
-        //StatConfig.init(context);
+        //StatConfig.asyncInit(context);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(MApp.getApp());
         StatConfig.setDebugEnable(!AppConstants.IS_RELEASE_VERSION);
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
@@ -111,6 +112,12 @@ public class EventReporter {
         prop.setProperty("package", packageName);
         prop.setProperty("forground", forground?"true":"false");
         StatService.trackCustomKVEvent(context, "app_crash", prop);
+    }
+
+    public static void reportArm64(String pkg, String status) {
+        Properties prop = new Properties();
+        prop.setProperty("status", status+ "_" + pkg);
+        StatService.trackCustomKVEvent(MApp.getApp(), "arm64", prop);
     }
 
     public static void lockerEnable(Context context, String status, String pkg, String from) {

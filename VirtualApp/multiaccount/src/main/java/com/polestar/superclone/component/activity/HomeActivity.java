@@ -104,7 +104,7 @@ public class HomeActivity extends BaseActivity {
         EventReporter.homeShow(this);
         setContentView(R.layout.activity_home);
         initView();
-        AppListUtils.getInstance(this); // init AppListUtils
+        AppListUtils.getInstance(this); // asyncInit AppListUtils
         String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
         av = "all".equals(conf) || "avz".equals(conf);
         long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);

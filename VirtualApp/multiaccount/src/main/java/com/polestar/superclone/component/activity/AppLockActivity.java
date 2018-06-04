@@ -20,7 +20,7 @@ import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
-import com.polestar.superclone.component.AppLockMonitor;
+import com.polestar.superclone.component.AppMonitorService;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.model.CustomizeAppData;
 import com.polestar.superclone.utils.AppManager;
@@ -63,6 +63,7 @@ public class AppLockActivity extends BaseActivity {
 
     public final static String EXTRA_USER_ID = "extra_clone_userid";
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
+    public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
 
     public static final void start(Context context, String pkg, int userId) {
         MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
@@ -104,7 +105,7 @@ public class AppLockActivity extends BaseActivity {
         mToolbarText.setText(mCenterAppText.getText());
     }
     private void loadNative(){
-        final FuseAdLoader adLoader = AppLockMonitor.getInstance().getAdLoader();
+        final FuseAdLoader adLoader = FuseAdLoader.get(CONFIG_SLOT_APP_LOCK, this);
         adLoader.setBannerAdSize(getBannerSize());
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
@@ -189,7 +190,7 @@ public class AppLockActivity extends BaseActivity {
                         finish();
                     }
                 }, 200);
-                AppLockMonitor.getInstance().unlocked(mPkgName, mUserId);
+                AppMonitorService.unlocked(mPkgName, mUserId);
             }
 
             @Override
