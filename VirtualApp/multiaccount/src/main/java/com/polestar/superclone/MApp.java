@@ -59,12 +59,16 @@ public class MApp extends MultiDexApplication {
     }
 
     public static boolean isOpenLog(){
-        File file = new File(Environment.getExternalStorageDirectory() + "/polelog");
-        boolean ret =  file.exists();
-        if(ret) {
-            Log.d(MLogs.DEFAULT_TAG, "log opened by file");
+        try {
+            File file = new File(Environment.getExternalStorageDirectory() + "/polelog");
+            boolean ret = file.exists();
+            if (ret) {
+                Log.d(MLogs.DEFAULT_TAG, "log opened by file");
+            }
+            return ret;
+        }catch (Exception ex){
+            return false;
         }
-        return  ret;
     }
 
     public static boolean isSupportPkg() {

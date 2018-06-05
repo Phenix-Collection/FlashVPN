@@ -104,10 +104,15 @@ public class PolestarApp extends MultiDexApplication {
     }
 
     public static boolean isOpenLog(){
-        File file = new File(Environment.getExternalStorageDirectory() + "/polelog");
-        boolean ret =  file.exists();
-        if(ret) {
-            Log.d(MLogs.DEFAULT_TAG, "log opened by file");
+        boolean ret = false;
+        try {
+            File file = new File(Environment.getExternalStorageDirectory() + "/polelog");
+            ret = file.exists();
+            if (ret) {
+                Log.d(MLogs.DEFAULT_TAG, "log opened by file");
+            }
+        }catch (Exception ex){
+
         }
         return  ret;
     }
