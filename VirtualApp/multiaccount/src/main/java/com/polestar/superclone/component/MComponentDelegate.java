@@ -184,10 +184,10 @@ public class MComponentDelegate implements ComponentDelegate {
         };
         Timer timer = new Timer();
         timer.schedule(task, 5000);
-        VirtualCore.get().getContext().bindService(intent,
-                agentServiceConnection,
-                Context.BIND_AUTO_CREATE);
         try {
+            VirtualCore.get().getContext().bindService(intent,
+                    agentServiceConnection,
+                    Context.BIND_AUTO_CREATE);
             syncQueue.take();
         }catch (Exception ex) {
 
