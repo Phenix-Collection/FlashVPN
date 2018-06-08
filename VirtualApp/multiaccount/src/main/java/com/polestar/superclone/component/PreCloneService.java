@@ -223,9 +223,14 @@ public class PreCloneService extends Service {
             mWorkHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    List<AppModel> attriList = doPreClone(appModelList);
-                    if (attriList == null || attriList.size() == 0){
-                        return ;
+                    List<AppModel> attriList;
+                    try {
+                        attriList = doPreClone(appModelList);
+                        if (attriList == null || attriList.size() == 0) {
+                            return;
+                        }
+                    }catch (Exception ex){
+                        return;
                     }
                     AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                     int random = new Random().nextInt(30);
