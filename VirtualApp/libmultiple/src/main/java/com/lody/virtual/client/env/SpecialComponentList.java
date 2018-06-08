@@ -81,6 +81,7 @@ public final class SpecialComponentList {
         IO_REDIRECT_BLACK_LIST.add("com.snapchat.android");
 
         ACTION_BLACK_LIST.add("android.appwidget.action.APPWIDGET_UPDATE");
+        ACTION_BLACK_LIST.add("android.provider.Telephony.SMS_RECEIVED");
 
         WHITE_PERMISSION.add("com.google.android.gms.settings.SECURITY_SETTINGS");
         WHITE_PERMISSION.add("com.google.android.apps.plus.PRIVACY_SETTINGS");
@@ -172,11 +173,6 @@ public final class SpecialComponentList {
             while (iterator.hasNext()) {
                 String action = iterator.next();
                 if (SpecialComponentList.isActionInBlackList(action)) {
-                    iterator.remove();
-                    continue;
-                }
-                if (GmsSupport.isGmsFamilyPackage(pkg)
-                        && "android.provider.Telephony.SMS_RECEIVED".equals(action)){
                     iterator.remove();
                     continue;
                 }

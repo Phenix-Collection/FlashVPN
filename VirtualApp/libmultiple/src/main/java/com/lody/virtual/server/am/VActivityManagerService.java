@@ -493,10 +493,34 @@ public class VActivityManagerService extends IActivityManager.Stub {
                     // There is still a connection to the service that is
                     // being brought down.  Mark it as dead.
                     cr.serviceDead = true;
-                try {
-                        cr.conn.connected(r.name, null);
-                    } catch (Exception e) {
+                    IBinder iBinder = cr.conn != null? cr.conn.asBinder() : null;
+                    if (iBinder != null) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                android.os.Parcel _data = android.os.Parcel.obtain();
+                                android.os.Parcel _reply = android.os.Parcel.obtain();
+                                try {
+                                    _data.writeInterfaceToken("android.app.IServiceConnection");
+                                    if ((r.name != null)) {
+                                        _data.writeInt(1);
+                                        r.name.writeToParcel(_data, 0);
+                                    } else {
+                                        _data.writeInt(0);
+                                    }
+                                    _data.writeStrongBinder(null);
+                                    _data.writeInt(0);
+                                    iBinder.transact(1, _data, _reply, 0);
+                                    _reply.readException();
+                                } finally {
+                                    _reply.recycle();
+                                    _data.recycle();
+                                }
+                            } else {
+                                cr.conn.connected(r.name, null);
+                            }
+                        } catch (Exception e) {
 
+                        }
                     }
                 }
             }
@@ -1364,10 +1388,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
                     && SpecialComponentList.canStartFromBroadcast(info.packageName, intent.getAction())) {
                 int userId = getUserId(vuid);
                 VLog.d(TAG, "startProcess for " + intent.toString() + " userId " + userId);
-                if (userId != 0) {
-                    VLog.logbug(TAG, VLog.getStackTraceString(new Exception("userId = " + userId)));
-                    userId = 0;
-                }
+//                if (userId != 0) {
+//                    VLog.logbug(TAG, VLog.getStackTraceString(new Exception("userId = " + userId)));
+//                    userId = 0;
+//                }
                 r = startProcessIfNeedLocked(info.processName, userId, info.packageName);
             }
         }

@@ -178,7 +178,7 @@ public final class VClientImpl extends IVClient.Stub {
         this.token = token;
         this.vuid = vuid;
 		this.vpid = vpid;
-		VLog.d(TAG, "initProcess for vuid: " + vuid + " vpid: " + vpid);
+		VLog.d(TAG, "initProcess for vuid: " + vuid + " vpid: " + vpid + " actual pid: " + Process.myPid() + " actual uid: " + Process.myUid());
     }
 
     private void handleNewIntent(NewIntentData data) {
@@ -387,6 +387,7 @@ public final class VClientImpl extends IVClient.Stub {
         VLog.d(TAG, "bindApplicationNoCheck OK " + packageName + " proc: " + processName);
         mBindAppWatchDog.feed(WATCH_BIND_APP);
         VActivityManager.get().appDoneExecuting();
+        VLog.d(TAG, "initProcess for vuid: " + vuid + " vpid: " + vpid + " actual pid: " + Process.myPid() + " actual uid: " + Process.myUid());
         VirtualCore.get().getComponentDelegate().afterApplicationCreate(mInitialApplication);
     }
 
