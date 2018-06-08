@@ -189,10 +189,10 @@ public class CloneAgent64 {
         };
         Timer timer = new Timer();
         timer.schedule(task, 8000);
-        mContext.bindService(intent,
-                agentServiceConnection,
-                Context.BIND_AUTO_CREATE);
         try {
+            mContext.bindService(intent,
+                    agentServiceConnection,
+                    Context.BIND_AUTO_CREATE);
             syncQueue.take();
         }catch (Exception ex) {
 
