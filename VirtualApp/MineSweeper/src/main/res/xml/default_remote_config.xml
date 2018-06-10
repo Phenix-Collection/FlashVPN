@@ -17,12 +17,12 @@
     <entry>
         <key>slot_game</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+        <value>fb_interstitial:2004777979771880_2004778713105140:0;ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
     </entry>
     <entry>
         <key>ad_interval</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>5</value>
+        <value>4</value>
     </entry>
     <entry>
         <key>slot_install_ad</key>
@@ -49,5 +49,9 @@
     <entry>
         <key>allow_unlock_ad</key>
         <value>true</value>
+    </entry>
+    <entry>
+        <key>coffee_key</key>
+        <value>1516027773710659325298</value>
     </entry>
 </defaultsMap>

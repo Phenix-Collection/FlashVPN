@@ -178,17 +178,27 @@ public class GameActivity extends Activity{
             if (adLoader.hasValidCache()) {
                 adLoader.loadAd(1, new IAdLoadListener() {
                     @Override
-                    protected void onAdLoaded(IAdAdapter ad) {
+                    public void onAdClicked(IAdAdapter ad) {
+
+                    }
+
+                    @Override
+                    public void onAdClosed(IAdAdapter ad) {
+
+                    }
+
+                    @Override
+                    public void onAdLoaded(IAdAdapter ad) {
                         ad.show();
                     }
 
                     @Override
-                    protected void onAdListLoaded(List<IAdAdapter> ads) {
+                    public void onAdListLoaded(List<IAdAdapter> ads) {
 
                     }
 
                     @Override
-                    protected void onError(String error) {
+                    public void onError(String error) {
 
                     }
                 });

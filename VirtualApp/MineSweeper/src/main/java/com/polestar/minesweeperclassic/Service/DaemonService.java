@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 
 import com.polestar.minesweeperclassic.utils.MLogs;
@@ -43,8 +44,10 @@ public class DaemonService extends Service {
     public void onCreate() {
         super.onCreate();
         MLogs.e("DaemonService onCreate");
-        startService(new Intent(this, InnerService.class));
-        startForeground(NOTIFY_ID, new Notification());
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            startService(new Intent(this, InnerService.class));
+            startForeground(NOTIFY_ID, new Notification());
+        }
 
         //发送唤醒广播来促使挂掉的UI进程重新启动起来
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
