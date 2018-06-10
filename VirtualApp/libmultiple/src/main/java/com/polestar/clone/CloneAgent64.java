@@ -112,8 +112,14 @@ public class CloneAgent64 {
         @Override public void onServiceConnected(ComponentName name, IBinder service) {
             try {
                 iCloneAgent = ICloneAgent.Stub.asInterface(service);
+                iCloneAgent.asBinder().linkToDeath(new IBinder.DeathRecipient() {
+                    @Override
+                    public void binderDied() {
+                        iCloneAgent = null;
+                    }
+                }, 0);
                 syncQueue.put(1);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 // will never happen, since the queue starts with one available slot
             }
             VLog.d("CloneAgent", "connected "+ name);

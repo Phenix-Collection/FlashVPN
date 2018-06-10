@@ -57,6 +57,7 @@ import com.lody.virtual.server.pm.PackageCacheManager;
 import com.lody.virtual.server.pm.PackageSetting;
 import com.lody.virtual.server.pm.VAppManagerService;
 import com.lody.virtual.server.pm.VPackageManagerService;
+import com.lody.virtual.server.pm.VUserManagerService;
 import com.lody.virtual.server.secondary.BinderDelegateService;
 
 import java.lang.reflect.InvocationTargetException;
@@ -1371,10 +1372,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
                     && SpecialComponentList.canStartFromBroadcast(info.packageName, intent.getAction())) {
                 int userId = getUserId(vuid);
                 VLog.d(TAG, "startProcess for " + intent.toString() + " userId " + userId);
-//                if (userId != 0) {
-//                    VLog.logbug(TAG, VLog.getStackTraceString(new Exception("userId = " + userId)));
-//                    userId = 0;
-//                }
+                if (userId != 0 && !VUserManagerService.get().exists(userId)) {
+                    VLog.logbug(TAG, VLog.getStackTraceString(new Exception("userId = " + userId)));
+                    userId = 0;
+                }
                 r = startProcessIfNeedLocked(info.processName, userId, info.packageName);
             }
         }

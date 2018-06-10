@@ -315,9 +315,9 @@ class MethodProxies {
             args[7] = flags;
             args[1] = getHostPkg();
             // Force userId to 0
-//            if (args[args.length - 1] instanceof Integer) {
-//                args[args.length - 1] = 0;
-//            }
+            if (args[args.length - 1] instanceof Integer) {
+                args[args.length - 1] = 0;
+            }
             IInterface sender = (IInterface) method.invoke(who, args);
             if (sender != null && creator != null) {
                 VActivityManager.get().addPendingIntent(sender.asBinder(), creator);
