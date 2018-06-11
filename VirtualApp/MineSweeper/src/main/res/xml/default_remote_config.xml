@@ -17,7 +17,7 @@
     <entry>
         <key>slot_game</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb_interstitial:2004777979771880_2004778713105140:0;ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0;fb_interstitial:2004777979771880_2004778713105140:0</value>
     </entry>
     <entry>
         <key>ad_interval</key>
@@ -27,16 +27,16 @@
     <entry>
         <key>slot_install_ad</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/2190488658:0</value>
     </entry>
     <entry>
         <key>slot_unlock_ad</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/2190488658:0</value>
     </entry>
     <entry>
         <key>auto_ad_first_interval</key>
-        <value>432000</value>
+        <value>216000</value>
     </entry>
     <entry>
         <key>auto_ad_interval</key>

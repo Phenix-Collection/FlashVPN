@@ -31,8 +31,8 @@ android {
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 2022
-            versionName "2.0.22.${releaseTime()}"
+            versionCode 2023
+            versionName "2.0.23.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
@@ -72,8 +72,8 @@ dependencies {
     })
 
     //firebase messaging/notifications
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-config:11.8.0'
+    compile 'com.google.firebase:firebase-core:16.0.0'
+    compile 'com.google.firebase:firebase-config:16.0.0'
 
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.facebook.android:audience-network-sdk:4.28.2'
