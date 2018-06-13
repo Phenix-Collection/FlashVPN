@@ -1372,7 +1372,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
                     && SpecialComponentList.canStartFromBroadcast(info.packageName, intent.getAction())) {
                 int userId = getUserId(vuid);
                 VLog.d(TAG, "startProcess for " + intent.toString() + " userId " + userId);
-                if (userId != 0 && !VUserManagerService.get().exists(userId)) {
+                if (userId != 0 ) {
                     VLog.logbug(TAG, VLog.getStackTraceString(new Exception("userId = " + userId)));
                     userId = 0;
                 }
