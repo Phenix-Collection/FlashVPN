@@ -614,6 +614,7 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 EventReporter.reportRate(HomeActivity.this, s+"_cancel", s);
+                PreferencesUtils.setLoveApp(false);
             }
         });
     }
