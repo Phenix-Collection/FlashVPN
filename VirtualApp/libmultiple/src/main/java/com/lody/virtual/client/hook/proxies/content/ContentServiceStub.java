@@ -40,11 +40,11 @@ public class ContentServiceStub extends BinderInvocationProxy {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             VLog.logbug("RegisterContentObserver", "RegisterContentObserver hooked");
-            if ("com.whatsapp".equals(VClientImpl.get().getCurrentPackage())){
+//            if ("com.whatsapp".equals(VClientImpl.get().getCurrentPackage())){
                 return null;
-            }else{
-                return super.call(who, method, args);
-            }
+//            }else{
+//                return super.call(who, method, args);
+//            }
         }
     }
 }
