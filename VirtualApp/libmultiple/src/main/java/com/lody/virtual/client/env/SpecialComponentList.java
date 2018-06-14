@@ -4,9 +4,13 @@ import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.os.Build;
 
 import com.lody.virtual.GmsSupport;
+import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.CloneAgent64;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,13 +136,19 @@ public final class SpecialComponentList {
 //        if (GmsSupport.isGmsFamilyPackage(pkg)) {
 //            return true;
 //        }
-        if (BROADCAST_START_WHITE_LIST.contains(pkg)) {
-            return true;
-        }
         if (action != null && action.contains("com.android.vending.INSTALL_REFERRER")){
             return true;
         }
-        return false;
+        if (!BROADCAST_START_WHITE_LIST.contains(pkg)) {
+            return false;
+        }
+        boolean arm64 = CloneAgent64.needArm64Support(VirtualCore.get().getContext(), pkg);
+        if (arm64 && !VirtualCore.get().getContext().getPackageName().endsWith("arm64")) {
+            BROADCAST_START_WHITE_LIST.remove(pkg);
+            VLog.logbug("CloneAgent","Remove not supported: " + pkg);
+            return false;
+        }
+        return true;
     }
     public static boolean isSpecSystemPackage(String pkg) {
         return SPEC_SYSTEM_APP_LIST.contains(pkg);
