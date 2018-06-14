@@ -39,8 +39,8 @@ android {
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
         }
         play {
-            versionCode 3008
-            versionName "3.0.08.${releaseTime()}"
+            versionCode 3100
+            versionName "3.1.00.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
@@ -104,9 +104,9 @@ dependencies {
     //compile 'com.google.code.gson:gson:2.3.1'
     //ad
     //firebase messaging/notifications
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-config:11.8.0'
-    compile 'com.google.firebase:firebase-ads:11.8.0'
+    compile 'com.google.firebase:firebase-core:16.0.0'
+    compile 'com.google.firebase:firebase-config:16.0.0'
+    compile 'com.google.firebase:firebase-ads:15.0.1'
     //compile 'com.facebook.android:audience-network-sdk:4.+'
     compile project(':libmultiple')
     compile project(':fuseadloader')
@@ -117,7 +117,7 @@ dependencies {
     //Avazu
     compile 'com.google.code.gson:gson:2.8.0'
     compile(name: 'anative_common', ext: 'aar')
-    compile 'com.facebook.android:audience-network-sdk:4.27.1'
+    compile 'com.facebook.android:audience-network-sdk:4.28.2'
     compile 'com.android.support:multidex:1.0.1'
 
     configurations.all {
