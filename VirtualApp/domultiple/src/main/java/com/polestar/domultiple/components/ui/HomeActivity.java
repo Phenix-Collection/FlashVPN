@@ -818,6 +818,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 EventReporter.reportRate(s+"_cancel", s);
+                PreferencesUtils.setLoveApp(false);
             }
         });
     }

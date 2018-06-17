@@ -8,7 +8,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.polestar.domultiple.PolestarApp;
 
 import java.util.Properties;
@@ -45,7 +44,7 @@ public class EventReporter {
     }
 
     public static void keyLog(Context context, String tag, String log) {
-        FirebaseCrash.log(tag + log);
+        //FirebaseCrash.log(tag + log);
     }
 
     public static void homeShow() {
@@ -69,7 +68,6 @@ public class EventReporter {
     }
 
     public static void reportCrash(Throwable ex, String packageName, boolean forground) {
-        FirebaseCrash.report(ex);
         Bundle bundle = new Bundle();
         bundle.putString("package", packageName);
         bundle.putBoolean("forground", forground);
