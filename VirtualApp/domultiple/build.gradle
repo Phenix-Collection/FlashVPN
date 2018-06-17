@@ -38,8 +38,8 @@ android {
         }
         play {
             applicationId "com.polestar.domultiple"
-            versionCode 2035
-            versionName "2.0.35.${releaseTime()}"
+            versionCode 2100
+            versionName "2.1.00.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             ndk {
                 // 设置支持的SO库架构
@@ -58,8 +58,8 @@ android {
         }
         play_64bit {
             applicationId "com.polestar.domultiple.arm64"
-            versionCode 2035
-            versionName "2.0.35.${releaseTime()}"
+            versionCode 2100
+            versionName "2.1.00.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             ndk {
                 // 设置支持的SO库架构
@@ -109,11 +109,11 @@ dependencies {
     compile 'org.greenrobot:greendao:3.0.1'
     compile 'com.tencent.bugly:crashreport:2.6.5'
 
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-config:11.8.0'
-    compile 'com.google.firebase:firebase-crash:11.8.0'
+    compile 'com.google.firebase:firebase-core:16.0.0'
+    compile 'com.google.firebase:firebase-config:16.0.0'
+    compile 'com.google.firebase:firebase-ads:15.0.1'
     compile 'com.android.billingclient:billing:dp-1'
-    compile 'com.facebook.android:audience-network-sdk:4.27.1'
+    compile 'com.facebook.android:audience-network-sdk:4.28.2'
 
     compile 'com.android.support:multidex:1.0.1'
 
