@@ -9,17 +9,12 @@ def releaseTime() {
 }
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "27.0.3"
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        applicationId 'mochat.multiple.parallel.whatsclone'
         minSdkVersion 16
         targetSdkVersion 21
-        ndk {
-            // 设置支持的SO库架构
-            abiFilters 'armeabi', 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-        }
         multiDexEnabled = true
     }
 
@@ -32,16 +27,36 @@ android {
         }
     }
 
+    flavorDimensions("arch","channel")
+
     productFlavors {
+        arm64 {
+            applicationId 'mochat.multiple.parallel.whatsclone.arm64'
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            }
+            dimension "arch"
+        }
+        arm32 {
+            applicationId 'mochat.multiple.parallel.whatsclone'
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'armeabi-v7a'//, 'x86_64', 'arm64-v8a'
+            }
+            dimension "arch"
+        }
         develop {
-            versionCode 9
+            versionCode 9999
             versionName '9999'
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
+            dimension "channel"
         }
         play {
-            versionCode 1001
-            versionName "1.0.01.${releaseTime()}"
+            versionCode 3100
+            versionName "3.1.00.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
+            dimension "channel"
         }
     }
 
@@ -104,9 +119,9 @@ dependencies {
     //compile 'com.google.code.gson:gson:2.3.1'
     //ad
     //firebase messaging/notifications
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-config:11.8.0'
-    compile 'com.google.firebase:firebase-ads:11.8.0'
+    compile 'com.google.firebase:firebase-core:16.0.0'
+    compile 'com.google.firebase:firebase-config:16.0.0'
+    compile 'com.google.firebase:firebase-ads:15.0.1'
     //compile 'com.facebook.android:audience-network-sdk:4.+'
     compile project(':libmultiple')
     compile project(':fuseadloader')
@@ -117,7 +132,7 @@ dependencies {
     //Avazu
     compile 'com.google.code.gson:gson:2.8.0'
     compile(name: 'anative_common', ext: 'aar')
-    compile 'com.facebook.android:audience-network-sdk:4.27.1'
+    compile 'com.facebook.android:audience-network-sdk:4.28.2'
     compile 'com.android.support:multidex:1.0.1'
 
     configurations.all {

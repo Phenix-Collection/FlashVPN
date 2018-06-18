@@ -9,17 +9,12 @@ def releaseTime() {
 }
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "27.0.3"
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        applicationId 'com.polestar.superclone'
         minSdkVersion 16
         targetSdkVersion 21
-        ndk {
-            // 设置支持的SO库架构
-            abiFilters 'armeabi'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-        }
         multiDexEnabled = true
     }
 
@@ -32,16 +27,36 @@ android {
         }
     }
 
+    flavorDimensions("arch","channel")
+
     productFlavors {
+        arm64 {
+            applicationId "com.polestar.superclone.arm64"
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            }
+            dimension "arch"
+        }
+        arm32 {
+            applicationId "com.polestar.superclone"
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'armeabi-v7a'//, 'x86_64', 'arm64-v8a'
+            }
+            dimension "arch"
+        }
         develop {
-            versionCode 9
+            versionCode 9999
             versionName '9999'
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
+            dimension "channel"
         }
         play {
             versionCode 3100
             versionName "3.1.00.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
+            dimension "channel"
         }
     }
 
@@ -113,6 +128,7 @@ dependencies {
     compile project(':Booster')
 
     compile 'com.android.billingclient:billing:dp-1'
+    implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
 
     //Avazu
     compile 'com.google.code.gson:gson:2.8.0'

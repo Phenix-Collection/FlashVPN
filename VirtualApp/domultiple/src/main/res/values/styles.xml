@@ -15,13 +15,13 @@
     </style>
     <style name="activityAnimationStyle">
 
-        <item name="@android:activityOpenEnterAnimation">@anim/slide_right_in</item>
+        <item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>
 
-        <item name="@android:activityOpenExitAnimation">@anim/slide_left_out</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_left_out</item>
 
-        <item name="@android:activityCloseEnterAnimation">@anim/slide_left_in</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_left_in</item>
 
-        <item name="@android:activityCloseExitAnimation">@anim/slide_right_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
 
     </style>
     <style name="AppTheme.FullScreenAndTranslucent">
@@ -41,6 +41,10 @@
     <style name="animation_translucent_translate" parent="@android:style/Animation.Translucent">
         <item name="android:windowEnterAnimation">@null</item>
         <item name="android:windowExitAnimation">@null</item>
+        <!--<item name="@android:activityCloseEnterAnimation">@null</item>-->
+        <!--<item name="@android:activityOpenExitAnimation">@null</item>-->
+        <!--<item name="@android:activityCloseExitAnimation">@null</item>-->
+        <!--<item name="@android:activityOpenEnterAnimation">@null</item>-->
     </style>
     <style name="TextStyle_Activity_Title">
         <item name="android:textSize">@dimen/title_bar_title_size</item>

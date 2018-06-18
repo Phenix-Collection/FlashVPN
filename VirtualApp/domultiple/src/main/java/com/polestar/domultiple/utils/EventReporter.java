@@ -44,7 +44,6 @@ public class EventReporter {
     }
 
     public static void keyLog(Context context, String tag, String log) {
-        //FirebaseCrash.log(tag + log);
     }
 
     public static void homeShow() {

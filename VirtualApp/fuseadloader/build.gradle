@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "27.0.3"
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
@@ -27,45 +27,45 @@ repositories {
     }
 }
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-   // compile 'com.android.support:appcompat-v7:25.3.1'
+   // implementation 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile 'com.google.android.exoplayer:exoplayer:r2.0.3'
+    implementation 'com.google.android.exoplayer:exoplayer:r2.0.3'
 
-    compile 'com.google.firebase:firebase-core:16.0.0'
-    compile 'com.google.firebase:firebase-config:16.0.0'
-    compile 'com.google.firebase:firebase-ads:15.0.1'
-    provided 'com.facebook.android:audience-network-sdk:4.28.2'
+    compileOnly 'com.google.firebase:firebase-core:16.0.0'
+    compileOnly 'com.google.firebase:firebase-config:16.0.0'
+    compileOnly 'com.google.firebase:firebase-ads:15.0.1'
+    compileOnly 'com.facebook.android:audience-network-sdk:4.28.2'
     compile(name: 'instantcoffee', ext: 'aar')
-//    compile 'com.google.ads.mediation:facebook:4.23.0.0'
+//    implementation 'com.google.ads.mediation:facebook:4.23.0.0'
 
-    compile('com.mopub:mopub-sdk-banner:4.20.0@aar') {
+    implementation('com.mopub:mopub-sdk-banner:4.20.0@aar') {
         transitive = true
     }
     // For native static (images).
-    compile('com.mopub:mopub-sdk-native-static:4.20.0@aar') {
+    implementation('com.mopub:mopub-sdk-native-static:4.20.0@aar') {
         transitive = true
     }
     // For native video. This will automatically also include native static
-    compile('com.mopub:mopub-sdk-native-video:4.20.0@aar') {
+    implementation('com.mopub:mopub-sdk-native-video:4.20.0@aar') {
         transitive = true
     }
 
     // For interstitials
-    compile('com.mopub:mopub-sdk-interstitial:4.20.0@aar') {
+    implementation('com.mopub:mopub-sdk-interstitial:4.20.0@aar') {
         transitive = true
     }
 
-    compile 'com.google.ads.mediation:mopub:4.20.0.0'
-    compile 'com.google.ads.mediation:facebook:4.28.2.0'
+    implementation 'com.google.ads.mediation:mopub:4.20.0.0'
+    implementation 'com.google.ads.mediation:facebook:4.28.2.0'
 
     //Avazu
-    compile 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.google.code.gson:gson:2.8.0'
     compile(name: 'anative_common', ext: 'aar')
-//    compile(name: 'anative_appwall', ext: 'aar')
+//    implementation(name: 'anative_appwall', ext: 'aar')
 
     compile files('libs/batmobi-V2.9.6.jar')
 

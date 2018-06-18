@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
 
 import com.polestar.booster.view.BoostView;
@@ -37,7 +36,7 @@ public class BoosterActivity extends Activity {
         }
     }
 
-    protected void onCreate(@Nullable Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booster_view);

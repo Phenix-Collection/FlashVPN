@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.view.WindowManager;
 
@@ -112,7 +111,7 @@ public class BoostMgr {
         }
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+
     public boolean dismissCleaner() {
         Activity activity = this.mCleanerViewRef != null ? (Activity)this.mCleanerViewRef.get() : null;
         if (activity == null) {
@@ -125,7 +124,7 @@ public class BoostMgr {
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+
     public boolean isCleanerActivityShowing() {
 
         if (this.mCleanerViewRef == null) {
@@ -164,7 +163,6 @@ public class BoostMgr {
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void onScreenOff() {
 
         clearCheckStartCleanerJob();

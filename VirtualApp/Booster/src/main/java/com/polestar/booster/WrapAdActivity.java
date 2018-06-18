@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 
 import com.polestar.booster.mgr.HomeListener;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -39,7 +38,7 @@ public class WrapAdActivity extends Activity {
 
     }
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BoosterLog.log("WrapAdActivity onCreate");
         mHandler = new Handler();

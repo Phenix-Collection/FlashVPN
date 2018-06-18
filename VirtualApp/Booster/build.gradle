@@ -18,8 +18,8 @@ def quote(String s) {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 16
@@ -36,13 +36,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            libraryVariants.all { variant ->
-                variant.outputs.each { output ->
-                    def file = output.outputFile
-                    def fileName = file.name.replace("cleaner-release.aar", "cleanersdk-library-release" + ".aar")
-                    output.outputFile = new File(file.parent, fileName)
-                }
-            }
+//            libraryVariants.all { variant ->
+//                variant.outputs.each { output ->
+//                    def file = output.outputFile
+//                    def fileName = file.name.replace("cleaner-release.aar", "cleanersdk-library-release" + ".aar")
+//                    output.outputFile = new File(file.parent, fileName)
+//                }
+//            }
         }
     }
 }
@@ -55,7 +55,9 @@ repositories {
 
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
-
+    compileOnly 'com.google.firebase:firebase-core:16.0.0'
+    compileOnly 'com.google.firebase:firebase-config:16.0.0'
+    compileOnly 'com.google.firebase:firebase-ads:15.0.1'
     //compile(name: 'commonsdk-library-release', ext: 'aar')
     compile 'com.nineoldandroids:library:2.4.0'
     //compile ':fuseadloader'

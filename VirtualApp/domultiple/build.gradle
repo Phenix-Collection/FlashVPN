@@ -6,8 +6,8 @@ def releaseTime() {
     return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
 }
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
@@ -25,46 +25,37 @@ android {
             keyPassword "123456"
         }
     }
+
+    flavorDimensions("arch","channel")
+
     productFlavors {
-        develop {
+        arm64 {
+            applicationId "com.polestar.domultiple.arm64"
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            }
+            dimension "arch"
+        }
+        arm32 {
             applicationId "com.polestar.domultiple"
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'armeabi-v7a'//, 'x86_64', 'arm64-v8a'
+            }
+            dimension "arch"
+        }
+        develop {
             versionCode 9999
             versionName '9999'
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
-            ndk {
-                // 设置支持的SO库架构
-                abiFilters 'armeabi'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-            }
+            dimension "channel"
         }
         play {
-            applicationId "com.polestar.domultiple"
-            versionCode 2100
-            versionName "2.1.00.${releaseTime()}"
+            versionCode 2035
+            versionName "2.0.35.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
-            ndk {
-                // 设置支持的SO库架构
-                abiFilters 'armeabi'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-            }
-        }
-        develop_64bit {
-            applicationId "com.polestar.domultiple.arm64"
-            versionCode 9999
-            versionName '9999'
-            manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
-            ndk {
-                // 设置支持的SO库架构
-                abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-            }
-        }
-        play_64bit {
-            applicationId "com.polestar.domultiple.arm64"
-            versionCode 2100
-            versionName "2.1.00.${releaseTime()}"
-            manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
-            ndk {
-                // 设置支持的SO库架构
-                abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-            }
+            dimension "channel"
         }
     }
 
@@ -99,29 +90,42 @@ repositories {
     }
 }
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    testImplementation 'junit:junit:4.12'
 
-    compile 'org.greenrobot:greendao:3.0.1'
-    compile 'com.tencent.bugly:crashreport:2.6.5'
+    implementation 'org.greenrobot:greendao:3.0.1'
+    implementation 'com.tencent.bugly:crashreport:2.6.5'
 
-    compile 'com.google.firebase:firebase-core:16.0.0'
-    compile 'com.google.firebase:firebase-config:16.0.0'
-    compile 'com.google.firebase:firebase-ads:15.0.1'
-    compile 'com.android.billingclient:billing:dp-1'
-    compile 'com.facebook.android:audience-network-sdk:4.28.2'
+    implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
 
-    compile 'com.android.support:multidex:1.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-config:16.0.0'
+    implementation 'com.google.firebase:firebase-ads:15.0.1'
+    implementation 'com.android.billingclient:billing:dp-1'
+    implementation 'com.facebook.android:audience-network-sdk:4.28.2'
+
+    implementation 'com.android.support:multidex:1.0.1'
 
    // compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 
-    compile project(':libmultiple')
-    compile project(':fuseadloader')
-    compile project(':Booster')
+    implementation project(':libmultiple')
+    implementation project(':fuseadloader')
+    implementation project(':Booster')
+
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion '26.1.0'
+                }
+            }
+        }
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
