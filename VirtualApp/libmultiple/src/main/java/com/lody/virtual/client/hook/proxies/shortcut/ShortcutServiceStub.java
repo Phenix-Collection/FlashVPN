@@ -27,6 +27,10 @@ public class ShortcutServiceStub extends BinderInvocationProxy {
         addMethodProxy(new ReplaceCallingPkgMethodProxy("getDynamicShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("setDynamicShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("addDynamicShortcuts"));
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("removeDynamicShortcuts"));
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("removeAllDynamicShortcuts"));
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("getPinnedShortcuts"));
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("updateShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("createShortcutResultIntent"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("disableShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("enableShortcuts"));
