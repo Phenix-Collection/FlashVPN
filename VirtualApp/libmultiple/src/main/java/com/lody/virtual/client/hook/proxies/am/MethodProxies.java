@@ -1012,16 +1012,22 @@ class MethodProxies {
             }catch (Exception e){
                 VLog.logbug("StartService", VLog.getStackTraceString(e));
             }
+            service.setDataAndType(service.getData(), resolvedType);
             if (fromInner) {
                 service = service.getParcelableExtra("_VA_|_intent_");
                 userId = service.getIntExtra("_VA_|_user_id_", userId);
             } else {
                 if (isServerProcess()) {
                     userId = service.getIntExtra("_VA_|_user_id_", VUserHandle.USER_NULL);
+                    if (userId == VUserHandle.USER_NULL) {
+                        return method.invoke(who, args);
+                    }
                 }
             }
-            service.setDataAndType(service.getData(), resolvedType);
-            ServiceInfo serviceInfo = VirtualCore.get().resolveServiceInfo(service, VUserHandle.myUserId());
+            if (userId != VUserHandle.myUserId()) {
+                VLog.logbug(TAG, "userId != myUserId " + userId + ": " +VUserHandle.myUserId());
+            }
+            ServiceInfo serviceInfo = VirtualCore.get().resolveServiceInfo(service, userId);
             if (serviceInfo != null) {
                 if (BLOCK_COMPONENT_LIST.contains(serviceInfo.name)){
                     VLog.logbug(TAG, "Blocked component: " + serviceInfo.name);
