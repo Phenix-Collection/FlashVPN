@@ -276,7 +276,9 @@ public class VAccountManagerService extends IAccountManager.Stub {
 
             @Override
             public void run() throws RemoteException {
-                mAuthenticator.getAuthToken(this, account, authTokenType, loginOptions);
+                if (mAuthenticator != null) {
+                    mAuthenticator.getAuthToken(this, account, authTokenType, loginOptions);
+                }
             }
 
             @Override
