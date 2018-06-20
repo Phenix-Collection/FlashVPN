@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +20,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -33,6 +36,7 @@ import com.polestar.domultiple.components.ui.SplashActivity;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -50,20 +54,48 @@ public class CommonUtils {
 
     public static void createLaunchShortcut(Context context){
         MLogs.d("create shortcut");
-        Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-        //不允许重复创建
-        shortcutintent.putExtra("duplicate", false);
-        //需要现实的名称
-        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name));
-        //快捷图片
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(context.getApplicationContext(), R.mipmap.ic_launcher);
-        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-        //点击快捷图片，运行的程序主入口
-        Intent extra =  new Intent(context.getApplicationContext() , ShortcutActivity.class);
+        Intent extra = new Intent(context.getApplicationContext(), ShortcutActivity.class);
         extra.putExtra(SplashActivity.EXTRA_FROM_SHORTCUT, true);
-        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, extra);
-        //发送广播。OK
-        context.sendBroadcast(shortcutintent);
+        extra.setAction(Intent.ACTION_MAIN);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+//            if (shortcutManager.isRequestPinShortcutSupported()) {
+//
+//                ShortcutInfo shortcut = new ShortcutInfo.Builder(context, getIconId(context.getPackageName(), 0))
+//                        .setShortLabel(context.getString(R.string.app_name))
+//                        .setLongLabel(context.getString(R.string.app_name))
+//                        .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
+//                        .setIntent(extra)
+//                        .build();
+//                try {
+//                    shortcutManager.requestPinShortcut(shortcut, null);
+//                }catch (Exception ex){
+//                    MLogs.logBug(ex.getMessage());
+//                    try{
+//                        shortcutManager.enableShortcuts(Arrays.asList(getIconId(context.getPackageName(), 0)));
+//                    }catch (Exception ex2){
+//                        MLogs.logBug(ex2.getMessage());
+//                    }
+//                }
+//                return;
+//            }
+//        }
+            Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+            //不允许重复创建
+            shortcutintent.putExtra("duplicate", false);
+            //需要现实的名称
+            shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name));
+            //快捷图片
+            Parcelable icon = Intent.ShortcutIconResource.fromContext(context.getApplicationContext(), R.mipmap.ic_launcher);
+            shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+            //点击快捷图片，运行的程序主入口
+            shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, extra);
+            //发送广播。OK
+            context.sendBroadcast(shortcutintent);
+    }
+
+    private static String getIconId(String pkg, int userId){
+        return pkg+"_"+userId;
     }
 
     public static void createShortCut(Context context, CloneModel appModel) {
@@ -76,7 +108,7 @@ public class CommonUtils {
         actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        createShortcut(context, actionIntent, appName, false, iconBitmap);
+        createShortcut(context, actionIntent, appName, appModel.getPackageName(), appModel.getPkgUserId(), false, iconBitmap);
 //        iconBitmap.recycle();
     }
 
@@ -88,11 +120,33 @@ public class CommonUtils {
         actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        removeShortcut(context, actionIntent, appName);
+        removeShortcut(context, actionIntent, appName, appModel.getPackageName(), appModel.getPkgUserId());
     }
 
-    public static void createShortcut(Context context, Intent actionIntent, String name,
+    public static void createShortcut(Context context, Intent actionIntent, String name, String pkg, int userId,
                                       boolean allowRepeat, Bitmap iconBitmap) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+            if (shortcutManager.isRequestPinShortcutSupported()) {
+                ShortcutInfo shortcut = new ShortcutInfo.Builder(context, getIconId(pkg, userId))
+                        .setShortLabel(name)
+                        .setLongLabel(name)
+                        .setIcon(Icon.createWithBitmap(iconBitmap))
+                        .setIntent(actionIntent)
+                        .build();
+                try {
+                    shortcutManager.requestPinShortcut(shortcut, null);
+                }catch (Exception ex){
+                    MLogs.logBug(ex.getMessage());
+                    try{
+                        shortcutManager.enableShortcuts(Arrays.asList(getIconId(pkg, userId)));
+                    }catch (Exception ex2){
+                        MLogs.logBug(ex2.getMessage());
+                    }
+                }
+                return;
+            }
+        }
         Intent addShortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
         // 是否允许重复创建
         addShortcutIntent.putExtra("duplicate", allowRepeat);
@@ -105,13 +159,23 @@ public class CommonUtils {
         context.sendBroadcast(addShortcutIntent);
     }
 
-    public static void removeShortcut(Context context, Intent actionIntent, String name) {
+    public static void removeShortcut(Context context, Intent actionIntent, String name, String pkg, int userId) {
         Intent intent = new Intent("com.android.launcher.action.UNINSTALL_SHORTCUT");
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
 //        intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.putExtra("duplicate", false);
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, actionIntent);
         context.sendBroadcast(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+            if (shortcutManager.isRequestPinShortcutSupported()) {
+                try{
+                    shortcutManager.disableShortcuts(Arrays.asList(getIconId(pkg, userId)));
+                }catch (Exception ex){
+                    MLogs.logBug(ex.getMessage());
+                }
+            }
+        }
     }
 
     public static boolean isArab(Context c) {
