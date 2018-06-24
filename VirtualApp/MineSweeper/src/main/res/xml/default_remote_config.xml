@@ -2,7 +2,7 @@
 <defaultsMap>
     <entry>
         <key>rating_interval</key>
-        <value>72</value>
+        <value>1</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -17,7 +17,7 @@
     <entry>
         <key>slot_game</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0;fb_interstitial:2004777979771880_2004778713105140:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
     </entry>
     <entry>
         <key>ad_interval</key>
@@ -36,11 +36,11 @@
     </entry>
     <entry>
         <key>auto_ad_first_interval</key>
-        <value>216000</value>
+        <value>86400</value>
     </entry>
     <entry>
         <key>auto_ad_interval</key>
-        <value>86400</value>
+        <value>43200</value>
     </entry>
     <entry>
         <key>allow_install_ad</key>

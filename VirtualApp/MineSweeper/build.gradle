@@ -35,8 +35,8 @@ android {
         }
         play {
             dimension "channel"
-            versionCode 2023
-            versionName "2.0.23.${releaseTime()}"
+            versionCode 2025
+            versionName "2.0.25.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }

@@ -76,6 +76,9 @@ public class GameActivity extends Activity{
     private int adInterval ;
     private FuseAdLoader adLoader;
 
+    private boolean isGameFinish;
+    private long lastPauseTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -122,6 +125,8 @@ public class GameActivity extends Activity{
         leftFlags = numOfMine;
         clicked = 0;
         steps = 0;
+        isGameFinish = false;
+        lastPauseTime = 0;
         startTime = System.currentTimeMillis();
         mHandler.removeMessages(TIME_COUNT_MSG);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(TIME_COUNT_MSG), 250);
@@ -246,6 +251,27 @@ public class GameActivity extends Activity{
     @Override
     protected void onPause() {
         super.onPause();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!isGameFinish) {
+            lastPauseTime = System.currentTimeMillis();
+            mHandler.removeMessages(TIME_COUNT_MSG);
+            MLogs.d("paused ");
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!isGameFinish && lastPauseTime != 0) {
+            startTime += (System.currentTimeMillis() - lastPauseTime);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(TIME_COUNT_MSG), 100);
+            MLogs.d("resume offset : " + (System.currentTimeMillis() - lastPauseTime));
+        }
     }
 
     @Override
@@ -349,6 +375,7 @@ public class GameActivity extends Activity{
     private void fail() {
         MLogs.d("failed");
         PreferenceUtils.incGameCount();
+        isGameFinish = true;
         mHandler.removeMessages(TIME_COUNT_MSG);
         for (int i = 0; i < rowOfMine; i ++ ) {
             for (int j = 0; j < lineOfMine; j ++ ) {
@@ -362,6 +389,7 @@ public class GameActivity extends Activity{
     private void success() {
         MLogs.d("success");
         PreferenceUtils.incGameCount();
+        isGameFinish = true;
         mHandler.removeMessages(TIME_COUNT_MSG);
         for (int i = 0; i < rowOfMine; i ++ ) {
             for (int j = 0; j < lineOfMine; j ++ ) {

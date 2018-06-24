@@ -75,7 +75,7 @@ public class ReportActivity extends Activity{
         String detail = getString(R.string.report_detail_mine_clear) +
                 getIntent().getIntExtra(EXTRA_MINES, 0) + "\n " +
                 getString(R.string.report_detail_difficulty) + "Easy" + "\n" +
-                getString(R.string.report_detail_time_cost) + time + "\n" +
+                getString(R.string.report_detail_time_cost) + time + "s\n" +
                 getString(R.string.report_detail_steps) + getIntent().getIntExtra(EXTRA_STEPS, 200);
         reportDetail.setText(detail);
 
