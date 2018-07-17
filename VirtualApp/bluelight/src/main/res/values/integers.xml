@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="color_temperature">
+        <item>3200</item>
+        <item>1800</item>
+        <item>2000</item>
+        <item>2700</item>
+        <item>3400</item>
+    </integer-array>
+</resources>

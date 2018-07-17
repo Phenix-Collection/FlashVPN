@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/main_image"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+            android:id="@+id/icon_image"
+            android:layout_width="48.0dip"
+            android:layout_height="48.0dip"
+            android:layout_below="@id/main_image"
+            android:layout_marginTop="12.0dip" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/main_image"
+            android:layout_marginStart="8.0dip"
+            android:layout_toEndOf="@id/icon_image">
+
+            <TextView
+                android:id="@+id/headline_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22.0dip"
+                android:maxLines="1"
+                android:textColor="#ffffffff"
+                android:textSize="16.0sp" />
+
+            <TextView
+                android:id="@+id/body_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/headline_text"
+                android:layout_marginTop="4.0dip"
+                android:maxLines="1"
+                android:textColor="#ccffffff"
+                android:textSize="12.0sp" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/install_button"
+            android:layout_width="fill_parent"
+            android:layout_height="36.0dip"
+            android:layout_below="@id/icon_image"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12.0dip"
+            android:background="#ff01a9db"
+            android:textColor="#ffffffff"
+            android:textSize="16.0sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5.0dip"
+        android:layout_marginTop="9.0dip"
+        android:background="@drawable/ad_tag_bg"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="AD"
+        android:textColor="#ff0096ff"
+        android:textSize="14.0sp" />
+</RelativeLayout>

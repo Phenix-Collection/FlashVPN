@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="help_image_padding_end">24.0dip</dimen>
+    <dimen name="help_image_padding_start">24.0dip</dimen>
+    <dimen name="help_padding_top">100.0dip</dimen>
+    <dimen name="help_subsection_padding">24.0dip</dimen>
+    <dimen name="help_subtitle_size">18.0sp</dimen>
+    <dimen name="help_text_padding_end">24.0dip</dimen>
+    <dimen name="help_text_padding_start">24.0dip</dimen>
+    <dimen name="help_text_size">16.0sp</dimen>
+    <dimen name="help_title_size">24.0sp</dimen>
+    <dimen name="help_title_subtitle_padding">36.0dip</dimen>
+    <dimen name="help_title_text_padding">16.0dip</dimen>
+
+    <dimen name="main_card_view_margin_bottom">8.0dip</dimen>
+    <dimen name="main_card_view_margin_end">8.0dip</dimen>
+    <dimen name="main_card_view_margin_start">8.0dip</dimen>
+    <dimen name="main_card_view_margin_top">8.0dip</dimen>
+    <dimen name="main_view_subtitle_size">14.0sp</dimen>
+    <dimen name="main_view_title_size">16.0sp</dimen>
+    <dimen name="nav_menu_height">52.0dip</dimen>
+    <dimen name="nav_menu_item_margin_end">16.0dip</dimen>
+    <dimen name="nav_menu_item_margin_start">16.0dip</dimen>
+    <dimen name="nav_menu_text_size">16.0sp</dimen>
+
+    <dimen name="toolbar_height">48.0dip</dimen>
+
+</resources>

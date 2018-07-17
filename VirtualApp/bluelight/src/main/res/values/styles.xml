@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppActionBar" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/main_view_title_text</item>
+    </style>
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+
+    <style name="FullscreenActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="@style/AppTheme">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="metaButtonBarButtonStyle">?android:buttonBarButtonStyle</item>
+        <item name="metaButtonBarStyle">?android:buttonBarStyle</item>
+    </style>
+
+    <style name="help_view_subtitle" parent="@style/help_view_text_base">
+        <item name="android:textSize">@dimen/help_subtitle_size</item>
+    </style>
+    <style name="help_view_text" parent="@style/help_view_text_base">
+        <item name="android:textSize">@dimen/help_text_size</item>
+    </style>
+    <style name="help_view_text_base">
+        <item name="android:textColor">@color/help_text_color</item>
+        <item name="android:paddingStart">@dimen/help_text_padding_start</item>
+        <item name="android:paddingEnd">@dimen/help_text_padding_end</item>
+    </style>
+    <style name="help_view_title" parent="@style/help_view_text_base">
+        <item name="android:textSize">@dimen/help_title_size</item>
+    </style>
+    <style name="main_view_subtitle_text">
+        <item name="android:textSize">@dimen/main_view_subtitle_size</item>
+        <item name="android:textColor">@color/main_view_subtitle_text</item>
+    </style>
+    <style name="main_view_switch_compat">
+        <item name="android:thumb">@drawable/switch_thumb</item>
+        <item name="track">@drawable/switch_track</item>
+    </style>
+    <style name="main_view_title_text">
+        <item name="android:textSize">@dimen/main_view_title_size</item>
+        <item name="android:textColor">@color/main_view_title_text</item>
+    </style>
+    <style name="nav_menu_text">
+        <item name="android:textSize">@dimen/nav_menu_text_size</item>
+        <item name="android:textColor">@color/nav_menu_text</item>
+    </style>
+</resources>

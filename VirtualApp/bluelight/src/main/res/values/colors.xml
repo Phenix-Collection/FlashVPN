@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#ff41437b</color>
+    <color name="colorPrimary">#ff41437b</color>
+    <color name="colorPrimaryDark">#ff323264</color>
+
+    <color name="help_background">#ff4433a8</color>
+    <color name="help_text_color">#ffffffff</color>
+
+    <color name="main_card_view_bg">#1affffff</color>
+    <color name="main_switch_off">#ffc4c4c4</color>
+    <color name="main_switch_on">#ff01a9db</color>
+    <color name="main_view_bg">@color/toolbar_bg</color>
+    <color name="main_view_separator">#33ffffff</color>
+    <color name="main_view_subtitle_text">#99ffffff</color>
+    <color name="main_view_time_text">#ff01a9db</color>
+    <color name="main_view_title_text">#ffffffff</color>
+
+    <color name="nav_menu_text">#ffffffff</color>
+    <color name="navigation_bg">#ff20215e</color>
+
+    <color name="progress_bar_bg">#fffafafa</color>
+    <color name="progress_bar_progress">#ff01a9db</color>
+    <color name="progress_bar_thumb">#ff01a9db</color>
+
+    <color name="switch_thumb">#ffffffff</color>
+
+    <color name="switch_track_off">#1affffff</color>
+    <color name="switch_track_on">#ff01a9db</color>
+    <color name="toolbar_bg">#ff080a59</color>
+
+    <color name="notification_off">#ff606060</color>
+    <color name="notification_on">#ff01a9db</color>
+
+    <color name="transparent">@android:color/transparent</color>
+    <color name="black_overlay">#66000000</color>
+</resources>

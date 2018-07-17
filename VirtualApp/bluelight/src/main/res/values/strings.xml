@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Blue Light</string>
+
+    <string name="auto_enable_title">Auto Enable</string>
+    <string name="auto_time_fmt">%1$s - %2$s</string>
+
+    <string name="choose_color_title">Choose Color</string>
+
+    <string name="filter_subtitle">Enable filter to protect your eyes</string>
+    <string name="filter_title">Filter</string>
+
+    <string name="help0_text">What we call blue light refers to visible light with a wavelength of 380–500 nm. As one of the three primary colors of natural light, blue light is the shortest wavelength and highest frequency high energy light, and thus it is widely used in LED technology to improve electronic products quality.</string>
+    <string name="help0_title">What is Blue Light</string>
+    <string name="help1_text">The harm of blue light to the human eye is mainly manifested in the eye pathology hazards and human rhythm hazards that cause myopia, cataracts, and macular degeneration.</string>
+    <string name="help1_title">Harms of Blue Light</string>
+    <string name="help2_section0_text">You can use flashlight at night, and we will not use the permission for other use.</string>
+    <string name="help2_section0_title">Get permission for camera</string>
+    <string name="help2_section1_text">Before installing other apps, please turn off this app to enable installation.</string>
+    <string name="help2_section1_title">Turn off and Install app</string>
+    <string name="help2_section2_text">"When taking screenshots, please turn off this app in case screenshots use the app's effects."</string>
+    <string name="help2_section2_title">Turn off and Take screenshots</string>
+    <string name="help2_title">Eye Protector Permission Requirements and Precautions</string>
+    <string name="intensity_title">Intensity</string>
+    <string name="nav_menu_feedback">Feedback</string>
+    <string name="nav_menu_help">What is Blue light</string>
+    <string name="nav_menu_notification">Notification Bar</string>
+    <string name="nav_menu_rate">Rate Five Starts</string>
+    <string name="nav_menu_share">Share with your friends</string>
+    <string name="nav_menu_switch">Enable</string>
+    <string name="nav_menu_version_fmt">Version V%1$s</string>
+    <string name="notification_channel_description">default notification</string>
+    <string name="notification_channel_name">default</string>
+    <string name="notification_status">Night mode</string>
+    <string name="notification_title">Notification Bar</string>
+    <string name="notification_torch">Flashlight</string>
+
+    <string name="pause_subtitle">Pause 60s for app installation</string>
+
+    <string name="rate_failure">You don’t have Google play installed, and you don’t even have a browser</string>
+    <string name="screen_dim_title">Screen Dim</string>
+
+    <string name="share_title">Share</string>
+ </resources>

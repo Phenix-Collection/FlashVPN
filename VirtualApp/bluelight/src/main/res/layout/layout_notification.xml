@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/notification_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="16.0dip"
+        android:paddingStart="16.0dip">
+
+        <ImageView
+            android:id="@+id/notification_status_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14.0dip"
+            android:gravity="center"
+            android:src="@drawable/ic_night_mode_off" />
+
+        <TextView
+            android:id="@+id/notification_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/notification_status_image"
+            android:layout_marginBottom="8.0dip"
+            android:layout_marginTop="8.0dip"
+            android:gravity="center"
+            android:text="@string/notification_status"
+            android:textColor="@color/notification_off"
+            android:textSize="12.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/notification_torch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/notification_status"
+        android:orientation="horizontal"
+        android:paddingEnd="16.0dip"
+        android:paddingStart="16.0dip">
+
+        <ImageView
+            android:id="@+id/notification_torch_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14.0dip"
+            android:gravity="center"
+            android:src="@drawable/ic_torch_off" />
+
+        <TextView
+            android:id="@+id/notification_torch_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/notification_torch_image"
+            android:layout_marginBottom="8.0dip"
+            android:layout_marginTop="8.0dip"
+            android:gravity="center"
+            android:text="@string/notification_torch"
+            android:textColor="@color/notification_off"
+            android:textSize="12.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/notification_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:orientation="horizontal"
+        android:paddingEnd="16.0dip"
+        android:paddingStart="16.0dip">
+
+        <ImageView
+            android:id="@+id/notification_setting_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14.0dip"
+            android:gravity="center"
+            android:src="@drawable/ic_setting" />
+    </RelativeLayout>
+</RelativeLayout>

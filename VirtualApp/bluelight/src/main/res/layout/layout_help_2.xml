@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:background="@color/help_background" android:layout_height="fill_parent" android:layout_width="fill_parent" android:orientation="vertical" android:paddingTop="@dimen/help_padding_top" xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="@string/help2_title" style="@style/help_view_title" />
+    <TextView android:layout_height="wrap_content" android:layout_marginTop="@dimen/help_title_subtitle_padding" android:layout_width="fill_parent" android:text="@string/help2_section0_title" style="@style/help_view_subtitle" />
+    <TextView android:layout_height="wrap_content" android:layout_marginTop="@dimen/help_title_text_padding" android:layout_width="fill_parent" android:text="@string/help2_section0_text" style="@style/help_view_text" />
+    <TextView android:layout_height="wrap_content" android:layout_marginTop="@dimen/help_subsection_padding" android:layout_width="fill_parent" android:text="@string/help2_section1_title" style="@style/help_view_subtitle" />
+    <TextView android:layout_height="wrap_content" android:layout_marginTop="@dimen/help_title_text_padding" android:layout_width="fill_parent" android:text="@string/help2_section1_text" style="@style/help_view_text" />
+    <TextView android:layout_height="wrap_content" android:layout_marginTop="@dimen/help_subsection_padding" android:layout_width="fill_parent" android:text="@string/help2_section2_title" style="@style/help_view_subtitle" />
+    <TextView android:layout_height="wrap_content" android:layout_marginTop="@dimen/help_title_text_padding" android:layout_width="fill_parent" android:text="@string/help2_section2_text" style="@style/help_view_text" />
+</LinearLayout>

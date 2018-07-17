@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/torch_bg">
+
+    <ImageView
+        android:id="@+id/torch_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52.0dip"
+        android:src="@drawable/torch_light"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="208.0dip">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/torch_body" />
+
+        <ImageButton
+            android:id="@+id/torch_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="160.0dip"
+            android:background="@android:color/transparent"
+            android:src="@drawable/torch_switch_off" />
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/torch_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="48.0dip"
+        android:layout_marginStart="32.0dip"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/torch_close" />
+
+    <ImageButton
+        android:id="@+id/torch_sos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="48.0dip"
+        android:layout_marginEnd="32.0dip"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/torch_sos_off" />
+</RelativeLayout>
