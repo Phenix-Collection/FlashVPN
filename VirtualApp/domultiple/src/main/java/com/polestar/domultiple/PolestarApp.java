@@ -1,8 +1,6 @@
 package com.polestar.domultiple;
 
-import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -30,7 +28,6 @@ import com.polestar.domultiple.clone.CloneApiDelegate;
 import com.polestar.domultiple.clone.CloneComponentDelegate;
 import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
-import com.polestar.domultiple.components.ui.SplashActivity;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
@@ -44,6 +41,7 @@ import java.io.File;
 import java.util.List;
 
 import nativesdk.ad.common.AdSdk;
+import nativesdk.ad.common.manager.PermissionManager;
 
 /**
  * Created by PolestarApp on 2017/7/15.
@@ -137,7 +135,11 @@ public class PolestarApp extends MultiDexApplication {
     private void initAd() {
         MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~6272167416");
         if (isAvzEnabled()) {
+            PermissionManager.setIsAgreePermission(gDefault, true);
             AdSdk.initialize(gDefault,"39fi40iihgfedc1",null);
+        }
+        if (AdSdk.isInited(gDefault)) {
+            MLogs.d("avz initialized");
         }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override

@@ -61,8 +61,8 @@ android {
             minSdkVersion 16
             targetSdkVersion 21
             multiDexEnabled = true
-            versionCode 2101
-            versionName "2.1.01.${releaseTime()}"
+            versionCode 2105
+            versionName "2.1.05.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             dimension "channel"
         }
@@ -78,6 +78,7 @@ android {
             pseudoLocalesEnabled true
             signingConfig signingConfigs.myConfig
             minifyEnabled true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'lib-proguard.txt'
         }
     }
