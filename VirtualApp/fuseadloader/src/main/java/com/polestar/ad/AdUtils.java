@@ -62,8 +62,7 @@ public class AdUtils {
             sb.append("&imppage=appstore");
             sb.append("&showtime=").append(showTime);
             sb.append("&hasclick=").append(hasClick);
-            AnalyticsManager.getInstance(context).doUpload(sb.toString(),
-                    Constants.Preference.TYPE_APP_MARKET);
+            AnalyticsManager.getInstance(context).doUpload(sb.toString());
             if (hasClick) {
                 NetworkUtils.reportTrueClick(context, mDataList.get(0).noticeUrl);
             }

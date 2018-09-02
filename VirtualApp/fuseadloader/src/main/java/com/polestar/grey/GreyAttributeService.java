@@ -50,12 +50,12 @@ public class GreyAttributeService extends Service {
     private static String SOURCE_ID = "29026";
     private static String FETCH_URL_BY_PKG =
             "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&adpkg={adpkg}&req_type=3&market=google"
-                    + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
+                    + "&deviceid={devId}&sdkversion=3.0.5.070315&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                     "reqId={reqid}&maid={maid}&gpid={gpid}";
 
     private static String FETCH_URL_ALL_PKG =
             "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&req_type=1&market=google"
-                    + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
+                    + "&deviceid={devId}&sdkversion=3.0.5.070315&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                     "reqId={reqid}&maid={maid}&gpid={gpid}";
 
     private Handler mainHandler;
@@ -64,11 +64,11 @@ public class GreyAttributeService extends Service {
     public static void init(String source) {
         SOURCE_ID = source;
         FETCH_URL_BY_PKG = "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&adpkg={adpkg}&req_type=3&market=google"
-                + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
+                + "&deviceid={devId}&sdkversion=3.0.5.070315&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                 "reqId={reqid}&maid={maid}&gpid={gpid}";
         FETCH_URL_ALL_PKG =
                 "http://api.c.avazunativeads.com/appwall?sourceid="+SOURCE_ID+"&req_type=1&market=google"
-                        + "&deviceid={devId}&sdkversion=2.2.7.092217&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
+                        + "&deviceid={devId}&sdkversion=3.0.5.070315&pkg={mypkg}&ua={ua}&os=android&language={lang}&" +
                         "reqId={reqid}&maid={maid}&gpid={gpid}";
     }
 
