@@ -211,3 +211,8 @@ public static java.lang.String TABLENAME;
  -dontwarn javax.annotation.Nullable
 
  -keep class com.batmobi.** { *; }
+ -dontwarn okhttp3.**
+ -dontwarn okio.**
+ -dontwarn javax.annotation.**
+ -dontwarn org.conscrypt.**
+ -ignorewarnings

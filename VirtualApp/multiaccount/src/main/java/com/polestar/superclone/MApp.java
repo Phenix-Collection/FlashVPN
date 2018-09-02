@@ -48,6 +48,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import nativesdk.ad.common.AdSdk;
+import nativesdk.ad.common.manager.PermissionManager;
 
 
 public class MApp extends MultiDexApplication {
@@ -134,6 +135,7 @@ public class MApp extends MultiDexApplication {
         String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
         boolean av = "all".equals(conf) || "avz".equals(conf);
         if (av) {
+            PermissionManager.setIsAgreePermission(gDefault, true);
             AdSdk.initialize(gDefault, AppConstants.AV_APP_ID, null );
         }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
