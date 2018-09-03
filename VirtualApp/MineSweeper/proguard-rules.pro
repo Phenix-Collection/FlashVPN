@@ -213,3 +213,4 @@ public static java.lang.String TABLENAME;
  -dontwarn javax.annotation.Nullable
 
  -keep class com.batmobi.** { *; }
+ -ignorewarnings
