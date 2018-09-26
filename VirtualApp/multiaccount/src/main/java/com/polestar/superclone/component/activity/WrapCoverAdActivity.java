@@ -51,7 +51,11 @@ public class WrapCoverAdActivity extends Activity {
         FuseAdLoader.get(slot, this).loadAd(1, new IAdLoadListener() {
             @Override
             public void onAdLoaded(IAdAdapter ad) {
-                ad.show();
+                try {
+                    ad.show();
+                }catch (Throwable ex){
+
+                }
             }
 
             @Override

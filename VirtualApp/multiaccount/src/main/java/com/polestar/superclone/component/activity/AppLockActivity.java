@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -94,6 +95,10 @@ public class AppLockActivity extends BaseActivity {
         View adView = ad.getAdView(viewBinder);
         if (adView != null) {
             adView.setBackgroundColor(0);
+            ViewGroup parentViewGroup = (ViewGroup) adView.getParent();
+            if (parentViewGroup != null ) {
+                parentViewGroup.removeView(adView);
+            }
             mAdInfoContainer.removeAllViews();
             mAdInfoContainer.addView(adView);
             updateTitleBar();
