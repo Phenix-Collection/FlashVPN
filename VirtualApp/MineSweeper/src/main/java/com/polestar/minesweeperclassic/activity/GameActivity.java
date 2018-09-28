@@ -402,6 +402,12 @@ public class GameActivity extends Activity{
         showRateDialogNeeded(RateDialog.FROM_GAME_SUCCESS);
     }
 
+    private void doMineClick(int row, int line, boolean isFlagMode, boolean countStep) {
+        MineCell cell = mineGrids[row][line];
+        if (cell != null) {
+            onMineCellClick(cell, isFlagMode, countStep);
+        }
+    }
     private void onMineCellClick(MineCell cell, boolean isFlagMode, boolean countStep) {
         if (cell.state == MineCell.STATE_CLICKED) {
             return;
@@ -417,6 +423,17 @@ public class GameActivity extends Activity{
             updateLeftFlags();
         } else {
             if (cell.state == MineCell.STATE_INIT) {
+                if (steps == 1 && cell.isMine) {
+                    //avoid first click cell;
+                    MLogs.d("bac luck re-init");
+                    long prePauseTime = lastPauseTime;
+                    long lastStartTime = startTime;
+                    doReset();
+                    lastPauseTime = prePauseTime;
+                    startTime = lastStartTime;
+                    doMineClick(cell.row, cell.col, isFlagMode, countStep);
+                    return;
+                }
                 cell.onClick();
                 if (cell.isMine) {
                     fail();
