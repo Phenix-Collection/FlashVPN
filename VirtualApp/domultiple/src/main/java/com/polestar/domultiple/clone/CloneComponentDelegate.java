@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
+import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
 import com.lody.virtual.helper.utils.VLog;
@@ -75,6 +76,17 @@ public class CloneComponentDelegate implements ComponentDelegate {
     public void afterApplicationCreate(Application application) {
 
     }
+    private static HashSet<String> mInterstitialActivitySet = new HashSet<>();
+    static {
+        mInterstitialActivitySet.add("com.google.android.gms.ads.AdActivity");
+        mInterstitialActivitySet.add("com.mopub.mobileads.MoPubActivity");
+        mInterstitialActivitySet.add("com.mopub.mobileads.MraidActivity");
+        mInterstitialActivitySet.add("com.mopub.common.MoPubBrowser");
+        mInterstitialActivitySet.add("com.mopub.mobileads.MraidVideoPlayerActivity");
+        mInterstitialActivitySet.add("com.batmobi.BatMobiActivity");
+        mInterstitialActivitySet.add("com.facebook.ads.AudienceNetworkActivity");
+        mInterstitialActivitySet.add("com.facebook.ads.InterstitialAdActivity");
+    }
 
     @Override
     public void beforeActivityCreate(Activity activity) {
@@ -114,6 +126,26 @@ public class CloneComponentDelegate implements ComponentDelegate {
     }
 
     IAppMonitor uiAgent;
+
+    @Override
+    public boolean handleStartActivity(String name) {
+        if (mInterstitialActivitySet.contains(name)) {
+            VLog.d("AppInstrumentation","Starting activity: " + name);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getAgent().onAdsLaunch(VClientImpl.get().getCurrentPackage(), VUserHandle.myUserId(), name);
+                    }catch (Exception ex) {
+
+                    }
+                }
+            }).start();
+            return true;
+        }
+        return false;
+    }
+
     private IAppMonitor getAgent() {
         if (uiAgent != null) {
             return  uiAgent;

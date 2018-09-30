@@ -106,4 +106,10 @@ public class EventReporter {
         bundle.putString("status", ""+enable);
         mFirebaseAnalytics.logEvent("quick_switch", bundle);
     }
+
+    public static void reportsAdsLaunch(String name) {
+        Bundle bundle = new Bundle();
+        bundle.putString("name", ""+name);
+        mFirebaseAnalytics.logEvent("ads_launch", bundle);
+    }
 }

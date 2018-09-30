@@ -179,6 +179,14 @@
         <value>true</value>
     </entry>
     <entry>
+        <key>ads_launch_ctrl</key>
+        <value>2</value>
+    </entry>
+    <entry>
+        <key>slot_intercept_ad</key>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/8362100470:0</value>
+    </entry>
+    <entry>
         <key>grey_source_id</key>
         <value>29087</value>
     </entry>

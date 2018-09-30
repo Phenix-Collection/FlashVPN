@@ -11,4 +11,5 @@ interface IAppMonitor {
     void onAppSwitchForeground(String pkg, int userId);
     void onAppSwitchBackground(String pkg, int userId);
     void onAppLock(String pkg, int userId);
+    void onAdsLaunch(String pkg, int userId, String name);
 }
