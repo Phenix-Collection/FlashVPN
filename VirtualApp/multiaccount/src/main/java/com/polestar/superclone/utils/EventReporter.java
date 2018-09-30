@@ -77,6 +77,11 @@ public class EventReporter {
         StatService.trackCustomKVEvent(context, "applist_clone", prop);
     }
 
+    public static void reportsAdsLaunch(Context context, String name) {
+        Properties prop = new Properties();
+        prop.setProperty("name", name);
+        StatService.trackCustomKVEvent(context, "ads_launch", prop);
+    }
     public static void appCloneAd(Context context, String ad) {
         Properties prop = new Properties();
         prop.setProperty("AD", ad);

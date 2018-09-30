@@ -53,6 +53,7 @@ public class WrapCoverAdActivity extends Activity {
             public void onAdLoaded(IAdAdapter ad) {
                 try {
                     ad.show();
+                    FuseAdLoader.get(slot, WrapCoverAdActivity.this).preloadAd();
                 }catch (Throwable ex){
 
                 }

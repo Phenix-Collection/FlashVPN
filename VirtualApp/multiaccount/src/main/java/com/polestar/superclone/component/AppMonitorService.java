@@ -25,6 +25,7 @@ import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
+import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
@@ -47,6 +48,7 @@ public class AppMonitorService extends Service {
     private static final String CONFIG_APP_START_AD_FILTER = "slot_app_start_filter";
     private static final String CONFIG_APP_START_AD_STYLE = "slot_app_start_style"; //native,interstitial,all
     public final static String CONFIG_APPLOCK_PRELOAD_INTERVAL = "applock_preload_interval";
+    public static final String SLOT_APP_INTERCEPT_INTERSTITIAL = "slot_intercept_ad";
     private static HashSet<String> filterPkgs ;
 
     private static String lastUnlockKey;
@@ -147,8 +149,8 @@ public class AppMonitorService extends Service {
 
     }
 
-    private void loadAd(String pkg, int userId) {
-        FuseAdLoader adLoader = FuseAdLoader.get(SLOT_APP_START_INTERSTITIAL, VirtualCore.get().getContext());
+    private void loadAd(String pkg, int userId, String slot) {
+        FuseAdLoader adLoader = FuseAdLoader.get(slot, VirtualCore.get().getContext());
         if(adLoader.hasValidAdSource()) {
             mainHandler.post(new Runnable() {
                 @Override
@@ -158,7 +160,7 @@ public class AppMonitorService extends Service {
                         public void onAdLoaded(IAdAdapter ad) {
                             //ad.show();
                             updateShowTime();
-                            WrapCoverAdActivity.start(AppMonitorService.this, SLOT_APP_START_INTERSTITIAL, pkg, userId );
+                            WrapCoverAdActivity.start(AppMonitorService.this, slot, pkg, userId );
                         }
 
                         @Override
@@ -168,7 +170,7 @@ public class AppMonitorService extends Service {
 
                         @Override
                         public void onError(String error) {
-                            MLogs.d(SLOT_APP_START_INTERSTITIAL + " load error:" + error);
+                            MLogs.d(slot + " load error:" + error);
                         }
 
                         @Override
@@ -192,8 +194,30 @@ public class AppMonitorService extends Service {
     public IBinder onBind(Intent intent) {
         return appMonitor;
     }
-
+    private static final int ADS_BLOCK = 0;
+    private static final int ADS_TO_COVER = 1;
+    private static final int ADS_FORCE_REPLACE = 2;
     private class AppMonitor extends IAppMonitor.Stub {
+        public void onAdsLaunch(String pkg, int userId, String name) {
+            EventReporter.reportsAdsLaunch(AppMonitorService.this, name);
+            int ctrl = (int) RemoteConfig.getLong("ads_launch_ctrl");
+            switch (ctrl) {
+                case ADS_TO_COVER:
+                    MLogs.d("Ads cover");
+                    if (needLoadCoverAd(false, pkg)) {
+                        loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
+                    }
+                    break;
+                case ADS_FORCE_REPLACE:
+                    MLogs.d("Ads replace");
+                    loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
+                    break;
+                case ADS_BLOCK:
+                default:
+                    MLogs.d("Ads blocked");
+                    return;
+            }
+        }
         public void onAppSwitchForeground(String pkg, int userId){
             MLogs.d(TAG, "OnAppForeground: " + pkg + " user: " + userId);
             AppModel model = CloneHelper.getInstance(AppMonitorService.this).getAppModel(pkg, userId);
@@ -210,7 +234,7 @@ public class AppMonitorService extends Service {
                 }
             }
             if (!locked && needLoadCoverAd(false, pkg)) {
-                loadAd(pkg, userId);
+                loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
             }
 
         }
