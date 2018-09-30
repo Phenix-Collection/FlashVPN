@@ -234,7 +234,7 @@ public class AppMonitorService extends Service {
                 }
             }
             if (!locked && needLoadCoverAd(false, pkg)) {
-                loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
+                loadAd(pkg, userId, SLOT_APP_START_INTERSTITIAL);
             }
 
         }
