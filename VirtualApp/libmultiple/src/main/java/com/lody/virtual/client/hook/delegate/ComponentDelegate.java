@@ -9,6 +9,10 @@ import android.app.Activity;
 public interface ComponentDelegate {
 
     ComponentDelegate EMPTY = new ComponentDelegate() {
+        @Override
+        public boolean handleStartActivity(String name) {
+            return false;
+        }
 
         @Override
         public void beforeActivityCreate(Activity activity) {
@@ -101,4 +105,6 @@ public interface ComponentDelegate {
     boolean isNotificationEnabled(String pkg, int userId);
 
     void reloadSetting(String lockKey, boolean adFree, long lockInterval, boolean quickSwitch);
+
+    boolean handleStartActivity(String name);
 }

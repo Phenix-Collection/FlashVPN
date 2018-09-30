@@ -384,7 +384,6 @@ class MethodProxies {
         private static final String SCHEME_FILE = "file";
         private static final String SCHEME_PACKAGE = "package";
         private static final String TAG = "StartActivity";
-
         @Override
         public String getMethodName() {
             return "startActivity";
@@ -423,6 +422,13 @@ class MethodProxies {
                     return method.invoke(who, args);
                 }
 //            }
+            if (intent.getComponent() != null) {
+                    String name = intent.getComponent().getClassName();
+                    if (VirtualCore.get().getComponentDelegate().handleStartActivity(name)) {
+                        VLog.d(TAG, "onAdActivity " + name);
+                        return 0;
+                    }
+            }
             if (Intent.ACTION_MAIN.equals(intent.getAction())
                     && intent.hasCategory(Intent.CATEGORY_HOME)
                     && (intent.getComponent() == null || intent.getComponent().getClassName().equals("com.google.android.setupwizard.SetupWizardActivity"))) {
