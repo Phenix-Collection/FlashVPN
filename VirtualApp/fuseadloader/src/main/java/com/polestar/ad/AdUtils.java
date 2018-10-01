@@ -7,11 +7,6 @@ import android.text.TextUtils;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-
 
 /**
  * Created by guojia on 2016/12/11.
@@ -73,7 +68,6 @@ public class AdUtils {
             }
         }
     }
-
 
     public static String MD5(String md5) {
         try {

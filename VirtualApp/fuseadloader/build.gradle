@@ -61,9 +61,7 @@ dependencies {
 
     implementation 'com.google.ads.mediation:mopub:4.20.0.0'
     implementation 'com.google.ads.mediation:facebook:4.28.2.0'
-
-    //Avazu
-//    implementation 'com.google.code.gson:gson:2.8.0'
+    
 //    implementation(name: 'anative_appwall', ext: 'aar')
 
     compile files('libs/batmobi-V2.9.6.jar')
