@@ -240,7 +240,7 @@ public class AppManager {
         String key = PreferencesUtils.getEncodedPatternPassword(MApp.getApp());
         boolean adFree = PreferencesUtils.isAdFree();
         long interval = PreferencesUtils.getLockInterval();
-        VirtualCore.get().reloadLockerSetting(key, adFree, interval);
+        // VirtualCore.get().reloadLockerSetting(key, adFree, interval);
     }
 
     @Deprecated

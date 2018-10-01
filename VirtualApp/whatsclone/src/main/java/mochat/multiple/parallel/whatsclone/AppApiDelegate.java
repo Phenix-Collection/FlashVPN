@@ -12,20 +12,6 @@ import mochat.multiple.parallel.whatsclone.utils.BitmapUtils;
  */
 
 public class AppApiDelegate implements IAppApiDelegate {
-
-    @Override
-    public Bitmap createCloneTagedBitmap(String pkg, Bitmap icon, int userId) {
-        if (pkg == null && icon == null) {
-            return null;
-        }
-        if (icon == null) {
-            PackageManager pm = MApp.getApp().getPackageManager();
-            return BitmapUtils.getCustomIcon(MApp.getApp(), pkg, userId);
-        } else {
-            return BitmapUtils.createBadgeIcon(MApp.getApp(), new BitmapDrawable(icon), userId);
-        }
-    }
-
     @Override
     public String getCloneTagedLabel(String label) {
         return label == null? MApp.getApp().getResources().getString(R.string.app_name) :

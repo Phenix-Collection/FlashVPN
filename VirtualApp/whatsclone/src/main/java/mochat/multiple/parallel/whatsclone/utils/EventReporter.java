@@ -259,4 +259,10 @@ public class EventReporter {
     public static void trackEndPage(Context context, String ext){
         StatService.trackEndPage(context, ext);
     }
+
+    public static void reportsAdsLaunch(Context context, String name) {
+        Properties prop = new Properties();
+        prop.setProperty("name", name);
+        StatService.trackCustomKVEvent(context, "ads_launch", prop);
+    }
 }

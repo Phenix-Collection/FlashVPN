@@ -251,6 +251,17 @@ public class HomeActivity extends BaseActivity {
                    // giftGifView.setGifResource(R.drawable.front_page_gift_icon);
 
                 }
+
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdListLoaded(List<IAdAdapter> ads) {
 

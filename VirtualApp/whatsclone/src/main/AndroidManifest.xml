@@ -167,6 +167,15 @@
         </provider>
 
         <activity
+            android:name=".component.activity.WrapCoverAdActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.lody.virtual.vt"
+            android:theme="@style/AppTheme.Launcher"/>
+
+        <service android:name=".component.AppMonitorService" android:exported="true" />
+
+        <activity
             android:name=".component.activity.NativeInterstitialActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

@@ -63,6 +63,7 @@ public class AppLockActivity extends BaseActivity {
 
     public final static String EXTRA_USER_ID = "extra_clone_userid";
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
+    public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
 
     public static final void start(Context context, String pkg, int userId) {
         MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
@@ -116,6 +117,16 @@ public class AppLockActivity extends BaseActivity {
                         inflatNativeAd(ad);
                         //loadAdmobNativeExpress();
                         adLoader.loadAd(1, null);
+
+                }
+
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
 
                 }
 
