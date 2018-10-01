@@ -23,7 +23,6 @@ import com.polestar.minesweeperclassic.utils.RemoteConfig;
 
 import java.io.File;
 import java.util.List;
-
 /**
  * Created by doriscoco on 2017/4/4.
  */

@@ -8,6 +8,8 @@
     <string name="appwall_title">Discover</string>
     <string name="feel_lucky" translatable="false">Feel Lucky</string>
     <string name="booster_title" translatable="false">RAM Optimize</string>
+    <string name="recommend" >Recommend</string>
+    <string name="popular" >Popular</string>
 
     <string name="action_settings">Settings</string>
     <string name="most_popular_apps">Most Popular</string>

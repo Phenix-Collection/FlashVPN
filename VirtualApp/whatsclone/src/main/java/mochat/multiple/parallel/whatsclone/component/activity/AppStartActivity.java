@@ -28,7 +28,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.grey.GreyAttribute;
+
 import mochat.multiple.parallel.whatsclone.BuildConfig;
 import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.R;
@@ -324,14 +324,6 @@ public class AppStartActivity extends BaseActivity {
                     AppManager.upgradeApp(appModel.getPackageName());
                 }
                 AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
-                if (mFirstStart) {
-                    GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
-                } else {
-                    if (!TextUtils.isEmpty(GreyAttribute.getReferrer(AppStartActivity.this, appModel.getPackageName()))){
-                        EventReporter.greyAttribute(AppStartActivity.this, "app_launch_attri", appModel.getPackageName());
-                        GreyAttribute.putReferrer(AppStartActivity.this, appModel.getPackageName(), "");
-                    }
-                }
                 //if()){
                 //    EventReporter.greyAttribute(AppStartActivity.this, appModel.getPackageName());
 //                } else{
@@ -342,9 +334,6 @@ public class AppStartActivity extends BaseActivity {
                     public void run() {
                         MLogs.d("AppStart finish");
                         finish();
-                        if (mFirstStart) {
-                            GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
-                        }
                     }
                 }, 4000);
             }

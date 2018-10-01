@@ -26,7 +26,6 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
 import mochat.multiple.parallel.whatsclone.billing.BillingProvider;
-import com.polestar.grey.GreyAttribute;
 import mochat.multiple.parallel.whatsclone.component.LocalActivityLifecycleCallBacks;
 import mochat.multiple.parallel.whatsclone.component.MComponentDelegate;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
@@ -43,8 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-
-import nativesdk.ad.common.AdSdk;
 
 
 public class MApp extends MultiDexApplication {
@@ -88,11 +85,6 @@ public class MApp extends MultiDexApplication {
 
     private void initAd() {
         MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~2288391923");
-        String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
-        boolean av = "all".equals(conf) || "avz".equals(conf);
-        if (av) {
-            AdSdk.initialize(gDefault, AppConstants.AV_APP_ID, null );
-        }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
@@ -154,7 +146,6 @@ public class MApp extends MultiDexApplication {
                     MLogs.d("coffee key : " + coffeeKey);
                     instantcoffee.Builder.build(getApp(),coffeeKey);
                 }
-                PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
             }
 
             @Override
@@ -165,7 +156,6 @@ public class MApp extends MultiDexApplication {
                 virtualCore.setComponentDelegate(delegate);
 
                 virtualCore.setAppApiDelegate(new AppApiDelegate());
-                GreyAttribute.init(PreferencesUtils.getString(gDefault, "grey_source_id", "29026"));
             }
 
             @Override

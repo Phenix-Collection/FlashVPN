@@ -174,7 +174,6 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent data = new Intent();
                 data.putExtra(AppConstants.EXTRA_APP_MODEL, mRecommandModels.get(i));
-                EventReporter.greyAttribute(AppListActivity.this, "recommend_clone", mRecommandModels.get(i).getPackageName());
                 setResult(Activity.RESULT_OK, data);
                 finish();
             }

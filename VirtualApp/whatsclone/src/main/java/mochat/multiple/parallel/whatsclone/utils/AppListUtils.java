@@ -11,7 +11,7 @@ import android.text.TextUtils;
 
 import com.lody.virtual.GmsSupport;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
-import com.polestar.grey.GreyAttribute;
+
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.db.DbManager;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
@@ -116,28 +116,6 @@ public class AppListUtils implements DataObserver {
                 availPkgs.add(model.getPackageName());
             }
         }
-        GreyAttribute.getAdPackages(mContext, new GreyAttribute.IAdPackageLoadCallback() {
-            @Override
-            public void onAdPackageListReady(List<String> packages, List<String> des) {
-                mRecommandModels.clear();
-                for (int i = 0; i < packages.size() && i < RemoteConfig.getLong(CONF_MAX_RECOMMEND); i++){
-                    PackageInfo packageInfo = null;
-                    PackageManager pm = mContext.getPackageManager();
-                    try {
-                        packageInfo = pm.getPackageInfo(packages.get(i), 0);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    if (packageInfo != null) {
-                        AppModel model = new AppModel(mContext, packageInfo);
-                        model.setDescription(des.get(i));
-                        mRecommandModels.add(model);
-                    }
-                }
-                notifyChanged();
-                writeRecommandAppsToFile(mRecommandModels);
-            }
-        }, availPkgs);
     }
 
     public List<AppModel> getRecommandModels() {

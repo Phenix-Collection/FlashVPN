@@ -101,21 +101,12 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
         initView();
         AppListUtils.getInstance(this); // init AppListUtils
-        String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
-        av = "all".equals(conf) || "avz".equals(conf);
-        long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);
+
         int random = new Random().nextInt(100);
         random = new Random().nextInt(100);
         long interval = System.currentTimeMillis() - PreferencesUtils.getAutoInterstialTime();
         autoShowInterstitial = (!PreferencesUtils.isAdFree() && random < RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL)
                 && (interval > RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL))) || BuildConfig.DEBUG;
-        MLogs.d( " autoInterstitial: " + autoShowInterstitial + " wallPercent : " + wallPercent);
-        if (av) {
-            random = new Random().nextInt(100);
-            if (random < 8 || BuildConfig.DEBUG) {
-                AdUtils.uploadWallImpression(this, random < 2 || BuildConfig.DEBUG);
-            }
-        }
         boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
         if (needUpdate) {
             MLogs.d("need update");
