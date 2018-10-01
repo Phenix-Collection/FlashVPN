@@ -351,7 +351,7 @@ public class MApp extends MultiDexApplication {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
         String referChannel = PreferencesUtils.getInstallChannel();
         strategy.setAppChannel(referChannel == null? channel : referChannel);
-        CrashReport.initCrashReport(context, "593c5eb275", !AppConstants.IS_RELEASE_VERSION, strategy);
+        CrashReport.initCrashReport(context, "30bae35a2b", !AppConstants.IS_RELEASE_VERSION, strategy);
         // close auto report, manual control
         MLogs.e("bugly channel: " + channel + " referrer: "+ referChannel);
         CrashReport.closeCrashReport();
