@@ -161,6 +161,11 @@ public class AppStartActivity extends BaseActivity {
         if(mAdLoader.hasValidAdSource()){
             mAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdClicked(IAdAdapter ad) {
 
                 }
@@ -212,6 +217,8 @@ public class AppStartActivity extends BaseActivity {
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
                 .mainMediaId(R.id.ad_cover_image)
+                .admMediaId(R.id.ad_adm_mediaview)
+                .fbMediaId(R.id.ad_fb_mediaview)
                 .iconImageId(R.id.ad_icon_image)
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
@@ -228,6 +235,11 @@ public class AppStartActivity extends BaseActivity {
         mAdLoader = FuseAdLoader.get(SLOT_APP_START_NATIVE, this).setBannerAdSize(getBannerSize());
         if(mAdLoader.hasValidAdSource()){
             mAdLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     updateShowTime(false);

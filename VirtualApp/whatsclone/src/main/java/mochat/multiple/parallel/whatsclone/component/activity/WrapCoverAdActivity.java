@@ -52,6 +52,11 @@ public class WrapCoverAdActivity extends Activity {
         int userId = getIntent().getIntExtra(EXTRA_USERID, 0);
         FuseAdLoader.get(slot, this).loadAd(1, new IAdLoadListener() {
             @Override
+            public void onRewarded(IAdAdapter ad) {
+
+            }
+
+            @Override
             public void onAdLoaded(IAdAdapter ad) {
                 try {
                     ad.show();

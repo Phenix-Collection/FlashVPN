@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/native_ad_layout_root"
-    android:background="@color/white"
+    android:background="@drawable/shadow"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:ellipsize="end"
                 android:text="this is title"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/text_gray_dark"
+                android:textColor="@color/white"
                 android:lines="1"
                 android:textSize="16sp" />
             <TextView
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:text="this is sub"
-                android:textColor="@color/text_gray_light"
+                android:textColor="@color/white"
                 android:textSize="10sp"
                 android:lines="2" />
 
@@ -60,6 +60,15 @@
             android:scaleType="fitXY"
             android:adjustViewBounds="true"/>
 
+        <com.facebook.ads.MediaView
+            android:id="@+id/ad_fb_mediaview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.gms.ads.formats.MediaView
+            android:id="@+id/ad_adm_mediaview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <!--<ImageView-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->

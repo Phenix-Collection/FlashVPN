@@ -236,6 +236,11 @@ public class HomeActivity extends BaseActivity {
         if (adLoader.hasValidAdSource()) {
             adLoader.loadAd(1, new IAdLoadListener() {
                 @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     isInterstitialAdLoaded = true;
                     interstitialAd = ad;

@@ -331,6 +331,8 @@ public class AppCloneActivity extends BaseActivity {
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
                 .mainMediaId(R.id.ad_cover_image)
+                .fbMediaId(R.id.ad_fb_mediaview)
+                .admMediaId(R.id.ad_adm_mediaview)
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
                 .build();
@@ -355,6 +357,11 @@ public class AppCloneActivity extends BaseActivity {
         //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_AD_AFTER_CLONE_PROTECT_TIME), new IAdLoadListener() {
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     adReady = true;

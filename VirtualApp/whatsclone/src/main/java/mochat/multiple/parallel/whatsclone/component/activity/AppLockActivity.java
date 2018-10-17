@@ -87,6 +87,8 @@ public class AppLockActivity extends BaseActivity {
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
                 .mainMediaId(R.id.ad_cover_image)
+                .fbMediaId(R.id.ad_fb_mediaview)
+                .admMediaId(R.id.ad_adm_mediaview)
                 .iconImageId(R.id.ad_icon_image)
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
@@ -111,6 +113,11 @@ public class AppLockActivity extends BaseActivity {
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (adLoader != null) {
             adLoader.loadAd(2, RemoteConfig.getLong(CONFIG_SLOT_APP_LOCK_PROTECT_TIME), new IAdLoadListener() {
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     MLogs.d("Applock native ad loaded. showing ");
