@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.ads.mediation.facebook.FacebookAdapter;
+import com.google.android.gms.ads.VideoController;
+import com.google.android.gms.ads.formats.MediaView;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -40,7 +43,7 @@ public class AdmobNativeAdapter extends AdAdapter {
     private String mFilter;
     private Context mContext;
 
-    private com.google.android.gms.ads.formats.NativeAd mRawAd;
+    private NativeAd mRawAd;
 
     public AdmobNativeAdapter(Context context, String key) {
         mContext = context;
@@ -125,7 +128,7 @@ public class AdmobNativeAdapter extends AdAdapter {
         startMonitor();
     }
 
-    private void postOnAdLoaded(com.google.android.gms.ads.formats.NativeAd ad) {
+    private void postOnAdLoaded(NativeAd ad) {
         mRawAd = ad;
         mLoadedTime = System.currentTimeMillis();
         if (adListener != null) {

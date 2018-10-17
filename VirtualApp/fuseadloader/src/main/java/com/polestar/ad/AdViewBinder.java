@@ -117,7 +117,7 @@ public class AdViewBinder {
     public final int starLevelLayoutId;
     @NonNull public final Map<String, Integer> extras;
 
-    private AdViewBinder(@NonNull final AdViewBinder.Builder builder) {
+    private AdViewBinder(@NonNull final Builder builder) {
         this.layoutId = builder.layoutId;
         this.titleId = builder.titleId;
         this.textId = builder.textId;

@@ -14,4 +14,5 @@ public interface IAdLoadListener {
     void onAdClosed(IAdAdapter ad) ;
     void onAdListLoaded(List<IAdAdapter> ads);
     void onError(String error);
+    void onRewarded(IAdAdapter ad);
 }

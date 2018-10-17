@@ -7,6 +7,10 @@ import android.text.TextUtils;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
 
 /**
  * Created by guojia on 2016/12/11.
@@ -35,6 +39,24 @@ public class AdUtils {
 //        // package value");
 //        sdk.init(map, context);
 //    }
+
+    public static String MD5(String md5) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(md5.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        return null;
+    }
+
+    public static String getAndroidID(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
 
     private static void setGaid(Context var0, String var1) {
         SharedPreferences var2 = var0.getSharedPreferences("sdk_preference", 0);
@@ -67,23 +89,5 @@ public class AdUtils {
                 return "";
             }
         }
-    }
-
-    public static String MD5(String md5) {
-        try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-            byte[] array = md.digest(md5.getBytes());
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < array.length; ++i) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
-            }
-            return sb.toString();
-        } catch (java.security.NoSuchAlgorithmException e) {
-        }
-        return null;
-    }
-
-    public static String getAndroidID(Context context) {
-        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }

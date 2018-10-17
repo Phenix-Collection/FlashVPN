@@ -261,6 +261,14 @@ public class FuseAdLoader {
         public IndexAdListener(int index) {
             this.index = index;
         }
+
+        @Override
+        public void onRewarded(IAdAdapter ad) {
+            if(mListener != null) {
+                mListener.onRewarded(ad);
+            }
+        }
+
         @Override
         public void onAdLoaded(IAdAdapter ad) {
             mNativeAdCache.put(mNativeAdConfigList.get(index).key, ad);
@@ -364,7 +372,10 @@ public class FuseAdLoader {
                 return new MopubInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_BT :
                 return new BtNativeAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_VK:
+            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_REWARD :
+                return new AdmobRewardVideoAdapter(mContext, config.key);
+            case AdConstants.NativeAdType.AD_SOURCE_FB_REWARD :
+                return new FBRewardVideoAdapter(mContext, config.key);
             default:
                 AdLog.e("not suppported source " + config.source);
                 return null;
@@ -383,5 +394,7 @@ public class FuseAdLoader {
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_BANNER);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_REWARD);
+        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FB_REWARD);
     }
 }

@@ -31,7 +31,7 @@ import java.util.List;
 
 public class FBNativeAdapter extends AdAdapter {
 
-    private com.facebook.ads.NativeAd mRawAd ;
+    private NativeAd mRawAd ;
     private Context mContext;
 
     public FBNativeAdapter(Context context, String key) {
@@ -47,7 +47,7 @@ public class FBNativeAdapter extends AdAdapter {
             boolean isTestDevice = AdSettings.isTestMode(mContext);
             AdLog.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
         }
-        mRawAd = new com.facebook.ads.NativeAd(mContext, mKey);
+        mRawAd = new NativeAd(mContext, mKey);
         adListener = listener;
         mRawAd.setAdListener(new AdListener() {
             @Override
@@ -174,7 +174,7 @@ public class FBNativeAdapter extends AdAdapter {
 //        adView.setLayoutParams(params);
         if (adView != null) {
             View main = adView.findViewById(viewBinder.mainMediaId);
-            MediaView coverView;
+            MediaView  coverView;
             if (main instanceof MediaView) {
                 coverView = (MediaView)main;
             } else if (viewBinder.fbMediaId != -1) {

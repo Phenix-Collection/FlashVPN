@@ -64,7 +64,7 @@ public class Fingerprint {
             //jsonObject.put("imeiHint", imei.substring(0, 8));
             jsonObject.put("ver", "1" );
             jsonObject.put("country", ctx.getResources().getConfiguration().locale.getCountry() );
-            jsonObject.put("aid", Settings.Secure.getString(ctx.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID));
+            jsonObject.put("aid", Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID));
             jsonObject.put("lang", ctx.getResources().getConfiguration().locale.getLanguage() );
             jsonObject.put("mcc", ctx.getResources().getConfiguration().mcc );
             jsonObject.put("mnc", ctx.getResources().getConfiguration().mnc );
@@ -88,7 +88,7 @@ public class Fingerprint {
 
             jsonObject.put("BRadioVer", Build.getRadioVersion());
 
-            android.util.DisplayMetrics x = new DisplayMetrics();
+            DisplayMetrics x = new DisplayMetrics();
             ((WindowManager)ctx.getSystemService(ctx.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(x);
 
             JSONObject dm = new JSONObject();
@@ -140,7 +140,7 @@ public class Fingerprint {
                     //jsonObject.put("btMacOui", btAddress.substring(0, 8).toLowerCase());
                     jsonObject.put("btmac", btAddress);
                 } else {
-                    btAddress = android.provider.Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_address");
+                    btAddress = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_address");
                     jsonObject.put("btmac", btAddress);
                 }
             }catch (Exception ex) {
