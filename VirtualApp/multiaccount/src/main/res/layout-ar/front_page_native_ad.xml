@@ -2,7 +2,7 @@
     android:id="@+id/native_ad_layout_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_native_header_ad"
+    android:background="@drawable/shadow"
     android:orientation="vertical">
 
     <FrameLayout
@@ -15,6 +15,15 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:adjustViewBounds="true"/>
+        <com.facebook.ads.MediaView
+            android:id="@+id/ad_fb_mediaview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.gms.ads.formats.MediaView
+            android:id="@+id/ad_adm_mediaview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/ad_flag"

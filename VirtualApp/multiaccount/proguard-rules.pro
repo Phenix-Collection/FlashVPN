@@ -181,6 +181,7 @@ public static java.lang.String TABLENAME;
 -keep	class	com.google.android.gms.ads.identifier.AdvertisingIdClient$Info	{	public	<methods>;}
 -keep	class	com.facebook.ads.NativeAd
 -keep	class   com.google.android.gms.ads.formats.NativeContentAd
+-keep class com.google.android.gms.**{*;}
 -keepclassmembernames class com.duapps.ad.** { *;}
 
 #Mobvista

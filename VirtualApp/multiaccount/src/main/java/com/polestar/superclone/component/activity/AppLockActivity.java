@@ -88,6 +88,8 @@ public class AppLockActivity extends BaseActivity {
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
                 .mainMediaId(R.id.ad_cover_image)
+                .fbMediaId(R.id.ad_fb_mediaview)
+                .admMediaId(R.id.ad_adm_mediaview)
                 .iconImageId(R.id.ad_icon_image)
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)

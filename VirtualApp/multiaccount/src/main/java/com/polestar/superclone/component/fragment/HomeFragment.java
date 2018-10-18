@@ -100,6 +100,8 @@ public class HomeFragment extends BaseFragment {
                 .textId(R.id.ad_subtitle_text)
                 .mainMediaId(R.id.ad_cover_image)
                 .iconImageId(R.id.ad_icon_image)
+                .fbMediaId(R.id.ad_fb_mediaview)
+                .admMediaId(R.id.ad_adm_mediaview)
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
                 .build();
