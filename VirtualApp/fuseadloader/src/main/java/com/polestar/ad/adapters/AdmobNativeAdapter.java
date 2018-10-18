@@ -304,18 +304,21 @@ public class AdmobNativeAdapter extends AdAdapter {
                 AdLog.d("Wrong ad layout " + viewBinder.layoutId);
                 return null;
             }
-            mediaView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-                @Override
-                public void onChildViewAdded(View parent, View child) {
-                    if (child instanceof ImageView) {
-                        ImageView imageView = (ImageView) child;
-                        imageView.setAdjustViewBounds(true);
+            if (mediaView != null) {
+                mediaView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+                    @Override
+                    public void onChildViewAdded(View parent, View child) {
+                        if (child instanceof ImageView) {
+                            ImageView imageView = (ImageView) child;
+                            imageView.setAdjustViewBounds(true);
+                        }
                     }
-                }
 
-                @Override
-                public void onChildViewRemoved(View parent, View child) {}
-            });
+                    @Override
+                    public void onChildViewRemoved(View parent, View child) {
+                    }
+                });
+            }
 
             StarLevelLayoutView starLevelLayout = null;
             if (viewBinder.starLevelLayoutId != -1) {
