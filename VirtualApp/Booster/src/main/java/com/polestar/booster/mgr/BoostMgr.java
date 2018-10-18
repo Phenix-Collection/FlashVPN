@@ -213,10 +213,6 @@ public class BoostMgr {
 
     private void doInstallAd() {
         FuseAdLoader.get(BoosterSdk.boosterConfig.installAdSlot,mContext).loadAd(2, new IAdLoadListener() {
-            @Override
-            public void onRewarded(IAdAdapter ad) {
-
-            }
 
             @Override
             public void onAdLoaded(IAdAdapter ad) {
@@ -321,11 +317,6 @@ public class BoostMgr {
 
     private void doShowUnlockAd(){
         FuseAdLoader.get(BoosterSdk.boosterConfig.unlockAdSlot,mContext).loadAd(2, 3000, new IAdLoadListener() {
-            @Override
-            public void onRewarded(IAdAdapter ad) {
-
-            }
-
             @Override
             public void onAdLoaded(IAdAdapter ad) {
                 BoosterLog.log("Unlock ad loaded");
