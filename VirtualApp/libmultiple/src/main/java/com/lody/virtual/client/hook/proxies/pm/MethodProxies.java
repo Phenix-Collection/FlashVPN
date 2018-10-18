@@ -191,6 +191,7 @@ class MethodProxies {
         public Object call(Object who, Method method, Object... args) throws Throwable {
             String pkgName = (String) args[0];
             if (pkgName.equals(getHostPkg())) {
+                args[args.length - 1] = VUserHandle.getHostUserId();
                 return method.invoke(who, args);
             }
             int uid = VPackageManager.get().getPackageUid(pkgName, 0);
@@ -643,11 +644,16 @@ class MethodProxies {
             if (packageInfo != null) {
                 return packageInfo;
             }
-            packageInfo = (PackageInfo) method.invoke(who, args);
-            if (packageInfo != null) {
-                if (isVisiblePackage(packageInfo.applicationInfo)) {
-                    return packageInfo;
+            try {
+                args[2] = VUserHandle.getHostUserId();
+                packageInfo = (PackageInfo) method.invoke(who, args);
+                if (packageInfo != null) {
+                    if (isVisiblePackage(packageInfo.applicationInfo)) {
+                        return packageInfo;
+                    }
                 }
+            }catch (Exception ex){
+
             }
             return null;
         }
@@ -994,9 +1000,14 @@ class MethodProxies {
             if (info != null) {
                 return info;
             }
-            info = (ApplicationInfo) method.invoke(who, args);
-            if (info == null || !isVisiblePackage(info)) {
-                return null;
+            try {
+                args[2] = VUserHandle.getHostUserId();;
+                info = (ApplicationInfo) method.invoke(who, args);
+                if (info == null || !isVisiblePackage(info)) {
+                    return null;
+                }
+            }catch (Exception ex) {
+                ex.printStackTrace();
             }
             return info;
         }

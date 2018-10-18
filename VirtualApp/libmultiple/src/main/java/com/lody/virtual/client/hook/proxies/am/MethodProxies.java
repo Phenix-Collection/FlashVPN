@@ -316,7 +316,7 @@ class MethodProxies {
             args[1] = getHostPkg();
             // Force userId to 0
             if (args[args.length - 1] instanceof Integer) {
-                args[args.length - 1] = 0;
+                args[args.length - 1] = VUserHandle.getHostUserId();
             }
             IInterface sender = (IInterface) method.invoke(who, args);
             if (sender != null && creator != null) {
@@ -1605,24 +1605,29 @@ class MethodProxies {
                 }
                 return holder;
             }
-            Object holder = method.invoke(who, args);
-            if (holder != null) {
-                if (BuildCompat.isOreo()) {
-                    IInterface provider = ContentProviderHolderOreo.provider.get(holder);
-                    info = ContentProviderHolderOreo.info.get(holder);
-                    if (provider != null) {
-                        provider = ProviderHook.createProxy(true, info.authority, provider);
+            try {
+                args[nameIdx+1] = VUserHandle.getHostUserId();
+                Object holder = method.invoke(who, args);
+                if (holder != null) {
+                    if (BuildCompat.isOreo()) {
+                        IInterface provider = ContentProviderHolderOreo.provider.get(holder);
+                        info = ContentProviderHolderOreo.info.get(holder);
+                        if (provider != null) {
+                            provider = ProviderHook.createProxy(true, info.authority, provider);
+                        }
+                        ContentProviderHolderOreo.provider.set(holder, provider);
+                    } else {
+                        IInterface provider = IActivityManager.ContentProviderHolder.provider.get(holder);
+                        info = IActivityManager.ContentProviderHolder.info.get(holder);
+                        if (provider != null) {
+                            provider = ProviderHook.createProxy(true, info.authority, provider);
+                        }
+                        IActivityManager.ContentProviderHolder.provider.set(holder, provider);
                     }
-                    ContentProviderHolderOreo.provider.set(holder, provider);
-                } else {
-                    IInterface provider = IActivityManager.ContentProviderHolder.provider.get(holder);
-                    info = IActivityManager.ContentProviderHolder.info.get(holder);
-                    if (provider != null) {
-                        provider = ProviderHook.createProxy(true, info.authority, provider);
-                    }
-                    IActivityManager.ContentProviderHolder.provider.set(holder, provider);
+                    return holder;
                 }
-                return holder;
+            }catch (Exception ex) {
+                ex.printStackTrace();
             }
             return null;
         }

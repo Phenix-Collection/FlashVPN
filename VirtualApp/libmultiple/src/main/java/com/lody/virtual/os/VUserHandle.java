@@ -185,6 +185,10 @@ public final class VUserHandle implements Parcelable {
         }
     }
 
+    public static int getHostUserId() {
+        return getUserId(Process.myUid());
+    }
+
     /** @hide */
     public static int getCallingUserId() {
         return getUserId(VBinder.getCallingUid());
