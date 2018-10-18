@@ -341,8 +341,6 @@ public class FuseAdLoader {
                 return new AdmobNativeAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_MOPUB:
                 return new MopubNativeAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER:
-                return mBannerAdSize == null? null : new AdmobExpressAdapter(mContext, config.key, mBannerAdSize);
             case AdConstants.NativeAdType.AD_SOURCE_ADMOB_BANNER:
                 AdSize bannerSize = config.bannerAdSize == null? mBannerAdSize: config.bannerAdSize;
                 return bannerSize == null? null : new AdmobBannerAdapter(mContext, config.key, bannerSize);
@@ -384,7 +382,6 @@ public class FuseAdLoader {
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_NAVTIVE_BANNER);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_BANNER);
     }
 }
