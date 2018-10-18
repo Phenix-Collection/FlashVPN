@@ -3,24 +3,21 @@ package com.polestar.ad.adapters;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.ads.mediation.facebook.FacebookAdapter;
-import com.google.android.gms.ads.VideoController;
-import com.google.android.gms.ads.formats.MediaView;
-import com.google.android.gms.ads.formats.NativeAd;
-import com.polestar.ad.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.VideoController;
 import com.google.android.gms.ads.VideoOptions;
+import com.google.android.gms.ads.formats.MediaView;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.NativeAdView;
 import com.google.android.gms.ads.formats.NativeAppInstallAd;
@@ -32,7 +29,6 @@ import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.view.StarLevelLayoutView;
-import com.polestar.imageloader.widget.BasicLazyLoadImageView;
 
 
 /**
@@ -105,7 +101,7 @@ public class AdmobNativeAdapter extends AdAdapter {
                 .setStartMuted(true)
                 .build();
         NativeAdOptions adOptions = new NativeAdOptions.Builder()
-                .setVideoOptions(videoOptions).setRequestMultipleImages(false).setReturnUrlsForImageAssets(true)
+                .setVideoOptions(videoOptions).setRequestMultipleImages(false).setReturnUrlsForImageAssets(false)
                 .build();
         builder.withNativeAdOptions(adOptions);
         builder.withAdListener(new AdListener() {
@@ -284,14 +280,7 @@ public class AdmobNativeAdapter extends AdAdapter {
 //        adView.setLayoutParams(params);
         NativeAdView nativeAdView = null;
         if (actualAdView != null) {
-            ImageView coverView = (ImageView) actualAdView.findViewById(viewBinder.mainMediaId);
             ImageView iconView = (ImageView) actualAdView.findViewById(viewBinder.iconImageId);
-            if (iconView instanceof BasicLazyLoadImageView) {
-                BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) iconView;
-                lazyLoadImageView.setDefaultResource(0);
-                lazyLoadImageView.requestDisplayURL(getIconImageUrl());
-            }
-
             TextView titleView = (TextView) actualAdView.findViewById(viewBinder.titleId);
             titleView.setText(getTitle());
             TextView subtitleView = (TextView) actualAdView.findViewById(viewBinder.textId);
@@ -299,7 +288,34 @@ public class AdmobNativeAdapter extends AdAdapter {
             TextView ctaView = (TextView) actualAdView.findViewById(viewBinder.callToActionId);
             ctaView.setText(getCallToActionText());
 
-            MediaView mediaView = (MediaView) actualAdView.findViewById(viewBinder.subMediaId);
+            MediaView mediaView = null;
+            ImageView coverImageView = null;
+
+            View main = actualAdView.findViewById(viewBinder.mainMediaId);
+            if (main instanceof MediaView) {
+                mediaView = (MediaView) main;
+            } else if (main instanceof ImageView) {
+                coverImageView = (ImageView) main;
+            }
+            if (mediaView == null && viewBinder.admMediaId != -1) {
+                mediaView = actualAdView.findViewById(viewBinder.admMediaId);
+            }
+            if (mediaView == null && coverImageView == null) {
+                AdLog.d("Wrong ad layout " + viewBinder.layoutId);
+                return null;
+            }
+            mediaView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+                @Override
+                public void onChildViewAdded(View parent, View child) {
+                    if (child instanceof ImageView) {
+                        ImageView imageView = (ImageView) child;
+                        imageView.setAdjustViewBounds(true);
+                    }
+                }
+
+                @Override
+                public void onChildViewRemoved(View parent, View child) {}
+            });
 
             StarLevelLayoutView starLevelLayout = null;
             if (viewBinder.starLevelLayoutId != -1) {
@@ -315,20 +331,28 @@ public class AdmobNativeAdapter extends AdAdapter {
                 adView.setHeadlineView(titleView);
                 adView.setLogoView(iconView);
                 adView.setBodyView(subtitleView);
+                NativeAd.Image image = ((NativeContentAd)mRawAd).getLogo();
+                if(adView.getLogoView() != null) {
+                    if (image != null) {
+                        ((ImageView) adView.getLogoView()).setImageDrawable(image.getDrawable());
+                    } else {
+                        adView.getLogoView().setVisibility(View.INVISIBLE);
+                    }
+                }
                 VideoController vc = ((NativeContentAd) mRawAd).getVideoController();
-                if (vc.hasVideoContent() && mediaView != null) {
-                    coverView.setVisibility(View.GONE);
+                if (mediaView != null) {
                     adView.setMediaView(mediaView);
                 } else {
-                    if (mediaView != null) {
-                        mediaView.setVisibility(View.GONE);
+                    adView.setImageView(coverImageView);
+                    NativeAd.Image cover = ((NativeContentAd) mRawAd).getImages().get(0);
+                    if (cover != null) {
+                        ((ImageView)adView.getImageView()).setImageDrawable(cover.getDrawable());
                     }
-                    adView.setImageView(coverView);
-                    if (coverView instanceof BasicLazyLoadImageView) {
-                        BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
-                        lazyLoadImageView.setDefaultResource(R.drawable.native_default);
-                        lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
-                    }
+//                    if (coverView instanceof BasicLazyLoadImageView) {
+//                        BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
+//                        lazyLoadImageView.setDefaultResource(R.drawable.native_default);
+//                        lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+//                    }
                 }
             } else if (mRawAd instanceof NativeAppInstallAd) {
                 nativeAdView = new NativeAppInstallAdView(mContext);
@@ -340,19 +364,22 @@ public class AdmobNativeAdapter extends AdAdapter {
                 if (starLevelLayout != null) {
                     adView.setStarRatingView(starLevelLayout);
                 }
+                NativeAd.Image image = ((NativeAppInstallAd)mRawAd).getIcon();
+                if (adView.getIconView() != null) {
+                    if (image != null) {
+                        ((ImageView) adView.getIconView()).setImageDrawable(image.getDrawable());
+                    } else {
+                        adView.getIconView().setVisibility(View.INVISIBLE);
+                    }
+                }
                 VideoController vc = ((NativeAppInstallAd) mRawAd).getVideoController();
-                if (vc.hasVideoContent() && mediaView != null) {
-                    coverView.setVisibility(View.GONE);
+                if (mediaView != null) {
                     adView.setMediaView(mediaView);
                 } else {
-                    if(mediaView !=null ) {
-                        mediaView.setVisibility(View.GONE);
-                    }
-                    adView.setImageView(coverView);
-                    if (coverView instanceof BasicLazyLoadImageView) {
-                        BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
-                        lazyLoadImageView.setDefaultResource(R.drawable.native_default);
-                        lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
+                    adView.setImageView(coverImageView);
+                    NativeAd.Image cover = ((NativeAppInstallAd) mRawAd).getImages().get(0);
+                    if (cover != null) {
+                        ((ImageView)adView.getImageView()).setImageDrawable(cover.getDrawable());
                     }
                 }
             } else {

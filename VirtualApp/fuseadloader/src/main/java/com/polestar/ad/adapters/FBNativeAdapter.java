@@ -15,6 +15,7 @@ import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSettings;
 import com.facebook.ads.MediaView;
+import com.facebook.ads.NativeAd;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdViewBinder;
@@ -79,7 +80,7 @@ public class FBNativeAdapter extends AdAdapter {
                 }
             }
         });
-        mRawAd.loadAd();
+        mRawAd.loadAd(NativeAd.MediaCacheFlag.ALL);
         startMonitor();
     }
 
@@ -172,7 +173,16 @@ public class FBNativeAdapter extends AdAdapter {
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        adView.setLayoutParams(params);
         if (adView != null) {
-            MediaView  coverView = (MediaView) adView.findViewById(viewBinder.mainMediaId);
+            View main = adView.findViewById(viewBinder.mainMediaId);
+            MediaView coverView;
+            if (main instanceof MediaView) {
+                coverView = (MediaView)main;
+            } else if (viewBinder.fbMediaId != -1) {
+                coverView =(MediaView) adView.findViewById(viewBinder.fbMediaId);
+            } else {
+                AdLog.e("Wrong layoutid " + viewBinder.layoutId);
+                return null;
+            }
             coverView.setNativeAd(mRawAd);
             ImageView iconView = (ImageView) adView.findViewById(viewBinder.iconImageId);
             if (iconView instanceof BasicLazyLoadImageView) {

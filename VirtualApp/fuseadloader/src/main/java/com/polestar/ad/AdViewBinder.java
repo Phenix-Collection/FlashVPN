@@ -17,7 +17,8 @@ public class AdViewBinder {
         private int textId;
         private int callToActionId;
         private int mainMediaId;
-        private int subMediaId;
+        private int admMediaId = -1;
+        private int fbMediaId = -1;
         private int iconImageId = -1;
         private int privacyInformationId;
         private int starLevelLayoutId = -1;
@@ -54,8 +55,14 @@ public class AdViewBinder {
         }
 
         @NonNull
-        public final Builder subMediaId(final int mediaLayoutId) {
-            this.subMediaId = mediaLayoutId;
+        public final Builder admMediaId(final int mediaLayoutId) {
+            this.admMediaId = mediaLayoutId;
+            return this;
+        }
+
+        @NonNull
+        public final Builder fbMediaId(final int mediaLayoutId) {
+            this.fbMediaId = mediaLayoutId;
             return this;
         }
 
@@ -99,8 +106,12 @@ public class AdViewBinder {
     public final int titleId;
     public final int textId;
     public final int callToActionId;
+    //Image
     public final int mainMediaId;
-    public final int subMediaId;
+    //AdmobMediaView
+    public final int admMediaId;
+    //FbMediaView
+    public final int fbMediaId;
     public final int iconImageId;
     public final int privacyInformationId;
     public final int starLevelLayoutId;
@@ -115,7 +126,8 @@ public class AdViewBinder {
         this.iconImageId = builder.iconImageId;
         this.privacyInformationId = builder.privacyInformationId;
         this.starLevelLayoutId = builder.starLevelLayoutId;
-        this.subMediaId = builder.subMediaId;
+        this.admMediaId = builder.admMediaId;
+        this.fbMediaId = builder.fbMediaId;
         this.extras = builder.extras;
     }
 }

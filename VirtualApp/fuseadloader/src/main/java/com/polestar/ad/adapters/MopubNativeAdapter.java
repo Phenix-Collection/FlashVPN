@@ -114,7 +114,7 @@ public class MopubNativeAdapter extends AdAdapter {
                 .mainImageId(viewBinder.mainMediaId)
                 .iconImageId(viewBinder.iconImageId)
                 .callToActionId(viewBinder.callToActionId)
-                .privacyInformationIconImageId(viewBinder.privacyInformationId)
+              // .privacyInformationIconImageId(viewBinder.privacyInformationId)
                 .addExtras(viewBinder.extras)
                 .build();
         final MoPubStaticNativeAdRenderer staticAdRender = new MoPubStaticNativeAdRenderer(mpViewBinder);
