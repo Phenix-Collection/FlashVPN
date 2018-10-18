@@ -56,17 +56,25 @@ public class GreyAttribute {
     //fetch ad and do click, and get referrer
     public static void checkAndClick(final Context ctx, final String pkg) {
         AdLog.d(TAG, "checkAndClick");
-        Intent intent = new Intent(ctx, GreyAttributeService.class);
-        intent.putExtra(Intent.EXTRA_PACKAGE_NAME, pkg);
-        intent.setAction(ACTION_CLICK);
-        ctx.startService(intent);
+        try {
+            Intent intent = new Intent(ctx, GreyAttributeService.class);
+            intent.putExtra(Intent.EXTRA_PACKAGE_NAME, pkg);
+            intent.setAction(ACTION_CLICK);
+            ctx.startService(intent);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     //send referrer to package
     public static void sendAttributor(final Context ctx,String pkg) {
-        Intent intent = new Intent(ctx, GreyAttributeService.class);
-        intent.putExtra(Intent.EXTRA_PACKAGE_NAME, pkg);
-        intent.setAction(ACTION_ATTRIBUTE);
-        ctx.startService(intent);
+        try {
+            Intent intent = new Intent(ctx, GreyAttributeService.class);
+            intent.putExtra(Intent.EXTRA_PACKAGE_NAME, pkg);
+            intent.setAction(ACTION_ATTRIBUTE);
+            ctx.startService(intent);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public interface IAdPackageLoadCallback {
@@ -76,23 +84,27 @@ public class GreyAttribute {
         if (ctx == null || cb == null) {
             return;
         }
-        Intent intent = new Intent(ctx, GreyAttributeService.class);
-        intent.setAction(ACTION_GET_PACKAGES);
-        intent.putStringArrayListExtra(EXTRA_PACKAGE_LIST, availList);
-        ctx.startService(intent);
+        try {
+            Intent intent = new Intent(ctx, GreyAttributeService.class);
+            intent.setAction(ACTION_GET_PACKAGES);
+            intent.putStringArrayListExtra(EXTRA_PACKAGE_LIST, availList);
+            ctx.startService(intent);
 
-        IntentFilter filter = new IntentFilter(ACTION_PACKAGE_READY);
-        ctx.getApplicationContext().registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                ArrayList<String> list = intent.getStringArrayListExtra(EXTRA_PACKAGE_LIST);
-                ArrayList<String> desclist = intent.getStringArrayListExtra(EXTRA_PACKAGE_DESC_LIST);
-                if (list != null && desclist != null) {
-                    cb.onAdPackageListReady(list, desclist);
+            IntentFilter filter = new IntentFilter(ACTION_PACKAGE_READY);
+            ctx.getApplicationContext().registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    ArrayList<String> list = intent.getStringArrayListExtra(EXTRA_PACKAGE_LIST);
+                    ArrayList<String> desclist = intent.getStringArrayListExtra(EXTRA_PACKAGE_DESC_LIST);
+                    if (list != null && desclist != null) {
+                        cb.onAdPackageListReady(list, desclist);
+                    }
+                    ctx.getApplicationContext().unregisterReceiver(this);
                 }
-                ctx.getApplicationContext().unregisterReceiver(this);
-            }
-        }, filter);
+            }, filter);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
