@@ -8,7 +8,9 @@ import com.lody.virtual.client.hook.delegate.AppInstrumentation;
 import com.lody.virtual.client.hook.proxies.account.AccountManagerStub;
 import com.lody.virtual.client.hook.proxies.alarm.AlarmManagerStub;
 import com.lody.virtual.client.hook.proxies.am.ActivityManagerStub;
+import com.lody.virtual.client.hook.proxies.am.AutoFillManagerStub;
 import com.lody.virtual.client.hook.proxies.am.HCallbackStub;
+import com.lody.virtual.client.hook.proxies.am.UpdateEngineStub;
 import com.lody.virtual.client.hook.proxies.appops.AppOpsManagerStub;
 import com.lody.virtual.client.hook.proxies.appwidget.AppWidgetManagerStub;
 import com.lody.virtual.client.hook.proxies.audio.AudioManagerStub;
@@ -64,6 +66,7 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.os.Build.VERSION_CODES.LOLLIPOP_MR1;
 import static android.os.Build.VERSION_CODES.M;
 import static android.os.Build.VERSION_CODES.N;
+import static android.os.Build.VERSION_CODES.O;
 
 /**
  * @author Lody
@@ -182,7 +185,11 @@ public final class InvocationStubManager {
                 addInjector(new WifiScannerStub());
                 addInjector(new ShortcutServiceStub());
                 addInjector(new DevicePolicyManagerStub());
+                addInjector(new UpdateEngineStub());
             }
+            if (Build.VERSION.SDK_INT >= O){
+				addInjector(new AutoFillManagerStub());
+			}
 		}
 	}
 

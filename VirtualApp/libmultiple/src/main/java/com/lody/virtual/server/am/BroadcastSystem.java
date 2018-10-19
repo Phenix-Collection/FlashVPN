@@ -262,9 +262,13 @@ public class BroadcastSystem {
             if ((intent.getFlags() & FLAG_RECEIVER_REGISTERED_ONLY) != 0 || isInitialStickyBroadcast()) {
                 return;
             }
-            String privilegePkg = intent.getStringExtra("_VA_|_privilege_pkg_");
-            if (privilegePkg != null && !info.packageName.equals(privilegePkg)) {
-                return;
+            try {
+                String privilegePkg = intent.getStringExtra("_VA_|_privilege_pkg_");
+                if (privilegePkg != null && !info.packageName.equals(privilegePkg)) {
+                    return;
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
             final PendingResult result = goAsync();
             new Thread(new Runnable() {

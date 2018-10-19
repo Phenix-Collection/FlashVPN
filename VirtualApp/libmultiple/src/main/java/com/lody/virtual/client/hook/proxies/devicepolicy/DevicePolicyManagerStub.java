@@ -6,6 +6,7 @@ import android.util.Log;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.base.BinderInvocationProxy;
 import com.lody.virtual.client.hook.base.MethodProxy;
+import com.lody.virtual.client.hook.base.ResultStaticMethodProxy;
 
 import java.lang.reflect.Method;
 
@@ -24,6 +25,8 @@ public class DevicePolicyManagerStub extends BinderInvocationProxy{
     protected void onBindMethods() {
         super.onBindMethods();
         addMethodProxy(new GetStorageEncryptionStatus());
+        addMethodProxy(new ResultStaticMethodProxy("getDeviceOwnerComponent",null));
+        addMethodProxy(new ResultStaticMethodProxy("notifyPendingSystemUpdate",null));
     }
 
     private static class GetStorageEncryptionStatus extends MethodProxy {
