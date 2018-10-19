@@ -36,7 +36,7 @@ public class BoosterSdk {
         public boolean isPreloadOnUnlock = false;
         public boolean allowPreloadAdTimer = false;
         public long preloadAdTimerInterval = 45*60*1000;
-        public int autoDismissTime = 10*1000;
+        public int autoDismissTime = 20*1000;
         public long autoCreateInterval = 3*24*60*60*1000;
         public long autoCleanInterval = 5*60*60*1000;
         public long autoAdFirstInterval = 3*24*60*60*1000;

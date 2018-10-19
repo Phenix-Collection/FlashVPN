@@ -522,7 +522,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                onCleanEnd();
+
             }
         });
 
@@ -584,6 +584,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
             @Override
             public void onAnimationEnd(Animator animation) {
                 nebulaAnimator.cancel();
+                onCleanEnd();
             }
         });
         startAnimator.setInterpolator(new LinearInterpolator());
