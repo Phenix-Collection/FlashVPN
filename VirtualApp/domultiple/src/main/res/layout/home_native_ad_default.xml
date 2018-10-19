@@ -32,20 +32,21 @@
                 android:textColor="@color/text_gray_dark"
                 android:textSize="15sp" />
 
-            <com.polestar.imageloader.widget.BasicLazyLoadImageView
-                android:id="@+id/ad_choices_image"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+            <LinearLayout
+                android:id="@+id/ad_choices_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@id/ad_choices_image"
+                android:layout_below="@id/ad_choices_container"
                 android:layout_marginBottom="3dp"
                 android:layout_marginTop="3dp"
                 android:background="@drawable/shape_round_corner_line"
@@ -54,21 +55,36 @@
                 android:text="AD"
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp" />
+
         </RelativeLayout>
 
-        <com.polestar.imageloader.widget.BasicLazyLoadImageView
-            android:id="@+id/ad_cover_image"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ad_header"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true"/>
+            android:id="@+id/cover_layout">
+            <com.polestar.imageloader.widget.BasicLazyLoadImageView
+                android:id="@+id/ad_cover_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"/>
+            <com.facebook.ads.MediaView
+                android:id="@+id/ad_fb_mediaview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.gms.ads.formats.MediaView
+                android:id="@+id/ad_adm_mediaview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ad_cover_image">
+            android:layout_below="@id/cover_layout">
 
             <TextView
                 android:id="@+id/ad_subtitle_text"
@@ -83,7 +99,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/text_gray_dark"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/ad_cta_text"
@@ -99,7 +115,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:textColor="@color/text_gray_dark"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
         </RelativeLayout>
     </RelativeLayout>

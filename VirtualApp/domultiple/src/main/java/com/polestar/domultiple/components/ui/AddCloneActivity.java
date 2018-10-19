@@ -84,22 +84,15 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         }
         final AdViewBinder viewBinder;
         switch (mAd.getAdType()) {
-            case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK:
-                viewBinder =  new AdViewBinder.Builder(R.layout.add_clone_native_ad_fb)
-                        .titleId(R.id.ad_title)
-                        .textId(R.id.ad_subtitle_text)
-                        .mainMediaId(R.id.ad_cover_image)
-                        .callToActionId(R.id.ad_cta_text)
-                        .privacyInformationId(R.id.ad_choices_container)
-                        .build();
-                break;
             default:
                 viewBinder =  new AdViewBinder.Builder(R.layout.add_clone_native_ad_default)
                         .titleId(R.id.ad_title)
                         .textId(R.id.ad_subtitle_text)
                         .mainMediaId(R.id.ad_cover_image)
+                        .fbMediaId(R.id.ad_fb_mediaview)
+                        .admMediaId(R.id.ad_adm_mediaview)
                         .callToActionId(R.id.ad_cta_text)
-                        .privacyInformationId(R.id.ad_choices_image)
+                        .privacyInformationId(R.id.ad_choices_container)
                         .build();
                 break;
         }

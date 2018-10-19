@@ -90,23 +90,16 @@ public class AppLockActivity extends BaseActivity {
     private void inflatNativeAd(IAdAdapter ad) {
         final AdViewBinder viewBinder;
         switch (ad.getAdType()) {
-            case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK:
-                viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad_fb)
-                        .titleId(R.id.ad_title)
-                        .textId(R.id.ad_subtitle_text)
-                        .mainMediaId(R.id.ad_cover_image)
-                        .callToActionId(R.id.ad_cta_text)
-                        .privacyInformationId(R.id.ad_choices_container)
-                        .build();
-                break;
             default:
                 viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad)
                         .titleId(R.id.ad_title)
                         .textId(R.id.ad_subtitle_text)
                         .mainMediaId(R.id.ad_cover_image)
+                        .fbMediaId(R.id.ad_fb_mediaview)
+                        .admMediaId(R.id.ad_adm_mediaview)
                         .iconImageId(R.id.ad_icon_image)
                         .callToActionId(R.id.ad_cta_text)
-                        .privacyInformationId(R.id.ad_choices_image)
+                        .privacyInformationId(R.id.ad_choices_container)
                         .build();
                 break;
         }
