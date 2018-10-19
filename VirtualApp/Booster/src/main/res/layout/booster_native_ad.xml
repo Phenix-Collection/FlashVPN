@@ -44,15 +44,6 @@
             android:textColor="@color/booster_adflag_color"
             android:textSize="12sp" />
 
-        <com.polestar.imageloader.widget.BasicLazyLoadImageView
-            android:layout_marginRight="3dp"
-            android:layout_marginTop="3dp"
-            android:id="@+id/ad_choices_image"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_gravity="top|right"
-            android:scaleType="fitXY" />
-
     </FrameLayout>
     <TextView
         android:id="@+id/ad_title"
@@ -66,7 +57,14 @@
         android:lineSpacingMultiplier="1.5"
         android:textColor="@color/booster_ad_title_color"
         android:textSize="16sp" />
-
+    <LinearLayout
+        android:id="@+id/ad_choices_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal" />
     <TextView
         android:id="@+id/ad_subtitle_text"
         android:layout_width="match_parent"

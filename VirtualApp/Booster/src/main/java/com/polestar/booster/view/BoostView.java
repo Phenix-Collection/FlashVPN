@@ -129,7 +129,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
                         .admMediaId(R.id.ad_adm_mediaview)
                        //.iconImageId(R.id.ad_icon_image)
                         .callToActionId(R.id.ad_cta_text)
-                        .privacyInformationId(R.id.ad_choices_image)
+                        .privacyInformationId(R.id.ad_choices_container)
                         .build();
                 break;
         }
