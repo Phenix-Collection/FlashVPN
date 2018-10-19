@@ -44,12 +44,12 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+        <LinearLayout
             android:id="@+id/ad_choices_image"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_gravity="top|right"
-            android:scaleType="fitXY" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="top|right"/>
 
         <LinearLayout
             android:layout_width="match_parent"
