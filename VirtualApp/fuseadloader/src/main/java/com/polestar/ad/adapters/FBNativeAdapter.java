@@ -222,8 +222,10 @@ public class FBNativeAdapter extends AdAdapter {
             }
             mRawAd.registerViewForInteraction(adView,clickableViews);
             LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(viewBinder.privacyInformationId);
-            AdChoicesView adChoicesView = new AdChoicesView(mContext, mRawAd, true);
-            adChoicesContainer.addView(adChoicesView);
+            if (adChoicesContainer != null) {
+                AdChoicesView adChoicesView = new AdChoicesView(mContext, mRawAd, true);
+                adChoicesContainer.addView(adChoicesView);
+            }
         }
         return  adView;
     }
