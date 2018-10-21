@@ -6,29 +6,35 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.polestar.imageloader.widget.BasicLazyLoadImageView
-            android:id="@+id/ad_cover_image"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true" />
+            android:id="@+id/ad_cover_layout">
+            <com.polestar.imageloader.widget.BasicLazyLoadImageView
+                android:id="@+id/ad_cover_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true" />
 
-        <com.facebook.ads.MediaView
-            android:id="@+id/ad_fb_mediaview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <com.facebook.ads.MediaView
+                android:id="@+id/ad_fb_mediaview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <com.google.android.gms.ads.formats.MediaView
-            android:id="@+id/ad_adm_mediaview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <com.google.android.gms.ads.formats.MediaView
+                android:id="@+id/ad_adm_mediaview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
 
         <TextView
             android:id="@+id/ad_flag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/ad_cover_image"
-            android:layout_alignTop="@id/ad_cover_image"
+            android:layout_alignLeft="@id/ad_cover_layout"
+            android:layout_alignTop="@id/ad_cover_layout"
             android:background="@color/native_ad_transparent_black"
             android:ellipsize="end"
             android:paddingLeft="4dp"
@@ -39,13 +45,13 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+        <LinearLayout
             android:id="@+id/ad_choices_image"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_alignRight="@id/ad_cover_image"
-            android:layout_alignTop="@id/ad_cover_image"
-            android:scaleType="fitXY" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignRight="@id/ad_cover_layout"
+            android:layout_alignTop="@id/ad_cover_layout"/>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"

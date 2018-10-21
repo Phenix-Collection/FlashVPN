@@ -44,6 +44,13 @@
             android:textColor="@color/booster_adflag_color"
             android:textSize="12sp" />
 
+        <LinearLayout
+            android:id="@+id/ad_choices_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="top|right"/>
+
     </FrameLayout>
     <TextView
         android:id="@+id/ad_title"
