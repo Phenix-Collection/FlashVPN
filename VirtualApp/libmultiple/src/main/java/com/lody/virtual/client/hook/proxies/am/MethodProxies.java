@@ -1400,6 +1400,9 @@ class MethodProxies {
                     }
                 }
             }
+            if (args[args.length - 1] instanceof Integer) {
+                args[args.length - 1] = VUserHandle.getHostUserId();
+            }
             return method.invoke(who, args);
         }
 

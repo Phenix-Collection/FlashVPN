@@ -545,6 +545,9 @@ public final class VirtualCore {
 
     public InstalledAppInfo getInstalledAppInfo(String pkg, int flags) {
         try {
+            if(getService() == null) {
+                return  null;
+            }
             return getService().getInstalledAppInfo(pkg, flags);
         } catch (RemoteException e) {
             return VirtualRuntime.crash(e);

@@ -73,6 +73,9 @@ public class ActivityManagerStub extends MethodInvocationProxy<MethodInvocationS
                     throw new RuntimeException("Call navigateUpTo!!!!");
                 }
             });
+
+            //public static final int IMPORTANCE_GONE = 1000;
+            addMethodProxy(new ResultStaticMethodProxy("getPackageProcessState", 1000));
             addMethodProxy(new ReplaceLastUidMethodProxy("checkPermissionWithToken"));
             addMethodProxy(new isUserRunning());
             addMethodProxy(new ResultStaticMethodProxy("updateConfiguration", 0));

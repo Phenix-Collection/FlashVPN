@@ -14,5 +14,6 @@ public class AutoFillManagerStub extends BinderInvocationProxy {
         super.onBindMethods();
         addMethodProxy(new ResultStaticMethodProxy("isServiceSupported",false));
         addMethodProxy(new ResultStaticMethodProxy("isServiceEnabled",false));
+        addMethodProxy(new ResultStaticMethodProxy("startSession",Integer.MIN_VALUE));
     }
 }

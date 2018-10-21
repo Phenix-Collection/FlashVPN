@@ -46,6 +46,7 @@ public class PowerManagerStub extends BinderInvocationProxy {
 			}
 		});
 		addMethodProxy(new ResultStaticMethodProxy("updateWakeLockWorkSource", 0));
+		addMethodProxy(new ResultStaticMethodProxy("acquireWakeLockWithLogging", null));
 	}
 
 	private Object onHandleError(InvocationTargetException e) throws Throwable {

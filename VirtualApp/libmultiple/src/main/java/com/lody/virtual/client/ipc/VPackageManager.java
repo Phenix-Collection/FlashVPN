@@ -18,6 +18,7 @@ import com.lody.virtual.client.env.VirtualRuntime;
 import com.lody.virtual.server.IPackageInstaller;
 import com.lody.virtual.server.IPackageManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,7 +82,11 @@ public class VPackageManager {
             // noinspection unchecked
             return getInterface().getInstalledApplications(flags, userId).getList();
         } catch (RemoteException e) {
+            e.printStackTrace();
             return VirtualRuntime.crash(e);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ArrayList<>(0);
         }
     }
 
