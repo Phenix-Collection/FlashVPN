@@ -61,8 +61,8 @@ android {
             minSdkVersion 16
             targetSdkVersion 21
             multiDexEnabled = true
-            versionCode 2110
-            versionName "2.1.10.${releaseTime()}"
+            versionCode 2112
+            versionName "2.1.12.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             dimension "channel"
         }
