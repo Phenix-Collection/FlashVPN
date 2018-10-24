@@ -5,6 +5,7 @@ import android.os.Build;
 import com.lody.virtual.client.VClientImpl;
 import com.lody.virtual.client.hook.base.BinderInvocationProxy;
 import com.lody.virtual.client.hook.base.MethodProxy;
+import com.lody.virtual.client.hook.base.ResultStaticMethodProxy;
 import com.lody.virtual.helper.utils.VLog;
 
 import java.lang.reflect.Method;
@@ -28,6 +29,7 @@ public class ContentServiceStub extends BinderInvocationProxy {
         super.onBindMethods();
         if (Build.VERSION.SDK_INT >= 26) {
             addMethodProxy(new RegisterContentObserver());
+            addMethodProxy(new ResultStaticMethodProxy("notifyChange", null));
         }
     }
 
