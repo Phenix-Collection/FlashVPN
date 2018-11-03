@@ -4,12 +4,12 @@ def releaseTime() {
     return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
 }
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.polestar.minesweeperclassic"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -35,8 +35,8 @@ android {
         }
         play {
             dimension "channel"
-            versionCode 2029
-            versionName "2.0.29.${releaseTime()}"
+            versionCode 2030
+            versionName "2.0.30.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
