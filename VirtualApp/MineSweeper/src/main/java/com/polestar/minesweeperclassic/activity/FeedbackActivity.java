@@ -28,11 +28,21 @@ public class FeedbackActivity extends BaseActivity {
     private Button mBtSubmit;
 
 
+    private static final String EXTRA_RATING = "extra_rating";
+    private int rating;
+
+    public static void start(Context activity, int rating) {
+        Intent intent = new Intent(activity, FeedbackActivity.class);
+        intent.putExtra(FeedbackActivity.EXTRA_RATING, rating);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         mContext = this;
+        rating = getIntent().getIntExtra(EXTRA_RATING, 0);
         initView();
     }
 
@@ -73,6 +83,7 @@ public class FeedbackActivity extends BaseActivity {
                     return;
                 }
 
+                content = content + "\n\n\n\n rating: " + rating;
                 Intent data=new Intent(Intent.ACTION_SENDTO);
                 data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about Mine Sweeper Classic");

@@ -214,3 +214,5 @@ public static java.lang.String TABLENAME;
 
  -keep class com.batmobi.** { *; }
  -ignorewarnings
+
+ -keep class com.google.android.gms.internal.** { *; }
