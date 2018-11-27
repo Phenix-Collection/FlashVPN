@@ -1,17 +1,16 @@
 package com.polestar.ad;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.text.TextUtils;
+
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import nativesdk.ad.common.app.Constants;
-import nativesdk.ad.common.common.network.NetworkUtils;
-import nativesdk.ad.common.database.AdInfo;
-import nativesdk.ad.common.database.AvDatabaseUtils;
-import nativesdk.ad.common.manager.AnalyticsManager;
 
 
 /**
@@ -42,32 +41,39 @@ public class AdUtils {
 //        sdk.init(map, context);
 //    }
 
+    private static void setGaid(Context var0, String var1) {
+        SharedPreferences var2 = var0.getSharedPreferences("sdk_preference", 0);
+        var2.edit().putString("gaid", var1).apply();
+    }
 
-    public static void uploadWallImpression(Context context, boolean hasClick) {
-        List<AdInfo> mDataList =
-                AvDatabaseUtils.getCacheAppWallData(context, 20, Constants.ActivityAd.SORT_ALL);
-        UUID mImpid = UUID.randomUUID();
-        long showTime = 3000 + new Random().nextInt(10000);
-        if (mDataList != null && mDataList.size() != 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(mDataList.get(0).impurls);
-            sb.append("&adlist=");
-            for (int i = 0; i < mDataList.size(); i++) {
-                sb.append(mDataList.get(i).campaignid);
-                if (i != (mDataList.size() - 1)) {
-                    sb.append(",");
+    private static String getGaid(Context var0) {
+        SharedPreferences var1 = var0.getSharedPreferences("sdk_preference", 0);
+        return var1.getString("gaid", "");
+    }
+
+    public static final String getGoogleAdvertisingId(Context var0) {
+        if (var0 == null) {
+            return "";
+        } else {
+            String var1 = getGaid(var0);
+            if (!TextUtils.isEmpty(var1)) {
+                return var1;
+            } else {
+                try {
+                    String var2 = AdvertisingIdClient.getAdvertisingIdInfo(var0).getId();
+                    if (!TextUtils.isEmpty(var2)) {
+                        setGaid(var0, var2);
+                        return var2;
+                    }
+                } catch (Throwable var3) {
+                    var3.printStackTrace();
                 }
-            }
-            sb.append("&impid=").append(mImpid.toString());
-            sb.append("&imppage=appstore");
-            sb.append("&showtime=").append(showTime);
-            sb.append("&hasclick=").append(hasClick);
-            AnalyticsManager.getInstance(context).doUpload(sb.toString());
-            if (hasClick) {
-                NetworkUtils.reportTrueClick(context, mDataList.get(0).noticeUrl);
+
+                return "";
             }
         }
     }
+
 
     public static String MD5(String md5) {
         try {

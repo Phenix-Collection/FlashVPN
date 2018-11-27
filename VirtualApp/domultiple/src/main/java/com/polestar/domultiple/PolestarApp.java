@@ -34,7 +34,6 @@ import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
-import com.polestar.grey.GreyAttribute;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -235,7 +234,6 @@ public class PolestarApp extends MultiDexApplication {
                 virtualCore.setComponentDelegate(delegate);
 
                 virtualCore.setAppApiDelegate(new CloneApiDelegate());
-                GreyAttribute.init(PreferencesUtils.getString(gDefault, "grey_source_id", "29026"));
             }
 
             @Override

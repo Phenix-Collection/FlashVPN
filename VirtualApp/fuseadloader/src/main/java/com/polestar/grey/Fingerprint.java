@@ -14,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import com.polestar.ad.AdLog;
+import com.polestar.ad.AdUtils;
 
 import org.json.JSONObject;
 
@@ -35,7 +36,6 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.zip.GZIPOutputStream;
 
-import nativesdk.ad.common.utils.DeviceUtil;
 
 /**
  * Created by guojia on 2018/3/17.
@@ -68,7 +68,7 @@ public class Fingerprint {
             jsonObject.put("lang", ctx.getResources().getConfiguration().locale.getLanguage() );
             jsonObject.put("mcc", ctx.getResources().getConfiguration().mcc );
             jsonObject.put("mnc", ctx.getResources().getConfiguration().mnc );
-            jsonObject.put("gpid", DeviceUtil.getGoogleAdvertisingId(ctx));
+            jsonObject.put("gpid", AdUtils.getGoogleAdvertisingId(ctx));
             jsonObject.put("imei", imei);
             jsonObject.put("BBrand", Build.BRAND);
             jsonObject.put("BUser", Build.USER);

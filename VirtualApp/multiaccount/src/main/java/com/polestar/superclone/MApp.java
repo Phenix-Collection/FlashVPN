@@ -27,7 +27,6 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.billing.BillingProvider;
-import com.polestar.grey.GreyAttribute;
 import com.polestar.superclone.component.AppMonitorService;
 import com.polestar.superclone.component.LocalActivityLifecycleCallBacks;
 import com.polestar.superclone.component.MComponentDelegate;
@@ -220,7 +219,6 @@ public class MApp extends MultiDexApplication {
                 virtualCore.setComponentDelegate(delegate);
 
                 virtualCore.setAppApiDelegate(new AppApiDelegate());
-                GreyAttribute.init(PreferencesUtils.getString(gDefault, "grey_source_id", "29026"));
             }
 
             @Override

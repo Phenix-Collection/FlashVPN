@@ -48,7 +48,6 @@ import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.UpDownDialog;
-import com.polestar.grey.GreyAttribute;
 
 import java.util.HashSet;
 import java.util.List;
@@ -183,25 +182,7 @@ public class AppLoadingActivity extends BaseActivity {
         if (needDoUpGrade) {
             CloneManager.upgradeApp(appModel.getPackageName());
         }
-        if (firstStart) {
-            GreyAttribute.sendAttributor(AppLoadingActivity.this, appModel.getPackageName());
-        } else {
-            if (!TextUtils.isEmpty(GreyAttribute.getReferrer(AppLoadingActivity.this, appModel.getPackageName()))){
-                EventReporter.greyAttribute(AppLoadingActivity.this, appModel.getPackageName());
-                GreyAttribute.putReferrer(AppLoadingActivity.this, appModel.getPackageName(), "");
-            }
-        }
         CloneManager.launchApp(appModel);
-        mainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                MLogs.d("AppStart finish");
-                if (firstStart) {
-                    GreyAttribute.sendAttributor(AppLoadingActivity.this, appModel.getPackageName());
-                }
-                finish();
-            }
-        }, 4000);
         finishIfTimeout();
     }
 

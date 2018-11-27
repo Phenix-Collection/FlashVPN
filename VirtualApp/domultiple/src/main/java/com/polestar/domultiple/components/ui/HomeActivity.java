@@ -128,12 +128,6 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         initView();
         initData();
         EventReporter.homeShow();
-        if (PolestarApp.isAvzEnabled()) {
-            int random = new Random().nextInt(100);
-            if (random < 8) {
-                AdUtils.uploadWallImpression(this, random < 2 );
-            }
-        }
         boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
         if (needUpdate) {
             MLogs.d("need update");

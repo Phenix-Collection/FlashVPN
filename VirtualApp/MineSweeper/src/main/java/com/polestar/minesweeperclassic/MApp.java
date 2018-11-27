@@ -23,8 +23,6 @@ import com.polestar.minesweeperclassic.utils.RemoteConfig;
 import java.io.File;
 import java.util.List;
 
-import nativesdk.ad.common.AdSdk;
-import nativesdk.ad.common.manager.PermissionManager;
 /**
  * Created by doriscoco on 2017/4/4.
  */
@@ -75,8 +73,6 @@ public class MApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
-        PermissionManager.setIsAgreePermission(gDefault, true);
-        AdSdk.initialize(gDefault, "60ifg1bjhgfedc1", null );
         BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
         res.titleString = R.string.app_name;
         res.boosterShorcutIcon = R.drawable.ic_launcher;

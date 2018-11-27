@@ -32,7 +32,6 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.grey.GreyAttribute;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.constant.AppConstants;
@@ -137,9 +136,6 @@ public class AppCloneActivity extends BaseActivity {
             mPkgName = appModel.getPackageName();
             mUserId = AppListUtils.getInstance(this).isCloned(appModel.getPackageName())?
                     AppManager.getNextAvailableUserId(appModel.getPackageName()):0;
-            if (mUserId == 0 && TextUtils.isEmpty(GreyAttribute.getReferrer(this, appModel.getPackageName()))) {
-                GreyAttribute.checkAndClick(AppCloneActivity.this, appModel.getPackageName());
-            }
             new Thread(new Runnable() {
                 @Override
                 public void run() {

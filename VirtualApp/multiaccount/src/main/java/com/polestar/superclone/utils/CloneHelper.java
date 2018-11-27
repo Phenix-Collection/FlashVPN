@@ -56,7 +56,6 @@ public class CloneHelper {
                     if (loadedListener != null) {
                         loadedListener.onInstalled(mClonedApps);
                     }
-                    //GreyAttribute.checkAndClick(appModel.getPackageName());
                 }
             });
         }catch (Exception ex) {

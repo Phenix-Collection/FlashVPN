@@ -29,7 +29,6 @@
         </receiver>
         <!--batmobi end-->
 
-        <service android:name="com.polestar.grey.GreyAttributeService" android:exported="false" android:process=":p99" />
     </application>
 
 </manifest>

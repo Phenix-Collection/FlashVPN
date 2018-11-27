@@ -63,9 +63,7 @@ dependencies {
     implementation 'com.google.ads.mediation:facebook:4.28.2.0'
 
     //Avazu
-    implementation 'com.google.code.gson:gson:2.8.0'
-    compile(name: 'anative_common', ext: 'aar')
-    compile(name: 'anative_appwall', ext: 'aar')
+//    implementation 'com.google.code.gson:gson:2.8.0'
 //    implementation(name: 'anative_appwall', ext: 'aar')
 
     compile files('libs/batmobi-V2.9.6.jar')

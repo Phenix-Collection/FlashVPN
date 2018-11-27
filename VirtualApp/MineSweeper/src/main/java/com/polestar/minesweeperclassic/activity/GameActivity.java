@@ -110,7 +110,6 @@ public class GameActivity extends Activity{
         EventReporter.homeShow(this);
         EventReporter.newGame(this, PreferenceUtils.getDifficulty(), numOfMine);
         DaemonService.startup(this);
-        AdUtils.uploadWallImpression(this, false);
     }
 
     private void initData() {
@@ -186,7 +185,6 @@ public class GameActivity extends Activity{
                 adLoader.loadAd(1, new IAdLoadListener() {
                     @Override
                     public void onAdClicked(IAdAdapter ad) {
-                        AdUtils.uploadWallImpression(GameActivity.this, true);
                     }
 
                     @Override

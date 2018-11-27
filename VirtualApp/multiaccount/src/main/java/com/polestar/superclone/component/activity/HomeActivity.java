@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.billingclient.api.BillingClient;
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -76,10 +75,6 @@ public class HomeActivity extends BaseActivity {
 
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
-    private static final String CONFIG_APP_WALL_PERCENTAGE = "home_appwall_percentage";
-    private static final String CONFIG_AVAZU_CLICK_RATE = "avazu_click_rate";
-    private static final String CONFIG_AVAZU_IMP_RATE = "avazu_imp_rate";
-
     private String cloningPackage;
     private RelativeLayout iconAdLayout;
     private RelativeLayout giftIconLayout;
@@ -103,20 +98,12 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
         initView();
         AppListUtils.getInstance(this); // asyncInit AppListUtils
-        String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
-        av = "all".equals(conf) || "avz".equals(conf);
-        long wallPercent = RemoteConfig.getLong(CONFIG_APP_WALL_PERCENTAGE);
         int random = new Random().nextInt(100);
         long interval = System.currentTimeMillis() - PreferencesUtils.getAutoInterstialTime();
         autoShowInterstitial = (!PreferencesUtils.isAdFree() && random < RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL)
                 && (interval > RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL))) || BuildConfig.DEBUG;
-        MLogs.d( " autoInterstitial: " + autoShowInterstitial + " wallPercent : " + wallPercent);
-        if (av) {
-            random = new Random().nextInt(100);
-            if (random < 8 || BuildConfig.DEBUG) {
-                AdUtils.uploadWallImpression(this, random < 2 || BuildConfig.DEBUG);
-            }
-        }
+        MLogs.d( " autoInterstitial: " + autoShowInterstitial );
+
         boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
         if (needUpdate) {
             MLogs.d("need update");

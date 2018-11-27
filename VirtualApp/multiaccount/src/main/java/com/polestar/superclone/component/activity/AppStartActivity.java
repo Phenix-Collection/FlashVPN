@@ -30,7 +30,6 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.clone.CloneAgent64;
-import com.polestar.grey.GreyAttribute;
 import com.polestar.superclone.BuildConfig;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
@@ -234,25 +233,7 @@ public class AppStartActivity extends BaseActivity {
         if (needDoUpGrade) {
             AppManager.upgradeApp(appModel.getPackageName());
         }
-        if (mFirstStart) {
-            GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
-        } else {
-            if (!TextUtils.isEmpty(GreyAttribute.getReferrer(AppStartActivity.this, appModel.getPackageName()))){
-                EventReporter.greyAttribute(AppStartActivity.this, "app_launch_attri", appModel.getPackageName());
-                GreyAttribute.putReferrer(AppStartActivity.this, appModel.getPackageName(), "");
-            }
-        }
         AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
-        mainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                MLogs.d("AppStart finish");
-                if (mFirstStart) {
-                    GreyAttribute.sendAttributor(AppStartActivity.this, appModel.getPackageName());
-                }
-                finish();
-            }
-        }, 4000);
         finishIfTimeout();
     }
 
