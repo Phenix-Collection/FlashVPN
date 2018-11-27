@@ -39,12 +39,12 @@ public class BoostMgr {
     static final String PREF_KEY_LAST_TIME_SHOW_AUTO_AD = "last_time_show_auto_ad";
 
     private static BoostMgr sInstance;
-    private static final int AUTO_AD_HISTORY_ACTIVITY_INSTALL = 11;
-    private static final int OK_INSTALL = 10;
-    private static final int NO_FILL_INSTALL = 12;
-    private static final int AUTO_AD_HISTORY_ACTIVITY_UNLOCK = 21;
-    private static final int OK_UNLOCK = 20;
-    private static final int NO_FILL_UNLOCK = 22;
+    private static final String AUTO_AD_HISTORY_ACTIVITY_INSTALL = "install_but_history";
+    private static final String OK_INSTALL = "install_show";
+    private static final String NO_FILL_INSTALL = "no_fill_install";
+    private static final String AUTO_AD_HISTORY_ACTIVITY_UNLOCK = "unlock_but_history";
+    private static final String OK_UNLOCK = "unlock_show";
+    private static final String NO_FILL_UNLOCK = "no_fill_unlock";
 
 
     public static BoostMgr getInstance(Context context) {
