@@ -376,7 +376,7 @@ public class PreferencesUtils {
     }
 
     public static String getInstallChannel() {
-        return getString(MApp.getApp(), "install_channel", null);
+        return getString(MApp.getApp(), "install_channel", "not_set");
     }
 
     public static void setGMSEnable(boolean enable) {

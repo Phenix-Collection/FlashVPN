@@ -158,12 +158,6 @@
             </intent-filter>
         </receiver>
 
-        <provider
-            android:name="com.tencent.mid.api.MidProvider"
-            android:authorities="mochat.multiple.parallel.whatsclone.TENCENT.MID.V3"
-            android:exported="true" >
-        </provider>
-
         <activity
             android:name=".component.activity.WrapCoverAdActivity"
             android:exported="true"

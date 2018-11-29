@@ -8,13 +8,13 @@ def releaseTime() {
     return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
 }
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "27.0.3"
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 26
         multiDexEnabled = true
     }
 
@@ -109,8 +109,8 @@ dependencies {
     //compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.google.android.exoplayer:exoplayer-dash:r2.4.4'
     // MTA
-    compile files('libs/mid-sdk-3.5.jar')
-    compile files('libs/mta-sdk-2.2.0.jar')
+//    compile files('libs/mid-sdk-3.5.jar')
+//    compile files('libs/mta-sdk-2.2.0.jar')
 
 
     //    compile files('libs/mta-sdk-2.2.0.jar')

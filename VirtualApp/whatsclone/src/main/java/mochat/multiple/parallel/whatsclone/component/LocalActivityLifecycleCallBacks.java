@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
-import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 
 /**
  * Created by yxx on 2016/9/7.
@@ -36,7 +35,6 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
         MLogs.e("onActivityResumed " +  activity.getComponentName());
         isForground = true;
         //MTA
-        EventReporter.onResume(activity);
     }
 
     @Override
@@ -44,7 +42,6 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
         MLogs.e("onActivityPaused " + activity.getComponentName());
         isForground = false;
         //MTA
-        EventReporter.onPause(activity);
     }
 
     @Override

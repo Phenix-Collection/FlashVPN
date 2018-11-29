@@ -12,7 +12,6 @@ import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.stat.StatConfig;
 
 /**
  * Created by guojia on 2017/5/4.
@@ -75,7 +74,7 @@ public class ReferrerReceiver extends BroadcastReceiver {
         if(!TextUtils.isEmpty(utm_source)) {
             PreferencesUtils.setInstallChannel(utm_source);
             CrashReport.setAppChannel(MApp.getApp(), utm_source);
-            StatConfig.setInstallChannel(MApp.getApp(), utm_source);
+            EventReporter.setChannel(utm_source);
             EventReporter.reportReferrer(MApp.getApp(), utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid);
         }
         new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
