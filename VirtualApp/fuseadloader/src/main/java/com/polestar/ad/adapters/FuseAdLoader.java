@@ -366,12 +366,12 @@ public class FuseAdLoader {
                 return new FBInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL:
                 return new AdmobInterstitialAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL:
-                return new BtInterstitialAdapter(mContext, config.key);
+//            case AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL:
+//                return new BtInterstitialAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL:
                 return new MopubInterstitialAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_BT :
-                return new BtNativeAdapter(mContext, config.key);
+//            case AdConstants.NativeAdType.AD_SOURCE_BT :
+//                return new BtNativeAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_ADMOB_REWARD :
                 return new AdmobRewardVideoAdapter(mContext, config.key);
             case AdConstants.NativeAdType.AD_SOURCE_FB_REWARD :
@@ -387,9 +387,9 @@ public class FuseAdLoader {
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL);
+//        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT);
+//        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
         SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL);

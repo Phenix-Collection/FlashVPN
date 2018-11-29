@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
@@ -64,6 +64,6 @@ dependencies {
 
 //    implementation(name: 'anative_appwall', ext: 'aar')
 
-    compile files('libs/batmobi-V2.9.6.jar')
+//    compile files('libs/batmobi-V2.9.6.jar')
 
 }
