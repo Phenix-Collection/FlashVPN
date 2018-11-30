@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.batmobi.BatmobiLib;
+//import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
@@ -96,7 +96,7 @@ public class MApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
-        BatmobiLib.init(gDefault, "8W4OBQJHMXNI1TM9TGZAK4HF");
+//        BatmobiLib.init(gDefault, "8W4OBQJHMXNI1TM9TGZAK4HF");
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
