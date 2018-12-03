@@ -75,11 +75,11 @@ public class DaemonService extends Service {
             //  remoteViews = new RemoteViews(this.getPackageName(), R.layout.quick_switch_notification);
             Notification notification;
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
-                Intent start = new Intent();
+                Intent start = getPackageManager().getLaunchIntentForPackage(VirtualCore.get().getHostPkg());
                 start.addCategory(Intent.CATEGORY_LAUNCHER);
                 start.setAction(Intent.ACTION_MAIN);
-                start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                start.setPackage(this.getPackageName());
+                //start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //start.setClass(this, )
 
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -102,9 +102,11 @@ public class DaemonService extends Service {
                 notification = new Notification();
             }
             VLog.e("DaemonService", "Start foreground");
-            startForeground(NOTIFY_ID, notification);
-//            stopForeground(true);
-//            stopSelf();
+            startForeground(NOTIFY_ID + 1, notification);
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+                stopForeground(true);
+                stopSelf();
+            }
             return super.onStartCommand(intent, flags, startId);
         }
 
