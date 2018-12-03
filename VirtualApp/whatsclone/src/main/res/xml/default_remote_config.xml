@@ -13,6 +13,10 @@
         <key>quit_rating_cloned_app_gate</key>
         <value>5</value>
     </entry>
+    <entry>
+        <key>home_ad_refresh_interval_s</key>
+        <value>60</value>
+    </entry>
 
     <entry>
         <key>home_appwall_percentage</key>

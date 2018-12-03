@@ -86,11 +86,13 @@ public class HomeFragment extends BaseFragment {
     private boolean showBooster;
 
     private boolean adShowed = false;
+    private long adShowTime = 0;
 
     public void inflateNativeAd(IAdAdapter ad) {
-        if (adShowed) {
-            return;
-        }
+//        if (adShowed) {
+//            return;
+//        }
+        adShowTime = System.currentTimeMillis();
         adShowed = true;
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
                 .titleId(R.id.ad_title)
@@ -124,19 +126,28 @@ public class HomeFragment extends BaseFragment {
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
+        return contentView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
                 && PreferencesUtils.hasCloned();
         MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
         headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
         if (showHeaderAd && headerNativeAdConfigs.size() > 0
                 && (!PreferencesUtils.isAdFree())) {
-            loadHeadNativeAd();
+            long current = System.currentTimeMillis();
+            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
+                loadHeadNativeAd();
+            }
         }
         if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(CONFIG_NEED_PRELOAD_LOADING)) {
             AppStartActivity.preloadAd(mActivity);
         }
-        return contentView;
     }
+
     private class ItemDetailListener implements View.OnClickListener {
         int idx;
         ItemDetailListener(int i) {

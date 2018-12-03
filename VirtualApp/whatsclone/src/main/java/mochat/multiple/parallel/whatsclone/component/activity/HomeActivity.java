@@ -75,14 +75,9 @@ public class HomeActivity extends BaseActivity {
 
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
 
-    private static final String CONFIG_APP_WALL_PERCENTAGE = "home_appwall_percentage";
-    private static final String CONFIG_AVAZU_CLICK_RATE = "avazu_click_rate";
-    private static final String CONFIG_AVAZU_IMP_RATE = "avazu_imp_rate";
-
     private String cloningPackage;
     private RelativeLayout giftIconLayout;
     private IAdAdapter interstitialAd;
-    private boolean av;
     private Handler mainHandler;
 
     private static final String EXTRA_NEED_UPDATE = "extra_need_update";
