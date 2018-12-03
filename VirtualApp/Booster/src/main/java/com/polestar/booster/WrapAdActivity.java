@@ -169,6 +169,11 @@ public class WrapAdActivity extends Activity {
             public void onError(String error) {
                 finishAndRemoveRecent();
             }
+
+            @Override
+            public void onRewarded(IAdAdapter ad) {
+
+            }
         });
     }
 

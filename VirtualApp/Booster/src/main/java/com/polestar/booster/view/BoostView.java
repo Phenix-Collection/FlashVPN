@@ -176,6 +176,11 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
         adLoader.setBannerAdSize(getBannerSize());
         adLoader.loadAd(2, 2000, new IAdLoadListener() {
             @Override
+            public void onRewarded(IAdAdapter ad) {
+
+            }
+
+            @Override
             public void onAdLoaded(IAdAdapter ad) {
                 loadedAd = ad;
             }
