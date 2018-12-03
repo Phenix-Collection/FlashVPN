@@ -2,6 +2,8 @@ package com.lody.virtual.client.stub;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -78,7 +80,19 @@ public class DaemonService extends Service {
                 start.setAction(Intent.ACTION_MAIN);
                 start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 start.setPackage(this.getPackageName());
-                Notification.Builder mBuilder =  new Notification.Builder(this);
+
+
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                String channel_id = "_id_service_";
+                NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Clone App Messaging", importance);
+                notificationChannel.enableLights(false);
+                //notificationChannel.setLightColor(Color.RED);
+                notificationChannel.enableVibration(false);
+                notificationChannel.setDescription("Clone App Messaging & Notification");
+                //notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                notificationManager.createNotificationChannel(notificationChannel);
+                Notification.Builder mBuilder =  new Notification.Builder(this, channel_id);
                 mBuilder.setContentTitle(getString(R.string.daemon_notification_text))
                         .setContentText(getString(R.string.daemon_notification_detail))
                         .setSmallIcon(this.getResources().getIdentifier("ic_launcher", "mipmap", this.getPackageName()))
@@ -87,9 +101,10 @@ public class DaemonService extends Service {
             } else {
                 notification = new Notification();
             }
+            VLog.e("DaemonService", "Start foreground");
             startForeground(NOTIFY_ID, notification);
-            stopForeground(true);
-            stopSelf();
+//            stopForeground(true);
+//            stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
 
