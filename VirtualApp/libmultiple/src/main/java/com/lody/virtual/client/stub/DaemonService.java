@@ -47,16 +47,20 @@ public class DaemonService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        startService(new Intent(this, InnerService.class));
-        startForeground(NOTIFY_ID, new Notification());
+        try {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+                startForegroundService(new Intent(this, InnerService.class));
+            } else {
+                startService(new Intent(this, InnerService.class));
+            }
+            startForeground(NOTIFY_ID, new Notification());
 
-        //发送唤醒广播来促使挂掉的UI进程重新启动起来
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent alarmIntent = new Intent();
-        alarmIntent.setAction(WAKE_ACTION);
-        PendingIntent operation = PendingIntent.getBroadcast(this, 1111, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		try {
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, operation);
+            //发送唤醒广播来促使挂掉的UI进程重新启动起来
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent alarmIntent = new Intent();
+            alarmIntent.setAction(WAKE_ACTION);
+            PendingIntent operation = PendingIntent.getBroadcast(this, 1111, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, operation);
 		}catch (Exception e) {
 			VLog.logbug("Alarm", VLog.getStackTraceString(e));
 		}
@@ -102,7 +106,7 @@ public class DaemonService extends Service {
                 notification = new Notification();
             }
             VLog.e("DaemonService", "Start foreground");
-            startForeground(NOTIFY_ID + 1, notification);
+            startForeground(NOTIFY_ID , notification);
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
                 stopForeground(true);
                 stopSelf();
