@@ -149,4 +149,6 @@
     <string name="check_update"><u>Vérifier la mise à jour</u></string>
     <string name="saturation">Saturation</string>
     <string name="about">Sur</string>
+    <string name="content_popular">Cloné à chaud</string>
+    <string name="content_recommend">Choix de l\'éditeur</string>
 </resources>

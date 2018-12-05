@@ -60,6 +60,11 @@ public class WrapCoverAdActivity extends Activity {
             }
 
             @Override
+            public void onRewarded(IAdAdapter ad) {
+
+            }
+
+            @Override
             public void onAdClosed(IAdAdapter ad) {
                 MLogs.d(TAG, " onCoverAdClosed");
                 if(!CloneAgent64.needArm64Support(WrapCoverAdActivity.this,pkg)) {

@@ -36,7 +36,6 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
         MLogs.e("onActivityResumed " +  activity.getComponentName());
         isForground = true;
         //MTA
-        EventReporter.onResume(activity);
     }
 
     @Override
@@ -44,7 +43,6 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
         MLogs.e("onActivityPaused " + activity.getComponentName());
         isForground = false;
         //MTA
-        EventReporter.onPause(activity);
     }
 
     @Override

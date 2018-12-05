@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
 
-import static com.tencent.stat.lbs.StatLbsClient.TAG;
 
 /**
  * This class handles all touch events associated with a user
@@ -255,7 +254,7 @@ public class DragController {
         v.buildDrawingCache();
         Bitmap cacheBitmap = v.getDrawingCache();
         if (cacheBitmap == null) {
-            Log.e(TAG, "failed getViewBitmap(" + v + ")", new RuntimeException());
+//            Log.e(TAG, "failed getViewBitmap(" + v + ")", new RuntimeException());
             return null;
         }
 

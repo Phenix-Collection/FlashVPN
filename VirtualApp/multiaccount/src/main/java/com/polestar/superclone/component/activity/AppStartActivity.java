@@ -146,6 +146,11 @@ public class AppStartActivity extends BaseActivity {
         if(mAdLoader.hasValidAdSource()){
             mAdLoader.loadAd(1, new IAdLoadListener() {
                 @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdClicked(IAdAdapter ad) {
 
                 }
@@ -268,7 +273,7 @@ public class AppStartActivity extends BaseActivity {
                         @Override
                         public void run() {
                             UpDownDialog.show(AppStartActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
-                                    getString(R.string.no_thanks), getString(R.string.anative_install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                    getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             switch (i) {

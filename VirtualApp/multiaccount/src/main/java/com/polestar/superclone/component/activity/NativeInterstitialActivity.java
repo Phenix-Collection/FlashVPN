@@ -129,6 +129,11 @@ public class NativeInterstitialActivity extends Activity {
             }
 
             @Override
+            public void onRewarded(IAdAdapter ad) {
+
+            }
+
+            @Override
             public void onAdClosed(IAdAdapter ad) {
 
             }

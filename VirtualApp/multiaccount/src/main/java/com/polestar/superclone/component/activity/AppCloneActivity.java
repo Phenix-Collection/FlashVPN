@@ -345,6 +345,11 @@ public class AppCloneActivity extends BaseActivity {
         if ( mNativeAdLoader.hasValidAdSource()) {
             mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_AD_AFTER_CLONE_PROTECT_TIME), new IAdLoadListener() {
                 @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdClicked(IAdAdapter ad) {
 
                 }

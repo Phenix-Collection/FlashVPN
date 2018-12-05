@@ -17,7 +17,7 @@
             android:layout_height="40dp"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
-            android:text="@string/anative_content_popular"
+            android:text="@string/content_popular"
             android:textColor="@color/text_gray_medium"
             android:textSize="14sp"/>
 
@@ -38,7 +38,7 @@
             android:layout_height="40dp"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
-            android:text="@string/anative_content_recommend"
+            android:text="@string/content_recommend"
             android:textColor="@color/text_gray_medium"
             android:textSize="14sp"/>
 

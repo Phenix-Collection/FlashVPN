@@ -109,8 +109,8 @@ dependencies {
     //compile 'com.google.code.gson:gson:2.3.1'
 
     // MTA
-    compile files('libs/mid-sdk-3.5.jar')
-    compile files('libs/mta-sdk-2.2.0.jar')
+//    compile files('libs/mid-sdk-3.5.jar')
+//    compile files('libs/mta-sdk-2.2.0.jar')
 
 
     //    compile files('libs/mta-sdk-2.2.0.jar')

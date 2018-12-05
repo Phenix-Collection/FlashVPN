@@ -3,7 +3,9 @@ package com.polestar.superclone;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -11,7 +13,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
@@ -31,6 +32,7 @@ import com.polestar.superclone.component.AppMonitorService;
 import com.polestar.superclone.component.LocalActivityLifecycleCallBacks;
 import com.polestar.superclone.component.MComponentDelegate;
 import com.polestar.superclone.component.activity.AppStartActivity;
+import com.polestar.superclone.component.receiver.PackageChangeReceiver;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.MLogs;
@@ -45,9 +47,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-
-import nativesdk.ad.common.AdSdk;
-import nativesdk.ad.common.manager.PermissionManager;
 
 
 public class MApp extends MultiDexApplication {
@@ -113,7 +112,6 @@ public class MApp extends MultiDexApplication {
 
     @Override
     protected void attachBaseContext(Context base) {
-        Log.d(MLogs.DEFAULT_TAG, "APP version: " + BuildConfig.VERSION_NAME + " Type: " + BuildConfig.BUILD_TYPE);
         Log.d(MLogs.DEFAULT_TAG, "LIB version: " + com.lody.virtual.BuildConfig.VERSION_NAME + " Type: " + com.lody.virtual.BuildConfig.BUILD_TYPE );
 
         super.attachBaseContext(base);
@@ -131,12 +129,6 @@ public class MApp extends MultiDexApplication {
 
     private void initAd() {
         MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8640815381");
-        String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
-        boolean av = "all".equals(conf) || "avz".equals(conf);
-        if (av) {
-            PermissionManager.setIsAgreePermission(gDefault, true);
-            AdSdk.initialize(gDefault, AppConstants.AV_APP_ID, null );
-        }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
@@ -148,7 +140,7 @@ public class MApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
-        BatmobiLib.init(gDefault, "8W4OBQJHMXNI1TM9TGZAK4HF");
+//        BatmobiLib.init(gDefault, "8W4OBQJHMXNI1TM9TGZAK4HF");
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
@@ -209,6 +201,7 @@ public class MApp extends MultiDexApplication {
                         }
                     }
                 }
+                initReceiver();
             }
 
             @Override
@@ -309,6 +302,17 @@ public class MApp extends MultiDexApplication {
         });
     }
 
+    private void initReceiver() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+            filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+            filter.addDataScheme("package");
+            getApp().registerReceiver(new PackageChangeReceiver(),
+                    filter);
+        }
+    }
+
     private class MAppCrashHandler implements Thread.UncaughtExceptionHandler {
 
         private Context context;
@@ -357,6 +361,7 @@ public class MApp extends MultiDexApplication {
             crash.putExtra("forground", forground);
             crash.putExtra("exception", ex);
             crash.putExtra("tag", tag);
+            crash.setPackage(BuildConfig.APPLICATION_ID);
             sendBroadcast(crash);
             //CrashReport.postCatchedException(ex);
             try {

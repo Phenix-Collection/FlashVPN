@@ -252,6 +252,11 @@ public class AppListActivity extends BaseActivity implements DataObserver {
                 }
 
                 @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdClosed(IAdAdapter ad) {
 
                 }

@@ -124,6 +124,11 @@ public class AppLockActivity extends BaseActivity {
                 }
 
                 @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdClosed(IAdAdapter ad) {
 
                 }

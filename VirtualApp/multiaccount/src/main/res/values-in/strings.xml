@@ -192,4 +192,5 @@
     <string name="check_update"><u>Cek pembaruan</u></string>
     <string name="saturation">Kejenuhan</string>
     <string name="about">Tentang</string>
+    <string name="content_recommend">Pilihan Editor</string>
 </resources>

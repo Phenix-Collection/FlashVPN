@@ -439,6 +439,11 @@ public class HomeFragment extends BaseFragment {
                 }
 
                 @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
+                @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     nativeAd = ad;
                     inflateNativeAd(ad);
