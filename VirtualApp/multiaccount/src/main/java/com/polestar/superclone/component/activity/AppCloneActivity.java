@@ -327,6 +327,7 @@ public class AppCloneActivity extends BaseActivity {
                 .iconImageId(R.id.ad_icon_image)
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
+                .adFlagId(R.id.ad_flag)
                 .build();
         View adView = ad.getAdView(viewBinder);
         if (adView != null) {

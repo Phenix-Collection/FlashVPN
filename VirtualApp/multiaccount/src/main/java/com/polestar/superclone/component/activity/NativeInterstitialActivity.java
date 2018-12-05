@@ -175,6 +175,7 @@ public class NativeInterstitialActivity extends Activity {
                     .callToActionId(R.id.ad_cta_text)
                     .privacyInformationId(R.id.ad_choices_image)
                     .starLevelLayoutId(R.id.star_level_layout)
+                    .adFlagId(R.id.ad_flag)
                     .build();
             View adView = ad.getAdView(viewBinder);
             mAdContainer.addView(adView);

@@ -75,6 +75,7 @@ public class HomeFragment extends BaseFragment {
     private LinearLayout nativeAdContainer;
 
     private IAdAdapter nativeAd;
+    private long adShowTime = 0;
 
     private FuseAdLoader mNativeAdLoader;
     private FuseAdLoader mApplistAdLoader;
@@ -91,9 +92,10 @@ public class HomeFragment extends BaseFragment {
     private boolean adShowed = false;
 
     public void inflateNativeAd(IAdAdapter ad) {
-        if (adShowed) {
-            return;
-        }
+//        if (adShowed) {
+//            return;
+//        }
+        adShowTime = System.currentTimeMillis();
         adShowed = true;
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
                 .titleId(R.id.ad_title)
@@ -104,6 +106,7 @@ public class HomeFragment extends BaseFragment {
                 .admMediaId(R.id.ad_adm_mediaview)
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
+                .adFlagId(R.id.ad_flag)
                 .build();
         View adView = ad.getAdView(viewBinder);
         nativeAdContainer.removeAllViews();
@@ -128,17 +131,6 @@ public class HomeFragment extends BaseFragment {
         mExplosionField = ExplosionField.attachToWindow(mActivity);
         initView();
         initData();
-        boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
-                && PreferencesUtils.hasCloned();
-        MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
-        headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
-        if (showHeaderAd && headerNativeAdConfigs.size() > 0
-                && (!PreferencesUtils.isAdFree())) {
-            loadHeadNativeAd();
-        }
-        if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
-            AppStartActivity.preloadAd(mActivity);
-        }
         mDragController = new DragController(mActivity);
         mDragController.setDragListener(mDragListener);
         mDragController.setWindowToken(contentView.getWindowToken());
@@ -419,6 +411,25 @@ public class HomeFragment extends BaseFragment {
         if (longClickGuide !=null) longClickGuide.dismiss();
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
+                && PreferencesUtils.hasCloned();
+        MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
+        headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
+        if (showHeaderAd && headerNativeAdConfigs.size() > 0
+                && (!PreferencesUtils.isAdFree())) {
+            long current = System.currentTimeMillis();
+            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
+                loadHeadNativeAd();
+            }
+        }
+        if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
+            AppStartActivity.preloadAd(mActivity);
+        }
+    }
 
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {

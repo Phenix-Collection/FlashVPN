@@ -273,6 +273,10 @@
         <key>slot_intercept_ad</key>
         <value>ab_interstitial:ca-app-pub-5490912237269284/1906457047:0</value>
     </entry>
+    <entry>
+        <key>home_ad_refresh_interval_s</key>
+        <value>60</value>
+    </entry>
     <!--
     <entry>
         <key>config_ad_load_timeout</key>

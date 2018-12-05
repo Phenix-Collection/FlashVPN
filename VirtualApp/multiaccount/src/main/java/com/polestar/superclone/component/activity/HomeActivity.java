@@ -290,7 +290,7 @@ public class HomeActivity extends BaseActivity {
         } else {
             hideAd();
         }
-        EventReporter.reportActive(this, true);
+        EventReporter.reportActive(this, true, "main");
     }
 
     @Override

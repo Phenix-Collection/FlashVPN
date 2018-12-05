@@ -228,7 +228,7 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("click_event", prop);
     }
 
-    public static void reportActive(Context context, boolean fg){
+    public static void reportActive(Context context, boolean fg, String action){
         if (!PreferencesUtils.needReportActive(fg)) {
             return;
         }

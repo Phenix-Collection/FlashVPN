@@ -53,6 +53,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:text="AD"
+                android:id="@+id/ad_flag"
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp" />
 

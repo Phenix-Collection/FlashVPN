@@ -387,7 +387,7 @@ public class AppStartActivity extends BaseActivity {
         if (appModel != null && needLoadNativeAd(false, appModel.getPackageName())) {
             loadNativeAd();
         }
-        EventReporter.reportActive(this, true);
+        EventReporter.reportActive(this, true,"shortcut");
 
     }
 
