@@ -1,1 +1,2 @@
-include ':libmultiple',':Booster', ':fuseadloader', ":whatsclone"
+include ':libmultiple', ':multiaccount', ':Booster', ':domultiple', ':fuseadloader', ':MineSweeper',":whatsclone"
+
