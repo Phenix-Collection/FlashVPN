@@ -59,6 +59,7 @@ public class DaemonService extends Service {
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent alarmIntent = new Intent();
             alarmIntent.setAction(WAKE_ACTION);
+            alarmIntent.setPackage(VirtualCore.get().getHostPkg());
             PendingIntent operation = PendingIntent.getBroadcast(this, 1111, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, operation);
 		}catch (Exception e) {
