@@ -122,6 +122,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
 //                break;
             default:
                 viewBinder = new AdViewBinder.Builder(R.layout.booster_native_ad)
+                        .adFlagId(R.id.ad_flag)
                         .titleId(R.id.ad_title)
                         .textId(R.id.ad_subtitle_text)
                         .mainMediaId(R.id.ad_cover_image)
