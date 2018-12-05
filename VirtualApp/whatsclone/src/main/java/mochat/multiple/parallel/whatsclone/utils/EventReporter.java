@@ -2,6 +2,7 @@ package mochat.multiple.parallel.whatsclone.utils;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import mochat.multiple.parallel.whatsclone.MApp;
@@ -16,18 +17,21 @@ public class EventReporter {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
 
+    private static final String PROP_CHANNEL = "channel";
+    private static final String PROP_CAMP = "campaign";
+
 
     public static void init(Context context) {
         //StatConfig.init(context);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(MApp.getApp());
         String channel = CommonUtils.getMetaDataInApplicationTag(context, "CHANNEL_NAME");
         String referChannel = PreferencesUtils.getInstallChannel();
-        mFirebaseAnalytics.setUserProperty("channel", referChannel);
+        mFirebaseAnalytics.setUserProperty(PROP_CHANNEL, referChannel);
         MLogs.e("MTA channel: " + channel + " refer: " + referChannel);
     }
 
     public static void setChannel(String channel) {
-        mFirebaseAnalytics.setUserProperty("channel",channel);
+        mFirebaseAnalytics.setUserProperty(PROP_CHANNEL,channel);
     }
 
     public class KeyLogTag {
@@ -200,6 +204,9 @@ public class EventReporter {
         prop.putString(ReferrerReceiver.UTM_SOURCE, utm_source == null? "" : utm_source);
         prop.putString(ReferrerReceiver.UTM_MEDIUM, utm_medium == null? "" : utm_medium);
         prop.putString(ReferrerReceiver.UTM_CAMPAIGN, utm_campaign == null? "" : utm_campaign);
+        if (!TextUtils.isEmpty(utm_campaign)) {
+            mFirebaseAnalytics.setUserProperty(PROP_CAMP, utm_campaign);
+        }
         mFirebaseAnalytics.logEvent("install_referrer", prop);
     }
 
