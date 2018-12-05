@@ -22,6 +22,7 @@ public class AdViewBinder {
         private int iconImageId = -1;
         private int privacyInformationId;
         private int starLevelLayoutId = -1;
+        private int adFlagId = -1;
         @NonNull
         private Map<String, Integer> extras = Collections.emptyMap();
 
@@ -85,6 +86,12 @@ public class AdViewBinder {
         }
 
         @NonNull
+        public final Builder adFlagId(final int adFlagId) {
+            this.adFlagId = adFlagId;
+            return this;
+        }
+
+        @NonNull
         public final Builder addExtras(final Map<String, Integer> resourceIds) {
             this.extras = new HashMap<String, Integer>(resourceIds);
             return this;
@@ -115,6 +122,8 @@ public class AdViewBinder {
     public final int iconImageId;
     public final int privacyInformationId;
     public final int starLevelLayoutId;
+    public final int adFlagId;
+
     @NonNull public final Map<String, Integer> extras;
 
     private AdViewBinder(@NonNull final Builder builder) {
@@ -129,5 +138,6 @@ public class AdViewBinder {
         this.admMediaId = builder.admMediaId;
         this.fbMediaId = builder.fbMediaId;
         this.extras = builder.extras;
+        this.adFlagId = builder.adFlagId;
     }
 }
