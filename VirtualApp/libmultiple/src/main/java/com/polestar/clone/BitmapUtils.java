@@ -13,6 +13,7 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
@@ -32,6 +33,8 @@ public class BitmapUtils {
     public static final int APP_ICON_WIDTH = 50;//dp
     public static final int APP_ICON_RADIUS = 12;//dp
     public static final int APP_ICON_PADDING = 5;//dp
+    public static final float APP_BADGE_TEXT_SIZE = 5.5f;//dp
+    public static final float APP_BADGE_TEXT_SIZE_SMALL = 4.5f;//dp
     public static final String ICON_FILE_PATH = "/icons";
 
     public static int dip2px(Context context, float dip) {
@@ -115,7 +118,7 @@ public class BitmapUtils {
     }
 
     public static int getRingIconId(Context paramContext, int userId) {
-        return paramContext.getResources().getIdentifier(userId == 0? "ring_icon" : "ring_icon_"+(userId+1),
+        return paramContext.getResources().getIdentifier(userId == 0? "ring_icon" : "ring_icon_template",
                 "mipmap", paramContext.getPackageName());
     }
 
@@ -146,6 +149,23 @@ public class BitmapUtils {
 //            int numberWidth = DisplayUtils.dip2px(context, 10);
 //            canvas.drawBitmap(Bitmap.createScaledBitmap(numberBmp,numberWidth,numberWidth,true),
 //                    new Rect(0,width-numberWidth,numberWidth,width), new Rect(0,width-numberWidth,numberWidth,width),null);
+            if (userId >= 1) {
+                paint.setColor(Color.parseColor("#FFFFFF"));
+                paint.setAntiAlias(true);
+                paint.setTypeface(Typeface.DEFAULT_BOLD);
+                if (userId < 9) {
+                    paint.setTextSize(dip2px(context, APP_BADGE_TEXT_SIZE));
+                    canvas.drawText("" + (userId + 1),
+                            width - dip2px(context, 6), width - dip2px(context, 5), paint);
+                } else {
+                    paint.setTextSize(dip2px(context, APP_BADGE_TEXT_SIZE_SMALL));
+                    canvas.drawText("" + (userId + 1),
+                            width - dip2px(context, 7.3f), width - dip2px(context, 5.3f), paint);
+                }
+            }
+//            final Rect rect2 = new Rect(width - 40, width - 40, width, width);
+//            final float roundPx2 = dip2px(context, 2);
+//            canvas.drawRoundRect(new RectF(rect2),roundPx2,roundPx2,paint);
         }catch (OutOfMemoryError error){
             error.printStackTrace();
             shortCutBitMap = null;
