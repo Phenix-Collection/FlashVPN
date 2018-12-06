@@ -239,6 +239,7 @@ public class EventReporter {
         prop.putString("adfree", "" + PreferencesUtils.isAdFree());
         prop.putString("rated", "" + PreferencesUtils.isRated());
         prop.putString("channel", "" + PreferencesUtils.getInstallChannel());
+        prop.putString("action", action);
         mFirebaseAnalytics.logEvent("track_active", prop);
     }
 
