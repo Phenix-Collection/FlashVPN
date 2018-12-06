@@ -4,6 +4,8 @@ import com.lody.virtual.client.hook.base.BinderInvocationProxy;
 import com.lody.virtual.client.hook.base.ReplaceCallingPkgMethodProxy;
 import com.lody.virtual.client.hook.base.ReplaceLastPkgMethodProxy;
 
+import java.lang.reflect.Method;
+
 import mirror.com.android.internal.telephony.ISub;
 
 /**
@@ -18,13 +20,55 @@ public class ISubStub extends BinderInvocationProxy {
     @Override
     protected void onBindMethods() {
         super.onBindMethods();
-        addMethodProxy(new ReplaceCallingPkgMethodProxy("getAllSubInfoList"));
-        addMethodProxy(new ReplaceCallingPkgMethodProxy("getAllSubInfoCount"));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("getActiveSubscriptionInfo"));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("getActiveSubscriptionInfoForIccId"));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("getActiveSubscriptionInfoForSimSlotIndex"));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("getActiveSubscriptionInfoList"));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("getActiveSubInfoCount"));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("getSubscriptionProperty"));
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("getAllSubInfoList"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    return super.call(who, method, args);
+                } catch (Throwable ex) {
+                    return null;
+                }
+            }
+        });
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("getAllSubInfoCount") {
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    return super.call(who, method, args);
+                } catch (Throwable ex) {
+                    return 0;
+                }
+            }
+        });
+        addMethodProxy(new ISubReplaceLastPkgMethodProxy("getActiveSubscriptionInfo"));
+        addMethodProxy(new ISubReplaceLastPkgMethodProxy("getActiveSubscriptionInfoForIccId"));
+        addMethodProxy(new ISubReplaceLastPkgMethodProxy("getActiveSubscriptionInfoForSimSlotIndex"));
+        addMethodProxy(new ISubReplaceLastPkgMethodProxy("getActiveSubscriptionInfoList"));
+        addMethodProxy(new ReplaceLastPkgMethodProxy("getActiveSubInfoCount"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    return super.call(who, method, args);
+                }catch (Throwable ex) {
+                    return  0;
+                }
+            }
+        });
+        addMethodProxy(new ISubReplaceLastPkgMethodProxy("getSubscriptionProperty"));
+    }
+
+    private class ISubReplaceLastPkgMethodProxy extends  ReplaceLastPkgMethodProxy {
+        public ISubReplaceLastPkgMethodProxy(String name) {
+            super(name);
+        }
+
+        @Override
+        public Object call(Object who, Method method, Object... args) throws Throwable {
+            try {
+                return super.call(who, method, args);
+            }catch (Throwable ex) {
+                return  null;
+            }
+        }
     }
 }

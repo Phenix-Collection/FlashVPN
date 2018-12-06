@@ -97,7 +97,11 @@ class MethodProxies {
                 }
 
             }
-            return super.call(who, method, args);
+            try {
+                return super.call(who, method, args);
+            }catch (Throwable ex) {
+                return new ArrayList<CellInfo>(0);
+            }
         }
     }
 
