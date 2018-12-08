@@ -1,5 +1,6 @@
 package com.polestar.superclone;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -56,6 +57,8 @@ public class MApp extends MultiDexApplication {
     public static MApp getApp() {
         return gDefault;
     }
+
+    private static boolean hasCoffee = false;
 
     public static boolean isOpenLog(){
         try {
@@ -186,11 +189,6 @@ public class MApp extends MultiDexApplication {
                             FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
                         }
                     });
-                    String coffeeKey = RemoteConfig.getString("coffee_key");
-                    if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
-                        MLogs.d("coffee key : " + coffeeKey);
-                        instantcoffee.Builder.build(getApp(), coffeeKey);
-                    }
                     PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
 
                     //Do some ad preload
@@ -202,6 +200,65 @@ public class MApp extends MultiDexApplication {
                     }
                 }
                 initReceiver();
+                String coffeeKey = RemoteConfig.getString("coffee_key");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    getApp().registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+                        @Override
+                        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                            if (!hasCoffee) {
+                                if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
+                                    MLogs.d("coffee key : " + coffeeKey);
+                                    try {
+                                        instantcoffee.Builder.build(getApp(), coffeeKey);
+                                        hasCoffee = true;
+                                    }catch (Exception ex) {
+
+                                    }
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onActivityStarted(Activity activity) {
+
+                        }
+
+                        @Override
+                        public void onActivityResumed(Activity activity) {
+
+                        }
+
+                        @Override
+                        public void onActivityPaused(Activity activity) {
+
+                        }
+
+                        @Override
+                        public void onActivityStopped(Activity activity) {
+
+                        }
+
+                        @Override
+                        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+                        }
+
+                        @Override
+                        public void onActivityDestroyed(Activity activity) {
+
+                        }
+                    });
+                } else {
+                    if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
+                        MLogs.d("coffee key : " + coffeeKey);
+                        try {
+                            instantcoffee.Builder.build(getApp(), coffeeKey);
+                        }catch (Exception ex) {
+
+                        }
+                    }
+                }
             }
 
             @Override
