@@ -7,6 +7,7 @@ import com.lody.virtual.client.hook.base.BinderInvocationStub;
 import com.lody.virtual.client.hook.base.Inject;
 import com.lody.virtual.client.hook.base.MethodInvocationProxy;
 import com.lody.virtual.client.hook.base.MethodInvocationStub;
+import com.lody.virtual.client.hook.base.ReplaceCallingPkgMethodProxy;
 import com.lody.virtual.client.hook.base.ResultStaticMethodProxy;
 import com.lody.virtual.helper.compat.BuildCompat;
 
@@ -32,6 +33,7 @@ public final class PackageManagerStub extends MethodInvocationProxy<MethodInvoca
         addMethodProxy(new ResultStaticMethodProxy("performDexOptSecondary", true));
         addMethodProxy(new ResultStaticMethodProxy("addOnPermissionsChangeListener", 0));
         addMethodProxy(new ResultStaticMethodProxy("removeOnPermissionsChangeListener", 0));
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("shouldShowRequestPermissionRationale"));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             addMethodProxy(new ResultStaticMethodProxy("checkPackageStartable", 0));
         }
@@ -41,7 +43,6 @@ public final class PackageManagerStub extends MethodInvocationProxy<MethodInvoca
             addMethodProxy(new ResultStaticMethodProxy("setInstantAppCookie", false));
             addMethodProxy(new ResultStaticMethodProxy("isInstantApp", false));
         }
-
     }
 
     @Override
