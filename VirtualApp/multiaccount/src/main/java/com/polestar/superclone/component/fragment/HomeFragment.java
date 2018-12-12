@@ -411,26 +411,6 @@ public class HomeFragment extends BaseFragment {
         if (longClickGuide !=null) longClickGuide.dismiss();
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
-                && PreferencesUtils.hasCloned();
-        MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
-        headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
-        if (showHeaderAd && headerNativeAdConfigs.size() > 0
-                && (!PreferencesUtils.isAdFree())) {
-            long current = System.currentTimeMillis();
-            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
-                loadHeadNativeAd();
-            }
-        }
-        if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
-            AppStartActivity.preloadAd(mActivity);
-        }
-    }
-
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity().getApplicationContext());
@@ -490,6 +470,20 @@ public class HomeFragment extends BaseFragment {
         }
         if (PreferencesUtils.isAdFree()) {
             hideAd();
+        } else {
+            boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
+                    && PreferencesUtils.hasCloned();
+            MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
+            headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
+            if (showHeaderAd && headerNativeAdConfigs.size() > 0) {
+                long current = System.currentTimeMillis();
+                if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
+                    loadHeadNativeAd();
+                }
+            }
+            if (RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
+                AppStartActivity.preloadAd(mActivity);
+            }
         }
         if (pkgGridAdapter != null) {
             pkgGridAdapter.notifyDataSetChanged();
