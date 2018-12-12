@@ -3,6 +3,8 @@ package com.lody.virtual.client.hook.proxies.shortcut;
 import com.lody.virtual.client.hook.base.BinderInvocationProxy;
 import com.lody.virtual.client.hook.base.ReplaceCallingPkgMethodProxy;
 
+import java.lang.reflect.Method;
+
 import mirror.android.content.pm.ILauncherApps;
 
 /**
@@ -27,8 +29,26 @@ public class ShortcutServiceStub extends BinderInvocationProxy {
         addMethodProxy(new ReplaceCallingPkgMethodProxy("getDynamicShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("setDynamicShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("addDynamicShortcuts"));
-        addMethodProxy(new ReplaceCallingPkgMethodProxy("removeDynamicShortcuts"));
-        addMethodProxy(new ReplaceCallingPkgMethodProxy("removeAllDynamicShortcuts"));
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("removeDynamicShortcuts"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    return super.call(who, method, args);
+                }catch (Throwable ex){
+                    return 0;
+                }
+            }
+        });
+        addMethodProxy(new ReplaceCallingPkgMethodProxy("removeAllDynamicShortcuts"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    return super.call(who, method, args);
+                }catch (Throwable ex){
+                    return 0;
+                }
+            }
+        });
         addMethodProxy(new ReplaceCallingPkgMethodProxy("getPinnedShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("updateShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("createShortcutResultIntent"));
