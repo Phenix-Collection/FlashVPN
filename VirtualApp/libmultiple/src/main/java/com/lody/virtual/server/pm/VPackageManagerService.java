@@ -22,6 +22,8 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.fixer.ComponentFixer;
 import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.compat.ObjectsCompat;
+import com.lody.virtual.helper.compat.PermissionCompat;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.VParceledListSlice;
 import com.lody.virtual.server.IPackageInstaller;
@@ -81,6 +83,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
     };
 
     private final ResolveInfo mResolveInfo;
+    private final HashMap<String, String[]> mDangerousPermissions;
 
     private final ActivityIntentResolver mActivities = new ActivityIntentResolver();
     private final ServiceIntentResolver mServices = new ServiceIntentResolver();
@@ -100,6 +103,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
         Intent intent = new Intent();
         intent.setClassName(VirtualCore.get().getHostPkg(), VASettings.RESOLVER_ACTIVITY);
         mResolveInfo = VirtualCore.get().getUnHookPackageManager().resolveActivity(intent, 0);
+        mDangerousPermissions = new HashMap();
     }
 
     public static void systemReady() {
@@ -167,6 +171,16 @@ public class VPackageManagerService extends IPackageManager.Stub {
             VPackage.PermissionGroupComponent group = pkg.permissionGroups.get(i);
             mPermissionGroups.put(group.className, group);
         }
+        String[] dangrousPerms = PermissionCompat.findDangerousPermissions(pkg.requestedPermissions);
+        if (dangrousPerms != null && dangrousPerms.length >0) {
+            VLog.d(TAG, pkg.packageName+ " put danger perms: " + dangrousPerms);
+            mDangerousPermissions.put(pkg.packageName, dangrousPerms);
+        }
+    }
+
+    public String[] getDangerousPermissions(String arg3) {
+
+        return mDangerousPermissions.get(arg3);
     }
 
     void deletePackageLocked(String packageName) {

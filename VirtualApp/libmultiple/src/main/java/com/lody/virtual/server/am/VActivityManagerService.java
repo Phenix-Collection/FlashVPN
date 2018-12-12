@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ConditionVariable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.IInterface;
@@ -42,6 +43,7 @@ import com.lody.virtual.helper.compat.ActivityManagerCompat;
 import com.lody.virtual.helper.compat.ApplicationThreadCompat;
 import com.lody.virtual.helper.compat.BundleCompat;
 import com.lody.virtual.helper.compat.IApplicationThreadCompat;
+import com.lody.virtual.helper.compat.PermissionCompat;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VBinder;
@@ -60,7 +62,6 @@ import com.lody.virtual.server.pm.VPackageManagerService;
 import com.lody.virtual.server.pm.VUserManagerService;
 import com.lody.virtual.server.secondary.BinderDelegateService;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -1016,11 +1017,75 @@ public class VActivityManagerService extends IActivityManager.Stub {
         if (vpid == -1) {
             return null;
         }
+
         app = performStartProcessLocked(uid, vpid, info, processName);
         if (app != null) {
             app.pkgList.add(info.packageName);
+            try {
+                requestPermissionIfNeed(app);
+            }catch (Throwable ex) {
+                VLog.logbug(TAG, ex.toString());
+            }
         }
         return app;
+    }
+
+
+    private void requestPermissionIfNeed(ProcessRecord arg4) {
+        if(PermissionCompat.isCheckPermissionRequired(arg4.info.targetSdkVersion)) {
+            VLog.d(TAG, "requestPermission for old package " + arg4.info.packageName);
+            String[] v0 = VPackageManagerService.get().getDangerousPermissions(arg4.info.packageName);
+            if (v0 == null || v0.length == 0) {
+                return;
+            }
+            ArrayList<String> reqs = new ArrayList<>();
+            HashSet<String> hostReq = VirtualCore.get().getHostRequestDangerPermissions();
+            for (String s : v0) {
+                if (hostReq.contains(s)) {
+                    reqs.add(s);
+                } else {
+                    VLog.d("Permission", s + " is filtered due to host not request");
+                }
+            }
+            String[] res = reqs.toArray(new String[0]);
+            if (res == null || res.length == 0) {
+                return;
+            }
+
+            if(!PermissionCompat.checkPermissions(res)) {
+                VLog.d(TAG, "need request permission");
+                ConditionVariable v1 = new ConditionVariable();
+                startRequestPermissions(res, v1);
+                v1.block();
+            }
+        } else {
+            VLog.d(TAG, "will do runtime for new package " + arg4.info.packageName);
+        }
+    }
+
+    private void startRequestPermissions(String[] arg4, ConditionVariable arg5) {
+        PermissionCompat.startRequestPermissions(VirtualCore.get().getContext(), arg4, new RequestPermissionCallBack(arg5));
+    }
+
+    private class RequestPermissionCallBack implements PermissionCompat.CallBack{
+        private final ConditionVariable permissionLock;
+
+        RequestPermissionCallBack(ConditionVariable lock) {
+            permissionLock = lock;
+        }
+        @Override
+        public boolean onResult(int arg1, String[] arg2, int[] arg3) {
+            boolean mResult;
+            try {
+                mResult = PermissionCompat.isRequestGranted(arg3);
+            }
+            catch(Throwable v0) {
+                throw v0;
+            } finally {
+                permissionLock.open();
+            }
+            return mResult;
+        }
     }
 
     private void sendFirstLaunchBroadcast(PackageSetting ps, int userId) {

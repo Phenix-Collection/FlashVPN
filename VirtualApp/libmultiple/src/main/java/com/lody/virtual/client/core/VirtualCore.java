@@ -37,6 +37,7 @@ import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.client.ipc.VirtualStorageManager;
 import com.lody.virtual.client.stub.VASettings;
 import com.lody.virtual.helper.compat.BundleCompat;
+import com.lody.virtual.helper.compat.PermissionCompat;
 import com.polestar.clone.BitmapUtils;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
@@ -48,6 +49,7 @@ import com.lody.virtual.server.interfaces.IPackageObserver;
 import com.lody.virtual.server.interfaces.IUiCallback;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 import dalvik.system.DexFile;
@@ -182,7 +184,8 @@ public final class VirtualCore {
             this.context = context;
             mainThread = ActivityThread.currentActivityThread.call();
             unHookPackageManager = context.getPackageManager();
-            hostPkgInfo = unHookPackageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_PROVIDERS);
+            hostPkgInfo = unHookPackageManager.getPackageInfo(context.getPackageName(),
+                    PackageManager.GET_PROVIDERS|PackageManager.GET_PERMISSIONS);
             detectProcessType();
             InvocationStubManager invocationStubManager = InvocationStubManager.getInstance();
             invocationStubManager.init();
@@ -194,6 +197,20 @@ public final class VirtualCore {
                 initLock = null;
             }
         }
+    }
+
+
+    private static HashSet<String> reqPerms;
+    public synchronized final HashSet<String> getHostRequestDangerPermissions() {
+        if (reqPerms == null) {
+            reqPerms = new HashSet<>();
+            for(String s: hostPkgInfo.requestedPermissions) {
+                if(PermissionCompat.DANGEROUS_PERMISSION.contains(s)) {
+                    reqPerms.add(s);
+                }
+            }
+        }
+        return reqPerms;
     }
 
     public void waitForEngine() {
@@ -651,6 +668,13 @@ public final class VirtualCore {
         } catch (RemoteException e) {
             return VirtualRuntime.crash(e);
         }
+    }
+
+    public final boolean checkSelfPermission(String perm) {
+
+        boolean res = getUnHookPackageManager().checkPermission(perm, getHostPkg()) == PackageManager.PERMISSION_GRANTED;
+        VLog.d("Permission", res + " : perm : " + perm);
+        return  res;
     }
 
     public void clearAppRequestListener() {

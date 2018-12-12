@@ -267,6 +267,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/VAAlertTheme"/>
 
+        <activity android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:name="com.lody.virtual.client.stub.RequestPermissionActivity"
+            android:process=":x"
+            android:taskAffinity="com.lody.virtual.request_permission"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+
         <provider
             android:name="com.lody.virtual.server.BinderProvider"
             android:authorities="${applicationId}.virtual.service.BinderProvider"
