@@ -177,11 +177,13 @@ public class MApp extends MultiDexApplication {
                         boosterConfig.autoAdInterval = 0;
                         boosterConfig.isUnlockAd = true;
                         boosterConfig.isInstallAd = true;
+                        boosterConfig.avoidShowIfHistory = false;
                     } else {
                         boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
                         boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
                         boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
                         boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                        boosterConfig.avoidShowIfHistory = RemoteConfig.getBoolean("avoid_ad_if_history");
                     }
                     BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
                         @Override
