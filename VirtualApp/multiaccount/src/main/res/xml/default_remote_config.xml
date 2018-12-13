@@ -59,6 +59,10 @@
         <value>true</value>
     </entry>
     <entry>
+        <key>avoid_ad_if_history</key>
+        <value>true</value>
+    </entry>
+    <entry>
         <key>slot_home_gift_interstitial</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>fb_interstitial:2132315560388455_2132315733721771:0;ab_interstitial:ca-app-pub-5490912237269284/2193158234:0</value>
