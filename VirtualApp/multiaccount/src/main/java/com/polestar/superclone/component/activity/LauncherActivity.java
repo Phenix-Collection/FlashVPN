@@ -16,6 +16,7 @@ import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
+import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
@@ -31,6 +32,7 @@ public class LauncherActivity extends BaseActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long time = System.currentTimeMillis();
+        EventReporter.reportWake(this, "user_launch");
         setContentView(R.layout.activity_spc_splash);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
         FuseAdLoader adLoader = FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this.getApplicationContext());

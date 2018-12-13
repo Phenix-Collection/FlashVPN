@@ -243,6 +243,18 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("track_active", prop);
     }
 
+    private static String sWakeSrc = null;
+
+    public static void reportWake(Context context, String src){
+        if (sWakeSrc == null && !TextUtils.isEmpty(src)) {
+            sWakeSrc = src;
+            Bundle prop = new Bundle();
+            prop.putString("wake_src", src);
+            mFirebaseAnalytics.logEvent("track_wake", prop);
+        }
+        MLogs.d("Wake from " + src + " original: " + sWakeSrc);
+    }
+
     public static void boostFrom(Context context, String from){
         Bundle prop = new Bundle();
         prop.putString("from", from);

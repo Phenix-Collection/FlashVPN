@@ -188,6 +188,11 @@ public class MApp extends MultiDexApplication {
                         public void reportEvent(String s, Bundle b) {
                             FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
                         }
+
+                        @Override
+                        public void reportWake(String s) {
+                            EventReporter.reportWake(MApp.getApp(), s);
+                        }
                     });
                     PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
 
