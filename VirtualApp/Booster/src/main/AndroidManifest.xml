@@ -63,6 +63,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:excludeFromRecents="true"
             android:autoRemoveFromRecents="true"
+            android:taskAffinity="covering"
             android:launchMode="singleInstance" />
 
         <provider android:authorities="com.polestar.sync.provider"

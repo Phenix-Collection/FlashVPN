@@ -45,6 +45,7 @@ public class BoosterSdk {
         public long autoAdFirstInterval = 3*24*60*60*1000;
         public long autoAdInterval = BuildConfig.DEBUG? 0: 8*60*60*1000;
         public int memoryThreshold = 70;
+        public boolean avoidShowIfHistory = true;
     }
 
     //all res id
