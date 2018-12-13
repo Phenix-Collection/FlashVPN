@@ -15,6 +15,8 @@ import com.lody.virtual.R;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.helper.utils.VLog;
 
+import static android.os.Build.VERSION_CODES.O;
+
 
 /**
  * @author Lody
@@ -48,7 +50,7 @@ public class DaemonService extends Service {
     public void onCreate() {
         super.onCreate();
         try {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            if (Build.VERSION.SDK_INT >= O) {
                 startForegroundService(new Intent(this, InnerService.class));
             } else {
                 startService(new Intent(this, InnerService.class));
@@ -79,7 +81,7 @@ public class DaemonService extends Service {
         public int onStartCommand(Intent intent, int flags, int startId) {
             //  remoteViews = new RemoteViews(this.getPackageName(), R.layout.quick_switch_notification);
             Notification notification;
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            if (Build.VERSION.SDK_INT >= O) {
                 Intent start = getPackageManager().getLaunchIntentForPackage(VirtualCore.get().getHostPkg());
                 start.addCategory(Intent.CATEGORY_LAUNCHER);
                 start.setAction(Intent.ACTION_MAIN);
@@ -88,15 +90,19 @@ public class DaemonService extends Service {
 
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                int importance = NotificationManager.IMPORTANCE_HIGH;
                 String channel_id = "_id_service_";
-                NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Clone App Messaging", importance);
-                notificationChannel.enableLights(false);
-                //notificationChannel.setLightColor(Color.RED);
-                notificationChannel.enableVibration(false);
-                notificationChannel.setDescription("Clone App Messaging & Notification");
-                //notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-                notificationManager.createNotificationChannel(notificationChannel);
+                if (notificationManager.getNotificationChannel(channel_id) == null) {
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+                    NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Clone App Messaging", importance);
+//                notificationChannel.enableVibration(false);
+                    notificationChannel.enableLights(false);
+//                notificationChannel.setVibrationPattern(new long[]{0});
+                    notificationChannel.setSound(null, null);
+                    notificationChannel.setDescription("Clone App Messaging & Notification");
+                    notificationChannel.setShowBadge(false);
+                    //notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    notificationManager.createNotificationChannel(notificationChannel);
+                }
                 Notification.Builder mBuilder =  new Notification.Builder(this, channel_id);
                 mBuilder.setContentTitle(getString(R.string.daemon_notification_text))
                         .setContentText(getString(R.string.daemon_notification_detail))
@@ -108,7 +114,7 @@ public class DaemonService extends Service {
             }
             VLog.e("DaemonService", "Start foreground");
             startForeground(NOTIFY_ID , notification);
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            if (Build.VERSION.SDK_INT < O) {
                 stopForeground(true);
                 stopSelf();
             }

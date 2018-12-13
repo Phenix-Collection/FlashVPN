@@ -88,8 +88,6 @@ public class PermissionCompat {
             }
             res = (String[])v1.toArray(new String[0]);
         }
-        VLog.d("Permission","danger permissions: " + res.length);
-
         return res;
     }
 

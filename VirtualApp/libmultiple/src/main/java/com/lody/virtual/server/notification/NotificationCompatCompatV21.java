@@ -12,6 +12,8 @@ import android.widget.RemoteViews;
 
 import com.lody.virtual.helper.utils.Reflect;
 
+import mirror.android.app.NotificationO;
+
 import static com.lody.virtual.os.VEnvironment.getPackageResourcePath;
 
 /**
@@ -29,6 +31,9 @@ import static com.lody.virtual.os.VEnvironment.getPackageResourcePath;
     @Override
     public boolean dealNotification(int id, Notification notification, String packageName) {
         Context appContext = getAppContext(packageName);
+        if(Build.VERSION.SDK_INT >= 26 && (TextUtils.isEmpty(notification.getChannelId()))) {
+            NotificationO.mChannelId.set(notification, NotificationCompat.DEFAULT_CHANNEL_ID);
+        }
         return appContext == null? false: (resolveRemoteViews(appContext, packageName, notification)
                 || resolveRemoteViews(appContext, packageName, notification.publicVersion));
     }
