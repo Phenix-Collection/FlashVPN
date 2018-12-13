@@ -1,1 +1,4 @@
-<resources></resources>
+<resources>
+    <string name="daemon_notification_text">Receiving messages for clones</string>
+<string name="daemon_notification_detail">Keep running in background to receive messages</string>
+</resources>

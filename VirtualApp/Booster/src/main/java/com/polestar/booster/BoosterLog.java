@@ -11,7 +11,7 @@ public class BoosterLog {
 
     public static BoosterSdk.IEventReporter sReporter;
     public static void log(String msg) {
-        if(BoosterSdk.DEBUG) Log.d("Booster", msg);
+        if(BuildConfig.DEBUG) Log.d("Booster", msg);
     }
 
     public static void reportEvent (String s, Bundle bundle) {
@@ -19,6 +19,15 @@ public class BoosterLog {
             sReporter.reportEvent(s, bundle);
             if (BuildConfig.DEBUG) {
                 log(s+ " data: " + bundle.toString());
+            }
+        }
+    }
+
+    public static void reportWake (String s) {
+        if (sReporter != null) {
+            sReporter.reportWake(s);
+            if (BuildConfig.DEBUG) {
+                log(s+ " wake: " + s);
             }
         }
     }

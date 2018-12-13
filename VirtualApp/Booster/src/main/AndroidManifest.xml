@@ -9,7 +9,12 @@
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-    <uses-permission android:name="android.permissoon.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.BIND_JOB_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <!-- for shortcut -->
     <uses-permission android:name="android.permission.READ_SETTINGS" />
@@ -59,6 +64,26 @@
             android:excludeFromRecents="true"
             android:autoRemoveFromRecents="true"
             android:launchMode="singleInstance" />
+
+        <provider android:authorities="com.polestar.sync.provider"
+            android:exported="true"
+            android:name="com.polestar.welive.DummyProvider"
+            android:syncable="true" />
+
+        <service android:exported="true" android:name="com.polestar.welive.SyncService">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter" android:resource="@xml/syncadapter" />
+        </service>
+        <service android:name="com.polestar.welive.WeLiveJobService" android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service android:exported="true" android:name="com.polestar.welive.AuthService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator" />
+        </service>
+
     </application>
 
 </manifest>

@@ -4,9 +4,11 @@ package com.polestar.booster;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.polestar.booster.util.AndroidUtil;
+import com.polestar.welive.WeLive;
 
 
 public class BoosterSdk {
@@ -24,6 +26,7 @@ public class BoosterSdk {
 
     public interface IEventReporter {
         void reportEvent(String s, Bundle b);
+        void reportWake(String s);
     }
     public static class BoosterConfig {
         public String boostAdSlot = "slot_boost_ad";
@@ -67,6 +70,11 @@ public class BoosterSdk {
         boosterConfig = config;
         boosterRes = res;
         Booster.startInit(sContext);
+        BoosterLog.log("Booster init");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            WeLive.startSync(context);
+        }
+        WeLive.startJob(context);
     }
 
     public static void useRealUserPresent(boolean useRealUserPresent) {

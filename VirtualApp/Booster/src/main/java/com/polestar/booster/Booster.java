@@ -1,6 +1,9 @@
 package com.polestar.booster;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -15,6 +18,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 
 import com.polestar.booster.mgr.BoostMgr;
 import com.polestar.booster.util.AndroidUtil;
@@ -26,9 +30,11 @@ import static com.polestar.booster.BoosterSdk.PREF_NAME;
 public class Booster extends Service {
 
     public static final String ACTION_INIT = BuildConfig.APPLICATION_ID + ".INIT";
+    public static final String ACTION_WAKE = BuildConfig.APPLICATION_ID + ".WAKE";
     public static final String ACTION_SCHEDULE = BuildConfig.APPLICATION_ID + ".SCHEDULE";
     public static final String ACTION_CONFIG_UPDATED = BuildConfig.APPLICATION_ID + ".CONFIG_UPDATED";
     public static final String ACTION_CLEAN_SHORTCUT_CLICK = BuildConfig.APPLICATION_ID + ".CLEAN_SHORTCUT_CLICK";
+    private static final int NOTIFY_ID = 1001;
 
 
 
@@ -87,6 +93,17 @@ public class Booster extends Service {
         try {
             Intent intent = new Intent(context, Booster.class);
             intent.setAction(ACTION_INIT);
+            context.startService(intent);
+        } catch (Exception e) {
+
+        }
+    }
+
+    public static void wake(Context context, String src){
+        try {
+            Intent intent = new Intent(context, Booster.class);
+            intent.setAction(ACTION_WAKE);
+            intent.putExtra("wake_src", src);
             context.startService(intent);
         } catch (Exception e) {
 
@@ -173,6 +190,41 @@ public class Booster extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         onStart(intent, startId);
+        BoosterLog.log("Booster onStart: " + intent);
+        String wake = intent.getStringExtra("wake_src");
+        if (!TextUtils.isEmpty(wake)){
+            BoosterLog.reportWake(wake);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent start = getPackageManager().getLaunchIntentForPackage(getPackageName());
+            start.addCategory(Intent.CATEGORY_LAUNCHER);
+            start.setAction(Intent.ACTION_MAIN);
+            //start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //start.setClass(this, )
+
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            String channel_id = "_id_service_";
+            if (notificationManager.getNotificationChannel(channel_id) == null) {
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Clone App Messaging", importance);
+//                notificationChannel.enableVibration(false);
+                notificationChannel.enableLights(false);
+//                notificationChannel.setVibrationPattern(new long[]{0});
+                notificationChannel.setSound(null, null);
+                notificationChannel.setDescription("Clone App Messaging & Notification");
+                notificationChannel.setShowBadge(false);
+                //notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+            Notification.Builder mBuilder =  new Notification.Builder(this, channel_id);
+            mBuilder.setContentTitle(getString(R.string.daemon_notification_text))
+                    .setContentText(getString(R.string.daemon_notification_detail))
+                    .setSmallIcon(this.getResources().getIdentifier("ic_launcher", "mipmap", this.getPackageName()))
+                    .setContentIntent(PendingIntent.getActivity(this,0, start, 0));
+            Notification notification = mBuilder.build();
+            startForeground(NOTIFY_ID, notification);
+        }
         return mRedelivery ? START_REDELIVER_INTENT : START_NOT_STICKY;
     }
 
@@ -280,6 +332,7 @@ public class Booster extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent != null ? intent.getAction() : null;
+            BoosterLog.log("onReceive: " + intent.getAction());
             if (Intent.ACTION_SCREEN_OFF.equals(action)) {
                 onScreenOff();
             }
