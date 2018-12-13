@@ -642,7 +642,7 @@ public class BoostMgr {
             return false;
         }
 
-        if (getHistoryActivity() != null) {
+        if (BoosterSdk.boosterConfig.avoidShowIfHistory && getHistoryActivity() != null) {
             BoosterLog.log("current has acitivity: " + getHistoryActivity());
             BoosterLog.autoAdShow(AUTO_AD_HISTORY_ACTIVITY_UNLOCK);
             return false;
@@ -680,7 +680,7 @@ public class BoostMgr {
             return ;
         }
 
-        if (getHistoryActivity() != null) {
+        if (BoosterSdk.boosterConfig.avoidShowIfHistory && getHistoryActivity() != null) {
             BoosterLog.autoAdShow(AUTO_AD_HISTORY_ACTIVITY_INSTALL);
             return;
         }
