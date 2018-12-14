@@ -151,4 +151,6 @@
     <string name="about">Sur</string>
     <string name="content_popular">Cloné à chaud</string>
     <string name="content_recommend">Choix de l\'éditeur</string>
+    <string name="dialog_permission_title">Donner la permission</string>
+    <string name="dialog_permission_content">Veuillez autoriser la demande d\'autorisation de Super Clone Pro, sinon certaines applications clonées et le service Google Play ne fonctionneront pas correctement.</string>
 </resources>

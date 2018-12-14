@@ -2,10 +2,13 @@ package com.polestar.superclone.component.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -19,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.billingclient.api.BillingClient;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -46,6 +48,7 @@ import com.polestar.superclone.widgets.UpDownDialog;
 import com.polestar.superclone.utils.RemoteConfig;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -68,12 +71,14 @@ public class HomeActivity extends BaseActivity {
     private static final String CONFIG_CLONE_RATE_INTERVAL = "clone_rate_interval";
     private static final String CONFIG_AD_FREE_DIALOG_INTERVAL = "ad_free_dialog_interval";
     private static final String CONFIG_AD_FREE_DIALOG_INTERVAL_2 = "ad_free_dialog_interval_2";
+    private static final String CONFIG_FORCE_REQUESTED_PERMISSIONS = "force_requested_permission";
 
     private static final String RATE_FROM_QUIT = "quit";
     private static final String RATE_AFTER_CLONE = "clone";
     private static final String RATE_FROM_MENU = "menu";
 
     private static final int REQUEST_UNLOCK_SETTINGS = 100;
+    private static final int REQUEST_APPLY_PERMISSION = 101;
 
     private String cloningPackage;
     private RelativeLayout iconAdLayout;
@@ -113,7 +118,71 @@ public class HomeActivity extends BaseActivity {
                     showUpdateDialog();
                 }
             }, 1000);
+        }else{
+            applyPermissionIfNeeded();
         }
+    }
+
+    //return true if need to apply permission
+    private boolean applyPermissionIfNeeded(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String conf = RemoteConfig.getString(CONFIG_FORCE_REQUESTED_PERMISSIONS);
+            if (TextUtils.isEmpty(conf)) {
+                return false;
+            }
+            String[] perms = conf.split(";");
+            if (perms == null || perms.length == 0) {
+                return false;
+            }
+            ArrayList<String> requestPerms = new ArrayList<>();
+            for (String s : perms) {
+                if (checkCallingOrSelfPermission(s) != PackageManager.PERMISSION_GRANTED) {
+                    requestPerms.add(s);
+                }
+            }
+            if (requestPerms.size() == 0) {
+                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "granted");
+                return false;
+            } else {
+                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "not_granted");
+                String[] toRequest = requestPerms.toArray(new String[0]);
+                boolean showRequestRational = false;
+                for (String s: toRequest) {
+                    if (shouldShowRequestPermissionRationale(s)){
+                        showRequestRational = true;
+                    }
+                }
+                if (showRequestRational
+                        || !PreferencesUtils.hasShownPermissionGuide()) {
+                    showPermissionGuideDialog(toRequest);
+                } else {
+                    requestPermissions(toRequest, REQUEST_APPLY_PERMISSION);
+                }
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    @TargetApi(23)
+    private void showPermissionGuideDialog(String[] perms) {
+        EventReporter.generalEvent("show_permission_guide");
+        PreferencesUtils.setShownPermissionGuide(true);
+        UpDownDialog.show(this, getString(R.string.dialog_permission_title),
+                getString(R.string.dialog_permission_content), null, getString(R.string.ok),
+                R.drawable.dialog_tag_comment, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EventReporter.generalEvent("ok_permission_guide");
+                        requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                EventReporter.generalEvent("cancel_permission_guide");
+                requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+            }
+        });
     }
 
     private void showUpdateDialog() {

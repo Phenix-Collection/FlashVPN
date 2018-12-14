@@ -193,4 +193,6 @@
     <string name="saturation">Kejenuhan</string>
     <string name="about">Tentang</string>
     <string name="content_recommend">Pilihan Editor</string>
+    <string name="dialog_permission_title">Memberikan ijin</string>
+    <string name="dialog_permission_content">Izinkan permintaan izin dari Super Clone Pro, jika tidak, beberapa aplikasi kloning dan Layanan Google Play tidak akan berfungsi dengan baik.</string>
 </resources>

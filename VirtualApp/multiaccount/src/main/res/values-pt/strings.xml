@@ -193,4 +193,6 @@
     <string name="saturation">Saturação</string>
     <string name="about">Sobre</string>
     <string name="content_recommend">Sugestões do Editor</string>
+    <string name="dialog_permission_title">Conceder permissão</string>
+    <string name="dialog_permission_content">Por favor, permita o pedido de permissão do Super Clone Pro, caso contrário, alguns aplicativos clonados e o Google Play Service não funcionarão corretamente.</string>
 </resources>

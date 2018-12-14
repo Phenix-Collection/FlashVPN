@@ -51,6 +51,8 @@
     <string name="not_really">Not Really</string>
     <string name="no_thanks">No, thanks</string>
     <string name="dialog_love_title">Love Super Clone</string>
+    <string name="dialog_permission_title">Grant Permission</string>
+    <string name="dialog_permission_content">Please allow permission request from Super Clone Pro, otherwise some cloned apps and Google Play Service will not work properly.</string>
     <string name="dialog_love_content">Would you mind give us a 5-star rating on the Play Store? It will inspire us and we appreciate your support!</string>
     <string name="remind_me_later">Remind me later</string>
     <string name="star_rating">Go 5-star rating now</string>

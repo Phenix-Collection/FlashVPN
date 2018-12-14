@@ -281,6 +281,10 @@
         <key>home_ad_refresh_interval_s</key>
         <value>60</value>
     </entry>
+    <entry>
+        <key>force_requested_permission</key>
+        <value>android.permission.READ_PHONE_STATE;android.permission.WRITE_EXTERNAL_STORAGE</value>
+    </entry>
     <!--
     <entry>
         <key>config_ad_load_timeout</key>

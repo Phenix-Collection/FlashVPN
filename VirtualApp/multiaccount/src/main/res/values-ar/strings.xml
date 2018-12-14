@@ -189,11 +189,12 @@
     <string name="update_dialog_right">تحديث</string>
     <string name="update_dialog_title">تحديث</string>
     <string name="update_dialog_left">تجاهل</string>
-    <string name="update_dialog_content">الإصدار الجديد قادم! قمنا بتحسين الكثير على أحدث إصدار. هل ترغب في تحديث الآن؟</string>
     <string name="check_update"><u>تحقق من التحديث</u></string>
     <string name="saturation">التشبع</string>
     <string name="about">حول</string>
     <string name="clone_success">%s جاهز. استمتع بها الآن!</string>
     <string name="content_popular">حار المستنسخة</string>
     <string name="content_recommend">يختار محرر</string>
+    <string name="dialog_permission_title">يعطي الأذن</string>
+    <string name="dialog_permission_content">الرجاء السماح بطلب إذن من Super Clone Pro ، وإلا فلن تعمل بعض التطبيقات المستنسخة وخدمة Google Play بشكل صحيح.</string>
 </resources>

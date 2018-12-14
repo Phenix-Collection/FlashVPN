@@ -18,8 +18,11 @@ public class EventReporter {
     private static final String APP_KEY = "Aqc1105890917";
     private static FirebaseAnalytics mFirebaseAnalytics;
 
-    private static final String PROP_CHANNEL = "channel";
-    private static final String PROP_CAMP = "campaign";
+    public static final String PROP_CHANNEL = "channel";
+    public static final String PROP_CAMP = "campaign";
+    public static final String PROP_PERMISSION = "granted_permission";
+    public static final String PROP_ADFREE = "adfree";
+    public static final String PROP_GMS = "gms";
 
     public static void init(Context context) {
         //StatConfig.asyncInit(context);
@@ -32,6 +35,12 @@ public class EventReporter {
 
     public class KeyLogTag {
         public static final String AERROR = "aerror";
+    }
+
+    public static void setUserProperty(String name, String prop) {
+        if(mFirebaseAnalytics != null) {
+            mFirebaseAnalytics.setUserProperty(name, prop);
+        }
     }
 
     public static void keyLog(Context context, String tag, String log) {

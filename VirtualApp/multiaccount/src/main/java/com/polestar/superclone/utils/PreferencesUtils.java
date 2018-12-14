@@ -398,6 +398,7 @@ public class PreferencesUtils {
         } catch (Throwable e) {
             MLogs.logBug(MLogs.getStackTraceString(e));
         }
+        EventReporter.setUserProperty(EventReporter.PROP_GMS, enable?"on":"off");
     }
 
     public static boolean isGMSEnable() {
@@ -420,6 +421,7 @@ public class PreferencesUtils {
 
     public static void setAdFree(boolean enable) {
         putBoolean(MApp.getApp(), "ad_free" , enable);
+        EventReporter.setUserProperty(EventReporter.PROP_ADFREE, enable?"on":"off");
     }
 
     public static long getLastAdFreeDialogTime() {
@@ -468,5 +470,14 @@ public class PreferencesUtils {
     public static boolean needReportActive(boolean fg) {
         long time =  getLong(MApp.getApp(), fg? "fg_active": "bg_active", 0);
         return System.currentTimeMillis() - time > 12*60*60*1000;
+    }
+
+    public static boolean hasShownPermissionGuide() {
+        return getBoolean(MApp.getApp(), "shown_permission_guide");
+    }
+
+
+    public static void setShownPermissionGuide(boolean shown) {
+        putBoolean(MApp.getApp(), "shown_permission_guide", shown);
     }
 }

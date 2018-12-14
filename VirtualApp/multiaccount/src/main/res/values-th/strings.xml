@@ -192,4 +192,6 @@
     <string name="check_update"><u>ตรวจสอบการอัปเดต</u></string>
     <string name="saturation">ความอิ่มตัว</string>
     <string name="about">เกี่ยวกับ</string>
+    <string name="dialog_permission_title">ให้สิทธิ์</string>
+    <string name="dialog_permission_content">โปรดอนุญาตให้มีการขออนุญาตจาก Super Clone Pro มิฉะนั้นแอปพลิเคชันโคลนและบริการ Google Play บางอย่างจะทำงานได้ไม่ถูกต้อง</string>
 </resources>
