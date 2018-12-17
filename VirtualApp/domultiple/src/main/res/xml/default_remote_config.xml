@@ -187,7 +187,15 @@
         <value>ab_interstitial:ca-app-pub-5490912237269284/8362100470:0</value>
     </entry>
     <entry>
-        <key>grey_source_id</key>
-        <value>29087</value>
+        <key>avoid_ad_if_history</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>home_ad_refresh_interval_s</key>
+        <value>60</value>
+    </entry>
+    <entry>
+        <key>force_requested_permission</key>
+        <value>android.permission.READ_PHONE_STATE;android.permission.WRITE_EXTERNAL_STORAGE</value>
     </entry>
 </defaultsMap>

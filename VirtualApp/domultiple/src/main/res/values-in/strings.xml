@@ -115,4 +115,6 @@
     <string name="quick_switch_desc">Aktifkan pengalihan cepat ke aplikasi kloning dari bilah notifikasi</string>
     <string name="quick_switch_dialog_content">Quick Switch akan memudahkan Anda beralih di antara aplikasi kloning dari bilah pemberitahuan. Apakah Anda ingin mengaktifkannya sekarang?</string>
     <string name="arm64_support">Dukungan 64bit</string>
+    <string name="dialog_permission_title">Memberikan ijin</string>
+    <string name="dialog_permission_content">Izinkan permintaan izin dari Do Multiple, jika tidak, beberapa aplikasi kloning dan Layanan Google Play tidak akan berfungsi dengan baik.</string>
 </resources>

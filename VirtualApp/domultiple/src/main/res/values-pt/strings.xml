@@ -114,4 +114,6 @@
     <string name="quick_switch_desc">Permitir mudança rápida para aplicativos clonados da barra de notificação</string>
     <string name="quick_switch_dialog_content">O Quick Switch permite que você alterne facilmente entre os aplicativos clonados da barra de notificação. Gostaria de habilitá-lo agora?</string>
     <string name="arm64_support">Suporte 64bit</string>
+    <string name="dialog_permission_title">Conceder permissão</string>
+    <string name="dialog_permission_content">Por favor, permita o pedido de permissão do Do Multiple, caso contrário, alguns aplicativos clonados e o Google Play Service não funcionarão corretamente.</string>
 </resources>

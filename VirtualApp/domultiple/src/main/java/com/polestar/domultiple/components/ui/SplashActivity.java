@@ -1,12 +1,10 @@
 package com.polestar.domultiple.components.ui;
 
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.polestar.booster.util.AndroidUtil;
@@ -17,6 +15,7 @@ import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
@@ -37,7 +36,9 @@ public class SplashActivity extends BaseActivity {
         long time = System.currentTimeMillis();
         setContentView(R.layout.splash_activity_layout);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
-        if (!PreferencesUtils.isAdFree() && !PolestarApp.isSupportPkg()) {
+        EventReporter.reportWake(this, "user_launch");
+
+        if (!PreferencesUtils.isAdFree() && !PolestarApp.isArm64()) {
             FuseAdLoader adLoader = FuseAdLoader.get(HomeActivity.SLOT_HOME_NATIVE, this.getApplicationContext());
             adLoader.setBannerAdSize(HomeActivity.getBannerAdSize());
             adLoader.preloadAd();
@@ -60,7 +61,7 @@ public class SplashActivity extends BaseActivity {
             }
         }, 2500 - delta);
 
-        if(!PolestarApp.isSupportPkg()) {
+        if(!PolestarApp.isArm64()) {
             if (getIntent().getBooleanExtra(EXTRA_FROM_SHORTCUT, false)) {
                 MLogs.d("Launching from shortcut");
                 if (AndroidUtil.hasShortcut(this)) {
@@ -84,7 +85,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void enterHome(){
-        if(PolestarApp.isSupportPkg()) {
+        if(PolestarApp.isArm64()) {
             getPackageManager().setComponentEnabledSetting(new ComponentName(this, SplashActivity.class.getName()),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         } else {

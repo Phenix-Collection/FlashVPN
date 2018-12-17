@@ -6,6 +6,7 @@ package com.polestar.domultiple.utils;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.domultiple.PolestarApp;
@@ -18,6 +19,11 @@ import java.util.Properties;
 public class EventReporter {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
+    public static final String PROP_CHANNEL = "channel";
+    public static final String PROP_CAMP = "campaign";
+    public static final String PROP_PERMISSION = "granted_permission";
+    public static final String PROP_ADFREE = "adfree";
+    public static final String PROP_GMS = "gms";
 
     public static void init(Context context) {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(PolestarApp.getApp());
@@ -26,6 +32,12 @@ public class EventReporter {
         mFirebaseAnalytics.setUserProperty("lite_mode", String.valueOf(PreferencesUtils.isLiteMode()));
         mFirebaseAnalytics.setUserProperty("adfree", String.valueOf(PreferencesUtils.isAdFree()));
         MLogs.e("MTA channel: " + channel);
+    }
+
+    public static void setUserProperty(String name, String prop) {
+        if(mFirebaseAnalytics != null) {
+            mFirebaseAnalytics.setUserProperty(name, prop);
+        }
     }
 
     public static void reportReferrer(String utm_source, String utm_medium, String utm_campaign, String utm_content, String utm_term, String gclid) {
@@ -111,5 +123,17 @@ public class EventReporter {
         Bundle bundle = new Bundle();
         bundle.putString("name", ""+name);
         mFirebaseAnalytics.logEvent("ads_launch", bundle);
+    }
+
+    private static String sWakeSrc = null;
+
+    public static void reportWake(Context context, String src){
+        if (sWakeSrc == null && !TextUtils.isEmpty(src)) {
+            sWakeSrc = src;
+            Bundle prop = new Bundle();
+            prop.putString("wake_src", src);
+            mFirebaseAnalytics.logEvent("track_wake", prop);
+        }
+        MLogs.d("Wake from " + src + " original: " + sWakeSrc);
     }
 }

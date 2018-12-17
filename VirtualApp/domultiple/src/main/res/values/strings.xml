@@ -162,6 +162,8 @@
     <string name="text_Q7_content">A7: Please check whether you granted these permissions to Do Multiple in your system setting.</string>
 
     <string name="powered_by_app" translatable="false">Powered by Do Multiple</string>
+    <string name="dialog_permission_title">Grant Permission</string>
+    <string name="dialog_permission_content">Please allow permission request from Do Multiple, otherwise some cloned apps and Google Play Service will not work properly.</string>
 
 
     <string-array name="month">
@@ -219,4 +221,6 @@
     <string name="hue">Hue</string>
     <string name="badge">Badge</string>
     <string name="cancel">Cancel</string>
+    <string name="install">Install</string>
+    <string name="sync_provider_name">com.polestar.domultiple.sync.provider</string>
 </resources>

@@ -216,7 +216,7 @@ public class AppLoadingActivity extends BaseActivity {
                         @Override
                         public void run() {
                             UpDownDialog.show(AppLoadingActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
-                                    getString(R.string.no_thanks), getString(R.string.anative_install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                    getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             switch (i) {
@@ -322,6 +322,7 @@ public class AppLoadingActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainHandler = new Handler();
+        EventReporter.reportWake(this, "app_shortcut");
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         setContentView(R.layout.app_loading_activity);
 
@@ -353,6 +354,7 @@ public class AppLoadingActivity extends BaseActivity {
                         .iconImageId(R.id.ad_icon_image)
                         .callToActionId(R.id.ad_cta_text)
                         .privacyInformationId(R.id.ad_choices_container)
+                        .adFlagId(R.id.ad_flag)
                         .build();
                 break;
         }
@@ -373,6 +375,11 @@ public class AppLoadingActivity extends BaseActivity {
         mNativeAdLoader.setBannerAdSize(getBannerSize());
         if(mNativeAdLoader.hasValidAdSource()){
             mNativeAdLoader.loadAd(1, new IAdLoadListener() {
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     updateShowTime();

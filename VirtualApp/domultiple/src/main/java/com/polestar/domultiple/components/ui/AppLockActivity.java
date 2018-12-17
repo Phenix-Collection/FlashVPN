@@ -100,6 +100,7 @@ public class AppLockActivity extends BaseActivity {
                         .iconImageId(R.id.ad_icon_image)
                         .callToActionId(R.id.ad_cta_text)
                         .privacyInformationId(R.id.ad_choices_container)
+                        .adFlagId(R.id.ad_flag)
                         .build();
                 break;
         }
@@ -124,6 +125,11 @@ public class AppLockActivity extends BaseActivity {
 //        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (adLoader != null) {
             adLoader.loadAd(2, RemoteConfig.getLong(CONFIG_SLOT_APP_LOCK_PROTECT_TIME), new IAdLoadListener() {
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     MLogs.d("Applock native ad loaded. showing ");

@@ -37,7 +37,7 @@ public class Arm64Activity extends BaseActivity {
             button.setText(R.string.feedback);
         } else {
             hint.setText(R.string.install_arm64_support);
-            button.setText(R.string.anative_install);
+            button.setText(R.string.install);
         }
     }
 

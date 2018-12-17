@@ -10,11 +10,11 @@ import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.components.ui.SplashActivity;
 import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 
-import nativesdk.ad.common.AdSdk;
 
 /**
  * Created by PolestarApp on 2017/7/23.
@@ -26,9 +26,8 @@ public class WakeReceiver extends BroadcastReceiver {
         //
         MLogs.logBug("Awake for " + intent);
         ServiceManagerNative.getService(ServiceManagerNative.APP);
-        if (PolestarApp.isAvzEnabled()) {
-            AdSdk.initialize(context,"39fi40iihgfedc1",null);
-        }
+        EventReporter.reportWake(PolestarApp.getApp(), intent.getAction());
+
         PackageManager pm = context.getPackageManager();
         if (pm.getComponentEnabledSetting(new ComponentName(context, SplashActivity.class))
                 != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {

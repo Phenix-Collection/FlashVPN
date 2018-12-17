@@ -4,9 +4,12 @@ package com.polestar.domultiple.components.ui;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -14,6 +17,7 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
@@ -62,6 +66,7 @@ import com.polestar.domultiple.widget.dragdrop.DragLayer;
 import com.polestar.domultiple.widget.dragdrop.DragSource;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -108,6 +113,11 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private final static String EXTRA_NEED_UPDATE = "extra_need_update";
 
     private Handler mainHandler;
+
+    private static final String CONFIG_FORCE_REQUESTED_PERMISSIONS = "force_requested_permission";
+    private static final int REQUEST_APPLY_PERMISSION = 101;
+
+    private long adShowTime = 0;
     public static void enter(Activity activity, boolean needUpdate) {
         MLogs.d("Enter home: update: " + needUpdate);
         Intent intent = new Intent(activity, HomeActivity.class);
@@ -137,7 +147,71 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                     showUpdateDialog();
                 }
             }, 1000);
+        } else {
+            applyPermissionIfNeeded();
         }
+    }
+
+    //return true if need to apply permission
+    private boolean applyPermissionIfNeeded(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String conf = RemoteConfig.getString(CONFIG_FORCE_REQUESTED_PERMISSIONS);
+            if (TextUtils.isEmpty(conf)) {
+                return false;
+            }
+            String[] perms = conf.split(";");
+            if (perms == null || perms.length == 0) {
+                return false;
+            }
+            ArrayList<String> requestPerms = new ArrayList<>();
+            for (String s : perms) {
+                if (checkCallingOrSelfPermission(s) != PackageManager.PERMISSION_GRANTED) {
+                    requestPerms.add(s);
+                }
+            }
+            if (requestPerms.size() == 0) {
+                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "granted");
+                return false;
+            } else {
+                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "not_granted");
+                String[] toRequest = requestPerms.toArray(new String[0]);
+                boolean showRequestRational = false;
+                for (String s: toRequest) {
+                    if (shouldShowRequestPermissionRationale(s)){
+                        showRequestRational = true;
+                    }
+                }
+                if (showRequestRational
+                        || !PreferencesUtils.hasShownPermissionGuide()) {
+                    showPermissionGuideDialog(toRequest);
+                } else {
+                    requestPermissions(toRequest, REQUEST_APPLY_PERMISSION);
+                }
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    @TargetApi(23)
+    private void showPermissionGuideDialog(String[] perms) {
+        EventReporter.generalClickEvent("show_permission_guide");
+        PreferencesUtils.setShownPermissionGuide(true);
+        UpDownDialog.show(this, getString(R.string.dialog_permission_title),
+                getString(R.string.dialog_permission_content), null, getString(R.string.ok),
+                R.drawable.dialog_tag_comment, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EventReporter.generalClickEvent("ok_permission_guide");
+                        requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                EventReporter.generalClickEvent("cancel_permission_guide");
+                requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+            }
+        });
     }
 
     private static final String CONF_LUCKY_GATE = "home_show_lucky_gate";
@@ -145,9 +219,6 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private void initData() {
         cm = CloneManager.getInstance(this);
         cm.loadClonedApps(this, this);
-        if (!PreferencesUtils.isAdFree()) {
-            loadAd();
-        }
     }
 
     private void showUpdateDialog() {
@@ -206,6 +277,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                         .admMediaId(R.id.ad_adm_mediaview)
                         .callToActionId(R.id.ad_cta_text)
                         .privacyInformationId(R.id.ad_choices_container)
+                        .adFlagId(R.id.ad_flag)
                         .build();
                 break;
         }
@@ -215,6 +287,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
             nativeAdContainer.setVisibility(View.VISIBLE);
+            adShowTime = System.currentTimeMillis();
         }
     }
     private void loadEmbedNative() {
@@ -224,6 +297,11 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         if (adLoader.hasValidAdSource()) {
             adLoader.setBannerAdSize(getBannerAdSize());
             adLoader.loadAd(2, 2000, new IAdLoadListener() {
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     inflateNativeAdView(ad);
@@ -256,6 +334,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     @Override
     protected void onResume() {
         super.onResume();
+        if (!PreferencesUtils.isAdFree()) {
+            long current = System.currentTimeMillis();
+            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
+                loadAd();
+            }
+        }
         if (CloneManager.getInstance(this).hasPendingClones()) {
             MLogs.d("Has pending clones");
             mProgressBar.setVisibility(View.VISIBLE);

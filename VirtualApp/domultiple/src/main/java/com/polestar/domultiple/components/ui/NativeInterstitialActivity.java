@@ -119,6 +119,11 @@ public class NativeInterstitialActivity extends Activity {
     public void fuseLoadNative() {
         mFuseLoader.loadAd(1, new IAdLoadListener() {
             @Override
+            public void onRewarded(IAdAdapter ad) {
+
+            }
+
+            @Override
             public void onAdLoaded(IAdAdapter ad) {
                 hideLoadding();
                 fillInterstitialLayout(ad);
@@ -167,6 +172,7 @@ public class NativeInterstitialActivity extends Activity {
                     .callToActionId(R.id.ad_cta_text)
                     .privacyInformationId(R.id.ad_choices_container)
                     .starLevelLayoutId(R.id.star_level_layout)
+                    .adFlagId(R.id.ad_flag)
                     .build();
             View adView = ad.getAdView(viewBinder);
             if (adView != null) {

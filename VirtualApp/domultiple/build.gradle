@@ -50,7 +50,7 @@ android {
         }
         develop {
             minSdkVersion 16
-            targetSdkVersion 21
+            targetSdkVersion 26
             multiDexEnabled = true
             versionCode 9999
             versionName '9999'
@@ -59,7 +59,7 @@ android {
         }
         play {
             minSdkVersion 16
-            targetSdkVersion 21
+            targetSdkVersion 26
             multiDexEnabled = true
             versionCode 2112
             versionName "2.1.12.${releaseTime()}"

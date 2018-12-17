@@ -85,6 +85,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                         .admMediaId(R.id.ad_adm_mediaview)
                         .callToActionId(R.id.ad_cta_text)
                         .privacyInformationId(R.id.ad_choices_container)
+                        .adFlagId(R.id.ad_flag)
                         .build();
                 break;
         }
@@ -118,6 +119,11 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         if (adLoader.hasValidAdSource()) {
             mAd = null;
             adLoader.loadAd(2,1000, new IAdLoadListener() {
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     mAd = ad;

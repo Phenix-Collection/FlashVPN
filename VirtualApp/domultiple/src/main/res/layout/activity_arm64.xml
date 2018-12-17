@@ -40,5 +40,5 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:capitalize="characters"
-        android:text="@string/anative_install"/>
+        android:text="@string/install"/>
 </RelativeLayout>

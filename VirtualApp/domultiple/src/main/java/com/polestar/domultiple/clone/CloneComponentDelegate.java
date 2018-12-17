@@ -12,8 +12,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
@@ -22,9 +20,6 @@ import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
 import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
-import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.ad.adapters.IAdAdapter;
-import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.IAppMonitor;
 import com.polestar.domultiple.PolestarApp;
@@ -53,7 +48,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(!PolestarApp.isSupportPkg()) {
+                if(!PolestarApp.isArm64()) {
                     List<CloneModel> list = DBManager.queryAppList(PolestarApp.getApp());
                     for (CloneModel app : list) {
                         if (app.getNotificationEnable()) {
@@ -238,7 +233,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
         MLogs.d("isNotificationEnabled pkg: " + key + " " + pkgs.contains(key));
         if ( pkgs.contains(key) ) {
             return  true;
-        } else if(PolestarApp.isSupportPkg()) {
+        } else if(PolestarApp.isArm64()) {
             CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
             if (data.isNotificationEnable) {
                 pkgs.add(key);

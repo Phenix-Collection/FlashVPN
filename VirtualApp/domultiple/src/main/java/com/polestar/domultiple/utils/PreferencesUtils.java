@@ -484,4 +484,13 @@ public class PreferencesUtils {
     public static long getIgnoreVersion() {
         return getLong(PolestarApp.getApp(), "ignore_version", -1);
     }
+
+    public static boolean hasShownPermissionGuide() {
+        return getBoolean(PolestarApp.getApp(), "shown_permission_guide");
+    }
+
+
+    public static void setShownPermissionGuide(boolean shown) {
+        putBoolean(PolestarApp.getApp(), "shown_permission_guide", shown);
+    }
 }

@@ -142,6 +142,11 @@ public class AppMonitorService extends Service {
                 public void run() {
                     adLoader.loadAd(1, new IAdLoadListener() {
                         @Override
+                        public void onRewarded(IAdAdapter ad) {
+
+                        }
+
+                        @Override
                         public void onAdLoaded(IAdAdapter ad) {
                                 //ad.show();
                                 updateShowTime();

@@ -1,16 +1,17 @@
 package com.polestar.domultiple;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
@@ -39,8 +40,6 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.io.File;
 import java.util.List;
 
-import nativesdk.ad.common.AdSdk;
-import nativesdk.ad.common.manager.PermissionManager;
 
 /**
  * Created by PolestarApp on 2017/7/15.
@@ -49,22 +48,18 @@ import nativesdk.ad.common.manager.PermissionManager;
 public class PolestarApp extends MultiDexApplication {
 
     private static PolestarApp gDefault;
+    private boolean hasCoffee = false;
 
     public static PolestarApp getApp() {
         return gDefault;
     }
 
-    public static boolean isAvzEnabled() {
-        String conf = RemoteConfig.getString(AppConstants.CONF_WALL_SDK);
-        return  "all".equals(conf) || "avz".equals(conf);
-    }
-
-    public static boolean isSupportPkg() {
+    public static boolean isArm64() {
         return getApp().getPackageName().endsWith("arm64");
     }
 
     public static boolean isSupportPkgExist() {
-        if (isSupportPkg()) {
+        if (isArm64()) {
             return  true;
         } else {
             try{
@@ -80,7 +75,7 @@ public class PolestarApp extends MultiDexApplication {
     }
 
     public static boolean isPrimaryPkgExist() {
-        if(isSupportPkg()) {
+        if(isArm64()) {
             try{
                 ApplicationInfo ai = getApp().getPackageManager().getApplicationInfo(getApp().getPackageName().replace(".arm64",""),0);
                 if (ai != null) {
@@ -96,7 +91,7 @@ public class PolestarApp extends MultiDexApplication {
     }
 
     public static boolean needAd() {
-        return !(isSupportPkg() && isPrimaryPkgExist());
+        return !(isArm64() && isPrimaryPkgExist());
     }
 
     public static boolean isOpenLog(){
@@ -133,13 +128,6 @@ public class PolestarApp extends MultiDexApplication {
 
     private void initAd() {
         MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~6272167416");
-        if (isAvzEnabled()) {
-            PermissionManager.setIsAgreePermission(gDefault, true);
-            AdSdk.initialize(gDefault,"39fi40iihgfedc1",null);
-        }
-        if (AdSdk.isInited(gDefault)) {
-            MLogs.d("avz initialized");
-        }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
@@ -151,7 +139,6 @@ public class PolestarApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         });
-        BatmobiLib.init(gDefault, "7OO01FES0DJDJRSSETIBBULF");
     }
     @Override
     public void onCreate() {
@@ -191,11 +178,15 @@ public class PolestarApp extends MultiDexApplication {
                         boosterConfig.autoAdInterval = 0;
                         boosterConfig.isUnlockAd = true;
                         boosterConfig.isInstallAd = true;
+                        boosterConfig.avoidShowIfHistory = false;
+
                     } else {
                         boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
                         boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
                         boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
                         boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                        boosterConfig.avoidShowIfHistory = RemoteConfig.getBoolean("avoid_ad_if_history");
+
                     }
                     BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
                     res.outterWheelImage = R.drawable.booster_ic_wheel_outside;
@@ -204,14 +195,73 @@ public class PolestarApp extends MultiDexApplication {
                     res.boosterShorcutIcon = R.drawable.booster_shortcut;
                     BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
                         @Override
+                        public void reportWake(String s) {
+                            EventReporter.reportWake(gDefault, s);
+                        }
+
+                        @Override
                         public void reportEvent(String s, Bundle b) {
                             FirebaseAnalytics.getInstance(PolestarApp.getApp()).logEvent(s, b);
                         }
                     });
                     String coffeeKey = RemoteConfig.getString("coffee_key");
-                    if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
-                        MLogs.d("coffee key : " + coffeeKey);
-                        instantcoffee.Builder.build(getApp(), coffeeKey);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        getApp().registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+                            @Override
+                            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                                if (!hasCoffee) {
+                                    if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
+                                        MLogs.d("coffee key : " + coffeeKey);
+                                        try {
+                                            instantcoffee.Builder.build(getApp(), coffeeKey);
+                                            hasCoffee = true;
+                                        }catch (Exception ex) {
+
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onActivityStarted(Activity activity) {
+
+                            }
+
+                            @Override
+                            public void onActivityResumed(Activity activity) {
+
+                            }
+
+                            @Override
+                            public void onActivityPaused(Activity activity) {
+
+                            }
+
+                            @Override
+                            public void onActivityStopped(Activity activity) {
+
+                            }
+
+                            @Override
+                            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+                            }
+
+                            @Override
+                            public void onActivityDestroyed(Activity activity) {
+
+                            }
+                        });
+                    } else {
+                        if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
+                            MLogs.d("coffee key : " + coffeeKey);
+                            try {
+                                instantcoffee.Builder.build(getApp(), coffeeKey);
+                            }catch (Exception ex) {
+
+                            }
+                        }
                     }
 
                     PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
