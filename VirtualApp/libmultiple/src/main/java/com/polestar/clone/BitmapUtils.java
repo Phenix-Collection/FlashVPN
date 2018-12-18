@@ -149,18 +149,35 @@ public class BitmapUtils {
 //            int numberWidth = DisplayUtils.dip2px(context, 10);
 //            canvas.drawBitmap(Bitmap.createScaledBitmap(numberBmp,numberWidth,numberWidth,true),
 //                    new Rect(0,width-numberWidth,numberWidth,width), new Rect(0,width-numberWidth,numberWidth,width),null);
-            if (userId >= 1) {
-                paint.setColor(Color.parseColor("#FFFFFF"));
-                paint.setAntiAlias(true);
-                paint.setTypeface(Typeface.DEFAULT_BOLD);
-                if (userId < 9) {
-                    paint.setTextSize(dip2px(context, APP_BADGE_TEXT_SIZE));
-                    canvas.drawText("" + (userId + 1),
-                            width - dip2px(context, 6), width - dip2px(context, 5), paint);
-                } else {
-                    paint.setTextSize(dip2px(context, APP_BADGE_TEXT_SIZE_SMALL));
-                    canvas.drawText("" + (userId + 1),
-                            width - dip2px(context, 7.3f), width - dip2px(context, 5.3f), paint);
+            if(context.getPackageName().startsWith("com.polestar.superclone")) {
+                if (userId >= 1) {
+                    paint.setColor(Color.parseColor("#FFFFFF"));
+                    paint.setAntiAlias(true);
+                    paint.setTypeface(Typeface.DEFAULT_BOLD);
+                    if (userId < 9) {
+                        paint.setTextSize(dip2px(context, APP_BADGE_TEXT_SIZE));
+                        canvas.drawText("" + (userId + 1),
+                                width - dip2px(context, 6), width - dip2px(context, 5), paint);
+                    } else {
+                        paint.setTextSize(dip2px(context, APP_BADGE_TEXT_SIZE_SMALL));
+                        canvas.drawText("" + (userId + 1),
+                                width - dip2px(context, 7.3f), width - dip2px(context, 5.6f), paint);
+                    }
+                }
+            } else if(context.getPackageName().startsWith("com.polestar.domultiple")) {
+                if (userId >= 1) {
+                    paint.setColor(Color.parseColor("#FFFFFF"));
+                    paint.setAntiAlias(true);
+                    paint.setTypeface(Typeface.DEFAULT_BOLD);
+                    if (userId < 9) {
+                        paint.setTextSize(dip2px(context, APP_BADGE_TEXT_SIZE));
+                        canvas.drawText("" + (userId + 1),
+                                 dip2px(context, 6), width - dip2px(context, 5.3f), paint);
+                    } else {
+                        paint.setTextSize(dip2px(context, APP_BADGE_TEXT_SIZE_SMALL));
+                        canvas.drawText("" + (userId + 1),
+                                 dip2px(context, 5.0f), width - dip2px(context, 6f), paint);
+                    }
                 }
             }
 //            final Rect rect2 = new Rect(width - 40, width - 40, width, width);
