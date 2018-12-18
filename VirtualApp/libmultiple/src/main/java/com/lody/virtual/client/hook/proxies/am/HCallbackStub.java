@@ -16,6 +16,7 @@ import com.lody.virtual.client.ipc.VPackageManager;
 import com.lody.virtual.helper.utils.ComponentUtils;
 import com.lody.virtual.helper.utils.Reflect;
 import com.lody.virtual.helper.utils.VLog;
+import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.InstalledAppInfo;
 import com.lody.virtual.remote.StubActivityRecord;
 import com.polestar.clone.StubService;
@@ -79,7 +80,7 @@ import mirror.android.app.IActivityManager;
                     Intent intent = ActivityThread.CreateServiceData.intent.get(msg.obj);
                             ServiceInfo info = Reflect.on(msg.obj).get("info");
                     if (!VirtualCore.get().getHostPkg().equals(info.packageName)) {
-                        info.applicationInfo = VPackageManager.get().getApplicationInfo(info.packageName, 0, 0);
+                        info.applicationInfo = VPackageManager.get().getApplicationInfo(info.packageName, 0, VUserHandle.myUserId());
                     }
                     VLog.d(TAG, "CREATE_SERVICE " + intent + " comp: " + info);
                    // VLog.d(TAG, "CREATE_SERVICE " + intent + " codepath: " + info.applicationInfo.);

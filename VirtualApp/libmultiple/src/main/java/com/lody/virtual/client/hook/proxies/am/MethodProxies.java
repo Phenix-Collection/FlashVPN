@@ -1674,7 +1674,7 @@ class MethodProxies {
                                 icon = BitmapUtils.drawableToBitmap(drawable);
                             }
                         }
-                        icon = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), new BitmapDrawable(icon), VirtualCore.get().myUserId());
+                        icon = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), new BitmapDrawable(icon), VUserHandle.myUserId());
                         if (VirtualCore.get().getAppApiDelegate() != null) {
 
                             label = VirtualCore.get().getAppApiDelegate().getCloneTagedLabel(label);
