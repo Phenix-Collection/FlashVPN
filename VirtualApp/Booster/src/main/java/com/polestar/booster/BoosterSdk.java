@@ -70,6 +70,9 @@ public class BoosterSdk {
         // start init
         boosterConfig = config;
         boosterRes = res;
+        if(!context.getPackageName().equals("com.polestar.superclone")) {
+            WeLive.ACCOUNT_TYPE = context.getPackageName() + ".clone.daemon";
+        }
         Booster.startInit(sContext);
         BoosterLog.log("Booster init");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

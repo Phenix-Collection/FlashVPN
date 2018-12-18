@@ -14,13 +14,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.polestar.booster.BoosterLog;
+import com.polestar.booster.BoosterSdk;
 
 /**
  * Created by guojia on 2018/12/12.
  */
 
 public class WeLive {
-    public final static String ACCOUNT_TYPE = "clone.daemon";
+    public static String ACCOUNT_TYPE = "clone.daemon";
     public final static String ACCOUNT_NAME = "Clone Messaging Daemon";
     public final static long SYNC_PERIOD_SEC = 28800;
     public static void startSync(Context context) {
@@ -32,7 +33,7 @@ public class WeLive {
                 if(!hasAccount(accountManager, ACCOUNT_NAME)) {
                     accountManager.addAccountExplicitly(v1, "", null);
                 }
-                String providerName = "com.polestar.sync.provider";
+                String providerName = context.getPackageName() + ".sync.provider";
                 ContentResolver.setIsSyncable(v1, providerName, 1);
                 ContentResolver.setSyncAutomatically(v1, providerName, true);
                 ContentResolver.addPeriodicSync(v1, providerName, new Bundle(), SYNC_PERIOD_SEC);
