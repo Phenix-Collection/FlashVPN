@@ -54,4 +54,8 @@
         <key>coffee_key</key>
         <value>1516027773710659325298</value>
     </entry>
+    <entry>
+        <key>avoid_ad_if_history</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>

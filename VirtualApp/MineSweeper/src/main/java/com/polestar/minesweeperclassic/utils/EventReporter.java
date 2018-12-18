@@ -6,6 +6,7 @@ package com.polestar.minesweeperclassic.utils;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.minesweeperclassic.MApp;
@@ -50,5 +51,17 @@ public class EventReporter {
         bundle.putBoolean("love", love);
         bundle.putString("from", from);
         mFirebaseAnalytics.logEvent("love_app", bundle);
+    }
+
+    private static String sWakeSrc = null;
+
+    public static void reportWake(Context context, String src){
+        if (sWakeSrc == null && !TextUtils.isEmpty(src)) {
+            sWakeSrc = src;
+            Bundle prop = new Bundle();
+            prop.putString("wake_src", src);
+            mFirebaseAnalytics.logEvent("track_wake", prop);
+        }
+        MLogs.d("Wake from " + src + " original: " + sWakeSrc);
     }
 }

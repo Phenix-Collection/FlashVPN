@@ -251,6 +251,12 @@ public class RateDialog {
         // 设置Dialog的大小
         dialog.getWindow().setLayout(dialogwidth, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                PreferenceUtils.setLoveApp(false);
+            }
+        });
         try {
             dialog.show();
         }catch (Exception e) {
