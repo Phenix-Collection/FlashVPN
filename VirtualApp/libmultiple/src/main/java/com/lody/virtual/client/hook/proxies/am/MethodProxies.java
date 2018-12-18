@@ -413,13 +413,21 @@ class MethodProxies {
             VLog.d(TAG, "intent: " + intent.toString());
 //            if(VirtualCore.get().isServerProcess()) {
                 if(Intent.ACTION_VIEW.equals(intent.getAction()) &&
-                    intent.getDataString() != null &&
-                        (intent.getDataString().contains("m.facebook.com")
-                        || intent.getDataString().contains("www.googleadservices.com")
-                        || intent.getDataString().contains("doubleclick.net")
-                        || intent.getDataString().contains("play.google.com")
-                        || intent.getDataString().contains("market://"))) {
-                    return method.invoke(who, args);
+                    intent.getDataString() != null ) {
+                    if(intent.getDataString().contains("m.facebook.com")
+                            || intent.getDataString().contains("www.googleadservices.com")
+                            || intent.getDataString().contains("doubleclick.net")) {
+                        return method.invoke(who, args);
+                    } else if (intent.getDataString().contains("play.google.com")
+                            || intent.getDataString().contains("market://")){
+                        if (intent.getDataString().contains("com.whatsapp")) {
+                            intent.setComponent(null);
+                            intent.setPackage(null);
+                            intent.setData(Uri.parse("https://www.whatsapp.com/android/"));
+                        } else {
+                            return method.invoke(who,args);
+                        }
+                    }
                 }
 //            }
             if (intent.getComponent() != null) {
