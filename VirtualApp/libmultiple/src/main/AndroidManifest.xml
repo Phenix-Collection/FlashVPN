@@ -70,6 +70,7 @@
     <uses-permission android:name="android.permission.READ_CELL_BROADCASTS"/>
     <uses-permission android:name="android.permission.READ_CLIPS" />
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_INSTALL_SESSIONS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
