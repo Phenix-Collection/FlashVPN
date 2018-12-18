@@ -58,7 +58,7 @@ public class BoosterSdk {
     }
 
 
-    static public BoosterConfig boosterConfig;
+    static public BoosterConfig boosterConfig = new BoosterConfig();
     static public BoosterRes boosterRes;
 
     static Context sContext;
