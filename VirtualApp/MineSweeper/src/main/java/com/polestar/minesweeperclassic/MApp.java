@@ -123,6 +123,7 @@ public class MApp extends MultiDexApplication {
         res.innerWheelImage = R.drawable.ic_launcher;
         res.outterWheelImage = R.drawable.ic_launcher;
         BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
+        boosterConfig.showNotification = false;
         if (BuildConfig.DEBUG) {
             boosterConfig.autoAdFirstInterval = 0;
             boosterConfig.autoAdInterval = 0;
