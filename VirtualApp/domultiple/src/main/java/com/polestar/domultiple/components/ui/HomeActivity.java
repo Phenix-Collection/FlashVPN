@@ -32,8 +32,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.polestar.booster.BoosterSdk;
-import com.polestar.ad.AdConstants;
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -195,23 +193,42 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     @TargetApi(23)
     private void showPermissionGuideDialog(String[] perms) {
-        EventReporter.generalClickEvent("show_permission_guide");
+        EventReporter.generalEvent("show_permission_guide");
         PreferencesUtils.setShownPermissionGuide(true);
         UpDownDialog.show(this, getString(R.string.dialog_permission_title),
                 getString(R.string.dialog_permission_content), null, getString(R.string.ok),
                 R.drawable.dialog_tag_comment, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        EventReporter.generalClickEvent("ok_permission_guide");
+                        EventReporter.generalEvent("ok_permission_guide");
                         requestPermissions(perms, REQUEST_APPLY_PERMISSION);
                     }
                 }).setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                EventReporter.generalClickEvent("cancel_permission_guide");
+                EventReporter.generalEvent("cancel_permission_guide");
                 requestPermissions(perms, REQUEST_APPLY_PERMISSION);
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        /* callback - no nothing */
+        switch (requestCode){
+            case REQUEST_APPLY_PERMISSION:
+                int i = 0;
+                boolean success = true;
+                for(String p: permissions){
+                    if(grantResults[i++] != PackageManager.PERMISSION_GRANTED) {
+                        success = false;
+                        EventReporter.generalEvent("fail_"+p);
+                    }
+                }
+                EventReporter.generalEvent("apply_permission_" + success);
+                MLogs.d("Apply permission result: " + success);
+                break;
+        }
     }
 
     private static final String CONF_LUCKY_GATE = "home_show_lucky_gate";
@@ -222,7 +239,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     }
 
     private void showUpdateDialog() {
-        EventReporter.generalClickEvent("update_dialog");
+        EventReporter.generalEvent("update_dialog");
         UpDownDialog.show(this, this.getResources().getString(R.string.update_dialog_title),
                 this.getResources().getString(R.string.update_dialog_content, "" + RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION)),
                 this.getResources().getString(R.string.update_dialog_left), this.getResources().getString(R.string.update_dialog_right),
@@ -239,7 +256,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                             case UpDownDialog.POSITIVE_BUTTON:
                                 dialogInterface.dismiss();
                                 CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
-                                EventReporter.generalClickEvent("update_go");
+                                EventReporter.generalEvent("update_go");
                                 break;
                         }
                     }
@@ -455,7 +472,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     }
 
     private void showQuickSwitchDialog() {
-        EventReporter.generalClickEvent("quick_switch_dialog");
+        EventReporter.generalEvent("quick_switch_dialog");
         MLogs.d("showQuickSwitchDialog");
         UpDownDialog.show(this, this.getResources().getString(R.string.quick_switch_title),
                 this.getResources().getString(R.string.quick_switch_dialog_content),
@@ -472,7 +489,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                             case UpDownDialog.POSITIVE_BUTTON:
                                 dialogInterface.dismiss();
                                 QuickSwitchNotification.enable();
-                                EventReporter.generalClickEvent("quick_switch_dialog_go");
+                                EventReporter.generalEvent("quick_switch_dialog_go");
                                 break;
                         }
                     }
@@ -780,14 +797,19 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         mActionBar.setVisibility(View.INVISIBLE);
 
         if (createShortcutArea.isSelected()) {
-            CommonUtils.createShortCut(this,((CloneModel) info));
-            mActionBar.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+            if (Build.VERSION.SDK_INT >= 23 && checkCallingOrSelfPermission("com.android.launcher.permission.INSTALL_SHORTCUT")
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{"com.android.launcher.permission.INSTALL_SHORTCUT"}, REQUEST_APPLY_PERMISSION);
+            } else {
+                CommonUtils.createShortCut(this, ((CloneModel) info));
+                mActionBar.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
                         Toast.makeText(HomeActivity.this, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
-                    //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
-                }
-            },500);
+                        //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+                    }
+                }, 500);
+            }
         } else if (deleteArea.isSelected()) {
             mActionBar.postDelayed(new Runnable() {
                 @Override

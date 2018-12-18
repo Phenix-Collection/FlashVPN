@@ -1,6 +1,7 @@
 package com.polestar.domultiple.notification;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -229,10 +231,27 @@ public class QuickSwitchNotification {
         if (remoteViews == null) {
             remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.quick_switch_notification);
         }
+        String channel_id = "_id_quick_switch_";
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager.getNotificationChannel(channel_id) == null) {
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Quick Switch", importance);
+//                notificationChannel.enableVibration(false);
+                notificationChannel.enableLights(false);
+//                notificationChannel.setVibrationPattern(new long[]{0});
+                notificationChannel.setSound(null, null);
+                notificationChannel.setDescription("Quick Switch Shortcuts");
+                notificationChannel.setShowBadge(false);
+                //notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+        }
         NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(mContext)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContent(remoteViews).setOngoing(true)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setChannelId(channel_id)
                 .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext,HomeActivity.class), 0));
         Notification notification = mBuilder.build();
         notification.flags = Notification.FLAG_NO_CLEAR|Notification.FLAG_ONGOING_EVENT;

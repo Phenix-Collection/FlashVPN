@@ -1,11 +1,16 @@
 package com.polestar.domultiple.components.ui;
 
+import android.annotation.TargetApi;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.polestar.booster.util.AndroidUtil;
 import com.lody.virtual.client.ipc.ServiceManagerNative;
@@ -19,6 +24,9 @@ import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
+import com.polestar.domultiple.widget.UpDownDialog;
+
+import java.util.ArrayList;
 
 /**
  * Created by PolestarApp on 2017/7/15.
@@ -71,9 +79,72 @@ public class SplashActivity extends BaseActivity {
                     MLogs.d("Failed to detect shortcut!");
                 }
             }
-        }//        }
+        }
     }
 
+    private static final String CONFIG_FORCE_REQUESTED_PERMISSIONS = "force_requested_permission";
+    private static final int REQUEST_APPLY_PERMISSION = 101;
+
+    @TargetApi(23)
+    private void showPermissionGuideDialog(String[] perms) {
+        EventReporter.generalEvent("show_permission_guide");
+        PreferencesUtils.setShownPermissionGuide(true);
+        UpDownDialog.show(this, getString(R.string.dialog_permission_title),
+                getString(R.string.dialog_permission_content), null, getString(R.string.ok),
+                R.drawable.dialog_tag_comment, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EventReporter.generalEvent("ok_permission_guide");
+                        requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                EventReporter.generalEvent("cancel_permission_guide");
+                requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+            }
+        });
+    }
+
+    private boolean applyPermissionIfNeeded(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String conf = RemoteConfig.getString(CONFIG_FORCE_REQUESTED_PERMISSIONS);
+            if (TextUtils.isEmpty(conf)) {
+                return false;
+            }
+            String[] perms = conf.split(";");
+            if (perms == null || perms.length == 0) {
+                return false;
+            }
+            ArrayList<String> requestPerms = new ArrayList<>();
+            for (String s : perms) {
+                if (checkCallingOrSelfPermission(s) != PackageManager.PERMISSION_GRANTED) {
+                    requestPerms.add(s);
+                }
+            }
+            if (requestPerms.size() == 0) {
+                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "granted");
+                return false;
+            } else {
+                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "not_granted");
+                String[] toRequest = requestPerms.toArray(new String[0]);
+                boolean showRequestRational = false;
+                for (String s: toRequest) {
+                    if (shouldShowRequestPermissionRationale(s)){
+                        showRequestRational = true;
+                    }
+                }
+                if (showRequestRational
+                        || !PreferencesUtils.hasShownPermissionGuide()) {
+                    showPermissionGuideDialog(toRequest);
+                } else {
+                    requestPermissions(toRequest, REQUEST_APPLY_PERMISSION);
+                }
+                return true;
+            }
+        }
+        return  false;
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -84,10 +155,42 @@ public class SplashActivity extends BaseActivity {
         return false;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        /* callback - no nothing */
+        switch (requestCode){
+            case REQUEST_APPLY_PERMISSION:
+                int i = 0;
+                boolean success = true;
+                for(String p: permissions){
+                    if(grantResults[i++] != PackageManager.PERMISSION_GRANTED) {
+                        success = false;
+                        EventReporter.generalEvent("fail_"+p);
+                    }
+                }
+                EventReporter.generalEvent("apply_permission_" + success);
+                MLogs.d("Apply permission result: " + success);
+                if (success) {
+                    installSuccess();
+                }
+                finish();
+                break;
+        }
+    }
+
+    private void installSuccess() {
+        Toast.makeText(this, "Install Success", Toast.LENGTH_SHORT).show();
+        getPackageManager().setComponentEnabledSetting(new ComponentName(this, SplashActivity.class.getName()),
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
+    }
+
     private void enterHome(){
         if(PolestarApp.isArm64()) {
-            getPackageManager().setComponentEnabledSetting(new ComponentName(this, SplashActivity.class.getName()),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+            if(!applyPermissionIfNeeded()) {
+               installSuccess();
+               finish();
+            }
         } else {
             if (!PreferencesUtils.isShortCutCreated()) {
                 PreferencesUtils.setShortCutCreated();
@@ -95,8 +198,8 @@ public class SplashActivity extends BaseActivity {
                 created = true;
             }
             HomeActivity.enter(this, needUpdate());
+            finish();
         }
-        finish();
     }
 
     private boolean needUpdate() {

@@ -87,7 +87,7 @@ public class AboutActivity extends BaseActivity {
             Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://plus.google.com/communities/104830818454731991305"));
 //                intent.putExtra("START_OUTTER_APP_FLAG",true);
             startActivity(intent);
-            EventReporter.generalClickEvent( "join_us_click");
+            EventReporter.generalEvent( "join_us_click");
         } catch (Exception localException1) {
             localException1.printStackTrace();
         }

@@ -65,7 +65,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customize_dialog_layout);
-        EventReporter.generalClickEvent("customize_icon_enter");
+        EventReporter.generalEvent("customize_icon_enter");
         seekBarHue = (SeekBar) findViewById(R.id.seek_bar_hue);
         seekBarSat = (SeekBar) findViewById(R.id.seek_bar_sat);
         seekBarLight = (SeekBar) findViewById(R.id.seek_bar_light);
@@ -158,7 +158,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        EventReporter.generalClickEvent("customize_icon_save");
+        EventReporter.generalEvent("customize_icon_save");
         mData.label = text;
         mData.saveToPref();
         try{

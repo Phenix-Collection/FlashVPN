@@ -101,7 +101,7 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("arm64", bundle);
     }
 
-    public static void generalClickEvent(String event) {
+    public static void generalEvent(String event) {
         Bundle bundle = new Bundle();
         bundle.putString("event", event);
         mFirebaseAnalytics.logEvent("general_event", bundle);
