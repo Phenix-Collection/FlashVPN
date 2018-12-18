@@ -208,6 +208,12 @@ public class AppLoadingActivity extends BaseActivity {
                         agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
                     }
                     agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(AppLoadingActivity.this, getString(R.string.start_with_arm64), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     finishIfTimeout();
                 } else{
                     //Guide download support package

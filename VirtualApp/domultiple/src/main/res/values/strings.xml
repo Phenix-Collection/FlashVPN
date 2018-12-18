@@ -55,6 +55,7 @@
     <string translatable="false" name="boost_title">Do Booster</string>
     <!-- app loading -->
     <string name="app_starting_tips">%s is starting ...</string>
+    <string name="start_with_arm64">Starting with Do Multiple 64bit support library...</string>
     <string name="first_start_tips">It may take a little longer for the first start.</string>
     <string name="upgrade_start_tips">It may take a little longer as this app was just upgraded.</string>
 
