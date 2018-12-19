@@ -77,7 +77,7 @@ public class QuickSwitchNotification {
     private boolean isInitialized = false;
 
     private QuickSwitchNotification(Context ctx){
-        mContext = ctx;
+        mContext = ctx.getApplicationContext();
         mgr = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         HandlerThread thread = new HandlerThread("switch_worker");
         thread.start();

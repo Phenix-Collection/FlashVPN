@@ -100,7 +100,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="${applicationId}.wake" />
+                <action android:name="com.polestar.messaging.wake" />
             </intent-filter>
         </receiver>
 
