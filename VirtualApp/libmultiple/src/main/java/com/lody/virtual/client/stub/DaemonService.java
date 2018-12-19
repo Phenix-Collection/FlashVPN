@@ -14,6 +14,7 @@ import android.os.IBinder;
 import com.lody.virtual.R;
 import com.lody.virtual.client.core.VirtualCore;
 import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.CloneAgent64;
 
 import static android.os.Build.VERSION_CODES.O;
 
@@ -26,6 +27,7 @@ public class DaemonService extends Service {
     private static final int NOTIFY_ID = 1001;
 	private static final String WAKE_ACTION = VirtualCore.get().getHostPkg() + ".wake";
     private final static int ALARM_INTERVAL = 30 * 60 * 1000;
+    private final static int FIRST_WAKE_DELAY = 2000;
 
     public static void startup(Context context) {
 		try {
@@ -63,7 +65,7 @@ public class DaemonService extends Service {
             alarmIntent.setAction(WAKE_ACTION);
             alarmIntent.setPackage(VirtualCore.get().getHostPkg());
             PendingIntent operation = PendingIntent.getBroadcast(this, 1111, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, operation);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 2000, ALARM_INTERVAL, operation);
 		}catch (Exception e) {
 			VLog.logbug("Alarm", VLog.getStackTraceString(e));
 		}
@@ -81,8 +83,9 @@ public class DaemonService extends Service {
         public int onStartCommand(Intent intent, int flags, int startId) {
             //  remoteViews = new RemoteViews(this.getPackageName(), R.layout.quick_switch_notification);
             Notification notification;
-            if (Build.VERSION.SDK_INT >= O) {
-                Intent start = getPackageManager().getLaunchIntentForPackage(VirtualCore.get().getHostPkg());
+            String pkg = VirtualCore.get().getHostPkg();
+            if (Build.VERSION.SDK_INT >= O && !pkg.endsWith(".arm64")) {
+                Intent start = getPackageManager().getLaunchIntentForPackage(pkg);
                 start.addCategory(Intent.CATEGORY_LAUNCHER);
                 start.setAction(Intent.ACTION_MAIN);
                 //start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -109,6 +112,7 @@ public class DaemonService extends Service {
                         .setSmallIcon(this.getResources().getIdentifier("ic_launcher", "mipmap", this.getPackageName()))
                         .setContentIntent(PendingIntent.getActivity(this,0, start, 0));
                 notification = mBuilder.build();
+                notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
             } else {
                 notification = new Notification();
             }
