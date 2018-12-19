@@ -108,6 +108,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private LinearLayout nativeAdContainer;
 
     private String startingPkg;
+    private CloneModel pendingStartModel;
     private final static String EXTRA_NEED_UPDATE = "extra_need_update";
 
     private Handler mainHandler;
@@ -145,6 +146,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                     showUpdateDialog();
                 }
             }, 1000);
+        } else if(!PreferencesUtils.hasCloned()) {
+            startActivity(new Intent(HomeActivity.this, AddCloneActivity.class));
         } else {
             applyPermissionIfNeeded();
         }
@@ -351,6 +354,17 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     @Override
     protected void onResume() {
         super.onResume();
+        if (pendingStartModel != null) {
+            AppLoadingActivity.startAppStartActivity(HomeActivity.this, pendingStartModel);
+            startingPkg = pendingStartModel.getPackageName();
+            if (pendingStartModel.getLaunched() == 0) {
+                pendingStartModel.setLaunched(1);
+                DBManager.updateCloneModel(HomeActivity.this, pendingStartModel);
+                gridAdapter.notifyDataSetChanged();
+            }
+            pendingStartModel = null;
+            return;
+        }
         if (!PreferencesUtils.isAdFree()) {
             long current = System.currentTimeMillis();
             if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
@@ -561,13 +575,17 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 int luckyIdx = size;
                 int addIdx = showLucky? luckyIdx + 1 : luckyIdx;
                 if (i < size) {
-                    CloneModel model = (CloneModel)gridAdapter.getItem(i);
-                    AppLoadingActivity.startAppStartActivity(HomeActivity.this, model);
-                    startingPkg = model.getPackageName();
-                    if (model.getLaunched() == 0) {
-                        model.setLaunched(1);
-                        DBManager.updateCloneModel(HomeActivity.this, model);
-                        gridAdapter.notifyDataSetChanged();
+                    if(!applyPermissionIfNeeded()) {
+                        CloneModel model = (CloneModel) gridAdapter.getItem(i);
+                        AppLoadingActivity.startAppStartActivity(HomeActivity.this, model);
+                        startingPkg = model.getPackageName();
+                        if (model.getLaunched() == 0) {
+                            model.setLaunched(1);
+                            DBManager.updateCloneModel(HomeActivity.this, model);
+                            gridAdapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        pendingStartModel = (CloneModel) gridAdapter.getItem(i);
                     }
                 } else if (showLucky && i == luckyIdx) {
                     Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
