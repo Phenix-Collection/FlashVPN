@@ -39,7 +39,6 @@ dependencies {
     compileOnly 'com.google.firebase:firebase-config:16.0.0'
     compileOnly 'com.google.firebase:firebase-ads:15.0.1'
     compileOnly 'com.facebook.android:audience-network-sdk:4.28.2'
-    compile(name: 'instantcoffee', ext: 'aar')
 //    implementation 'com.google.ads.mediation:facebook:4.23.0.0'
 
     implementation('com.mopub:mopub-sdk-banner:4.20.0@aar') {
