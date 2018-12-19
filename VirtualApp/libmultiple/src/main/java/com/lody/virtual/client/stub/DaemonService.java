@@ -25,7 +25,7 @@ import static android.os.Build.VERSION_CODES.O;
 public class DaemonService extends Service {
 
     private static final int NOTIFY_ID = 1001;
-	private static final String WAKE_ACTION = VirtualCore.get().getHostPkg() + ".wake";
+	private static final String WAKE_ACTION = "com.polestar.messaging.wake";
     private final static int ALARM_INTERVAL = 30 * 60 * 1000;
     private final static int FIRST_WAKE_DELAY = 2000;
 
@@ -60,10 +60,11 @@ public class DaemonService extends Service {
             startForeground(NOTIFY_ID, new Notification());
 
             //发送唤醒广播来促使挂掉的UI进程重新启动起来
+            String hostPackage = VirtualCore.get().getHostPkg();
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent alarmIntent = new Intent();
             alarmIntent.setAction(WAKE_ACTION);
-            alarmIntent.setPackage(VirtualCore.get().getHostPkg());
+            alarmIntent.setPackage(hostPackage);
             PendingIntent operation = PendingIntent.getBroadcast(this, 1111, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 2000, ALARM_INTERVAL, operation);
 		}catch (Exception e) {
