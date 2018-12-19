@@ -10,6 +10,7 @@ import com.lody.virtual.client.hook.utils.MethodParameterUtils;
 import com.lody.virtual.client.ipc.VNotificationManager;
 import com.lody.virtual.helper.compat.ParceledListSliceCompat;
 import com.lody.virtual.helper.utils.ArrayUtils;
+import com.lody.virtual.helper.utils.VLog;
 import com.lody.virtual.os.VUserHandle;
 import com.lody.virtual.remote.VParceledListSlice;
 
@@ -124,6 +125,11 @@ class MethodProxies {
 
             args[1] = tag;
             args[2] = id;
+            try{
+                args[args.length - 1] = VirtualCore.get().myUserId();
+            }catch (Throwable ex) {
+                ex.printStackTrace();
+            }
             return method.invoke(who, args);
         }
     }
