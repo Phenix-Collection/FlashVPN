@@ -251,6 +251,14 @@
         <key>conf_pkg_clean_hour</key>
         <value>168</value>
     </entry>
+    <entry>
+        <key>avoid_ad_if_history</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>force_requested_permission</key>
+        <value>android.permission.READ_PHONE_STATE;android.permission.WRITE_EXTERNAL_STORAGE</value>
+    </entry>
     <!--
     <entry>
         <key>config_ad_load_timeout</key>

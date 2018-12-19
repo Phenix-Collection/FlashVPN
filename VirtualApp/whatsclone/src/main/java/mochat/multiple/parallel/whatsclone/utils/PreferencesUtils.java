@@ -461,4 +461,13 @@ public class PreferencesUtils {
         long time =  getLong(MApp.getApp(), fg? "fg_active": "bg_active", 0);
         return System.currentTimeMillis() - time > 12*60*60*1000;
     }
+
+    public static boolean hasShownPermissionGuide() {
+        return getBoolean(MApp.getApp(), "shown_permission_guide");
+    }
+
+
+    public static void setShownPermissionGuide(boolean shown) {
+        putBoolean(MApp.getApp(), "shown_permission_guide", shown);
+    }
 }

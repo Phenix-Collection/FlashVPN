@@ -129,23 +129,25 @@ public class MApp extends MultiDexApplication {
                     boosterConfig.autoAdInterval = 0;
                     boosterConfig.isUnlockAd = true;
                     boosterConfig.isInstallAd = true;
+                    boosterConfig.avoidShowIfHistory = false;
                 } else {
                     boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
                     boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
                     boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
                     boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                    boosterConfig.avoidShowIfHistory = RemoteConfig.getBoolean("avoid_ad_if_history");
                 }
                 BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
+                    @Override
+                    public void reportWake(String s) {
+                        EventReporter.reportWake(gDefault, s);
+                    }
+
                     @Override
                     public void reportEvent(String s, Bundle b) {
                         FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
                     }
                 });
-                String coffeeKey = RemoteConfig.getString("coffee_key");
-                if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
-                    MLogs.d("coffee key : " + coffeeKey);
-                    instantcoffee.Builder.build(getApp(),coffeeKey);
-                }
             }
 
             @Override

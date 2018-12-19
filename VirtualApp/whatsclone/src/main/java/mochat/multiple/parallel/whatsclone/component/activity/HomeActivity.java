@@ -2,10 +2,13 @@ package mochat.multiple.parallel.whatsclone.component.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -46,6 +49,7 @@ import mochat.multiple.parallel.whatsclone.widgets.UpDownDialog;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -79,6 +83,8 @@ public class HomeActivity extends BaseActivity {
     private RelativeLayout giftIconLayout;
     private IAdAdapter interstitialAd;
     private Handler mainHandler;
+    private static final String CONFIG_FORCE_REQUESTED_PERMISSIONS = "force_requested_permission";
+    private static final int REQUEST_APPLY_PERMISSION = 101;
 
     private static final String EXTRA_NEED_UPDATE = "extra_need_update";
     public static void enter(Activity activity, boolean needUpdate) {
@@ -111,6 +117,89 @@ public class HomeActivity extends BaseActivity {
                     showUpdateDialog();
                 }
             }, 1000);
+        } else {
+            applyPermissionIfNeeded();
+        }
+    }
+
+    //return true if need to apply permission
+    private boolean applyPermissionIfNeeded(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String conf = RemoteConfig.getString(CONFIG_FORCE_REQUESTED_PERMISSIONS);
+            if (TextUtils.isEmpty(conf)) {
+                return false;
+            }
+            String[] perms = conf.split(";");
+            if (perms == null || perms.length == 0) {
+                return false;
+            }
+            ArrayList<String> requestPerms = new ArrayList<>();
+            for (String s : perms) {
+                if (checkCallingOrSelfPermission(s) != PackageManager.PERMISSION_GRANTED) {
+                    requestPerms.add(s);
+                }
+            }
+            if (requestPerms.size() == 0) {
+                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "granted");
+                return false;
+            } else {
+                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "not_granted");
+                String[] toRequest = requestPerms.toArray(new String[0]);
+                boolean showRequestRational = false;
+                for (String s: toRequest) {
+                    if (shouldShowRequestPermissionRationale(s)){
+                        showRequestRational = true;
+                    }
+                }
+                if (showRequestRational
+                        || !PreferencesUtils.hasShownPermissionGuide()) {
+                    showPermissionGuideDialog(toRequest);
+                } else {
+                    requestPermissions(toRequest, REQUEST_APPLY_PERMISSION);
+                }
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    @TargetApi(23)
+    private void showPermissionGuideDialog(String[] perms) {
+        EventReporter.generalEvent("show_permission_guide");
+        PreferencesUtils.setShownPermissionGuide(true);
+        UpDownDialog.show(this, getString(R.string.dialog_permission_title),
+                getString(R.string.dialog_permission_content), null, getString(R.string.ok),
+                R.drawable.dialog_tag_comment, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EventReporter.generalEvent("ok_permission_guide");
+                        requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                EventReporter.generalEvent("cancel_permission_guide");
+                requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        /* callback - no nothing */
+        switch (requestCode){
+            case REQUEST_APPLY_PERMISSION:
+                int i = 0;
+                boolean success = true;
+                for(String p: permissions){
+                    if(grantResults[i++] != PackageManager.PERMISSION_GRANTED) {
+                        success = false;
+                        EventReporter.generalEvent("fail_"+p);
+                    }
+                }
+                EventReporter.generalEvent("apply_permission_" + success);
+                MLogs.d("Apply permission result: " + success);
+                break;
         }
     }
 

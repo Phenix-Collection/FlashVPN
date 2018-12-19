@@ -193,6 +193,10 @@
     <string name="applock_forgot_password"><u>Forgot Password?</u></string>
     <string name="need_set_secure_answer">Please set answer for secure question and then press confirm button.</string>
 
+    <string name="dialog_permission_title">Grant Permission</string>
+    <string name="dialog_permission_content">Please allow permission request from Whats Clone, otherwise some cloned apps and Google Play Service will not work properly.</string>
+
+
     <string-array name="month">
         <item>Jan</item>
         <item>Feb</item>

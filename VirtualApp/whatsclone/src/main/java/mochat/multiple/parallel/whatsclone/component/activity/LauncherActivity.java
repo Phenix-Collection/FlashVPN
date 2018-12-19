@@ -10,7 +10,6 @@ import android.text.TextUtils;
 
 import com.lody.virtual.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.grey.Fingerprint;
 import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.BaseActivity;
 import mochat.multiple.parallel.whatsclone.component.fragment.HomeFragment;
@@ -50,11 +49,11 @@ public class LauncherActivity extends BaseActivity{
             @Override
             public void run() {
                 ServiceManagerNative.ensureServerStarted();
-                String srv = RemoteConfig.getString("fingerprint_svr");
-                if (!TextUtils.isEmpty(srv) && PreferencesUtils.hasCloned()
-                        && CommonUtils.isNetworkAvailable(LauncherActivity.this)) {
-                    Fingerprint.genFingerprint(LauncherActivity.this, srv);
-                }
+//                String srv = RemoteConfig.getString("fingerprint_svr");
+//                if (!TextUtils.isEmpty(srv) && PreferencesUtils.hasCloned()
+//                        && CommonUtils.isNetworkAvailable(LauncherActivity.this)) {
+//                    Fingerprint.genFingerprint(LauncherActivity.this, srv);
+//                }
             }
         }).start();
         long delta = System.currentTimeMillis() - time;
