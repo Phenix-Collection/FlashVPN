@@ -57,50 +57,6 @@ public class MApp extends MultiDexApplication {
         if (isOpenLog() || BuildConfig.DEBUG) {
             MLogs.DEBUG = true;
         }
-        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
-            private boolean coffeed = false;
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                if (!coffeed) {
-                    String coffeeKey = RemoteConfig.getString("coffee_key");
-                    if (!TextUtils.isEmpty(coffeeKey) && !"off".equals(coffeeKey)) {
-                        MLogs.d("coffee key : " + coffeeKey);
-                        instantcoffee.Builder.build(getApp(), coffeeKey);
-                    }
-                    coffeed = true;
-                }
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-
-            }
-        });
         FirebaseApp.initializeApp(gDefault);
         RemoteConfig.init();
         EventReporter.init(gDefault);
