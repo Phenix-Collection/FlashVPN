@@ -148,8 +148,6 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             }, 1000);
         } else if(!PreferencesUtils.hasCloned()) {
             startActivity(new Intent(HomeActivity.this, AddCloneActivity.class));
-        } else {
-            applyPermissionIfNeeded();
         }
     }
 
