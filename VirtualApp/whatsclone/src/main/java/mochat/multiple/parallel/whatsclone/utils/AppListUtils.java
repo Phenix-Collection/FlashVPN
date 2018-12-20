@@ -95,6 +95,7 @@ public class AppListUtils implements DataObserver {
             loadRecommandAppsFromFile(mRecommandModels);
             loadRecommandAppsFromAds();
         }
+        notifyChanged();
         MLogs.e("update app list done");
     }
 

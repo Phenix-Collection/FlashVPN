@@ -10,7 +10,6 @@ import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,12 +48,13 @@ import mochat.multiple.parallel.whatsclone.utils.DisplayUtils;
 import mochat.multiple.parallel.whatsclone.utils.ExplosionField;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
+import mochat.multiple.parallel.whatsclone.utils.PermissionManager;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
 import mochat.multiple.parallel.whatsclone.widgets.LeftRightDialog;
 import mochat.multiple.parallel.whatsclone.widgets.GridAppCell;
 import mochat.multiple.parallel.whatsclone.widgets.HeaderGridView;
-import mochat.multiple.parallel.whatsclone.widgets.TutorialGuides;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -73,6 +73,7 @@ public class HomeFragment extends BaseFragment {
     private LinearLayout nativeAdContainer;
 
     private IAdAdapter nativeAd;
+    private AppModel mPendingStart;
 
     private FuseAdLoader mNativeAdLoader;
     private FuseAdLoader mApplistAdLoader;
@@ -108,7 +109,6 @@ public class HomeFragment extends BaseFragment {
         nativeAdContainer.removeAllViews();
         nativeAdContainer.addView(adView);
         pkgGridAdapter.notifyDataSetChanged();
-        dismissLongClickGuide();
     }
 
     public void hideAd() {
@@ -327,7 +327,12 @@ public class HomeFragment extends BaseFragment {
                 MLogs.d("onItemClick " + i);
                 if(i >= 0 && i < appInfos.size()){
                     AppModel model = appInfos.get(i);
-                    startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
+                    PermissionManager permissionManager = new PermissionManager(mActivity, HomeActivity.REQUEST_APPLY_PERMISSION);
+                    if (permissionManager.applyPermissionIfNeeded()) {
+                        mPendingStart = model;
+                    } else {
+                        startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
+                    }
                 }else{
                     int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
                     int boosterIdx = appInfos.size();
@@ -389,36 +394,6 @@ public class HomeFragment extends BaseFragment {
         return new AdSize(dpWidth, 135);
     }
 
-    private TutorialGuides.Builder mTutorialBuilder;
-
-    private TutorialGuides longClickGuide = null;
-    private void showLongClickItemGuide(){
-        try {
-            String text = getString(R.string.long_press_tips);
-            mTutorialBuilder = new TutorialGuides.Builder(mActivity);
-            mTutorialBuilder.anchorView(pkgGridView.getChildAt(0+pkgGridView.getGridItemStartOffset()));
-            mTutorialBuilder.defaultMaxWidth(true);
-            mTutorialBuilder.onShowListener(new TutorialGuides.OnShowListener() {
-                @Override
-                public void onShow(TutorialGuides tooltip) {
-                    PreferencesUtils.setLongClickGuideShowed(mActivity);
-                }
-            });
-            longClickGuide = mTutorialBuilder.text(text)
-                    .gravity(Gravity.BOTTOM)
-                    .build();
-            longClickGuide.show();
-        }catch (Exception e){
-            MLogs.e("error to showLongClickItemGuide");
-            MLogs.e(e);
-        }
-    }
-
-    private void dismissLongClickGuide() {
-        if (longClickGuide !=null) longClickGuide.dismiss();
-    }
-
-
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity().getApplicationContext());
@@ -473,6 +448,11 @@ public class HomeFragment extends BaseFragment {
         }
         if (pkgGridAdapter != null) {
             pkgGridAdapter.notifyDataSetChanged();
+        }
+
+        if (mPendingStart != null) {
+            startAppLaunchActivity(mPendingStart.getPackageName(),mPendingStart.getPkgUserId());
+            mPendingStart = null;
         }
     }
 

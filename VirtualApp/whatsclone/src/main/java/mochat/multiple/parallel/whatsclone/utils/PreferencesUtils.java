@@ -248,10 +248,6 @@ public class PreferencesUtils {
         return getBoolean(c, AppConstants.PreferencesKey.SHOWN_LONG_CLICK_GUIDE, false);
     }
 
-    public static void setLongClickGuideShowed(Context c){
-        putBoolean(c, AppConstants.PreferencesKey.SHOWN_LONG_CLICK_GUIDE, true);
-    }
-
     public static String getEncodedPatternPassword(Context c) {
         return getString(c, AppConstants.PreferencesKey.ENCODED_PATTERN_PWD);
     }
@@ -429,8 +425,7 @@ public class PreferencesUtils {
     }
 
     public static boolean hasCloned() {
-        return getBoolean(MApp.getApp(), "spc_ever_cloned", false)
-                || hasShownLongClickGuide(MApp.getApp());
+        return getBoolean(MApp.getApp(), "spc_ever_cloned", false);
     }
 
     public static void setHasCloned() {

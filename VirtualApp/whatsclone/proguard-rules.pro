@@ -213,3 +213,41 @@ public static java.lang.String TABLENAME;
  -dontwarn javax.annotation.Nullable
 
  -keep class com.batmobi.** { *; }
+
+ -assumenosideeffects class com.polestar.ad.AdLog {
+    public static *** v(...);
+    public static *** d(...);
+    public static *** i(...);
+    public static *** w(...);
+    public static *** e(...);
+  }
+
+ #-assumenosideeffects class com.lody.virtual.helper.utils.VLog {
+ #public static *** v(...);
+ #public static *** d(...);
+ #public static *** i(...);
+ #public static *** w(...);
+ #public static *** e(...);
+ #}
+
+ -assumenosideeffects class com.polestar.superclone.utils.MLogs {
+ public static *** v(...);
+ public static *** d(...);
+ public static *** i(...);
+ public static *** w(...);
+ public static *** e(...);
+ }
+
+ -keep class mirror.** {*;}
+ -keep class android.** {*;}
+ -keep class com.polestar.clone.client.hook.base.LogInvocation {*;}
+ -keep class com.polestar.clone.client.hook.base.LogInvocation.** {*;}
+ -keepnames class com.polestar.clone.client.NativeEngine {*;}
+ -keepclassmembers class com.polestar.clone.client.NativeEngine {public static *;}
+ -keepnames class com.polestar.clone.client.NativeEngine
+ -keep class * extends com.polestar.clone.client.hook.base.MethodProxy {}
+ -keep class * extends android.os.IBinder {}
+ -keep class * extends android.os.Binder {}
+ -keep class * extends android.os.IInterface {}
+ -keep class * extends android.app.IServiceConnection.Stub {}
+ -keepclassmembers class com.polestar.clone.client.hook.secondary.ServiceConnectionDelegate { public *;}

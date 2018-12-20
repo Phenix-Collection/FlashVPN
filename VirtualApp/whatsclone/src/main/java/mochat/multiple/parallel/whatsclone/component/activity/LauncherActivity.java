@@ -13,6 +13,7 @@ import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.BaseActivity;
 import mochat.multiple.parallel.whatsclone.component.fragment.HomeFragment;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
+import mochat.multiple.parallel.whatsclone.utils.AppListUtils;
 import mochat.multiple.parallel.whatsclone.utils.CloneHelper;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
@@ -41,6 +42,9 @@ public class LauncherActivity extends BaseActivity{
                 CloneHelper.getInstance(LauncherActivity.this).preLoadClonedApp(LauncherActivity.this);
             }
         },100);
+        if(!PreferencesUtils.hasCloned()) {
+            AppListUtils.getInstance(this);
+        }
 
         //VirtualCore.get().waitForEngine();
         new Thread(new Runnable() {

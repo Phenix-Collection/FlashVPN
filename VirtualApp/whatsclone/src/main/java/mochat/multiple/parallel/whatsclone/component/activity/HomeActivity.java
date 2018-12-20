@@ -43,6 +43,7 @@ import mochat.multiple.parallel.whatsclone.utils.CloneHelper;
 import mochat.multiple.parallel.whatsclone.utils.CommonUtils;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
+import mochat.multiple.parallel.whatsclone.utils.PermissionManager;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.widgets.LeftRightDialog;
 import mochat.multiple.parallel.whatsclone.widgets.UpDownDialog;
@@ -83,8 +84,8 @@ public class HomeActivity extends BaseActivity {
     private RelativeLayout giftIconLayout;
     private IAdAdapter interstitialAd;
     private Handler mainHandler;
-    private static final String CONFIG_FORCE_REQUESTED_PERMISSIONS = "force_requested_permission";
-    private static final int REQUEST_APPLY_PERMISSION = 101;
+    public static final int REQUEST_APPLY_PERMISSION = 101;
+    private PermissionManager permissionManager;
 
     private static final String EXTRA_NEED_UPDATE = "extra_need_update";
     public static void enter(Activity activity, boolean needUpdate) {
@@ -98,6 +99,7 @@ public class HomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainHandler = new Handler();
+        permissionManager = new PermissionManager(this, REQUEST_APPLY_PERMISSION);
         EventReporter.homeShow(this);
         setContentView(R.layout.activity_home);
         initView();
@@ -117,71 +119,9 @@ public class HomeActivity extends BaseActivity {
                     showUpdateDialog();
                 }
             }, 1000);
-        } else {
-            applyPermissionIfNeeded();
+        } else if(!PreferencesUtils.hasCloned()) {
+            startAppListActivity();
         }
-    }
-
-    //return true if need to apply permission
-    private boolean applyPermissionIfNeeded(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String conf = RemoteConfig.getString(CONFIG_FORCE_REQUESTED_PERMISSIONS);
-            if (TextUtils.isEmpty(conf)) {
-                return false;
-            }
-            String[] perms = conf.split(";");
-            if (perms == null || perms.length == 0) {
-                return false;
-            }
-            ArrayList<String> requestPerms = new ArrayList<>();
-            for (String s : perms) {
-                if (checkCallingOrSelfPermission(s) != PackageManager.PERMISSION_GRANTED) {
-                    requestPerms.add(s);
-                }
-            }
-            if (requestPerms.size() == 0) {
-                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "granted");
-                return false;
-            } else {
-                EventReporter.setUserProperty(EventReporter.PROP_PERMISSION, "not_granted");
-                String[] toRequest = requestPerms.toArray(new String[0]);
-                boolean showRequestRational = false;
-                for (String s: toRequest) {
-                    if (shouldShowRequestPermissionRationale(s)){
-                        showRequestRational = true;
-                    }
-                }
-                if (showRequestRational
-                        || !PreferencesUtils.hasShownPermissionGuide()) {
-                    showPermissionGuideDialog(toRequest);
-                } else {
-                    requestPermissions(toRequest, REQUEST_APPLY_PERMISSION);
-                }
-                return true;
-            }
-        }
-        return  false;
-    }
-
-    @TargetApi(23)
-    private void showPermissionGuideDialog(String[] perms) {
-        EventReporter.generalEvent("show_permission_guide");
-        PreferencesUtils.setShownPermissionGuide(true);
-        UpDownDialog.show(this, getString(R.string.dialog_permission_title),
-                getString(R.string.dialog_permission_content), null, getString(R.string.ok),
-                R.drawable.dialog_tag_comment, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        EventReporter.generalEvent("ok_permission_guide");
-                        requestPermissions(perms, REQUEST_APPLY_PERMISSION);
-                    }
-                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                EventReporter.generalEvent("cancel_permission_guide");
-                requestPermissions(perms, REQUEST_APPLY_PERMISSION);
-            }
-        });
     }
 
     @Override
@@ -460,10 +400,6 @@ public class HomeActivity extends BaseActivity {
     private void doAnimationEnter() {
         mHomeFragment.showFromBottom();
         EventReporter.generalClickEvent(this, "home_animate_enter");
-        if (!PreferencesUtils.hasShownLongClickGuide(this)) {
-            MLogs.d("Not show long click guide.");
-            return;
-        }
         boolean needShowRate = guideRateIfNeeded();
         boolean showAdFree = false;
         if (!needShowRate && !BillingProvider.get().isAdFreeVIP()) {

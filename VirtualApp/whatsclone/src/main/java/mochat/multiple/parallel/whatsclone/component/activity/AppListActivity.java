@@ -224,6 +224,34 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                MLogs.d("onChanged");
+                mPopularModels = AppListUtils.getInstance(AppListActivity.this).getPopularModels();
+                mInstalledModels = AppListUtils.getInstance(AppListActivity.this).getInstalledModels();
+                mRecommandModels = AppListUtils.getInstance(AppListActivity.this).getRecommandModels();
+                if (mPopularModels == null || mPopularModels.size() == 0) {
+                    mTextPopular.setVisibility(View.GONE);
+                    mListView.setVisibility(View.GONE);
+                } else {
+                    mListView.setVisibility(View.VISIBLE);
+                    mAppListAdapter.setModels(mPopularModels);
+                }
+
+                if (mRecommandModels == null || mRecommandModels.size() == 0) {
+                    mTextRecommand.setVisibility(View.GONE);
+                    mRecommandListView.setVisibility(View.GONE);
+                } else {
+                    mTextRecommand.setVisibility(View.VISIBLE);
+                    mRecommandListView.setVisibility(View.VISIBLE);
+                    mRecommandListAdapter.setModels(mRecommandModels);
+                }
+                if (mInstalledModels == null || mInstalledModels.size() == 0) {
+                    mTextMore.setVisibility(View.GONE);
+                    mGradView.setVisibility(View.GONE);
+                } else {
+                    mGradView.setVisibility(View.VISIBLE);
+                    mTextMore.setVisibility(View.VISIBLE);
+                    showMoreApps();
+                }
                 mAppListAdapter.notifyDataSetChanged();
                 mAppGridAdapter.notifyDataSetChanged();
                 mRecommandListAdapter.notifyDataSetChanged();

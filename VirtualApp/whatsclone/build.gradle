@@ -70,7 +70,7 @@ android {
             pseudoLocalesEnabled true
             signingConfig signingConfigs.myConfig
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'lib-proguard.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {

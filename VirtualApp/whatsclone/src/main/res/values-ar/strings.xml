@@ -10,7 +10,6 @@
     <string name="start">بداية</string>
     <string name="cancel">إلغاء</string>
     <string name="cloning">استنساخ...</string>
-    <string name="cloning_tips">ويتم استنساخ تطبيق ...</string>
     <string name="app_starting_tips">تطبيق بدأت %s ...</string>
     <string name="first_start_tips">وسوف يستغرق وقتا أطول قليلا لبدء أول.</string>
 

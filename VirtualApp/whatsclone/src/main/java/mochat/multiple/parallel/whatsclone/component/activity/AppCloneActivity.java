@@ -48,6 +48,7 @@ import mochat.multiple.parallel.whatsclone.utils.CommonUtils;
 import mochat.multiple.parallel.whatsclone.utils.DisplayUtils;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
+import mochat.multiple.parallel.whatsclone.utils.PermissionManager;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
 import mochat.multiple.parallel.whatsclone.utils.ToastUtils;
@@ -522,6 +523,8 @@ public class AppCloneActivity extends BaseActivity {
         mTxtInstalled.setText(String.format(getString(R.string.clone_success), data.label));
         mTxtInstalled.setVisibility(View.VISIBLE);
         showCloneSetting();
+        PermissionManager permissionManager  = new PermissionManager(this, 1000);
+        permissionManager.applyPermissionIfNeeded();
     }
 
     private void showCloneSetting() {

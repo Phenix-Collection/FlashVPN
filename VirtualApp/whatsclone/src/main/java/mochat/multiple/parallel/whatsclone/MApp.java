@@ -67,7 +67,7 @@ public class MApp extends MultiDexApplication {
     @Override
     protected void attachBaseContext(Context base) {
         Log.d(MLogs.DEFAULT_TAG, "APP version: " + BuildConfig.VERSION_NAME + " Type: " + BuildConfig.BUILD_TYPE);
-        Log.d(MLogs.DEFAULT_TAG, "LIB version: " + com.lody.clone.BuildConfig.VERSION_NAME + " Type: " + com.lody.clone.BuildConfig.BUILD_TYPE );
+        Log.d(MLogs.DEFAULT_TAG, "LIB version: " + com.polestar.clone.BuildConfig.VERSION_NAME + " Type: " + com.polestar.clone.BuildConfig.BUILD_TYPE );
 
         super.attachBaseContext(base);
         gDefault = this;
