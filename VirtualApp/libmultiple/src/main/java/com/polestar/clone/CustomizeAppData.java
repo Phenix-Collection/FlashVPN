@@ -8,7 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.clone.client.core.VirtualCore;
 
 /**
  * Created by PolestarApp on 2017/7/29.

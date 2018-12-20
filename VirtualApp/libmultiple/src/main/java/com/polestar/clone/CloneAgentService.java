@@ -9,17 +9,16 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
-import android.os.Parcel;
 
-import com.lody.virtual.client.core.InstallStrategy;
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.ipc.VActivityManager;
-import com.lody.virtual.client.ipc.VPackageManager;
-import com.lody.virtual.helper.utils.VLog;
-import com.lody.virtual.os.VUserInfo;
-import com.lody.virtual.os.VUserManager;
-import com.lody.virtual.remote.InstallResult;
-import com.lody.virtual.remote.InstalledAppInfo;
+import com.polestar.clone.client.core.InstallStrategy;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.ipc.VActivityManager;
+import com.polestar.clone.client.ipc.VPackageManager;
+import com.polestar.clone.helper.utils.VLog;
+import com.polestar.clone.os.VUserInfo;
+import com.polestar.clone.os.VUserManager;
+import com.polestar.clone.remote.InstallResult;
+import com.polestar.clone.remote.InstalledAppInfo;
 
 import java.io.File;
 

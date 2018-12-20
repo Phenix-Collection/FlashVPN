@@ -17,8 +17,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.client.core.VirtualCore;
 
 import java.io.File;
 import java.io.FileNotFoundException;

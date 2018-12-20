@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.stub.VASettings;
-import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.stub.VASettings;
+import com.polestar.clone.helper.utils.VLog;
 
 /**
  * Created by guojia on 2017/6/11.

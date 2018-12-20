@@ -9,7 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.os.Looper;
 
-import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.helper.utils.VLog;
 
 import java.util.Timer;
 import java.util.TimerTask;

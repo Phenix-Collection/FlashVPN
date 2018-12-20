@@ -1,6 +1,6 @@
 package mirror;
 
-import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.helper.utils.VLog;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

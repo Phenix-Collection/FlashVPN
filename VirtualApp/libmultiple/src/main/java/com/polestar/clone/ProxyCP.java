@@ -13,8 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.ParcelFileDescriptor;
-import com.lody.virtual.helper.compat.ContentProviderCompat;
-import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.helper.compat.ContentProviderCompat;
+import com.polestar.clone.helper.utils.VLog;
 
 import java.io.FileNotFoundException;
 import java.util.List;
