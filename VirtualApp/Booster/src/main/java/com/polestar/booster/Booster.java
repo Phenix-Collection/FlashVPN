@@ -171,7 +171,7 @@ public class Booster extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         onStart(intent, startId);
         BoosterLog.log("Booster onStart: " + intent);
-        String wake = intent.getStringExtra("wake_src");
+        String wake = intent != null? intent.getStringExtra("wake_src"): "svc_restart";
         if (!TextUtils.isEmpty(wake)){
             BoosterLog.reportWake(wake);
         }
