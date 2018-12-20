@@ -41,13 +41,6 @@ public class Booster extends Service {
     static final String PREF_KEY_LAST_TIME_USER_DISABLE_AUTO_CLEAN = "last_time_user_disable_auto_clean";
     static final String PREF_KEY_LAST_SYNC_CONFIG_INFO_SUCCESS_TIME = "last_sync_config_info_success_time";
 
-
-    public static class Battery {
-        public static final String ACTION_DISMISS_BATTERY = "dismiss_batterybooster_action";
-        public static final String ACTION_SHOW_BATTERY = "show_batterybooster_action";
-        public static final String ACTION_BATTERY_KILL_LOCKSCREEN = "kill_systemlockscreen_action";
-    }
-
     private volatile Looper mCleanerLooper;
     private volatile CleanerHandler mCleanerHandler;
 
@@ -117,19 +110,6 @@ public class Booster extends Service {
             context.sendBroadcast(intent);
         } catch (Exception e) {
 
-        }
-    }
-
-    public static void schedule(Context context) {
-        try {
-            Intent intent = new Intent(context, Booster.class);
-            intent.setAction(ACTION_SCHEDULE);
-            PendingIntent pi = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            long interval = TimeUtil.MINUTE * 10L;
-            AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + interval, interval, pi);
-        } catch (Exception e) {
         }
     }
 
@@ -245,16 +225,11 @@ public class Booster extends Service {
         return null;
     }
 
-    public void setIntentRedelivery(boolean enabled) {
-        mRedelivery = enabled;
-    }
-
     private void onHandleIntent(Intent intent) {
         if (intent == null)
             return;
 
         final String action = intent.getAction();
-        final long start = System.currentTimeMillis();
         try {
             if (ACTION_INIT.equals(action)) {
                 handleInit();
@@ -300,24 +275,6 @@ public class Booster extends Service {
         // checkCreateUpdateCleanShortcut();
     }
 
-    private void handleUpdateConfigAutoCleanEnabled() {
-
-        try {
-
-            onUserChangeAutoClean(BoosterSdk.boosterConfig.isAutoClean);
-        } finally {
-            onConfigUpdated(this);
-        }
-    }
-
-    private void handleUpdateConfigMemoryThreshold() {
-        onConfigUpdated(this);
-    }
-
-    private void handleUpdateConfigUseRealUserPresent() {
-        onConfigUpdated(this);
-    }
-
     private void handleCleanShortcutClick(final String from) {
 
         mMainHandler.post(new Runnable() {
@@ -350,18 +307,6 @@ public class Booster extends Service {
 //            if (CommonService.ACTION_USE_REAL_USER_PRESENT.equals(action)) {
 //                BoosterSdk.useRealUserPresent(false);
 //            }
-
-            if (Battery.ACTION_SHOW_BATTERY.equals(action)) {
-                onShowBattery();
-            }
-
-            if (Battery.ACTION_DISMISS_BATTERY.equals(action)) {
-                onDismissBattery();
-            }
-
-            if (Battery.ACTION_BATTERY_KILL_LOCKSCREEN.equals(action)) {
-                onBatteryKillLockscreen();
-            }
         }
     };
 
@@ -389,9 +334,6 @@ public class Booster extends Service {
 //        filter.addAction(CommonSdk.ACTION_REAL_USER_PRESENT);
 //        filter.addAction(CommonService.ACTION_USE_REAL_USER_PRESENT);
 //        filter.addAction(CommonService.ACTION_TRIGGER_REAL_USER_PRESENT);
-        filter.addAction(Battery.ACTION_SHOW_BATTERY);
-        filter.addAction(Battery.ACTION_DISMISS_BATTERY);
-        filter.addAction(Battery.ACTION_BATTERY_KILL_LOCKSCREEN);
         AndroidUtil.safeRegisterBroadcastReceiver(this, mLockscreenReceiver, filter);
 
 //        IntentFilter installFilter = new IntentFilter();

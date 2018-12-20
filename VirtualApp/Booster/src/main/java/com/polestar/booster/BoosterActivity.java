@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import com.polestar.booster.view.BoostView;
-
 
 public class BoosterActivity extends Activity {
 

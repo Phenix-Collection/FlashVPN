@@ -1,4 +1,4 @@
-package com.polestar.booster.view;
+package com.polestar.booster;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -24,14 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdSize;
-import com.polestar.booster.BoosterLog;
-import com.polestar.booster.BoosterSdk;
-import com.polestar.booster.R;
 import com.polestar.booster.mgr.BoostMgr;
 import com.polestar.booster.util.AndroidUtil;
 import com.polestar.booster.util.BoostUtil;
 import com.polestar.booster.util.FontUtil;
-import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -69,7 +65,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
     private ViewGroup mLayoutClickArea;
 
     private ViewGroup mLayoutAnimationTop;
-    private NebulaAnimationLayout mNebulaAnimationLayout;
+    private DotAnimationLayout mDotAnimationLayout;
     private ImageView mWheelInside;
     private ImageView mWheelOutside;
 
@@ -301,7 +297,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
         mLayoutClickArea.setOnClickListener(this);
 
         mLayoutAnimationTop = (ViewGroup) mLayoutCleanerView.findViewById(R.id.boostersdk_layout_wheel);
-        mNebulaAnimationLayout = (NebulaAnimationLayout) mLayoutCleanerView.findViewById(R.id.boostersdk_nebula_animation_layout);
+        mDotAnimationLayout = (DotAnimationLayout) mLayoutCleanerView.findViewById(R.id.boostersdk_nebula_animation_layout);
         mWheelInside = (ImageView) mLayoutCleanerView.findViewById(R.id.boostersdk_wheel_inside);
         mWheelInside.setImageResource(BoosterSdk.boosterRes.innerWheelImage);
         mWheelOutside = (ImageView) mLayoutCleanerView.findViewById(R.id.boostersdk_wheel_outside);
@@ -582,7 +578,10 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
         translations.setStartDelay(1000);
         translations.playTogether(translation4, translation5, translation6, translation7);
 
-        final ValueAnimator nebulaAnimator = mNebulaAnimationLayout.createNebulaAnimator(800);
+        final ValueAnimator nebulaAnimator = mDotAnimationLayout.createNebulaAnimator(800);
+//        nebulaAnimator.setInterpolator(new AccelerateInterpolator());
+//        nebulaAnimator.setRepeatMode(ValueAnimator.RESTART);
+//        nebulaAnimator.setRepeatCount(ValueAnimator.INFINITE);
 
         AnimatorSet startAnimator = new AnimatorSet();
         startAnimator.playTogether(rotations, translations, nebulaAnimator);
@@ -616,8 +615,8 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
                 mWheelInside.setScaleY(scale);
                 mWheelOutside.setScaleX(scale);
                 mWheelOutside.setScaleY(scale);
-                mNebulaAnimationLayout.setScaleX(scale);
-                mNebulaAnimationLayout.setScaleY(scale);
+                mDotAnimationLayout.setScaleX(scale);
+                mDotAnimationLayout.setScaleY(scale);
             }
         });
 

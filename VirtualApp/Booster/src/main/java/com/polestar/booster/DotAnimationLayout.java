@@ -1,4 +1,4 @@
-package com.polestar.booster.view;
+package com.polestar.booster;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -11,17 +11,14 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-
-import com.polestar.booster.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class NebulaAnimationLayout extends View {
+public class DotAnimationLayout extends View {
 
-    private static final String TAG = NebulaAnimationLayout.class.getSimpleName();
+    private static final String TAG = DotAnimationLayout.class.getSimpleName();
 
     private Context mContext;
     private ValueAnimator mAnimator;
@@ -33,13 +30,13 @@ public class NebulaAnimationLayout extends View {
     private Bitmap mBitmap;
     private Matrix mMatrix;
 
-    public NebulaAnimationLayout(Context context) {
+    public DotAnimationLayout(Context context) {
         super(context);
 
         init(context);
     }
 
-    public NebulaAnimationLayout(Context context, AttributeSet attrs) {
+    public DotAnimationLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         init(context);
@@ -49,7 +46,7 @@ public class NebulaAnimationLayout extends View {
         mContext = context;
         mNebulaList = new ArrayList<>();
         mRandom = new Random();
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cleanersdk_ic_nebula);
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.dot_icon);
         mMatrix = new Matrix();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -120,9 +117,6 @@ public class NebulaAnimationLayout extends View {
                 invalidate();
             }
         });
-        mAnimator.setInterpolator(new AccelerateInterpolator());
-        mAnimator.setRepeatMode(ValueAnimator.RESTART);
-        mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         return mAnimator;
     }
 

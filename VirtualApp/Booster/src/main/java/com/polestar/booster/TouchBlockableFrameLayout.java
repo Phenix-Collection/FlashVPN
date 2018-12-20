@@ -1,4 +1,4 @@
-package com.polestar.booster.view;
+package com.polestar.booster;
 
 import android.content.Context;
 import android.util.AttributeSet;
