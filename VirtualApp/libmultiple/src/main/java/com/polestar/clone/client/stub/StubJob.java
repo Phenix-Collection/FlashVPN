@@ -154,7 +154,11 @@ public class StubJob extends Service {
 
         @Override
         public void jobFinished(int jobId, boolean reschedule) throws RemoteException {
-            clientCallback.jobFinished(jobId, reschedule);
+            try {
+                clientCallback.jobFinished(jobId, reschedule);
+            }catch (Throwable ex){
+                ex.printStackTrace();
+            }
         }
 
         @Override
