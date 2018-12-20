@@ -9,8 +9,8 @@ import android.content.pm.ResolveInfo;
 import android.os.Process;
 import android.text.TextUtils;
 
-import com.lody.virtual.GmsSupport;
-import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.polestar.clone.GmsSupport;
+import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;

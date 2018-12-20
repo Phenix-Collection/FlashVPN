@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.polestar.booster.util.AndroidUtil;
-import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;

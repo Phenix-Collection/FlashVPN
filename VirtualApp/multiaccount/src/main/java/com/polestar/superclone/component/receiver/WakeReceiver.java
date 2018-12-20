@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;

@@ -15,11 +15,11 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.os.Looper;
 
-import com.lody.virtual.client.VClientImpl;
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.hook.delegate.ComponentDelegate;
-import com.lody.virtual.helper.utils.VLog;
-import com.lody.virtual.os.VUserHandle;
+import com.polestar.clone.client.VClientImpl;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.hook.delegate.ComponentDelegate;
+import com.polestar.clone.helper.utils.VLog;
+import com.polestar.clone.os.VUserHandle;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.IAppMonitor;
 import com.polestar.domultiple.PolestarApp;

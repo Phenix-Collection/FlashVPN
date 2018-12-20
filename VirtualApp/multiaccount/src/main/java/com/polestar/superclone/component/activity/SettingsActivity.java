@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
-import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.billing.BillingConstants;
 import com.polestar.billing.BillingProvider;
 import com.polestar.superclone.R;

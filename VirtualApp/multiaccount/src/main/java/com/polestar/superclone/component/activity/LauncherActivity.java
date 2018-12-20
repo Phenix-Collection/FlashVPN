@@ -6,16 +6,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
-import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.utils.CloneHelper;
-import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;

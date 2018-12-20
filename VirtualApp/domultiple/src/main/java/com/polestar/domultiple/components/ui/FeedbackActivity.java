@@ -20,8 +20,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.remote.InstalledAppInfo;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.remote.InstalledAppInfo;
 import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.utils.MLogs;

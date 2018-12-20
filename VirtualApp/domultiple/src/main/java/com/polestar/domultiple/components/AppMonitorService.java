@@ -1,19 +1,14 @@
 package com.polestar.domultiple.components;
 
-import android.app.Activity;
-import android.app.Application;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
@@ -32,10 +27,8 @@ import com.polestar.domultiple.IAppMonitor;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by guojia on 2018/5/27.

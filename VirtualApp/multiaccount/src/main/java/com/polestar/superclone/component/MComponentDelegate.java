@@ -11,11 +11,10 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.os.Looper;
 
-import com.lody.virtual.client.VClientImpl;
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.hook.delegate.ComponentDelegate;
-import com.lody.virtual.helper.utils.VLog;
-import com.lody.virtual.os.VUserHandle;
+import com.polestar.clone.client.VClientImpl;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.hook.delegate.ComponentDelegate;
+import com.polestar.clone.os.VUserHandle;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.IAppMonitor;
 import com.polestar.superclone.MApp;
@@ -165,7 +164,7 @@ public class MComponentDelegate implements ComponentDelegate {
     @Override
     public boolean handleStartActivity(String name) {
         if (mInterstitialActivitySet.contains(name)) {
-            VLog.d("AppInstrumentation","Starting activity: " + name);
+            MLogs.d("AppInstrumentation","Starting activity: " + name);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -202,7 +201,7 @@ public class MComponentDelegate implements ComponentDelegate {
         ComponentName comp = new ComponentName(targetPkg, AppMonitorService.class.getName());
         Intent intent = new Intent();
         intent.setComponent(comp);
-        VLog.d("AppMonitor", "bindService intent "+ intent);
+        MLogs.d("AppMonitor", "bindService intent "+ intent);
         syncQueue.clear();
         TimerTask task = new TimerTask() {
             @Override
@@ -236,7 +235,7 @@ public class MComponentDelegate implements ComponentDelegate {
             } catch (InterruptedException e) {
                 // will never happen, since the queue starts with one available slot
             }
-            VLog.d("CloneAgent", "connected "+ name);
+            MLogs.d("CloneAgent", "connected "+ name);
         }
         @Override public void onServiceDisconnected(ComponentName name) {
             uiAgent = null;

@@ -6,16 +6,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
-import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
 import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.BaseActivity;
 import mochat.multiple.parallel.whatsclone.component.fragment.HomeFragment;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.utils.CloneHelper;
-import mochat.multiple.parallel.whatsclone.utils.CommonUtils;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;

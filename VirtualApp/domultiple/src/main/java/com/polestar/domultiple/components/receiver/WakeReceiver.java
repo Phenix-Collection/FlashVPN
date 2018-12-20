@@ -6,14 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
-import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.components.ui.SplashActivity;
-import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
-import com.polestar.domultiple.utils.PreferencesUtils;
-import com.polestar.domultiple.utils.RemoteConfig;
 
 
 /**

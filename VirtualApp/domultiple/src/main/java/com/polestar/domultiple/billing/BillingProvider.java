@@ -9,7 +9,7 @@ import android.os.Looper;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
-import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.utils.MLogs;

@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lody.virtual.helper.utils.VLog;
 import com.polestar.superclone.R;
 import com.polestar.superclone.utils.AnimatorHelper;
 import com.polestar.superclone.utils.DisplayUtils;
@@ -79,7 +78,7 @@ public class UpDownDialog {
         try {
             dialog.show();
         }catch (Exception e) {
-            MLogs.logBug(VLog.getStackTraceString(e));
+            MLogs.logBug(MLogs.getStackTraceString(e));
         }
         AnimatorHelper.elasticScale(dialogView);
         return dialog;

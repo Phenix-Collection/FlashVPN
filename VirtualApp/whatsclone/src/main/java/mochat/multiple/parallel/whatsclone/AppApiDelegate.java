@@ -1,11 +1,6 @@
 package mochat.multiple.parallel.whatsclone;
 
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-
-import com.lody.virtual.client.core.IAppApiDelegate;
-import mochat.multiple.parallel.whatsclone.utils.BitmapUtils;
+import com.polestar.clone.client.core.IAppApiDelegate;
 
 /**
  * Created by guojia on 2016/12/19.

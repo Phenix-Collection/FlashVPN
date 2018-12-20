@@ -9,8 +9,8 @@ import android.content.pm.ResolveInfo;
 import android.os.Process;
 import android.text.TextUtils;
 
-import com.lody.virtual.GmsSupport;
-import com.lody.virtual.client.ipc.ServiceManagerNative;
+import com.polestar.clone.GmsSupport;
+import com.polestar.clone.client.ipc.ServiceManagerNative;
 
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.db.DbManager;

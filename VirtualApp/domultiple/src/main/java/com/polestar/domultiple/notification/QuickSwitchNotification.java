@@ -19,7 +19,7 @@ import android.widget.RemoteViews;
 
 import com.polestar.booster.BoosterSdk;
 import com.polestar.booster.BoosterShortcutActivity;
-import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.BitmapUtils;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
@@ -31,7 +31,6 @@ import com.polestar.domultiple.components.ui.HomeActivity;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
-import com.polestar.domultiple.utils.DisplayUtils;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;

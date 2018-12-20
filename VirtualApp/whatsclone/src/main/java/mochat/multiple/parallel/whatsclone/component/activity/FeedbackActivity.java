@@ -19,8 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.remote.InstalledAppInfo;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.remote.InstalledAppInfo;
 import mochat.multiple.parallel.whatsclone.BuildConfig;
 import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.BaseActivity;

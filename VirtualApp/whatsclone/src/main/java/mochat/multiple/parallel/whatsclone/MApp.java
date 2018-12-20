@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,13 +14,13 @@ import com.google.android.gms.ads.MobileAds;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.lody.virtual.client.VClientImpl;
-import com.lody.virtual.client.core.CrashHandler;
-import com.lody.virtual.client.core.InstallStrategy;
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.client.stub.VASettings;
-import com.lody.virtual.remote.InstallResult;
-import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.client.VClientImpl;
+import com.polestar.clone.client.core.CrashHandler;
+import com.polestar.clone.client.core.InstallStrategy;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.stub.VASettings;
+import com.polestar.clone.remote.InstallResult;
+import com.polestar.clone.helper.utils.VLog;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -68,7 +67,7 @@ public class MApp extends MultiDexApplication {
     @Override
     protected void attachBaseContext(Context base) {
         Log.d(MLogs.DEFAULT_TAG, "APP version: " + BuildConfig.VERSION_NAME + " Type: " + BuildConfig.BUILD_TYPE);
-        Log.d(MLogs.DEFAULT_TAG, "LIB version: " + com.lody.virtual.BuildConfig.VERSION_NAME + " Type: " + com.lody.virtual.BuildConfig.BUILD_TYPE );
+        Log.d(MLogs.DEFAULT_TAG, "LIB version: " + com.lody.clone.BuildConfig.VERSION_NAME + " Type: " + com.lody.clone.BuildConfig.BUILD_TYPE );
 
         super.attachBaseContext(base);
         gDefault = this;

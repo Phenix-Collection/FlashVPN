@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.polestar.booster.mgr.BoostMgr;
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.helper.utils.VLog;
 import mochat.multiple.parallel.whatsclone.db.DbManager;
 import mochat.multiple.parallel.whatsclone.utils.AppManager;
 import mochat.multiple.parallel.whatsclone.utils.CloneHelper;

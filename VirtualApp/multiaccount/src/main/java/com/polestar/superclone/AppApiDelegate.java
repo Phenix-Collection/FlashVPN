@@ -1,7 +1,7 @@
 package com.polestar.superclone;
 
 
-import com.lody.virtual.client.core.IAppApiDelegate;
+import com.polestar.clone.client.core.IAppApiDelegate;
 
 /**
  * Created by guojia on 2016/12/19.

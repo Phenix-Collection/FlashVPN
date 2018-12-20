@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lody.virtual.helper.utils.VLog;
 import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.utils.AnimatorHelper;
 import mochat.multiple.parallel.whatsclone.utils.DisplayUtils;
@@ -79,7 +78,7 @@ public class UpDownDialog {
         try {
             dialog.show();
         }catch (Exception e) {
-            MLogs.logBug(VLog.getStackTraceString(e));
+            MLogs.logBug(MLogs.getStackTraceString(e));
         }
         AnimatorHelper.elasticScale(dialogView);
         return dialog;

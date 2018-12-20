@@ -2,16 +2,12 @@ package com.polestar.domultiple.widget;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lody.virtual.helper.utils.VLog;
-import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.components.ui.FeedbackActivity;
 import com.polestar.domultiple.utils.AnimatorHelper;
@@ -147,7 +143,7 @@ public class RateDialog {
         try {
             dialog.show();
         }catch (Exception e) {
-            MLogs.logBug(VLog.getStackTraceString(e));
+            MLogs.logBug(MLogs.getStackTraceString(e));
         }
         AnimatorHelper.elasticScale(dialogView);
         return dialog;

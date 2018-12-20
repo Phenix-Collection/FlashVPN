@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import com.lody.virtual.os.VUserHandle;
+import com.polestar.clone.os.VUserHandle;
 import com.polestar.clone.CloneAgent64;
 import com.polestar.superclone.R;
 import com.polestar.superclone.constant.AppConstants;

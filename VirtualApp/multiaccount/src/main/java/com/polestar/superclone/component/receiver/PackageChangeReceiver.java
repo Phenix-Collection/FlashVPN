@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.polestar.booster.mgr.BoostMgr;
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.helper.utils.VLog;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.helper.utils.VLog;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.CloneHelper;

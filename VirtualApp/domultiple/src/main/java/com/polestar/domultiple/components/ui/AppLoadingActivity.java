@@ -24,9 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
-import com.lody.virtual.client.core.VirtualCore;
-import com.lody.virtual.os.VUserHandle;
-import com.polestar.ad.AdConstants;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.os.VUserHandle;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;

@@ -2,8 +2,6 @@ package com.polestar.domultiple.components.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -11,16 +9,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
-import com.lody.virtual.client.core.VirtualCore;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.billing.BillingConstants;
 import com.polestar.domultiple.billing.BillingProvider;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
-import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.EventReporter;
-import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
 import com.polestar.domultiple.widget.BlueSwitch;
