@@ -16,7 +16,7 @@ import mirror.android.location.ILocationManager;
  * @author Lody
  * @see android.location.LocationManager
  */
-@LogInvocation(LogInvocation.Condition.ALWAYS)
+//@LogInvocation(LogInvocation.Condition.ALWAYS)
 @Inject(MethodProxies.class)
 public class LocationManagerStub extends BinderInvocationProxy {
     public LocationManagerStub() {
