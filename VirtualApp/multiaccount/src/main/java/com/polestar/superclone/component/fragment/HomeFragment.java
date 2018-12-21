@@ -43,6 +43,7 @@ import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.ExplosionField;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
+import com.polestar.superclone.utils.PermissionManager;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.superclone.widgets.LeftRightDialog;
@@ -73,6 +74,7 @@ public class HomeFragment extends BaseFragment {
     private DragController mDragController;
     private DragLayer mDragLayer;
     private LinearLayout nativeAdContainer;
+    private AppModel mPendingStart;
 
     private IAdAdapter nativeAd;
     private long adShowTime = 0;
@@ -298,16 +300,22 @@ public class HomeFragment extends BaseFragment {
                 MLogs.d("onItemClick " + i);
                 if(i >= 0 && i < appInfos.size()){
                     AppModel model = appInfos.get(i);
-                    if(floatView.isIdle()){
-                        startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
-                    }else{
-                        floatView.restore();
-                        floatView.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
-                            }
-                        },100);
+                    PermissionManager permissionManager = new PermissionManager(mActivity, HomeActivity.REQUEST_APPLY_PERMISSION);
+                    if (permissionManager.applyPermissionIfNeeded()) {
+                        mPendingStart = model;
+                    } else {
+
+                        if (floatView.isIdle()) {
+                            startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
+                        } else {
+                            floatView.restore();
+                            floatView.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startAppLaunchActivity(model.getPackageName(), model.getPkgUserId());
+                                }
+                            }, 100);
+                        }
                     }
                 }else{
                     int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
@@ -363,6 +371,10 @@ public class HomeFragment extends BaseFragment {
     private void showCloneAppGuide(){
         //TutorialGuidesUtils.removeOnGlobalLayoutListener(pkgGridView,this);
         try {
+            if (PreferencesUtils.hasCloned()) {
+                PreferencesUtils.setCloneGuideShowed(mActivity);
+                return;
+            }
             String text = getString(R.string.start_tips);
             mTutorialBuilder = new TutorialGuides.Builder(mActivity);
 
@@ -488,6 +500,10 @@ public class HomeFragment extends BaseFragment {
         if (pkgGridAdapter != null) {
             pkgGridAdapter.notifyDataSetChanged();
         }
+        if (mPendingStart != null) {
+            startAppLaunchActivity(mPendingStart.getPackageName(),mPendingStart.getPkgUserId());
+            mPendingStart = null;
+        }
     }
 
     private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
@@ -543,6 +559,7 @@ public class HomeFragment extends BaseFragment {
                             pkgGridView.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    MLogs.d("show clone app guide");
                                     showCloneAppGuide();
                                 }
                             }, 1000);

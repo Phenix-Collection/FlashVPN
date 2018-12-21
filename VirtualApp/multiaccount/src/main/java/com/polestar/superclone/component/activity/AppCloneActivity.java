@@ -46,6 +46,7 @@ import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
+import com.polestar.superclone.utils.PermissionManager;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.superclone.utils.ToastUtils;
@@ -510,6 +511,8 @@ public class AppCloneActivity extends BaseActivity {
         data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
         mTxtInstalled.setText(String.format(getString(R.string.clone_success), data.label));
         showCloneSetting();
+        PermissionManager permissionManager  = new PermissionManager(this, 1000);
+        permissionManager.applyPermissionIfNeeded();
     }
 
     private void showCloneSetting() {

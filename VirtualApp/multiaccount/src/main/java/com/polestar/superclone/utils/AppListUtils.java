@@ -94,6 +94,7 @@ public class AppListUtils implements DataObserver {
             loadRecommandAppsFromFile(mRecommandModels);
         }
         MLogs.e("update app list done");
+        notifyChanged();
     }
 
     public boolean isCloned(String pkg) {

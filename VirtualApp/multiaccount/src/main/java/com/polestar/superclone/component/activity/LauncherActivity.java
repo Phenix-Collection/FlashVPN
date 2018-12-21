@@ -13,6 +13,7 @@ import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.constant.AppConstants;
+import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
@@ -43,6 +44,10 @@ public class LauncherActivity extends BaseActivity{
                 CloneHelper.getInstance(LauncherActivity.this).preLoadClonedApp(LauncherActivity.this);
             }
         },100);
+
+        if(!PreferencesUtils.hasCloned()) {
+            AppListUtils.getInstance(this);
+        }
 
         //VirtualCore.get().waitForEngine();
         new Thread(new Runnable() {
