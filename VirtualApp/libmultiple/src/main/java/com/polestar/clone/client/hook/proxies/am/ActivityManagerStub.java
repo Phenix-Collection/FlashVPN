@@ -1,5 +1,6 @@
 package com.polestar.clone.client.hook.proxies.am;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -13,12 +14,15 @@ import com.polestar.clone.client.hook.base.MethodInvocationProxy;
 import com.polestar.clone.client.hook.base.MethodInvocationStub;
 import com.polestar.clone.client.hook.base.MethodProxy;
 import com.polestar.clone.client.hook.base.ReplaceCallingPkgMethodProxy;
+import com.polestar.clone.client.hook.base.ReplaceLastPkgMethodProxy;
 import com.polestar.clone.client.hook.base.ReplaceLastUidMethodProxy;
 import com.polestar.clone.client.hook.base.ResultStaticMethodProxy;
 import com.polestar.clone.client.hook.base.StaticMethodProxy;
 import com.polestar.clone.client.ipc.VActivityManager;
 import com.polestar.clone.helper.compat.BuildCompat;
 import com.polestar.clone.helper.compat.ParceledListSliceCompat;
+import com.polestar.clone.os.VUserInfo;
+import com.polestar.clone.os.VUserManager;
 import com.polestar.clone.remote.AppTaskInfo;
 
 import java.lang.reflect.Method;
@@ -70,7 +74,12 @@ public class ActivityManagerStub extends MethodInvocationProxy<MethodInvocationS
             addMethodProxy(new StaticMethodProxy("navigateUpTo") {
                 @Override
                 public Object call(Object who, Method method, Object... args) throws Throwable {
-                    throw new RuntimeException("Call navigateUpTo!!!!");
+                    try{
+                       return super.call(who, method, args);
+                    }catch (Throwable ex) {
+                        ex.printStackTrace();
+                        return false;
+                    }
                 }
             });
 
@@ -81,9 +90,48 @@ public class ActivityManagerStub extends MethodInvocationProxy<MethodInvocationS
             addMethodProxy(new isUserRunning());
             addMethodProxy(new ResultStaticMethodProxy("updateConfiguration", 0));
             addMethodProxy(new ReplaceCallingPkgMethodProxy("setAppLockedVerifying"));
+            addMethodProxy(new ReplaceCallingPkgMethodProxy("reportJunkFromApp"));
+            addMethodProxy(new ReplaceLastPkgMethodProxy("getAppStartMode"));
+
+            addMethodProxy(new StaticMethodProxy("setRequestedOrientation") {
+                @Override
+                public Object call(Object who, Method method, Object... args) throws Throwable {
+                    try {
+                        return super.call(who, method, args);
+                    }catch (Exception ex){
+                        return 0;
+                    }
+                }
+            });
+
+//            addMethodProxy(new StaticMethodProxy("activityResumed") {
+//                @Override
+//                public Object call(Object who, Method method, Object... args) throws Throwable {
+//                    try{
+//                        VActivityManager.get().onActivityResumed((Activity) args[0]);
+//                    }catch (Exception ex){
+//                    }
+//                    return super.call(who, method, args);
+//
+//                }
+//            });
+//
+//            addMethodProxy(new StaticMethodProxy("activityDestroyed") {
+//                @Override
+//                public Object call(Object who, Method method, Object... args) throws Throwable {
+//                    try{
+//                        VActivityManager.get().onActivityDestroy(((Activity) args[0]);
+//                    }catch (Exception ex){
+//                        ex.printStackTrace();
+//                    }
+//                    return super.call(who, method, args);
+//
+//                }
+//            });
+
             addMethodProxy(new StaticMethodProxy("checkUriPermission") {
                 @Override
-                public Object afterCall(Object who, Method method, Object[] args, Object result) throws Throwable {
+                public Object call(Object who, Method method, Object[] args) throws Throwable {
                     return PackageManager.PERMISSION_GRANTED;
                 }
             });
@@ -136,7 +184,13 @@ public class ActivityManagerStub extends MethodInvocationProxy<MethodInvocationS
         @Override
         public Object call(Object who, Method method, Object... args) {
             int userId = (int) args[0];
-            return userId == 0;
+
+            for(VUserInfo info: VUserManager.get().getUsers()){
+                if (info.id == userId) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
