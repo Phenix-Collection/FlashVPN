@@ -117,7 +117,8 @@ public class HomeActivity extends BaseActivity {
                     showUpdateDialog();
                 }
             }, 1000);
-        } else if(!PreferencesUtils.hasCloned()) {
+        }
+        else if(!PreferencesUtils.hasCloned() && RemoteConfig.getBoolean("go_clone_first_start")) {
             startAppListActivity();
         }
     }

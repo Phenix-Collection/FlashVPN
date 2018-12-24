@@ -282,6 +282,10 @@
         <value>60</value>
     </entry>
     <entry>
+        <key>go_clone_first_start</key>
+        <value>false</value>
+    </entry>
+    <entry>
         <key>force_requested_permission</key>
         <value>android.permission.READ_PHONE_STATE;android.permission.WRITE_EXTERNAL_STORAGE</value>
     </entry>
