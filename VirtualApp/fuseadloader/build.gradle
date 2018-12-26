@@ -35,9 +35,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     implementation 'com.google.android.exoplayer:exoplayer:r2.0.3'
 
-    compileOnly 'com.google.firebase:firebase-core:16.0.0'
-    compileOnly 'com.google.firebase:firebase-config:16.0.0'
-    compileOnly 'com.google.firebase:firebase-ads:15.0.1'
+    compile 'com.google.firebase:firebase-core:16.0.6'
+    compile 'com.google.firebase:firebase-config:16.1.2'
+    compile 'com.google.firebase:firebase-ads:17.1.2'
     compileOnly 'com.facebook.android:audience-network-sdk:4.28.2'
 //    implementation 'com.google.ads.mediation:facebook:4.23.0.0'
 

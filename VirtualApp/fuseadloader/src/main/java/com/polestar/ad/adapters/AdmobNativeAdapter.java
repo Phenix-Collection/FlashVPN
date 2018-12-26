@@ -27,11 +27,16 @@ import com.google.android.gms.ads.formats.NativeAppInstallAd;
 import com.google.android.gms.ads.formats.NativeAppInstallAdView;
 import com.google.android.gms.ads.formats.NativeContentAd;
 import com.google.android.gms.ads.formats.NativeContentAdView;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
+import com.polestar.ad.BuildConfig;
 import com.polestar.ad.view.StarLevelLayoutView;
+
+import java.util.List;
 
 
 /**
@@ -43,7 +48,7 @@ public class AdmobNativeAdapter extends AdAdapter {
     private String mFilter;
     private Context mContext;
 
-    private NativeAd mRawAd;
+    private UnifiedNativeAd mRawAd;
 
     public AdmobNativeAdapter(Context context, String key) {
         mContext = context;
@@ -63,42 +68,21 @@ public class AdmobNativeAdapter extends AdAdapter {
         if (num > 1) {
             AdLog.d("Admob not support load for more than 1 ads. Only return 1 ad");
         }
+////        if (BuildConfig.DEBUG) {
+//            mKey = "ca-app-pub-3940256099942544/1044960115";
+////        }
+//        mKey = "ca-app-pub-3940256099942544/2247696110";
         AdLoader.Builder  builder = new AdLoader.Builder(mContext, mKey);
-        boolean isContent = false;
-        boolean isInstall = false;
-        if (TextUtils.isEmpty(mFilter) || mFilter.equals(AdConstants.AdMob.FILTER_BOTH_INSTALL_AND_CONTENT)){
-            isContent = true;
-            isInstall = true;
-        } else if (mFilter.equals(AdConstants.AdMob.FILTER_ONLY_CONTENT)){
-            isContent = true;
-        }else if (mFilter.equals(AdConstants.AdMob.FILTER_ONLY_INSTALL)) {
-            isInstall = true;
-        }
-
-        if (isContent) {
-            builder.forContentAd(new NativeContentAd.OnContentAdLoadedListener() {
-                @Override
-                public void onContentAdLoaded(NativeContentAd nativeContentAd) {
-                    if (isValidAd(nativeContentAd)) {
-                        postOnAdLoaded(nativeContentAd);
-                    } else {
-                        postOnAdLoadFail(999);
-                    }
+        builder.forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+            @Override
+            public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                if (isValidAd(unifiedNativeAd)) {
+                    postOnAdLoaded(unifiedNativeAd);
+                } else {
+                    postOnAdLoadFail(999);
                 }
-            });
-        }
-        if (isInstall) {
-            builder.forAppInstallAd(new NativeAppInstallAd.OnAppInstallAdLoadedListener() {
-                @Override
-                public void onAppInstallAdLoaded(NativeAppInstallAd nativeAppInstallAd) {
-                    if (isValidAd(nativeAppInstallAd)) {
-                        postOnAdLoaded(nativeAppInstallAd);
-                    } else {
-                        postOnAdLoadFail(999);
-                    }
-                }
-            });
-        }
+            }
+        });
 
         VideoOptions videoOptions = new VideoOptions.Builder()
                 .setStartMuted(true)
@@ -115,20 +99,20 @@ public class AdmobNativeAdapter extends AdAdapter {
             }
         });
         AdLoader adLoader = builder.build();
-        if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID(mContext);
-            String deviceId = AdUtils.MD5(android_id).toUpperCase();
-            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-            adLoader.loadAd(request);
-            boolean isTestDevice = request.isTestDevice(mContext);
-            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
-        } else {
+//        if (AdConstants.DEBUG) {
+//            String android_id = AdUtils.getAndroidID(mContext);
+//            String deviceId = AdUtils.MD5(android_id).toUpperCase();
+//            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
+//            adLoader.loadAd(request);
+//            boolean isTestDevice = request.isTestDevice(mContext);
+//            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
+//        } else {
             adLoader.loadAd(new AdRequest.Builder().build());
-        }
+//        }
         startMonitor();
     }
 
-    private void postOnAdLoaded(NativeAd ad) {
+    private void postOnAdLoaded(UnifiedNativeAd ad) {
         mRawAd = ad;
         mLoadedTime = System.currentTimeMillis();
         if (adListener != null) {
@@ -150,96 +134,47 @@ public class AdmobNativeAdapter extends AdAdapter {
 
     @Override
     public String getAdType() {
-        if (mRawAd instanceof NativeAppInstallAd) {
-            return AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL;
-        }
-        if (mRawAd instanceof NativeContentAd) {
-            return AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL;
-        }
-        return null;
+        return AdConstants.NativeAdType.AD_SOURCE_ADMOB;
     }
 
     @Override
     public String getCoverImageUrl() {
-        if (mRawAd instanceof NativeAppInstallAd) {
-            return ((NativeAppInstallAd) mRawAd).getImages().get(0).getUri().toString();
-        }
-        if (mRawAd instanceof NativeContentAd) {
-            return((NativeContentAd) mRawAd).getImages().get(0).getUri().toString();
-        }
-        return null;
+      return mRawAd.getImages() != null ? mRawAd.getImages().get(0).getUri().toString() : null;
     }
 
     @Override
     public String getIconImageUrl() {
-        if (mRawAd instanceof NativeAppInstallAd && ((NativeAppInstallAd) mRawAd).getIcon() != null) {
-            return ((NativeAppInstallAd) mRawAd).getIcon().getUri().toString();
-        }
-        if (mRawAd instanceof NativeContentAd
-                && ((NativeContentAd) mRawAd).getLogo() != null) {
-            return ((NativeContentAd) mRawAd).getLogo().getUri().toString();
-        }
-        return  null;
+        return mRawAd.getIcon() == null? null: mRawAd.getIcon().getUri().toString();
     }
 
     @Override
     public String getBody() {
-        if (mRawAd instanceof NativeAppInstallAd) {
-            return((NativeAppInstallAd) mRawAd).getBody()!=null?((NativeAppInstallAd) mRawAd).getBody().toString():null;
-        }
-        if (mRawAd instanceof NativeContentAd) {
-            return((NativeContentAd) mRawAd).getBody()!=null?((NativeContentAd) mRawAd).getBody().toString():null;
-        }
-        return  null;
+        return( mRawAd).getBody()!=null?( mRawAd).getBody().toString():null;
+
     }
 
     @Override
     public String getSubtitle() {
-        if (mRawAd instanceof NativeAppInstallAd) {
-            Bundle extras = ((NativeAppInstallAd) mRawAd).getExtras();
-            if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
-                return extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET,"");
-            }
-            return((NativeAppInstallAd) mRawAd).getBody()!=null?((NativeAppInstallAd) mRawAd).getBody().toString():null;
+        Bundle extras = ( mRawAd).getExtras();
+        if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
+            return extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET,"");
         }
-        if (mRawAd instanceof NativeContentAd) {
-            Bundle extras = ((NativeContentAd) mRawAd).getExtras();
-            if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
-                return extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET,"");
-            }
-            return((NativeContentAd) mRawAd).getBody()!=null?((NativeContentAd) mRawAd).getBody().toString():null;
-        }
-        return null;
+        return( mRawAd).getBody()!=null?mRawAd.getBody().toString():null;
     }
 
     @Override
     public double getStarRating() {
-        if (mRawAd instanceof NativeAppInstallAd) {
-            return ((NativeAppInstallAd) mRawAd).getStarRating();
-        }
-        return super.getStarRating();
+        return (mRawAd).getStarRating();
     }
 
     @Override
     public String getTitle() {
-        if (mRawAd instanceof NativeAppInstallAd) {
-            return ((NativeAppInstallAd) mRawAd).getHeadline() != null ? ((NativeAppInstallAd) mRawAd).getHeadline().toString() : null;
-        }
-        if (mRawAd instanceof NativeContentAd) {
-            return ((NativeContentAd) mRawAd).getHeadline() != null ? ((NativeContentAd) mRawAd).getHeadline().toString() : null;
-        }
-        return null;
+        return (mRawAd).getHeadline() != null ? (mRawAd).getHeadline().toString() : null;
     }
 
     @Override
     public String getCallToActionText() {
-        if (mRawAd instanceof NativeAppInstallAd) {
-            return((NativeAppInstallAd) mRawAd).getCallToAction() != null? ((NativeAppInstallAd) mRawAd).getCallToAction().toString() : null;
-        }
-        if (mRawAd instanceof NativeContentAd) {
-            return((NativeContentAd) mRawAd).getCallToAction() != null? ((NativeContentAd) mRawAd).getCallToAction().toString() : null;
-        }
-        return null;
+            return( mRawAd).getCallToAction() != null? (mRawAd).getCallToAction().toString() : null;
     }
 
     @Override
@@ -259,21 +194,9 @@ public class AdmobNativeAdapter extends AdAdapter {
         }
     }
 
-    private boolean isValidAd(NativeAd ad) {
-        if ( ad instanceof NativeContentAd) {
-            NativeContentAd contentAd = (NativeContentAd) ad;
-            return (contentAd.getHeadline() != null && contentAd.getBody() != null
-                    && contentAd.getImages() != null && contentAd.getImages().size() > 0
-                    && contentAd.getImages().get(0) != null
-                    && contentAd.getCallToAction() != null);
-        } else if (ad instanceof NativeAppInstallAd){
-            NativeAppInstallAd appInstallAd = (NativeAppInstallAd) ad;
-            return (appInstallAd.getHeadline() != null && appInstallAd.getBody() != null
-                    && appInstallAd.getImages() != null && appInstallAd.getImages().size() > 0
-                    && appInstallAd.getImages().get(0) != null
-                    && appInstallAd.getCallToAction() != null);
-        }
-        return false;
+    private boolean isValidAd(UnifiedNativeAd ad) {
+            return (ad.getHeadline() != null && ad.getBody() != null
+                    && ad.getCallToAction() != null);
     }
 
     @Override
@@ -281,7 +204,7 @@ public class AdmobNativeAdapter extends AdAdapter {
         View actualAdView = LayoutInflater.from(mContext).inflate(viewBinder.layoutId, null);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        adView.setLayoutParams(params);
-        NativeAdView nativeAdView = null;
+        UnifiedNativeAdView nativeAdView = new UnifiedNativeAdView(mContext);
         if (actualAdView != null) {
             ImageView iconView = (ImageView) actualAdView.findViewById(viewBinder.iconImageId);
             TextView titleView = (TextView) actualAdView.findViewById(viewBinder.titleId);
@@ -330,66 +253,38 @@ public class AdmobNativeAdapter extends AdAdapter {
                     starLevelLayout.setRating((int) getStarRating());
                 }
             }
-            if (mRawAd instanceof NativeContentAd) {
-                nativeAdView = new NativeContentAdView(mContext);
-                NativeContentAdView adView = (NativeContentAdView) nativeAdView;
-                adView.setCallToActionView(ctaView);
-                adView.setHeadlineView(titleView);
-                adView.setLogoView(iconView);
-                adView.setBodyView(subtitleView);
-                NativeAd.Image image = ((NativeContentAd)mRawAd).getLogo();
-                if(adView.getLogoView() != null) {
-                    if (image != null) {
-                        ((ImageView) adView.getLogoView()).setImageDrawable(image.getDrawable());
-                    } else {
-                        adView.getLogoView().setVisibility(View.INVISIBLE);
+            nativeAdView.setCallToActionView(ctaView);
+            nativeAdView.setHeadlineView(titleView);
+            nativeAdView.setBodyView(subtitleView);
+            VideoController vc = mRawAd.getVideoController();
+            if (vc.hasVideoContent()) {
+                if (mediaView == null) {
+                    return null;
+                }
+                vc.setVideoLifecycleCallbacks(new VideoController.VideoLifecycleCallbacks() {
+                    @Override
+                    public void onVideoEnd() {
+                        AdLog.d("onVideoEnd");
                     }
-                }
-                VideoController vc = ((NativeContentAd) mRawAd).getVideoController();
-                if (mediaView != null) {
-                    adView.setMediaView(mediaView);
-                } else {
-                    adView.setImageView(coverImageView);
-                    NativeAd.Image cover = ((NativeContentAd) mRawAd).getImages().get(0);
-                    if (cover != null) {
-                        ((ImageView)adView.getImageView()).setImageDrawable(cover.getDrawable());
-                    }
-//                    if (coverView instanceof BasicLazyLoadImageView) {
-//                        BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) coverView;
-//                        lazyLoadImageView.setDefaultResource(R.drawable.native_default);
-//                        lazyLoadImageView.requestDisplayURL(getCoverImageUrl());
-//                    }
-                }
-            } else if (mRawAd instanceof NativeAppInstallAd) {
-                nativeAdView = new NativeAppInstallAdView(mContext);
-                NativeAppInstallAdView adView = (NativeAppInstallAdView) nativeAdView;
-                adView.setCallToActionView(ctaView);
-                adView.setHeadlineView(titleView);
-                adView.setIconView(iconView);
-                adView.setBodyView(subtitleView);
-                if (starLevelLayout != null) {
-                    adView.setStarRatingView(starLevelLayout);
-                }
-                NativeAd.Image image = ((NativeAppInstallAd)mRawAd).getIcon();
-                if (adView.getIconView() != null) {
-                    if (image != null) {
-                        ((ImageView) adView.getIconView()).setImageDrawable(image.getDrawable());
-                    } else {
-                        adView.getIconView().setVisibility(View.INVISIBLE);
-                    }
-                }
-                VideoController vc = ((NativeAppInstallAd) mRawAd).getVideoController();
-                if (mediaView != null) {
-                    adView.setMediaView(mediaView);
-                } else {
-                    adView.setImageView(coverImageView);
-                    NativeAd.Image cover = ((NativeAppInstallAd) mRawAd).getImages().get(0);
-                    if (cover != null) {
-                        ((ImageView)adView.getImageView()).setImageDrawable(cover.getDrawable());
-                    }
-                }
+                });
+                nativeAdView.setMediaView(mediaView);
             } else {
-                return null;
+                if (coverImageView == null) {
+                    return null;
+                }
+                nativeAdView.setImageView(coverImageView);
+                List<NativeAd.Image> images = mRawAd.getImages();
+                coverImageView.setImageDrawable(images.get(0).getDrawable());
+            }
+            if (iconView != null ) {
+                nativeAdView.setIconView(iconView);
+                if (mRawAd.getIcon() == null) {
+                    nativeAdView.getIconView().setVisibility(View.GONE);
+                } else {
+                    ((ImageView) nativeAdView.getIconView()).setImageDrawable(
+                            mRawAd.getIcon().getDrawable());
+                    nativeAdView.getIconView().setVisibility(View.VISIBLE);
+                }
             }
             // Google native ad view renders the AdChoices icon in one of the four corners of
             // its view. If a margin is specified on the actual ad view, the AdChoices view
@@ -425,11 +320,6 @@ public class AdmobNativeAdapter extends AdAdapter {
     @Override
     public void destroy() {
         super.destroy();
-        if (mRawAd instanceof NativeContentAd){
-            ((NativeContentAd) mRawAd).destroy();
-        }
-        if (mRawAd instanceof NativeAppInstallAd){
-            ((NativeAppInstallAd) mRawAd).destroy();
-        }
+        mRawAd.destroy();
     }
 }
