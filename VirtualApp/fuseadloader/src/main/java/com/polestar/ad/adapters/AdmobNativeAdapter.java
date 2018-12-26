@@ -99,16 +99,16 @@ public class AdmobNativeAdapter extends AdAdapter {
             }
         });
         AdLoader adLoader = builder.build();
-//        if (AdConstants.DEBUG) {
-//            String android_id = AdUtils.getAndroidID(mContext);
-//            String deviceId = AdUtils.MD5(android_id).toUpperCase();
-//            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-//            adLoader.loadAd(request);
-//            boolean isTestDevice = request.isTestDevice(mContext);
-//            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
-//        } else {
+        if (AdConstants.DEBUG) {
+            String android_id = AdUtils.getAndroidID(mContext);
+            String deviceId = AdUtils.MD5(android_id).toUpperCase();
+            AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
+            adLoader.loadAd(request);
+            boolean isTestDevice = request.isTestDevice(mContext);
+            AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
+        } else {
             adLoader.loadAd(new AdRequest.Builder().build());
-//        }
+        }
         startMonitor();
     }
 
