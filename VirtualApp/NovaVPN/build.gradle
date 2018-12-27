@@ -34,7 +34,7 @@ android {
 
     signingConfigs {
         myConfig {
-            storeFile file("../nova-vpn.jks")
+            storeFile file("../publish/nova-vpn.jks")
             storePassword "novateam"
             keyAlias "key0"
             keyPassword "novateam"
