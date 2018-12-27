@@ -262,6 +262,10 @@ public class AdmobNativeAdapter extends AdAdapter {
                 if (mediaView == null) {
                     return null;
                 }
+                mediaView.setVisibility(View.VISIBLE);
+                if (coverImageView != null) {
+                    coverImageView.setVisibility(View.GONE);
+                }
                 vc.setVideoLifecycleCallbacks(new VideoController.VideoLifecycleCallbacks() {
                     @Override
                     public void onVideoEnd() {
@@ -272,6 +276,10 @@ public class AdmobNativeAdapter extends AdAdapter {
             } else {
                 if (coverImageView == null) {
                     return null;
+                }
+                coverImageView.setVisibility(View.VISIBLE);
+                if (mediaView != null) {
+                    mediaView.setVisibility(View.GONE);
                 }
                 nativeAdView.setImageView(coverImageView);
                 List<NativeAd.Image> images = mRawAd.getImages();

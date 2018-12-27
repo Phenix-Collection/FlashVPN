@@ -184,6 +184,7 @@ public class FBNativeAdapter extends AdAdapter {
                 return null;
             }
             coverView.setNativeAd(mRawAd);
+            coverView.setVisibility(View.VISIBLE);
             ImageView iconView = (ImageView) adView.findViewById(viewBinder.iconImageId);
             if (iconView instanceof BasicLazyLoadImageView) {
                 BasicLazyLoadImageView lazyLoadImageView = (BasicLazyLoadImageView) iconView;

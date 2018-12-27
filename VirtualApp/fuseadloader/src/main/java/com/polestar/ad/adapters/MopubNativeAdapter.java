@@ -2,6 +2,7 @@ package com.polestar.ad.adapters;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.mopub.nativeads.AdapterHelper;
 import com.mopub.nativeads.MoPubNative;
@@ -119,9 +120,12 @@ public class MopubNativeAdapter extends AdAdapter {
                 .build();
         final MoPubStaticNativeAdRenderer staticAdRender = new MoPubStaticNativeAdRenderer(mpViewBinder);
         rendererProxy.setRenderImpl(staticAdRender);
-
         AdapterHelper helper = new AdapterHelper(mContext, 0, 5);
         View adview = helper.getAdView(null, null, rawAd, mpViewBinder);
+        ImageView iv = adview.findViewById(viewBinder.mainMediaId);
+        if (iv != null) {
+            iv.setVisibility(View.VISIBLE);
+        }
         registerViewForInteraction(adview);
         return adview;
     }
