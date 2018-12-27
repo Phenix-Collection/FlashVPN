@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "546632409927",
+    "firebase_url": "https://nova-vpn.firebaseio.com",
+    "project_id": "nova-vpn",
+    "storage_bucket": "nova-vpn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546632409927:android:8170e232ad0e1f7f",
+        "android_client_info": {
+          "package_name": "nova.fast.free.vpn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546632409927-ds5d3rlrthmuml3gs30rtjgs3rca4s5p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIP4wyTKeO92vFo7hVSBhf946DEA9Mhwo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

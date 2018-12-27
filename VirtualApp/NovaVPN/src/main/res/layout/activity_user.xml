@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/reward_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="8dp"
+        android:onClick="onRewardClick"
+
+        android:background="@drawable/shadow">
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/icon_reward"
+            android:id="@+id/reward_icon"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/reward_icon"
+            android:layout_toEndOf="@id/reward_icon"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="14sp"
+            android:text="@string/reward_text_no_premium_time"
+            android:id="@+id/reward_text"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/shadow">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_margin = "8dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/icon_trophy_award"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text_gray_dark"
+                android:text="@string/become_vip"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginBottom = "8dp"
+                android:layout_marginTop = "8dp"
+                android:layout_marginRight= "18dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginLeft= "18dp"
+                android:layout_marginStart= "18dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/check_yes"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray_dark"
+                android:text="@string/become_vip_tips1"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginBottom = "8dp"
+                android:layout_marginTop = "8dp"
+                android:layout_marginRight= "18dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginLeft= "18dp"
+                android:layout_marginStart= "18dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/check_yes"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray_dark"
+                android:text="@string/become_vip_tips2"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginBottom = "8dp"
+                android:layout_marginTop = "8dp"
+                android:layout_marginRight= "18dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginLeft= "18dp"
+                android:layout_marginStart= "18dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/check_yes"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray_dark"
+                android:text="@string/become_vip_tips3"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginBottom = "8dp"
+                android:layout_marginTop = "8dp"
+                android:layout_marginRight= "18dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginLeft= "18dp"
+                android:layout_marginStart= "18dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/check_yes"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray_dark"
+                android:text="@string/become_vip_tips4"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--<include layout="@layout/setting_wide_splitter"/>-->
+
+    <nova.fast.free.vpn.ui.widget.FixedListView
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:dividerHeight="10dp"
+        android:layout_marginTop="10dp"
+        android:divider="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/card_list"></nova.fast.free.vpn.ui.widget.FixedListView>
+</LinearLayout>

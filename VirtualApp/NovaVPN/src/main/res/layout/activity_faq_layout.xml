@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<ScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:scrollbars="vertical"-->
+    <!--android:fadingEdge="vertical"-->
+    <!--android:background="@color/light_gray"-->
+    <!--android:paddingBottom="20dp"-->
+    <!--android:clipToPadding="false">-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipToPadding="true"
+    android:background="@color/white"
+    >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:layout_margin="15dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="14sp"
+            android:textColor="#2929ff"
+            android:id="@+id/contact_dev_team"
+            android:text="@string/contact_dev_team"
+            android:onClick="onContactTeamClick"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/faq_list"
+            android:divider="@color/white"
+            android:layout_above="@id/contact_dev_team"></ListView>
+
+</RelativeLayout>
+<!--</ScrollView>-->
+

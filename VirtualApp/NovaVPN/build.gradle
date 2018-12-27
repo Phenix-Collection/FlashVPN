@@ -1,0 +1,103 @@
+apply plugin: 'com.android.application'
+
+def releaseTime() {
+    return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
+}
+//buildscript {
+//    repositories {
+//        google()
+//        mavenCentral()
+//        maven {
+//            url 'https://maven.google.com/'
+//            name 'Google'
+//        }
+//      //  jcenter()
+//    }
+//    dependencies {
+//        classpath 'com.android.tools.build:gradle:3.1.4'
+//    }
+//}
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig {
+        applicationId "nova.fast.free.vpn"
+        multiDexEnabled true
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1005
+        versionName "1.0.05.${releaseTime()}"
+    }
+
+    signingConfigs {
+        myConfig {
+            storeFile file("../nova-vpn.jks")
+            storePassword "novateam"
+            keyAlias "key0"
+            keyPassword "novateam"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs',project(':fuseadloader').file('libs')
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    testCompile 'junit:junit:4.12'
+
+    compile 'org.bouncycastle:bcprov-jdk15on:1.57'
+    compile 'com.futuremind.recyclerfastscroll:fastscroll:0.2.5'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.android.support:appcompat-v7:+'
+    implementation 'com.android.support:multidex:1.0.1'
+
+    implementation 'com.tencent.bugly:crashreport:2.6.5'
+
+    implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
+
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-config:16.0.0'
+    implementation 'com.google.firebase:firebase-ads:15.0.1'
+    api 'com.android.billingclient:billing:1.0'
+    implementation 'com.facebook.android:audience-network-sdk:4.28.2'
+
+    implementation project(':fuseadloader')
+
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion '26.1.0'
+                }
+            }
+        }
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'
