@@ -139,7 +139,8 @@ public class AdmobNativeAdapter extends AdAdapter {
 
     @Override
     public String getCoverImageUrl() {
-      return mRawAd.getImages() != null ? mRawAd.getImages().get(0).getUri().toString() : null;
+      return mRawAd.getImages() != null && mRawAd.getImages().size() > 0 ?
+              mRawAd.getImages().get(0).getUri().toString() : null;
     }
 
     @Override
