@@ -5,7 +5,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
+
+import java.util.List;
+
 import nova.fast.free.vpn.AppConstants;
+import nova.fast.free.vpn.NovaApp;
 import nova.fast.free.vpn.NovaUser;
 import nova.fast.free.vpn.R;
 import nova.fast.free.vpn.utils.CommonUtils;
@@ -19,13 +26,18 @@ import nova.fast.free.vpn.utils.RemoteConfig;
 
 public class SplashActivity extends BaseActivity {
 
-    private static boolean created;
+    private boolean adShown = false;
+    private boolean loadTimeout = false;
+    private boolean enteredHome ;
     public final static String EXTRA_FROM_SHORTCUT = "extra_from_shortcut";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MLogs.d(this.getClass().getName() +" launching from intent: " +getIntent());
+        adShown = false;
+        loadTimeout = false;
+        enteredHome = false;
         long time = System.currentTimeMillis();
         setContentView(R.layout.splash_activity_layout);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
@@ -35,15 +47,55 @@ public class SplashActivity extends BaseActivity {
 //            adLoader.setBannerAdSize(HomeActivity.getBannerAdSize());
 //            adLoader.preloadAd();
         }
+
+        if (NovaApp.getApp().needEnterAd()) {
+            FuseAdLoader.get(NovaApp.SLOT_ENTER_AD, this).loadAd(2, 2000, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAdAdapter ad) {
+                    if (!loadTimeout) {
+                        ad.show();
+                        adShown = true;
+                    }
+                }
+
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+                    enterHome();
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+            });
+        }
         Handler handler = new Handler();
 
         long delta = System.currentTimeMillis() - time;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                enterHome();
+                if(!adShown) {
+                    enterHome();
+                }
+                loadTimeout = true;
             }
-        }, 2500 - delta);
+        }, 3000 - delta);
 
 //        if(!NovaApp.isSupportPkg()) {
 //            if (getIntent().getBooleanExtra(EXTRA_FROM_SHORTCUT, false)) {
@@ -69,14 +121,15 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void enterHome(){
-
-        if (!PreferenceUtils.isShortCutCreated()) {
-            PreferenceUtils.setShortCutCreated();
-            CommonUtils.createLaunchShortcut(this);
-            created = true;
+        if (!enteredHome) {
+            enteredHome = true;
+            if (!PreferenceUtils.isShortCutCreated()) {
+                PreferenceUtils.setShortCutCreated();
+                CommonUtils.createLaunchShortcut(this);
+            }
+            HomeActivity.enter(this, needUpdate());
+            finish();
         }
-        HomeActivity.enter(this, needUpdate());
-        finish();
     }
 
     private boolean needUpdate() {

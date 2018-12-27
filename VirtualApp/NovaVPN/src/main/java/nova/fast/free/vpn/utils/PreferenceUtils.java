@@ -313,4 +313,12 @@ public class PreferenceUtils {
     public static void setStartOnBoot(boolean enable) {
         putBoolean(NovaApp.getApp(), "is_start_on_boot", enable);
     }
+
+    public static void setEnterAdTime(){
+        putLong(NovaApp.getApp(),"enter_ad_time",System.currentTimeMillis());
+    }
+
+    public static long getEnterAdTime() {
+        return getLong(NovaApp.getApp(), "enter_ad_time", 0);
+    }
 }

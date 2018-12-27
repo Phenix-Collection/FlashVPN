@@ -10,12 +10,24 @@
         <!--<value>xhour</value>-->
     </entry>
     <entry>
-        <key>quit_rating_cloned_app_gate</key>
-        <value>3</value>
+        <key>slot_home_enter_ad</key>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/7008323374:0</value>
+        <!--<value>xhour</value>-->
     </entry>
     <entry>
-        <key>hot_clone_list</key>
-        <value>com.facebook.orca:com.whatsapp:com.facebook.katana:com.bbm:com.imo.android.imoim:com.bsb.hike:com.supercell.clashofclans:com.instagram.android:com.facebook.lite:com.supercell.clashroyale:jp.naver.line.android</value>
+        <key>slot_home_enter_ad_interval_sec</key>
+        <value>36000</value>
+        <!--<value>xhour</value>-->
+    </entry>
+    <entry>
+        <key>slot_connected_ad</key>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/9985903834:0</value>
+        <!--<value>xhour</value>-->
+    </entry>
+    <entry>
+        <key>slot_connected_ad_interval_sec</key>
+        <value>300</value>
+        <!--<value>xhour</value>-->
     </entry>
     <entry>
         <key>show_rate_menu</key>

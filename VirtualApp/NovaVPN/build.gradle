@@ -80,9 +80,9 @@ dependencies {
 
     implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
 
-    implementation 'com.google.firebase:firebase-core:16.0.0'
-    implementation 'com.google.firebase:firebase-config:16.0.0'
-    implementation 'com.google.firebase:firebase-ads:15.0.1'
+    compile 'com.google.firebase:firebase-core:16.0.6'
+    compile 'com.google.firebase:firebase-config:16.1.2'
+    compile 'com.google.firebase:firebase-ads:17.1.2'
     api 'com.android.billingclient:billing:1.0'
     implementation 'com.facebook.android:audience-network-sdk:4.28.2'
 

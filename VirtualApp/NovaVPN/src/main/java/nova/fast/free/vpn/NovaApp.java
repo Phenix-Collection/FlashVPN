@@ -66,6 +66,16 @@ public class NovaApp extends MultiDexApplication {
             }
         });
     }
+
+
+    private final static String CONF_ENTER_AD_INTERVAL_SEC = "slot_home_enter_ad_interval_sec";
+    public final static String SLOT_ENTER_AD = "slot_home_enter_ad";
+
+    public boolean needEnterAd(){
+        long interval = RemoteConfig.getLong(CONF_ENTER_AD_INTERVAL_SEC);
+        return ((System.currentTimeMillis() - PreferenceUtils.getEnterAdTime()) > interval*1000) ;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -83,6 +93,10 @@ public class NovaApp extends MultiDexApplication {
             MLogs.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             AdConstants.DEBUG = true;
            //BoosterSdk.DEBUG = true;
+        }
+
+        if(needEnterAd()) {
+            FuseAdLoader.get(SLOT_ENTER_AD, getApp()).preloadAd();
         }
     }
 }
