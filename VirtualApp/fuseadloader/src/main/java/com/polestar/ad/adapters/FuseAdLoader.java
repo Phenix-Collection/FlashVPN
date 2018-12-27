@@ -142,14 +142,14 @@ public class FuseAdLoader {
     private void finishLoading(int idx) {
         mLoadingBits &= (~(0x1 << idx));
         if (mAdReturned) {
-            AdLog.d("Ad already returned");
+            AdLog.d("Ad already returned " + mSlot);
             return;
         }
         long now = System.currentTimeMillis();
         IAdAdapter ad = getValidCache();
         if (ad == null ) {
             //need load next or no fill;
-            AdLog.d("No valid ad returned");
+            AdLog.d("No valid ad returned " + mSlot);
             if (idx == mNativeAdConfigList.size() - 1) {
                 boolean betterLoading = false;
                 for (int i = idx - 1; i >= 0; i--) {
