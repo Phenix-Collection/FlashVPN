@@ -28,8 +28,8 @@ android {
         multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1005
-        versionName "1.0.05.${releaseTime()}"
+        versionCode 1006
+        versionName "1.0.06.${releaseTime()}"
     }
 
     signingConfigs {
@@ -87,6 +87,7 @@ dependencies {
     implementation 'com.facebook.android:audience-network-sdk:4.28.2'
 
     implementation project(':fuseadloader')
+    implementation project(':Booster')
 
     configurations.all {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
