@@ -47,6 +47,7 @@ public class BoosterSdk {
         public int memoryThreshold = 70;
         public boolean avoidShowIfHistory = true;
         public boolean showNotification = true;
+        public String accountName = "Clone Messaging Daemon";
     }
 
     //all res id

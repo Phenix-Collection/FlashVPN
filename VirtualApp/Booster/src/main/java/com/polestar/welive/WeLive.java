@@ -22,15 +22,14 @@ import com.polestar.booster.BoosterSdk;
 
 public class WeLive {
     public static String ACCOUNT_TYPE = "clone.daemon";
-    public final static String ACCOUNT_NAME = "Clone Messaging Daemon";
     public final static long SYNC_PERIOD_SEC = 28800;
     public static void startSync(Context context) {
         BoosterLog.log("JJJJ startSync");
-        Account v1 = new Account(ACCOUNT_NAME, ACCOUNT_TYPE);
+        Account v1 = new Account(BoosterSdk.boosterConfig.accountName, ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
         if(accountManager != null) {
             try {
-                if(!hasAccount(accountManager, ACCOUNT_NAME)) {
+                if(!hasAccount(accountManager, BoosterSdk.boosterConfig.accountName)) {
                     accountManager.addAccountExplicitly(v1, "", null);
                 }
                 String providerName = context.getPackageName() + ".sync.provider";
