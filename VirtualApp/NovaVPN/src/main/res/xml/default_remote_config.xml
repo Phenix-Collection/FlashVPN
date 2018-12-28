@@ -78,7 +78,7 @@
     </entry>
     <entry>
         <key>rate_vpn_time_sec</key>
-        <value>30</value>
+        <value>600</value>
     </entry>
     <entry>
         <key>auto_ad_first_interval</key>
