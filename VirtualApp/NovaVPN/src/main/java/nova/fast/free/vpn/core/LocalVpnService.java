@@ -392,12 +392,15 @@ public class LocalVpnService extends VpnService implements Runnable {
             if (deduct > 0) {
                 last = current - (current - last - deduct*1000);
             }
+            if (current - start > 10000) {
+                PreferenceUtils.addConnectedTimeSec((current - start) / 1000);
+                start = current;
+            }
         }
         in.close();
         disconnectVPN();
         PreferenceUtils.addReceiveBytes(m_ReceivedBytes);
         PreferenceUtils.addSentBytes(m_SentBytes);
-        PreferenceUtils.addConnectedTimeSec((System.currentTimeMillis() - start)/1000);
         updateNotification();
     }
 

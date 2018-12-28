@@ -46,6 +46,7 @@ import nova.fast.free.vpn.utils.CommonUtils;
 import nova.fast.free.vpn.utils.EventReporter;
 import nova.fast.free.vpn.utils.MLogs;
 import nova.fast.free.vpn.utils.PreferenceUtils;
+import nova.fast.free.vpn.utils.RemoteConfig;
 
 public class HomeActivity extends BaseActivity implements LocalVpnService.onStatusChangedListener {
     private final static String EXTRA_NEED_UPDATE = "extra_need_update";
@@ -80,6 +81,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private final static String RATE_FROM_MENU = "rate_from_menu";
     private final static String RATE_FROM_DIALOG = "rate_from_dialog";
     private final static String SLOT_CONNECTED_AD = "slot_connected_ad";
+    private final static String CONF_RATE_DIALOG_GATE = "rate_vpn_time_sec";
 
     public static void enter(Activity activity, boolean needUpdate) {
         MLogs.d("Enter home: update: " + needUpdate);
@@ -239,6 +241,16 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             }
         };
         timer.scheduleAtFixedRate(timeCountTask, 1000, 1000);
+
+        if (!PreferenceUtils.hasShownRateDialog(this)
+                && PreferenceUtils.getConnectedTimeSec() > RemoteConfig.getLong(CONF_RATE_DIALOG_GATE)) {
+            mainHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showRateDialog(RATE_FROM_DIALOG);
+                }
+            }, 1000);
+        }
     }
 
     private void updateConnectState(int state) {
@@ -252,9 +264,6 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 btnCenterBg.setImageResource(R.drawable.shape_stop_btn_bg);
                 btnCenterBg.setAnimation(connectBgAnimation);
                 connectBgAnimation.start();
-                if (!PreferenceUtils.hasShownRateDialog(this)) {
-                    showRateDialog(RATE_FROM_DIALOG);
-                }
                 break;
             case STATE_DISCONNECTED:
                 MLogs.d("state disconnected");
