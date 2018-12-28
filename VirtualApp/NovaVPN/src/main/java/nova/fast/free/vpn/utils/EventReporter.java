@@ -6,6 +6,7 @@ package nova.fast.free.vpn.utils;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -61,5 +62,16 @@ public class EventReporter {
         Bundle bundle = new Bundle();
         bundle.putString("event", event);
         mFirebaseAnalytics.logEvent("general_event", bundle);
+    }
+
+    private static String sWakeSrc;
+    public static void reportWake(Context context, String src){
+        if (sWakeSrc == null && !TextUtils.isEmpty(src)) {
+            sWakeSrc = src;
+            Bundle prop = new Bundle();
+            prop.putString("wake_src", src);
+            mFirebaseAnalytics.logEvent("track_wake", prop);
+        }
+        MLogs.d("Wake from " + src + " original: " + sWakeSrc);
     }
 }

@@ -19,6 +19,7 @@ import nova.fast.free.vpn.NovaApp;
 import nova.fast.free.vpn.NovaUser;
 import nova.fast.free.vpn.R;
 import nova.fast.free.vpn.utils.CommonUtils;
+import nova.fast.free.vpn.utils.EventReporter;
 import nova.fast.free.vpn.utils.MLogs;
 import nova.fast.free.vpn.utils.PreferenceUtils;
 import nova.fast.free.vpn.utils.RemoteConfig;
@@ -38,6 +39,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MLogs.d(this.getClass().getName() +" launching from intent: " +getIntent());
+        EventReporter.reportWake(this, "user_launch");
         adShown = false;
         loadTimeout = false;
         enteredHome = false;
