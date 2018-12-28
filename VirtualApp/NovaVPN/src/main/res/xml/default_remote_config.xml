@@ -11,7 +11,7 @@
     </entry>
     <entry>
         <key>slot_home_enter_ad</key>
-        <value>ab_interstitial:ca-app-pub-5490912237269284/7008323374:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/7008323374:0;fb_interstitial:2385718151443961_2519204801428628:0</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -21,12 +21,7 @@
     </entry>
     <entry>
         <key>slot_connected_ad</key>
-        <value>ab_interstitial:ca-app-pub-5490912237269284/9985903834:0</value>
-        <!--<value>xhour</value>-->
-    </entry>
-    <entry>
-        <key>slot_connected_ad_interval_sec</key>
-        <value>300</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/9985903834:0;fb_interstitial:2385718151443961_2519205458095229:0</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -64,6 +59,14 @@
     <entry>
         <key>block_domain</key>
         <value></value>
+    </entry>
+    <entry>
+        <key>conf_vip_speed_boost</key>
+        <value>150</value>
+    </entry>
+    <entry>
+        <key>conf_normal_speed_boost</key>
+        <value>100</value>
     </entry>
     <entry>
         <key>active_sub_sku_items</key>

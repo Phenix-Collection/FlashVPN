@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nova.fast.free.vpn.BuildConfig;
 import nova.fast.free.vpn.NovaUser;
 import nova.fast.free.vpn.R;
 import nova.fast.free.vpn.core.AppProxyManager;
@@ -76,6 +78,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private final static int STATE_START_CONNECTING = 3;
 
     private final static String RATE_FROM_MENU = "rate_from_menu";
+    private final static String RATE_FROM_DIALOG = "rate_from_dialog";
+    private final static String SLOT_CONNECTED_AD = "slot_connected_ad";
 
     public static void enter(Activity activity, boolean needUpdate) {
         MLogs.d("Enter home: update: " + needUpdate);
@@ -222,10 +226,6 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             cityText.setText(si.city);
         }
         updateConnectState(LocalVpnService.IsRunning? STATE_CONNECTED:STATE_DISCONNECTED);
-        if (!NovaUser.getInstance(this).isVIP()) {
-            loadHomeNativeAd();
-            loadRewardAd();
-        }
         updateRewardLayout();
         if (isRewarded) {
             NovaUser.getInstance(HomeActivity.this).doRewardFreePremium();
@@ -252,6 +252,9 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 btnCenterBg.setImageResource(R.drawable.shape_stop_btn_bg);
                 btnCenterBg.setAnimation(connectBgAnimation);
                 connectBgAnimation.start();
+                if (!PreferenceUtils.hasShownRateDialog(this)) {
+                    showRateDialog(RATE_FROM_DIALOG);
+                }
                 break;
             case STATE_DISCONNECTED:
                 MLogs.d("state disconnected");
@@ -462,7 +465,11 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         MLogs.d("starting vpn service...");
         connectingFailed = false;
         updateConnectState(STATE_START_CONNECTING);
-        startService(new Intent(this, LocalVpnService.class));
+        if (Build.VERSION.SDK_INT >= 26) {
+            startForegroundService(new Intent(this, LocalVpnService.class));
+        } else {
+            startService(new Intent(this, LocalVpnService.class));
+        }
         LocalVpnService.addOnStatusChangedListener(this);
     }
 
@@ -476,12 +483,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         rateDialogShowed= true;
         EventReporter.reportRate(this,"start", from);
         PreferenceUtils.updateRateDialogTime(this);
-        RateDialog rateDialog = new RateDialog(this, from);
+        final RateDialog rateDialog = new RateDialog(this, from);
         rateDialog.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 EventReporter.reportRate(HomeActivity.this, from+"_cancel", from);
                 PreferenceUtils.setLoveApp(false);
+                rateDialogShowed = false;
             }
         });
     }
@@ -545,6 +553,10 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         });
 
         timer = new Timer();
+        if (!NovaUser.getInstance(this).isVIP()) {
+            loadHomeNativeAd();
+            loadRewardAd();
+        }
 //        startActivity(new Intent().setClass(this, MainActivity.class));
 //        finish();
     }
@@ -572,6 +584,40 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     public void onStatusChanged(String status, Boolean isRunning) {
         if (isRunning) {
             connectingFailed = false;
+            if (PreferenceUtils.hasShownRateDialog(this)
+                    && !NovaUser.getInstance(this).isVIP()) {
+                FuseAdLoader.get(SLOT_CONNECTED_AD, this).loadAd(2, new IAdLoadListener() {
+                    @Override
+                    public void onAdLoaded(IAdAdapter ad) {
+                        ad.show();
+                    }
+
+                    @Override
+                    public void onAdClicked(IAdAdapter ad) {
+
+                    }
+
+                    @Override
+                    public void onAdClosed(IAdAdapter ad) {
+
+                    }
+
+                    @Override
+                    public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+
+                    @Override
+                    public void onRewarded(IAdAdapter ad) {
+
+                    }
+                });
+            }
         } else {
             connectingFailed = true;
         }

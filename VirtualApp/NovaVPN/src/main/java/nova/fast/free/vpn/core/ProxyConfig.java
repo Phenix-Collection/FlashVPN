@@ -227,7 +227,7 @@ public class ProxyConfig {
         if (isFakeIP(ip))
             return true;
         if (m_outside_china_use_proxy && ip != 0) {
-            boolean need = !ChinaIpMaskManager.isIPInChina(ip);
+            boolean need = true; //!ChinaIpMaskManager.isIPInChina(ip);
             MLogs.d("need proxy for ip outside cn: " + need);
             return need;
         }

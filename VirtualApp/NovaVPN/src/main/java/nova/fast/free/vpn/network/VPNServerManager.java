@@ -2,6 +2,7 @@ package nova.fast.free.vpn.network;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -40,10 +41,14 @@ public class VPNServerManager {
     private ArrayList<ServerInfo> activeServers;
     private static VPNServerManager sInstance;
     private Handler mainHandler;
+    private Handler workHandler;
 
     String def = "{\"servers\": [{\"id\": 0,\"geo\": \"kr\",\"city\": \"Seoul\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 1,\"geo\": \"kr\",\"city\": \"Seoul-2\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 2,\"geo\": \"us\",\"city\": \"New York\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 3,\"geo\": \"sg\",\"city\": \"Singapore\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 4,\"geo\": \"us\",\"city\": \"Los Angles\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 5,\"geo\": \"jp\",\"city\": \"Tokyo\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 6,\"geo\": \"de\",\"city\": \"Berlin\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 7,\"geo\": \"br\",\"city\": \"Sao Paulo\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"}]}";
     private VPNServerManager(Context appContext){
         mainHandler = new Handler(Looper.getMainLooper());
+        HandlerThread thread = new HandlerThread("sync");
+        thread.start();
+        workHandler = new Handler(thread.getLooper());
         activeServers = getActiveServers();
 //        String res ;
 //        try{
@@ -200,7 +205,8 @@ public class VPNServerManager {
 
             }
         }
-        new Thread(new Runnable() {
+
+        workHandler.post(new Runnable() {
             @Override
             public void run() {
                 if (NetworkUtils.isNetConnected(NovaApp.getApp())) {
@@ -230,7 +236,7 @@ public class VPNServerManager {
                     }
                 }
             }
-        }).start();
+        });
     }
 
     //5 times in 60s

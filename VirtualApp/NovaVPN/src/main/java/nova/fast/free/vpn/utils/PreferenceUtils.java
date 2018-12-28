@@ -257,6 +257,10 @@ public class PreferenceUtils {
         return last;
     }
 
+    public static boolean hasShownRateDialog(Context c) {
+        return getLong(c, "last_rate_dialog",-1) != -1;
+    }
+
     public static boolean isShortCutCreated() {
         return getBoolean(NovaApp.getApp(),"super_clone_shortcut",false);
         //avoid create short cut for updated user
@@ -320,5 +324,29 @@ public class PreferenceUtils {
 
     public static long getEnterAdTime() {
         return getLong(NovaApp.getApp(), "enter_ad_time", 0);
+    }
+
+    public static void addReceiveBytes(long received) {
+        putLong(NovaApp.getApp(), "received_bytes", getLong(NovaApp.getApp(), "received_bytes") + received);
+    }
+
+    public static long getReceiveBytes() {
+        return getLong(NovaApp.getApp(), "received_bytes");
+    }
+
+    public static void addSentBytes(long sent) {
+        putLong(NovaApp.getApp(), "sent_bytes", getLong(NovaApp.getApp(), "sent_bytes") + sent);
+    }
+
+    public static long getSentBytes() {
+        return getLong(NovaApp.getApp(), "sent_bytes");
+    }
+
+    public static long getConnectedTimeSec() {
+        return getLong(NovaApp.getApp(), "connected_time_sec");
+    }
+
+    public static void addConnectedTimeSec(long sec) {
+        putLong(NovaApp.getApp(), "connected_time_sec", getLong(NovaApp.getApp(), "connected_time_sec") + sec);
     }
 }

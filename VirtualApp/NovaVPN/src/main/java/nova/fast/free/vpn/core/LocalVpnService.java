@@ -1,15 +1,23 @@
 package nova.fast.free.vpn.core;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.net.TrafficStats;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.os.ParcelFileDescriptor;
+import android.support.v4.app.NotificationCompat;
 
 import nova.fast.free.vpn.NovaUser;
 import nova.fast.free.vpn.R;
@@ -25,12 +33,14 @@ import nova.fast.free.vpn.ui.HomeActivity;
 import nova.fast.free.vpn.utils.CommonUtils;
 import nova.fast.free.vpn.utils.MLogs;
 import nova.fast.free.vpn.utils.PreferenceUtils;
+import nova.fast.free.vpn.utils.RemoteConfig;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +48,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static android.os.Build.VERSION_CODES.O;
 
 public class LocalVpnService extends VpnService implements Runnable {
 
@@ -63,10 +75,28 @@ public class LocalVpnService extends VpnService implements Runnable {
     private Handler m_Handler;
     private long m_SentBytes;
     private long m_ReceivedBytes;
+    private int NOTIFY_ID = 10001;
+    private long lastSpeedCalTime;
+    private long lastDownBytes;
+    private long lastUpBytes;
+    private final int MSG_UPDATE_NOTIFICATION = 100;
+
+    private final String CONF_VIP_SPEED_BOOST = "conf_vip_speed_boost";
+    private final String CONF_NORMAL_SPEED_BOOST = "conf_normal_speed_boost";
 
     public LocalVpnService() {
         ID++;
-        m_Handler = new Handler();
+        m_Handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case MSG_UPDATE_NOTIFICATION:
+                        updateNotification();
+                        sendMessageDelayed(obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
+                        break;
+                }
+            }
+        };
         m_Packet = new byte[20000];
         m_IPHeader = new IPHeader(m_Packet, 0);
         m_TCPHeader = new TCPHeader(m_Packet, 20);
@@ -83,13 +113,88 @@ public class LocalVpnService extends VpnService implements Runnable {
         // Start a new session by creating a new thread.
         m_VPNThread = new Thread(this, "VPNServiceThread");
         m_VPNThread.start();
+        m_Handler.sendMessageDelayed(m_Handler.obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
         super.onCreate();
     }
 
+    private void updateNotification() {
+        m_Handler.post(new Runnable() {
+            @Override
+            public void run() {
+//                if (Build.VERSION.SDK_INT >= 26) {
+                Intent intent = new Intent(Instance, HomeActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(Instance, 0, intent, 0);
+                Notification notification;
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                String channel_id = "_id_service_";
+                if (Build.VERSION.SDK_INT >= 26 &&
+                        notificationManager.getNotificationChannel(channel_id) == null) {
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+                    NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Nova VPN", importance);
+//                notificationChannel.enableVibration(false);
+                    notificationChannel.enableLights(false);
+//                notificationChannel.setVibrationPattern(new long[]{0});
+                    notificationChannel.setSound(null, null);
+                    notificationChannel.setDescription("Nova VPN information");
+                    notificationChannel.setShowBadge(false);
+                    //notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    notificationManager.createNotificationChannel(notificationChannel);
+                }
+                NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(Instance, channel_id);
+                String title = IsRunning ? getString(R.string.notification_connected):getString(R.string.notification_to_connect);
+                int id = PreferenceUtils.getPreferServer();
+                ServerInfo si = id == ServerInfo.SERVER_ID_AUTO ? VPNServerManager.getInstance(LocalVpnService.this).getBestServer():
+                        VPNServerManager.getInstance(LocalVpnService.this).getServerInfo(id);
+                float[] speed = getNetworkSpeed();
+                DecimalFormat format = new DecimalFormat("0.0");
+                String downSpeed = format.format((speed[0] > 1000)? speed[0]/1000:speed[0]);
+                downSpeed += (speed[0] > 1000) ? "KB/s":"Byte/s";
+                String upSpeed = format.format((speed[1] > 1000)? speed[1]/1000:speed[1]);
+                upSpeed += (speed[1] > 1000) ? "KB/s":"Byte/s";
+
+                mBuilder.setContentTitle(title)
+                        .setContentText("Down " + downSpeed + " Up " + upSpeed)
+                        .setSmallIcon(si.getFlagResId())
+                        .setContentIntent(pendingIntent);
+                notification = mBuilder.build();
+                notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+                try {
+                    startForeground(NOTIFY_ID, notification);
+
+                }catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+//            }
+        });
+
+    }
+
+
+    private float[] getNetworkSpeed() {
+        float boost = 1.0f;
+        if (IsRunning) {
+            boost = (NovaUser.getInstance(this).isVIP() || NovaUser.getInstance(this).getFreePremiumSeconds() > 0)
+                    ? ((float) RemoteConfig.getLong(CONF_VIP_SPEED_BOOST)) / 100
+                    : ((float) RemoteConfig.getLong(CONF_NORMAL_SPEED_BOOST)) / 100;
+        }
+        long current = System.currentTimeMillis();
+        long sent = TrafficStats.getTotalTxBytes();
+        long received = TrafficStats.getTotalRxBytes();
+        float[] result = new float[2];
+        result[0] = ((float)(received - lastDownBytes))*boost*1000/(current - lastSpeedCalTime);
+        result[1] = ((float)(sent - lastUpBytes))*boost*1000/(current - lastSpeedCalTime);
+        lastSpeedCalTime = current;
+        lastUpBytes = sent;
+        lastDownBytes = received;
+        return result;
+    }
+
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent cmd, int flags, int startId) {
+        updateNotification();
         IsRunning = true;
-        return super.onStartCommand(intent, flags, startId);
+        return super.onStartCommand(cmd, flags, startId);
     }
 
     public interface onStatusChangedListener {
@@ -259,6 +364,7 @@ public class LocalVpnService extends VpnService implements Runnable {
         FileInputStream in = new FileInputStream(m_VPNInterface.getFileDescriptor());
         int size = 0;
         long last = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         while (size != -1 && IsRunning) {
             while ((size = in.read(m_Packet)) > 0 && IsRunning) {
                 if (m_DnsProxy.Stopped || m_TcpProxyServer.Stopped) {
@@ -289,6 +395,10 @@ public class LocalVpnService extends VpnService implements Runnable {
         }
         in.close();
         disconnectVPN();
+        PreferenceUtils.addReceiveBytes(m_ReceivedBytes);
+        PreferenceUtils.addSentBytes(m_SentBytes);
+        PreferenceUtils.addConnectedTimeSec((System.currentTimeMillis() - start)/1000);
+        updateNotification();
     }
 
     void onIPPacketReceived(IPHeader ipHeader, int size) throws IOException {

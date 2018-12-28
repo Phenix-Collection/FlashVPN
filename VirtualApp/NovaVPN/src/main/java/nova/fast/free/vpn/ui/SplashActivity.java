@@ -1,9 +1,12 @@
 package nova.fast.free.vpn.ui;
 
 import android.content.pm.PackageInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -48,13 +51,29 @@ public class SplashActivity extends BaseActivity {
 //            adLoader.preloadAd();
         }
 
-        if (NovaApp.getApp().needEnterAd()) {
+        boolean stateOn = true;
+        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        /**
+         * Gets the state of the display, such as whether it is on or off.
+         *
+         * @return The state of the display: one of {@link #STATE_OFF}, {@link #STATE_ON},
+         * {@link #STATE_DOZE}, {@link #STATE_DOZE_SUSPEND}, or {@link #STATE_UNKNOWN}.
+         */
+        if (Build.VERSION.SDK_INT >= 20) {
+            stateOn = display.getState() == Display.STATE_ON;
+        }
+        boolean needEnterAd = stateOn && NovaApp.getApp().needEnterAd();
+        if (needEnterAd) {
             FuseAdLoader.get(NovaApp.SLOT_ENTER_AD, this).loadAd(2, 2000, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     if (!loadTimeout) {
                         ad.show();
                         adShown = true;
+                        MLogs.d("show home enter ad");
+                    } else {
+                        MLogs.d("loaded time out, not show ad");
                     }
                 }
 
@@ -87,6 +106,7 @@ public class SplashActivity extends BaseActivity {
         Handler handler = new Handler();
 
         long delta = System.currentTimeMillis() - time;
+        long timeout =  needEnterAd?5000:2500;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -95,7 +115,7 @@ public class SplashActivity extends BaseActivity {
                 }
                 loadTimeout = true;
             }
-        }, 3000 - delta);
+        }, timeout - delta);
 
 //        if(!NovaApp.isSupportPkg()) {
 //            if (getIntent().getBooleanExtra(EXTRA_FROM_SHORTCUT, false)) {
@@ -112,6 +132,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
+        MLogs.d("Splash onResume");
         super.onResume();
     }
 

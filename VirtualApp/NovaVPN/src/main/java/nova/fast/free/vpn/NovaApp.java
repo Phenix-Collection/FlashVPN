@@ -1,10 +1,13 @@
 package nova.fast.free.vpn;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
@@ -73,7 +76,8 @@ public class NovaApp extends MultiDexApplication {
 
     public boolean needEnterAd(){
         long interval = RemoteConfig.getLong(CONF_ENTER_AD_INTERVAL_SEC);
-        return ((System.currentTimeMillis() - PreferenceUtils.getEnterAdTime()) > interval*1000) ;
+        return !NovaUser.getInstance(this).isVIP() && PreferenceUtils.hasShownRateDialog(this)
+                && (System.currentTimeMillis() - PreferenceUtils.getEnterAdTime()) > interval*1000 ;
     }
 
     @Override
