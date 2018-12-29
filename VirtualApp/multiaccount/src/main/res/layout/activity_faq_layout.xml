@@ -136,6 +136,23 @@
                 android:text="@string/text_Q7_content"
                 android:textSize="@dimen/faq_content_size"
                 android:textColor="@color/faq_content_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_Q8_title"
+                android:textSize="@dimen/faq_title_size"
+                android:textColor="@color/faq_title_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/text_Q8_content"
+                android:textSize="@dimen/faq_content_size"
+                android:textColor="@color/faq_content_color"/>
         </LinearLayout>
     </ScrollView>
 

@@ -197,4 +197,5 @@
     <string name="content_recommend">يختار محرر</string>
     <string name="dialog_permission_title">يعطي الأذن</string>
     <string name="dialog_permission_content">الرجاء السماح بطلب إذن من Super Clone Pro ، وإلا فلن تعمل بعض التطبيقات المستنسخة وخدمة Google Play بشكل صحيح.</string>
+    <string name="toast_arm64_package">مكتبة 32 بت مفقودة في هذا التطبيق المستنسخ. يرجى التحقق من الأسئلة الشائعة إذا كان الاستنساخ لا يعمل.</string>
 </resources>

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.polestar.clone.client.core.VirtualCore;
@@ -309,7 +310,9 @@ public class AppStartActivity extends BaseActivity {
                 if(!needAbiSupport) {
                     doLaunchMyself();
                 } else{
+                    EventReporter.reportArm64(appModel.getPackageName(), "start");
                     doLaunchMyself();
+                    Toast.makeText(AppStartActivity.this, R.string.toast_arm64_package, Toast.LENGTH_LONG).show();
                     //doLaunchFromAgent();
                 }
             }

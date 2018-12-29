@@ -122,7 +122,7 @@ public class AppMonitorService extends Service {
             }
         }
         MLogs.d(TAG, "needLoad start app ad: " + need);
-        return (need && (!filterPkgs.contains(pkg)||pkg == null)) || BuildConfig.DEBUG;
+        return (need && (!filterPkgs.contains(pkg)||pkg == null)) ;
     }
 
     private static long getLastShowTime() {

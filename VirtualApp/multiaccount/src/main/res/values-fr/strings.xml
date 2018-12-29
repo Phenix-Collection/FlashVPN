@@ -153,4 +153,5 @@
     <string name="content_recommend">Choix de l\'éditeur</string>
     <string name="dialog_permission_title">Donner la permission</string>
     <string name="dialog_permission_content">Veuillez autoriser la demande d\'autorisation de Super Clone Pro, sinon certaines applications clonées et le service Google Play ne fonctionneront pas correctement.</string>
+    <string name="toast_arm64_package">Bibliothèque 32 bits manquante dans cette application clonée. Veuillez vérifier la FAQ si le clone ne fonctionne pas.</string>
 </resources>

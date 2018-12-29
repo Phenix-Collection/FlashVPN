@@ -109,6 +109,8 @@
     <string name="settings_follow_us">Follow us on Facebook Page</string>
     <string name="settings_join_us">Join Our Community</string>
     <string name="settings_right" translatable="false">Polestar Applab All rights reserved</string>
+    <string name="toast_arm64_package">Missing 32bit library in this cloned app. Please check FAQ if clone not work.</string>
+
 
     <array name="navigationItem">
         <item name="navigation_notifications">Privacy Locker</item>
@@ -139,6 +141,8 @@
     <string name="text_Q6_content">A6: Please check whether you enabled locker for this app and grant permission to Super Clone to show floating window. For example, on Xiaomi device, Settings->App Management->Super Clone->Permission Control->Floating Window.</string>
     <string name="text_Q7_title">Q7: Why shortcut cannot be created or camera, location not work?</string>
     <string name="text_Q7_content">A7: Please check whether you granted these permissions to Super Clone in your system setting.</string>
+    <string name="text_Q8_title">Q8: Why some clones not work and toast missing 32bit library when start?</string>
+    <string name="text_Q8_content">A8: When download app from Google Play, it will dynamically repack the package according to your device model and would optimize out 32bit library in some cases. For compatibility, Super Clone only packed 32bit clone engine to support most apps. But if error happen when open cloned app, suggest you try to download the full package of the cloned app from websites. Normally you can download the full apk from the download page of official website or apk website like apkpure.com.</string>
 
     <string name="clone_label_tag">%s+</string>
 
