@@ -310,9 +310,11 @@ public class AppStartActivity extends BaseActivity {
                 if(!needAbiSupport) {
                     doLaunchMyself();
                 } else{
-                    EventReporter.reportArm64(appModel.getPackageName(), "start");
                     doLaunchMyself();
-                    Toast.makeText(AppStartActivity.this, R.string.toast_arm64_package, Toast.LENGTH_LONG).show();
+                    if (mFirstStart) {
+                        EventReporter.reportArm64(appModel.getPackageName(), "start");
+                        Toast.makeText(AppStartActivity.this, R.string.toast_arm64_package, Toast.LENGTH_LONG).show();
+                    }
                     //doLaunchFromAgent();
                 }
             }
