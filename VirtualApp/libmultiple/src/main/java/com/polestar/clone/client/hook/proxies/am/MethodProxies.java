@@ -424,9 +424,8 @@ class MethodProxies {
                             intent.setComponent(null);
                             intent.setPackage(null);
                             intent.setData(Uri.parse("https://www.whatsapp.com/android/"));
-                        } else {
-                            return method.invoke(who,args);
                         }
+                        return method.invoke(who,args);
                     }
                 }
 //            }
