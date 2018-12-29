@@ -79,9 +79,9 @@
         </service>
 
         <receiver
-            android:name="com.polestar.domultiple.components.receiver.WakeReceiver"
+            android:name="nova.fast.free.vpn.core.WakeReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />

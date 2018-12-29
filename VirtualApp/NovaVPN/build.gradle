@@ -28,8 +28,8 @@ android {
         multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1008
-        versionName "1.0.08.${releaseTime()}"
+        versionCode 1010
+        versionName "1.0.10.${releaseTime()}"
     }
 
     signingConfigs {
