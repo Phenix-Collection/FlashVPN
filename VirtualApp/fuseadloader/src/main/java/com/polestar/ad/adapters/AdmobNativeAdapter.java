@@ -258,7 +258,7 @@ public class AdmobNativeAdapter extends AdAdapter {
             nativeAdView.setHeadlineView(titleView);
             nativeAdView.setBodyView(subtitleView);
             VideoController vc = mRawAd.getVideoController();
-            if (vc.hasVideoContent()) {
+            if (vc.hasVideoContent() || mRawAd.getImages() == null || mRawAd.getImages().size() == 0) {
                 if (mediaView == null) {
                     return null;
                 }
