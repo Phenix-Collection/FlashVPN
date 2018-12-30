@@ -23,13 +23,12 @@ import java.util.List;
 import nova.fast.free.vpn.R;
 import nova.fast.free.vpn.network.ServerInfo;
 import nova.fast.free.vpn.network.VPNServerManager;
-import nova.fast.free.vpn.ui.widget.FixedListView;
 import nova.fast.free.vpn.utils.MLogs;
 import nova.fast.free.vpn.utils.PreferenceUtils;
 
 public class SelectServerActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener{
     private RadioButton autoCheckBox;
-    private FixedListView serverListView;
+    private ListView serverListView;
     private CompoundButton currentSelected;
     private ImageView autoSignalImg;
     private VPNServerManager vpnServerManager;
@@ -133,6 +132,7 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
                     return  country == 0?serverInfo.id - t1.id: country;
                 }
             });
+            MLogs.d("Get Servers num: " + servers.size());
         }
 
         @Override

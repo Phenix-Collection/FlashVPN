@@ -67,13 +67,15 @@
 
         </LinearLayout>
 
-        <nova.fast.free.vpn.ui.widget.FixedListView
+        <ListView
             android:id="@+id/server_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:divider="@color/light_gray"
             android:background="@color/white"
-            android:dividerHeight="0.5dp"></nova.fast.free.vpn.ui.widget.FixedListView>
+            android:scrollbars="vertical"
+            android:scrollbarDefaultDelayBeforeFade="2"
+            android:dividerHeight="0.5dp"></ListView>
     </LinearLayout>
 
 
