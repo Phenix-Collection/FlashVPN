@@ -265,4 +265,9 @@
         <value>ab_install:10000;ab_content:10000;ab:10000;fb:10000;mp:10000;fb_interstitial:10000;ab_interstitial:10000;mp_interstitial:10000;ab_native_banner:10000</value>
     </entry>
 -->
+    <entry>
+        <key>fingerprint_url</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>off</value>
+    </entry>
 </defaultsMap>
