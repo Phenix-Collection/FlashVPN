@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<include layout="@layout/tool_bar"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="100dp"
+		android:gravity="center"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:text="@string/promoAct_infoText"
+			android:textStyle="bold"/>
+
+		<EditText
+			android:id="@+id/promoAct_promoET"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/button_right_margin"
+			android:layout_marginLeft="@dimen/button_right_margin"
+			android:layout_marginRight="@dimen/button_right_margin"
+			android:layout_marginStart="@dimen/button_right_margin"
+			android:layout_marginTop="@dimen/activity_horizontal_margin"
+			android:inputType="numberDecimal"
+			android:background="@color/colorGray"
+			android:padding="@dimen/half_margin"
+			android:textColor="@color/secondaryText"/>
+
+		<Button
+			android:id="@+id/promoAct_submitBut"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/selector_green_clickable_but"
+			android:layout_marginEnd="@dimen/button_right_margin"
+			android:layout_marginLeft="@dimen/button_right_margin"
+			android:layout_marginRight="@dimen/button_right_margin"
+			android:layout_marginStart="@dimen/button_right_margin"
+			android:layout_marginTop="@dimen/activity_horizontal_margin"
+			android:text="@string/promoAct_submitButText"
+			android:textColor="@color/primaryIconText"
+			android:textStyle="bold"/>
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:padding="@dimen/activity_horizontal_margin"
+			android:text="@string/promoAct_footerText"
+			android:textStyle="bold"/>
+
+	</LinearLayout>
+
+</FrameLayout>

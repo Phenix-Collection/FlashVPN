@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/window_bg"
+	android:orientation="vertical">
+
+	<LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="horizontal"
+		android:paddingBottom="@dimen/activity_horizontal_margin"
+		android:paddingLeft="@dimen/activity_horizontal_margin"
+		android:paddingRight="@dimen/activity_horizontal_margin"
+		android:paddingTop="@dimen/activity_horizontal_margin">
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical">
+
+			<ImageView
+				android:layout_width="@dimen/login_google_left_margin"
+				android:layout_height="@dimen/login_google_left_margin"
+				android:layout_gravity="center_horizontal"
+				android:src="@drawable/ic_referral"/>
+
+			<TextView
+				android:id="@+id/referralFrag_referralCount"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginTop="@dimen/half_margin"
+				android:gravity="center"
+				android:text="@string/firstReferralFrag_referralCountTitle"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/referralFrag_ActiveReferralsLayout"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_weight="1"
+			android:orientation="vertical"
+			android:visibility="gone">
+
+			<ImageView
+				android:layout_width="@dimen/login_google_left_margin"
+				android:layout_height="@dimen/login_google_left_margin"
+				android:layout_gravity="center_horizontal"
+				android:src="@drawable/ic_active_referrals"/>
+
+			<TextView
+				android:id="@+id/referralFrag_activeReferralCountTV"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginTop="@dimen/half_margin"
+				android:gravity="center"
+				android:text="@string/secondReferralFrag_activeTitle"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="right"
+			android:layout_weight="1"
+			android:orientation="vertical">
+
+			<ImageView
+				android:layout_width="@dimen/login_google_left_margin"
+				android:layout_height="@dimen/login_google_left_margin"
+				android:layout_gravity="center_horizontal"
+				android:src="@drawable/ic_referral_balance"/>
+
+			<TextView
+				android:id="@+id/referralFrag_referralBalance"
+				fontPath="fonts/Roboto-Regular.ttf"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginTop="@dimen/half_margin"
+				android:gravity="center"
+				android:text="@string/referralFrag_referralBalance"/>
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<android.support.v7.widget.CardView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/activity_horizontal_margin"
+		android:layout_marginStart="@dimen/activity_horizontal_margin"
+		app:cardBackgroundColor="@color/primaryText"
+		app:cardCornerRadius="10dp">
+
+		<TextView
+			android:id="@+id/referralFrag_refInfoTV"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/shape_top_card"
+			android:gravity="center"
+			android:padding="@dimen/half_margin"
+			android:text="@string/firstReferralFrag_title"
+			android:textColor="@android:color/black"
+			android:textSize="14sp"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/element_margin"
+			android:gravity="center_horizontal"
+			android:orientation="vertical"
+			android:paddingTop="@dimen/half_margin">
+
+			<TextView
+				android:id="@+id/referralFrag_promoCodeTV"
+				fontPath="@string/fontBold"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/activity_horizontal_margin"
+				android:textColor="@android:color/black"
+				android:textSize="20sp"
+				tools:text="1dfsDFsd541"/>
+
+			<Button
+				android:id="@+id/referralFrag_copyCodeBut"
+				style="@style/appButton.StrokedAccent"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/activity_horizontal_margin"
+				android:layout_marginTop="@dimen/edit_text_right_margin"
+				android:paddingEnd="@dimen/element_margin"
+				android:paddingStart="@dimen/element_margin"
+				android:text="@string/firstReferralFrag_copyButText"/>
+
+		</LinearLayout>
+	</android.support.v7.widget.CardView>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/itemSimpleTextHeight"
+		android:gravity="center_horizontal"
+		android:text="@string/firstReferralFrag_inviteFriendsTitle"
+		android:textColor="@color/primaryText"
+		android:textSize="16sp"/>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="@dimen/half_margin"
+		android:gravity="center_horizontal"
+		android:orientation="horizontal"
+		android:padding="@dimen/half_margin">
+
+		<ImageView
+			android:id="@+id/referralFrag_FacebookShareBut"
+			android:layout_width="@dimen/socialIconSize"
+			android:layout_height="@dimen/socialIconSize"
+			android:layout_marginRight="@dimen/edit_text_right_margin"
+			android:src="@drawable/ic_fb"/>
+
+		<ImageView
+			android:id="@+id/referralFrag_VkShareBut"
+			android:layout_width="@dimen/socialIconSize"
+			android:layout_height="@dimen/socialIconSize"
+			android:layout_gravity="center_horizontal"
+			android:src="@drawable/ic_vk"/>
+
+		<ImageView
+			android:id="@+id/referralFrag_GoogleShareBut"
+			android:layout_width="@dimen/socialIconSize"
+			android:layout_height="@dimen/socialIconSize"
+			android:layout_marginLeft="@dimen/edit_text_right_margin"
+			android:src="@drawable/ic_google"/>
+	</LinearLayout>
+
+</LinearLayout>

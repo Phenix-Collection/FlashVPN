@@ -1,0 +1,1 @@
+include ':app', ':unity-ads', ':adtrial-android-sdk-release-2017-07-10'

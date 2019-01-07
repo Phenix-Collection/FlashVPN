@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:showIn="navigation_view">
+
+		<item
+			android:id="@+id/nav_tasks"
+			android:checked="true"
+			android:icon="@drawable/ic_tab_tasks"
+			android:title="@string/main_toolbar_title"/>
+
+		<item
+			android:id="@+id/nav_balance"
+			android:icon="@drawable/ic_tab_money"
+			android:title="@string/toolbar_balanceText"/>
+
+		<item
+			android:id="@+id/nav_friends"
+			android:icon="@drawable/ic_tab_referrals"
+			android:title="@string/toolbarTitle_friends"/>
+
+	<item
+		android:id="@+id/nav_account"
+		android:icon="@drawable/ic_account"
+		android:title="@string/menu_account"/>
+
+		<item
+			android:id="@+id/nav_info"
+			android:icon="@drawable/ic_tab_info"
+			android:title="@string/rules_toolbar_title"/>
+
+</menu>

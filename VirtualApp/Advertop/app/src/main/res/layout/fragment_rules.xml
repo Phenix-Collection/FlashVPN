@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/activity_horizontal_margin">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/fragmentRulesCallBackTV"
+		android:layout_marginTop="25dp"
+		android:text="@string/rules_callback_text"
+		android:textSize="22sp"
+		android:gravity="center"
+		android:textStyle="bold"/>
+
+	<EditText
+		android:layout_width="match_parent"
+		android:layout_height="150dp"
+		android:id="@+id/fragmentRulesCallBackET"
+		android:lines="5"
+		android:gravity="left|top"
+		android:padding="5dp"
+		android:inputType="textCapSentences"
+		android:imeOptions="actionDone"
+		android:background="@drawable/shape_rectangle_edit_text"
+		android:textColor="@color/primaryText"
+		android:textSize="20sp"
+		android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+	<Button
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/fragmentRulesSendBut"
+		android:text="@string/rules_send_but_text"
+		android:layout_marginRight="70dp"
+		android:layout_marginLeft="70dp"
+		android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+</LinearLayout>

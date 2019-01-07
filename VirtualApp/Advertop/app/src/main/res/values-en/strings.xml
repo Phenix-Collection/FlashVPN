@@ -1,0 +1,390 @@
+<resources>
+
+	<string name="rulesFrag_questionException">Enter your question</string>
+	<!--Splash Screen-->
+	<string name="permissionRequestExplanation">Permits are required for authorization and operation of the application</string>
+	<string name="permissionError">You should give all permissions for app</string>
+
+	<!--Register screen-->
+	<string name="register_soc_login">Sign In</string>
+	<string name="register_login">Login</string>
+	<string name="registerAct_browserActNotFoundException">Cannot find activity exception</string>
+	<string name="register_pass">Password</string>
+	<string name="register_phone">Phone number</string>
+	<string name="register_promo">Promo code</string>
+	<string name="register_but_text">Sign Up</string>
+	<string name="register_title">Fill the fields, please</string>
+	<string name="menu_profile">Profile</string>
+	<string name="register_toolbar_title">Sign Up</string>
+	<string name="registerAct_policy"><![CDATA[<font color=\"#FFFFFF\"><u>Privacy Policy</u></font>]]></string>
+	<string name="registerAct_policyException">Read privacy policy</string>
+	<string name="register_through_social">Or sign in through your social network:</string>
+	<!--Intro screen-->
+	<string-array name="intro_titles">
+		<item>Выполняй задания</item>
+		<item>Видеозона</item>
+		<item>Партнерские задания</item>
+		<item>Мгновенный вывод денег</item>
+		<item>Построй свой бизнесс</item>
+	</string-array>
+	<string-array name="intro_content">
+		<item>Устанавливай приложения и запускай их каждый день, получая за это реальные деньги</item>
+		<item>Смотри интересные видео и получай за это монетки</item>
+		<item>Выполняй простые задания от наших партнеров</item>
+		<item>Выводи деньги на популярные платежные системы</item>
+		<item>Приглашай друзей по своему промокоду и получай 30% от их прибыли</item>
+	</string-array>
+	<string name="intro_next_but">Далее</string>
+	<!--Login screen-->
+	<string name="login_promo_tv_info">If you have a promo code - you can enter it in the field below</string>
+	<string name="login_toolbar_title">Sign in</string>
+	<string name="loginAct_promoTite">Enter promo:</string>
+	<string name="loginAct_enterChoiceTV">Choose how to enter:</string>
+	<!--Main Screen-->
+	<string name="main_toolbar_title">Task</string>
+	<string name="money_toolbar_title">Money</string>
+	<string name="rules_toolbar_title">Info</string>
+	<string name="task_price">%.2f</string>
+	<string name="toolbarTitle_activeTasks">Active tasks</string>
+	<string name="toolbarTitle_friends">Friends</string>
+	<!--Funds Screen-->
+	<string name="fundsFragment_paymentSystemsMenuTitle">Choose payment system:</string>
+	<string name="fundsFragmentNoPaymentSystemsException">We have not found payment systems. Check your Internet connection and try again</string>
+	<string name="fragmentFunds_moneyTransferred">Referral balance transferred</string>
+	<string name="fundsFrag_privatError">Error from PrivatBank server</string>
+	<string name="fundsFrag_privatRequestLimitError">Request limit exceeded to PrivatBank server</string>
+	<string name="fundsFrag_launchLimitException">You need finish 3 tasks(10 launches) first, then you can release your funds</string>
+	<!--Frieds screen-->
+	<string name="friends_vk_share_toast_text">Message added to the wall</string>
+	<string name="referralFrag_promoCopied">Promo has been copied</string>
+	<string name="referralFrag_shareToast">Posted</string>
+	<string name="referralFrag_shareExceptionToast">Oops something goes wrong, try later</string>
+	<!--Rules screen-->
+	<string	name="rules_callback_text">Feedback</string>
+	<string name="rules_send_but_text">Send</string>
+	<string	name="rules_text">1. Do the tasks. \n2. Earn money. \n3. Get money on your mobile bill.</string>
+	<!--Single Task Screen-->
+	ы
+	<string name="timer_update">%02d seconds left</string>
+	<string name="timer_finished">Click here and get your reward</string>
+	<string name="singleAct_taskTitle" formatted="false">Get %1s during %1d days for launching this app</string>
+	<string name="detailedAct_appNotFoundException">This task does not exists. Refresh task list</string>
+	<string name="detailedTaskAct_taskNotReadyYetException">Task is not ready yet</string>
+	<string name="detailedTaskAct_taskFailedException">Task failed</string>
+	<string name="detailedTaskAct_askingUserToOpenMarketMessage">Collapse this app, open Play Market and start to complete conditions</string>
+	<string name="singleAct_taskDescription">(You don\'t need to install it every time)</string>
+	<string name="taskAdapter_newTaskTitle">New task</string>
+	<string name="taskAdapter_activeTaskTitle">In progress</string>
+	<string	name="single_task_status">Status:</string>
+	<string	name="single_task_price">%1s</string>
+	<string name="singleTask_ConditionsTitle">Conditions</string>
+	<string name="singleTask_statusTitle">Status:</string>
+	<string name="single_task_get_task_but_text">Perform</string>
+	<string name="single_task_status_free">Free</string>
+	<string name="single_task_status_progress">Performing</string>
+	<string name="single_task_status_finished">Done</string>
+	<string name="singleTask_taskEndingText"><![CDATA[Task will end in: <b>%1d</b>]]></string>
+	<string name="single_task_finished">Task is completed</string>
+	<string name="tasksFrag_noActiveTasksMessage">You have not any active tasks.\nGo and take one on. Just switch to first tab!</string>
+	<string name="tasksFrag_noTasksMessage">We have not new task for you at this moment.</string>
+	<string name="singleTask_launchAppBut">Open app</string>
+	<string name="singleTask_launchAppButDesc">and get +%1s</string>
+	<string name="singleTask_noAppException">You need to install app first</string>
+	<string name="singleTask_activeTaskText">Task in progress</string>
+	<string name="singleTask_disableTaskText">Task not taken yet</string>
+	<string name="singleTask_toEarlyException">Oops… App launch not counted. 24 hours not passed yet. Try later</string>
+	<string name="singleTask_doneText">Launch tomorrow</string>
+	<string name="singleTask_doneTextDesc">and get +%1s</string>
+	<string name="singleTask_attention">Don\'t forget to launch tomorrow</string>
+	<string name="singleTask_attentionBannerText">Attention! After launch do at least 6 acts in app. Otherwise you have a chance to be in black list of users and can be blocked! Checking conducted one time per week.</string>
+	<string name="detailedTaskAct_additionalTaskTitle">Additional task</string>
+	<string name="detailedTaskAct_additionalTaskPrice" formatted="false">Commend app and get %.2f %s more</string>
+	<string name="detailedTaskAct_additionalTaskNotAvailableText">When additional task will be available you\'ll get notification</string>
+	<string name="push_content_text_review_task_available">You are available to start working with additional task</string>
+	<string name="detailedTaskAct_additionalTaskNotAvailableButText" formatted="false">+ x %s</string>
+	<string name="detailedTaskAct_additionalTaskOnModerationText">Done! Wait for finishing moderation</string>
+	<string name="detailedTaskAct_additionalTaskFailedModerationText">Failed! Screenshot not finished the moderation</string>
+	<string name="detailedTaskAct_additionalTaskUnAvailableTaskText">Moderating…</string>
+	<string name="dialogStarApp_conditions">1. ВНИМАНИЕ, Google Play удаляет отзывы людей, которые провели меньше 5 минут внутри приложения, о котором вы пишите отзыв. Поизучайте хотя бы 3&#8211;4 минуты рекламируемое приложение, перед тем как написать отзыв, иначе мы его не увидим. (Проверка осуществляется спустя сутки написания).\n2. Open app\'s page in GooglePlay and go to \"Ratings\".\n3. Set rating: \"%d stars\".\n4. Make a screenshot of your rating and send it for moderation.</string>
+	<string name="dialogStarCommentApp_conditions" formatted="false">1. ВНИМАНИЕ, Google Play удаляет отзывы людей, которые провели меньше 5 минут внутри приложения, о котором вы пишите отзыв. Поизучайте хотя бы 3&#8211;4 минуты рекламируемое приложение, перед тем как написать отзыв, иначе мы его не увидим. (Проверка осуществляется спустя сутки написания).\n2. Open app\'s page in GooglePlay and go to \"Ratings\".\n3. Set rating: \"%d зірок\".\n4. Write comment at least 20 words, using keywords: \"%s\".\n5. Rate five other positive comments.\n6. Make a screenshot of your rating and send it for moderation.</string>
+	<string name="dialogStarApp_butText">Send screenshot for moderation</string>
+	///TASK TYPES
+	<string name="singleAct_firstCondition">1. Find app using icon and keywords: \"%1s\"</string>
+	<string name="singleAct_secondCondition" formatted="false">%1d. Install and keep on device during %1d d</string>
+	<string name="singleAct_thirdCondition" formatted="false">%1d. Keep launching the app once in 24 hours during %1d days</string>
+	<string name="singleAct_thirdCondition_48" formatted="false">%1d. Keep launching the app once in 48 hours during %1d days</string>
+	<string name="singleAct_thirdCondition_72" formatted="false">%1d. Keep launching the app once in 72 hours during %1d days</string>
+	<string name="singleAct_fourthCondition" formatted="false">%1d. After app was open you should stay there during 20 seconds and click on notification</string>
+	<string name="singleAct_fifthCondition" formatted="false">%1d. Additional conditions:\n %1s</string>
+	<string name="singleTask_dailyTaskWithKeyWords">1. Find app using icon and keywords\n2. Install app\n3. Launch during days: %1d\n4. After app was open you should to do 6 transitions between app screens</string>
+	<string name="singleTask_dailyTaskNoKeywords">1. Install app\n2. Launch during days: %1d\n3. After app was open you should to do 6 transitions between app screens</string>
+	<string name="singleTask_singleWithKeywords">1. Find app using icon and keywords\n2. Install app</string>
+	<string name="singleTask_singleNoKeywords">1. Install app</string>
+	<string name="adMobRandomMessage">Press "Install" button</string>
+
+	<!--Splash Screen-->
+	<string name="splash_dialog_positive_but_text">Restart</string>
+	<string name="splash_negative_but_text">quit</string>
+	<string name="splash_dialog_title">No connection</string>
+	<string name="splash_dialog_message">You can not use the app without connecting to the Internet. We are waiting for you.</string>
+	<!--Other strings-->
+	<string name="timer_start_notification">%1d seconds left</string>
+	<string name="registerDialogMessage">Try again</string>
+	<string name="registerDialogPosButText">Once more</string>
+	<string name="registerDialogWrongPromoTitle">Invalid promotional code</string>
+	<string name="notificationNewTaskMessage">Yeah! New task enabled!</string>
+	<string name="notificationNewTasksMessage">Yeah! New tasks enabled!</string>
+	<string name="notificationReminderMessage">24 hours are passed, don\'t forget to open the app</string>
+	<string name="wrongSecretKey">Security key entered incorrectly</string>
+	<string	name="refillInfoText">Enter or check already entered phone number and enter the amount of payment.</string>
+	<string	name="friends_rules">\tInvite your friends to AdverTop using the promotional code and get 10% of their income</string>
+	<string name="share_message">I earn more than 1000 rubles a month on installing free games and applications. Do not wait, start earning with us! Install the "AdverTop" application, register and enter the promo code: %1s. \n</string>
+	<string name="refillToolBarTitle">Cashouts</string>
+	<!--Refill screen-->
+	<string name="refillSendRequestText">Cashout</string>
+	<string name="refillErrorDialogTitle">Error</string>
+	<string name="refillInsufficientFundsDialogMessage">Not enough money in the account</string>
+	<string name="refillErrorDialogPosButName">Close</string>
+	<string name="refillRequestSendedTitle">The request is processed</string>
+	<string name="refillRequestSendedMessage">Thank you. Your request is being processed.</string>
+	<string name="refillBankErrorTitle">Rejected</string>
+	<string name="refillBankErrorMessage">Sorry, your request was rejected by the bank. Please try again later.</string>
+	<string name="snackBarLoadingTitle">Loading …</string>
+	<string name="snackBarEnterFunds">Please enter a value with which you want to receive</string>
+	<string name="snackRequestAlreadySended">The request is processed. Please wait.</string>
+	<string name="countyDialogTitle">Select country</string>
+	<string name="countryDialogUkraineButText">Ukraine</string>
+	<string name="countryDialogRussiaButText">Russia</string>
+	<string name="refillAct_confirmDialog">After commission you\'ll get %.2f </string>
+	<string name="refillAct_confirmationDialogPosButText">Agree</string>
+	<string name="refillAct_confirmationDialogNegButText">Cancel</string>
+	<string name="refillAct_amountHint">Amount…</string>
+	<string name="refillAct_limitException">Amount must be bigger than %.2f</string>
+	<!--Для Вас з\'явилися нові завдання-->
+	<string name="singleTaskDescription">\nInstall and not removed for 3 days</string>
+	<string name="singleTaskSearchByKeyword">\nFind app by the icon and download</string>
+	<string name="thereIsNoLocation">Unable to get your location</string>
+	<string name="payeerDialogTitle">Get money</string>
+	<string name="payeerSystemsDialogTitle">Select a payment system to release your money:</string>
+	<string name="payeerDialogInptFieldHint">Amount…</string>
+	<string name="payeerDialogInputMobileHint">Phone number…</string>
+	<string name="payeerDialogInputWalletHint">Wallet number…</string>
+	<string name="payeerDialogInputAccountHint">Your account…</string>
+	<string name="payeerDialogInputCardHint">Card number…</string>
+	<string name="payeerPaymentDialogWrongAccountException">This payment system account does not exist</string>
+	<string name="payeerPaymentDialogWrongAmountException">The minimum amount for payment %s</string>
+	<string name="payeerDialogOkBut">Yes</string>
+	<string name="secretKeyDialogTitle">Verification</string>
+	<string name="secretKeyDialogMessage">Enter your security key</string>
+	<string name="secretKeyDialogOkBut">Send</string>
+	<string name="secretKeyDialogCancelBut">Cancel</string>
+	<string name="payeerDialogCancelBut">Close</string>
+	<string name="gpsErrorText">Restart application, please</string>
+	<string name="gpsTextError">Enable GPS and restart the app</string>
+	<string name="refillRequestUserNotFound">User not found</string>
+	<string name="purchaseDone">You\'ll get your funds in 10 days</string>
+	<string	name="firstReferralFrag_copyButText">Copy</string>
+	<string	name="firstReferralFrag_inviteFriendsTitle">Tell friends</string>
+	<string	name="firstReferralFrag_referralBalanceTitle">Referral balance:</string>
+	<string	name="firstReferralFrag_referralCountTitle">Referrals:\n%1d</string>
+	<string name="referralFrag_referralBalance">Income:\n%1s</string>
+	<string name="firstReferralFrag_title">Invite friends using this promo and get 30% from their income</string>
+	<string	name="secondsReferralFrag_title">Invite friends using this promo and get 30% more after tasks completed</string>
+	<string	name="fundsFragment_balance">Balance:</string>
+	<string name="fundsFragment_expectedFunds">Expected income:</string>
+	<string	name="fundsFragment_getFunds">Get money</string>
+	<string name="fundsFragment_referralBalance">Referral balance:</string>
+	<string	name="fundsFragment_titleText">Release funds like you want!</string>
+	<string	name="fundsFragment_tranfferButText">Transfer</string>
+	<string	name="fundsFragment_transferExpectedInfoText">Money will be transferred after all active tasks will be finished</string>
+	<string	name="fundsFragment_transferInfoText">To get your referral balance, you need to transfer it to your own balance first</string>
+	<string	name="referralScreen_firstPageTitle">Referral plan #1</string>
+	<string	name="referralScreen_secondPageTitle">Referral plan #2</string>
+	<string	name="referralScreen_title">Invite friends and rise your income!</string>
+	<string	name="secondReferralFrag_activeTitle">Active:\n%1d</string>
+	<!--Info screen-->
+	<string name="infoFrag_title">Learn more about the app</string>
+	<string name="infoFrag_firstRow">1. Rules</string>
+	<string name="infoFrag_secondRow">2. Referral plan №1</string>
+	<string name="infoFrag_thirdRow">3. Referral plan №2</string>
+	<string name="infoFrag_fourthRow">4. Get money</string>
+	<string name="infoFrag_fifthRow">5. Support</string>
+	<string name="infoFrag_policy">6. Privacy Policy</string>
+	<string name="singleTaskAct_referralText">Increase your prices\nof tasks on 30%</string>
+
+	<string name="toolbar_balanceText">Balance \n%.2f</string>
+	<string name="toolbar_expectedBalanceText">Waiting \n%.2f</string>
+	<!--Tasks screen-->
+	<string name="tasksFrag_defaultTasksHeader">Default tasks</string>
+	<string name="tasksFrag_serverTasksHeader">New tasks</string>
+	<string name="taskFrag_headerInfoText">Если прямо сейчас нет заданий - не переживайте и не в коем случае не удаляйте приложение! Дело в том, что задания появляются по мере обращения к нам рекламодателей, и иногда их больше, иногда меньше, но как только появится новое приложение, мы сразу оповестим вас с помощью пуш-уведомления! Но вы всегда можете зарабатывать, выполняя задания от партнеров, смотреть видеозону, интересные видео. Также не забывайте о реферальных программах, которые способны увеличить ваш доход в разы.</string>
+	<string name="tasksFrag_activeHeader">Don\'t forget about task launches</string>
+	<string name="tasksFrag_activeFooter">Attention!\nDo task launches only from our app, otherwise they will not be credited</string>
+	<string name="tasksFrag_header">Existing tasks</string>
+	<string name="tasksFrag_footer">Attention, You must be a member of our Vk group, this is a mandatory condition, otherwise You will not see notification about new tasks, and even can be banned</string>
+
+	<string name="taskFrag_vkTaskFinished">Task complete</string>
+	<string name="taskFrag_vkTaskException">Task can be done only once</string>
+	<string name="videoTaskException">You should watch whole video</string>
+	<string name="videoNotReadyError">Video is not downloaded yet, try later</string>
+	<string name="ad_content_is_not_available">Ad content is not available yet at this moment. Come back later</string>
+	<string name="videoIsReadyMessage">Video is ready</string>
+	<string name="platformVideoIsReady">Video from %1s is ready</string>
+	<string name="youHaveBannedMessage">You have been banned on this service. Email administrator</string>
+	<string name="videoLimitMessage">Your daily video ad limit has ends. Come back tomorrow</string>
+	<string name="tutorial_GoButText">Go go go!</string>
+	<string name="roulette_NoFundsError">Not enough funds</string>
+	<string name="registerAct_promoCodeTitle">Do you have promo?\nWrite it down:</string>
+	<string name="menu_account">Account</string>
+
+	<string-array name="defTasksTitles">
+		<item>Interesting video</item>
+		<item>Earnings from partners</item>
+		<item>Try your luck</item>
+		<item>Video zone</item>
+		<item>Increase your income</item>
+		<!--<item>News and Competitions</item>-->
+	</string-array>
+
+	<string name="def_commend_task_title">App commend</string>
+
+	<string-array name="defTasksLinks">
+		<item>Watch</item>
+		<item>Finish tasks</item>
+		<item>Spin it</item>
+		<item>Watch and earn money</item>
+		<item>Invite friends</item>
+		<!--<item>Enter the group</item>-->
+	</string-array>
+
+	<string name="def_commend_task_link">Commend</string>
+
+	<string-array name="defTasksPrices">
+		<item>0.05</item>
+		<item>0.05</item>
+		<item>100</item>
+		<item>%</item>
+		<item>30</item>
+		<!--<item>0.01</item>-->
+	</string-array>
+
+	<string-array name="videoAdPlatforms">
+		<item>UnityAds</item>
+		<item>AdColony</item>
+		<item>AppNext</item>
+		<item>Fyber</item>
+		<item>Facebook</item>
+	</string-array>
+
+	<string-array name="videoAdDescriptions">
+		<item>Top games</item>
+		<item>Epic trailers</item>
+		<item>The best propositions</item>
+		<item>Interesting videos</item>
+		<item>Top propositions</item>
+	</string-array>
+
+	<string-array name="offerWallPlatforms">
+		<item>Fyber</item>
+		<item>AdsCent</item>
+		<item>AdTrial</item>
+		<item>OfferToro</item>
+	</string-array>
+
+	<string-array name="offerWallDescriptions">
+		<item>Interesting offers</item>
+		<item>Large prises</item>
+		<item>Test</item>
+		<item>The best offers</item>
+	</string-array>
+
+	<string-array name="paymentSystemTitles">
+		<item>Webmoney</item>
+		<item>Qiwi</item>
+		<item>Yandex</item>
+		<item>Tele2</item>
+		<item>Megafon</item>
+		<item>Beeline</item>
+		<item>Mts</item>
+		<item>Kyivstar</item>
+		<item>Lifecell</item>
+		<item>Vodafone</item>
+		<item>Visa</item>
+		<item>Mastercard</item>
+	</string-array>
+
+	<string name="videoLoadingText">Loading ads…</string>
+	<string name="videoAdTitle">Video from %1s</string>
+	<string name="videoAdHeaderText">Watch videos and earn money</string>
+	<string name="videoAdFooterText">Attention! After each video you\'ve watched go to google play using link, otherwise has a possibility not to earn money</string>
+	<string name="offerWallAdTitle">Offer from %1s</string>
+	<string name="offerWallFooterText">Read task condition carefully!</string>
+	<string name="toolbar_videoAdTitle">Video zone</string>
+	<string name="toolbar_offerWallTitle">Tasks from partners!</string>
+	<string name="offerWallNotReadyException">No tasks from this partner</string>
+	<string name="offerWallHeaderLayoutTitle">Attention! Read this</string>
+	<string name="offerWallHeaderLayoutText">1. Внимательно читайте инструкцию к заданию (установить и открыть, зарегистририроваться на 7-дневную бесплатную версию, набрать уровень и т.д.)\n\n2. Не выполняйте один и тот же заказ у нескольких партнеров, выберите самый дорогой!\n\n3. Уведомление о новых партнерских заданиях не приходит. Проверяйте их каждый день самостоятельно.\n\n4. Партнерское задание оплачиваеться только если приложение не было установлено ранее!\n\n5. Две реферальные программы учитывают партнерские задания.\n\n6. Мы не гарантируем оплату партнерских заданий. По вопросам зачисления вознаграждения обращайтесь в поддержку партнеров.</string>
+	<string name="videoAd_successFullText">Nice! You have got you money</string>
+	<string name="videoAd_failText">Some error occurs. Check your network</string>
+	<string name="singleAct_toolbarTitle">Task for %.2f</string>
+	<string name="error_super_reward">Cannot calculate reward. Try later</string>
+
+	<!--Promo code activity-->
+	<string name="promoAct_toolbarTitle">Get more money</string>
+	<string name="promoAct_infoText">Type your partnership promo</string>
+	<string name="promoAct_footerText">This is a secret promo! You can find it only on several ad apps. We recommend you carefully watch all the stuff in these apps</string>
+	<string name="promoAct_submitButText">Done</string>
+	<string name="promoAct_notANumberException">Wrong promo</string>
+	<string name="promoAct_promoNotExistsException">Promo does not exists</string>
+	<string name="promoAct_promoActivatedException">Promo already activated</string>
+	<string name="promoAct_bonusNotReadyException">Not yet</string>
+	<string name="promoAct_promoSomeError">Some error on server side. Try later</string>
+
+	<!--Timer view-->
+	<string name="timer_title"><![CDATA[Wait on this page more then <b>%1d</b> seconds and you\'ll get your money for this today]]></string>
+	<string name="timer_getMoneyBut">Take</string>
+	<string name="timer_infoText">You can check our app, using only bottom menu buttons:</string>
+	<string name="timer_resultTitle">Now you can take your money</string>
+
+	<!--Roulette acivity-->
+	<string name="rouletteAct_title">Try your luck! Win more</string>
+	<string name="rouletteAct_makeBetText">Make a bet:</string>
+	<string name="rouletteAct_toolbarTitle">Roulette</string>
+	<string name="rouletteAct_playButText">Play</string>
+	<string name="rouletteAct_moreInfoText">Screenshot your win and get a chance to win a super price. More in Vk group!</string>
+	<string name="rouletteAct_moreButText">More</string>
+	<string name="rouletteAct_winTitle">Congratulations</string>
+	<string name="rouletteAct_loseTitle">Not today</string>
+	<string name="rouletteAct_winMessage">You won %1s\n Today is your day!</string>
+	<string name="rouletteAct_loseMessage">You lost %1s\n Play one more time!</string>
+
+	<string name="someErrorText">Ooops! Some error occurred. Come back later</string>
+	<string name="cannotLoadAnimationError">Cannot load game animation. Just wait for your bet result</string>
+
+	<!--Profile activity-->
+	<string name="profileAct_infoText">Want a special tasks, give us more info about you</string>
+	<string name="profileAct_idTitle">Your ID: %1s</string>
+	<string name="profileAct_nameHint">Name</string>
+	<string name="profileAct_phoneNumberHint">Mobile number</string>
+	<string name="profileAct_yearTitle">Year</string>
+	<string name="profileAct_genderTitle">Gender</string>
+	<string name="profileAct_genderMale">Male</string>
+	<string name="profileAct_genderFemale">Female</string>
+	<string name="profileAct_doneBut">Done</string>
+	<string name="profileAct_profileDataUpdated">Data updated</string>
+	<string name="profileAct_idCopiedMessage">Id has been copied</string>
+	<string name="profileAct_emailAlreadyExistsError">Email exists</string>
+
+	<string name="nav_expected_balance">Wait for</string>
+	<string name="nav_balance">Balance</string>
+	<string name="nav_referrals">Referrals</string>
+	<string name="support_text">If you have questions welcome to advertop.help@gmail.com</string>
+	<string name="timer_error">Nope. You need to wait for timer</string>
+	<string name="timer_ok_but">Continue</string>
+
+	<string-array name="genders">
+		<item>Male</item>
+		<item>Female</item>
+	</string-array>
+
+</resources>

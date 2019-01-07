@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('adtrial-android-sdk-release-2017-07-10.aar'))

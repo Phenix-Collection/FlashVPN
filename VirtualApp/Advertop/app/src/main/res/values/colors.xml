@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#51BC5E</color>
+    <color name="colorPrimaryDark">#39AA3E</color>
+	<color name="colorPrimaryLight">#80f58f</color>
+	<color name="colorPrimaryDarkPressed">#26862b</color>
+	<color name="colorPrimaryUnActive">#8fea9a</color>
+	<color name="colorHint">#A2CEB5</color>
+	<color name="colorAlpha">#33FFFFFF</color>
+	<color name="colorPrimaryDisable">#63B5F6</color>
+    <color name="colorAccent">#30AD81</color>
+	<color name="primaryText">@android:color/white</color>
+	<color name="colorNewTask">#C6F0C2</color>
+	<color name="colorGray">#f8f8f8</color>
+	<color name="colorDarkGray">#eceded</color>
+	<color name="colorPressedGray">#b2b3b3</color>
+	<color name="secondaryText">#727272</color>
+	<color name="dividerColor">#B6B6B6</color>
+	<color name="primaryIconText">#FFFFFF</color>
+	<color name="colorPrimarySnackBarGood">#4CA64C</color>
+	<color name="colorSnackbarBg">#CE2828</color>
+	<color name="colorDarkGrayAlpha">#88eceded</color>
+	<color name="colorLoadingAlpha">#88727272</color>
+	<color name="colorWindowBg">#f4fcfe</color>
+	<color name="colorExpectedBalance">#eceded</color>
+	<color name="colorBadgeBg">#db2c1e</color>
+	<!--<color name="colorNewTask">#A2FA72</color>-->
+	<color name="colorFirstSlide">#FF5E4C</color>
+	<color name="colorSecondSlide">#7E57C2</color>
+	<color name="colorThirdSlide">#01C853</color>
+	<color name="colorFourthSlide">#49B5F3</color>
+	<color name="colorFifthSlide">#FF6A4C</color>
+	<!--DetailedTaskAct - additional task-->
+	<color name="colorAdditionalTaskNormal">#f7ae2f</color>
+	<color name="colorAdditionalTaskDisabled">#fad9a0</color>
+	<color name="colorAdditionalTaskPressed">#ca860e</color>
+	<color name="colorEnd">#1F8671</color>
+</resources>

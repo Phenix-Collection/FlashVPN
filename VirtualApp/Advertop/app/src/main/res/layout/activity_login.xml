@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/window_bg"
+	android:orientation="vertical">
+
+	<include
+		layout="@layout/tool_bar"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:orientation="vertical">
+
+		<ImageView
+			android:layout_width="100dp"
+			android:layout_height="100dp"
+			android:src="@drawable/ic_promo"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:padding="@dimen/activity_horizontal_margin"
+			android:layout_marginBottom="@dimen/activity_horizontal_margin"
+			android:text="@string/loginAct_promoTite"
+			android:textSize="20sp"/>
+
+		<EditText
+			android:id="@+id/loginPromoET"
+			style="@style/appEditText"
+			android:textSize="18sp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:hint="@string/register_promo"
+			android:inputType="text"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/button_right_margin"
+				android:gravity="center_horizontal"
+				android:paddingBottom="@dimen/activity_horizontal_margin"
+				android:text="@string/loginAct_enterChoiceTV"
+				android:textColor="@color/primaryText"
+				android:textSize="18sp"/>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:gravity="center_horizontal"
+				android:orientation="horizontal"
+				android:padding="@dimen/half_margin"
+				android:paddingBottom="@dimen/activity_horizontal_margin"
+				android:paddingTop="@dimen/half_margin">
+
+				<ImageView
+					android:id="@+id/loginFacebook"
+					android:layout_width="@dimen/socialIconSize"
+					android:layout_height="@dimen/socialIconSize"
+					android:layout_marginRight="@dimen/edit_text_right_margin"
+					android:src="@drawable/ic_fb"/>
+
+				<ImageView
+					android:id="@+id/loginVk"
+					android:layout_width="@dimen/socialIconSize"
+					android:layout_height="@dimen/socialIconSize"
+					android:layout_gravity="center_horizontal"
+					android:src="@drawable/ic_vk"/>
+
+				<ImageView
+					android:id="@+id/loginGoogle"
+					android:layout_width="@dimen/socialIconSize"
+					android:layout_height="@dimen/socialIconSize"
+					android:layout_marginLeft="@dimen/edit_text_right_margin"
+					android:src="@drawable/ic_google"/>
+			</LinearLayout>
+		</LinearLayout>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:drawableLeft="@drawable/ic_login_phone"
+		android:gravity="left|center_vertical"
+		android:paddingBottom="@dimen/half_margin"
+		android:paddingLeft="@dimen/activity_horizontal_margin"
+		android:paddingRight="@dimen/half_margin"
+		android:paddingTop="@dimen/half_margin"
+		android:text="@string/login_promo_tv_info"
+		android:textColor="@color/primaryIconText"/>
+
+</FrameLayout>

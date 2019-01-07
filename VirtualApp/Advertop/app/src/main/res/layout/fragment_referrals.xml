@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:fillViewport="true"
+	android:background="@color/colorPrimary">
+
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:paddingBottom="@dimen/half_margin"
+			android:paddingLeft="@dimen/activity_horizontal_margin"
+			android:paddingRight="@dimen/activity_horizontal_margin"
+			android:paddingTop="@dimen/activity_horizontal_margin">
+
+			<TextView
+				android:id="@+id/referalScreen_firstPage"
+				android:layout_width="0dp"
+				android:layout_height="38dp"
+				android:layout_weight="1"
+				android:background="@drawable/selector_left_page"
+				android:gravity="center_vertical"
+				android:paddingBottom="@dimen/referral_titlePadding"
+				android:paddingLeft="@dimen/activity_horizontal_margin"
+				android:paddingTop="@dimen/referral_titlePadding"
+				android:text="@string/referralScreen_firstPageTitle"
+				android:textColor="@color/colorPrimary"/>
+
+			<TextView
+				android:id="@+id/referalScreen_secondPage"
+				android:layout_width="0dp"
+				android:layout_height="38dp"
+				android:layout_weight="1"
+				android:background="@drawable/selector_right_page"
+				android:gravity="end|center_vertical"
+				android:paddingBottom="@dimen/referral_titlePadding"
+				android:paddingRight="@dimen/activity_horizontal_margin"
+				android:paddingTop="@dimen/referral_titlePadding"
+				android:text="@string/referralScreen_secondPageTitle"
+				android:textColor="@color/colorPrimary"/>
+		</LinearLayout>
+
+		<FrameLayout
+			android:id="@+id/referalContainer"
+			android:layout_marginTop="@dimen/activity_horizontal_margin"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+	</LinearLayout>
+</ScrollView>

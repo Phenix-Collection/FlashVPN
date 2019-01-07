@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="30dp"
+	android:layout_height="30dp"
+	android:layout_margin="5dp"
+	android:background="@drawable/selector_active_tasks">
+
+	<TextView
+		android:id="@+id/activeTasksBadgeTv"
+		android:layout_width="@dimen/activity_horizontal_margin"
+		android:layout_height="@dimen/activity_horizontal_margin"
+		android:layout_gravity="end"
+		android:visibility="gone"
+		android:background="@drawable/shape_badge_bg"
+		android:gravity="center"
+		android:text="99"
+		android:textColor="@color/primaryIconText"
+		android:textAppearance="@style/TextAppearance.AppCompat.Small"
+		android:textSize="10sp"
+		android:textStyle="bold"/>
+</FrameLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/colorGray">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@color/secondaryText"
+		android:layout_marginLeft="@dimen/bottomSheetPadding"
+		android:layout_marginStart="@dimen/bottomSheetPadding"
+		android:layout_marginTop="@dimen/activity_horizontal_margin"
+		android:text="@string/fundsFragment_paymentSystemsMenuTitle"/>
+
+	<GridView
+		android:id="@+id/paymentSystemsBottomSheet_gridView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:numColumns="4"
+		android:paddingBottom="12dp"
+		android:paddingEnd="@dimen/bottomSheetPadding"
+		android:paddingLeft="@dimen/bottomSheetPadding"
+		android:paddingRight="@dimen/bottomSheetPadding"
+		android:paddingStart="@dimen/bottomSheetPadding"
+		android:paddingTop="44dp"
+		android:stretchMode="columnWidth"/>
+
+</FrameLayout>

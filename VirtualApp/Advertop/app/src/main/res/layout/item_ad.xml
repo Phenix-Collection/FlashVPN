@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/tasks_card_view_height"
+	app:cardBackgroundColor="@android:color/white"
+	app:cardCornerRadius="4dp">
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@drawable/selector_selected_recycler_view_item">
+
+		<ImageView
+			android:id="@+id/item_ad_icon"
+			android:layout_width="@dimen/socialIconSize"
+			android:layout_height="@dimen/socialIconSize"
+			android:layout_gravity="center_vertical"
+			android:layout_marginLeft="@dimen/activity_horizontal_margin"
+			android:layout_marginStart="@dimen/activity_horizontal_margin"
+			tools:src="@drawable/ic_video_ad"/>
+
+		<TextView
+			android:id="@+id/item_ad_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/item_text_left_margin"
+			android:layout_marginStart="@dimen/item_text_left_margin"
+			android:layout_gravity="center_vertical"
+			android:textColor="@android:color/black"
+			android:textSize="18sp"
+			tools:text="ASfhsduifh hg ilf"/>
+
+		<TextView
+			android:id="@+id/item_ad_description"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
+			android:layout_marginBottom="@dimen/activity_horizontal_margin"
+			android:layout_marginLeft="@dimen/item_text_left_margin"
+			android:layout_marginStart="@dimen/item_text_left_margin"
+			android:textColor="@color/colorPrimary"
+			android:textStyle="bold"
+			android:visibility="gone"
+			tools:text="asdjfnsdkj"/>
+	</FrameLayout>
+
+</android.support.v7.widget.CardView>

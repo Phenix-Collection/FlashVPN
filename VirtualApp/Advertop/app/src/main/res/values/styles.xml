@@ -1,0 +1,83 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowBackground">@color/primaryIconText</item>
+		<item name="android:windowDisablePreview">true</item>
+		<item name="buttonStyle">@style/appButton</item>
+		<item name="android:textColor">@color/primaryText</item>
+    </style>
+
+	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+	<!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>-->
+
+	<style name="LoadingProgressDialog" parent="Theme.AppCompat.Dialog.Alert">
+		<item name="android:textColor">@color/primaryIconText</item>
+		<item name="android:background">@color/colorPrimaryUnActive</item>
+	</style>
+
+	<style name="appEditText" parent="android:Widget.EditText">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">38dp</item>
+		<item name="android:layout_marginLeft">@dimen/element_margin</item>
+		<item name="android:paddingTop">@dimen/half_margin</item>
+		<item name="android:paddingBottom">@dimen/half_margin</item>
+		<item name="android:paddingEnd">@dimen/half_margin</item>
+		<item name="android:layout_marginRight">@dimen/element_margin</item>
+		<item name="android:textColorHint">@color/colorHint</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">@color/primaryText</item>
+	</style>
+
+	<style name="AppSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+		<item name="android:colorControlActivated"
+			tools:targetApi="lollipop">@color/colorAlpha</item>
+		<item name="android:thumb">@drawable/thumb</item>
+		<item name="android:track">@drawable/track</item>
+		<item name="switchTextAppearance">@style/SwitchTextAppearance</item>
+		<item name="android:thumbTint" tools:targetApi="lollipop">@color/primaryText</item>
+		<item name="android:trackTint" tools:targetApi="m">@color/colorAlpha</item>
+	</style>
+
+	<style name="SwitchTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
+		<item name="android:textColor">@android:color/black</item>
+	</style>
+
+	<style name="appButton" parent="android:Widget.Button">
+		<item name="android:gravity">center</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textSize">@dimen/text_size_14sp</item>
+		<item name="android:minHeight">@dimen/button_min_height</item>
+		<item name="android:textColor">@color/colorAccent</item>
+		<item name="android:background">@drawable/rounded_alpha</item>
+		<item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="appButton.StrokedWhite">
+		<item name="android:background">@drawable/shape_white_stroked</item>
+		<item name="android:textColor">@android:color/white</item>
+		<item name="android:textAllCaps">false</item>
+	</style>
+
+	<style name="appButton.StrokedAccent">
+		<item name="android:background">@drawable/shape_accent_stroked</item>
+		<item name="android:textColor">@color/colorAccent</item>
+		<item name="android:textAllCaps">false</item>
+	</style>
+
+	<!--<style name="Base.Widget.Design.TabLayout" parent="android:Widget">-->
+	<!--<item name="tabBackground">@drawable/selector_tab_layout</item>-->
+	<!--</style>-->
+
+	<style name="DefaultDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/secondaryText</item>
+        <item name="android:background">@color/colorWindowBg</item>
+    </style>
+
+</resources>

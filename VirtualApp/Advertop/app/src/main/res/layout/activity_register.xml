@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:gravity="center"
+	android:background="@drawable/window_bg"
+	android:orientation="vertical">
+
+	<ImageView
+		android:layout_width="@dimen/registerAct_logoSize"
+		android:layout_height="@dimen/registerAct_logoSize"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="@dimen/registerAct_topMargin"
+		android:src="@drawable/ic_large_logo"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="40dp"
+		android:gravity="center"
+		android:text="@string/registerAct_promoCodeTitle"
+		android:textColor="@color/primaryText"
+		android:textSize="18sp"/>
+
+	<EditText
+		android:id="@+id/registerPromodET"
+		style="@style/appEditText"
+		android:layout_marginTop="@dimen/activity_horizontal_margin"
+		android:gravity="center"
+		android:hint="@string/register_promo"
+		android:imeOptions="actionDone"
+		android:lines="1"
+		android:textSize="18sp"
+		android:singleLine="true"/>
+
+	<Button
+		android:id="@+id/registerBut"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/element_margin"
+		android:layout_marginRight="@dimen/element_margin"
+		android:layout_marginTop="@dimen/activity_horizontal_margin"
+		android:text="@string/register_but_text"/>
+
+	<TextView
+		android:id="@+id/registerAct_policyText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/activity_horizontal_margin"
+		android:layout_marginLeft="@dimen/half_margin"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:layout_marginTop="32dp"
+		android:gravity="center"
+		android:padding="@dimen/activity_horizontal_margin"
+		android:text="@string/register_through_social"
+		android:textColor="@color/primaryText"/>
+
+	<Button
+		android:id="@+id/registerIfTV"
+		style="@style/appButton.StrokedWhite"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingLeft="@dimen/edit_text_left_margin"
+		android:paddingRight="@dimen/edit_text_left_margin"
+		android:layout_gravity="center"
+		android:text="@string/register_soc_login"/>
+
+</LinearLayout>

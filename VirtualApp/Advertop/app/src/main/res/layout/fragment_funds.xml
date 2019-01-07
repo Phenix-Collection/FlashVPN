@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:background="@drawable/window_bg"
+	android:paddingBottom="@dimen/half_margin"
+	android:fillViewport="true">
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<ImageView
+			android:layout_width="120dp"
+			android:layout_height="120dp"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="@dimen/activity_horizontal_margin"
+			android:src="@drawable/ic_balance_large"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="@dimen/activity_horizontal_margin"
+			android:text="@string/nav_balance"
+			android:textColor="@color/primaryText"
+			android:textSize="18sp"/>
+
+		<TextView
+			android:id="@+id/fragmentMyFunds"
+			fontPath="fonts/Roboto-Regular.ttf"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="@dimen/activity_horizontal_margin"
+			android:textColor="@color/primaryText"
+			android:textSize="22sp"
+			android:textStyle="bold"
+			tools:text="75.5 P"/>
+
+		<Button
+			android:id="@+id/fragmentFundsReleaseFunds"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/activity_horizontal_margin"
+			android:layout_marginRight="@dimen/activity_horizontal_margin"
+			android:layout_marginTop="@dimen/activity_horizontal_margin"
+			android:background="@drawable/rounded_alpha"
+			android:text="@string/fundsFragment_getFunds"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/half_margin"
+			android:layout_marginTop="@dimen/half_margin"
+			android:orientation="horizontal">
+
+			<android.support.v7.widget.CardView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_marginEnd="@dimen/half_margin"
+				android:layout_marginStart="@dimen/activity_horizontal_margin"
+				app:cardBackgroundColor="@color/primaryText"
+				app:cardCornerRadius="10dp"
+				android:layout_weight="1">
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:paddingBottom="@dimen/half_margin"
+					android:paddingTop="@dimen/half_margin"
+					android:gravity="center_horizontal"
+					android:orientation="vertical">
+
+				<ImageView
+					android:layout_width="@dimen/login_google_left_margin"
+					android:layout_height="@dimen/login_google_left_margin"
+					android:src="@drawable/ic_wait_income"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/activity_horizontal_margin"
+					android:text="@string/fundsFragment_expectedFunds"
+					android:textColor="@color/secondaryText"/>
+
+				<TextView
+					android:id="@+id/fragmentFundsExpectedFunds"
+					fontPath="fonts/Roboto-Regular.ttf"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/half_margin"
+					android:textColor="@android:color/black"
+					android:textSize="22sp"
+					tools:text="1547 R"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/half_margin"
+					android:gravity="center"
+					android:padding="@dimen/half_margin"
+					android:text="@string/fundsFragment_transferExpectedInfoText"
+					android:textColor="@color/secondaryText"
+					android:textSize="12sp"/>
+
+			</LinearLayout>
+
+			</android.support.v7.widget.CardView>
+
+			<android.support.v7.widget.CardView
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/half_margin"
+				android:layout_marginEnd="@dimen/activity_horizontal_margin"
+				app:cardBackgroundColor="@color/primaryText"
+				app:cardCornerRadius="10dp"
+				android:layout_weight="1">
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_horizontal"
+					android:paddingBottom="@dimen/half_margin"
+					android:paddingTop="@dimen/half_margin"
+					android:orientation="vertical">
+
+					<ImageView
+						android:layout_width="@dimen/login_google_left_margin"
+						android:layout_height="@dimen/login_google_left_margin"
+						android:src="@drawable/ic_income"/>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="@dimen/activity_horizontal_margin"
+						android:text="@string/fundsFragment_referralBalance"
+						android:textColor="@color/secondaryText"/>
+
+					<TextView
+						android:id="@+id/fragmentFundsReferralBalance"
+						fontPath="fonts/Roboto-Regular.ttf"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="@dimen/half_margin"
+						android:textColor="@android:color/black"
+						android:textSize="22sp"
+						tools:text="174 R"/>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="@dimen/half_margin"
+						android:gravity="center_horizontal"
+						android:padding="@dimen/half_margin"
+						android:text="@string/fundsFragment_transferInfoText"
+						android:textColor="@color/secondaryText"
+						android:textSize="12sp"/>
+
+					<Button
+						android:id="@+id/fragmentFundsTransferBut"
+						style="@style/appButton.StrokedAccent"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="@dimen/half_margin"
+						android:paddingEnd="@dimen/activity_horizontal_margin"
+						android:paddingStart="@dimen/activity_horizontal_margin"
+						android:text="@string/fundsFragment_tranfferButText"/>
+
+				</LinearLayout>
+
+			</android.support.v7.widget.CardView>
+		</LinearLayout>
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/activity_horizontal_margin"
+			android:layout_marginStart="@dimen/activity_horizontal_margin"
+			android:background="@drawable/shape_rounded_primary"
+			android:gravity="center"
+			android:padding="12dp"
+			android:text="@string/fundsFragment_titleText"
+			android:textColor="@android:color/white"/>
+
+	</LinearLayout>
+</ScrollView>

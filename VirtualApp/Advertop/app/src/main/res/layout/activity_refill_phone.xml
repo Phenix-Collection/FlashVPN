@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:orientation="vertical"
+	android:layout_height="match_parent">
+
+	<include
+		layout="@layout/tool_bar"/>
+
+		<TextView
+			android:id="@+id/refillText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/edit_text_left_margin"
+			android:layout_marginRight="@dimen/edit_text_right_margin"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			android:gravity="center"
+			android:text="@string/refillInfoText"
+			android:textSize="20sp"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/edit_text_left_margin"
+			android:layout_marginRight="@dimen/edit_text_right_margin"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+
+			<Button
+				android:id="@+id/refillPhoneCountrySelector"
+				android:layout_width="100dp"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:paddingRight="@dimen/activity_vertical_margin"
+				android:text="+38"
+				android:textColor="@color/vk_white"/>
+
+			<EditText
+				android:id="@+id/refillPhoneNumberET"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="@dimen/activity_vertical_margin"
+				android:imeOptions="actionNext"
+				android:inputType="phone"
+				android:lines="1"
+				android:singleLine="true"
+				android:textColor="@color/colorPrimaryDark"
+				android:textColorHint="@color/secondaryText"/>
+
+		</LinearLayout>
+
+		<EditText
+			android:id="@+id/refillAmountET"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/edit_text_left_margin"
+			android:layout_marginRight="@dimen/edit_text_right_margin"
+			android:imeOptions="actionDone"
+			android:inputType="number"
+			android:lines="1"
+			android:hint="@string/refillAct_amountHint"
+			android:singleLine="true"
+			android:textColor="@color/colorPrimaryDark"
+			android:textColorHint="@color/primaryText"/>
+
+		<Button
+			android:id="@+id/refillSendRequestBut"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/button_left_margin"
+			android:layout_marginRight="@dimen/button_right_margin"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			android:text="@string/refillSendRequestText"/>
+
+</LinearLayout>

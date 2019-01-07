@@ -1,0 +1,62 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+	<dimen name="half_margin">8dp</dimen>
+	<dimen name="activity_horizontal_margin">16dp</dimen>
+	<dimen name="element_margin">48dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+	<dimen name="edit_text_right_margin">30dp</dimen>
+	<dimen name="edit_text_left_margin">30dp</dimen>
+	<dimen name="button_right_margin">70dp</dimen>
+	<dimen name="button_left_margin">70dp</dimen>
+	<dimen name="itemSimpleTextHeight">48dp</dimen>
+	<dimen name="itemImageTextHeight">56dp</dimen>
+	<!--Login Act-->
+	<dimen name="login_info_text_size">22sp</dimen>
+	<dimen name="login_google_left_margin">68dp</dimen>
+	<dimen name="login_google_right_margin">68dp</dimen>
+	<dimen name="login_google_top_margin">50dp</dimen>
+	<dimen name="button_min_height">40dp</dimen>
+	<dimen name="login_vk_top_margin">15dp</dimen>
+	<dimen name="login_vk_left_padding">10dp</dimen>
+	<dimen name="login_fb_top_margin">15dp</dimen>
+	<!--Register act-->
+	<dimen name="registerAct_logoSize">150dp</dimen>
+	<dimen name="registerAct_topMargin">30dp</dimen>
+	<dimen name="register_info_text_size">20sp</dimen>
+	<dimen name="register_email_top_margin">30dp</dimen>
+	<dimen name="register_element_space_size">10dp</dimen>
+	<dimen name="register_sign_in_text_size">18sp</dimen>
+	<dimen name="registerAppNameTextSize">35sp</dimen>
+	<!--Tasks Fragment-->
+	<dimen name="tasks_card_view_height">75dp</dimen>
+	<dimen name="singleAct_iconSize">72dp</dimen>
+	<dimen name="task_coinSize">50dp</dimen>
+	<dimen name="new_task_icon_size">40dp</dimen>
+	<dimen name="newTaskIconRightMargin">100dp</dimen>
+	<!--Payment systems-->
+	<dimen name="paymentIconWidth">105dp</dimen>
+	<dimen name="paymentIconHeight">32dp</dimen>
+	<dimen name="paymentTextLeftMargin">131dp</dimen>
+
+	<!--Referral Screen-->
+	<dimen name="socialIconSize">48dp</dimen>
+	<dimen name="rouletteIVSize">175dp</dimen>
+	<dimen name="rouletteDialogSize">300dp</dimen>
+	<dimen name="referral_IconsSize">80dp</dimen>
+	<dimen name="referral_titlePadding">5dp</dimen>
+	<dimen name="referralTextMargin">86dp</dimen>
+	<dimen name="comment_size_smile">20dp</dimen>
+	<dimen name="tutorial_GoButWidth">150dp</dimen>
+	<dimen name="tutorial_GoButHeight">50dp</dimen>
+	<dimen name="tutorial_GoButTextSize">18sp</dimen>
+
+	<dimen name="item_text_left_margin">80dp</dimen>
+	<dimen name="done_but_width">250dp</dimen>
+	
+	<dimen name="buttonTextSize">16sp</dimen>
+	<dimen name="botSheetUnSelectedDotSize">4dp</dimen>
+
+	<dimen name="bottomSheetPadding">24dp</dimen>
+</resources>
+

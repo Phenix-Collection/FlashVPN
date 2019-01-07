@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/activitySingleTaskGetTaskBut"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="250dp"
+	android:layout_height="wrap_content"
+	android:background="@drawable/selector_active_rounded_but"
+	android:gravity="center"
+	android:orientation="vertical"
+	android:padding="@dimen/half_margin">
+
+	<TextView
+		android:id="@+id/singleAct_openButTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/single_task_get_task_but_text"
+		android:textColor="@color/primaryIconText"
+		android:textSize="16sp"
+		android:textStyle="bold"/>
+
+	<TextView
+		android:id="@+id/singleAct_openButDesc"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		android:textColor="@color/primaryIconText"/>
+
+</LinearLayout>

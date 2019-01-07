@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent" android:layout_height="match_parent"
+	android:background="@color/colorGray">
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<include
+			layout="@layout/tool_bar"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/primaryIconText"
+		android:paddingBottom="@dimen/half_margin"
+		android:paddingLeft="@dimen/activity_horizontal_margin"
+		android:paddingTop="@dimen/half_margin">
+
+		<ImageView
+			android:id="@+id/activitySingleTaskIcon"
+			android:layout_width="@dimen/singleAct_iconSize"
+			android:layout_height="@dimen/singleAct_iconSize"
+			android:layout_centerVertical="true"
+			android:src="@drawable/ic_def_referrals"/>
+
+		<TextView
+			android:id="@+id/activitySingleTaskTitle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/activity_horizontal_margin"
+			android:layout_marginTop="@dimen/half_margin"
+			android:layout_toRightOf="@+id/activitySingleTaskIcon"
+			android:textColor="@android:color/black"
+			android:textSize="15sp"
+			android:textStyle="bold"
+			tools:text="asdasd jnaskdj nfjdfsngj dfnjkg n"/>
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/activitySingleTaskTitle"
+			android:layout_marginLeft="@dimen/activity_horizontal_margin"
+			android:layout_marginTop="@dimen/half_margin"
+			android:layout_toRightOf="@+id/activitySingleTaskIcon"
+			android:text="@string/singleAct_taskDescription"
+			android:textColor="@color/secondaryText"
+			android:textSize="13sp"/>
+
+	</RelativeLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/colorDarkGray"
+			android:orientation="vertical">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/activity_horizontal_margin"
+				android:paddingTop="@dimen/half_margin"
+				android:text="@string/singleTask_ConditionsTitle"
+				android:textColor="@color/secondaryText"
+				android:textStyle="bold"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/half_margin"
+				android:layout_marginLeft="@dimen/activity_horizontal_margin"
+				android:layout_marginRight="@dimen/activity_horizontal_margin"
+				android:layout_marginTop="@dimen/half_margin"
+				android:background="@drawable/shape_rounded_white"
+				android:orientation="vertical">
+
+				<TextView
+					android:id="@+id/singleAct_firstCondition"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:padding="@dimen/half_margin"
+					android:text="@string/singleAct_firstCondition"
+					android:textColor="@color/secondaryText"
+					android:textSize="16sp"/>
+
+				<TextView
+					android:id="@+id/singleAct_secondCondition"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:padding="@dimen/half_margin"
+					android:text="@string/singleAct_secondCondition"
+					android:textColor="@color/secondaryText"
+					android:textSize="16sp"/>
+
+				<TextView
+					android:id="@+id/singleAct_thirdCondition"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:padding="@dimen/half_margin"
+					android:text="@string/singleAct_thirdCondition"
+					android:textColor="@color/secondaryText"
+					android:textSize="16sp"/>
+
+				<TextView
+					android:id="@+id/singleAct_fourthCondition"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:padding="@dimen/half_margin"
+					android:text="@string/singleAct_fourthCondition"
+					android:textColor="@color/secondaryText"
+					android:textIsSelectable="true"
+					android:textSize="16sp"/>
+
+				<TextView
+					android:id="@+id/singleAct_fifthCondition"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:padding="@dimen/half_margin"
+					android:text="@string/singleAct_fifthCondition"
+					android:textColor="@color/secondaryText"
+					android:textIsSelectable="true"
+					android:textSize="16sp"
+					android:visibility="gone"/>
+
+		</LinearLayout>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			android:paddingLeft="@dimen/activity_horizontal_margin"
+			android:paddingRight="@dimen/activity_horizontal_margin"
+			android:paddingTop="@dimen/half_margin">
+
+			<include
+				android:id="@+id/activitySingleTaskGetTaskBut"
+				layout="@layout/done_button_widget"
+				android:layout_width="@dimen/done_but_width"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"/>
+
+			<TextView
+				android:id="@+id/singleTask_daysLeftTitle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginTop="@dimen/half_margin"
+				android:text="@string/singleTask_taskEndingText"
+				android:textColor="@color/secondaryText"/>
+
+			<TextView
+				android:id="@+id/singleTask_dailyAttentionTV"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginBottom="@dimen/activity_horizontal_margin"
+				android:paddingTop="@dimen/half_margin"
+				android:textColor="@color/primaryText"
+				android:textSize="12sp"
+				android:textStyle="bold"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/detailedTaskAct_reviewAppContainer"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:paddingBottom="@dimen/half_margin"
+			android:paddingTop="@dimen/half_margin"
+			android:visibility="gone">
+
+			<TextView
+				fontPath="@string/fontBold"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@color/colorDarkGray"
+				android:gravity="center"
+				android:padding="5dp"
+				android:text="@string/detailedTaskAct_additionalTaskTitle"
+				android:textColor="@color/secondaryText"
+				android:textSize="13sp"/>
+
+			<TextView
+				android:id="@+id/detailedTaskAct_additionalTaskText"
+				fontPath="@string/fontBold"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:padding="@dimen/half_margin"
+				android:text="@string/detailedTaskAct_additionalTaskPrice"
+				android:textColor="@color/secondaryText"/>
+
+			<Button
+				android:id="@+id/detailedTaskAct_additionalTaskBut"
+				android:layout_width="@dimen/done_but_width"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginTop="@dimen/half_margin"
+				android:background="@drawable/selector_clickable_additional_task"
+				android:enabled="false"
+				android:text="@string/single_task_get_task_but_text"
+				android:visibility="gone"/>
+		</LinearLayout>
+
+		<TextView
+			android:id="@+id/singleTask_attentionBannerTv"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/colorDarkGray"
+			android:gravity="center"
+			android:padding="@dimen/half_margin"
+			android:paddingBottom="@dimen/half_margin"
+			android:text="@string/singleTask_attentionBannerText"
+			android:textColor="@color/secondaryText"
+			android:textStyle="bold"/>
+
+		<TextView
+			android:id="@+id/singleTask_referralScreen"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/primaryText"
+			android:drawableLeft="@drawable/ic_star"
+			android:drawableRight="@drawable/ic_go_arrow_small"
+			android:gravity="left|center_vertical"
+			android:padding="@dimen/half_margin"
+			android:text="@string/singleTaskAct_referralText"
+			android:textColor="@color/primaryIconText"
+			android:textStyle="bold"/>
+
+	<LinearLayout
+		android:id="@+id/singleTask_translatableLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorDarkGray"
+		android:orientation="vertical"
+		android:visibility="gone">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/half_margin"
+			android:orientation="horizontal"
+			android:paddingLeft="@dimen/edit_text_right_margin"
+			android:paddingRight="@dimen/edit_text_right_margin">
+
+			<TextView
+				android:id="@+id/referralFrag_promoCodeTV"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0.6"
+				android:gravity="center"
+				android:textColor="@color/primaryText"
+				android:textSize="20sp"/>
+
+			<Button
+				android:id="@+id/referralFrag_copyCodeBut"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.4"
+				android:background="@drawable/shape_rounded_normal_but"
+				android:text="@string/firstReferralFrag_copyButText"/>
+
+		</LinearLayout>
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:paddingBottom="@dimen/activity_horizontal_margin"
+			android:paddingTop="@dimen/activity_horizontal_margin"
+			android:text="@string/firstReferralFrag_inviteFriendsTitle"
+			android:textColor="@color/primaryText"
+			android:textSize="14sp"/>
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:gravity="center_horizontal"
+			android:orientation="horizontal"
+			android:padding="@dimen/half_margin"
+			android:paddingBottom="@dimen/activity_horizontal_margin"
+			android:paddingTop="@dimen/half_margin">
+
+			<ImageView
+				android:id="@+id/referralFrag_FacebookShareBut"
+				android:layout_width="@dimen/socialIconSize"
+				android:layout_height="@dimen/socialIconSize"
+				android:layout_marginRight="@dimen/edit_text_right_margin"
+				android:src="@drawable/ic_fb"/>
+
+			<ImageView
+				android:id="@+id/referralFrag_VkShareBut"
+				android:layout_width="@dimen/socialIconSize"
+				android:layout_height="@dimen/socialIconSize"
+				android:layout_gravity="center_horizontal"
+				android:src="@drawable/ic_vk"/>
+
+			<ImageView
+				android:id="@+id/referralFrag_GoogleShareBut"
+				android:layout_width="@dimen/socialIconSize"
+				android:layout_height="@dimen/socialIconSize"
+				android:layout_marginLeft="@dimen/edit_text_right_margin"
+				android:src="@drawable/ic_google"/>
+		</LinearLayout>
+	</LinearLayout>
+
+</LinearLayout>
+
+</ScrollView>

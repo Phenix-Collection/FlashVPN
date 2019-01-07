@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:fillViewport="true">
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@drawable/window_bg">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+			<include layout="@layout/tool_bar"/>
+
+			<ImageView
+				android:id="@+id/rouletteAct_gifIv"
+				android:layout_width="120dp"
+				android:layout_height="120dp"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginTop="@dimen/activity_horizontal_margin"
+				android:src="@drawable/ic_roulette_large"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal"
+				android:orientation="vertical">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:padding="@dimen/half_margin"
+					android:text="@string/rouletteAct_makeBetText"
+					android:textColor="@color/primaryText"
+					android:textSize="16sp"/>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="@dimen/activity_horizontal_margin"
+					android:layout_marginStart="@dimen/activity_horizontal_margin">
+
+					<Button
+						android:id="@+id/rouletteAct_firstBet"
+						android:layout_width="0dp"
+						android:layout_height="38dp"
+						android:layout_marginTop="@dimen/activity_horizontal_margin"
+						android:layout_weight="1"
+						android:layout_margin="@dimen/half_margin"
+						android:background="@drawable/rounded_alpha"
+						android:gravity="center"
+						android:textColor="@color/colorEnd"
+						android:textSize="20sp"
+						tools:text="1 R"/>
+
+					<Button
+						android:id="@+id/rouletteAct_secondBet"
+						android:layout_width="0dp"
+						android:layout_height="38dp"
+						android:layout_marginTop="@dimen/half_margin"
+						android:layout_weight="1"
+						android:layout_margin="@dimen/half_margin"
+						android:background="@drawable/shape_bid_unselected"
+						android:gravity="center"
+						android:textColor="@color/primaryText"
+						android:textSize="20sp"
+						tools:text="2 R"/>
+
+					<Button
+						android:id="@+id/rouletteAct_thirdBet"
+						android:layout_width="0dp"
+						android:layout_height="38dp"
+						android:layout_margin="@dimen/half_margin"
+						android:layout_marginTop="@dimen/half_margin"
+						android:layout_weight="1"
+						android:background="@drawable/shape_bid_unselected"
+						android:textColor="@color/primaryText"
+						android:gravity="center"
+						android:textSize="20sp"
+						tools:text="3 R"/>
+				</LinearLayout>
+
+				<Button
+					android:id="@+id/rouletteAct_makeBetBut"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:layout_marginBottom="@dimen/activity_horizontal_margin"
+					android:layout_marginEnd="@dimen/activity_horizontal_margin"
+					android:layout_marginStart="@dimen/activity_horizontal_margin"
+					android:layout_marginTop="@dimen/activity_horizontal_margin"
+					android:background="@drawable/rounded_alpha"
+					android:clickable="false"
+					android:enabled="false"
+					android:text="@string/rouletteAct_playButText"/>
+
+
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="@dimen/activity_horizontal_margin"
+					android:layout_marginStart="@dimen/activity_horizontal_margin"
+					android:background="@drawable/shape_rounded_primary"
+					android:gravity="center"
+					android:padding="12dp"
+					android:text="@string/rouletteAct_title"
+					android:textColor="@android:color/white"/>
+			</LinearLayout>
+
+			<!--<LinearLayout-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="match_parent"-->
+			<!--android:background="@color/colorGray"-->
+			<!--android:gravity="center_horizontal"-->
+			<!--android:orientation="vertical">-->
+
+			<!--<TextView-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:gravity="center"-->
+			<!--android:padding="@dimen/activity_horizontal_margin"-->
+			<!--android:text="@string/rouletteAct_moreInfoText"-->
+			<!--android:textColor="@color/secondaryText"-->
+			<!--android:textSize="14sp"/>-->
+
+			<!--<Button-->
+			<!--android:id="@+id/rouletteAct_moreBut"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:background="@drawable/selector_gray_clickable_but"-->
+			<!--android:paddingLeft="@dimen/register_email_top_margin"-->
+			<!--android:paddingRight="@dimen/register_email_top_margin"-->
+			<!--android:text="@string/rouletteAct_moreButText"-->
+			<!--android:textColor="@color/secondaryText"/>-->
+
+			<!--</LinearLayout>-->
+
+		</LinearLayout>
+
+		<include
+			layout="@layout/widget_loading"/>
+
+	</FrameLayout>
+
+</android.support.v4.widget.NestedScrollView>

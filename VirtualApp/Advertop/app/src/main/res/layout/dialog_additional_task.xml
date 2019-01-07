@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/activity_horizontal_margin"
+	android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/dialog_star_conditions"
+		fontPath="@string/fontRegular"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+
+	<Button
+		android:id="@+id/dialog_star_send_screenshot"
+		fontPath="@string/fontMedium"
+		android:layout_width="wrap_content"
+		android:layout_marginTop="@dimen/edit_text_left_margin"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:background="@drawable/selector_clickable_additional_task"
+		android:padding="@dimen/half_margin"
+		android:text="@string/dialogStarApp_butText"/>
+
+</LinearLayout>

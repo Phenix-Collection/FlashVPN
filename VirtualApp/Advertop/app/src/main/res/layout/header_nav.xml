@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@android:color/transparent"
+	android:gravity="center"
+	android:orientation="vertical"
+	android:paddingTop="@dimen/activity_horizontal_margin">
+
+	<ImageView
+		android:id="@+id/iv_header_nav_avatar"
+		android:layout_width="@dimen/newTaskIconRightMargin"
+		android:layout_height="@dimen/newTaskIconRightMargin"
+		android:src="@drawable/ic_profile"/>
+
+	<TextView
+		android:id="@+id/tv_header_nav_email"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		android:layout_marginTop="@dimen/activity_horizontal_margin"
+		android:textColor="@android:color/white"
+		android:textSize="16sp"
+		tools:text="Some email"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_marginStart="@dimen/activity_horizontal_margin"
+		android:layout_marginEnd="@dimen/activity_horizontal_margin"
+		android:layout_marginTop="@dimen/activity_horizontal_margin"
+		android:layout_height="1dp"
+		android:background="@android:color/white"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/activity_horizontal_margin">
+
+		<FrameLayout
+			android:layout_width="0dp"
+			android:layout_height="40dp"
+			android:layout_weight="1">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:text="@string/nav_expected_balance"/>
+
+			<TextView
+				android:id="@+id/nav_wait_balance"
+				android:layout_width="wrap_content"
+				android:drawableStart="@drawable/ic_nav_expected"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal|bottom"
+				tools:text=" 122 R"/>
+
+		</FrameLayout>
+
+		<FrameLayout
+			android:layout_width="0dp"
+			android:layout_height="40dp"
+			android:layout_weight="1">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:text="@string/nav_balance"/>
+
+			<TextView
+				android:id="@+id/nav_balance"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:drawableStart="@drawable/ic_nav_balance"
+				android:layout_gravity="center_horizontal|bottom"
+				tools:text=" 122 R"/>
+
+		</FrameLayout>
+
+		<FrameLayout
+			android:layout_width="0dp"
+			android:layout_height="40dp"
+			android:layout_weight="1">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:text="@string/nav_referrals"/>
+
+			<TextView
+				android:id="@+id/nav_referrals"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:drawableStart="@drawable/ic_nav_referrals"
+				android:layout_gravity="center_horizontal|bottom"
+				tools:text=" 45"/>
+
+		</FrameLayout>
+	</LinearLayout>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginStart="@dimen/activity_horizontal_margin"
+		android:layout_marginEnd="@dimen/activity_horizontal_margin"
+		android:background="@android:color/white"/>
+
+</LinearLayout>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/window_bg">
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent" android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<android.support.v7.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/half_margin"
+			app:cardBackgroundColor="@android:color/white">
+
+			<LinearLayout
+				android:id="@+id/infoFrag_firstDescLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/infoFrag_firstTitleTV"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:drawableRight="@drawable/ic_right_arrow"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_firstRow"
+				android:textColor="@android:color/black"
+				android:textSize="16sp"/>
+
+			<TextView
+				android:id="@+id/infoFrag_firstDescTV"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/edit_text_right_margin"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_firstDesc"
+				android:textColor="@android:color/black"
+				android:textSize="14sp"
+				android:visibility="gone"/>
+		</LinearLayout>
+		</android.support.v7.widget.CardView>
+
+		<android.support.v7.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/half_margin"
+			android:layout_marginStart="@dimen/half_margin"
+			app:cardBackgroundColor="@color/primaryText">
+
+			<LinearLayout
+				android:id="@+id/infoFrag_secondDescLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/infoFrag_secondTitleTV"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:drawableRight="@drawable/ic_right_arrow"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_secondRow"
+				android:textColor="@android:color/black"
+				android:textSize="16sp"/>
+
+			<TextView
+				android:id="@+id/infoFrag_secondDescTV"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/edit_text_right_margin"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_secondDesc"
+				android:textColor="@android:color/black"
+				android:textSize="14sp"
+				android:visibility="gone"/>
+		</LinearLayout>
+		</android.support.v7.widget.CardView>
+
+		<android.support.v7.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/half_margin"
+			app:cardBackgroundColor="@color/primaryText">
+
+			<LinearLayout
+				android:id="@+id/infoFrag_thirdDescLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/infoFrag_thirdTitleTV"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:drawableRight="@drawable/ic_right_arrow"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_thirdRow"
+				android:textColor="@android:color/black"
+				android:textSize="16sp"/>
+
+			<TextView
+				android:id="@+id/infoFrag_thirdDescTV"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/edit_text_right_margin"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_thirdDesc"
+				android:textColor="@android:color/black"
+				android:textSize="14sp"
+				android:visibility="gone"/>
+		</LinearLayout>
+
+		</android.support.v7.widget.CardView>
+
+		<android.support.v7.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/half_margin"
+			android:layout_marginStart="@dimen/half_margin"
+			app:cardBackgroundColor="@color/primaryText">
+
+			<LinearLayout
+				android:id="@+id/infoFrag_fourthDescLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/infoFrag_fourthTitleTV"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:drawableRight="@drawable/ic_right_arrow"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_fourthRow"
+				android:textColor="@android:color/black"
+				android:textSize="16sp"/>
+
+			<TextView
+				android:id="@+id/infoFrag_fourthDescTV"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/edit_text_right_margin"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_forthDesc"
+				android:textColor="@android:color/black"
+				android:textSize="14sp"
+				android:visibility="gone"/>
+		</LinearLayout>
+
+		</android.support.v7.widget.CardView>
+
+		<android.support.v7.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/half_margin"
+			app:cardBackgroundColor="@color/primaryText">
+
+			<LinearLayout
+				android:id="@+id/infoFrag_supportBut"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:drawableRight="@drawable/ic_right_arrow"
+				android:orientation="vertical">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:drawableRight="@drawable/ic_right_arrow"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_fifthRow"
+				android:textColor="@android:color/black"
+				android:textSize="16sp"/>
+		</LinearLayout>
+
+		</android.support.v7.widget.CardView>
+
+		<android.support.v7.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/half_margin"
+			android:layout_marginBottom="@dimen/half_margin"
+			android:layout_marginStart="@dimen/half_margin"
+			app:cardBackgroundColor="@color/primaryText">
+
+			<LinearLayout
+				android:id="@+id/infoFrag_policyBut"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:drawableRight="@drawable/ic_right_arrow"
+				android:padding="@dimen/half_margin"
+				android:text="@string/infoFrag_policy"
+				android:textColor="@android:color/black"
+				android:textSize="16sp"/>
+		</LinearLayout>
+
+
+		</android.support.v7.widget.CardView>
+
+	</LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

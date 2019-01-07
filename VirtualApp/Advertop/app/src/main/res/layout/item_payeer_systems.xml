@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:id="@+id/itemPaymentSystemsLayout"
+	android:layout_height="@dimen/itemImageTextHeight">
+
+	<TextView
+		android:id="@+id/itemPayeerSystemsName"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginLeft="@dimen/paymentTextLeftMargin"
+		android:fontFamily="sans-serif"
+		android:gravity="center_vertical"
+		android:text="advCash"
+		android:textColor="@color/primaryText"
+		android:textSize="16sp"/>
+
+	<ImageView
+		android:id="@+id/itemPayeerSystemsIcon"
+		android:layout_width="@dimen/paymentIconWidth"
+		android:layout_height="@dimen/paymentIconHeight"
+		android:layout_gravity="center_vertical"
+		android:layout_marginLeft="@dimen/activity_vertical_margin"
+		android:src="@drawable/ic_yandex"/>
+	
+</FrameLayout>
