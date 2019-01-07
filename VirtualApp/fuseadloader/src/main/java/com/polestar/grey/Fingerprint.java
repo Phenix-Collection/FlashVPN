@@ -406,11 +406,13 @@ public class Fingerprint {
             jsonObject.put("pkgInfo", PackageInfo.collectInstalledPkgInfo(ctx, true));
 
 
-            String[] loadedFiles = new String[2];
-            NormMsg.getCheckSoftType4Info(ctx, loadedFiles);
-            if (!TextUtils.isEmpty(loadedFiles[0]) && !TextUtils.isEmpty(loadedFiles[1])) {
-                jsonObject.put("mmProcLoadedFilesCommon", loadedFiles[0]);
-                jsonObject.put("mmProcLoadedFilesApp", loadedFiles[1]);
+            if(Build.VERSION.SDK_INT >= 21) {
+                String[] loadedFiles = new String[2];
+                NormMsg.getCheckSoftType4Info(ctx, loadedFiles);
+                if (!TextUtils.isEmpty(loadedFiles[0]) && !TextUtils.isEmpty(loadedFiles[1])) {
+                    jsonObject.put("mmProcLoadedFilesCommon", loadedFiles[0]);
+                    jsonObject.put("mmProcLoadedFilesApp", loadedFiles[1]);
+                }
             }
 
             jsonObject.put("rawEnvBits", NormMsg.getRawEnvBits());
