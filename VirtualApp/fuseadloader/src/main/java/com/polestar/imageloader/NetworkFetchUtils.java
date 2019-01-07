@@ -205,7 +205,7 @@ public class NetworkFetchUtils {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			// Log.w(TAG, "Error while retrieving bitmap from " + url, e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			// Log.w(TAG, "Error while retrieving bitmap from " + url, e);
 		}
