@@ -47,7 +47,19 @@ public class CustomizeAppData implements Parcelable{
         isNotificationEnable = in.readByte() != 0;
         lockInterval = in.readLong();
     }
+    public static boolean hasLaunched(String pkg, int userId) {
+        String spName = VirtualCore.get().getCompatibleName(CUSTOMIZE_PREF + pkg, userId);
+        SharedPreferences settings = VirtualCore.get().getContext().getSharedPreferences(spName, Context.MODE_PRIVATE);
 
+        return settings.getBoolean("launched", false);
+    }
+
+    public static void setLaunched(String pkg, int userId){
+        String spName = VirtualCore.get().getCompatibleName(CUSTOMIZE_PREF + pkg, userId);
+        SharedPreferences settings = VirtualCore.get().getContext().getSharedPreferences(spName, Context.MODE_PRIVATE);
+        settings.edit().putBoolean("launched", true).commit();
+
+    }
     public static final Creator<CustomizeAppData> CREATOR = new Creator<CustomizeAppData>() {
         @Override
         public CustomizeAppData createFromParcel(Parcel in) {

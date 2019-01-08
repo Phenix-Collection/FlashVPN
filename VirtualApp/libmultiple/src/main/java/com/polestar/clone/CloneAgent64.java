@@ -99,7 +99,19 @@ public class CloneAgent64 {
     public boolean isCloned(String pkg, int userId){
         try{
             if(getAgent()!= null){
-               return getAgent().isCloned(pkg, userId);
+                return getAgent().isCloned(pkg, userId);
+            }
+        }catch (Exception ex){
+
+        }
+        return false;
+    }
+
+
+    public boolean isAppRunning(String pkg, int userId){
+        try{
+            if(getAgent()!= null){
+                return getAgent().isCloned(pkg, userId);
             }
         }catch (Exception ex){
 

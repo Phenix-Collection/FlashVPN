@@ -131,5 +131,13 @@ public class CloneAgentService extends Service {
                 }
             }
         }
+
+        public boolean isAppRunning(String pkg, int userId) {
+            try {
+                return VirtualCore.get().isAppRunning(pkg, userId);
+            }catch (Throwable ex){
+                return false;
+            }
+        }
     }
 }
