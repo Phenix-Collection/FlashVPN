@@ -176,7 +176,8 @@ public class Booster extends Service {
             BoosterLog.reportWake(wake);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                && BoosterSdk.boosterConfig.showNotification) {
+                && BoosterSdk.boosterConfig.showNotification
+                && !getPackageName().endsWith("arm64")) {
             Intent start = getPackageManager().getLaunchIntentForPackage(getPackageName());
             start.addCategory(Intent.CATEGORY_LAUNCHER);
             start.setAction(Intent.ACTION_MAIN);
