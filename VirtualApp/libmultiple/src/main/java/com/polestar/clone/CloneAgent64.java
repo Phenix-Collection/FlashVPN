@@ -9,8 +9,10 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.os.Looper;
 
+import com.polestar.clone.helper.compat.NativeLibraryHelperCompat;
 import com.polestar.clone.helper.utils.VLog;
 
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
@@ -149,18 +151,18 @@ public class CloneAgent64 {
     static public boolean needArm64Support(Context context, String pkg){
         try {
             ApplicationInfo ai = context.getPackageManager().getApplicationInfo(pkg, 0);
-            String clonePrimaryAbi = ApplicationInfoL.primaryCpuAbi.get(ai);
-            String cloneSecondAbi = ApplicationInfoL.secondaryCpuAbi.get(ai);
-            VLog.d(TAG, "NeedAbiSupport: " +  " pri: " + clonePrimaryAbi + " sec: " + cloneSecondAbi);
-            if (clonePrimaryAbi == null) {
+            Set<String> supports = NativeLibraryHelperCompat.getABIsFromApk(ai.sourceDir);
+            if (supports == null || supports.size() == 0) {
                 return false;
             }
-            if (clonePrimaryAbi.contains("armeabi")) {
-                return false;
+            for (String s: supports) {
+                VLog.d(TAG, "ABI: " + s);
+                if(s.contains("armeabi")){
+                    return false;
+                }
             }
-            if (cloneSecondAbi == null || !cloneSecondAbi.contains("armeabi")) {
-                return true;
-            }
+            VLog.d(TAG, "needAbiSupport true");
+            return true;
         }catch (Exception ex){
 
         }
@@ -208,7 +210,7 @@ public class CloneAgent64 {
         Timer timer = new Timer();
         timer.schedule(task, 8000);
         try {
-            mContext.bindService(intent,
+            mContext.getApplicationContext().bindService(intent,
                     agentServiceConnection,
                     Context.BIND_AUTO_CREATE);
             syncQueue.take();
@@ -219,7 +221,7 @@ public class CloneAgent64 {
     }
 
     public CloneAgent64(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     public void destroy() {

@@ -100,7 +100,7 @@ public class NativeLibraryHelperCompat {
 		return false;
 	}
 
-	private static Set<String> getABIsFromApk(String apk) {
+	public static Set<String> getABIsFromApk(String apk) {
 		try {
 			ZipFile apkFile = new ZipFile(apk);
 			Enumeration<? extends ZipEntry> entries = apkFile.entries();

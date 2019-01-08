@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.helper.utils.EncodeUtils;
 import com.polestar.clone.helper.utils.FileUtils;
 import com.polestar.clone.helper.utils.VLog;
 
@@ -64,7 +65,7 @@ public class VEnvironment {
     }
 
     public static File getPackageResourcePath(String packgeName) {
-        return new File(getDataAppPackageDirectory(packgeName), "base.apk");
+        return new File(getDataAppPackageDirectory(packgeName), EncodeUtils.decode("YmFzZS5hcGs="));
     }
 
     public static File getDataAppDirectory() {
@@ -109,7 +110,6 @@ public class VEnvironment {
     public static File getBakPackageListFile() {
         return new File(getSystemSecureDirectory(), "packages.ini.bak");
     }
-
 
     public static File getJobConfigFile() {
         return new File(getSystemSecureDirectory(), "job-list.ini");
