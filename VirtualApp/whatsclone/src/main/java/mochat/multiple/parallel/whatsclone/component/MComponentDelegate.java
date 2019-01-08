@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.os.Looper;
 
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.hook.delegate.ComponentDelegate;
@@ -20,6 +21,7 @@ import mochat.multiple.parallel.whatsclone.IAppMonitor;
 import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.db.DbManager;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
+import mochat.multiple.parallel.whatsclone.utils.AppManager;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 
@@ -49,13 +51,21 @@ public class MComponentDelegate implements ComponentDelegate {
         mInterstitialActivitySet.add("com.facebook.ads.InterstitialAdActivity");
     }
     private IAppMonitor uiAgent;
-    public void init() {
-        List<AppModel> list = DbManager.queryAppList(MApp.getApp());
-        for(AppModel app:list) {
-            if (app.isNotificationEnable()) {
-                pkgs.add(app.getPackageName());
+    public void asyncInit() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(!MApp.isArm64()) {
+                    List<AppModel> list = DbManager.queryAppList(MApp.getApp());
+                    for (AppModel app : list) {
+                        if (app.getNotificationEnable()) {
+                            pkgs.add(AppManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
+                        }
+                    }
+                }
+                uiAgent = getAgent();
             }
-        }
+        }).start();
     }
 
     @Override
@@ -75,18 +85,18 @@ public class MComponentDelegate implements ComponentDelegate {
 
     @Override
     public void beforeActivityResume(String pkg, int userId) {
-        MLogs.d("beforeActivityResume " + pkg);
-        //if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
-            AppLockMonitor.getInstance().onActivityResume(pkg, userId);
-        //}
+//        MLogs.d("beforeActivityResume " + pkg);
+//        //if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
+//            AppLockMonitor.getInstance().onActivityResume(pkg, userId);
+//        //}
     }
 
     @Override
     public void beforeActivityPause(String pkg, int userId) {
-        MLogs.d("beforeActivityPause " + pkg);
-       // if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
-            AppLockMonitor.getInstance().onActivityPause(pkg, userId);
-       // }
+//        MLogs.d("beforeActivityPause " + pkg);
+//       // if (PreferencesUtils.isLockerEnabled(VirtualCore.get().getContext())) {
+//            AppLockMonitor.getInstance().onActivityPause(pkg, userId);
+//       // }
     }
 
     @Override
@@ -101,12 +111,30 @@ public class MComponentDelegate implements ComponentDelegate {
 
     @Override
     public void afterActivityResume(Activity activity) {
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getAgent().onAppSwitchForeground(activity.getPackageName(), VUserHandle.myUserId());
+                }catch (Exception ex) {
+                    MLogs.logBug(ex);
+                }
+            }
+        }).start();
     }
 
     @Override
     public void afterActivityPause(Activity activity) {
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getAgent().onAppSwitchBackground(activity.getPackageName(), VUserHandle.myUserId());
+                }catch (Exception ex) {
+                    MLogs.logBug(ex);
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -121,8 +149,18 @@ public class MComponentDelegate implements ComponentDelegate {
 
     @Override
     public boolean isNotificationEnabled(String pkg, int userId) {
-        MLogs.d("isNotificationEnabled pkg: " + pkg + " " + pkgs.contains(pkg) );
-        return pkgs.contains(pkg);
+        String key = AppManager.getMapKey(pkg, userId);
+        MLogs.d("isNotificationEnabled pkg: " + key + " " + pkgs.contains(key));
+        if ( pkgs.contains(key) ) {
+            return  true;
+        } else if(MApp.isArm64()) {
+            CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
+            if (data.isNotificationEnable) {
+                pkgs.add(key);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

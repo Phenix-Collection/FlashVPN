@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +20,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -29,8 +32,10 @@ import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.activity.AppStartActivity;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
-import mochat.multiple.parallel.whatsclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
+import com.polestar.clone.BitmapUtils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -55,8 +60,49 @@ public class CommonUtils {
         actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        createShortcut(context, actionIntent, appName, false, iconBitmap);
+        createShortcut(context, actionIntent, appName, appModel.getPackageName(), appModel.getPkgUserId(), false, iconBitmap);
 //        iconBitmap.recycle();
+    }
+
+    public static void createShortcut(Context context, Intent actionIntent, String name, String pkg, int userId,
+                                      boolean allowRepeat, Bitmap iconBitmap) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+            if (shortcutManager.isRequestPinShortcutSupported()) {
+                ShortcutInfo shortcut = new ShortcutInfo.Builder(context, getIconId(pkg, userId))
+                        .setShortLabel(name)
+                        .setLongLabel(name)
+                        .setIcon(Icon.createWithBitmap(iconBitmap))
+                        .setIntent(actionIntent)
+                        .build();
+                try {
+                    shortcutManager.requestPinShortcut(shortcut, null);
+                }catch (Exception ex){
+                    MLogs.logBug(ex.getMessage());
+                    try{
+                        shortcutManager.enableShortcuts(Arrays.asList(getIconId(pkg, userId)));
+                    }catch (Exception ex2){
+                        MLogs.logBug(ex2.getMessage());
+                    }
+                }
+                return;
+            }
+        }
+
+        Intent addShortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        // 是否允许重复创建
+        addShortcutIntent.putExtra("duplicate", allowRepeat);
+        // 快捷方式的标题
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+        // 快捷方式的图标
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap);
+        // 快捷方式的动作
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, actionIntent);
+        context.sendBroadcast(addShortcutIntent);
+    }
+
+    private static String getIconId(String pkg, int userId){
+        return pkg+"_"+userId;
     }
 
     public static void removeShortCut(Context context, AppModel appModel) {
@@ -68,20 +114,6 @@ public class CommonUtils {
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         removeShortcut(context, actionIntent, appName);
-    }
-
-    public static void createShortcut(Context context, Intent actionIntent, String name,
-                                      boolean allowRepeat, Bitmap iconBitmap) {
-        Intent addShortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-        // 是否允许重复创建
-        addShortcutIntent.putExtra("duplicate", allowRepeat);
-        // 快捷方式的标题
-        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
-        // 快捷方式的图标
-        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap);
-        // 快捷方式的动作
-        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, actionIntent);
-        context.sendBroadcast(addShortcutIntent);
     }
 
     public static void removeShortcut(Context context, Intent actionIntent, String name) {
@@ -286,61 +318,6 @@ public class CommonUtils {
             }
         }
         return false;
-    }
-
-    public static int getRingIconId(int userId) {
-        switch (userId) {
-            case 0:
-                return R.mipmap.ring_icon;
-            case 1:
-                return R.mipmap.ring_icon_2;
-            case 2:
-                return R.mipmap.ring_icon_3;
-            case 3:
-                return R.mipmap.ring_icon_4;
-            case 4:
-                return R.mipmap.ring_icon_5;
-            case 5:
-                return R.mipmap.ring_icon_6;
-            case 6:
-                return R.mipmap.ring_icon_7;
-            case 7:
-                return R.mipmap.ring_icon_8;
-            case 8:
-                return R.mipmap.ring_icon_9;
-            default:
-                return R.mipmap.ring_icon;
-        }
-    }
-
-    public static Bitmap createCustomIcon(Context context, Drawable appIcon, int userId){
-        if(appIcon == null){
-            return null;
-        }
-        Bitmap shortCutBitMap;
-        try{
-            int width = DisplayUtils.dip2px(context, AppConstants.APP_ICON_WIDTH);
-            int padding = DisplayUtils.dip2px(context, AppConstants.APP_ICON_PADDING);
-            shortCutBitMap = Bitmap.createBitmap(width,width,Bitmap.Config.ARGB_8888);
-            Bitmap mShape = BitmapFactory.decodeResource(context.getResources(), getRingIconId(userId));
-            Canvas canvas = new Canvas(shortCutBitMap);
-
-            Paint paint = new Paint();
-            paint.setColor(Color.TRANSPARENT);
-            final Rect rect = new Rect(0, 0, width, width);
-            final float roundPx = DisplayUtils.dip2px(context, AppConstants.APP_ICON_RADIUS);
-            canvas.drawRoundRect(new RectF(rect),roundPx,roundPx,paint);
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
-
-            appIcon.setBounds(padding,padding,width - padding,width - padding);
-            appIcon.draw(canvas);
-
-            canvas.drawBitmap(Bitmap.createScaledBitmap(mShape,width,width,true),new Rect(0,0,width,width),new Rect(0,0,width,width),null);
-        }catch (OutOfMemoryError error){
-            error.printStackTrace();
-            shortCutBitMap = null;
-        }
-        return shortCutBitMap;
     }
 
     public static Drawable getAppIcon(String packageName) {

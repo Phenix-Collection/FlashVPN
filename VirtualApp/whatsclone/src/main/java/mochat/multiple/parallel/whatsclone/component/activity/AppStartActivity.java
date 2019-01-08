@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,8 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
+import com.polestar.clone.CloneAgent64;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.os.VUserHandle;
 import com.polestar.ad.AdViewBinder;
@@ -32,11 +35,12 @@ import com.polestar.ad.adapters.IAdLoadListener;
 import mochat.multiple.parallel.whatsclone.BuildConfig;
 import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.R;
+import mochat.multiple.parallel.whatsclone.component.AppMonitorService;
 import mochat.multiple.parallel.whatsclone.component.BaseActivity;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.db.DbManager;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
-import mochat.multiple.parallel.whatsclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import mochat.multiple.parallel.whatsclone.utils.AppManager;
 import mochat.multiple.parallel.whatsclone.utils.CommonUtils;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
@@ -44,6 +48,7 @@ import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
 import mochat.multiple.parallel.whatsclone.utils.ToastUtils;
+import mochat.multiple.parallel.whatsclone.widgets.UpDownDialog;
 
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +70,6 @@ public class AppStartActivity extends BaseActivity {
     private String from;
     private boolean needDoUpGrade;
     private FuseAdLoader mAdLoader;
-    private static final String SLOT_APP_START_INTERSTIAL = "slot_app_start";
     private static final String SLOT_APP_START_NATIVE = "slot_app_start_native";
     private static final String CONFIG_APP_START_NATIVE_AD_FREQ = "slot_app_start_native_freq_min";
     private static final String CONFIG_APP_INTERSTITIAL_AD_FREQ = "slot_app_start_freq_hour";
@@ -79,37 +83,9 @@ public class AppStartActivity extends BaseActivity {
     private boolean launched;
     private long loadingStart;
     private boolean mFirstStart;
-
-    public static boolean needLoadInterstitialAd(boolean preload, String pkg) {
-        if (PreferencesUtils.isAdFree()) {
-            return false;
-        }
-        String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
-        if (!("interstitial".equals(style) || "all".equals(style))) {
-            return false;
-        }
-        long interval = RemoteConfig.getLong(CONFIG_APP_INTERSTITIAL_AD_FREQ)*60*60*1000;
-        long ramp = RemoteConfig.getLong(CONFIG_APP_START_INTERSTITIAL_AD_RAMP)*60*60*1000;
-        long last = getLastShowTime(true);
-        if (last == 0 && TextUtils.isEmpty(pkg)) {
-            return false;
-        }
-        long actualLast = last == 0? CommonUtils.getInstallTime(MApp.getApp(), MApp.getApp().getPackageName()): last;
-        long delta =
-                preload? System.currentTimeMillis() - actualLast + 15*60*1000: System.currentTimeMillis()-actualLast;
-        boolean need =  last == 0? delta > ramp: delta > interval;
-        if (filterPkgs == null) {
-            filterPkgs = new HashSet<>();
-            String[] arr = RemoteConfig.getString(CONFIG_APP_START_AD_FILTER).split(":");
-            if(arr !=null) {
-                for (String s : arr) {
-                    filterPkgs.add(s);
-                }
-            }
-        }
-        MLogs.d("needLoad start app ad: " + need);
-        return (need && (!filterPkgs.contains(pkg) || pkg ==null)) || BuildConfig.DEBUG;
-    }
+    private boolean needAbiSupport = false;
+    private Handler mainHandler;
+    private boolean isAppRunning;
 
     public static boolean needLoadNativeAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
@@ -138,7 +114,7 @@ public class AppStartActivity extends BaseActivity {
                 }
             }
         }
-        MLogs.d("needLoad start app ad: " + need);
+        MLogs.d("needLoad start app native ad: " + need);
         return (need && (!filterPkgs.contains(pkg) || pkg ==null)) || BuildConfig.DEBUG;
     }
 
@@ -146,69 +122,8 @@ public class AppStartActivity extends BaseActivity {
         return AdSize.MEDIUM_RECTANGLE;
     }
     public static void preloadAd(Context context) {
-        if (needLoadInterstitialAd(true, null)) {
-            FuseAdLoader.get(SLOT_APP_START_INTERSTIAL, context).preloadAd();
-        }
         if (needLoadNativeAd(true, null)) {
             FuseAdLoader.get(SLOT_APP_START_NATIVE,context).setBannerAdSize(getBannerSize()).preloadAd();
-        }
-    }
-
-    public void loadInterstitialAd() {
-        mAdLoader = FuseAdLoader.get(SLOT_APP_START_INTERSTIAL, this);
-        loadingStart = System.currentTimeMillis();
-        hasShownAd = false;
-        if(mAdLoader.hasValidAdSource()){
-            mAdLoader.loadAd(1, new IAdLoadListener() {
-                @Override
-                public void onRewarded(IAdAdapter ad) {
-
-                }
-
-                @Override
-                public void onAdClicked(IAdAdapter ad) {
-
-                }
-
-                @Override
-                public void onAdClosed(IAdAdapter ad) {
-
-                }
-
-                @Override
-                public void onAdLoaded(IAdAdapter ad) {
-                    if (!launched && !PreferencesUtils.isAdFree()) {
-                        long delta = System.currentTimeMillis() - loadingStart;
-                        if (delta < 0) {
-                            ad.show();
-                            EventReporter.generalClickEvent(AppStartActivity.this, "app_start_ad_show");
-                            hasShownAd = true;
-                            updateShowTime(true);
-                        } else {
-                            mImgAppIcon.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ad.show();
-                                    EventReporter.generalClickEvent(AppStartActivity.this, "app_start_ad_show");
-                                    hasShownAd = true;
-                                    updateShowTime(true);
-                                }
-                            }, INTERSTITIAL_SHOW_DELAY - delta);
-                        }
-                    }
-                }
-
-                @Override
-                public void onAdListLoaded(List<IAdAdapter> ads) {
-
-                }
-
-                @Override
-                public void onError(String error) {
-                    MLogs.d(SLOT_APP_START_INTERSTIAL + " load error:" + error);
-                    doLaunch();
-                }
-            });
         }
     }
 
@@ -234,7 +149,7 @@ public class AppStartActivity extends BaseActivity {
     public void loadNativeAd() {
         mAdLoader = FuseAdLoader.get(SLOT_APP_START_NATIVE, this).setBannerAdSize(getBannerSize());
         if(mAdLoader.hasValidAdSource()){
-            mAdLoader.loadAd(1, new IAdLoadListener() {
+            mAdLoader.loadAd(2, 300, new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 
@@ -286,10 +201,10 @@ public class AppStartActivity extends BaseActivity {
         if (AppManager.needUpgrade(packageName)) {
             VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
         } else {
-            if (AppManager.isAppLaunched(packageName, userId)) {
-                AppManager.launchApp(packageName, userId);
-                return;
-            }
+//            if (AppManager.isAppLaunched(packageName, userId)) {
+//                AppManager.launchApp(packageName, userId);
+//                return;
+//            }
         }
         Intent intent = new Intent(activity, AppStartActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -320,37 +235,114 @@ public class AppStartActivity extends BaseActivity {
             ToastUtils.ToastDefult(this, getString(R.string.toast_shortcut_invalid));
             finish();
         } else {
+            needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = AppManager.needUpgrade(appModel.getPackageName());
+            if (AppMonitorService.needLoadCoverAd(true, appModel.getPackageName())) {
+                AppMonitorService.preloadCoverAd();
+            }
+            isAppRunning = AppManager.isAppRunning(appModel.getPackageName(), appModel.getPkgUserId());
+            MLogs.d("isAppRunning : " + isAppRunning);
+        }
+        if (appModel != null && !isAppRunning && needLoadNativeAd(false, appModel.getPackageName())) {
+            loadNativeAd();
         }
     }
 
     private void doLaunch(){
         if (launched) return;
         launched = true;
-        new Handler().postDelayed(new Runnable() {
+        EventReporter.launchApp(AppStartActivity.this, appModel.getPackageName(), from, appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
+        mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                EventReporter.launchApp(AppStartActivity.this, appModel.getPackageName(), from, appModel.getLockerState() != AppConstants.AppLockState.DISABLED);
-                // Todo: if app is already launched, just switch it to front, no need re-launch
-                if (needDoUpGrade) {
-                    AppManager.upgradeApp(appModel.getPackageName());
+                if(!needAbiSupport) {
+                    doLaunchMyself();
+                } else{
+                    doLaunchFromAgent();
                 }
-                AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
-                //if()){
-                //    EventReporter.greyAttribute(AppStartActivity.this, appModel.getPackageName());
-//                } else{
-//                    MLogs.d("No refer for " + appModel.getPackageName());
-//                }
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        MLogs.d("AppStart finish");
-                        finish();
-                    }
-                }, 4000);
             }
-        }, 500);
+        }, isAppRunning? 0: 3000);
     }
+
+    private void doLaunchMyself(){
+        // Todo: if app is already launched, just switch it to front, no need re-launch
+        if (needDoUpGrade) {
+            AppManager.upgradeApp(appModel.getPackageName());
+        }
+        AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+        finishIfTimeout();
+    }
+
+    private void doLaunchFromAgent() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CloneAgent64 agent = new CloneAgent64(AppStartActivity.this);
+                if(agent.hasSupport()) {
+                    if(agent.isCloned(appModel.getPackageName(), appModel.getPkgUserId())) {
+                        if (agent.isNeedUpgrade(appModel.getPackageName())) {
+                            agent.upgradeApp(appModel.getPackageName());
+                        }
+                    } else {
+                        agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
+                    }
+                    agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+                    AppManager.updateLaunchTime(appModel.getPackageName(), appModel.getPkgUserId());
+                    if (!isAppRunning) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AppStartActivity.this, getString(R.string.start_with_arm64), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    finishIfTimeout();
+                } else{
+                    //Guide download support package
+                    //EventReporter.reportArm64(appModel.getPackageName(), "start");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            UpDownDialog.show(AppStartActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
+                                    getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            switch (i) {
+                                                case UpDownDialog.NEGATIVE_BUTTON:
+//                                                    EventReporter.reportArm64(appModel.getPackageName(), "cancel");
+                                                    doLaunchMyself();
+                                                    break;
+                                                case UpDownDialog.POSITIVE_BUTTON:
+                                                    CommonUtils.jumpToMarket(AppStartActivity.this, getPackageName()+".arm64");
+//                                                    EventReporter.reportArm64(appModel.getPackageName(), "go");
+                                                    break;
+                                            }
+                                        }
+                                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialogInterface) {
+                                    doLaunchMyself();
+                                }
+                            });
+                        }
+                    });
+
+                }
+                agent.destroy();
+            }
+        }).start();
+    }
+
+    private void finishIfTimeout(){
+        mainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MLogs.d("app start finished");
+                finish();
+            }
+        }, 8000);
+    }
+
     private void initView() {
         mLoadingView = (ProgressBar) findViewById(R.id.loading);
         //It's the first one trick here, ProgressBar widget will be drawn in indeterminate mode
@@ -414,15 +406,14 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        setContentView(R.layout.activity_start);
-
+        mainHandler = new Handler();
         initData();
-        initView();
-        if (appModel != null && needLoadNativeAd(false, appModel.getPackageName())) {
-            loadNativeAd();
+        if (!isAppRunning) {
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            setContentView(R.layout.activity_start);
+            initView();
         }
+        doLaunch();
         EventReporter.reportActive(this, true);
 
     }
@@ -430,33 +421,20 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
+        finish();
     }
 
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        initData();
-        initView();
+        MLogs.d("onNewIntent");
+//        initData();
+//        initView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!hasShownAd && needLoadInterstitialAd(false, appModel.getPackageName())) {
-            loadInterstitialAd();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //not have ad loaded
-                    if (!hasShownAd) {
-                        doLaunch();
-                    }
-                }
-                //wait 4000ms
-            }, 3000);
-        } else {
-            doLaunch();
-        }
     }
 
 

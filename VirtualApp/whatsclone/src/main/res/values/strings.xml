@@ -251,4 +251,11 @@
     <string name="light">Lightness</string>
     <string name="hue">Hue</string>
     <string name="badge">Tag</string>
+
+    <string name="install" translatable="false">Install</string>
+    <string name="start_with_arm64">Starting with Whats Clone 64bit support library...</string>
+    <string name="install_64bit_library">Installing 64bit support </string>
+    <string name="arm64_dialog_title">64bit Support</string>
+    <string name="arm64_dialog_content">Detected 64bit libraries in %s. Suggest install 64bit support packages if error happen. Do you want to install now?</string>
+
 </resources>

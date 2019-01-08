@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import mochat.multiple.parallel.whatsclone.MApp;
-import mochat.multiple.parallel.whatsclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import mochat.multiple.parallel.whatsclone.utils.CommonUtils;
 
 

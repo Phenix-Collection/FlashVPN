@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
-import mochat.multiple.parallel.whatsclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import mochat.multiple.parallel.whatsclone.widgets.RoundSwitch;
 
 import java.util.List;

@@ -18,7 +18,7 @@ import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
 import mochat.multiple.parallel.whatsclone.utils.AppListUtils;
 import mochat.multiple.parallel.whatsclone.utils.AppManager;
-import mochat.multiple.parallel.whatsclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 
 import java.util.List;
 

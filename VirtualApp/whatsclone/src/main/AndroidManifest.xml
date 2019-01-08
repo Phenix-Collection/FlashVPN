@@ -106,7 +106,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.lody.virtual.vt"
-            android:process=":x"
             android:theme="@style/AppTheme.Launcher"/>
 
         <meta-data
@@ -188,7 +187,7 @@
             android:theme="@android:style/Theme.Translucent"
             android:multiprocess="true" />
 
-        <provider android:authorities="mochat.multiple.parallel.whatsclone.sync.provider"
+        <provider android:authorities="${applicationId}.sync.provider"
             android:exported="true"
             android:name="com.polestar.welive.DummyProvider"
             android:syncable="true" />

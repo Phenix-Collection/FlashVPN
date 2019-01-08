@@ -77,7 +77,7 @@
     </entry>
     <entry>
         <key>slot_applist_native</key>
-        <value>adm:ca-app-pub-5490912237269284/2394088347:0</value>
+        <value>fb:282133655744452_282135569077594:0;adm:ca-app-pub-5490912237269284/2394088347:0</value>
     </entry>
     <entry>
         <key>clone_rate_package</key>
@@ -169,7 +169,7 @@
     </entry>
     <entry>
         <key>slot_app_start_ramp_hour</key>
-        <value>2</value>
+        <value>24</value>
     </entry>
     <entry>
         <key>slot_app_start_native_freq_min</key>
@@ -229,19 +229,15 @@
     </entry>
     <entry>
         <key>slot_app_start_native</key>
-        <value>ab_banner:ca-app-pub-5490912237269284/2779023735:0;adm:ca-app-pub-5490912237269284/1661383181:0</value>
+        <value>fb:282133655744452_282135569077594:0;ab_banner:ca-app-pub-5490912237269284/2779023735:0;adm:ca-app-pub-5490912237269284/1661383181:0</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
-        <value>9</value>
+        <value>99</value>
     </entry>
     <entry>
         <key>pkg_config</key>
         <value>5</value>
-    </entry>
-    <entry>
-        <key>coffee_key</key>
-        <value>1516027773710659325298</value>
     </entry>
     <entry>
         <key>conf_max_recommend_apps</key>

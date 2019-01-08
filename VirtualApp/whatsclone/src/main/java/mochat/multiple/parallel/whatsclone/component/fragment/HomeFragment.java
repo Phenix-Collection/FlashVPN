@@ -28,6 +28,8 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.clone.CloneAgent64;
+
 import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.BaseFragment;
@@ -39,7 +41,7 @@ import mochat.multiple.parallel.whatsclone.component.activity.NativeInterstitial
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.db.DbManager;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
-import mochat.multiple.parallel.whatsclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import mochat.multiple.parallel.whatsclone.utils.AnimatorHelper;
 import mochat.multiple.parallel.whatsclone.utils.AppManager;
 import mochat.multiple.parallel.whatsclone.utils.CloneHelper;
@@ -558,6 +560,15 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void run() {
                 deleteApp(appModel);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CloneAgent64 agent64 = new CloneAgent64(getActivity());
+                        if(agent64.hasSupport() && agent64.isCloned(appModel.getPackageName(),appModel.getPkgUserId())) {
+                            agent64.deleteClone(appModel.getPackageName(), appModel.getPkgUserId());
+                        }
+                    }
+                }).start();
             }
         }, 1000);
 

@@ -14,7 +14,7 @@ import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.BaseActivity;
 import mochat.multiple.parallel.whatsclone.db.DbManager;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
-import mochat.multiple.parallel.whatsclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 
 import java.util.List;

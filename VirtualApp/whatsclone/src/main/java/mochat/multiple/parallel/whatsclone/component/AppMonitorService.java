@@ -61,8 +61,8 @@ public class AppMonitorService extends Service {
             switch (msg.what){
                 case MSG_DELAY_LOCK_APP:
                     //QuickSwitchNotification.getInstance(VirtualCore.get().getContext()).updateLruPackages((String)msg.obj);
+                    MLogs.d(TAG,"relock lastUnlockKey " + lastUnlockKey);
                     lastUnlockKey = null;
-                    MLogs.d("relock lastUnlockKey " + lastUnlockKey);
                     break;
                 case MSG_PRELOAD_AD:
                     if (!PreferencesUtils.isAdFree() && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
@@ -84,7 +84,7 @@ public class AppMonitorService extends Service {
     }
     public static void unlocked(String pkg, int userId) {
         lastUnlockKey = AppManager.getMapKey(pkg,userId);
-        MLogs.d("unlocked lastUnlockKey " + lastUnlockKey);
+        MLogs.d(TAG,"unlocked lastUnlockKey " + lastUnlockKey);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class AppMonitorService extends Service {
             }
         }
         MLogs.d(TAG, "needLoad start app ad: " + need);
-        return (need && (!filterPkgs.contains(pkg)||pkg == null)) || BuildConfig.DEBUG;
+        return (need && (!filterPkgs.contains(pkg)||pkg == null)) ;
     }
 
     private static long getLastShowTime() {

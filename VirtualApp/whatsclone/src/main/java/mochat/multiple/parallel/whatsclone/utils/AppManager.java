@@ -8,6 +8,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
+import com.polestar.clone.CloneAgent64;
+import com.polestar.clone.CloneAgentService;
 import com.polestar.clone.client.core.InstallStrategy;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.ipc.VActivityManager;
@@ -21,8 +23,9 @@ import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.db.DbManager;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
-import mochat.multiple.parallel.whatsclone.model.CustomizeAppData;
+import com.polestar.clone.CustomizeAppData;
 import mochat.multiple.parallel.whatsclone.model.PackageConfig;
+import com.polestar.clone.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,19 +118,8 @@ public class AppManager {
         }
     }
 
-    @Deprecated
-    public static void launchApp(String packageName) {
-        //Check app version and trying to upgrade if necessary
-        try {
-            MLogs.d(TAG, "launchApp packageName = " + packageName);
-            mPackageLaunchTime.put(packageName, System.currentTimeMillis());
-            Intent intent = VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId());
-            VActivityManager.get().startActivity(intent, VUserHandle.myUserId());
-        } catch (Exception e) {
-            MLogs.e(e);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
+    public static void updateLaunchTime(String pkg, int userId) {
+        mPackageLaunchTime.put(getMapKey(pkg, userId), System.currentTimeMillis());
     }
 
     public static void launchApp(String packageName, int userId) {
@@ -243,32 +235,15 @@ public class AppManager {
         // VirtualCore.get().reloadLockerSetting(key, adFree, interval);
     }
 
-    @Deprecated
-    public static boolean isAppRunning(String pkg) {
-        return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId());
-    }
-
     public static boolean isAppRunning(String pkg, int userId) {
-        return VirtualCore.get().isAppRunning(pkg, userId);
-    }
-
-    @Deprecated
-    public static boolean isAppLaunched(String pkg) {
-        long time = mPackageLaunchTime.get(pkg) == null ? 0:  mPackageLaunchTime.get(pkg);
-        return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId())
-                && ((System.currentTimeMillis()-time) < 60*60*1000);
-    }
-
-    public static boolean isAppLaunched(String pkg, int userId) {
         String key = getMapKey(pkg, userId);
         long time = mPackageLaunchTime.get(key) == null ? 0:  mPackageLaunchTime.get(key);
-        return VirtualCore.get().isAppRunning(pkg, userId)
+        boolean hasSupportLib= MApp.isSupportPkgExist();
+        return (VirtualCore.get().isAppRunning(pkg, userId)
+                || (hasSupportLib && new CloneAgent64(MApp.getApp()).isAppRunning(pkg, userId)))
                 && ((System.currentTimeMillis()-time) < 60*60*1000);
     }
 
-    public static boolean isAppLaunched(AppModel model) {
-        return isAppLaunched(model.getPackageName(), model.getPkgUserId());
-    }
     /*
      * the configure format:
      * pkg1:cnt1;pkg2:cnt2;pkg3:cnt3

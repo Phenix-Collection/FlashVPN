@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name" translatable="false">WhatsClone 64bit</string>
+    <string name="app_slogan" translatable="false">Installing 64bit support...</string>
+</resources>

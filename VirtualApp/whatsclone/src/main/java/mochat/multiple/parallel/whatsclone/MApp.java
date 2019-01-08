@@ -3,6 +3,7 @@ package mochat.multiple.parallel.whatsclone;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -50,6 +51,28 @@ public class MApp extends MultiDexApplication {
     public static MApp getApp() {
         return gDefault;
     }
+
+    public static boolean isArm64() {
+        return getApp().getPackageName().endsWith("arm64");
+    }
+
+
+    public static boolean isSupportPkgExist() {
+        if (isArm64()) {
+            return  true;
+        } else {
+            try{
+                ApplicationInfo ai = getApp().getPackageManager().getApplicationInfo(getApp().getPackageName()+ ".arm64",0);
+                if (ai != null) {
+                    return true;
+                }
+            }catch(Exception ex){
+
+            }
+            return false;
+        }
+    }
+
 
     public static boolean isOpenLog(){
         try {
@@ -153,7 +176,7 @@ public class MApp extends MultiDexApplication {
             public void onVirtualProcess() {
                 MLogs.d("Virtual process create");
                 MComponentDelegate delegate = new MComponentDelegate();
-                delegate.init();
+                delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
 
                 virtualCore.setAppApiDelegate(new AppApiDelegate());
@@ -194,7 +217,7 @@ public class MApp extends MultiDexApplication {
                 RemoteConfig.init();
                 MLogs.d("Server process app onCreate 0");
                 MComponentDelegate delegate = new MComponentDelegate();
-                delegate.init();
+                delegate.asyncInit();
                 MLogs.d("Server process app onCreate 1");
                 VirtualCore.get().setComponentDelegate(delegate);
                 MLogs.d("Server process app onCreate 2");

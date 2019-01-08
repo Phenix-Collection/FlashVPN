@@ -35,6 +35,38 @@
         "ads_service": {
           "status": 2
         }
+      },
+      "admob_app_id": "ca-app-pub-5490912237269284~2288391923"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711759563898:android:91c19e8c7683dd9d",
+        "android_client_info": {
+          "package_name": "mochat.multiple.parallel.whatsclone.arm64"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711759563898-v96talqp7mi6cnl4aa82uh1lempucq0a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7CnrnLFhuHBUe0u3DuM0zPRcDZnsKOUc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
       }
     }
   ],

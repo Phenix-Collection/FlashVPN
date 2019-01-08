@@ -15,13 +15,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import com.polestar.clone.CloneAgent64;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.clone.os.VUserHandle;
 import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
-import mochat.multiple.parallel.whatsclone.model.CustomizeAppData;
 import mochat.multiple.parallel.whatsclone.utils.AppManager;
-import mochat.multiple.parallel.whatsclone.utils.BitmapUtils;
+import com.polestar.clone.BitmapUtils;
 import mochat.multiple.parallel.whatsclone.utils.CloneHelper;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
@@ -173,6 +174,14 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         if (appModel.getLockerState() != AppConstants.AppLockState.DISABLED) {
             AppManager.reloadLockerSetting();
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CloneAgent64 agent64 = new CloneAgent64(CustomizeIconActivity.this);
+                agent64.syncPackageSetting(mData.pkg, mData.userId, mData);
+            }
+        }).start();
         finish();
     }
 
