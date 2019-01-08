@@ -241,7 +241,8 @@ public class AppStartActivity extends BaseActivity {
                 AppMonitorService.preloadCoverAd();
             }
             isAppRunning = AppManager.isAppRunning(appModel.getPackageName(), appModel.getPkgUserId());
-            MLogs.d("isAppRunning : " + isAppRunning);
+            mFirstStart = !CustomizeAppData.hasLaunched(appModel.getPackageName(), appModel.getPkgUserId());
+            MLogs.d("isAppRunning : " + isAppRunning + " firstStart: " + mFirstStart);
         }
         if (appModel != null && !isAppRunning && needLoadNativeAd(false, appModel.getPackageName())) {
             loadNativeAd();
@@ -300,32 +301,36 @@ public class AppStartActivity extends BaseActivity {
                 } else{
                     //Guide download support package
                     //EventReporter.reportArm64(appModel.getPackageName(), "start");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            UpDownDialog.show(AppStartActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
-                                    getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            switch (i) {
-                                                case UpDownDialog.NEGATIVE_BUTTON:
+                    if (mFirstStart) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UpDownDialog.show(AppStartActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
+                                        getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                switch (i) {
+                                                    case UpDownDialog.NEGATIVE_BUTTON:
 //                                                    EventReporter.reportArm64(appModel.getPackageName(), "cancel");
-                                                    doLaunchMyself();
-                                                    break;
-                                                case UpDownDialog.POSITIVE_BUTTON:
-                                                    CommonUtils.jumpToMarket(AppStartActivity.this, getPackageName()+".arm64");
+                                                        doLaunchMyself();
+                                                        break;
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        CommonUtils.jumpToMarket(AppStartActivity.this, getPackageName() + ".arm64");
 //                                                    EventReporter.reportArm64(appModel.getPackageName(), "go");
-                                                    break;
+                                                        break;
+                                                }
                                             }
-                                        }
-                                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialogInterface) {
-                                    doLaunchMyself();
-                                }
-                            });
-                        }
-                    });
+                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialogInterface) {
+                                        doLaunchMyself();
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        doLaunchMyself();
+                    }
 
                 }
                 agent.destroy();
@@ -374,7 +379,6 @@ public class AppStartActivity extends BaseActivity {
             });
             String title = (data.customized) ? data.label : appModel.getName();
             mTxtTips.setText(String.format(getString(R.string.app_starting_tips), title));
-            mFirstStart = !CustomizeAppData.hasLaunched(appModel.getPackageName(), appModel.getPkgUserId());
             if (mFirstStart){
                 CustomizeAppData.setLaunched(appModel.getPackageName(), appModel.getPkgUserId());
                 mFirstStartTips.setVisibility(View.VISIBLE);
