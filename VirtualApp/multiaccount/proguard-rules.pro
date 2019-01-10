@@ -247,7 +247,8 @@ public static *** e(...);
 -keep class com.polestar.clone.client.hook.base.LogInvocation {*;}
 -keep class com.polestar.clone.client.hook.base.LogInvocation.** {*;}
 -keepnames class com.polestar.clone.client.NativeEngine {*;}
--keepclassmembers class com.polestar.clone.client.NativeEngine {public static *;}
+-keep class com.polestar.clone.client.NativeEngine {*;}
+-keepclassmembers class com.polestar.clone.client.NativeEngine { *;}
 -keepnames class com.polestar.clone.client.NativeEngine
 -keep class * extends com.polestar.clone.client.hook.base.MethodProxy {}
 -keep class * extends android.os.IBinder {}
