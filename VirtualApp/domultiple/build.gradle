@@ -41,7 +41,7 @@ android {
             dimension "arch"
         }
         arm32 {
-            applicationId "com.polestar.domultiple"
+            applicationId "do.multiple.cloner"
             ndk {
                 // 设置支持的SO库架构
                 abiFilters 'armeabi-v7a'//, 'x86_64', 'arm64-v8a'
@@ -61,8 +61,8 @@ android {
             minSdkVersion 16
             targetSdkVersion 26
             multiDexEnabled = true
-            versionCode 2122
-            versionName "2.1.22.${releaseTime()}"
+            versionCode 21228
+            versionName "2.1.28.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             dimension "channel"
         }

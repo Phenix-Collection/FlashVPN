@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.utils.CommonUtils;
@@ -45,7 +46,7 @@ public class Arm64Activity extends BaseActivity {
         if (isInstalled) {
             FeedbackActivity.start(this, 0);
         } else {
-            CommonUtils.jumpToMarket(this, getPackageName()+".arm64");
+            CommonUtils.jumpToMarket(this, AppConstants.ARM64_SUPPORT_PKG);
         }
     }
 }

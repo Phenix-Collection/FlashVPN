@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority="com.polestar.domultiple.sync.provider"
-    android:accountType="com.polestar.domultiple.clone.daemon"
+    android:contentAuthority="do.multiple.cloner.sync.provider"
+    android:accountType="do.multiple.cloner.clone.daemon"
     android:userVisible="false"
     android:supportsUploading="false"
     android:allowParallelSyncs="false"

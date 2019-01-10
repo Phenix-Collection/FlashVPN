@@ -3,7 +3,7 @@
     <string name="about">เกี่ยวกับ</string>
     <string name="ad_free">ลบโฆษณา</string>
     <string name="add_clone_title">สร้าง Clone</string>
-    <string name="adfree_dialog_content">บริจาคให้กับนักพัฒนาซอฟต์แวร์และกลายเป็นผู้ใช้พรีเมียมของ Do Multiple และปิดโฆษณาทั้งหมดในแอปนี้ คุณต้องการซื้อตอนนี้หรือไม่?</string>
+    <string name="adfree_dialog_content">บริจาคให้กับนักพัฒนาซอฟต์แวร์และกลายเป็นผู้ใช้พรีเมียมของ DO Multiple Space และปิดโฆษณาทั้งหมดในแอปนี้ คุณต้องการซื้อตอนนี้หรือไม่?</string>
     <string name="adfree_dialog_title">เป็นผู้ใช้วีไอพี</string>
     <string name="al_btn_finish">ยืนยัน</string>
     <string name="al_btn_next">ต่อไป</string>
@@ -42,7 +42,7 @@
     <string name="yes">ใช่</string>
     <string name="toast_shortcut_added">เพิ่มทางลัดแล้ว</string>
     <string name="update_dialog_left">ไม่สนใจเวอร์ชันนี้</string>
-    <string name="update_dialog_content">เวอร์ชันใหม่กำลังจะมาถึง! เราปรับปรุงเวอร์ชันในเวอร์ชัน %s มากขึ้น คุณต้องการอัปเดต Do Multiple เดี๋ยวนี้หรือไม่?</string>
+    <string name="update_dialog_content">เวอร์ชันใหม่กำลังจะมาถึง! เราปรับปรุงเวอร์ชันในเวอร์ชัน %s มากขึ้น คุณต้องการอัปเดต DO Multiple Space เดี๋ยวนี้หรือไม่?</string>
     <string name="toast_shortcut_invalid">ทางลัดไม่ถูกต้อง</string>
     <string name="hue">สี</string>
     <string name="congratulations">ขอแสดงความยินดี</string>
@@ -92,7 +92,7 @@
     <string name="remind_me_later">เตือนฉันภายหลัง</string>
     <string name="saturation">ความอิ่มตัว</string>
     <string name="settings">การตั้งค่า</string>
-    <string name="settings_adfree_content">เปิดใช้งานบริการวีไอพีของ Do Multiple</string>
+    <string name="settings_adfree_content">เปิดใช้งานบริการวีไอพีของ DO Multiple Space</string>
     <string name="settings_lite_disable_notice">ในโหมดปกติบริการ Google Play ได้รับการสนับสนุนและอาจทำให้มีหน่วยความจำและการใช้แบตเตอรี่มากขึ้น คุณต้องการปิดโหมด Lite หรือไม่?</string>
     <string name="settings_lite_disable_toast">โหมด Lite ถูกปิดใช้งาน</string>
     <string name="settings_lite_enable_notice">ในโหมด Lite บริการ Google Play จะถูกปิดใช้งานเพื่อลดการใช้หน่วยความจำและการใช้พลังงาน โปรดปิดเมื่อโคลนใช้บริการของ Google คุณแน่ใจที่จะเปิดใช้งานโหมด Lite หรือไม่?</string>

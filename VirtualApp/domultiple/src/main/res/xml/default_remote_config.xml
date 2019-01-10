@@ -48,17 +48,17 @@
     <entry>
         <key>slot_home_lucky</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb_interstitial:1459853160757953_1459894630753806:0;ab_interstitial:ca-app-pub-5490912237269284/9387261829:0;ab_native_banner:ca-app-pub-5490912237269284/8896488415:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_home_native</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb:1459853160757953_1459875127422423:0;adm:ca-app-pub-5490912237269284/1203301424:0;ab_native_banner:ca-app-pub-5490912237269284/8998403107:0;mp:882d63a898684cbf9c24adc140164cb4:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_add_clone_native</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>adm:ca-app-pub-5490912237269284/8705907993:0;fb:1459853160757953_1459876500755619:0;mp:57b0c41a95fc4f4aa5037cf72f35ab08:0;ab_native_banner:ca-app-pub-5490912237269284/6660633893:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>add_clone_preload_gate</key>
@@ -92,16 +92,16 @@
     </entry>
     <entry>
         <key>slot_app_start</key>
-        <value>ab_interstitial:ca-app-pub-5490912237269284/6692336792:0;fb_interstitial:1459853160757953_1459899664086636:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_app_start_native</key>
         <!--<value>ab_native_banner:ca-app-pub-5490912237269284/8998403107:0;fb:1459853160757953_1558953330847935:0;mp:58664de38d5c46678988e90136d075fe:0</value>-->
-        <value>ab_banner:ca-app-pub-5490912237269284/5615410147:0:2;fb:1459853160757953_1558953330847935:0;mp:5ab36bc7a0a54001ba4c626053d8e71b:0;ab_native_banner:ca-app-pub-5490912237269284/8896488415:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_app_lock</key>
-        <value>adm:ca-app-pub-5490912237269284/9137631764:0;ab_banner:ca-app-pub-5490912237269284/6534574298:0:2;fb:1459853160757953_1459901287419807:0;ab_native_banner:ca-app-pub-5490912237269284/2036945252:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_test</key>
@@ -133,7 +133,7 @@
     </entry>
     <entry>
         <key>slot_boost_ad</key>
-        <value>adm:ca-app-pub-5490912237269284/8946060076:0;fb:1459853160757953_1567501253326476:0;mp:58664de38d5c46678988e90136d075fe:0;ab_native_banner:ca-app-pub-5490912237269284/8998403107:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>guide_quick_switch_interval_s</key>
@@ -155,12 +155,12 @@
     <entry>
         <key>slot_install_ad</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/9975771994:0;bt_interstitial:12828_22050:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_unlock_ad</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/9975771994:0;bt_interstitial:12828_22050:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>auto_ad_first_interval</key>
@@ -184,7 +184,7 @@
     </entry>
     <entry>
         <key>slot_intercept_ad</key>
-        <value>ab_interstitial:ca-app-pub-5490912237269284/8362100470:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>avoid_ad_if_history</key>

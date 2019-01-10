@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.os.Process;
 import android.text.TextUtils;
 
+import com.polestar.clone.CloneAgent64;
 import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.InstallStrategy;
 import com.polestar.clone.client.core.VirtualCore;
@@ -468,26 +469,16 @@ public class CloneManager {
         return DBManager.queryCloneModelByPackageName(mContext, packageName, userId);
     }
 
-    @Deprecated
-    public static boolean isAppRunning(String pkg) {
-        return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId());
-    }
-
     public static boolean isAppRunning(String pkg, int userId) {
         return VirtualCore.get().isAppRunning(pkg, userId);
-    }
-
-    @Deprecated
-    public static boolean isAppLaunched(String pkg) {
-        long time = mPackageLaunchTime.get(pkg) == null ? 0:  mPackageLaunchTime.get(pkg);
-        return VirtualCore.get().isAppRunning(pkg, VUserHandle.myUserId())
-                && ((System.currentTimeMillis()-time) < 60*60*1000);
     }
 
     public static boolean isAppLaunched(String pkg, int userId) {
         String key = getMapKey(pkg, userId);
         long time = mPackageLaunchTime.get(key) == null ? 0:  mPackageLaunchTime.get(key);
-        return VirtualCore.get().isAppRunning(pkg, userId)
+        boolean hasSupportLib= PolestarApp.isSupportPkgExist();
+        return (VirtualCore.get().isAppRunning(pkg, userId)
+                || (hasSupportLib && new CloneAgent64(PolestarApp.getApp()).isAppRunning(pkg, userId)))
                 && ((System.currentTimeMillis()-time) < 60*60*1000);
     }
 

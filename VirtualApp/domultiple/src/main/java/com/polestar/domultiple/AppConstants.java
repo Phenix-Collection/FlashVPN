@@ -6,15 +6,6 @@ public class AppConstants {
 
     public static final String DEVELOP_CHANNEL = "develop";
 
-    public static final int REQUEST_SELECT_APP = 5;
-    public static final int REQUEST_INSTALL_APP = 6;
-
-    public static final int HOME_GRID_COLUMN = 3;
-
-    public static final String EXTRA_APP_MODEL = "com.polestar.applab.utils.extra.APP_MODEL";
-
-    public static final String KEY_CLONED_APPS = "Cloned Apps";
-
     public static final String EXTRA_CLONED_APP_PACKAGENAME = "app_packagename";
     public static final String EXTRA_FROM = "From where";
     public static final String VALUE_FROM_SHORTCUT = "From shortcut";
@@ -58,8 +49,9 @@ public class AppConstants {
 
     }
 
-    public final static String CONF_WALL_SDK = "conf_wall_sdk";
-    public static final String WALL_UNIT_ID = "8442";
+    public final static String ARM64_SUPPORT_PKG = "com.polestar.domultiple.arm64";
+    public final static String PRIMARY_PKG_LEGACY = "com.polestar.domultiple";
+    public final static String PRIMARY_PKG = "do.multiple.cloner";
 
     public final static String CONF_UPDATE_VERSION = "push_update_version";
     public final static String CONF_LATEST_VERSION = "current_version";

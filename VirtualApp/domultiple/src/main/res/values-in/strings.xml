@@ -42,7 +42,7 @@
     <string name="yes">iya nih</string>
     <string name="toast_shortcut_added">Shortcut ditambahkan</string>
     <string name="update_dialog_left">Abaikan versi ini</string>
-    <string name="update_dialog_content">Versi baru akan datang! Kami memperbaiki banyak versi %s. Apakah Anda ingin memperbarui Do Multiple sekarang?</string>
+    <string name="update_dialog_content">Versi baru akan datang! Kami memperbaiki banyak versi %s. Apakah Anda ingin memperbarui DO Multiple Space sekarang?</string>
     <string name="toast_shortcut_invalid">Pintasan tidak valid</string>
     <string name="hue">Warna</string>
     <string name="congratulations">Selamat</string>
@@ -56,7 +56,7 @@
     <string name="delete_dialog_title">Peringatan</string>
     <string name="dialog_feedback_content">Maukah Anda memberi kami beberapa umpan balik untuk membantu memperbaikinya?</string>
     <string name="dialog_love_content">Maukah Anda memberi kami peringkat 5 bintang di Play Store? Ini akan menginspirasi kita dan kami menghargai dukungan Anda!</string>
-    <string name="dialog_rating_us_content">Nikmati menggunakan aplikasi Do Multiple?</string>
+    <string name="dialog_rating_us_content">Nikmati menggunakan aplikasi DO Multiple Space?</string>
     <string name="enable_lock_settings_content">Toggle untuk mengaktifkan atau menonaktifkan fitur locker privasi</string>
     <string name="enable_lock_settings_title">Privasi Locker</string>
     <string name="extra_feedback_decription">Kami akan menyelesaikan masalah ini untuk Anda secepatnya dan menghargai bantuan Anda untuk memperbaiki produk!</string>
@@ -93,7 +93,7 @@
     <string name="remind_me_later">Ingatkan aku nanti</string>
     <string name="saturation">Kejenuhan</string>
     <string name="settings">Pengaturan</string>
-    <string name="settings_adfree_content">Aktifkan layanan VIP dari Do Multiple</string>
+    <string name="settings_adfree_content">Aktifkan layanan VIP dari DO Multiple Space</string>
     <string name="settings_lite_disable_notice">Dalam mode normal, Layanan Google Play didukung dan dapat menyebabkan lebih banyak penggunaan memori dan baterai. Apakah Anda ingin mematikan Mode Ringan?</string>
     <string name="settings_lite_disable_toast">Mode Lite dinonaktifkan</string>
     <string name="settings_lite_enable_notice">Dalam Mode Ringan, Layanan Google Play akan dinonaktifkan karena penggunaan memori dan daya lebih sedikit. Matikan saat klon menggunakan layanan Google. Apakah Anda yakin untuk mengaktifkan Mode Ringan?</string>
@@ -116,5 +116,5 @@
     <string name="quick_switch_dialog_content">Quick Switch akan memudahkan Anda beralih di antara aplikasi kloning dari bilah pemberitahuan. Apakah Anda ingin mengaktifkannya sekarang?</string>
     <string name="arm64_support">Dukungan 64bit</string>
     <string name="dialog_permission_title">Memberikan ijin</string>
-    <string name="dialog_permission_content">Izinkan permintaan izin dari Do Multiple, jika tidak, beberapa aplikasi kloning dan Layanan Google Play tidak akan berfungsi dengan baik.</string>
+    <string name="dialog_permission_content">Izinkan permintaan izin dari DO Multiple Space, jika tidak, beberapa aplikasi kloning dan Layanan Google Play tidak akan berfungsi dengan baik.</string>
 </resources>

@@ -84,6 +84,7 @@ public class AppLoadingActivity extends BaseActivity {
     private LinearLayout mNativeContainer;
     private boolean needAbiSupport;
     private Handler mainHandler;
+    private boolean isAppRunning;
 
     public static boolean needLoadNativeAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
@@ -130,12 +131,6 @@ public class AppLoadingActivity extends BaseActivity {
         String packageName = model.getPackageName();
         if (CloneManager.needUpgrade(packageName)) {
             CloneManager.killApp(packageName);
-        } else {
-            if (CloneManager.isAppLaunched(model)) {
-                CloneManager.launchApp(model);
-                EventReporter.appStart(true, model.getLockerState() != AppConstants.AppLockState.DISABLED, "home", model.getPackageName(), model.getPkgUserId());
-                return;
-            }
         }
         Intent intent = new Intent(activity, AppLoadingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -167,11 +162,12 @@ public class AppLoadingActivity extends BaseActivity {
         } else {
             needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
+            isAppRunning = CloneManager.isAppLaunched(appModel);
         }
         if (AppMonitorService.needLoadCoverAd(true, appModel.getPackageName())) {
             AppMonitorService.preloadCoverAd();
         }
-        EventReporter.appStart(CloneManager.isAppLaunched(appModel), appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName(), appModel.getPkgUserId());
+        EventReporter.appStart(isAppRunning, appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName(), appModel.getPkgUserId());
         return true;
     }
 
@@ -190,7 +186,7 @@ public class AppLoadingActivity extends BaseActivity {
             public void run() {
                 finish();
             }
-        }, 10000);
+        }, 5000);
     }
 
     private void doLaunchFromAgent() {
@@ -217,35 +213,37 @@ public class AppLoadingActivity extends BaseActivity {
                 } else{
                     //Guide download support package
                     EventReporter.reportArm64(appModel.getPackageName(), "start");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            UpDownDialog.show(AppLoadingActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
-                                    getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            switch (i) {
-                                                case UpDownDialog.NEGATIVE_BUTTON:
-                                                    EventReporter.reportArm64(appModel.getPackageName(), "cancel");
-                                                    doLaunchMyself();
-                                                    break;
-                                                case UpDownDialog.POSITIVE_BUTTON:
-                                                    CommonUtils.jumpToMarket(AppLoadingActivity.this, getPackageName()+".arm64");
-                                                    EventReporter.reportArm64(appModel.getPackageName(), "go");
-                                                    break;
+                    if (firstStart) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UpDownDialog.show(AppLoadingActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
+                                        getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                switch (i) {
+                                                    case UpDownDialog.NEGATIVE_BUTTON:
+                                                        EventReporter.reportArm64(appModel.getPackageName(), "cancel");
+                                                        doLaunchMyself();
+                                                        break;
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        CommonUtils.jumpToMarket(AppLoadingActivity.this, AppConstants.ARM64_SUPPORT_PKG);
+                                                        EventReporter.reportArm64(appModel.getPackageName(), "go");
+                                                        break;
+                                                }
                                             }
-                                        }
-                                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialogInterface) {
-                                    doLaunchMyself();
-                                }
-                            });
-                        }
-                    });
-
+                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialogInterface) {
+                                        doLaunchMyself();
+                                    }
+                                });
+                            }
+                        });
+                    } else{
+                        doLaunchMyself();
+                    }
                 }
-                agent.destroy();
             }
         }).start();
     }
@@ -260,7 +258,7 @@ public class AppLoadingActivity extends BaseActivity {
                     doLaunchFromAgent();
                 }
             }
-        }, 500);
+        }, isAppRunning? 0: 500);
     }
 
     private void initView() {
@@ -332,10 +330,13 @@ public class AppLoadingActivity extends BaseActivity {
         setContentView(R.layout.app_loading_activity);
 
         if (initData()) {
-            initView();
-            if (needLoadNativeAd(false, appModel.getPackageName())) {
-                loadNativeAd();
+            if(!isAppRunning) {
+                initView();
+                if (needLoadNativeAd(false, appModel.getPackageName())) {
+                    loadNativeAd();
+                }
             }
+            doLaunch();
         }
     }
 
@@ -430,7 +431,6 @@ public class AppLoadingActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        doLaunch();
     }
 
     public static void preloadAd(Context context) {

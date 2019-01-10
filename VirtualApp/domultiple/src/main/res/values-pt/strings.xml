@@ -3,7 +3,7 @@
     <string name="about"></string>
     <string name="ad_free">Remover propagandas</string>
     <string name="add_clone_title">Criar Clone</string>
-    <string name="adfree_dialog_content">Doe ao desenvolvedor e torne-se um usuário premium de Do Multiple e apague todos os ADs neste aplicativo. Você quer comprar agora?</string>
+    <string name="adfree_dialog_content">Doe ao desenvolvedor e torne-se um usuário premium de DO Multiple Space e apague todos os ADs neste aplicativo. Você quer comprar agora?</string>
     <string name="adfree_dialog_title">Torne-se usuário VIP</string>
     <string name="al_btn_finish">Confirme</string>
     <string name="al_btn_next">Próximo</string>
@@ -42,7 +42,7 @@
     <string name="yes">sim</string>
     <string name="toast_shortcut_added">Atalho adicionado</string>
     <string name="update_dialog_left">Ignore esta versão</string>
-    <string name="update_dialog_content">Nova versão está chegando! Melhoramos muito a versão %s. Gostaria de atualizar Do Multiple agora?</string>
+    <string name="update_dialog_content">Nova versão está chegando! Melhoramos muito a versão %s. Gostaria de atualizar DO Multiple Space agora?</string>
     <string name="toast_shortcut_invalid">O atalho não é válido</string>
     <string name="hue">Matiz</string>
     <string name="congratulations">Parabéns</string>
@@ -56,7 +56,7 @@
     <string name="delete_dialog_title">Cuidado</string>
     <string name="dialog_feedback_content">Gostaria de nos dar alguns comentários para ajudar a melhorar?</string>
     <string name="dialog_love_content">Você se importaria de nos dar uma classificação de 5 estrelas na Play Store? Isso nos inspirará e agradeceremos o seu apoio!</string>
-    <string name="dialog_rating_us_content">Use o aplicativo Do Multiple?</string>
+    <string name="dialog_rating_us_content">Use o aplicativo DO Multiple Space?</string>
     <string name="enable_lock_settings_content">Alternar para ativar ou desativar o recurso de espaço de privacidade</string>
     <string name="enable_lock_settings_title">Armário de privacidade</string>
     <string name="extra_feedback_decription">Vamos resolver o problema para você o mais rápido possível e apreciar sua ajuda para melhorar o produto!</string>
@@ -115,5 +115,5 @@
     <string name="quick_switch_dialog_content">O Quick Switch permite que você alterne facilmente entre os aplicativos clonados da barra de notificação. Gostaria de habilitá-lo agora?</string>
     <string name="arm64_support">Suporte 64bit</string>
     <string name="dialog_permission_title">Conceder permissão</string>
-    <string name="dialog_permission_content">Por favor, permita o pedido de permissão do Do Multiple, caso contrário, alguns aplicativos clonados e o Google Play Service não funcionarão corretamente.</string>
+    <string name="dialog_permission_content">Por favor, permita o pedido de permissão do DO Multiple Space, caso contrário, alguns aplicativos clonados e o Google Play Service não funcionarão corretamente.</string>
 </resources>
