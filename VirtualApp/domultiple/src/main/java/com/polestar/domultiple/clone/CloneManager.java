@@ -367,6 +367,10 @@ public class CloneManager {
         }
     }
 
+    public static void updateLaunchTime(String pkg, int userId) {
+        mPackageLaunchTime.put(getMapKey(pkg, userId), System.currentTimeMillis());
+    }
+
     public static void launchApp(String packageName, int userId) {
         //Check app version and trying to upgrade if necessary
         try {
