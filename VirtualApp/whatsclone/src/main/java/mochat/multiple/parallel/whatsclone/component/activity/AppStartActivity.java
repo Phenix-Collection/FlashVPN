@@ -218,7 +218,7 @@ public class AppStartActivity extends BaseActivity {
 
     }
 
-    private void initData() {
+    private boolean initData() {
 
         Intent intent = getIntent();
         launched = false;
@@ -234,6 +234,7 @@ public class AppStartActivity extends BaseActivity {
         if (appModel == null) {
             ToastUtils.ToastDefult(this, getString(R.string.toast_shortcut_invalid));
             finish();
+            return false;
         } else {
             needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = AppManager.needUpgrade(appModel.getPackageName());
@@ -244,6 +245,7 @@ public class AppStartActivity extends BaseActivity {
             mFirstStart = !CustomizeAppData.hasLaunched(appModel.getPackageName(), appModel.getPkgUserId());
             MLogs.d("isAppRunning : " + isAppRunning + " firstStart: " + mFirstStart);
         }
+        return true;
     }
 
     private void doLaunch(){
@@ -408,17 +410,18 @@ public class AppStartActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainHandler = new Handler();
-        initData();
-        if (!isAppRunning) {
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            setContentView(R.layout.activity_start);
-            initView();
-            if (appModel != null && !isAppRunning && needLoadNativeAd(false, appModel.getPackageName())) {
-                loadNativeAd();
+        if (initData()) {
+            if (!isAppRunning) {
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                setContentView(R.layout.activity_start);
+                initView();
+                if (appModel != null && !isAppRunning && needLoadNativeAd(false, appModel.getPackageName())) {
+                    loadNativeAd();
+                }
             }
+            doLaunch();
+            EventReporter.reportActive(this, true);
         }
-        doLaunch();
-        EventReporter.reportActive(this, true);
 
     }
 
