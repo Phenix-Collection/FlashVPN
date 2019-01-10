@@ -163,6 +163,7 @@ public class AppLoadingActivity extends BaseActivity {
             needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
             isAppRunning = CloneManager.isAppLaunched(appModel);
+            MLogs.d("isAppRunning " + isAppRunning);
         }
         if (AppMonitorService.needLoadCoverAd(true, appModel.getPackageName())) {
             AppMonitorService.preloadCoverAd();
@@ -203,6 +204,7 @@ public class AppLoadingActivity extends BaseActivity {
                         agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
                     }
                     agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+                    CloneManager.updateLaunchTime(appModel.getPackageName(), appModel.getPkgUserId());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
