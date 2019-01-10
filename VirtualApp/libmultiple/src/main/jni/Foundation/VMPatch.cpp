@@ -331,12 +331,12 @@ replaceCameraNativeSetupMethod(JNIEnv *env, jobject javaMethod, jboolean isArt, 
 
 static bool inWhiteList(const char *hostPackageName) {
     static const char *const white_list[] = {
-            "Y29tLnBvbGVzdGFyLmRvbXVsdGlwbGU=", // "com.polestar.domultiple"
-            "Y29tLnBvbGVzdGFyLmRvbXVsdGlwbGUuYXJtNjQ=", // "com.polestar.domultiple.arm64"
+            "ZG8ubXVsdGlwbGUuY2xvbmVy", // "do.multiple.cloner"
+            "ZG8ubXVsdGlwbGUuY2xvbmVyLmFybTY0", // "do.multiple.cloner.arm64"
             "bW9jaGF0Lm11bHRpcGxlLnBhcmFsbGVsLndoYXRzY2xvbmU=", // "mochat.multiple.parallel.whatsclone"
             "bW9jaGF0Lm11bHRpcGxlLnBhcmFsbGVsLndoYXRzY2xvbmUuYXJtNjQ=", // "mochat.multiple.parallel.whatsclone.arm64"
-            "Y29tLnBvbGVzdGFyLnN1cGVyY2xvbmU=", // "com.polestar.superclone"
-            "Y29tLnBvbGVzdGFyLnN1cGVyY2xvbmUuYXJtNjQ=" // "com.polestar.superclone.arm64"
+            "Y29tLnBvbGVzdGFyLnN1cGVyYi5jbG9uZXI=", // "com.polestar.superb.cloner"
+            "Y29tLnBvbGVzdGFyLnN1cGVyYi5jbG9uZXIuYXJtNjQ=" // "com.polestar.superb.cloner.arm64"
     };
     const char * const *iter = &white_list[0];
     const char * const *iter_end = &white_list[sizeof(white_list) / sizeof(white_list[0])];

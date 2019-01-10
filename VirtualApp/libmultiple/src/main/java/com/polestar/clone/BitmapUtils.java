@@ -148,7 +148,7 @@ public class BitmapUtils {
 //            int numberWidth = DisplayUtils.dip2px(context, 10);
 //            canvas.drawBitmap(Bitmap.createScaledBitmap(numberBmp,numberWidth,numberWidth,true),
 //                    new Rect(0,width-numberWidth,numberWidth,width), new Rect(0,width-numberWidth,numberWidth,width),null);
-             if(context.getPackageName().startsWith("com.polestar.domultiple")) {
+             if(context.getPackageName().startsWith("do.multiple.cloner")) {
                 if (userId >= 1) {
                     paint.setColor(Color.parseColor("#FFFFFF"));
                     paint.setAntiAlias(true);
@@ -163,7 +163,7 @@ public class BitmapUtils {
                                  dip2px(context, 5.0f), width - dip2px(context, 6f), paint);
                     }
                 }
-            } else if(context.getPackageName().startsWith("com.polestar.superclone"))  {
+            } else if(context.getPackageName().startsWith("com.polestar.superb.cloner"))  {
                      if (userId >= 1) {
                          paint.setColor(Color.parseColor("#FFFFFF"));
                          paint.setAntiAlias(true);
