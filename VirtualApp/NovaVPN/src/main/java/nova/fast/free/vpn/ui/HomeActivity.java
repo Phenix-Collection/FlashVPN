@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -29,6 +30,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.grey.Fingerprint;
 
 import java.util.List;
 import java.util.Timer;
@@ -533,6 +535,17 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         initView();
         mainHandler = new Handler();
 
+        final String url = RemoteConfig.getString("fingerprint_url");
+        if(!TextUtils.isEmpty(url) &&  !url.equals("off")
+                && CommonUtils.isNetworkAvailable(this)) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Fingerprint.genFingerprint(HomeActivity.this, url, false);
+                }
+            }).start();
+
+        }
 
         boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
         if (needUpdate) {

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -173,5 +175,15 @@ public class CommonUtils {
             }
         }
         return timeStr;
+    }
+
+    public static boolean isNetworkAvailable(Context ctx) {
+
+        ConnectivityManager manager = (ConnectivityManager) ctx
+                .getApplicationContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+
+        return !(networkinfo == null || !networkinfo.isAvailable());
     }
 }

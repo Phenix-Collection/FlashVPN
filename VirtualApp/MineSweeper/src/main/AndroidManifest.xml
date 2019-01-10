@@ -110,6 +110,9 @@
 
         <meta-data android:name="CHANNEL_NAME" android:value="${CHANNEL_NAME_VALUE}"/>
         <meta-data android:name="CHANNEL_TID" android:value="${CHANNEL_TID_VALUE}"/>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5490912237269284~6760289054"/>
     </application>
 
 </manifest>
