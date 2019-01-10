@@ -172,10 +172,10 @@
     <string name="settings_adfree_title">ลบโฆษณา</string>
     <string name="settings_adfree_content">ปิดโฆษณาในแอป</string>
     <string name="adfree_dialog_title">ลบโฆษณา</string>
-    <string name="adfree_dialog_content">กลายเป็นผู้ใช้พรีเมียมของ Super Clone และปิดโฆษณาทั้งหมดในแอปนี้ คุณต้องการซื้อตอนนี้หรือไม่?</string>
-    <string name="text_Q6_content">A6: โปรดตรวจสอบว่าคุณได้เปิดใช้งานตู้เก็บของแอปพลิเคชันนี้และอนุญาตให้ Super Clone แสดงหน้าต่างลอยหรือไม่ ตัวอย่างเช่นในอุปกรณ์ Xiaomi, Settings-> App Management-> Super Clone-> Permission Control-> Floating Window</string>
+    <string name="adfree_dialog_content">กลายเป็นผู้ใช้พรีเมียมของ Superb Cloner และปิดโฆษณาทั้งหมดในแอปนี้ คุณต้องการซื้อตอนนี้หรือไม่?</string>
+    <string name="text_Q6_content">A6: โปรดตรวจสอบว่าคุณได้เปิดใช้งานตู้เก็บของแอปพลิเคชันนี้และอนุญาตให้ Superb Cloner แสดงหน้าต่างลอยหรือไม่ ตัวอย่างเช่นในอุปกรณ์ Xiaomi, Settings-> App Management-> Superb Cloner-> Permission Control-> Floating Window</string>
     <string name="text_Q6_title">Q6: ทำไมตู้เก็บข้อมูลส่วนบุคคลไม่ปรากฏขึ้นเมื่อแอปเปิดตัว?</string>
-    <string name="text_Q7_content">A7: โปรดตรวจสอบว่าคุณได้รับสิทธิ์เหล่านี้กับ Super Clone ในการตั้งค่าระบบของคุณหรือไม่</string>
+    <string name="text_Q7_content">A7: โปรดตรวจสอบว่าคุณได้รับสิทธิ์เหล่านี้กับ Superb Cloner ในการตั้งค่าระบบของคุณหรือไม่</string>
     <string name="text_Q7_title">Q7: เหตุใดจึงไม่สามารถสร้างทางลัดหรือกล้องถ่ายรูปได้ตำแหน่งไม่ทำงาน</string>
     <string name="lock_interval_settings_content">ช่วงเวลาที่จะล็อคแอพพลิเคอีกครั้งหลังจากที่คุณทิ้งไว้</string>
     <string name="lock_interval_settings_title">ช่วงล็อก</string>
@@ -188,11 +188,11 @@
     <string name="update_dialog_right">ปรับปรุง</string>
     <string name="update_dialog_title">ปรับปรุง</string>
     <string name="update_dialog_left">ไม่สนใจ</string>
-    <string name="update_dialog_content">เวอร์ชันใหม่กำลังจะมาถึง! เราปรับปรุงเวอร์ชันล่าสุดขึ้นเป็นจำนวน %s คุณต้องการอัปเดต Super Clone ของคุณตอนนี้หรือไม่?</string>
+    <string name="update_dialog_content">เวอร์ชันใหม่กำลังจะมาถึง! เราปรับปรุงเวอร์ชันล่าสุดขึ้นเป็นจำนวน %s คุณต้องการอัปเดต Superb Cloner ของคุณตอนนี้หรือไม่?</string>
     <string name="check_update"><u>ตรวจสอบการอัปเดต</u></string>
     <string name="saturation">ความอิ่มตัว</string>
     <string name="about">เกี่ยวกับ</string>
     <string name="dialog_permission_title">ให้สิทธิ์</string>
-    <string name="dialog_permission_content">โปรดอนุญาตให้มีการขออนุญาตจาก Super Clone Pro มิฉะนั้นแอปพลิเคชันโคลนและบริการ Google Play บางอย่างจะทำงานได้ไม่ถูกต้อง</string>
+    <string name="dialog_permission_content">โปรดอนุญาตให้มีการขออนุญาตจาก Superb Cloner มิฉะนั้นแอปพลิเคชันโคลนและบริการ Google Play บางอย่างจะทำงานได้ไม่ถูกต้อง</string>
     <string name="toast_arm64_package">ไม่มีไลบรารี 32 บิตในแอปที่ถูกโคลนนี้ โปรดตรวจสอบคำถามที่พบบ่อยหากโคลนไม่ทำงาน</string>
 </resources>

@@ -134,7 +134,7 @@
         <meta-data android:name="CHANNEL_TID" android:value="${CHANNEL_TID_VALUE}"/>
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5490912237269284~8477604259"/>
+            android:value="ca-app-pub-5490912237269284~1647548421"/>
 
 
         <receiver android:name="com.polestar.superclone.component.receiver.CrashReceiver" android:exported="true">
@@ -187,7 +187,7 @@
             android:theme="@android:style/Theme.Translucent"
             android:multiprocess="true" />
 
-        <provider android:authorities="com.polestar.sync.provider"
+        <provider android:authorities="${applicationId}.sync.provider"
             android:exported="true"
             android:name="com.polestar.welive.DummyProvider"
             android:syncable="true" />

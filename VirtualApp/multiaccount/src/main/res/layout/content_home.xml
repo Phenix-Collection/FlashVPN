@@ -43,6 +43,7 @@
                     android:layout_toRightOf="@id/menu_btn"
                     android:layout_marginLeft="16dp"
                     android:text="@string/app_alias_name"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="19sp" />
                 <RelativeLayout

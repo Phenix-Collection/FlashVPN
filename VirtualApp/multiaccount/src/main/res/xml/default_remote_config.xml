@@ -13,24 +13,14 @@
         <key>quit_rating_cloned_app_gate</key>
         <value>5</value>
     </entry>
-
-    <entry>
-        <key>home_appwall_percentage</key>
-        <value>50</value>
-    </entry>
     <entry>
         <key>slot_home_lucky_new</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb_interstitial:2132315560388455_2132315733721771:0;ab_interstitial:ca-app-pub-5490912237269284/2193158234:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_app_lock</key>
-        <value>ab_banner:ca-app-pub-5490912237269284/6761645550:0:2;adm:ca-app-pub-5490912237269284/9930734372:0</value>
-    </entry>
-    <entry>
-        <key>slot_test</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb_interstitial:205346500198371_205882903478064:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_install_ad</key>
@@ -65,11 +55,11 @@
     <entry>
         <key>slot_home_gift_interstitial</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb_interstitial:2132315560388455_2132315733721771:0;ab_interstitial:ca-app-pub-5490912237269284/2193158234:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_home_header_native</key>
-        <value>adm:ca-app-pub-5490912237269284/8289461591:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>home_show_header_ad</key>
@@ -77,7 +67,7 @@
     </entry>
     <entry>
         <key>slot_applist_native</key>
-        <value>adm:ca-app-pub-5490912237269284/9383939461:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>clone_rate_package</key>
@@ -116,7 +106,7 @@
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
-        <value>adm:ca-app-pub-5490912237269284/9767082843:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>fb_follow_page</key>
@@ -124,11 +114,11 @@
     </entry>
     <entry>
         <key>ad_free_dialog_interval</key>
-        <value>48</value>
+        <value>48000</value>
     </entry>
     <entry>
         <key>ad_free_dialog_interval_2</key>
-        <value>360</value>
+        <value>360000</value>
     </entry>
     <entry>
         <key>default_lock_enable</key>
@@ -185,7 +175,7 @@
     </entry>
     <entry>
         <key>slot_app_start</key>
-        <value>fb_interstitial:2132315560388455_2141488576137820:0;ab_interstitial:ca-app-pub-5490912237269284/4589889732:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_app_start_filter</key>
@@ -225,11 +215,11 @@
     </entry>
     <entry>
         <key>slot_boost_ad</key>
-        <value>adm:ca-app-pub-5490912237269284/6729989417:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>slot_app_start_native</key>
-        <value>ab_banner:ca-app-pub-5490912237269284/4945112956:0:2;bt:13276_24244:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
@@ -238,14 +228,6 @@
     <entry>
         <key>pkg_config</key>
         <value>5</value>
-    </entry>
-    <entry>
-        <key>grey_source_id</key>
-        <value>29026</value>
-    </entry>
-    <entry>
-        <key>coffee_key</key>
-        <value>1516027773710659325298</value>
     </entry>
     <entry>
         <key>conf_preclone_attr_delay</key>
@@ -275,7 +257,7 @@
     </entry>
     <entry>
         <key>slot_intercept_ad</key>
-        <value>ab_interstitial:ca-app-pub-5490912237269284/1906457047:0</value>
+        <value>null</value>
     </entry>
     <entry>
         <key>home_ad_refresh_interval_s</key>

@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "235393634473",
-    "firebase_url": "https://superclone-pro.firebaseio.com",
-    "project_id": "superclone-pro",
-    "storage_bucket": "superclone-pro.appspot.com"
+    "project_number": "968851718454",
+    "firebase_url": "https://superb-cloner.firebaseio.com",
+    "project_id": "superb-cloner",
+    "storage_bucket": "superb-cloner.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:235393634473:android:5ebd8fbc2206d085",
+        "mobilesdk_app_id": "1:968851718454:android:fe9706038a958a4c",
         "android_client_info": {
-          "package_name": "com.polestar.superclone"
+          "package_name": "com.polestar.superb.cloner"
         }
       },
       "oauth_client": [
         {
-          "client_id": "235393634473-uhtp5kgqh046br836gs8ka3hs991j4h4.apps.googleusercontent.com",
+          "client_id": "968851718454-iv8uk966vdqp95qhen9dkf4ccsm8vk89.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAnqYYw07Svpdr_yZXdxf_69kL4dQu1bcs"
+          "current_key": "AIzaSyB3AemH2e83uB4YW2xe7lJeJUd1RAgF554"
         }
       ],
       "services": {
