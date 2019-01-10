@@ -123,7 +123,7 @@ public class PolestarApp extends MultiDexApplication {
     }
 
     private void initAd() {
-        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~2264773329");
+        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~2442960626");
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
