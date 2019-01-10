@@ -244,9 +244,6 @@ public class AppStartActivity extends BaseActivity {
             mFirstStart = !CustomizeAppData.hasLaunched(appModel.getPackageName(), appModel.getPkgUserId());
             MLogs.d("isAppRunning : " + isAppRunning + " firstStart: " + mFirstStart);
         }
-        if (appModel != null && !isAppRunning && needLoadNativeAd(false, appModel.getPackageName())) {
-            loadNativeAd();
-        }
     }
 
     private void doLaunch(){
@@ -416,6 +413,9 @@ public class AppStartActivity extends BaseActivity {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             setContentView(R.layout.activity_start);
             initView();
+            if (appModel != null && !isAppRunning && needLoadNativeAd(false, appModel.getPackageName())) {
+                loadNativeAd();
+            }
         }
         doLaunch();
         EventReporter.reportActive(this, true);
