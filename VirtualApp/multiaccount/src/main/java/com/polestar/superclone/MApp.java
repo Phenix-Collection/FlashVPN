@@ -127,7 +127,7 @@ public class MApp extends MultiDexApplication {
     }
 
     private void initAd() {
-        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~8640815381");
+        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~1647548421");
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
