@@ -183,7 +183,12 @@ public class CloneAgent64 {
         if (iCloneAgent != null) {
             return  iCloneAgent;
         }
-        String supportPkg = mContext.getPackageName()+".arm64";
+        String supportPkg ;
+        if (mContext.getPackageName().equals("do.multiple.cloner")) {
+            supportPkg = "com.polestar.domultiple.arm64";
+        } else {
+            supportPkg = mContext.getPackageName()+".arm64";
+        }
         try{
             ApplicationInfo ai = mContext.getPackageManager().getApplicationInfo(supportPkg, 0);
         }catch (PackageManager.NameNotFoundException ex) {
