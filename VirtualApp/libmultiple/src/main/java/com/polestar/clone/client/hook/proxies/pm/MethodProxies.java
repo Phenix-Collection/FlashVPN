@@ -31,6 +31,7 @@ import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.clone.client.ipc.VPackageManager;
 import com.polestar.clone.helper.collection.ArraySet;
 import com.polestar.clone.helper.compat.ParceledListSliceCompat;
+import com.polestar.clone.helper.compat.PermissionCompat;
 import com.polestar.clone.helper.utils.ArrayUtils;
 import com.polestar.clone.helper.utils.EncodeUtils;
 import com.polestar.clone.os.VUserHandle;
@@ -735,13 +736,18 @@ class MethodProxies {
             String permName = (String) args[0];
             String pkgName = (String) args[1];
             int userId = VUserHandle.myUserId();
-            if (permName.startsWith("com.google")) {
-                return PackageManager.PERMISSION_GRANTED;
-            }
-            if (Manifest.permission.ACCOUNT_MANAGER.equals(permName)) {
-                return PackageManager.PERMISSION_GRANTED;
-            }
-            if (!permName.startsWith("android.permission")) {
+//            if (permName.startsWith("com.google")) {
+//                return PackageManager.PERMISSION_GRANTED;
+//            }
+//            if (Manifest.permission.ACCOUNT_MANAGER.equals(permName)) {
+//                return PackageManager.PERMISSION_GRANTED;
+//            }
+//            if (!permName.startsWith("android.permission")) {
+//                return PackageManager.PERMISSION_GRANTED;
+//            }
+            if (PermissionCompat.DANGEROUS_PERMISSION.contains(permName)
+                    && !VirtualCore.get().getHostRequestDangerPermissions().contains(permName)) {
+                //Request permission that host not request
                 return PackageManager.PERMISSION_GRANTED;
             }
             return VPackageManager.get().checkPermission(permName, pkgName, userId);

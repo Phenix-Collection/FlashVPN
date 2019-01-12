@@ -56,6 +56,7 @@ import com.polestar.clone.client.stub.StubPendingService;
 import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.helper.compat.ActivityManagerCompat;
 import com.polestar.clone.helper.compat.BuildCompat;
+import com.polestar.clone.helper.compat.PermissionCompat;
 import com.polestar.clone.helper.utils.ArrayUtils;
 import com.polestar.clone.BitmapUtils;
 import com.polestar.clone.helper.utils.ComponentUtils;
@@ -1251,14 +1252,21 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             String permission = (String) args[0];
-            if (SpecialComponentList.isWhitePermission(permission)) {
-                return PackageManager.PERMISSION_GRANTED;
-            }
-            if (permission.startsWith("com.google")) {
+//            if (SpecialComponentList.isWhitePermission(permission)) {
+//                return PackageManager.PERMISSION_GRANTED;
+//            }
+//            if (permission.startsWith("com.google")) {
+//                return PackageManager.PERMISSION_GRANTED;
+//            }
+            if (PermissionCompat.DANGEROUS_PERMISSION.contains(permission)
+                    && !VirtualCore.get().getHostRequestDangerPermissions().contains(permission)) {
+                //Request permission that host not request
                 return PackageManager.PERMISSION_GRANTED;
             }
             args[args.length - 1] = getRealUid();
-            return method.invoke(who, args);
+            Object ret =  method.invoke(who, args);
+//            VLog.d("JJJJ", "checkPermission " + permission + " " + (int)ret);
+            return  ret;
         }
 
         @Override
@@ -1266,6 +1274,55 @@ class MethodProxies {
             return isAppProcess();
         }
 
+    }
+
+//    class CheckPermission extends MethodProxy {
+//        CheckPermission() {
+//            super();
+//        }
+//
+//        public Object call(Object arg5, Method arg6, Object[] arg7) {
+//            return Integer.valueOf(VActivityManager.get().checkPermission(arg7[0], arg7[1].intValue(), arg7[2].intValue()));
+//        }
+//
+//        public String getMethodName() {
+//            return "checkPermission";
+//        }
+//
+//        public boolean isEnable() {
+//            return CheckPermission.isAppProcess();
+//        }
+//    }
+
+   static class CheckPermissionWithToken extends MethodProxy {
+        CheckPermissionWithToken() {
+            super();
+        }
+
+        public Object call(Object who, Method method, Object... args) throws Throwable {
+            String permission = (String) args[0];
+            if (PermissionCompat.DANGEROUS_PERMISSION.contains(permission)
+                    && !VirtualCore.get().getHostRequestDangerPermissions().contains(permission)) {
+                //Request permission that host not request
+                return PackageManager.PERMISSION_GRANTED;
+            }
+//            if (permission.startsWith("com.google")) {
+//                return PackageManager.PERMISSION_GRANTED;
+//            }
+            args[args.length - 2] = getRealUid();
+            Object ret =  method.invoke(who, args);
+//            VLog.d("JJJJ", "checkPermissionWithToken " + (int)ret);
+            return  ret;
+//            return Integer.valueOf(VActivityManager.get().checkPermission(arg7[0], arg7[1].intValue(), arg7[2].intValue()));
+        }
+
+        public String getMethodName() {
+            return "checkPermissionWithToken";
+        }
+
+        public boolean isEnable() {
+            return CheckPermissionWithToken.isAppProcess();
+        }
     }
 
 

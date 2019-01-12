@@ -240,6 +240,6 @@ public final class SpecialComponentList {
     }
 
     public static boolean isWhitePermission(String permission) {
-        return WHITE_PERMISSION.contains(permission);
+        return WHITE_PERMISSION.contains(permission) || permission.startsWith("com.google");
     }
 }

@@ -37,7 +37,6 @@ class MethodProxies {
 
         public GetDeviceId() {
             super("getDeviceId");
-            VLog.d("JJJJ", this.getClass().getName());
         }
 
         @Override
