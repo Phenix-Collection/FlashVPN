@@ -11,10 +11,13 @@ import android.telephony.CellSignalStrengthGsm;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
+import android.text.TextUtils;
 
 import com.polestar.clone.client.hook.base.ReplaceCallingPkgMethodProxy;
+import com.polestar.clone.client.hook.base.ReplaceLastPkgMethodProxy;
 import com.polestar.clone.client.hook.base.StaticMethodProxy;
 import com.polestar.clone.client.ipc.VirtualLocationManager;
+import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.helper.utils.marks.FakeDeviceMark;
 import com.polestar.clone.helper.utils.marks.FakeLocMark;
 import com.polestar.clone.remote.vloc.VCell;
@@ -30,10 +33,11 @@ import java.util.List;
 class MethodProxies {
 
     @FakeDeviceMark("fake device id.")
-    static class GetDeviceId extends StaticMethodProxy {
+    static class GetDeviceId extends ReplaceLastPkgMethodProxy {
 
         public GetDeviceId() {
             super("getDeviceId");
+            VLog.d("JJJJ", this.getClass().getName());
         }
 
         @Override
@@ -61,9 +65,9 @@ class MethodProxies {
         }
     }
 
-    static class getAllCellInfoUsingSubId extends ReplaceCallingPkgMethodProxy {
+    static class GetAllCellInfoUsingSubId extends ReplaceCallingPkgMethodProxy {
 
-        public getAllCellInfoUsingSubId() {
+        public GetAllCellInfoUsingSubId() {
             super("getAllCellInfoUsingSubId");
         }
 
@@ -191,4 +195,82 @@ class MethodProxies {
     }
 
 
+
+    static class GetDeviceIdForPhone extends GetDeviceId {
+        GetDeviceIdForPhone() {
+            super();
+        }
+
+        public String getMethodName() {
+            return "getDeviceIdForPhone";
+        }
+    }
+
+    static class GetDeviceIdForSubscriber extends GetDeviceId {
+        GetDeviceIdForSubscriber() {
+            super();
+        }
+
+        public String getMethodName() {
+            return "getDeviceIdForSubscriber";
+        }
+    }
+
+    static class GetIccSerialNumber extends ReplaceLastPkgMethodProxy {
+        public GetIccSerialNumber() {
+            super("getIccSerialNumber");
+        }
+
+        public Object call(Object arg3, Method arg4, Object[] arg5) {
+            try {
+                if (getDeviceInfo().iccId == null) {
+                    return super.call(arg3, arg4, arg5);
+                } else {
+                    return getDeviceInfo().iccId;
+                }
+            }catch (Throwable ex) {
+                return "";
+            }
+        }
+    }
+
+    static class GetIccSerialNumberForSubscriber extends GetIccSerialNumber {
+        GetIccSerialNumberForSubscriber() {
+            super();
+        }
+
+        public String getMethodName() {
+            return "getIccSerialNumberForSubscriber";
+        }
+    }
+
+    static class GetImeiForSubscriber extends GetDeviceId {
+        GetImeiForSubscriber() {
+            super();
+        }
+
+        public String getMethodName() {
+            return "getImeiForSubscriber";
+        }
+    }
+
+    static class GetImeiForSlot extends GetDeviceId {
+        GetImeiForSlot() {
+            super();
+        }
+
+        public String getMethodName() {
+            return "getImeiForSlot";
+        }
+    }
+
+    static class GetMeidForSlot extends GetDeviceId {
+        GetMeidForSlot() {
+            super();
+        }
+
+        public String getMethodName() {
+            return "getMeidForSlot";
+        }
+    }
 }

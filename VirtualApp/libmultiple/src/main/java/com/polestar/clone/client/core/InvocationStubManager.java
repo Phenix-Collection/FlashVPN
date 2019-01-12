@@ -5,6 +5,7 @@ import android.os.Build;
 import com.polestar.clone.client.hook.base.MethodInvocationProxy;
 import com.polestar.clone.client.hook.base.MethodInvocationStub;
 import com.polestar.clone.client.hook.delegate.AppInstrumentation;
+import com.polestar.clone.client.hook.proxies.accessibility.AccessibilityManagerStub;
 import com.polestar.clone.client.hook.proxies.account.AccountManagerStub;
 import com.polestar.clone.client.hook.proxies.alarm.AlarmManagerStub;
 import com.polestar.clone.client.hook.proxies.am.ActivityManagerStub;
@@ -46,6 +47,9 @@ import com.polestar.clone.client.hook.proxies.restriction.RestrictionStub;
 import com.polestar.clone.client.hook.proxies.search.SearchManagerStub;
 import com.polestar.clone.client.hook.proxies.shortcut.ShortcutServiceStub;
 import com.polestar.clone.client.hook.proxies.statusbar.StatusBarManagerStub;
+import com.polestar.clone.client.hook.proxies.system.LockSettingsStub;
+import com.polestar.clone.client.hook.proxies.system.SystemUpdateStub;
+import com.polestar.clone.client.hook.proxies.telephony.HwTelephonyStub;
 import com.polestar.clone.client.hook.proxies.telephony.TelephonyRegistryStub;
 import com.polestar.clone.client.hook.proxies.telephony.TelephonyStub;
 import com.polestar.clone.client.hook.proxies.usage.UsageStatsManagerStub;
@@ -58,6 +62,8 @@ import com.polestar.clone.client.interfaces.IInjector;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import mirror.com.android.internal.telephony.IHwTelephony;
 
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
@@ -135,6 +141,10 @@ public final class InvocationStubManager {
 			addInjector(new MountServiceStub());
 			addInjector(new BackupManagerStub());
 			addInjector(new TelephonyStub());
+			if (Build.VERSION.SDK_INT >= O && IHwTelephony.TYPE != null){
+				addInjector(new HwTelephonyStub());
+			}
+			addInjector(new AccessibilityManagerStub());
 			addInjector(new TelephonyRegistryStub());
 			addInjector(new PhoneSubInfoStub());
 			addInjector(new PowerManagerStub());
@@ -189,6 +199,13 @@ public final class InvocationStubManager {
             }
             if (Build.VERSION.SDK_INT >= O){
 				addInjector(new AutoFillManagerStub());
+				if( IHwTelephony.TYPE != null) {
+					this.addInjector(new HwTelephonyStub());
+				}
+			}
+			if (Build.VERSION.SDK_INT >= 28) {
+            	addInjector(new SystemUpdateStub());
+            	addInjector(new LockSettingsStub());
 			}
 		}
 	}
