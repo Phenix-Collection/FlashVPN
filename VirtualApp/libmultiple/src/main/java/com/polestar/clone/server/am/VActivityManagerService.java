@@ -144,6 +144,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
     @Override
     public int startActivities(Intent[] intents, String[] resolvedTypes, IBinder token, Bundle options, int userId) {
         synchronized (this) {
+            if (intents == null) return 0;
             ActivityInfo[] infos = new ActivityInfo[intents.length];
             for (int i = 0; i < intents.length; i++) {
                 ActivityInfo ai = VirtualCore.get().resolveActivityInfo(intents[i], userId);
