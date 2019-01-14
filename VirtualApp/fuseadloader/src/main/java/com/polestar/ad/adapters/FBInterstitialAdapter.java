@@ -24,30 +24,28 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
     }
 
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         adListener = listener;
         if (listener == null) {
             AdLog.e("Not set listener!");
             return;
         }
         if (AdConstants.DEBUG) {
-            SharedPreferences sp = mContext.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
+            SharedPreferences sp = context.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
             String deviceIdHash = sp.getString("deviceIdHash", "");
             AdSettings.addTestDevice(deviceIdHash);
-            boolean isTestDevice = AdSettings.isTestMode(mContext);
+            boolean isTestDevice = AdSettings.isTestMode(context);
             AdLog.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
         }
-        interstitialAd = new InterstitialAd(mContext, key);
+        interstitialAd = new InterstitialAd(context, key);
         interstitialAd.setAdListener(this);
         interstitialAd.loadAd();
         startMonitor();
     }
 
     private String key;
-    private Context mContext;
 
     public FBInterstitialAdapter(Context context, String key) {
-        mContext = context;
         this.key = key;
         LOAD_TIMEOUT = 20*1000;
 
@@ -118,7 +116,7 @@ public class FBInterstitialAdapter extends AdAdapter implements InterstitialAdLi
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL;
+        return AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL;
     }
 
     @Override

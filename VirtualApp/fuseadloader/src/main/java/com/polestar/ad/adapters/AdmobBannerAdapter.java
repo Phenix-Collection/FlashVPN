@@ -7,7 +7,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
@@ -19,91 +18,90 @@ import com.polestar.ad.AdViewBinder;
 
 public class AdmobBannerAdapter extends AdAdapter {
     private AdView mRawAd;
-    private Context mContext;
     private AdSize mSize;
     private final static String TAG = "AdmobBannerAdapter";
 
     public AdmobBannerAdapter(Context context, String key, AdSize bannerSize) {
-        mContext = context;
         mKey = key;
         mSize = bannerSize;
-        initAdView();
     }
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_ADMOB_BANNER;
+        return AdConstants.AdType.AD_SOURCE_ADMOB_BANNER;
     }
 
     @Override
-    public View getAdView(AdViewBinder viewBinder) {
+    public View getAdView(Context context, AdViewBinder viewBinder) {
         registerViewForInteraction(mRawAd);
         return mRawAd;
     }
 
-    private void initAdView() {
+    private void initAdView(Context context) {
         if (mRawAd == null) {
-            mRawAd = new AdView(mContext);
-        }
-        mRawAd.setAdSize(mSize);
+            mRawAd = new AdView(context);
+            mRawAd.setAdSize(mSize);
 //        mAdmobExpressView.setAdUnitId("ca-app-pub-5490912237269284/2431070657");
-        mRawAd.setAdUnitId(mKey);
-        mRawAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                AdLog.d(TAG, "onAdClosed");
-                if (adListener != null) {
-                    adListener.onAdClosed(AdmobBannerAdapter.this);
+            mRawAd.setAdUnitId(mKey);
+            mRawAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    AdLog.d(TAG, "onAdClosed");
+                    if (adListener != null) {
+                        adListener.onAdClosed(AdmobBannerAdapter.this);
+                    }
                 }
-            }
 
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                AdLog.d(TAG, "onAdFailedToLoad " + i);
-                stopMonitor();
-                if (adListener != null) {
-                    adListener.onError("ErrorCode " + i);
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+                    AdLog.d(TAG, "onAdFailedToLoad " + i);
+                    stopMonitor();
+                    if (adListener != null) {
+                        adListener.onError("ErrorCode " + i);
+                    }
                 }
-            }
 
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-                if (adListener != null) {
-                    adListener.onAdClicked(AdmobBannerAdapter.this);
+                @Override
+                public void onAdLeftApplication() {
+                    super.onAdLeftApplication();
                 }
-            }
 
-            @Override
-            public void onAdLoaded() {
-                AdLog.d(TAG, "onAdLoaded");
-                mLoadedTime = System.currentTimeMillis();
-                stopMonitor();
-                super.onAdLoaded();
-                if (adListener != null) {
-                    adListener.onAdLoaded(AdmobBannerAdapter.this);
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                    if (adListener != null) {
+                        adListener.onAdClicked(AdmobBannerAdapter.this);
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void onAdLoaded() {
+                    AdLog.d(TAG, "onAdLoaded");
+                    mLoadedTime = System.currentTimeMillis();
+                    stopMonitor();
+                    super.onAdLoaded();
+                    if (adListener != null) {
+                        adListener.onAdLoaded(AdmobBannerAdapter.this);
+                    }
+                }
+            });
+        }
+
     }
 
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         adListener = listener;
+        initAdView(context);
         AdLog.d("loadAdmobNativeExpress");
         startMonitor();
         if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID(mContext);
+            String android_id = AdUtils.getAndroidID(context);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
-            boolean isTestDevice = request.isTestDevice(mContext);
+            boolean isTestDevice = request.isTestDevice(context);
             AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
             AdLog.d( "Admob unit id "+ mRawAd.getAdUnitId());
             mRawAd.loadAd(request );

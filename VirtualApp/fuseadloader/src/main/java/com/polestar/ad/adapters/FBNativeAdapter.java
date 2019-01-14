@@ -32,22 +32,20 @@ import java.util.List;
 public class FBNativeAdapter extends AdAdapter {
 
     private NativeAd mRawAd ;
-    private Context mContext;
 
     public FBNativeAdapter(Context context, String key) {
-        mContext = context;
         mKey = key;
     }
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         if (AdConstants.DEBUG) {
-            SharedPreferences sp = mContext.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
+            SharedPreferences sp = context.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
             String deviceIdHash = sp.getString("deviceIdHash", "");
             AdSettings.addTestDevice(deviceIdHash);
-            boolean isTestDevice = AdSettings.isTestMode(mContext);
+            boolean isTestDevice = AdSettings.isTestMode(context);
             AdLog.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
         }
-        mRawAd = new NativeAd(mContext, mKey);
+        mRawAd = new NativeAd(context, mKey);
         adListener = listener;
         mRawAd.setAdListener(new AdListener() {
             @Override
@@ -86,7 +84,7 @@ public class FBNativeAdapter extends AdAdapter {
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_FACEBOOK;
+        return AdConstants.AdType.AD_SOURCE_FACEBOOK;
     }
 
     @Override
@@ -143,7 +141,7 @@ public class FBNativeAdapter extends AdAdapter {
     }
 
     @Override
-    public void registerPrivacyIconView(View view) {
+    public void registerPrivacyIconView(final View view) {
         //AdChoicesView choicesView = new AdChoicesView(mContext, mRawAd, true);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +154,7 @@ public class FBNativeAdapter extends AdAdapter {
                     intent.setFlags(
                             Intent.FLAG_ACTIVITY_NEW_TASK
                                     | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                    mContext.startActivity(intent);
+                    view.getContext().startActivity(intent);
                 }
             }
         });
@@ -168,8 +166,8 @@ public class FBNativeAdapter extends AdAdapter {
     }
 
     @Override
-    public View getAdView(AdViewBinder viewBinder) {
-        View adView = LayoutInflater.from(mContext).inflate(viewBinder.layoutId, null);
+    public View getAdView(Context context, AdViewBinder viewBinder) {
+        View adView = LayoutInflater.from(context).inflate(viewBinder.layoutId, null);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        adView.setLayoutParams(params);
         if (adView != null) {
@@ -224,7 +222,7 @@ public class FBNativeAdapter extends AdAdapter {
             mRawAd.registerViewForInteraction(adView,clickableViews);
             LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(viewBinder.privacyInformationId);
             if (adChoicesContainer != null) {
-                AdChoicesView adChoicesView = new AdChoicesView(mContext, mRawAd, true);
+                AdChoicesView adChoicesView = new AdChoicesView(context, mRawAd, true);
                 adChoicesContainer.addView(adChoicesView);
             }
         }

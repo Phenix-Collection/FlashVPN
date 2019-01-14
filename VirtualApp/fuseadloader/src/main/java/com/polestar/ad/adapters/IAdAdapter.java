@@ -1,5 +1,7 @@
 package com.polestar.ad.adapters;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 
 import com.polestar.ad.AdViewBinder;
@@ -47,16 +49,19 @@ public interface IAdAdapter {
 
     void destroy();
 
-    View getAdView(AdViewBinder viewBinder);
+    View getAdView(Context context, AdViewBinder viewBinder);
 
     /**
      *
      * @param num number of Ads; if <= 0 , will use the default value 1s
      * @param listener
      */
-    void loadAd(int num, IAdLoadListener listener);
+    void loadAd(Context context, int num, IAdLoadListener listener);
 
-    public boolean isInterstitialAd();
+    boolean isInterstitialAd();
 
     void setAdListener(IAdLoadListener listener);
+
+    void onActivityResume(Activity activity);
+    void onActivityPause(Activity activity);
 }

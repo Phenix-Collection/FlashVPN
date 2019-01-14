@@ -1,14 +1,26 @@
 package com.polestar.ad.adapters;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.ComponentCallbacks;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.MobileAds;
+import com.ironsource.mediationsdk.IronSource;
+import com.mopub.common.MoPub;
+import com.mopub.common.SdkConfiguration;
+import com.mopub.common.SdkInitializationListener;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
+import com.polestar.ad.BuildConfig;
+import com.polestar.ad.SDKConfiguration;
 import com.polestar.imageloader.ImageLoader;
 
 import java.util.ArrayList;
@@ -22,7 +34,7 @@ import java.util.List;
  */
 
 public class FuseAdLoader {
-    private Context mContext;
+    private Context mAppContext;
     private List<AdConfig> mNativeAdConfigList = new ArrayList();
     private HashMap<String, IAdAdapter> mNativeAdCache = new HashMap<>();
     private IAdLoadListener mListener;
@@ -33,27 +45,112 @@ public class FuseAdLoader {
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private int mLoadingBits;
     private boolean mAdReturned;
-    private static ConfigFetcher configFetcher;
+    private static ConfigFetcher sConfigFetcher;
+    private static SDKConfiguration sConfiguration;
+    //Some SDK e.g. Mopub, IronSource needs to be initialized with Activity context
+    private static boolean sInitializedWithActivity;
 
     private static HashMap<String, FuseAdLoader> sAdLoaderMap = new HashMap<>();
-    public synchronized static FuseAdLoader get(String slot, Context appContext) {
+    public synchronized static FuseAdLoader get(String slot, Context context) {
         FuseAdLoader adLoader = sAdLoaderMap.get(slot);
         if (adLoader == null) {
-            adLoader = new FuseAdLoader(slot, appContext);
+            adLoader = new FuseAdLoader(slot, context.getApplicationContext());
             sAdLoaderMap.put(slot, adLoader);
-        } else {
-            adLoader.attachContext(appContext);
+        }
+        if (context instanceof Activity && !sInitializedWithActivity){
+            if(sConfiguration.hasMopub()){
+                initMopub((Activity) context);
+            }
+            if(sConfiguration.hasIronSource()) {
+                initIronSource((Activity) context);
+            }
         }
         return adLoader;
     }
 
-    public void attachContext(Context context) {
-        mContext = context;
+    private static void initMopub (Activity activity) {
+        SdkConfiguration.Builder builder = new SdkConfiguration.Builder(sConfiguration.mopubInitAdId);
+        MoPub.initializeSdk(activity, builder.build(), new SdkInitializationListener() {
+            @Override
+            public void onInitializationFinished() {
+                AdLog.d("Mopub initialized");
+                MoPub.getPersonalInformationManager().grantConsent();
+            }
+        });
     }
 
-    public static void init(ConfigFetcher depends) {
-        configFetcher = depends;
+    private static void initIronSource(Activity activity) {
+        IronSource.init(activity, sConfiguration.ironSourceAppKey);
+        AdLog.d("init IronSourcce ");
+        if (BuildConfig.DEBUG) {
+            IronSource.setAdaptersDebug(true);
+        }
+        IronSource.setConsent(true);
+        IronSource.shouldTrackNetworkState(activity , true);
     }
+//    public static void init( ConfigFetcher depends) {
+//        sConfigFetcher = depends;
+//    }
+
+    public static void init (final ConfigFetcher depends, Context context, final SDKConfiguration configuration) {
+        sConfigFetcher = depends;
+        sConfiguration = configuration;
+        if(sConfiguration.hasAdmob()) {
+            MobileAds.initialize(context, configuration.admobAppId);
+        }
+        if (context instanceof Activity) {
+            sInitializedWithActivity = true;
+            if (sConfiguration.hasMopub()) {
+                initMopub((Activity) context);
+            }
+            if (sConfiguration.hasIronSource()) {
+                initIronSource((Activity) context);
+            }
+        }
+        Application application = (Application) context.getApplicationContext();
+        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                if (sInitializedWithActivity && sConfiguration.hasIronSource()) {
+                    IronSource.onResume(activity);
+                }
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                if (sInitializedWithActivity && sConfiguration.hasIronSource()) {
+                    IronSource.onPause(activity);
+                }
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+    }
+
+//    public static void initIronSource
 
     public interface ConfigFetcher {
         public boolean isAdFree();
@@ -61,11 +158,11 @@ public class FuseAdLoader {
     }
 
     private FuseAdLoader(String slot, Context context) {
-        this.mContext = context;
+        this.mAppContext = context;
         mSlot = slot;
         List<AdConfig> adSources ;
-        if (configFetcher != null ) {
-           adSources = configFetcher.getAdConfigList(mSlot);
+        if (sConfigFetcher != null ) {
+           adSources = sConfigFetcher.getAdConfigList(mSlot);
         }  else {
             adSources = new ArrayList<>(0);
         }
@@ -74,8 +171,8 @@ public class FuseAdLoader {
 
     public static final HashSet<String> SUPPORTED_TYPES = new HashSet<>();
 
-    public void preloadAd() {
-        loadAd(1, null);
+    public void preloadAd(Context context) {
+        loadAd(context, 1, null);
     }
 
     public FuseAdLoader setBannerAdSize(AdSize adSize) {
@@ -83,12 +180,12 @@ public class FuseAdLoader {
         return this;
     }
 
-    public void loadAd(int burstNum, long protectTime, IAdLoadListener listener) {
+    public void loadAd(Context context, int burstNum, long protectTime, IAdLoadListener listener) {
         AdLog.d("FuseAdLoader :" + mSlot + " load ad: " + burstNum + " listener: " + listener);
         if (Looper.getMainLooper() != Looper.myLooper()) {
             throw new IllegalStateException("Load ad not from main thread");
         }
-        if (configFetcher.isAdFree()) {
+        if (sConfigFetcher.isAdFree()) {
             AdLog.d("FuseAdLoader : AD free version");
             if (listener != null) {
                 listener.onError("AD free version");
@@ -124,7 +221,7 @@ public class FuseAdLoader {
             }, protectTime);
         }
         for (int i = 0; i < burstNum; i ++ ) {
-            if (loadNextNativeAd()) {
+            if (loadNextNativeAd(context)) {
                 AdLog.d("Stop burst as already find cache at: " + i);
                 break;
             }
@@ -139,7 +236,7 @@ public class FuseAdLoader {
         mLoadingBits |= (0x1 << idx);
     }
 
-    private void finishLoading(int idx) {
+    private void finishLoading(Context context, int idx) {
         mLoadingBits &= (~(0x1 << idx));
         if (mAdReturned) {
             AdLog.d("Ad already returned " + mSlot);
@@ -163,7 +260,7 @@ public class FuseAdLoader {
                     //mListener = null;
                 }
             } else {
-                loadNextNativeAd();
+                loadNextNativeAd(context);
             }
         } else {
             // no need load next, fill or just wait timeout;
@@ -230,9 +327,9 @@ public class FuseAdLoader {
         return false;
     }
 
-    public void loadAd(int burstNum, IAdLoadListener listener) {
+    public void loadAd(Context context, int burstNum, IAdLoadListener listener) {
         AdLog.d("load " + mSlot + " listen: " + listener);
-        loadAd(burstNum, 0 , listener);
+        loadAd(context, burstNum, 0 , listener);
     }
 
     public void addAdConfig(AdConfig adConfig) {
@@ -258,8 +355,10 @@ public class FuseAdLoader {
 
     class IndexAdListener implements IAdLoadListener {
         int index;
-        public IndexAdListener(int index) {
+        Context loadingContext;
+        public IndexAdListener(Context context, int index) {
             this.index = index;
+            loadingContext = context;
         }
 
         @Override
@@ -275,13 +374,13 @@ public class FuseAdLoader {
             AdLog.d(mSlot + " ad loaded " + ad.getAdType() + " index: " + index);
             if (ad.getCoverImageUrl() != null) {
                 AdLog.d("preload " + ad.getCoverImageUrl());
-                ImageLoader.getInstance().doPreLoad(mContext, ad.getCoverImageUrl());
+                ImageLoader.getInstance().doPreLoad(mAppContext, ad.getCoverImageUrl());
             }
             if (ad.getIconImageUrl() != null) {
                 AdLog.d("preload " + ad.getIconImageUrl());
-                ImageLoader.getInstance().doPreLoad(mContext, ad.getIconImageUrl());
+                ImageLoader.getInstance().doPreLoad(mAppContext, ad.getIconImageUrl());
             }
-            finishLoading(index);
+            finishLoading(loadingContext, index);
         }
 
         @Override
@@ -306,12 +405,12 @@ public class FuseAdLoader {
 
         @Override
         public void onError(String error) {
-            finishLoading(index);
+            finishLoading(loadingContext, index);
             AdLog.e("Load current source " + mNativeAdConfigList.get(index).source + " error : " + error);
         }
 
     }
-    private boolean loadNextNativeAd() {
+    private boolean loadNextNativeAd(Context context) {
         final int idx = nextLoadingIdx();
         if (idx < 0 || idx >= mNativeAdConfigList.size()) {
             AdLog.d(mSlot + " tried to load all source . Index : " + idx);
@@ -326,17 +425,17 @@ public class FuseAdLoader {
         AdConfig config = mNativeAdConfigList.get(idx);
         if (hasValidCache(config)) {
             AdLog.d(mSlot + " already have cache for : " + config.key);
-            finishLoading(idx);
+            finishLoading(context, idx);
             return true;
         }
         //Do load
         IAdAdapter loader = getNativeAdAdapter(config);
         if (loader == null) {
-            finishLoading(idx);
+            finishLoading(context, idx);
             return false;
         }
         AdLog.d(mSlot + " start load for : " + config.source + " index : " + idx );
-        loader.loadAd(1, new IndexAdListener(idx));
+        loader.loadAd(context, 1, new IndexAdListener(context, idx));
         return false;
     }
 
@@ -344,38 +443,37 @@ public class FuseAdLoader {
         if (config == null || config.source == null) {
             return null;
         }
+        if (!sConfiguration.hasSupport(config.source)) {
+            return null;
+        }
         switch (config.source) {
-            case AdConstants.NativeAdType.AD_SOURCE_ADMOB:
-                return new AdmobNativeAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_MOPUB:
-                return new MopubNativeAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_BANNER:
+            case AdConstants.AdType.AD_SOURCE_ADMOB:
+                return new AdmobNativeAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_MOPUB:
+                return new MopubNativeAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_ADMOB_BANNER:
                 AdSize bannerSize = config.bannerAdSize == null? mBannerAdSize: config.bannerAdSize;
-                return bannerSize == null? null : new AdmobBannerAdapter(mContext, config.key, bannerSize);
-            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT:
-                AdmobNativeAdapter adapter = new AdmobNativeAdapter(mContext, config.key);
-                adapter.setFilter(AdConstants.AdMob.FILTER_ONLY_CONTENT);
-                return adapter;
-            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL:
-                AdmobNativeAdapter adapterInstall = new AdmobNativeAdapter(mContext, config.key);
-                adapterInstall.setFilter(AdConstants.AdMob.FILTER_ONLY_INSTALL);
-                return adapterInstall;
-            case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK:
-                return new FBNativeAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL:
-                return new FBInterstitialAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL:
-                return new AdmobInterstitialAdapter(mContext, config.key);
-//            case AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL:
-//                return new BtInterstitialAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL:
-                return new MopubInterstitialAdapter(mContext, config.key);
-//            case AdConstants.NativeAdType.AD_SOURCE_BT :
-//                return new BtNativeAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_ADMOB_REWARD :
-                return new AdmobRewardVideoAdapter(mContext, config.key);
-            case AdConstants.NativeAdType.AD_SOURCE_FB_REWARD :
-                return new FBRewardVideoAdapter(mContext, config.key);
+                return bannerSize == null? null : new AdmobBannerAdapter(mAppContext, config.key, bannerSize);
+            case AdConstants.AdType.AD_SOURCE_FACEBOOK:
+                return new FBNativeAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL:
+                return new FBInterstitialAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_ADMOB_INTERSTITIAL:
+                return new AdmobInterstitialAdapter(mAppContext, config.key);
+//            case AdConstants.AdType.AD_SOURCE_BT_INTERSTITIAL:
+//                return new BtInterstitialAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL:
+                return new MopubInterstitialAdapter(mAppContext, config.key);
+//            case AdConstants.AdType.AD_SOURCE_BT :
+//                return new BtNativeAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_ADMOB_REWARD :
+                return new AdmobRewardVideoAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_FB_REWARD :
+                return new FBRewardVideoAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_IRONSOURCE_REWARD:
+                return new IronSourceRewardVideoAdapter(mAppContext, config.key);
+            case AdConstants.AdType.AD_SOURCE_IRONSOURCE_INTERSTITIAL:
+                return new IronSourceInterstitialAdapter(mAppContext, config.key);
             default:
                 AdLog.e("not suppported source " + config.source);
                 return null;
@@ -383,18 +481,18 @@ public class FuseAdLoader {
     }
 
     static {
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_CONTENT);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INSTALL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL);
-//        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT_INTERSTITIAL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
-//        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_BT);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_BANNER);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_ADMOB_REWARD);
-        SUPPORTED_TYPES.add(AdConstants.NativeAdType.AD_SOURCE_FB_REWARD);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_ADMOB);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_ADMOB_INTERSTITIAL);
+//        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_BT_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_FACEBOOK);
+//        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_BT);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_MOPUB);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_ADMOB_BANNER);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_ADMOB_REWARD);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_FB_REWARD);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_IRONSOURCE_INTERSTITIAL);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_IRONSOURCE_REWARD);
     }
 }

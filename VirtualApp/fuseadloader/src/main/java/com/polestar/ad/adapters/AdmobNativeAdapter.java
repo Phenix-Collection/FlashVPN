@@ -2,7 +2,6 @@ package com.polestar.ad.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,23 +16,14 @@ import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.VideoController;
 import com.google.android.gms.ads.VideoOptions;
-import com.google.android.gms.ads.formats.MediaView;
-import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
-import com.google.android.gms.ads.formats.NativeAdView;
-import com.google.android.gms.ads.formats.NativeAppInstallAd;
-import com.google.android.gms.ads.formats.NativeAppInstallAdView;
-import com.google.android.gms.ads.formats.NativeContentAd;
-import com.google.android.gms.ads.formats.NativeContentAdView;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
-import com.polestar.ad.BuildConfig;
 import com.polestar.ad.view.StarLevelLayoutView;
 
 import java.util.List;
@@ -45,21 +35,15 @@ import java.util.List;
 
 public class AdmobNativeAdapter extends AdAdapter {
 
-    private String mFilter;
-    private Context mContext;
 
     private UnifiedNativeAd mRawAd;
 
     public AdmobNativeAdapter(Context context, String key) {
-        mContext = context;
         mKey = key;
     }
 
-    public void setFilter(String filter) {
-        mFilter = filter;
-    }
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         if (listener == null) {
             AdLog.e("listener not set.");
             return;
@@ -72,7 +56,7 @@ public class AdmobNativeAdapter extends AdAdapter {
 //            mKey = "ca-app-pub-3940256099942544/1044960115";
 ////        }
 //        mKey = "ca-app-pub-3940256099942544/2247696110";
-        AdLoader.Builder  builder = new AdLoader.Builder(mContext, mKey);
+        AdLoader.Builder  builder = new AdLoader.Builder(context, mKey);
         builder.forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
             @Override
             public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
@@ -100,11 +84,11 @@ public class AdmobNativeAdapter extends AdAdapter {
         });
         AdLoader adLoader = builder.build();
         if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID(mContext);
+            String android_id = AdUtils.getAndroidID(context);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
             adLoader.loadAd(request);
-            boolean isTestDevice = request.isTestDevice(mContext);
+            boolean isTestDevice = request.isTestDevice(context);
             AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
         } else {
             adLoader.loadAd(new AdRequest.Builder().build());
@@ -134,7 +118,7 @@ public class AdmobNativeAdapter extends AdAdapter {
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_ADMOB;
+        return AdConstants.AdType.AD_SOURCE_ADMOB;
     }
 
     @Override
@@ -201,11 +185,11 @@ public class AdmobNativeAdapter extends AdAdapter {
     }
 
     @Override
-    public View getAdView(AdViewBinder viewBinder) {
-        View actualAdView = LayoutInflater.from(mContext).inflate(viewBinder.layoutId, null);
+    public View getAdView(Context context, AdViewBinder viewBinder) {
+        View actualAdView = LayoutInflater.from(context).inflate(viewBinder.layoutId, null);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        adView.setLayoutParams(params);
-        UnifiedNativeAdView nativeAdView = new UnifiedNativeAdView(mContext);
+        UnifiedNativeAdView nativeAdView = new UnifiedNativeAdView(context);
         if (actualAdView != null) {
             ImageView iconView = (ImageView) actualAdView.findViewById(viewBinder.iconImageId);
             TextView titleView = (TextView) actualAdView.findViewById(viewBinder.titleId);

@@ -1,7 +1,6 @@
 package com.polestar.ad.adapters;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.View;
 
 import com.google.android.gms.ads.AdRequest;
@@ -15,12 +14,10 @@ import com.polestar.ad.AdUtils;
 import com.polestar.ad.BuildConfig;
 
 public class AdmobRewardVideoAdapter extends AdAdapter {
-    private Context mContext;
     private RewardedVideoAd rewardedVideoAd;
 
     public AdmobRewardVideoAdapter(Context context, String key) {
         mKey = key;
-        mContext = context;
     }
     @Override
     public void registerPrivacyIconView(View view) {
@@ -28,13 +25,13 @@ public class AdmobRewardVideoAdapter extends AdAdapter {
     }
 
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         adListener = listener;
         if (listener == null) {
             AdLog.e("Not set listener!");
             return;
         }
-        rewardedVideoAd =   MobileAds.getRewardedVideoAdInstance(mContext);
+        rewardedVideoAd =   MobileAds.getRewardedVideoAdInstance(context);
         rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
             @Override
             public void onRewardedVideoAdLoaded() {
@@ -89,11 +86,11 @@ public class AdmobRewardVideoAdapter extends AdAdapter {
         });
 
         if (BuildConfig.DEBUG) {
-            String android_id = AdUtils.getAndroidID(mContext);
+            String android_id = AdUtils.getAndroidID(context);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
             rewardedVideoAd.loadAd(mKey,request);
-            boolean isTestDevice = request.isTestDevice(mContext);
+            boolean isTestDevice = request.isTestDevice(context);
             AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
         } else {
             rewardedVideoAd.loadAd(mKey,new AdRequest.Builder().build());
@@ -114,7 +111,7 @@ public class AdmobRewardVideoAdapter extends AdAdapter {
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_ADMOB_REWARD;
+        return AdConstants.AdType.AD_SOURCE_ADMOB_REWARD;
     }
 
     @Override

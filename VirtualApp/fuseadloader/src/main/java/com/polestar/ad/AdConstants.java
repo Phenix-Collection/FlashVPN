@@ -8,15 +8,7 @@ package com.polestar.ad;
 public class AdConstants {
     public static boolean DEBUG = BuildConfig.DEBUG ;
 
-    public static final class AdMob {
-        public static final String FILTER_BOTH_INSTALL_AND_CONTENT = "both";
-        public static final String FILTER_ONLY_INSTALL = "install";
-        public static final String FILTER_ONLY_CONTENT = "content";
-    }
-
-    public static final class NativeAdType {
-        public static final String AD_SOURCE_ADMOB_INSTALL = "adm_install";
-        public static final String AD_SOURCE_ADMOB_CONTENT = "adm_content";
+    public static final class AdType {
         public static final String AD_SOURCE_ADMOB = "adm";
         public static final String AD_SOURCE_FACEBOOK = "fb";
         public static final String AD_SOURCE_MOPUB = "mp";
@@ -28,5 +20,7 @@ public class AdConstants {
         public static final String AD_SOURCE_BT = "bt";
         public static final String AD_SOURCE_FB_REWARD = "fb_reward";
         public static final String AD_SOURCE_ADMOB_REWARD = "adm_reward";
+        public static final String AD_SOURCE_IRONSOURCE_REWARD = "ir_reward";
+        public static final String AD_SOURCE_IRONSOURCE_INTERSTITIAL = "ir_interstitial";
     }
 }

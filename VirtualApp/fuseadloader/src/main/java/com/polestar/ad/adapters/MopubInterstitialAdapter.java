@@ -15,11 +15,9 @@ import com.polestar.ad.AdLog;
 
 public class MopubInterstitialAdapter extends AdAdapter implements MoPubInterstitial.InterstitialAdListener {
     private MoPubInterstitial mInterstitial;
-    private Context mContext;
     private String key;
 
     public MopubInterstitialAdapter(Context context, String key) {
-        mContext = context;
         this.key = key;
         LOAD_TIMEOUT = 20*1000;
 
@@ -76,7 +74,7 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
     }
 
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         adListener = listener;
         if (listener == null) {
             AdLog.e("Not set listener!");
@@ -85,11 +83,11 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
         if (AdConstants.DEBUG) {
             mKey = "24534e1901884e398f1253216226017e";
         }
-        if (!(mContext instanceof Activity) ){
+        if (!(context instanceof Activity) ){
             adListener.onError("No activity context found!");
             return;
         }
-        mInterstitial = new MoPubInterstitial((Activity)mContext, key);
+        mInterstitial = new MoPubInterstitial((Activity)context, key);
         mInterstitial.setInterstitialAdListener(this);
         mInterstitial.load();
         startMonitor();
@@ -105,7 +103,7 @@ public class MopubInterstitialAdapter extends AdAdapter implements MoPubIntersti
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_MOPUB_INTERSTITIAL;
+        return AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL;
     }
 
     @Override

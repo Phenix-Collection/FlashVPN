@@ -13,12 +13,10 @@ import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 
 public class FBRewardVideoAdapter extends AdAdapter {
-    private Context mContext;
     private RewardedVideoAd rewardedVideoAd;
 
     public FBRewardVideoAdapter(Context context, String key) {
         mKey = key;
-        mContext = context;
         LOAD_TIMEOUT = 20*1000;
     }
     @Override
@@ -27,20 +25,20 @@ public class FBRewardVideoAdapter extends AdAdapter {
     }
 
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         adListener = listener;
         if (listener == null) {
             AdLog.e("Not set listener!");
             return;
         }
         if (AdConstants.DEBUG) {
-            SharedPreferences sp = mContext.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
+            SharedPreferences sp = context.getSharedPreferences("FBAdPrefs", Context.MODE_PRIVATE);
             String deviceIdHash = sp.getString("deviceIdHash", "");
             AdSettings.addTestDevice(deviceIdHash);
-            boolean isTestDevice = AdSettings.isTestMode(mContext);
+            boolean isTestDevice = AdSettings.isTestMode(context);
             AdLog.d( "is FB Test Device ? "+deviceIdHash+" "+isTestDevice);
         }
-        rewardedVideoAd = new RewardedVideoAd(mContext, mKey);
+        rewardedVideoAd = new RewardedVideoAd(context, mKey);
         rewardedVideoAd.setAdListener(new RewardedVideoAdListener() {
             @Override
             public void onRewardedVideoCompleted() {
@@ -104,7 +102,7 @@ public class FBRewardVideoAdapter extends AdAdapter {
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_FB_REWARD;
+        return AdConstants.AdType.AD_SOURCE_FB_REWARD;
     }
 
     @Override

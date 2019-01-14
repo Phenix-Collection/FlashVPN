@@ -22,7 +22,6 @@ import java.util.EnumSet;
  */
 
 public class MopubNativeAdapter extends AdAdapter {
-    private Context mContext;
     private String adUnit;
     private RequestParameters parameters;
     private MoPubNative moPubNative;
@@ -30,7 +29,6 @@ public class MopubNativeAdapter extends AdAdapter {
     private MoPubAdRendererProxy rendererProxy;
 
     public MopubNativeAdapter(Context context, String adUnit) {
-        mContext = context;
         this.adUnit = adUnit;
         if (AdConstants.DEBUG) {
             AdLog.d( "Mopub test mode");
@@ -55,10 +53,10 @@ public class MopubNativeAdapter extends AdAdapter {
     }
 
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         adListener = listener;
         AdLog.d("Mopub loadAd " + listener);
-        moPubNative = new MoPubNative(mContext, this.adUnit, new MoPubNative.MoPubNativeNetworkListener() {
+        moPubNative = new MoPubNative(context, this.adUnit, new MoPubNative.MoPubNativeNetworkListener() {
             @Override
             public void onNativeLoad(NativeAd nativeAd) {
                 AdLog.d("Mopub onNativeLoad " );
@@ -87,7 +85,7 @@ public class MopubNativeAdapter extends AdAdapter {
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_MOPUB;
+        return AdConstants.AdType.AD_SOURCE_MOPUB;
     }
 
     @Override
@@ -108,7 +106,7 @@ public class MopubNativeAdapter extends AdAdapter {
     }
 
     @Override
-    public View getAdView(AdViewBinder viewBinder) {
+    public View getAdView(Context context, AdViewBinder viewBinder) {
         final ViewBinder mpViewBinder =  new ViewBinder.Builder(viewBinder.layoutId)
                 .titleId(viewBinder.titleId)
                 .textId(viewBinder.textId)
@@ -120,7 +118,7 @@ public class MopubNativeAdapter extends AdAdapter {
                 .build();
         final MoPubStaticNativeAdRenderer staticAdRender = new MoPubStaticNativeAdRenderer(mpViewBinder);
         rendererProxy.setRenderImpl(staticAdRender);
-        AdapterHelper helper = new AdapterHelper(mContext, 0, 5);
+        AdapterHelper helper = new AdapterHelper(context, 0, 5);
         View adview = helper.getAdView(null, null, rawAd, mpViewBinder);
         ImageView iv = adview.findViewById(viewBinder.mainMediaId);
         if (iv != null) {

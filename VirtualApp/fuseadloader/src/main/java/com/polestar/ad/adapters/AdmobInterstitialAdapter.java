@@ -16,11 +16,9 @@ import com.polestar.ad.AdLog;
 
 public class AdmobInterstitialAdapter extends AdAdapter {
     private InterstitialAd rawAd;
-    private Context mContext;
     private String key;
 
     public AdmobInterstitialAdapter(Context context, String key) {
-        mContext = context;
         this.key = key;
         LOAD_TIMEOUT = 20*1000;
     }
@@ -31,7 +29,7 @@ public class AdmobInterstitialAdapter extends AdAdapter {
 
     @Override
     public String getAdType() {
-        return AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL;
+        return AdConstants.AdType.AD_SOURCE_ADMOB_INTERSTITIAL;
     }
 
     @Override
@@ -51,13 +49,13 @@ public class AdmobInterstitialAdapter extends AdAdapter {
     }
 
     @Override
-    public void loadAd(int num, IAdLoadListener listener) {
+    public void loadAd(Context context, int num, IAdLoadListener listener) {
         adListener = listener;
         if (listener == null){
             AdLog.e("listener is null!!");
             return;
         }
-        rawAd = new InterstitialAd(mContext);
+        rawAd = new InterstitialAd(context);
         rawAd.setAdUnitId(key);
         rawAd.setAdListener(new AdListener() {
             @Override
@@ -103,11 +101,11 @@ public class AdmobInterstitialAdapter extends AdAdapter {
         });
 
         if (AdConstants.DEBUG) {
-            String android_id = AdUtils.getAndroidID(mContext);
+            String android_id = AdUtils.getAndroidID(context);
             String deviceId = AdUtils.MD5(android_id).toUpperCase();
             AdRequest request = new AdRequest.Builder().addTestDevice(deviceId).build();
             rawAd.loadAd(request);
-            boolean isTestDevice = request.isTestDevice(mContext);
+            boolean isTestDevice = request.isTestDevice(context);
             AdLog.d( "is Admob Test Device ? "+deviceId+" "+isTestDevice);
         } else {
             rawAd.loadAd(new AdRequest.Builder().build());
