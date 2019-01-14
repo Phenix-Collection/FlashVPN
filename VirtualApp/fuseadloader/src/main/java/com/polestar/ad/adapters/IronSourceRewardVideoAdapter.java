@@ -2,6 +2,8 @@ package com.polestar.ad.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import com.ironsource.mediationsdk.IronSource;
@@ -11,14 +13,21 @@ import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 
+
 public class IronSourceRewardVideoAdapter extends AdAdapter {
 
+    private Handler mainHandler;
     public IronSourceRewardVideoAdapter(Context context, String key) {
         mKey = key; //placement_id
+        mainHandler = new Handler(Looper.getMainLooper());
     }
     @Override
     public void registerPrivacyIconView(View view) {
 
+    }
+
+    private void postOnMainHandler(Runnable runnable) {
+        mainHandler.post(runnable);
     }
 
     @Override
@@ -36,26 +45,37 @@ public class IronSourceRewardVideoAdapter extends AdAdapter {
 
             @Override
             public void onRewardedVideoAdClosed() {
-                if (adListener != null) {
-                    adListener.onAdClosed(IronSourceRewardVideoAdapter.this);
-                }
+                postOnMainHandler(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (adListener != null) {
+                            adListener.onAdClosed(IronSourceRewardVideoAdapter.this);
+                        }
+                    }
+                });
+
             }
 
             @Override
-            public void onRewardedVideoAvailabilityChanged(boolean b) {
-                if (b) {
-                    AdLog.d("onRewardedVideoAdLoaded");
-                    stopMonitor();
-                    mLoadedTime = System.currentTimeMillis();
-                    if(adListener != null) {
-                        adListener.onAdLoaded(IronSourceRewardVideoAdapter.this);
+            public void onRewardedVideoAvailabilityChanged(final boolean b) {
+                postOnMainHandler(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (b) {
+                            AdLog.d("onRewardedVideoAdLoaded");
+                            stopMonitor();
+                            mLoadedTime = System.currentTimeMillis();
+                            if(adListener != null) {
+                                adListener.onAdLoaded(IronSourceRewardVideoAdapter.this);
+                            }
+                        } else {
+                            if (adListener != null) {
+                                adListener.onError("Not Available");
+                            }
+                            stopMonitor();
+                        }
                     }
-                } else {
-                    if (adListener != null) {
-                        adListener.onError("Not Available");
-                    }
-                    stopMonitor();
-                }
+                });
             }
 
             @Override
@@ -71,9 +91,15 @@ public class IronSourceRewardVideoAdapter extends AdAdapter {
             @Override
             public void onRewardedVideoAdRewarded(Placement placement) {
                 AdLog.d("onRewardedVideoAdRewarded");
-                if (adListener != null) {
-                    adListener.onRewarded(IronSourceRewardVideoAdapter.this);
-                }
+                postOnMainHandler(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (adListener != null) {
+                            adListener.onRewarded(IronSourceRewardVideoAdapter.this);
+                        }
+                    }
+                });
+
             }
 
             @Override
