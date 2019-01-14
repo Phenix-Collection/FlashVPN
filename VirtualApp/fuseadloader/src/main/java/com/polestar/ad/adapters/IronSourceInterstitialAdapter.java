@@ -117,6 +117,7 @@ public class IronSourceInterstitialAdapter extends AdAdapter {
             mLoadedTime = System.currentTimeMillis();
             if (adListener != null) {
                 adListener.onAdLoaded(IronSourceInterstitialAdapter.this);
+                adListener = null;
             }
         }
     }

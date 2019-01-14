@@ -3,6 +3,7 @@ package com.polestar.ad;
 import android.text.TextUtils;
 
 import com.ironsource.mediationsdk.IronSource;
+import com.mopub.common.MoPub;
 import com.polestar.ad.adapters.FuseAdLoader;
 
 import java.util.Set;
@@ -32,8 +33,14 @@ public class SDKConfiguration {
     }
 
     public boolean hasMopub() {
-        return !TextUtils.isEmpty(mopubInitAdId) && (supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_MOPUB)
-                || supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL));
+        try {
+            Class mopub = Class.forName(MoPub.class.getName());
+            return mopub != null && !TextUtils.isEmpty(mopubInitAdId) && (supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_MOPUB)
+                    || supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL));
+        }catch (Throwable ex){
+            AdLog.e(ex);
+        }
+        return false;
     }
 
     public boolean hasIronSource() {

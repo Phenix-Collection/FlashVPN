@@ -90,6 +90,7 @@ public class IronSourceRewardVideoAdapter extends AdAdapter {
             mLoadedTime = System.currentTimeMillis();
             if(adListener != null) {
                 adListener.onAdLoaded(IronSourceRewardVideoAdapter.this);
+                adListener = null;
             }
         } else {
             startMonitor();

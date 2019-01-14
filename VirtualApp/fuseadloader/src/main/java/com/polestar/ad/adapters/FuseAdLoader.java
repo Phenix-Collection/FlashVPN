@@ -64,6 +64,7 @@ public class FuseAdLoader {
             if(sConfiguration.hasIronSource()) {
                 initIronSource((Activity) context);
             }
+            sInitializedWithActivity = true;
         }
         return adLoader;
     }
@@ -81,7 +82,7 @@ public class FuseAdLoader {
 
     private static void initIronSource(Activity activity) {
         IronSource.init(activity, sConfiguration.ironSourceAppKey);
-        AdLog.d("init IronSourcce ");
+        AdLog.d("init IronSourcce " );
         if (BuildConfig.DEBUG) {
             IronSource.setAdaptersDebug(true);
         }
@@ -121,16 +122,16 @@ public class FuseAdLoader {
 
             @Override
             public void onActivityResumed(Activity activity) {
-                if (sInitializedWithActivity && sConfiguration.hasIronSource()) {
-                    IronSource.onResume(activity);
-                }
+//                if (sInitializedWithActivity && sConfiguration.hasIronSource()) {
+//                    IronSource.onResume(activity);
+//                }
             }
 
             @Override
             public void onActivityPaused(Activity activity) {
-                if (sInitializedWithActivity && sConfiguration.hasIronSource()) {
-                    IronSource.onPause(activity);
-                }
+//                if (sInitializedWithActivity && sConfiguration.hasIronSource()) {
+//                    IronSource.onPause(activity);
+//                }
             }
 
             @Override
