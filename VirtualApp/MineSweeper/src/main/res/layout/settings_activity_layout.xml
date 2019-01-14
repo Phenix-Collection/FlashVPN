@@ -188,21 +188,21 @@
             android:textSize="15sp" />
 
 
-        <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="#cccccc" />-->
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="60dp"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:onClick="onPrivacyPolicyClick"-->
-            <!--android:paddingLeft="22dp"-->
-            <!--android:paddingRight="22dp"-->
-            <!--android:background="@color/white"-->
-            <!--android:text="@string/settings_privacy_policy"-->
-            <!--android:textColor="@color/text_gray_dark"-->
-            <!--android:textSize="15sp" />-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:onClick="onShareClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:background="@color/white"
+            android:text="@string/share_tips"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
 
 
 

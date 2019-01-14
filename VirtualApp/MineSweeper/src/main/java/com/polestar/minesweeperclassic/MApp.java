@@ -10,12 +10,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.ads.MobileAds;
+import com.polestar.ad.SDKConfiguration;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.minesweeperclassic.activity.GameActivity;
 import com.polestar.minesweeperclassic.utils.BugReporter;
 import com.polestar.minesweeperclassic.utils.EventReporter;
 import com.polestar.minesweeperclassic.utils.MLogs;
@@ -61,7 +63,11 @@ public class MApp extends MultiDexApplication {
         RemoteConfig.init();
         EventReporter.init(gDefault);
         BugReporter.init(gDefault);
-        MobileAds.initialize(this, "ca-app-pub-5490912237269284~6760289054");
+        SDKConfiguration sdkConfiguration = new SDKConfiguration.Builder()
+                .admobAppId("ca-app-pub-5490912237269284~6760289054")
+                .disableAdType(AdConstants.AdType.AD_SOURCE_MOPUB)
+                .disableAdType(AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL)
+                .ironSourceAppKey("8618670d").build();
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
@@ -72,7 +78,7 @@ public class MApp extends MultiDexApplication {
             public List<AdConfig> getAdConfigList(String slot) {
                 return RemoteConfig.getAdConfigList(slot);
             }
-        });
+        }, gDefault, sdkConfiguration);
         BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
         res.titleString = R.string.app_name;
         res.boosterShorcutIcon = R.drawable.ic_launcher;
@@ -109,6 +115,9 @@ public class MApp extends MultiDexApplication {
             MLogs.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             AdConstants.DEBUG = true;
             BoosterSdk.DEBUG = true;
+        }
+        if (GameActivity.needAppStartAd()) {
+            FuseAdLoader.get(GameActivity.SLOT_ENTER_INTERSTITIAL, gDefault).preloadAd(gDefault);
         }
     }
 }

@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -39,15 +40,6 @@
             android:layout_marginRight="5dip"
             android:layout_marginTop="10dip"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/button_negative"
-                style="@style/guide_dialog_negative_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_weight="1.0" />
-
             <TextView
                 android:id="@+id/button_positive"
                 style="@style/guide_dialog_positive_button"
@@ -55,6 +47,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_weight="1.0" />
+            <TextView
+                android:id="@+id/button_negative"
+                style="@style/guide_dialog_negative_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1.0"
+                android:visibility="gone"/>
+
+
         </LinearLayout>
     </LinearLayout>
 

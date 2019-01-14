@@ -1,6 +1,7 @@
 package com.polestar.minesweeperclassic.activity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,16 +10,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.minesweeperclassic.MApp;
 import com.polestar.minesweeperclassic.R;
 import com.polestar.minesweeperclassic.Service.DaemonService;
 import com.polestar.minesweeperclassic.utils.DisplayUtils;
@@ -26,6 +26,7 @@ import com.polestar.minesweeperclassic.utils.EventReporter;
 import com.polestar.minesweeperclassic.utils.MLogs;
 import com.polestar.minesweeperclassic.utils.PreferenceUtils;
 import com.polestar.minesweeperclassic.utils.RemoteConfig;
+import com.polestar.minesweeperclassic.widget.CustomDialog;
 import com.polestar.minesweeperclassic.widget.MineCell;
 import com.polestar.minesweeperclassic.widget.RateDialog;
 
@@ -75,10 +76,33 @@ public class GameActivity extends Activity{
     private final static String AD_INTERVAL = "ad_interval";
     private static int mResetTimes ;
     private int adInterval ;
-    private FuseAdLoader adLoader;
+    private FuseAdLoader inGameAdLoader;
+    private int rewardLives = 0;
+    private static int failTimes = 0;
 
     private boolean isGameFinish;
     private long lastPauseTime;
+
+    public final static String SLOT_ENTER_INTERSTITIAL = "slot_app_start";
+    private final static String CONF_APP_START_INTERVAL = "app_start_ad_interval_sec";
+    private final static String SLOT_REWARD_VIDEO = "slot_game_lives_ad";
+    private final static String CONF_REWARD_LIVES = "conf_reward_lives";
+
+    public static boolean needAppStartAd() {
+        boolean ret = PreferenceUtils.hasShownRateDialog() &&
+                (System.currentTimeMillis() - PreferenceUtils.getLastAppStartAdTime(MApp.getApp())) >= 1000*RemoteConfig.getLong(CONF_APP_START_INTERVAL);
+        MLogs.d("needAppStartAd: " + ret);
+        return ret;
+    }
+
+    private boolean useRewardAd() {
+        return  rewardLives > 0;
+    }
+
+    private boolean needGetLife() {
+        return useRewardAd() && failTimes >= rewardLives && PreferenceUtils.hasShownRateDialog() &&
+                FuseAdLoader.get(SLOT_REWARD_VIDEO, this).hasValidCache();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +111,13 @@ public class GameActivity extends Activity{
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
+        rewardLives = (int) RemoteConfig.getLong(CONF_REWARD_LIVES);
         adInterval = (int) RemoteConfig.getLong(AD_INTERVAL);
-        if (adLoader == null) {
-            adLoader = FuseAdLoader.get(SLOT_GAME_INTERSTITIAL, this.getApplication());
+        if (inGameAdLoader == null) {
+            inGameAdLoader = FuseAdLoader.get(SLOT_GAME_INTERSTITIAL, this);
         }
         if (adInterval != 0) {
-            adLoader.preloadAd();
+            inGameAdLoader.preloadAd(this);
         }
         mHandler = new Handler(){
             @Override
@@ -105,10 +130,56 @@ public class GameActivity extends Activity{
                 }
             }
         };
-        initData();
-        initView();
+
+        FuseAdLoader enterAdLoader = FuseAdLoader.get(SLOT_ENTER_INTERSTITIAL, this);
+        if (needAppStartAd() && enterAdLoader.hasValidCache()) {
+            enterAdLoader.loadAd(this, 1, 0, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAdAdapter ad) {
+                    mResetTimes = 0;
+                    ad.show();
+                    PreferenceUtils.updateLastAppStartAdTime(GameActivity.this);
+                }
+
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            initData();
+                            initView();
+                        }
+                    });
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+            });
+        } else {
+            initData();
+            initView();
+            MLogs.d("no ad cache for app start");
+        }
         EventReporter.homeShow(this);
         EventReporter.newGame(this, PreferenceUtils.getDifficulty(), numOfMine);
+        EventReporter.reportWake(this, "new_game");
         DaemonService.startup(this);
     }
 
@@ -180,47 +251,132 @@ public class GameActivity extends Activity{
     }
 
     public void onReset(View view) {
-        if ( adInterval != 0 && (mResetTimes ++ % adInterval) == 0) {
-            if (adLoader.hasValidCache()) {
-                adLoader.loadAd(1, new IAdLoadListener() {
+        if (!useRewardAd()) {
+            MLogs.d("interval " + adInterval + " reset: " + mResetTimes);
+            if (adInterval != 0 && (++mResetTimes % adInterval) == 0
+                    && PreferenceUtils.hasShownRateDialog()) {
+                MLogs.d("need show ad");
+                if (inGameAdLoader.hasValidCache()) {
+                    MLogs.d("hasValidCache");
+                    inGameAdLoader.loadAd(this, 1, new IAdLoadListener() {
+                        @Override
+                        public void onRewarded(IAdAdapter ad) {
+
+                        }
+
+                        @Override
+                        public void onAdClicked(IAdAdapter ad) {
+                        }
+
+                        @Override
+                        public void onAdClosed(IAdAdapter ad) {
+                            if (adInterval != 0) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //  inGameAdLoader.preloadAd(GameActivity.this);
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onAdLoaded(IAdAdapter ad) {
+                            ad.show();
+                        }
+
+                        @Override
+                        public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                        }
+
+                        @Override
+                        public void onError(String error) {
+
+                        }
+                    });
+                } else {
+                    MLogs.d("no cache");
+                }
+            } else {
+                MLogs.d("no need to show ");
+            }
+            if (adInterval != 0) {
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onRewarded(IAdAdapter ad) {
-
-                    }
-
-                    @Override
-                    public void onAdClicked(IAdAdapter ad) {
-                    }
-
-                    @Override
-                    public void onAdClosed(IAdAdapter ad) {
-
-                    }
-
-                    @Override
-                    public void onAdLoaded(IAdAdapter ad) {
-                        ad.show();
-                    }
-
-                    @Override
-                    public void onAdListLoaded(List<IAdAdapter> ads) {
-
-                    }
-
-                    @Override
-                    public void onError(String error) {
-
+                    public void run() {
+                        inGameAdLoader.preloadAd(GameActivity.this);
                     }
                 });
             }
-        }
-        doReset();
-        if (adInterval != 0) {
-            adLoader.preloadAd();
+            doReset();
+        } else {
+            if (needGetLife()) {
+                showRewardVideoDialog();
+            } else {
+                doReset();
+            }
         }
     }
 
+    private void showRewardVideoDialog() {
+        CustomDialog.show(this, RemoteConfig.getString("reward_dialog_title"),
+                RemoteConfig.getString("reward_dialog_content"), null, RemoteConfig.getString("reward_dialog_button"),
+                R.drawable.reward_video, R.layout.reward_video_dialog,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FuseAdLoader.get(SLOT_REWARD_VIDEO, GameActivity.this).loadAd(GameActivity.this, 2, 0, new IAdLoadListener() {
+                            @Override
+                            public void onAdLoaded(IAdAdapter ad) {
+                                ad.show();
+                            }
+
+                            @Override
+                            public void onAdClicked(IAdAdapter ad) {
+
+                            }
+
+                            @Override
+                            public void onAdClosed(IAdAdapter ad) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        FuseAdLoader.get(SLOT_REWARD_VIDEO, GameActivity.this).preloadAd(GameActivity.this);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                            }
+
+                            @Override
+                            public void onError(String error) {
+
+                            }
+
+                            @Override
+                            public void onRewarded(IAdAdapter ad) {
+                                failTimes = 0;
+                                MLogs.d("onRewarded");
+                                EventReporter.setUserProperty(EventReporter.PROP_REWARD_USER, "true");
+                                EventReporter.generalEvent("reward_" + ad.getAdType());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        doReset();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+    }
+
     private void doReset() {
+        MLogs.d("doReset");
         initData();
         initView();
         EventReporter.newGame(this, PreferenceUtils.getDifficulty(), numOfMine);
@@ -284,11 +440,15 @@ public class GameActivity extends Activity{
         super.onResume();
         int newSize = PreferenceUtils.getCellSize();
         if (newSize != cellSize || difficulty != PreferenceUtils.getDifficulty()) {
+            MLogs.d("setting changed");
             cellSize = newSize;
             difficulty = PreferenceUtils.getDifficulty();
-            doReset();
+            initData();
+            initView();
         }
-
+        if (useRewardAd()) {
+            FuseAdLoader.get(SLOT_REWARD_VIDEO, this).preloadAd(this);
+        }
     }
 
     private void updateTime(){
@@ -380,6 +540,7 @@ public class GameActivity extends Activity{
     private void fail() {
         MLogs.d("failed");
         PreferenceUtils.incGameCount();
+        failTimes ++;
         isGameFinish = true;
         mHandler.removeMessages(TIME_COUNT_MSG);
         for (int i = 0; i < rowOfMine; i ++ ) {
@@ -388,7 +549,11 @@ public class GameActivity extends Activity{
             }
         }
         resetButton.setBackgroundResource(R.drawable.sorrow);
-        showRateDialogNeeded(RateDialog.FROM_GAME_FAIL);
+        if (needGetLife()) {
+            showRewardVideoDialog();
+        } else {
+            showRateDialogNeeded(RateDialog.FROM_GAME_FAIL);
+        }
     }
 
     private void success() {

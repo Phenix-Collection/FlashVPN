@@ -35,8 +35,8 @@ android {
         }
         play {
             dimension "channel"
-            versionCode 2041
-            versionName "2.0.41.${releaseTime()}"
+            versionCode 2045
+            versionName "2.0.45.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
@@ -66,6 +66,13 @@ repositories {
     flatDir {
         dirs 'libs',project(':fuseadloader').file('libs')
     }
+    maven {
+        url "https://dl.bintray.com/ironsource-mobile/android-sdk"
+    }
+    maven {
+        //IronSource Adapters
+        url "http://dl.bintray.com/ironsource-mobile/android-adapters"
+    }
 }
 
 dependencies {
@@ -76,13 +83,19 @@ dependencies {
     })
 
     //firebase messaging/notifications
-    implementation 'com.google.firebase:firebase-core:16.0.0'
-    implementation 'com.google.firebase:firebase-config:16.0.0'
-    implementation 'com.google.firebase:firebase-ads:15.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-config:16.1.2'
+    implementation 'com.google.firebase:firebase-ads:17.1.2'
     implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
     implementation 'com.android.support:multidex:1.0.1'
     implementation 'com.facebook.android:audience-network-sdk:4.28.2'
     implementation 'com.android.support:appcompat-v7:25.4.0'
+
+    implementation 'com.ironsource.sdk:mediationsdk:6.8.1@jar'
+    //Admob
+    implementation 'com.ironsource.adapters:admobadapter:4.3.0@jar'
+    //Applovin
+    implementation 'com.ironsource.adapters:applovinadapter:4.3.1@jar'
 
     implementation project(':fuseadloader')
     implementation project(':Booster')

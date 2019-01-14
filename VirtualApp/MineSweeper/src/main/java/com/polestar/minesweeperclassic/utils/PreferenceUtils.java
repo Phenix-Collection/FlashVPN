@@ -250,6 +250,10 @@ public class PreferenceUtils {
         putInt(MApp.getApp(),"cellsize", size);
     }
 
+    public static boolean hasShownRateDialog() {
+        return getLoveApp() != 0;
+    }
+
     public static void setLoveApp(  boolean b) {
         putInt(MApp.getApp(),"love_app", b? 1:-1);
     }
@@ -276,5 +280,17 @@ public class PreferenceUtils {
             last = CommonUtils.getInstallTime(c, c.getPackageName());
         }
         return last;
+    }
+
+    public static long getLastAppStartAdTime(Context c){
+        long last = getLong(c, "last_start_ad_time", -1);
+        if (last == -1) {
+            last = CommonUtils.getInstallTime(c, c.getPackageName());
+        }
+        return last;
+    }
+
+    public static void updateLastAppStartAdTime(Context c) {
+        putLong(c, "last_start_ad_time", System.currentTimeMillis() );
     }
 }

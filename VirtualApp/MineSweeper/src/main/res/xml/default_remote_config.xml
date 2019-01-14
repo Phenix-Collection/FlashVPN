@@ -2,7 +2,7 @@
 <defaultsMap>
     <entry>
         <key>rating_interval</key>
-        <value>1</value>
+        <value>96</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -17,7 +17,24 @@
     <entry>
         <key>slot_game</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+        <!--<value>ir_interstitial:mine_in_game:0</value>-->
+        <value>ir_interstitial:mine_in_game:0;ab_interstitial:ca-app-pub-5490912237269284/5725607546:0</value>
+    </entry>
+    <entry>
+        <key>slot_app_start</key>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/6012989210:0;ir_interstitial:mine_start:0</value>
+    </entry>
+    <entry>
+        <key>app_start_ad_interval_sec</key>
+        <value>3600</value>
+    </entry>
+    <entry>
+        <key>slot_game_lives_ad</key>
+        <value>ir_reward:get_life_in_game:0;adm_reward:ca-app-pub-5490912237269284/8428718810:0</value>
+    </entry>
+    <entry>
+        <key>conf_reward_lives</key>
+        <value>5</value>
     </entry>
     <entry>
         <key>ad_interval</key>
@@ -51,11 +68,19 @@
         <value>true</value>
     </entry>
     <entry>
-        <key>coffee_key</key>
-        <value>1516027773710659325298</value>
-    </entry>
-    <entry>
         <key>avoid_ad_if_history</key>
         <value>true</value>
+    </entry>
+    <entry>
+        <key>reward_dialog_title</key>
+        <value>Watch a Video</value>
+    </entry>
+    <entry>
+        <key>reward_dialog_content</key>
+        <value>Need more luck to sweep all mines :) Watch a short rewarded video to get more lives?</value>
+    </entry>
+    <entry>
+        <key>reward_dialog_button</key>
+        <value>Watch Now!</value>
     </entry>
 </defaultsMap>

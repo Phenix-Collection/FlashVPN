@@ -24,7 +24,6 @@ import com.polestar.minesweeperclassic.utils.EventReporter;
 import com.polestar.minesweeperclassic.utils.MLogs;
 import com.polestar.minesweeperclassic.utils.PreferenceUtils;
 import com.polestar.minesweeperclassic.widget.RateDialog;
-import com.polestar.minesweeperclassic.widget.UpDownDialog;
 
 public class SettingsActivity extends Activity {
     private TextView titleTv;
@@ -165,5 +164,21 @@ public class SettingsActivity extends Activity {
 
     public void onRateUsClick(View view) {
         new RateDialog(this, RateDialog.FROM_SETTINGS).show();
+    }
+
+    public void onShareClick(View view) {
+        shareWithFriends(this);
+    }
+
+    public void shareWithFriends(Context context) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String appName = context.getResources().getString(R.string.app_name);
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, appName);
+        String shareContent = "Come to challenge me at: ";
+        shareContent = shareContent + "https://play.google.com/store/apps/details?id="
+                + context.getPackageName() +  "&referrer=utm_source%3Duser_share";
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
+        context.startActivity(Intent.createChooser(shareIntent, getString(R.string.share_tips)));
     }
 }

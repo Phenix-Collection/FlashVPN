@@ -9,8 +9,8 @@
     <string name="settings_game">"Game"</string>
     <string name="settings_more">"More"</string>
     <string name="settings_difficulty">"Difficulty"</string>
-    <string name="settings_privacy_policy">"Privacy Policy"</string>
-    <string name="settings_terms_of_service">"Terms of Service"</string>
+    <string name="share_tips">"Share with friend"</string>
+    <string name="share">"Share"</string>
     <string name="settings_feed_back">"Feedback"</string>
     <string name="settings_rate_us">"Rate Us"</string>
     <string name="difficulty_easy">"Easy"</string>

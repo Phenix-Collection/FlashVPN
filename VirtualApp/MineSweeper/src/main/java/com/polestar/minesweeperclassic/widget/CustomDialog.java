@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.polestar.minesweeperclassic.R;
 import com.polestar.minesweeperclassic.utils.DisplayUtils;
 
-public class UpDownDialog {
+public class CustomDialog {
 
     public final static int NEGATIVE_BUTTON = 1;
     public final static int POSITIVE_BUTTON = 2;

@@ -17,10 +17,18 @@ public class EventReporter {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
 
+    public static String PROP_REWARD_USER = "rewarded";
+
     public static void init(Context context) {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(MApp.getApp());
     }
 
+
+    public static void setUserProperty(String name, String prop) {
+        if(mFirebaseAnalytics != null) {
+            mFirebaseAnalytics.setUserProperty(name, prop);
+        }
+    }
 
     public static void homeShow(Context context) {
         mFirebaseAnalytics.logEvent("home_show", null);
@@ -63,5 +71,11 @@ public class EventReporter {
             mFirebaseAnalytics.logEvent("track_wake", prop);
         }
         MLogs.d("Wake from " + src + " original: " + sWakeSrc);
+    }
+
+    public static void generalEvent(String event) {
+        Bundle prop = new Bundle();
+        prop.putString("name", event);
+        mFirebaseAnalytics.logEvent("general_event", prop);
     }
 }

@@ -95,7 +95,7 @@ public class RateDialog {
 //        UpDownDialog.show(activity, title,
 //                activity.getString(R.string.dialog_rating_us_content), activity.getString(R.string.not_really),
 //                activity.getString(R.string.yes), R.drawable.dialog_tag_congratulations,
-//                R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+//                R.layout.reward_video_dialog, new DialogInterface.OnClickListener() {
 //                    @Override
 //                    public void onClick(DialogInterface dialog, int which) {
 //                        switch (which) {
@@ -106,7 +106,7 @@ public class RateDialog {
 //                                        activity.getString(R.string.dialog_feedback_content),
 //                                        activity.getString(R.string.no_thanks),
 //                                        activity.getString(R.string.ok), R.drawable.dialog_tag_comment,
-//                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+//                                        R.layout.reward_video_dialog, new DialogInterface.OnClickListener() {
 //                                            @Override
 //                                            public void onClick(DialogInterface dialog, int which) {
 //                                                switch (which) {
@@ -126,7 +126,7 @@ public class RateDialog {
 //                                        activity.getString(R.string.dialog_love_content),
 //                                        activity.getString(R.string.remind_me_later),
 //                                        activity.getString(R.string.star_rating), R.drawable.dialog_tag_love,
-//                                        R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+//                                        R.layout.reward_video_dialog, new DialogInterface.OnClickListener() {
 //                                            @Override
 //                                            public void onClick(DialogInterface dialog, int which) {
 //                                                switch (which) {
@@ -259,6 +259,8 @@ public class RateDialog {
         });
         try {
             dialog.show();
+            PreferenceUtils.updateRateDialogTime(activity);
+            PreferenceUtils.setLoveApp(false);
         }catch (Exception e) {
            e.printStackTrace();
         }
