@@ -89,7 +89,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 break;
         }
 
-        View adView = mAd.getAdView(viewBinder);
+        View adView = mAd.getAdView(this, viewBinder);
         if (adView != null) {
             try {
                 adContainer.removeAllViews();
@@ -117,7 +117,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         adLoader.setBannerAdSize(getBannerAdSize());
         if (adLoader.hasValidAdSource()) {
             mAd = null;
-            adLoader.loadAd(2,1000, new IAdLoadListener() {
+            adLoader.loadAd(this, 2,1000, new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 

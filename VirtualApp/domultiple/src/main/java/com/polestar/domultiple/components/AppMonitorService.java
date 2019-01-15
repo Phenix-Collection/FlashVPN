@@ -133,7 +133,7 @@ public class AppMonitorService extends Service {
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    adLoader.loadAd(1, new IAdLoadListener() {
+                    adLoader.loadAd(AppMonitorService.this, 1, new IAdLoadListener() {
                         @Override
                         public void onRewarded(IAdAdapter ad) {
 

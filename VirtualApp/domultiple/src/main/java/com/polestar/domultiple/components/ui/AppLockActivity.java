@@ -105,7 +105,7 @@ public class AppLockActivity extends BaseActivity {
         }
 
 
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(this, viewBinder);
         if (adView != null) {
             adView.setBackgroundColor(0);
             ViewGroup parentViewGroup = (ViewGroup) adView.getParent();
@@ -120,10 +120,10 @@ public class AppLockActivity extends BaseActivity {
     private void loadNative(){
         final FuseAdLoader adLoader = FuseAdLoader.get(CONFIG_SLOT_APP_LOCK, PolestarApp.getApp());
         adLoader.setBannerAdSize(getBannerSize());
-//        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
-//        adLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
+//        adLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+//        adLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (adLoader != null) {
-            adLoader.loadAd(2, RemoteConfig.getLong(CONFIG_SLOT_APP_LOCK_PROTECT_TIME), new IAdLoadListener() {
+            adLoader.loadAd(this, 2, RemoteConfig.getLong(CONFIG_SLOT_APP_LOCK_PROTECT_TIME), new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 
@@ -134,7 +134,7 @@ public class AppLockActivity extends BaseActivity {
                     MLogs.d("Applock native ad loaded. showing ");
                         inflatNativeAd(ad);
                         //loadAdmobNativeExpress();
-                        adLoader.loadAd(1, null);
+                        adLoader.preloadAd(AppLockActivity.this);
 
                 }
 

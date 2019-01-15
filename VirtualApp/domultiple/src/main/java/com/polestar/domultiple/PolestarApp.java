@@ -10,6 +10,7 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.google.android.gms.ads.MobileAds;
+import com.polestar.ad.SDKConfiguration;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -123,7 +124,17 @@ public class PolestarApp extends MultiDexApplication {
     }
 
     private void initAd() {
-        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~2442960626");
+//        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~2442960626");
+        SDKConfiguration.Builder builder = new SDKConfiguration.Builder();
+        if (!needAd()) {
+            for (String s : FuseAdLoader.SUPPORTED_TYPES) {
+                builder.disableAdType(s);
+            }
+        } else {
+            builder.mopubAdUnit("41988cc0fe194791a6b5cf6bb82290ca")
+                    .admobAppId("ca-app-pub-5490912237269284~2442960626")
+                    .ironSourceAppKey("8671d87d");
+        }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
@@ -134,7 +145,7 @@ public class PolestarApp extends MultiDexApplication {
             public List<AdConfig> getAdConfigList(String slot) {
                 return RemoteConfig.getAdConfigList(slot);
             }
-        });
+        }, getApp(), builder.build());
     }
     @Override
     public void onCreate() {
@@ -164,7 +175,7 @@ public class PolestarApp extends MultiDexApplication {
                 //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
-                if (needAd()) {
+//                if (needAd()) {
                     initAd();
                     //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                     //
@@ -182,6 +193,10 @@ public class PolestarApp extends MultiDexApplication {
                         boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
                         boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
                         boosterConfig.avoidShowIfHistory = RemoteConfig.getBoolean("avoid_ad_if_history");
+                        if (!needAd()) {
+                            boosterConfig.isUnlockAd = false;
+                            boosterConfig.isInstallAd = false;
+                        }
 
                     }
                     BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
@@ -210,7 +225,7 @@ public class PolestarApp extends MultiDexApplication {
                             AppMonitorService.preloadCoverAd();
                         }
                     }
-                }
+//                }
             }
 
             @Override

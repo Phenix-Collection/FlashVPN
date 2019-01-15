@@ -49,7 +49,7 @@ public class SplashActivity extends BaseActivity {
         if (!PreferencesUtils.isAdFree() && !PolestarApp.isArm64()) {
             FuseAdLoader adLoader = FuseAdLoader.get(HomeActivity.SLOT_HOME_NATIVE, this.getApplicationContext());
             adLoader.setBannerAdSize(HomeActivity.getBannerAdSize());
-            adLoader.preloadAd();
+            adLoader.preloadAd(this);
         }
         Handler handler = new Handler();
         CloneManager.getInstance(this).loadClonedApps(this, null);

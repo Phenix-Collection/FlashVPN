@@ -368,7 +368,7 @@ public class AppLoadingActivity extends BaseActivity {
         }
 
 
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(this, viewBinder);
         if (adView != null) {
             adView.setBackgroundColor(0);
             mNativeContainer.removeAllViews();
@@ -382,7 +382,7 @@ public class AppLoadingActivity extends BaseActivity {
         mNativeAdLoader = FuseAdLoader.get(SLOT_APP_START_NATIVE, this);
         mNativeAdLoader.setBannerAdSize(getBannerSize());
         if(mNativeAdLoader.hasValidAdSource()){
-            mNativeAdLoader.loadAd(1, new IAdLoadListener() {
+            mNativeAdLoader.loadAd(this, 2, new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 
@@ -437,7 +437,7 @@ public class AppLoadingActivity extends BaseActivity {
 
     public static void preloadAd(Context context) {
         if (needLoadNativeAd(true, null)) {
-            FuseAdLoader.get(SLOT_APP_START_NATIVE, context).setBannerAdSize(getBannerSize()).preloadAd();
+            FuseAdLoader.get(SLOT_APP_START_NATIVE, context).setBannerAdSize(getBannerSize()).preloadAd(context);
         }
     }
 

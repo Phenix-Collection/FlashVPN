@@ -80,8 +80,8 @@ public class NativeInterstitialActivity extends Activity {
         //mvLoadNative();
         mFuseLoader = FuseAdLoader.get(CONFIG_SLOT_HOME_LUCKY, this);
         mFuseLoader.setBannerAdSize(getBannerSize());
-        //mFuseLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
-        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
+        //mFuseLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         fuseLoadNative();
     }
 
@@ -117,7 +117,7 @@ public class NativeInterstitialActivity extends Activity {
     }
 
     public void fuseLoadNative() {
-        mFuseLoader.loadAd(1, new IAdLoadListener() {
+        mFuseLoader.loadAd(this, 1, new IAdLoadListener() {
             @Override
             public void onRewarded(IAdAdapter ad) {
 
@@ -127,7 +127,7 @@ public class NativeInterstitialActivity extends Activity {
             public void onAdLoaded(IAdAdapter ad) {
                 hideLoadding();
                 fillInterstitialLayout(ad);
-                mFuseLoader.loadAd(1, null);
+                mFuseLoader.loadAd(NativeInterstitialActivity.this, 1, null);
                 mHandler.removeMessages(MSG_TIMEOUT);
 //                loadAdmobNativeExpress();
             }
@@ -174,7 +174,7 @@ public class NativeInterstitialActivity extends Activity {
                     .starLevelLayoutId(R.id.star_level_layout)
                     .adFlagId(R.id.ad_flag)
                     .build();
-            View adView = ad.getAdView(viewBinder);
+            View adView = ad.getAdView(this, viewBinder);
             if (adView != null) {
                 mAdContainer.addView(adView);
                 mAdContainer.setVisibility(View.VISIBLE);

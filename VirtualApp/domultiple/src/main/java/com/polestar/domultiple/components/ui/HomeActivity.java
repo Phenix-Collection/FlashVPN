@@ -300,7 +300,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 break;
         }
 
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(this, viewBinder);
         if (adView != null) {
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
@@ -314,7 +314,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         }
         if (adLoader.hasValidAdSource()) {
             adLoader.setBannerAdSize(getBannerAdSize());
-            adLoader.loadAd(2, 2000, new IAdLoadListener() {
+            adLoader.loadAd(this, 2, 2000, new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 
@@ -709,7 +709,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         if (mClonedList.size() <= RemoteConfig.getLong(CONF_ADD_CLONE_PRELOAD_GATE)
                 && !PreferencesUtils.isAdFree()) {
             FuseAdLoader.get(AddCloneActivity.SLOT_ADD_CLONE_AD, PolestarApp.getApp())
-                    .setBannerAdSize(AddCloneActivity.getBannerAdSize()).preloadAd();
+                    .setBannerAdSize(AddCloneActivity.getBannerAdSize()).preloadAd(this);
         }
     }
 
