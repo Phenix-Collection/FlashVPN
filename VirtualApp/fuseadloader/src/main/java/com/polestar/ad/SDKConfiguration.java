@@ -6,6 +6,7 @@ import com.ironsource.mediationsdk.IronSource;
 import com.mopub.common.MoPub;
 import com.polestar.ad.adapters.FuseAdLoader;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -67,7 +68,7 @@ public class SDKConfiguration {
         private SDKConfiguration configuration;
         public Builder() {
             configuration = new SDKConfiguration();
-            configuration.supportedFuseAdType = FuseAdLoader.SUPPORTED_TYPES;
+            configuration.supportedFuseAdType = new HashSet<>(FuseAdLoader.SUPPORTED_TYPES);
         }
 
         public SDKConfiguration build() {

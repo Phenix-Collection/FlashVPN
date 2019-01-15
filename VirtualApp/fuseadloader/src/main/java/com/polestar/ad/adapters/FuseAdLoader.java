@@ -335,7 +335,7 @@ public class FuseAdLoader {
 
     public void addAdConfig(AdConfig adConfig) {
         if (adConfig != null && !TextUtils.isEmpty(adConfig.source) && !TextUtils.isEmpty(adConfig.key)) {
-            if (SUPPORTED_TYPES.contains(adConfig.source)) {
+            if (sConfiguration.supportedFuseAdType.contains(adConfig.source)) {
                 mNativeAdConfigList.add(adConfig);
                 AdLog.d("add adConfig : " + adConfig.toString());
             }
