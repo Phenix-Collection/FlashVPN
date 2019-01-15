@@ -379,6 +379,27 @@ class MethodProxies {
 
     }
 
+    static class ReportSizeConfigurations extends MethodProxy {
+        @Override
+        public String getMethodName() {
+            return "reportSizeConfigurations";
+        }
+
+        @Override
+        public boolean isEnable() {
+            return VirtualCore.get().isVAppProcess();
+        }
+
+        @Override
+        public Object call(Object who, Method method, Object... args) throws Throwable {
+            try{
+                return method.invoke(who, args);
+            } catch (Throwable ex) {
+                return null;
+            }
+        }
+    }
+
 
     static class StartActivity extends MethodProxy {
 
