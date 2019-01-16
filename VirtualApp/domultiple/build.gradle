@@ -61,8 +61,8 @@ android {
             minSdkVersion 16
             targetSdkVersion 26
             multiDexEnabled = true
-            versionCode 21300
-            versionName "2.13.00.${releaseTime()}"
+            versionCode 21308
+            versionName "2.13.08.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             dimension "channel"
         }
@@ -98,6 +98,13 @@ repositories {
     flatDir {
         dirs 'libs',project(':fuseadloader').file('libs')
     }
+    maven {
+        url "https://dl.bintray.com/ironsource-mobile/android-sdk"
+    }
+    maven {
+        //IronSource Adapters
+        url "http://dl.bintray.com/ironsource-mobile/android-adapters"
+    }
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -114,12 +121,35 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.0'
     implementation 'com.google.firebase:firebase-config:16.0.0'
-    implementation 'com.google.firebase:firebase-ads:15.0.1'
+    arm32Implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.android.billingclient:billing:dp-1'
-    implementation 'com.facebook.android:audience-network-sdk:4.28.2'
+    arm32Implementation 'com.facebook.android:audience-network-sdk:4.28.2'
 
     implementation 'com.android.support:multidex:1.0.1'
 
+
+    arm32Implementation('com.mopub:mopub-sdk-banner:5.2.0@aar') {
+        transitive = true
+    }
+    // For native static (images).
+    arm32Implementation('com.mopub:mopub-sdk-native-static:5.2.0@aar') {
+        transitive = true
+    }
+    // For native video. This will automatically also include native static
+//    implementation('com.mopub:mopub-sdk-native-video:4.20.0@aar') {
+//        transitive = true
+//    }
+
+    // For interstitials
+    arm32Implementation('com.mopub:mopub-sdk-interstitial:5.2.0@aar') {
+        transitive = true
+    }
+
+    arm32Implementation 'com.ironsource.sdk:mediationsdk:6.8.1@jar'
+    //Admob
+    arm32Implementation 'com.ironsource.adapters:admobadapter:4.3.0@jar'
+    //Applovin
+    arm32Implementation 'com.ironsource.adapters:applovinadapter:4.3.1@jar'
    // compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 
     implementation project(':libmultiple')
