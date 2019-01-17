@@ -140,7 +140,7 @@ public class WrapAdActivity extends Activity {
         });
 
         String slot = getIntent().getStringExtra(EXTRA_AD_SLOT);
-        FuseAdLoader.get(slot, this).loadAd(2, new IAdLoadListener() {
+        FuseAdLoader.get(slot, this).loadAd(this, 2, new IAdLoadListener() {
 
             @Override
             public void onAdLoaded(IAdAdapter ad) {

@@ -107,7 +107,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
     private void inflateNativeAd(IAdAdapter ad) {
         final AdViewBinder viewBinder;
         switch (ad.getAdType()) {
-//            case AdConstants.NativeAdType.AD_SOURCE_FACEBOOK:
+//            case AdConstants.AdType.AD_SOURCE_FACEBOOK:
 //                viewBinder = new AdViewBinder.Builder(R.layout.booster_native_ad_fb)
 //                        .titleId(R.id.ad_title)
 //                        .textId(R.id.ad_subtitle_text)
@@ -130,7 +130,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
                         .build();
                 break;
         }
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(getContext(), viewBinder);
         if (adView != null) {
             adView.setBackgroundColor(0);
             mLayoutCleanerViewAd.addView(adView);
@@ -171,7 +171,7 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
         //TODO JJJJ
         adLoader = FuseAdLoader.get(mSlotId, mContext.getApplicationContext());
         adLoader.setBannerAdSize(getBannerSize());
-        adLoader.loadAd(2, 2000, new IAdLoadListener() {
+        adLoader.loadAd(getContext(), 2, 2000, new IAdLoadListener() {
             @Override
             public void onRewarded(IAdAdapter ad) {
 
