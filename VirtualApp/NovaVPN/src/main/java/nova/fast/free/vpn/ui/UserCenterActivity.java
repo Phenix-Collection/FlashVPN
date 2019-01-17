@@ -118,7 +118,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
 
     private void loadRewardAd() {
 
-        FuseAdLoader.get(SLOT_USER_CENTER_REWARD, this) .loadAd(2, 1000,
+        FuseAdLoader.get(SLOT_USER_CENTER_REWARD, this) .loadAd(this, 2, 1000,
                 new IAdLoadListener() {
                     @Override
                     public void onRewarded(IAdAdapter ad) {

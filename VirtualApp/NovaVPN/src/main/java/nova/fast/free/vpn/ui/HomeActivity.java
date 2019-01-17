@@ -98,8 +98,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     public static void preloadAd(Context context) {
-        FuseAdLoader.get(SLOT_HOME_NATIVE, context).preloadAd();
-        FuseAdLoader.get(SLOT_HOME_GIFT_REWARD,context).preloadAd();
+        FuseAdLoader.get(SLOT_HOME_NATIVE, context).preloadAd(context);
+        FuseAdLoader.get(SLOT_HOME_GIFT_REWARD,context).preloadAd(context);
     }
 
     private void inflateHomeNativeAd(IAdAdapter ad) {
@@ -117,7 +117,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_container)
                 .build();
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(this,viewBinder);
         if (adView != null) {
             if (adView.getParent() != null) {
                 ((ViewGroup)adView.getParent()).removeView(adView);
@@ -131,7 +131,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private boolean isRewarded = false;
     private void loadRewardAd() {
 
-        FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, this) .loadAd(2, 1000,
+        FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, this) .loadAd(this, 2, 1000,
                 new IAdLoadListener() {
                     @Override
                     public void onRewarded(IAdAdapter ad) {
@@ -176,7 +176,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     private void loadHomeNativeAd() {
-        FuseAdLoader.get(SLOT_HOME_NATIVE, this).loadAd(2, 2000, new IAdLoadListener() {
+        FuseAdLoader.get(SLOT_HOME_NATIVE, this).loadAd(this, 2, 2000, new IAdLoadListener() {
             @Override
             public void onAdLoaded(IAdAdapter ad) {
                 inflateHomeNativeAd(ad);
@@ -608,7 +608,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             connectingFailed = false;
             if (PreferenceUtils.hasShownRateDialog(this)
                     && !NovaUser.getInstance(this).isVIP()) {
-                FuseAdLoader.get(SLOT_CONNECTED_AD, this).loadAd(2, new IAdLoadListener() {
+                FuseAdLoader.get(SLOT_CONNECTED_AD, this).loadAd(this, 2, new IAdLoadListener() {
                     @Override
                     public void onAdLoaded(IAdAdapter ad) {
                         ad.show();

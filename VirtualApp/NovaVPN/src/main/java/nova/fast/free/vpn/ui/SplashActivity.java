@@ -67,7 +67,7 @@ public class SplashActivity extends BaseActivity {
         }
         boolean needEnterAd = stateOn && NovaApp.getApp().needEnterAd();
         if (needEnterAd) {
-            FuseAdLoader.get(NovaApp.SLOT_ENTER_AD, this).loadAd(2, 2000, new IAdLoadListener() {
+            FuseAdLoader.get(NovaApp.SLOT_ENTER_AD, this).loadAd(this, 2, 2000, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     if (!loadTimeout) {

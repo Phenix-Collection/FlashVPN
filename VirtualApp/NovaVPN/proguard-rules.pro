@@ -210,3 +210,10 @@ public static java.lang.String TABLENAME;
  -keep class com.android.vending.billing.**
 
  -keep class nova.fast.free.vpn.tunnel.shadowsocks.** {*;}
+
+ -keep class com.ironsource.adapters.** { *;
+  }
+  -dontwarn com.ironsource.mediationsdk.**
+  -dontwarn com.ironsource.adapters.**
+  -dontwarn com.moat.**
+  -keep class com.moat.** { public protected private *; }

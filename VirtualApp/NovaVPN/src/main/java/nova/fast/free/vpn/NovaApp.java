@@ -15,6 +15,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
+import com.polestar.ad.SDKConfiguration;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.booster.BoosterSdk;
 
@@ -59,18 +60,21 @@ public class NovaApp extends MultiDexApplication {
     }
 
     private void initAd() {
-        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~7387660650");
+        SDKConfiguration.Builder builder = new SDKConfiguration.Builder();
+
+        builder.mopubAdUnit("8e77a1b50d5c4a9fb204d212e2bd530a")
+                .admobAppId("ca-app-pub-5490912237269284~7387660650");
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
-                return NovaUser.getInstance(NovaApp.getApp()).isVIP();
+                return NovaUser.getInstance(getApp()).isVIP();
             }
 
             @Override
             public List<AdConfig> getAdConfigList(String slot) {
                 return RemoteConfig.getAdConfigList(slot);
             }
-        });
+        }, getApp(), builder.build());
     }
 
 
@@ -103,7 +107,7 @@ public class NovaApp extends MultiDexApplication {
         }
 
         if(needEnterAd()) {
-            FuseAdLoader.get(SLOT_ENTER_AD, getApp()).preloadAd();
+            FuseAdLoader.get(SLOT_ENTER_AD, getApp()).preloadAd(getApp());
         }
 
         BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
