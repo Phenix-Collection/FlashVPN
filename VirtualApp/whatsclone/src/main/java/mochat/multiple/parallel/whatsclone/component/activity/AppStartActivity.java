@@ -123,7 +123,7 @@ public class AppStartActivity extends BaseActivity {
     }
     public static void preloadAd(Context context) {
         if (needLoadNativeAd(true, null)) {
-            FuseAdLoader.get(SLOT_APP_START_NATIVE,context).setBannerAdSize(getBannerSize()).preloadAd();
+            FuseAdLoader.get(SLOT_APP_START_NATIVE,context).setBannerAdSize(getBannerSize()).preloadAd(context);
         }
     }
 
@@ -138,7 +138,7 @@ public class AppStartActivity extends BaseActivity {
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
                 .build();
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(this, viewBinder);
         if (adView != null) {
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
@@ -149,7 +149,7 @@ public class AppStartActivity extends BaseActivity {
     public void loadNativeAd() {
         mAdLoader = FuseAdLoader.get(SLOT_APP_START_NATIVE, this).setBannerAdSize(getBannerSize());
         if(mAdLoader.hasValidAdSource()){
-            mAdLoader.loadAd(2, 300, new IAdLoadListener() {
+            mAdLoader.loadAd(this, 2, 300, new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 

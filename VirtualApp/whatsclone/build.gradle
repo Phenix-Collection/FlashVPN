@@ -89,6 +89,13 @@ repositories {
     flatDir {
         dirs 'libs',project(':fuseadloader').file('libs')
     }
+    maven {
+        url "https://dl.bintray.com/ironsource-mobile/android-sdk"
+    }
+    maven {
+        //IronSource Adapters
+        url "http://dl.bintray.com/ironsource-mobile/android-adapters"
+    }
 }
 
 dependencies {
@@ -108,6 +115,23 @@ dependencies {
     compile 'org.greenrobot:greendao:3.0.1'
     //compile 'com.google.code.gson:gson:2.3.1'
     implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
+
+    implementation('com.mopub:mopub-sdk-banner:5.2.0@aar') {
+        transitive = true
+    }
+    // For native static (images).
+    implementation('com.mopub:mopub-sdk-native-static:5.2.0@aar') {
+        transitive = true
+    }
+    // For native video. This will automatically also include native static
+//    implementation('com.mopub:mopub-sdk-native-video:4.20.0@aar') {
+//        transitive = true
+//    }
+
+    // For interstitials
+    implementation('com.mopub:mopub-sdk-interstitial:5.2.0@aar') {
+        transitive = true
+    }
 //    compile 'com.google.android.exoplayer:exoplayer-dash:r2.4.4'
     // MTA
 //    compile files('libs/mid-sdk-3.5.jar')

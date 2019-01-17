@@ -50,7 +50,7 @@ public class WrapCoverAdActivity extends Activity {
         String slot = getIntent().getStringExtra(EXTRA_AD_SLOT);
         String pkg = getIntent().getStringExtra(EXTRA_PACKAGE);
         int userId = getIntent().getIntExtra(EXTRA_USERID, 0);
-        FuseAdLoader.get(slot, this).loadAd(1, new IAdLoadListener() {
+        FuseAdLoader.get(slot, this).loadAd(WrapCoverAdActivity.this, 1, new IAdLoadListener() {
             @Override
             public void onRewarded(IAdAdapter ad) {
 
@@ -60,7 +60,7 @@ public class WrapCoverAdActivity extends Activity {
             public void onAdLoaded(IAdAdapter ad) {
                 try {
                     ad.show();
-                    FuseAdLoader.get(slot, WrapCoverAdActivity.this).preloadAd();
+                    FuseAdLoader.get(slot, WrapCoverAdActivity.this).preloadAd(WrapCoverAdActivity.this);
                 }catch (Throwable ex){
 
                 }

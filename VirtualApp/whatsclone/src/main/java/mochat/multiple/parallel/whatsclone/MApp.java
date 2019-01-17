@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 //import com.batmobi.BatmobiLib;
 import com.google.android.gms.ads.MobileAds;
+import com.polestar.ad.SDKConfiguration;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -106,7 +107,16 @@ public class MApp extends MultiDexApplication {
     }
 
     private void initAd() {
-        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~2288391923");
+
+        SDKConfiguration.Builder builder = new SDKConfiguration.Builder();
+        if (!isArm64()) {
+            for (String s : FuseAdLoader.SUPPORTED_TYPES) {
+                builder.disableAdType(s);
+            }
+        } else {
+            builder.mopubAdUnit("ea07176770a548c2985d4846fa9bed3c")
+                    .admobAppId("ca-app-pub-5490912237269284~2288391923");
+        }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
@@ -117,10 +127,10 @@ public class MApp extends MultiDexApplication {
             public List<AdConfig> getAdConfigList(String slot) {
                 return RemoteConfig.getAdConfigList(slot);
             }
-        });
+        }, getApp(), builder.build());
 //        BatmobiLib.init(gDefault, "8W4OBQJHMXNI1TM9TGZAK4HF");
-        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
-        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
+        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.AdType.AD_SOURCE_FACEBOOK);
+        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
     }
     @Override
@@ -155,8 +165,10 @@ public class MApp extends MultiDexApplication {
                 } else {
                     boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
                     boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
-                    boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
-                    boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                    if (!isArm64()) {
+                        boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
+                        boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
+                    }
                     boosterConfig.avoidShowIfHistory = RemoteConfig.getBoolean("avoid_ad_if_history");
                 }
                 BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {

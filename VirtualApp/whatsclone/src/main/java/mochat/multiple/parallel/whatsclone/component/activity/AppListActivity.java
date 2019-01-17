@@ -269,10 +269,10 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             mNativeAdLoader = FuseAdLoader.get(SLOT_APPLIST_NATIVE, this.getApplicationContext());
             mNativeAdLoader.setBannerAdSize(getBannerAdSize());
         }
-//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
-//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
+//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+//        mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (mNativeAdLoader.hasValidAdSource()) {
-            mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_APPLIST_NATIVE_PRIOR_TIME), new IAdLoadListener() {
+            mNativeAdLoader.loadAd(AppListActivity.this,2, RemoteConfig.getLong(CONFIG_APPLIST_NATIVE_PRIOR_TIME), new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 
@@ -317,7 +317,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
                 .build();
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(this, viewBinder);
         nativeAd = ad;
         if (adView != null) {
             adContainer.removeAllViews();

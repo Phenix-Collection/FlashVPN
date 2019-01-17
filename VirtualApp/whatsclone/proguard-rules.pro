@@ -252,3 +252,10 @@ public static java.lang.String TABLENAME;
  -keep class * extends android.os.IInterface {}
  -keep class * extends android.app.IServiceConnection.Stub {}
  -keepclassmembers class com.polestar.clone.client.hook.secondary.ServiceConnectionDelegate { public *;}
+
+-keep class com.ironsource.adapters.** { *;
+ }
+ -dontwarn com.ironsource.mediationsdk.**
+ -dontwarn com.ironsource.adapters.**
+ -dontwarn com.moat.**
+ -keep class com.moat.** { public protected private *; }

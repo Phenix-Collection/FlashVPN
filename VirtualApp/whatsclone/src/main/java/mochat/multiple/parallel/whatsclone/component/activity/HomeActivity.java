@@ -292,9 +292,9 @@ public class HomeActivity extends BaseActivity {
         isInterstitialAdLoaded = false;
         interstitialAd = null;
         adLoader = FuseAdLoader.get(SLOT_HOME_GIFT_INTERSTITIAL, this);
-        //adLoader.addAdSource(AdConstants.NativeAdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
+        //adLoader.addAdSource(AdConstants.AdType.AD_SOURCE_ADMOB_INTERSTITIAL, "ca-app-pub-5490912237269284/5384537050", -1);
         if (adLoader.hasValidAdSource()) {
-            adLoader.loadAd(1, new IAdLoadListener() {
+            adLoader.loadAd(this, 1, new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 
