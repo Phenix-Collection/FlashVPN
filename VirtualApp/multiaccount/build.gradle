@@ -89,6 +89,13 @@ repositories {
     flatDir {
         dirs 'libs',project(':fuseadloader').file('libs')
     }
+    maven {
+        url "https://dl.bintray.com/ironsource-mobile/android-sdk"
+    }
+    maven {
+        //IronSource Adapters
+        url "http://dl.bintray.com/ironsource-mobile/android-adapters"
+    }
 }
 
 dependencies {
@@ -133,6 +140,23 @@ dependencies {
     //Avazu
     compile 'com.facebook.android:audience-network-sdk:4.28.2'
     compile 'com.android.support:multidex:1.0.1'
+
+    implementation('com.mopub:mopub-sdk-banner:5.2.0@aar') {
+        transitive = true
+    }
+    // For native static (images).
+    implementation('com.mopub:mopub-sdk-native-static:5.2.0@aar') {
+        transitive = true
+    }
+    // For native video. This will automatically also include native static
+//    implementation('com.mopub:mopub-sdk-native-video:4.20.0@aar') {
+//        transitive = true
+//    }
+
+    // For interstitials
+    implementation('com.mopub:mopub-sdk-interstitial:5.2.0@aar') {
+        transitive = true
+    }
 
     configurations.all {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->

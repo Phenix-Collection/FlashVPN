@@ -330,7 +330,7 @@ public class AppCloneActivity extends BaseActivity {
                 .privacyInformationId(R.id.ad_choices_image)
                 .adFlagId(R.id.ad_flag)
                 .build();
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(this, viewBinder);
         if (adView != null) {
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
@@ -342,10 +342,10 @@ public class AppCloneActivity extends BaseActivity {
             mNativeAdLoader = FuseAdLoader.get(SLOT_AD_AFTER_CLONE, this.getApplicationContext());
             mNativeAdLoader.setBannerAdSize(getBannerSize());
         }
-        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
-        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.NativeAdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
+        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
+        //mNativeAdLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if ( mNativeAdLoader.hasValidAdSource()) {
-            mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_AD_AFTER_CLONE_PROTECT_TIME), new IAdLoadListener() {
+            mNativeAdLoader.loadAd(this, 2, RemoteConfig.getLong(CONFIG_AD_AFTER_CLONE_PROTECT_TIME), new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 

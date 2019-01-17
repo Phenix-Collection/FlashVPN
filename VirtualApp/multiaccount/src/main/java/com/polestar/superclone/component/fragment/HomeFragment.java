@@ -110,7 +110,7 @@ public class HomeFragment extends BaseFragment {
                 .privacyInformationId(R.id.ad_choices_image)
                 .adFlagId(R.id.ad_flag)
                 .build();
-        View adView = ad.getAdView(viewBinder);
+        View adView = ad.getAdView(getActivity(),viewBinder);
         nativeAdContainer.removeAllViews();
         nativeAdContainer.addView(adView);
         pkgGridAdapter.notifyDataSetChanged();
@@ -443,7 +443,7 @@ public class HomeFragment extends BaseFragment {
         }
 
         if ( mNativeAdLoader.hasValidAdSource()) {
-            mNativeAdLoader.loadAd(2, RemoteConfig.getLong(CONFIG_HOME_NATIVE_PRIOR_TIME), new IAdLoadListener() {
+            mNativeAdLoader.loadAd(getActivity(), 2, RemoteConfig.getLong(CONFIG_HOME_NATIVE_PRIOR_TIME), new IAdLoadListener() {
                 @Override
                 public void onAdClicked(IAdAdapter ad) {
 
@@ -686,6 +686,6 @@ public class HomeFragment extends BaseFragment {
             mApplistAdLoader = FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity.getApplicationContext());
             mApplistAdLoader.setBannerAdSize(AppListActivity.getBannerAdSize());
         }
-        mApplistAdLoader.preloadAd();
+        mApplistAdLoader.preloadAd(getActivity());
     }
 }

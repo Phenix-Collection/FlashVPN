@@ -13,6 +13,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
+import com.polestar.ad.SDKConfiguration;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -106,7 +107,7 @@ public class MApp extends MultiDexApplication {
     }
 
     public static boolean needAd() {
-        return !(isSupportPkg() && isPrimaryPkgExist());
+        return !(isSupportPkg());
     }
 
     @Override
@@ -127,7 +128,16 @@ public class MApp extends MultiDexApplication {
     }
 
     private void initAd() {
-        MobileAds.initialize(gDefault, "ca-app-pub-5490912237269284~1647548421");
+        SDKConfiguration.Builder builder = new SDKConfiguration.Builder();
+        if (!needAd()) {
+            for (String s : FuseAdLoader.SUPPORTED_TYPES) {
+                builder.disableAdType(s);
+            }
+        } else {
+            builder.mopubAdUnit("5a17369b6c344b1e92aac6857c4194bb")
+                    .admobAppId("ca-app-pub-5490912237269284~1647548421")
+                    .ironSourceAppKey("86621d4d");
+        }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
@@ -138,10 +148,10 @@ public class MApp extends MultiDexApplication {
             public List<AdConfig> getAdConfigList(String slot) {
                 return RemoteConfig.getAdConfigList(slot);
             }
-        });
+        }, getApp(), builder.build());
 //        BatmobiLib.init(gDefault, "8W4OBQJHMXNI1TM9TGZAK4HF");
-        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK);
-        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.NativeAdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
+        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.AdType.AD_SOURCE_FACEBOOK);
+        //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
     }
     @Override

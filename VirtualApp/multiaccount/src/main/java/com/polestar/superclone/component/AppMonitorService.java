@@ -66,7 +66,7 @@ public class AppMonitorService extends Service {
                 case MSG_PRELOAD_AD:
                     if (!PreferencesUtils.isAdFree() && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
                         FuseAdLoader.get(AppLockActivity.CONFIG_SLOT_APP_LOCK,AppMonitorService.this)
-                                .setBannerAdSize(AppLockActivity.getBannerSize()).loadAd(1, null);
+                                .setBannerAdSize(AppLockActivity.getBannerSize()).preloadAd(AppMonitorService.this);
                         long interval = RemoteConfig.getLong(CONFIG_APPLOCK_PRELOAD_INTERVAL);
                         MLogs.d("Applocker schedule next ad at " + interval);
                         if (interval >= 15*60*000) {
@@ -152,7 +152,7 @@ public class AppMonitorService extends Service {
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    adLoader.loadAd(1, new IAdLoadListener() {
+                    adLoader.loadAd(AppMonitorService.this, 1, new IAdLoadListener() {
                         @Override
                         public void onRewarded(IAdAdapter ad) {
 
