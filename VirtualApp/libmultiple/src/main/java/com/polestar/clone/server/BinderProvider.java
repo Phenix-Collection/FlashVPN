@@ -14,6 +14,7 @@ import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.clone.client.stub.DaemonService;
 import com.polestar.clone.helper.compat.BundleCompat;
+import com.polestar.clone.helper.compat.NotificationChannelCompat;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.server.accounts.VAccountManagerService;
 import com.polestar.clone.server.am.BroadcastSystem;
@@ -43,6 +44,7 @@ public final class BinderProvider extends ContentProvider {
         if (!VirtualCore.get().isStartup()) {
             return true;
         }
+        NotificationChannelCompat.checkOrCreateChannel(context, NotificationChannelCompat.DEFAULT_CHANNEL_ID, "messages from clone");
         VPackageManagerService.systemReady();
         addService(ServiceManagerNative.PACKAGE, VPackageManagerService.get());
         VActivityManagerService.systemReady(context);

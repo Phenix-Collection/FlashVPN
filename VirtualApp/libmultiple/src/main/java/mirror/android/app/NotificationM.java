@@ -9,7 +9,11 @@ import mirror.RefObject;
 
 public class NotificationM {
     // fix anti-virus Ikarus AndroidOS.AdDisplay.AdLock
-//    public static Class<?> TYPE = RefClass.load(NotificationM.class, Notification.class);
-//    public static RefObject<Icon> mLargeIcon;
-//    public static RefObject<Icon> mSmallIcon;
+    public static Class TYPE;
+    public static RefObject mLargeIcon;
+    public static RefObject mSmallIcon;
+
+    static {
+        NotificationM.TYPE = RefClass.load(NotificationM.class, Notification.class);
+    }
 }

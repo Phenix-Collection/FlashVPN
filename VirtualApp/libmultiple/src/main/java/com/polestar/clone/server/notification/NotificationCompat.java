@@ -22,7 +22,7 @@ import mirror.com.android.internal.R_Hide;
 public abstract class NotificationCompat {
 
     public static final String EXTRA_TITLE = "android.title";
-    public static final String DEFAULT_CHANNEL_ID = "clone_default";
+
     public static final String EXTRA_TITLE_BIG = EXTRA_TITLE + ".big";
     public static final String EXTRA_TEXT = "android.text";
     public static final String EXTRA_SUB_TEXT = "android.subText";

@@ -5,13 +5,21 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
+import com.polestar.clone.BitmapUtils;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.ipc.VNotificationManager;
+import com.polestar.clone.helper.compat.NotificationChannelCompat;
 import com.polestar.clone.helper.utils.Reflect;
+import com.polestar.clone.helper.utils.VLog;
+import com.polestar.clone.os.VUserHandle;
 
+import mirror.android.app.NotificationM;
 import mirror.android.app.NotificationO;
 
 import static com.polestar.clone.os.VEnvironment.getPackageResourcePath;
@@ -27,12 +35,29 @@ import static com.polestar.clone.os.VEnvironment.getPackageResourcePath;
     NotificationCompatCompatV21() {
         super();
     }
-
+    private String fixupChannelId(String id, String pkg) {
+        // TODO check the id length
+        String newId =  pkg + "@";
+        if (id != null)
+            newId += id;
+        return newId;
+    }
     @Override
     public boolean dealNotification(int id, Notification notification, String packageName) {
         Context appContext = getAppContext(packageName);
-        if(Build.VERSION.SDK_INT >= 26 && (TextUtils.isEmpty(notification.getChannelId()))) {
-            NotificationO.mChannelId.set(notification, NotificationCompat.DEFAULT_CHANNEL_ID);
+        if(Build.VERSION.SDK_INT >= 26 ) {
+            VLog.d(TAG,"dealNotification " + notification);
+            if ((TextUtils.isEmpty(notification.getChannelId()))) {
+                NotificationO.mChannelId.set(notification, NotificationChannelCompat.DEFAULT_CHANNEL_ID);
+            } else {
+                String channelId = (String) NotificationO.mChannelId.get(notification);
+//                try {
+                    NotificationO.mChannelId.set(notification, fixupChannelId(channelId, packageName));
+//                }catch (Throwable ex) {
+//                    ex.printStackTrace();
+//                }
+
+            }
         }
         return appContext == null? false: (resolveRemoteViews(appContext, packageName, notification)
                 || resolveRemoteViews(appContext, packageName, notification.publicVersion));
@@ -60,7 +85,15 @@ import static com.polestar.clone.os.VEnvironment.getPackageResourcePath;
         } else {
             getNotificationFixer().fixIconImage(appContext.getResources(), notification.contentView, false, notification);
         }
-        notification.icon = host.icon;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (notification.getSmallIcon() == null) {
+                NotificationM.mSmallIcon.set(notification,
+                        Icon.createWithBitmap(BitmapUtils.getCustomIcon(VirtualCore.get().getContext(),
+                                appContext.getPackageName(), VUserHandle.myUserId())));
+            }
+        } else {
+            notification.icon = host.icon;
+        }
 
         ApplicationInfo proxyApplicationInfo = new ApplicationInfo(host);
 

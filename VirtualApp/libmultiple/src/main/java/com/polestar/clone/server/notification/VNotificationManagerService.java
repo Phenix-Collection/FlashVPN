@@ -151,6 +151,7 @@ public class VNotificationManagerService extends INotificationManager.Stub {
     @Override
     @TargetApi(Build.VERSION_CODES.O)
     public NotificationChannel getNotificationChannel(String pkg, String channelId) {
+        VLog.d(TAG, "getNotificationChannel " + channelId + " fixed: " + fixupId(channelId, pkg));
         NotificationChannel channel = mNotificationManager.getNotificationChannel(fixupId(channelId, pkg));
         return unFixupNotificationChannel(channel, pkg);
     }
