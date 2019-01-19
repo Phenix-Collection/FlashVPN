@@ -1,4 +1,4 @@
-package com.polestar.task;
+package com.polestar.task.database.datamodels;
 
 import android.text.TextUtils;
 

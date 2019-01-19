@@ -2,10 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 def appName = "AdverTop"
-def keystorePath = "D:/Advertop/Advertop.jks"
-def password = "www123"
-def aliasName = "Advertop"
-def debugAlias = "Advertop"
+//def keystorePath = "D:/Advertop/Advertop.jks"
+//def password = "www123"
+//def aliasName = "Advertop"
+//def debugAlias = "Advertop"
+def keystorePath = "/Users/huanzheng/Downloads/android-key/weidao.jks"
+def password="Q1234%ilovelinux"
+def aliasName="release"
+def debugAlias ="release"
+
 android {
     compileSdkVersion 25
     buildToolsVersion "27.0.3"

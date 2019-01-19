@@ -4,7 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:maxSdkVersion="18" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,66 +14,71 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission android:name="nova.fast.free.vpn.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+
+    <permission
+        android:name="nova.fast.free.vpn.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="nova.fast.free.vpn.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
+        android:name=".NovaApp"
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".NovaApp"
-        android:persistent="true">
+        android:persistent="true"
+        android:theme="@style/AppTheme">
         <activity
             android:name=".ui.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.ShortcutActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Launcher"
-            android:exported="true">
-        </activity>
-        <activity android:name=".ui.HomeActivity" android:screenOrientation="portrait" android:launchMode="singleTask"/>
+            android:theme="@style/AppTheme.Launcher"></activity>
+        <activity
+            android:name=".ui.HomeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.FaqActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SelectServerActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.FeedbackActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SettingsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AboutActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.UserCenterActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.WebViewActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
-            android:name="nova.fast.free.vpn.ui.AppProxySettingActivity"
-            android:label="@string/proxied_apps"
+            android:name=".ui.AppProxySettingActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleTask"/>
+            android:label="@string/proxied_apps"
+            android:launchMode="singleTask" />
 
         <service
-            android:name="nova.fast.free.vpn.core.LocalVpnService"
+            android:name=".core.LocalVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
@@ -79,7 +86,7 @@
         </service>
 
         <receiver
-            android:name="nova.fast.free.vpn.core.WakeReceiver"
+            android:name=".core.WakeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -103,34 +110,59 @@
                 <action android:name="com.polestar.messaging.wake" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".network.SystemStatusReceiver">  
-            <intent-filter>    
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>    
-            </intent-filter>  
-         </receiver> 
-
+        <receiver android:name=".network.SystemStatusReceiver">
+              
+                
+            <intent-filter>
+                    
+                      
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                    
+                    
+            </intent-filter>
+              
+        </receiver>
+         
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5490912237269284~7387660650"/>
+            android:value="ca-app-pub-5490912237269284~7387660650" />
 
-        <provider android:authorities="${applicationId}.sync.provider"
-            android:exported="true"
+        <provider
             android:name="com.polestar.welive.DummyProvider"
+            android:authorities="${applicationId}.sync.provider"
+            android:exported="true"
             android:syncable="true" />
 
-        <service android:exported="true" android:name="com.polestar.welive.SyncService">
+        <service
+            android:name="com.polestar.welive.SyncService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter" android:resource="@xml/syncadapter" />
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
         </service>
-        <service android:name="com.polestar.welive.WeLiveJobService" android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service android:exported="true" android:name="com.polestar.welive.AuthService">
+        <service
+            android:name="com.polestar.welive.WeLiveJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.polestar.welive.AuthService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
-            <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator" />
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
         </service>
-</application>
+
+        <activity
+            android:name=".ui.AdTestActivity"
+            android:label="@string/title_activity_ad_test"
+            android:theme="@style/AppTheme"></activity>
+    </application>
+
 </manifest>

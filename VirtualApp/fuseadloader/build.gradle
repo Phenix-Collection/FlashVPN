@@ -111,4 +111,9 @@ dependencies {
 //    compile 'com.ironsource.adapters:vungleadapter:4.1.4@jar'
 //    compile 'com.github.vungle:vungle-android-sdk:6.3.17'
 
+    //2019-01-18
+    //retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
 }
