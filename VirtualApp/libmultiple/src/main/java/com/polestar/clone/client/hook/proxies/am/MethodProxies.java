@@ -1,5 +1,6 @@
 package com.polestar.clone.client.hook.proxies.am;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -1279,6 +1280,12 @@ class MethodProxies {
 //            if (permission.startsWith("com.google")) {
 //                return PackageManager.PERMISSION_GRANTED;
 //            }
+            if (Manifest.permission.ACCOUNT_MANAGER.equals(permission)) {
+                return PackageManager.PERMISSION_GRANTED;
+            }
+            if (!permission.startsWith("android.permission")) {
+                return PackageManager.PERMISSION_GRANTED;
+            }
             if (PermissionCompat.DANGEROUS_PERMISSION.contains(permission)
                     && !VirtualCore.get().getHostRequestDangerPermissions().contains(permission)) {
                 //Request permission that host not request
@@ -1648,7 +1655,10 @@ class MethodProxies {
             int nameIdx = getProviderNameIndex();
             String name = (String) args[nameIdx];
             int userId = VUserHandle.myUserId();
-            if (name != null && name.contains(ServiceManagerNative.SERVICE_CP_AUTH)) {
+            if (name != null &&
+                    (name.contains(ServiceManagerNative.SERVICE_CP_AUTH)
+                    || name.contains(VirtualCore.get().getHostPkg() + ".virtual_stub_"))) {
+                VLog.d(TAG, "direct invoke " + name);
                 return method.invoke(who, args);
             }
             ProviderInfo info = VPackageManager.get().resolveContentProvider(name, 0, userId);
