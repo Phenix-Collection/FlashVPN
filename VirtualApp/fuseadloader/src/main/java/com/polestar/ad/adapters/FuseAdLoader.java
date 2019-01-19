@@ -447,37 +447,42 @@ public class FuseAdLoader {
         if (!sConfiguration.hasSupport(config.source)) {
             return null;
         }
-        switch (config.source) {
-            case AdConstants.AdType.AD_SOURCE_ADMOB:
-                return new AdmobNativeAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_MOPUB:
-                return new MopubNativeAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_ADMOB_BANNER:
-                AdSize bannerSize = config.bannerAdSize == null? mBannerAdSize: config.bannerAdSize;
-                return bannerSize == null? null : new AdmobBannerAdapter(mAppContext, config.key, bannerSize);
-            case AdConstants.AdType.AD_SOURCE_FACEBOOK:
-                return new FBNativeAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL:
-                return new FBInterstitialAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_ADMOB_INTERSTITIAL:
-                return new AdmobInterstitialAdapter(mAppContext, config.key);
+        try {
+            switch (config.source) {
+                case AdConstants.AdType.AD_SOURCE_ADMOB:
+                    return new AdmobNativeAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_MOPUB:
+                    return new MopubNativeAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_ADMOB_BANNER:
+                    AdSize bannerSize = config.bannerAdSize == null ? mBannerAdSize : config.bannerAdSize;
+                    return bannerSize == null ? null : new AdmobBannerAdapter(mAppContext, config.key, bannerSize);
+                case AdConstants.AdType.AD_SOURCE_FACEBOOK:
+                    return new FBNativeAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL:
+                    return new FBInterstitialAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_ADMOB_INTERSTITIAL:
+                    return new AdmobInterstitialAdapter(mAppContext, config.key);
 //            case AdConstants.AdType.AD_SOURCE_BT_INTERSTITIAL:
 //                return new BtInterstitialAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL:
-                return new MopubInterstitialAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL:
+                    return new MopubInterstitialAdapter(mAppContext, config.key);
 //            case AdConstants.AdType.AD_SOURCE_BT :
 //                return new BtNativeAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_ADMOB_REWARD :
-                return new AdmobRewardVideoAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_FB_REWARD :
-                return new FBRewardVideoAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_IRONSOURCE_REWARD:
-                return new IronSourceRewardVideoAdapter(mAppContext, config.key);
-            case AdConstants.AdType.AD_SOURCE_IRONSOURCE_INTERSTITIAL:
-                return new IronSourceInterstitialAdapter(mAppContext, config.key);
-            default:
-                AdLog.e("not suppported source " + config.source);
-                return null;
+                case AdConstants.AdType.AD_SOURCE_ADMOB_REWARD:
+                    return new AdmobRewardVideoAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_FB_REWARD:
+                    return new FBRewardVideoAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_IRONSOURCE_REWARD:
+                    return new IronSourceRewardVideoAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_IRONSOURCE_INTERSTITIAL:
+                    return new IronSourceInterstitialAdapter(mAppContext, config.key);
+                default:
+                    AdLog.e("not suppported source " + config.source);
+                    return null;
+            }
+        }catch (Throwable ex) {
+            AdLog.e("Error to get loader for " +config);
+            return null;
         }
     }
 

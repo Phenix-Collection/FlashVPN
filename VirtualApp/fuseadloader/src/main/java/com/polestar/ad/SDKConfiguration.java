@@ -72,6 +72,16 @@ public class SDKConfiguration {
         }
 
         public SDKConfiguration build() {
+            if (!configuration.hasIronSource()) {
+                configuration.supportedFuseAdType.remove(AdConstants.AdType.AD_SOURCE_IRONSOURCE_REWARD);
+                configuration.supportedFuseAdType.remove(AdConstants.AdType.AD_SOURCE_IRONSOURCE_INTERSTITIAL);
+                AdLog.e("IronSource not built in. Disabled");
+            }
+            if (!configuration.hasMopub()) {
+                configuration.supportedFuseAdType.remove(AdConstants.AdType.AD_SOURCE_MOPUB);
+                configuration.supportedFuseAdType.remove(AdConstants.AdType.AD_SOURCE_MOPUB_INTERSTITIAL);
+                AdLog.e("Mopub not built in. Disabled");
+            }
             return configuration;
         }
 
