@@ -438,22 +438,22 @@ public class HomeActivity extends BaseActivity {
         EventReporter.generalClickEvent(this, "home_animate_enter");
         boolean needShowRate = guideRateIfNeeded();
         boolean showAdFree = false;
-        if (!needShowRate && !BillingProvider.get().isAdFreeVIP()) {
-            long interval = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL) * 60 * 60 * 1000;
-            long interval2 = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL_2) * 60 * 60 * 1000;
-            interval = PreferencesUtils.getAdFreeClickStatus() ? interval : interval2;
-            long last = PreferencesUtils.getLastAdFreeDialogTime();
-            if ((System.currentTimeMillis() - last) > interval ) {
-                showAdFree = true;
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAdFreeDialog();
-                    }
-                }, 800);
-                PreferencesUtils.updateLastAdFreeDialogTime();
-            }
-        }
+//        if (!needShowRate && !BillingProvider.get().isAdFreeVIP()) {
+//            long interval = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL) * 60 * 60 * 1000;
+//            long interval2 = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL_2) * 60 * 60 * 1000;
+//            interval = PreferencesUtils.getAdFreeClickStatus() ? interval : interval2;
+//            long last = PreferencesUtils.getLastAdFreeDialogTime();
+//            if ((System.currentTimeMillis() - last) > interval ) {
+//                showAdFree = true;
+//                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        showAdFreeDialog();
+//                    }
+//                }, 800);
+//                PreferencesUtils.updateLastAdFreeDialogTime();
+//            }
+//        }
         if (!showAdFree && !isAutoInterstitialShown && autoShowInterstitial) {
             if (interstitialAd != null && !PreferencesUtils.isAdFree()) {
                 try {
