@@ -1,9 +1,14 @@
 package com.polestar.clone.client.hook.proxies.location;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationRequest;
 import android.os.Build;
 
+import com.polestar.clone.client.VClientImpl;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.hook.base.MethodProxy;
 import com.polestar.clone.client.hook.base.ReplaceLastPkgMethodProxy;
 import com.polestar.clone.client.ipc.VirtualLocationManager;
@@ -30,6 +35,22 @@ public class MethodProxies {
             }
             if (LocationRequestL.mWorkSource != null) {
                 LocationRequestL.mWorkSource.set(request, null);
+            }
+            if (LocationRequestL.mProvider != null) {
+                try {
+                    String provider = LocationRequestL.mProvider.get(request);
+                    if ("passive".equals(provider)
+                            || "gps".equals(provider)) {
+                        if (VirtualCore.get().getContext().checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            LocationRequestL.mProvider.set(request, "network");
+                            //POWER_LOW
+                            LocationRequestL.quality.set(request, 201);
+                        }
+                    }
+                }catch (Throwable ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
