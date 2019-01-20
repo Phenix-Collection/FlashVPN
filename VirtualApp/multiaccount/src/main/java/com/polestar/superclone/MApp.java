@@ -170,7 +170,7 @@ public class MApp extends MultiDexApplication {
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
-                if (needAd()) {
+//                if (needAd()) {
                     initAd();
                     BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
                     res.titleString = R.string.booster_title;
@@ -211,7 +211,7 @@ public class MApp extends MultiDexApplication {
                             AppMonitorService.preloadCoverAd();
                         }
                     }
-                }
+//                }
                 initReceiver();
             }
 

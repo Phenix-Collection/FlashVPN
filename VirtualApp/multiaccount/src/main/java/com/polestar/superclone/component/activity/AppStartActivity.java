@@ -79,6 +79,7 @@ public class AppStartActivity extends BaseActivity {
     private boolean needAbiSupport;
     private boolean mFirstStart;
     private Handler  mainHandler ;
+    private boolean isAppLaunched;
 
     public static boolean needLoadNativeAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
@@ -194,10 +195,6 @@ public class AppStartActivity extends BaseActivity {
         if (AppManager.needUpgrade(packageName)) {
             VirtualCore.get().killApp(packageName, VUserHandle.USER_ALL);
         } else {
-            if (AppManager.isAppLaunched(packageName, userId)) {
-                AppManager.launchApp(packageName, userId);
-                return;
-            }
         }
         Intent intent = new Intent(activity, AppStartActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -228,6 +225,7 @@ public class AppStartActivity extends BaseActivity {
         } else {
             needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = AppManager.needUpgrade(appModel.getPackageName());
+            isAppLaunched = AppManager.isAppLaunched(appModel);
             if (AppMonitorService.needLoadCoverAd(true, appModel.getPackageName())) {
                 AppMonitorService.preloadCoverAd();
             }
@@ -249,7 +247,7 @@ public class AppStartActivity extends BaseActivity {
             public void run() {
                 finish();
             }
-        }, 10000);
+        }, 7000);
     }
 
     private void doLaunchFromAgent() {
@@ -266,36 +264,59 @@ public class AppStartActivity extends BaseActivity {
                         agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
                     }
                     agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+                    AppManager.updateLaunchTime(appModel.getPackageName(), appModel.getPkgUserId());
+                    if (!isAppLaunched) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AppStartActivity.this, getString(R.string.start_with_arm64), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                     finishIfTimeout();
                 } else{
                     //Guide download support package
-                    EventReporter.reportArm64(appModel.getPackageName(), "start");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            UpDownDialog.show(AppStartActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
-                                    getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            switch (i) {
-                                                case UpDownDialog.NEGATIVE_BUTTON:
-                                                    EventReporter.reportArm64(appModel.getPackageName(), "cancel");
-                                                    doLaunchMyself();
-                                                    break;
-                                                case UpDownDialog.POSITIVE_BUTTON:
-                                                    CommonUtils.jumpToMarket(AppStartActivity.this, getPackageName()+".arm64");
-                                                    EventReporter.reportArm64(appModel.getPackageName(), "go");
-                                                    break;
+//                    EventReporter.reportArm64(appModel.getPackageName(), "start");
+                    if (mFirstStart
+                            || (!VirtualCore.get().isAppInstalledAsUser( appModel.getPkgUserId(), appModel.getPackageName()))) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UpDownDialog.show(AppStartActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
+                                        getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                switch (i) {
+                                                    case UpDownDialog.NEGATIVE_BUTTON:
+                                                        EventReporter.reportArm64(appModel.getPackageName(), "cancel");
+                                                        doLaunchMyself();
+                                                        break;
+                                                    case UpDownDialog.POSITIVE_BUTTON:
+                                                        CommonUtils.jumpToMarket(AppStartActivity.this, getPackageName() + ".arm64");
+                                                        EventReporter.reportArm64(appModel.getPackageName(), "go");
+                                                        break;
+                                                }
                                             }
-                                        }
-                                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialogInterface) {
+                                        doLaunchMyself();
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        if(!isAppLaunched) {
+                            mainHandler.post(new Runnable() {
                                 @Override
-                                public void onCancel(DialogInterface dialogInterface) {
-                                    doLaunchMyself();
+                                public void run() {
+                                    Toast.makeText(AppStartActivity.this, R.string.toast_arm64_package, Toast.LENGTH_SHORT).show();
                                 }
                             });
+
                         }
-                    });
+                        doLaunchMyself();
+                    }
 
                 }
                 agent.destroy();
@@ -310,15 +331,15 @@ public class AppStartActivity extends BaseActivity {
                 if(!needAbiSupport) {
                     doLaunchMyself();
                 } else{
-                    doLaunchMyself();
-                    if (mFirstStart) {
-                        EventReporter.reportArm64(appModel.getPackageName(), "start");
-                        Toast.makeText(AppStartActivity.this, R.string.toast_arm64_package, Toast.LENGTH_LONG).show();
-                    }
-                    //doLaunchFromAgent();
+//                    doLaunchMyself();
+//                    if (mFirstStart) {
+//                        EventReporter.reportArm64(appModel.getPackageName(), "start");
+//                        Toast.makeText(AppStartActivity.this, R.string.toast_arm64_package, Toast.LENGTH_LONG).show();
+//                    }
+                    doLaunchFromAgent();
                 }
             }
-        }, 500);
+        }, isAppLaunched ? 0: 3000);
     }
     private void initView() {
         mLoadingView = (ProgressBar) findViewById(R.id.loading);
@@ -389,9 +410,14 @@ public class AppStartActivity extends BaseActivity {
         setContentView(R.layout.activity_start);
 
         initData();
-        initView();
-        if (appModel != null && needLoadNativeAd(false, appModel.getPackageName())) {
-            loadNativeAd();
+        if (appModel != null && !isAppLaunched) {
+            initView();
+            if ( needLoadNativeAd(false, appModel.getPackageName())) {
+                loadNativeAd();
+            }
+        }
+        if (appModel != null) {
+            doLaunch();
         }
         EventReporter.reportActive(this, true,"shortcut");
 
@@ -400,19 +426,20 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
+        finish();
     }
 
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        initData();
-        initView();
+//        initData();
+//        initView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        doLaunch();
+        //doLaunch();
     }
 
 

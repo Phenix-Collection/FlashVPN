@@ -194,5 +194,5 @@
     <string name="about">เกี่ยวกับ</string>
     <string name="dialog_permission_title">ให้สิทธิ์</string>
     <string name="dialog_permission_content">โปรดอนุญาตให้มีการขออนุญาตจาก Superb Cloner มิฉะนั้นแอปพลิเคชันโคลนและบริการ Google Play บางอย่างจะทำงานได้ไม่ถูกต้อง</string>
-    <string name="toast_arm64_package">ไม่มีไลบรารี 32 บิตในแอปที่ถูกโคลนนี้ โปรดตรวจสอบคำถามที่พบบ่อยหากโคลนไม่ทำงาน</string>
+    <string name="toast_arm64_package">ตรวจพบไลบรารี 64 บิตในโคลนนี้ โปรดติดตั้งไลบรารีการสนับสนุน 64 บิตหากเกิดข้อผิดพลาด</string>
 </resources>
