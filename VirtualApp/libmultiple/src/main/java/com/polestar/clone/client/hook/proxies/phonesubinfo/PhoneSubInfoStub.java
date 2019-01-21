@@ -26,7 +26,12 @@ public class PhoneSubInfoStub extends BinderInvocationProxy {
 	protected void onBindMethods() {
 		super.onBindMethods();
 		addMethodProxy(new ReplaceLastPkgMethodProxy("getNaiForSubscriber"));
-		addMethodProxy(new ReplaceLastPkgMethodProxy("getImeiForSubscriber"));
+		addMethodProxy(new ReplaceLastPkgMethodProxy("getImeiForSubscriber") {
+			@Override
+			public Object call(Object who, Method method, Object... args) throws Throwable {
+				return getDeviceInfo().deviceId;
+			}
+		});
 		addMethodProxy(new ReplaceCallingPkgMethodProxy("getDeviceSvn"));
 		addMethodProxy(new ReplaceLastPkgMethodProxy("getDeviceSvnUsingSubId"));
 		addMethodProxy(new ReplaceCallingPkgMethodProxy("getSubscriberId"){
