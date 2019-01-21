@@ -53,6 +53,7 @@ public class AutoFillManagerStub extends BinderInvocationProxy {
 
             v2.setAccessible(true);
             v2.set(v1, v0_1);
+            VLog.d("Autofill", "injected");
         }
         catch(Throwable v0) {
             VLog.e("AutoFillManagerStub", "AutoFillManagerStub inject error.", v0);
@@ -69,6 +70,7 @@ public class AutoFillManagerStub extends BinderInvocationProxy {
             @Override
             public Object call(Object who, Method method, Object... args) throws Throwable {
                 try {
+                    VLog.d("Autofill", "startSession");
                     return super.call(who, method, args);
                 }catch (Throwable ex) {
                     return Integer.MIN_VALUE;
@@ -76,7 +78,10 @@ public class AutoFillManagerStub extends BinderInvocationProxy {
             }
         });
         addMethodProxy(new ReplacePkgAndComponentProxy("updateOrRestartSession"));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("isServiceEnabled"));
+        addMethodProxy(new ResultStaticMethodProxy("addClient", 0));
+
+
+//        addMethodProxy(new ReplaceLastPkgMethodProxy("isServiceEnabled"));
 
 //        addMethodProxy(new ResultStaticMethodProxy("isServiceSupported",false));
 //        addMethodProxy(new ResultStaticMethodProxy("isServiceEnabled",false));
