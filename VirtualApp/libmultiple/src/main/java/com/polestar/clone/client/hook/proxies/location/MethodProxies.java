@@ -105,7 +105,11 @@ public class MethodProxies {
                 }
                 return 0;
             }
-            return super.call(who, method, args);
+            try {
+                return super.call(who, method, args);
+            }catch (Throwable ex) {
+                return 0;
+            }
         }
     }
 
@@ -145,7 +149,12 @@ public class MethodProxies {
                     return null;
                 }
             }
-            return super.call(who, method, args);
+            try {
+                return super.call(who, method, args);
+            }catch (Throwable ex){
+                ex.printStackTrace();
+                return null;
+            }
         }
     }
 
