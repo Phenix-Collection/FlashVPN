@@ -72,7 +72,8 @@ public class SettingsProviderHook extends ExternalProviderHook {
         try {
             return methodBox.call();
         } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof SecurityException) {
+            if (e.getCause() instanceof SecurityException
+                    || e.getCause() instanceof RuntimeException) {
                 return null;
             }
             throw e;
