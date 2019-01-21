@@ -1538,6 +1538,10 @@ class MethodProxies {
                 int userId = intent.getIntExtra("_VA_|_user_id_", -1);
                 VLog.d("RegisterReceiver", "Accept uid " + uid + " userid:"+userId
                         + " vuid:"+VClientImpl.get().getVUid() + " myuserId: " + VUserHandle.myUserId());
+                if (intent.getAction() != null &&
+                        intent.getAction().contains("com.google.android.chimera.MODULE_CONFIGURATION_CHANGED")) {
+                    return false;
+                }
                 if (uid != -1) {
                     return VClientImpl.get().getVUid() == uid;
                 }
@@ -1857,6 +1861,7 @@ class MethodProxies {
             ACTION_BLACK_LIST.add("com.google.android.gms.walletp2p.phenotype.ACTION_PHENOTYPE_REGISTER");
             ACTION_BLACK_LIST.add("com.facebook.zero.ACTION_ZERO_REFRESH_TOKEN");
             ACTION_BLACK_LIST.add("com.google.android.gms.magictether.SCANNED_DEVICE");
+            ACTION_BLACK_LIST.add("com.google.android.chimera.MODULE_CONFIGURATION_CHANGED");
         }
 
         @Override
