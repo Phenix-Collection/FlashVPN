@@ -1,6 +1,5 @@
 package com.polestar.task.network.services;
 
-import com.polestar.task.network.datamodels.User;
 import com.polestar.task.network.responses.UserResponse;
 
 import retrofit2.Call;

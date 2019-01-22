@@ -2,7 +2,7 @@ package com.polestar.task.network.datamodels;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Task {
+public class Task extends TimeModel {
     /**
      * $table->integer('task_type');
      $table->string('description');
@@ -39,6 +39,8 @@ public class Task {
     public int mLimitTotal;
     @SerializedName("limit_per_day")
     public int mLimitPerDay;
+    @SerializedName("end_time")
+    public String mEndTime;
     @SerializedName("detail")
     public String mDetail;
 

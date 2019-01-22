@@ -31,6 +31,11 @@ public class ErrorCodeInterceptor implements Interceptor {
      * 而我们的onResponse，抛开302不谈(现在还不清楚retrofit对于302是怎么处理的)，里面的http status应该
      * 都是200；并且raw_response的数据，始终是可以被deserialize成预定义的class的
      *
+     * 假如没有这个errCode interceptor，那么服务器返回预定义的错误时，客户端根本不知道到底发生了什么错误。
+     * 因为onResponse里那个期待的responseClass不包含任何东西,成员变量都是null。
+     * Adtop是在onResponse里通过不同的http status code来区分错误
+     * 我们是在onFailure里通过errMsg来区分错误
+     *
      */
 
 

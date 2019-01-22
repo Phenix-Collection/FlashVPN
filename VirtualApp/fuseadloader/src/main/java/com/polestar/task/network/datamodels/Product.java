@@ -2,7 +2,7 @@ package com.polestar.task.network.datamodels;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Product {
+public class Product extends TimeModel {
     @SerializedName("id")
     public long mId;
 
