@@ -1,6 +1,6 @@
 package com.polestar.task.network.responses;
 
-import com.google.gson.annotations.SerializedName;
+import com.polestar.task.network.datamodels.User;
 
-public class UserResponse {
+public class UserResponse extends User{
 }
