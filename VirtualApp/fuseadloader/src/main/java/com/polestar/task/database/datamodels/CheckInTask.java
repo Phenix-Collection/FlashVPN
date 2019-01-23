@@ -8,7 +8,7 @@ import org.json.JSONObject;
  * Created by guojia on 2019/1/17.
  */
 
-public class CheckInTask extends Task {
+public class CheckInTask extends TaskNoUse {
     public int[] award;
 
     @Override

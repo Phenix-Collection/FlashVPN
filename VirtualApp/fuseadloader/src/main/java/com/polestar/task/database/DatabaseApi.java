@@ -1,7 +1,5 @@
 package com.polestar.task.database;
 
-import com.polestar.task.IProductStatusListener;
-import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
 import com.polestar.task.network.datamodels.User;
@@ -22,7 +20,6 @@ public interface DatabaseApi {
 
     Task getTaskById(long taskId);
 
-
     User getMyUserInfo();
     boolean setUserInfo(User user);
 
@@ -32,9 +29,4 @@ public interface DatabaseApi {
 //    List<ProductInfoNoUse> getPurchasedProducts();
 
     Product getProductInfo(long id);
-
-    void consumeProduct(String deviceId, long productId, int amount, IProductStatusListener listener);
-
-    void requestFinishTask(String deviceId, long taskId, ITaskStatusListener listener);
-
 }

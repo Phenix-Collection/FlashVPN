@@ -39,12 +39,37 @@ public class ErrorCodeInterceptor implements Interceptor {
      */
 
 
-    public static boolean isAdError(Throwable throwable) {
-        String errMsg = throwable.getMessage();
+    public static boolean isAdErrorMsg(String errMsg) {
         if (errMsg != null && errMsg.startsWith(Configuration.ADERR_PREFIX)) {
             return true;
         }
         return false;
+    }
+
+    public static String composeErrMsg(int errCode, String errMsg) {
+        return Configuration.ADERR_PREFIX + Configuration.ADERR_SEPARATOR
+                + errCode + Configuration.ADERR_SEPARATOR + errMsg;
+    }
+
+    public static int getErrCode(String msg) {
+        if (msg != null && msg.startsWith(Configuration.ADERR_PREFIX)) {
+            String[] info = msg.split(Configuration.ADERR_SEPARATOR);
+            try {
+                int ret = Integer.valueOf(info[1]);
+                return ret;
+            } catch (Exception e) {
+
+            }
+        }
+        return 0;
+    }
+
+    public static String getErrMsg(String msg) {
+        if (msg != null && msg.startsWith(Configuration.ADERR_PREFIX)) {
+            String[] info = msg.split(Configuration.ADERR_SEPARATOR);
+            return info[2];
+        }
+        return "";
     }
 
     @Override
@@ -62,7 +87,7 @@ public class ErrorCodeInterceptor implements Interceptor {
             String errMsg = jsonObject.optString("errMsg");
 
             if (errCode > 0) {
-                throw new IOException(errMsg);
+                throw new IOException(composeErrMsg(errCode, errMsg));
             }
         } catch (JSONException e) {
             Log.i(Configuration.HTTP_TAG, "Invalid JSON response");

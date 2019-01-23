@@ -1,6 +1,6 @@
 package com.polestar.task.network.services;
 
-import com.polestar.task.network.responses.UserResponse;
+import com.polestar.task.network.datamodels.User;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -13,5 +13,5 @@ public interface AuthApi {
     @Headers("Accept: application/json")
     @POST("api/v1/user/registerAnonymous")
     @FormUrlEncoded
-    Call<UserResponse> registerAnonymous(@Field("device_id") String deviceID);
+    Call<User> registerAnonymous(@Field("device_id") String deviceID);
 }

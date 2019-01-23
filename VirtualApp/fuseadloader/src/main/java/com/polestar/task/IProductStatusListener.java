@@ -1,5 +1,9 @@
 package com.polestar.task;
 
+import com.polestar.task.network.datamodels.Product;
+
+import java.util.ArrayList;
+
 /**
  * Created by guojia on 2019/1/19.
  */
@@ -13,6 +17,10 @@ public interface IProductStatusListener {
      * @param totalCost total cost of coins
      * @param balance balance updated from server
      */
-    void onConsumeSuccess(String id, int amount, int totalCost, int balance);
-    void onConsumeFail(ErrorCode code);
+    void onConsumeSuccess(long id, int amount, int totalCost, int balance);
+    void onConsumeFail(ADErrorCode code);
+
+    void onGetAllAvailableProducts(ArrayList<Product> products);
+
+    void onGeneralError(ADErrorCode code);
 }

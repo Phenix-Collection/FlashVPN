@@ -8,7 +8,7 @@ import org.json.JSONObject;
  * Created by guojia on 2019/1/17.
  */
 
-public class AdTask extends Task {
+public class AdTask extends TaskNoUse {
     public static final String SLOT_ALL_AD_PLACEMENT = "slot_*";
     public static final String SLOT_DIVIDER = ";";
     public static final String SLOT_ALL_POP_PLACEMENT = "pop_*";

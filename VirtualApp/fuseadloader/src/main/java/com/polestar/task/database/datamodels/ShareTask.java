@@ -6,7 +6,7 @@ import org.json.JSONObject;
  * Created by guojia on 2019/1/17.
  */
 
-public class ShareTask extends Task {
+public class ShareTask extends TaskNoUse {
     public String shareUrl;
     public String desc;
 

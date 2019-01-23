@@ -8,7 +8,7 @@ import org.json.JSONObject;
  * Created by guojia on 2019/1/17.
  */
 
-public class RewardVideoTask extends Task {
+public class RewardVideoTask extends TaskNoUse {
     /**
      * ad slot; can get ad config by ad lot
      */

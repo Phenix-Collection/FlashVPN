@@ -1,14 +1,13 @@
 package com.polestar.task.database;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
-import com.polestar.task.IProductStatusListener;
-import com.polestar.task.ITaskStatusListener;
-import com.polestar.task.database.datamodels.ProductInfoNoUse;
 import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
 import com.polestar.task.network.datamodels.User;
+import com.polestar.task.network.responses.ProductsResponse;
 import com.polestar.task.network.responses.TasksResponse;
 
 import java.io.BufferedReader;
@@ -51,6 +50,8 @@ public class DatabaseFileImpl implements DatabaseApi {
         mContext = context;
 
         loadTasks(TASK_FILE);
+        loadUserInfo(USER_FILE);
+        loadProducts(PRODUCT_FILE);
     }
 
     private void createDirIfNotExist(String dirName) {
@@ -75,6 +76,11 @@ public class DatabaseFileImpl implements DatabaseApi {
                 }
             }
         }
+        if (mTasks != null) {
+            Log.i(TAG, "Loaded " + mTasks.size() + " tasks from disk");
+        } else {
+            Log.i(TAG, "Loaded 0 tasks from disk");
+        }
     }
 
     // called with lock held outside
@@ -83,6 +89,65 @@ public class DatabaseFileImpl implements DatabaseApi {
         tasksResponse.mTasks = tasks;
         File file = new File(mContext.getFilesDir(), fileName);
         return writeOneLineToFile(file.getAbsolutePath(), mGson.toJson(tasksResponse));
+    }
+
+    private void loadProducts(String fileName) {
+        createDirIfNotExist(DIR);
+        File file = new File(mContext.getFilesDir(), fileName);
+
+        synchronized (PRODUCT_FILE) {
+            String productInfo = readOnelineFromFile(file.getAbsolutePath());
+            if (productInfo == null) {
+                mProducts = null;
+            } else {
+                ProductsResponse productsResponse = mGson.fromJson(productInfo, ProductsResponse.class);
+                if (productsResponse != null) {
+                    mProducts = productsResponse.mProducts;
+                }
+            }
+        }
+        if (mProducts != null) {
+            Log.i(TAG, "Loaded " + mProducts.size() + " products from disk");
+        } else {
+            Log.i(TAG, "Loaded 0 products from disk");
+        }
+    }
+
+    // called with lock held outside
+    private boolean storeProductsSynced(ArrayList<Product> products, String fileName) {
+        ProductsResponse productsResponse = new ProductsResponse();
+        productsResponse.mProducts = products;
+        File file = new File(mContext.getFilesDir(), fileName);
+        return writeOneLineToFile(file.getAbsolutePath(), mGson.toJson(productsResponse));
+    }
+
+    private boolean storeUserSynced(User user, String fileName) {
+        if (user != null) {
+            File file = new File(mContext.getFilesDir(), fileName);
+            return writeOneLineToFile(file.getAbsolutePath(), mGson.toJson(mUser));
+        } else {
+            Log.i(TAG, "Invalid user info");
+            return false;
+        }
+    }
+
+    private void loadUserInfo(String fileName) {
+        createDirIfNotExist(DIR);
+        File file = new File(mContext.getFilesDir(), fileName);
+
+        synchronized (USER_FILE) {
+            String userInfo = readOnelineFromFile(file.getAbsolutePath());
+            if (userInfo == null) {
+                mUser = null;
+            } else {
+                mUser = mGson.fromJson(userInfo, User.class);
+            }
+            if (mUser != null) {
+                Log.i(TAG, "Loaded user info " + mGson.toJson(mUser));
+            } else {
+                Log.e(TAG, "No user info loaded");
+            }
+        }
     }
 
     @Override
@@ -96,7 +161,6 @@ public class DatabaseFileImpl implements DatabaseApi {
     public boolean setActiveTasks(ArrayList<Task> tasks) {
         synchronized (TASK_FILE) {
             mTasks = tasks;
-
             return storeTasksSynced(mTasks, TASK_FILE);
         }
     }
@@ -137,17 +201,25 @@ public class DatabaseFileImpl implements DatabaseApi {
 
     @Override
     public boolean setUserInfo(User user) {
-        return false;
+        synchronized (USER_FILE) {
+            mUser = user;
+            return storeUserSynced(mUser, USER_FILE);
+        }
     }
 
     @Override
     public List<Product> getAllProductInfo() {
-        return null;
+        synchronized (PRODUCT_FILE) {
+            return mProducts;
+        }
     }
 
     @Override
     public boolean setActiveProducts(ArrayList<Product> products) {
-        return false;
+        synchronized (PRODUCT_FILE) {
+            mProducts = products;
+            return storeProductsSynced(mProducts, PRODUCT_FILE);
+        }
     }
 
 //    @Override
@@ -157,19 +229,17 @@ public class DatabaseFileImpl implements DatabaseApi {
 
     @Override
     public Product getProductInfo(long id) {
+        synchronized (PRODUCT_FILE) {
+            if (mProducts != null) {
+                for (Product product : mProducts) {
+                    if (product.mId == id) {
+                        return product;
+                    }
+                }
+            }
+        }
         return null;
     }
-
-    @Override
-    public void consumeProduct(String deviceId, long productId, int amount, IProductStatusListener listener) {
-
-    }
-
-    @Override
-    public void requestFinishTask(String deviceId, long taskId, ITaskStatusListener listener) {
-
-    }
-
 
     public static String readOnelineFromFile(String fileName) {
         InputStream instream = null;
