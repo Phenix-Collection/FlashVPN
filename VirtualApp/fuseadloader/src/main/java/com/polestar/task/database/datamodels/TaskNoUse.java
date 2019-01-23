@@ -6,7 +6,7 @@ import org.json.JSONObject;
  * Created by guojia on 2019/1/17.
  */
 
-public abstract class Task {
+public abstract class TaskNoUse {
     public static final String TASK_TYPE_SHARE = "share";
     public static final String TASK_TYPE_CHECKIN = "checkin";
     public static final String TASK_TYPE_REWARD_VIDEO = "rv";
@@ -37,7 +37,7 @@ public abstract class Task {
     public String rank;
 
 
-    public Task(JSONObject jsonObject) {
+    public TaskNoUse(JSONObject jsonObject) {
         id = jsonObject.optLong("id");
         type = jsonObject.optString("type");
         payout = jsonObject.optInt("payout", 0);

@@ -2,10 +2,11 @@ package com.polestar.task.database;
 
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
-import com.polestar.task.database.datamodels.ProductInfo;
-import com.polestar.task.database.datamodels.Task;
-import com.polestar.task.database.datamodels.UserInfo;
+import com.polestar.task.network.datamodels.Product;
+import com.polestar.task.network.datamodels.Task;
+import com.polestar.task.network.datamodels.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface DatabaseApi {
@@ -15,22 +16,25 @@ public interface DatabaseApi {
      * @return all tasks that available in server. App client should judge whether it is doable by task info
      */
     List<Task> getActiveTasks();
+    boolean setActiveTasks(ArrayList<Task> tasks);
 
-    List<Task> getActiveTasksByType(String type);
+    List<Task> getActiveTasksByType(int type);
 
-    Task getTaskById(String taskId);
+    Task getTaskById(long taskId);
 
 
-    UserInfo getMyUserInfo();
+    User getMyUserInfo();
+    boolean setUserInfo(User user);
 
-    List<ProductInfo> getAllProductInfo();
+    List<Product> getAllProductInfo();
+    boolean setActiveProducts(ArrayList<Product> products);
 
-    List<ProductInfo> getPurchasedProducts();
+//    List<ProductInfoNoUse> getPurchasedProducts();
 
-    ProductInfo getProductInfo(String id);
+    Product getProductInfo(long id);
 
-    void consumeProduct(String id, int amount, IProductStatusListener listener);
+    void consumeProduct(String deviceId, long productId, int amount, IProductStatusListener listener);
 
-    void requestFinishTask(String taskId, ITaskStatusListener listener);
+    void requestFinishTask(String deviceId, long taskId, ITaskStatusListener listener);
 
 }
