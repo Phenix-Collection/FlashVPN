@@ -17,7 +17,7 @@ public interface IProductStatusListener {
      * @param totalCost total cost of coins
      * @param balance balance updated from server
      */
-    void onConsumeSuccess(long id, int amount, int totalCost, int balance);
+    void onConsumeSuccess(long id, int amount, float totalCost, float balance);
     void onConsumeFail(ADErrorCode code);
 
     void onGetAllAvailableProducts(ArrayList<Product> products);

@@ -1,23 +1,26 @@
 package com.polestar.task.database.datamodels;
 
+import com.polestar.task.network.datamodels.Task;
+
 import org.json.JSONObject;
 
 /**
  * Created by guojia on 2019/1/17.
  */
 
-public class ShareTask extends TaskNoUse {
+public class ShareTask extends Task {
     public String shareUrl;
     public String desc;
 
-    public ShareTask(JSONObject jsonObject) {
-        super(jsonObject);
+    public ShareTask(Task task) {
+        super(task);
     }
 
     @Override
-    protected void parseTaskDetail(JSONObject detail) {
+    protected boolean parseTaskDetail(JSONObject detail) {
         shareUrl = detail.optString("url","");
         desc = detail.optString("desc", "");
+        return true;
     }
 
     @Override

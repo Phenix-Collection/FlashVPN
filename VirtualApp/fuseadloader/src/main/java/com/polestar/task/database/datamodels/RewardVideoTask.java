@@ -2,13 +2,15 @@ package com.polestar.task.database.datamodels;
 
 import android.text.TextUtils;
 
+import com.polestar.task.network.datamodels.Task;
+
 import org.json.JSONObject;
 
 /**
  * Created by guojia on 2019/1/17.
  */
 
-public class RewardVideoTask extends TaskNoUse {
+public class RewardVideoTask extends Task {
     /**
      * ad slot; can get ad config by ad lot
      */
@@ -22,12 +24,13 @@ public class RewardVideoTask extends TaskNoUse {
     }
 
     @Override
-    protected void parseTaskDetail(JSONObject detail) {
+    protected boolean parseTaskDetail(JSONObject detail) {
         adSlot = detail.optString("adSlot");
         desc = detail.optString("desc");
+        return true;
     }
 
-    public RewardVideoTask(JSONObject jsonObject) {
-        super(jsonObject);
+    public RewardVideoTask(Task task) {
+        super(task);
     }
 }

@@ -1,7 +1,7 @@
 package com.polestar.task.network.services;
 
-import com.polestar.task.network.datamodels.UserTask;
 import com.polestar.task.network.responses.TasksResponse;
+import com.polestar.task.network.responses.UserTaskResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -18,6 +18,6 @@ public interface TasksApi {
     @Headers("Accept: application/json")
     @POST("api/v1/task/finishTask")
     @FormUrlEncoded
-    Call<UserTask> finishTask(@Field("device_id") String deviceID,
-                              @Field("task_id") long productId);
+    Call<UserTaskResponse> finishTask(@Field("device_id") String deviceID,
+                                      @Field("task_id") long productId);
 }

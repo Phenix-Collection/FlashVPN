@@ -11,6 +11,8 @@ import com.polestar.task.network.datamodels.UserProduct;
 import com.polestar.task.network.datamodels.UserTask;
 import com.polestar.task.network.responses.ProductsResponse;
 import com.polestar.task.network.responses.TasksResponse;
+import com.polestar.task.network.responses.UserProductResponse;
+import com.polestar.task.network.responses.UserTaskResponse;
 import com.polestar.task.network.services.AuthApi;
 import com.polestar.task.network.services.ProductsApi;
 import com.polestar.task.network.services.TasksApi;
@@ -59,10 +61,12 @@ public class AdApiHelper {
             @Override
             public void onFailure(Call<User> call, Throwable t){
                 Log.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
-                if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
-                    listener.onRegisterFailed(ADErrorCode.createFromAdErrMsg(t.getMessage()));
-                } else {
-                    listener.onRegisterFailed(ADErrorCode.createServerDown());
+                if (listener != null) {
+                    if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
+                        listener.onRegisterFailed(ADErrorCode.createFromAdErrMsg(t.getMessage()));
+                    } else {
+                        listener.onRegisterFailed(ADErrorCode.createServerDown());
+                    }
                 }
             }
         });
@@ -96,28 +100,32 @@ public class AdApiHelper {
             public void onFailure(Call<ProductsResponse> call, Throwable t) {
                 Log.e(Configuration.HTTP_TAG, "onFailure: "+ t.getMessage());
                 // getProducts has no predefined err, so this must be server error
-                if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
-                    listener.onGeneralError(ADErrorCode.createFromAdErrMsg(t.getMessage()));
-                } else {
-                    listener.onGeneralError(ADErrorCode.createServerDown());
+                if (listener != null) {
+                    if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
+                        listener.onGeneralError(ADErrorCode.createFromAdErrMsg(t.getMessage()));
+                    } else {
+                        listener.onGeneralError(ADErrorCode.createServerDown());
+                    }
                 }
             }
         });
     }
 
-    public static void consumeProduct(String deviceId, long id, final IProductStatusListener listener) {
+    public static void consumeProduct(String deviceId, final long id, final int amount, final IProductStatusListener listener) {
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<UserProduct> call = service.consumeProduct(deviceId, id);
-        call.enqueue(new Callback<UserProduct>() {
+        Call<UserProductResponse> call = service.consumeProduct(deviceId, id, amount);
+        call.enqueue(new Callback<UserProductResponse>() {
             @Override
-            public void onResponse(Call<UserProduct> call, Response<UserProduct> response) {
+            public void onResponse(Call<UserProductResponse> call, Response<UserProductResponse> response) {
                 Log.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
 
                 switch(response.code()){
                     case 200:
-                        UserProduct ur = response.body();
-                        Log.i(Configuration.HTTP_TAG, "onResponse cost: "+ ur.mCost);
-                        //TODO
+                        UserProductResponse ur = response.body();
+                        Log.i(Configuration.HTTP_TAG, "onResponse cost: "+ ur.mUserProduct.mCost);
+                        if (listener != null) {
+                            listener.onConsumeSuccess(id, amount, ur.mUserProduct.mCost, ur.mUser.mBalance);
+                        }
                         break;
                     default:
                         if (listener != null) {
@@ -128,12 +136,14 @@ public class AdApiHelper {
             }
 
             @Override
-            public void onFailure(Call<UserProduct> call, Throwable t) {
+            public void onFailure(Call<UserProductResponse> call, Throwable t) {
                 Log.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
-                if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
-                    listener.onGeneralError(ADErrorCode.createFromAdErrMsg(t.getMessage()));
-                } else {
-                    listener.onGeneralError(ADErrorCode.createServerDown());
+                if (listener != null) {
+                    if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
+                        listener.onConsumeFail(ADErrorCode.createFromAdErrMsg(t.getMessage()));
+                    } else {
+                        listener.onGeneralError(ADErrorCode.createServerDown());
+                    }
                 }
             }
         });
@@ -165,29 +175,33 @@ public class AdApiHelper {
 
             @Override
             public void onFailure(Call<TasksResponse> call, Throwable t) {
-                Log.e(Configuration.HTTP_TAG, "onFailure: "+t.getMessage());
-                if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
-                    listener.onGeneralError(ADErrorCode.createFromAdErrMsg(t.getMessage()));
-                } else {
-                    listener.onGeneralError(ADErrorCode.createServerDown());
+                Log.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
+                if (listener != null) {
+                    if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
+                        listener.onGeneralError(ADErrorCode.createFromAdErrMsg(t.getMessage()));
+                    } else {
+                        listener.onGeneralError(ADErrorCode.createServerDown());
+                    }
                 }
             }
         });
     }
 
-    public static void finishTask(String deviceId, long id, final ITaskStatusListener listener) {
+    public static void finishTask(String deviceId, final long id, final ITaskStatusListener listener) {
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<UserTask> call = service.finishTask(deviceId, id);
-        call.enqueue(new Callback<UserTask>() {
+        Call<UserTaskResponse> call = service.finishTask(deviceId, id);
+        call.enqueue(new Callback<UserTaskResponse>() {
             @Override
-            public void onResponse(Call<UserTask> call, Response<UserTask> response) {
+            public void onResponse(Call<UserTaskResponse> call, Response<UserTaskResponse> response) {
                 Log.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
 
                 switch(response.code()){
                     case 200:
-                        UserTask ur = response.body();
-                        Log.i(Configuration.HTTP_TAG, "onResponse paid: "+ ur.mPayout);
-                        //TODO
+                        UserTaskResponse ur = response.body();
+                        Log.i(Configuration.HTTP_TAG, "onResponse paid: "+ ur.mUserTask.mPayout);
+                        if (listener != null) {
+                            listener.onTaskSuccess(id, ur.mUserTask.mPayout, ur.mUser.mBalance);
+                        }
                         break;
                     default:
                         if (listener != null) {
@@ -198,12 +212,14 @@ public class AdApiHelper {
             }
 
             @Override
-            public void onFailure(Call<UserTask> call, Throwable t) {
+            public void onFailure(Call<UserTaskResponse> call, Throwable t) {
                 Log.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
-                if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
-                    listener.onGeneralError(ADErrorCode.createFromAdErrMsg(t.getMessage()));
-                } else {
-                    listener.onGeneralError(ADErrorCode.createServerDown());
+                if (listener != null) {
+                    if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
+                        listener.onTaskFail(id, ADErrorCode.createFromAdErrMsg(t.getMessage()));
+                    } else {
+                        listener.onGeneralError(ADErrorCode.createServerDown());
+                    }
                 }
             }
         });

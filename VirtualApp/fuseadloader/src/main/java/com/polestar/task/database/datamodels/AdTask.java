@@ -2,13 +2,15 @@ package com.polestar.task.database.datamodels;
 
 import android.text.TextUtils;
 
+import com.polestar.task.network.datamodels.Task;
+
 import org.json.JSONObject;
 
 /**
  * Created by guojia on 2019/1/17.
  */
 
-public class AdTask extends TaskNoUse {
+public class AdTask extends Task {
     public static final String SLOT_ALL_AD_PLACEMENT = "slot_*";
     public static final String SLOT_DIVIDER = ";";
     public static final String SLOT_ALL_POP_PLACEMENT = "pop_*";
@@ -43,8 +45,8 @@ public class AdTask extends TaskNoUse {
      */
     public int priority;
 
-    public AdTask(JSONObject jsonObject) {
-        super(jsonObject);
+    public AdTask(Task task) {
+        super(task);
     }
 
     @Override
@@ -59,7 +61,7 @@ public class AdTask extends TaskNoUse {
     }
 
     @Override
-    protected void parseTaskDetail(JSONObject detail) {
+    protected boolean parseTaskDetail(JSONObject detail) {
         adid = detail.optString("adid");
         adDesc = detail.optString("adDesc");
         flowDesc = detail.optString("flowDesc");
@@ -76,5 +78,6 @@ public class AdTask extends TaskNoUse {
                 SLOT_ALL_AD_PLACEMENT + SLOT_DIVIDER + SLOT_ALL_TASK_PLACEMENT);
         excludeSlots = detail.optString("exclude");
         priority = detail.optInt("priority", 0);
+        return true;
     }
 }

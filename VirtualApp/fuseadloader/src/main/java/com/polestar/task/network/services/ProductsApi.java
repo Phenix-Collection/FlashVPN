@@ -1,7 +1,7 @@
 package com.polestar.task.network.services;
 
-import com.polestar.task.network.datamodels.UserProduct;
 import com.polestar.task.network.responses.ProductsResponse;
+import com.polestar.task.network.responses.UserProductResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -18,6 +18,7 @@ public interface ProductsApi {
     @Headers("Accept: application/json")
     @POST("api/v1/product/consumeProduct")
     @FormUrlEncoded
-    Call<UserProduct> consumeProduct(@Field("device_id") String deviceID,
-                                     @Field("product_id") long productId);
+    Call<UserProductResponse> consumeProduct(@Field("device_id") String deviceID,
+                                             @Field("product_id") long productId,
+                                             @Field("amount") int amount);
 }

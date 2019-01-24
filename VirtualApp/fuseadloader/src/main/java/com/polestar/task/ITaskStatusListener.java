@@ -16,7 +16,7 @@ public interface ITaskStatusListener {
      * @param payment
      * @param balance updated from server
      */
-    void onTaskSuccess(long taskId, int payment, int balance);
+    void onTaskSuccess(long taskId, float payment, float balance);
     void onTaskFail(long taskId, ADErrorCode code);
 
     void onGetAllAvailableTasks(ArrayList<Task> tasks);

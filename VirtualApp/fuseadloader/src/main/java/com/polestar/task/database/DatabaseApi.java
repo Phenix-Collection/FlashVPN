@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface DatabaseApi {
-
+    public static final String TAG = "Database";
     /**
      *
      * @return all tasks that available in server. App client should judge whether it is doable by task info

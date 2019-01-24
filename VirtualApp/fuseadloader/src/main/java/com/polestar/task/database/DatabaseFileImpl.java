@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseFileImpl implements DatabaseApi {
-    public static final String TAG = "Database";
-
     ArrayList<Task> mTasks = new ArrayList<>();
     ArrayList<Product> mProducts = new ArrayList<>();
     User mUser;
@@ -78,6 +76,11 @@ public class DatabaseFileImpl implements DatabaseApi {
         }
         if (mTasks != null) {
             Log.i(TAG, "Loaded " + mTasks.size() + " tasks from disk");
+            for (Task task : mTasks) {
+                if (task.isAdTask()) {
+                    task.getAdTask();
+                }
+            }
         } else {
             Log.i(TAG, "Loaded 0 tasks from disk");
         }

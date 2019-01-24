@@ -45,10 +45,11 @@ public class AdTestActivity extends AppCompatActivity {
         DatabaseImplFactory.getDatabaseApi(AdTestActivity.this);
 
         AdApiHelper.register("fakedeviceId", null);
-        getAvailableProducts(null);
+
+       /* getAvailableProducts(null);
         getAvailableTasks(new ITaskStatusListener() {
             @Override
-            public void onTaskSuccess(long taskId, int payment, int balance) {
+            public void onTaskSuccess(long taskId, float payment, float balance) {
             }
 
             @Override
@@ -65,8 +66,8 @@ public class AdTestActivity extends AppCompatActivity {
                 Log.i(Configuration.HTTP_TAG, code.toString());
             }
         });
-        consumeProduct("fakedeviceId",1, null);
-        finishTask("fakedeviceId",1, null);
+        consumeProduct("fakedeviceId",1, 2, null);
+        finishTask("fakedeviceId",1, null);*/
     }
 
 
