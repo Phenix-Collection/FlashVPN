@@ -38,13 +38,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_center="true"
-                android:textColor="@color/reward_collect_coin_color"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
                 android:text="Redeem"
                 android:textSize="16sp"
                 android:gravity="center"
                 android:padding="4dp"
-                android:background="@drawable/shape_call_to_action_back"
+                android:background="@drawable/submit_button"
                 />
         </RelativeLayout>
 
