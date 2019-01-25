@@ -28,4 +28,21 @@
     <declare-styleable name="FeedbackShader">
         <attr name="shader_color_on_click" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="IconFontTextView">
+        <attr name="bgSize" format="dimension" />
+        <attr name="bgColor" format="color" />
+        <attr name="bgShape">
+            <enum name="oval" value="0" />
+            <enum name="rectangle" value="1" />
+            <enum name="other" value="2" />
+        </attr>
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <!-- attr name="strokeWidth" format="float" -->
+        <attr name="icon_strokeWidth" format="float" />
+        <attr name="flip_horizontal" format="boolean" />
+        <attr name="central_transparent" format="boolean" />
+        <attr name="central_bgcolor" format="color" />
+    </declare-styleable>
 </resources>
