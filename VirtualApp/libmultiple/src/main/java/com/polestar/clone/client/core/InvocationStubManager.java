@@ -199,9 +199,6 @@ public final class InvocationStubManager {
             }
             if (Build.VERSION.SDK_INT >= O){
 				addInjector(new AutoFillManagerStub());
-				if( IHwTelephony.TYPE != null) {
-					this.addInjector(new HwTelephonyStub());
-				}
 			}
 			if (Build.VERSION.SDK_INT >= 28) {
             	addInjector(new SystemUpdateStub());
