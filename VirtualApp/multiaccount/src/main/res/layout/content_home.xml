@@ -106,7 +106,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_alignParentRight="true"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/mobvista_wall_new_tip" />
+                                android:src="@drawable/shape_new_dot" />
                         </RelativeLayout>
 
                     </RelativeLayout>
@@ -116,22 +116,49 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/layout_setting" >
+                android:layout_below="@id/layout_setting"
+                android:layout_above="@+id/frag_navigate_bar">
                 <FrameLayout
                     android:id="@+id/frag_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/frag_navigate_bar"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/theme_color2">
+                <TextView
+                    android:onClick="onSwitchToClonesClick"
+                    android:id="@+id/button_app_clones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="App Clones"/>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray"/>
+                <TextView
+                    android:onClick="onSwitchToRewardsClick"
+                    android:id="@+id/button_reward_center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Reward Center"/>
+            </LinearLayout>
             <!--android:layout_above="@id/image_bottom"-->
         </android.support.percent.PercentRelativeLayout>
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/blur_forground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-
     </FrameLayout>
 </FrameLayout>

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/selector_grid_app">
+    android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,10 +24,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:ellipsize="end"
-                    android:singleLine="true"
+                    android:maxLines="1"
                     android:textColor="@color/theme_text_color"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     android:textSize="12sp" />
         </LinearLayout>
 

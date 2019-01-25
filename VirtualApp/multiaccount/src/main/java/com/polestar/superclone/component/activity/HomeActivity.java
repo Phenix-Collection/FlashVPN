@@ -36,6 +36,7 @@ import com.polestar.superclone.component.adapter.NavigationAdapter;
 import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
+import com.polestar.superclone.reward.RewardCenterFragment;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
@@ -55,6 +56,7 @@ import java.util.Random;
 public class HomeActivity extends BaseActivity {
 
     private HomeFragment mHomeFragment;
+    private RewardCenterFragment mRewardCenterFragment;
     private DrawerLayout drawer;
     private ListView navigationList;
     private ImageView giftIconView;
@@ -209,7 +211,8 @@ public class HomeActivity extends BaseActivity {
         View view = findViewById(R.id.content_home);
         setImmerseLayout(view);
         mHomeFragment = new HomeFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mHomeFragment).commitAllowingStateLoss();
+        mRewardCenterFragment = new RewardCenterFragment();
+        doSwitchToClonesFragment();
     }
 
 
@@ -650,6 +653,22 @@ public class HomeActivity extends BaseActivity {
         } else {
             doAnimationEnter();
         }
+    }
+
+    private void doSwitchToClonesFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mHomeFragment).commitAllowingStateLoss();
+    }
+
+    private void doSwitchToRewardsFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mRewardCenterFragment).commitAllowingStateLoss();
+    }
+
+    public void onSwitchToClonesClick(View view) {
+        doSwitchToClonesFragment();
+    }
+
+    public void onSwitchToRewardsClick(View view) {
+        doSwitchToRewardsFragment();
     }
 
     @Override
