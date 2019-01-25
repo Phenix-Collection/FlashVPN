@@ -34,8 +34,8 @@ public class Task extends TimeModel {
     public static final int TASK_TYPE_AD_TASK = 1;
     public static final int TASK_TYPE_CHECKIN_TASK = 2;
     public static final int TASK_TYPE_REWARDVIDEO_TASK = 3;
-    public static final int TASK_TYPE_SHARE_TASK = 4;
-
+    public static final int TASK_TYPE_SHARE_TASK = 4; //主动提交referralCode的提交人的奖励
+    public static final int TASK_TYPE_REFERREE_TASK = 5; //被动提交referralCode的推荐人的奖励
 
     @SerializedName("id")
     public long mId;

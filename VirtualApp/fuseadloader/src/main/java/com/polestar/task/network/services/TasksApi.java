@@ -19,5 +19,6 @@ public interface TasksApi {
     @POST("api/v1/task/finishTask")
     @FormUrlEncoded
     Call<UserTaskResponse> finishTask(@Field("device_id") String deviceID,
-                                      @Field("task_id") long productId);
+                                      @Field("task_id") long productId,
+                                      @Field("referral_code") String referralCode);
 }

@@ -15,9 +15,4 @@ public interface AuthApi {
     @FormUrlEncoded
     Call<User> registerAnonymous(@Field("device_id") String deviceID);
 
-    @Headers("Accept: application/json")
-    @POST("api/v1/user/submitReferralCode")
-    @FormUrlEncoded
-    Call<User> submitReferralCode(@Field("device_id") String deviceID,
-                                  @Field("referral_code") String referralCode);
 }

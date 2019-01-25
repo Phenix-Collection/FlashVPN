@@ -189,7 +189,7 @@ public class AdApiHelper {
 
     public static void finishTask(String deviceId, final long id, final ITaskStatusListener listener) {
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<UserTaskResponse> call = service.finishTask(deviceId, id);
+        Call<UserTaskResponse> call = service.finishTask(deviceId, id, null);
         call.enqueue(new Callback<UserTaskResponse>() {
             @Override
             public void onResponse(Call<UserTaskResponse> call, Response<UserTaskResponse> response) {
@@ -200,7 +200,7 @@ public class AdApiHelper {
                         UserTaskResponse ur = response.body();
                         Log.i(Configuration.HTTP_TAG, "onResponse paid: "+ ur.mUserTask.mPayout);
                         if (listener != null) {
-                            listener.onTaskSuccess(id, ur.mUserTask.mPayout, ur.mUser.mBalance);
+                            listener.onTaskSuccess(id, ur.mUserTask.getPayout(), ur.mUser.mBalance);
                         }
                         break;
                     default:
