@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
-import com.polestar.booster.BoosterSdk;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -340,7 +339,7 @@ public class HomeFragment extends BaseFragment {
                         EventReporter.homeGiftClick(mActivity, "lucky_item");
                     } else if (showBooster && i==boosterIdx) {
                         MLogs.d("Start booster");
-                        BoosterSdk.startClean(mActivity, "home_item");
+//                        BoosterSdk.startClean(mActivity, "home_item");
                     }
                 }
             }
@@ -364,7 +363,7 @@ public class HomeFragment extends BaseFragment {
                         EventReporter.homeGiftClick(mActivity, "lucky_item_long");
                     } else if (showBooster && i==boosterIdx) {
                         MLogs.d("Start booster");
-                        BoosterSdk.startClean(mActivity, "home_item_long");
+//                        BoosterSdk.startClean(mActivity, "home_item_long");
                     }
                     return  false;
                 }

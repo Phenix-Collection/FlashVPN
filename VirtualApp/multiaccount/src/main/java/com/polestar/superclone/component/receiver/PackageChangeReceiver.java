@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.polestar.booster.mgr.BoostMgr;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.superclone.db.DbManager;
@@ -53,7 +52,7 @@ public class PackageChangeReceiver extends BroadcastReceiver{
             }
             if (!replacing && !installed) {
                 MLogs.d("call booster onInstall");
-                BoostMgr.getInstance(context).onInstall(pkg);
+//                BoostMgr.getInstance(context).onInstall(pkg);
             }
         }
     }

@@ -138,24 +138,23 @@ dependencies {
     //firebase messaging/notifications
     compile 'com.google.firebase:firebase-core:16.0.6'
     compile 'com.google.firebase:firebase-config:16.1.2'
-    compile 'com.google.firebase:firebase-ads:17.1.2'
+    arm32Implementation 'com.google.firebase:firebase-ads:17.1.2'
     //compile 'com.facebook.android:audience-network-sdk:4.+'
     compile project(':libmultiple')
     compile project(':fuseadloader')
-    compile project(':Booster')
 
     compile 'com.android.billingclient:billing:dp-1'
     implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
 
     //Avazu
-    compile 'com.facebook.android:audience-network-sdk:4.28.2'
+    arm32Implementation 'com.facebook.android:audience-network-sdk:4.28.2'
     compile 'com.android.support:multidex:1.0.1'
 
-    implementation('com.mopub:mopub-sdk-banner:5.2.0@aar') {
+    arm32Implementation('com.mopub:mopub-sdk-banner:5.2.0@aar') {
         transitive = true
     }
     // For native static (images).
-    implementation('com.mopub:mopub-sdk-native-static:5.2.0@aar') {
+    arm32Implementation('com.mopub:mopub-sdk-native-static:5.2.0@aar') {
         transitive = true
     }
     // For native video. This will automatically also include native static
@@ -164,9 +163,15 @@ dependencies {
 //    }
 
     // For interstitials
-    implementation('com.mopub:mopub-sdk-interstitial:5.2.0@aar') {
+    arm32Implementation('com.mopub:mopub-sdk-interstitial:5.2.0@aar') {
         transitive = true
     }
+
+    arm32Implementation 'com.ironsource.sdk:mediationsdk:6.8.1@jar'
+    //Admob
+    arm32Implementation 'com.ironsource.adapters:admobadapter:4.3.0@jar'
+    //Applovin
+    arm32Implementation 'com.ironsource.adapters:applovinadapter:4.3.1@jar'
 
     configurations.all {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->

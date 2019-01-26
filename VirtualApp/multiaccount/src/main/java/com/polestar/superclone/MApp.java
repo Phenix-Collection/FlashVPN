@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
 import com.polestar.ad.SDKConfiguration;
-import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.clone.client.VClientImpl;
@@ -172,38 +171,6 @@ public class MApp extends MultiDexApplication {
                 BillingProvider.get();
 //                if (needAd()) {
                     initAd();
-                    BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
-                    res.titleString = R.string.booster_title;
-                    res.boosterShorcutIcon = R.drawable.boost_icon;
-                    res.innerWheelImage = R.drawable.boost_out_wheel;
-                    res.outterWheelImage = R.drawable.boost_inner_wheel;
-                    BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
-                    if (BuildConfig.DEBUG) {
-                        boosterConfig.autoAdFirstInterval = 0;
-                        boosterConfig.autoAdInterval = 0;
-                        boosterConfig.isUnlockAd = true;
-                        boosterConfig.isInstallAd = true;
-                        boosterConfig.avoidShowIfHistory = false;
-                    } else {
-                        boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
-                        boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
-                        boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
-                        boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
-                        boosterConfig.avoidShowIfHistory = RemoteConfig.getBoolean("avoid_ad_if_history");
-                    }
-                    BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
-                        @Override
-                        public void reportEvent(String s, Bundle b) {
-                            FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
-                        }
-
-                        @Override
-                        public void reportWake(String s) {
-                            EventReporter.reportWake(MApp.getApp(), s);
-                        }
-                    });
-                    PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
-
                     //Do some ad preload
                     if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
                         AppStartActivity.preloadAd(gDefault);
@@ -297,7 +264,6 @@ public class MApp extends MultiDexApplication {
             VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             MLogs.DEBUG = true;
             AdConstants.DEBUG = true;
-            BoosterSdk.DEBUG = true;
         }
         VLog.setKeyLogger(new VLog.IKeyLogger() {
             @Override
