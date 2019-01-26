@@ -5,6 +5,8 @@
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:background="@color/reward_center_bg_color"
         >
 
@@ -13,46 +15,67 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginLeft="12dp"
             android:id = "@+id/reward_user_info_layout">
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+            <com.polestar.superclone.widgets.IconFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
                 android:id = "@+id/reward_coin_icon"
-                android:scaleType="fitXY"
-                android:adjustViewBounds="true"
+                android:text="@string/iconfont_coin"
+                android:textColor="@color/reward_coin_color"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
             <TextView
+                android:id= "@+id/user_balance_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/reward_coin_icon"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
                 android:textColor="@color/text_gray_dark"
-                android:text="10000 coins"/>
-            <TextView
+                android:text="10000pts"/>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:textColor="@color/white"
-                android:text="Redeem"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:padding="4dp"
                 android:background="@drawable/submit_button"
-                />
+                android:id="@+id/store_button"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingRight="8dp"
+                android:paddingLeft="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+                <com.polestar.superclone.widgets.IconFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="@string/iconfont_shopcart"/>
+                <TextView
+                    android:layout_marginLeft="@dimen/icon_text_space"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:text="Redeem"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
         </RelativeLayout>
 
-        <include layout="@layout/reward_general_item" android:id="@+id/invite_task_item" />
+        <include
+            android:id="@+id/invite_task_item"
+            layout="@layout/reward_general_item" />
         
         <View
             android:layout_width="match_parent"
-            android:layout_height="5dp" />
+            android:layout_height="@dimen/reward_task_item_space" />
 
         <include layout="@layout/reward_general_item" android:id="@+id/checkin_task_item" />
 

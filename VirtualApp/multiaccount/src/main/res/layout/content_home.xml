@@ -131,32 +131,55 @@
                 android:layout_height="56dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/theme_color2">
-                <TextView
-                    android:onClick="onSwitchToClonesClick"
+                <LinearLayout
                     android:id="@+id/button_app_clones"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="App Clones"/>
+                    android:layout_gravity="center"
+                    android:onClick="onSwitchToClonesClick"
+                    android:layout_height="wrap_content">
+                    <com.polestar.superclone.widgets.IconFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:text="@string/iconfont_apps"/>
+                    <TextView
+                        android:layout_marginLeft="@dimen/icon_text_space"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:text="@string/clones"/>
+                </LinearLayout>
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:background="@color/gray"/>
-                <TextView
-                    android:onClick="onSwitchToRewardsClick"
+                <LinearLayout
                     android:id="@+id/button_reward_center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Reward Center"/>
+                    android:layout_gravity="center"
+                    android:onClick="onSwitchToRewardsClick"
+                    android:layout_height="wrap_content">
+                    <com.polestar.superclone.widgets.IconFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:text="@string/iconfont_trophy"/>
+                    <TextView
+                        android:layout_marginLeft="@dimen/icon_text_space"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:text="@string/reward_center"/>
+                </LinearLayout>
             </LinearLayout>
             <!--android:layout_above="@id/image_bottom"-->
         </android.support.percent.PercentRelativeLayout>

@@ -76,4 +76,5 @@
     <color name="reward_center_bg_color">@color/white</color>
     <!--<color name="reward_collect_coin_color">#ff2dbbfb</color>-->
     <color name="reward_collect_coin_color">@color/lucky_red</color>
+    <color name="reward_coin_color">#fd7921</color>
 </resources>

@@ -257,4 +257,10 @@
     <string name="light">Lightness</string>
     <string name="hue">Hue</string>
     <string name="badge">Tag</string>
+
+    <!--reward -->
+    <string name="clones">App Clones</string>
+    <string name="coin_unit">coin</string>
+    <string name="reward_center">Reward Center</string>
+    <string name="redeem">Redeem</string>
 </resources>

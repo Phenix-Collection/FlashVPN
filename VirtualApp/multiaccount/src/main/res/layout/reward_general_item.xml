@@ -5,13 +5,14 @@
     android:background="@drawable/shadow"
     android:orientation="horizontal">
 
-    <ImageView
+    <com.polestar.superclone.widgets.IconFontTextView
         android:id="@+id/task_icon"
-        android:layout_width="48dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY" />
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

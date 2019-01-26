@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="iconfont_video" translatable="false">\uE001</string>
+    <string name="iconfont_gift" translatable="false">\uE002</string>
+    <string name="iconfont_trophy" translatable="false">\uE003</string>
+    <string name="iconfont_fingerpint" translatable="false">\uE004</string>
+    <string name="iconfont_invite" translatable="false">\uE005</string>
+    <string name="iconfont_like" translatable="false">\uE006</string>
+    <string name="iconfont_member" translatable="false">\uE007</string>
+    <string name="iconfont_apps" translatable="false">\uE008</string>
+    <string name="iconfont_diamond" translatable="false">\uE009</string>
+    <string name="iconfont_share" translatable="false">\uE00A</string>
+    <string name="iconfont_trash" translatable="false">\uE00B</string>
+    <string name="iconfont_notification" translatable="false">\uE00C</string>
+    <string name="iconfont_comment" translatable="false">\uE00D</string>
+    <string name="iconfont_game" translatable="false">\uE00E</string>
+    <string name="iconfont_crown" translatable="false">\uE00F</string>
+    <string name="iconfont_love" translatable="false">\uE010</string>
+    <string name="iconfont_checkin" translatable="false">\uE012</string>
+    <string name="iconfont_shortcut" translatable="false">\uE013</string>
+    <string name="iconfont_shopcart" translatable="false">\uE014</string>
+    <string name="iconfont_coin" translatable="false">\uE016</string>
+    <string name="iconfont_lock" translatable="false">\uE017</string>
+    <string name="iconfont_user" translatable="false">\uE018</string>
+    <!--<string name="iconfont_shortcut" translatable="false">\uE013</string>-->
+    <!--<string name="iconfont_shortcut" translatable="false">\uE013</string>-->
+</resources>

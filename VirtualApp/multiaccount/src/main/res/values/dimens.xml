@@ -29,4 +29,8 @@
     <dimen name="guidetooltip_maxwidth">200dp</dimen>
 
     <dimen name="setting_page_shape_height">8dp</dimen>
+
+
+    <dimen name="reward_task_item_space">8dp</dimen>
+    <dimen name="icon_text_space">6dp</dimen>
 </resources>
