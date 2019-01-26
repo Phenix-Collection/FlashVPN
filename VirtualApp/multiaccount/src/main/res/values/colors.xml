@@ -77,4 +77,6 @@
     <!--<color name="reward_collect_coin_color">#ff2dbbfb</color>-->
     <color name="reward_collect_coin_color">@color/lucky_red</color>
     <color name="reward_coin_color">#fd7921</color>
+    <color name="default_foreground_color">#FFFFFF</color>
+    <color name="transparent_gray_cover">#55dddddd</color>
 </resources>
