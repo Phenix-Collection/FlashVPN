@@ -217,16 +217,16 @@ public class HomeFragment extends BaseFragment {
             if (showLucky) {
                 size ++;
             }
-            if ( size < 15 ) {
-                if (adShowed) {
-                    size = 15;
-                } else {
-                    size = 18;
-                }
-
-            } else {
-                size = size + 3 - (size % 3);
-            }
+//            if ( size < 15 ) {
+//                if (adShowed) {
+//                    size = 15;
+//                } else {
+//                    size = 18;
+//                }
+//
+//            } else {
+//                size = size + 3 - (size % 3);
+//            }
             return size;
         }
 

@@ -106,7 +106,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_alignParentRight="true"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/mobvista_wall_new_tip" />
+                                android:src="@drawable/shape_new_dot" />
                         </RelativeLayout>
 
                     </RelativeLayout>
