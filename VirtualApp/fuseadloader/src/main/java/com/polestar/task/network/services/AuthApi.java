@@ -13,6 +13,9 @@ public interface AuthApi {
     @Headers("Accept: application/json")
     @POST("api/v1/user/registerAnonymous")
     @FormUrlEncoded
-    Call<User> registerAnonymous(@Field("device_id") String deviceID);
+    Call<User> registerAnonymous(@Field("device_id") String deviceID,
+                                 @Field("country") String country,
+                                 @Field("lang") String lang,
+                                 @Field("locale") String locale);
 
 }

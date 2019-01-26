@@ -36,7 +36,7 @@ public class AdApiHelper {
 
     public static void register(String deviceId, final IUserStatusListener listener) {
         AuthApi service = RetrofitServiceFactory.createSimpleRetroFitService(AuthApi.class);
-        Call<User> call = service.registerAnonymous(deviceId);
+        Call<User> call = service.registerAnonymous(deviceId, null, null, null);
         call.enqueue(new Callback<User>(){
             @Override
             public void onResponse(Call<User> call, Response<User> response){
