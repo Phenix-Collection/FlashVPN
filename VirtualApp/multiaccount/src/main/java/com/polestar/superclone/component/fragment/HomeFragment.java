@@ -270,8 +270,8 @@ public class HomeFragment extends BaseFragment {
                     appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                     appName.setTextColor(getResources().getColor(R.color.lucky_red));
                 } else if(showBooster && i == boosterIdx) {
-                    appIcon.setImageResource(R.drawable.boost_icon);
-                    appName.setText(R.string.booster_title);
+//                    appIcon.setImageResource(R.drawable.boost_icon);
+//                    appName.setText(R.string.booster_title);
                 }
             }
 
