@@ -57,7 +57,7 @@ public class RewardCenterFragment extends BaseFragment {
 
     private void updateUserInfo() {
         TextView points = userInfoView.findViewById(R.id.user_balance_txt);
-        points.setText(String.format("%.1f%s",appUser.getMyBalance() , getActivity().getString(R.string.reward_center)));
+        points.setText(String.format("%.1f%s",appUser.getMyBalance() , getActivity().getString(R.string.coin_unit)));
     }
 
     private void updateBasicTasks(){

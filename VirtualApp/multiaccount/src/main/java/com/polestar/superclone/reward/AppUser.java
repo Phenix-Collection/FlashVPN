@@ -1,6 +1,11 @@
 package com.polestar.superclone.reward;
 
+import android.Manifest;
+import android.os.Handler;
+import android.os.HandlerThread;
+
 import com.polestar.superclone.MApp;
+import com.polestar.superclone.utils.MLogs;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.database.DatabaseApi;
@@ -28,20 +33,29 @@ public class AppUser {
     private String mId;
     private static AppUser sAppUser = null;
     private DatabaseApi databaseApi;
+    private final static String TAG = "AppUser";
 
-    private final static long UPDATE_INTERVAL = 3600*1000;
     private AppUser() {
-        init();
+        databaseApi = DatabaseImplFactory.getDatabaseApi(MApp.getApp());
+        initData();
+        RewardInfoFetcher.get(MApp.getApp()).registerUpdateObserver(new RewardInfoFetcher.IRewardInfoFetchListener() {
+            @Override
+            public void onFetched() {
+                MLogs.d(TAG, "onFetched");
+                initData();
+            }
+        });
+        RewardInfoFetcher.get(MApp.getApp()).preloadRewardInfo();
     }
 
-    private void init() {
-        databaseApi = DatabaseImplFactory.getDatabaseApi(MApp.getApp());
+    private void initData() {
         User userInfo = databaseApi.getMyUserInfo();
         if (userInfo != null) {
             mBalance = userInfo.mBalance;
             mId = userInfo.mDeviceId;
             mInviteCode = userInfo.mReferralCode;
         }
+
 //        if (needUpdate()) {
 //            AdApiHelper.getAvailableTasks(new ITaskStatusListener() {
 //                @Override
@@ -67,17 +81,12 @@ public class AppUser {
 //
 //
 //        }
-        scheduleUpdateTasks();
     }
 
-    private void scheduleUpdateTasks() {
-
-    }
 
     synchronized public static AppUser getInstance() {
         if (sAppUser == null) {
             sAppUser = new AppUser();
-            sAppUser.init();
         }
         return sAppUser;
     }
