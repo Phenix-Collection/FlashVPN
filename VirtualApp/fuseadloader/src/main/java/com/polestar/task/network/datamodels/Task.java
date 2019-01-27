@@ -1,8 +1,9 @@
 package com.polestar.task.network.datamodels;
 
-import android.util.Log;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
+import com.polestar.ad.AdLog;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.datamodels.AdTask;
 import com.polestar.task.database.datamodels.CheckInTask;
@@ -44,6 +45,8 @@ public class Task extends TimeModel {
     //任务自己的描述
     @SerializedName("task_type")
     public int mTaskType;
+    @SerializedName("title")
+    public String mTitle;
     @SerializedName("description")
     public String mDescription;
     @SerializedName("status")
@@ -59,10 +62,11 @@ public class Task extends TimeModel {
     @SerializedName("end_time")
     public String mEndTime;
     @SerializedName("detail")
-    public String mDetail;
+    public JSONObject mDetail;
 
     public Task(Task task) {
         mId = task.mId;
+        mTitle = task.mTitle;
         mTaskType = task.mTaskType;
         mDescription = task.mDescription;
         mStatus = task.mStatus;
@@ -94,7 +98,7 @@ public class Task extends TimeModel {
                 mAdTask = new AdTask(this);
             }
             if (!mAdTask.parseDetailInfo()) {
-                Log.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to ADTask");
+                AdLog.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to ADTask");
                 return null;
             }
             return mAdTask;
@@ -112,8 +116,9 @@ public class Task extends TimeModel {
             if (mCheckInTask == null) {
                 mCheckInTask = new CheckInTask(this);
             }
+            AdLog.d(DatabaseApi.TAG, "detail is " + mDetail.toString());
             if (!mCheckInTask.parseDetailInfo()) {
-                Log.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to CheckInTask");
+                AdLog.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to CheckInTask");
                 return null;
             }
             return mCheckInTask;
@@ -132,7 +137,7 @@ public class Task extends TimeModel {
                 mRewardVideoTask = new RewardVideoTask(this);
             }
             if (!mRewardVideoTask.parseDetailInfo()) {
-                Log.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to RewardVideoTask");
+                AdLog.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to RewardVideoTask");
                 return null;
             }
             return mRewardVideoTask;
@@ -150,8 +155,9 @@ public class Task extends TimeModel {
             if (mShareTask == null) {
                 mShareTask = new ShareTask(this);
             }
+            AdLog.d(DatabaseApi.TAG,"share detail : " + mDetail);
             if (!mShareTask.parseDetailInfo()) {
-                Log.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to ShareTask");
+                AdLog.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to ShareTask");
                 return null;
             }
             return mShareTask;
@@ -170,7 +176,7 @@ public class Task extends TimeModel {
                 mReferTask = new ReferTask(this);
             }
             if (!mReferTask.parseDetailInfo()) {
-                Log.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to ReferTask");
+                AdLog.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to ReferTask");
                 return null;
             }
             return mReferTask;
@@ -192,17 +198,13 @@ public class Task extends TimeModel {
     // return false if detail info not valid
     public boolean parseDetailInfo() {
         endTime = MiscUtils.getTimeInMilliSecondsFromUTC(mEndTime);
-        if (mDetail == null || mDetail.isEmpty()) {
+        if (mDetail == null) {
             return false;
         }
 
-        try {
-            JSONObject jsonObject = new JSONObject(mDetail);
-            return parseTaskDetail(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return parseTaskDetail(mDetail);
+
+
     }
 
     protected boolean parseTaskDetail(JSONObject jsonObject) {
@@ -223,6 +225,6 @@ public class Task extends TimeModel {
      * @return
      */
     public boolean isEffective() {
-        return isValid() && System.currentTimeMillis() < endTime;
+        return isValid() && (System.currentTimeMillis() < endTime || endTime <= 0);
     }
 }

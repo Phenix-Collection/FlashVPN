@@ -15,7 +15,6 @@ public class RewardVideoTask extends Task {
      * ad slot; can get ad config by ad lot
      */
     public String adSlot;
-    public String desc;
 //    public AdConfig adConfig;
 
     @Override
@@ -26,7 +25,6 @@ public class RewardVideoTask extends Task {
     @Override
     protected boolean parseTaskDetail(JSONObject detail) {
         adSlot = detail.optString("adSlot");
-        desc = detail.optString("desc");
         return true;
     }
 

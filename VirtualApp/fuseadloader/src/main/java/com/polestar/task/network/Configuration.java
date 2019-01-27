@@ -1,7 +1,7 @@
 package com.polestar.task.network;
 
 public class Configuration {
-    public static final String URL_PREFIX = "http://13.112.221.35";
+    public static String URL_PREFIX = "http://13.112.221.35";
 
     public static final int STATUS_OPEN = 1;
     public static final int STATUS_CLOSED = 2;

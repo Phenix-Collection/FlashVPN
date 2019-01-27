@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 public class ShareTask extends Task {
     public String shareUrl;
-    public String desc;
 
     public ShareTask(Task task) {
         super(task);
@@ -19,7 +18,6 @@ public class ShareTask extends Task {
     @Override
     protected boolean parseTaskDetail(JSONObject detail) {
         shareUrl = detail.optString("url","");
-        desc = detail.optString("desc", "");
         return true;
     }
 

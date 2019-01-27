@@ -21,13 +21,14 @@ public class AdTask extends Task {
      * the description of the offer, e.g. most popular game in xxx
      */
     public String adDesc;
-    /**
-     * the description of the conversion flow, e.g. install and upgrade to level 3
-     */
-    public String flowDesc;
+//    /**
+//     * the description of the conversion flow, e.g. install and upgrade to level 3
+//     * the flow description should be in the base task model
+//     */
+//    public String flowDesc;
     public String impUrl;
     public String clickUrl;  //MUST
-    public String title; //MUST
+//    public String title; //MUST move to base task
     public String flow; //cpi
     public String imageUrl;
     public String iconUrl;  //MUST
@@ -54,7 +55,7 @@ public class AdTask extends Task {
         return super.isValid()
                 && !TextUtils.isEmpty(adid)
                 && !TextUtils.isEmpty(iconUrl)
-                && !TextUtils.isEmpty(title)
+                && !TextUtils.isEmpty(mTitle)
                 && !TextUtils.isEmpty(ctaText)
                 && !TextUtils.isEmpty(pkg)
                 && !TextUtils.isEmpty(clickUrl);
@@ -64,11 +65,11 @@ public class AdTask extends Task {
     protected boolean parseTaskDetail(JSONObject detail) {
         adid = detail.optString("adid");
         adDesc = detail.optString("adDesc");
-        flowDesc = detail.optString("flowDesc");
+//        flowDesc = detail.optString("flowDesc");
         flow = detail.optString("flow");
         impUrl = detail.optString("impUrl");
         clickUrl = detail.optString("clkUrl");
-        title = detail.optString("title");
+//        title = detail.optString("title");
         imageUrl = detail.optString("image");
         iconUrl = detail.optString("icon");
         videoUrl = detail.optString("video");

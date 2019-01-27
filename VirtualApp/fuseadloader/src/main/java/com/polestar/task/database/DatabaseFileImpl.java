@@ -1,9 +1,10 @@
 package com.polestar.task.database;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.res.AssetManager;
 
 import com.google.gson.Gson;
+import com.polestar.ad.AdLog;
 import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
 import com.polestar.task.network.datamodels.User;
@@ -59,6 +60,26 @@ public class DatabaseFileImpl implements DatabaseApi {
         }
     }
 
+    public static String getJson(String fileName,Context context) {
+        //将json数据变成字符串
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            //获取assets资源管理器
+            AssetManager assetManager = context.getAssets();
+            //通过管理器打开文件并读取
+            BufferedReader bf = new BufferedReader(new InputStreamReader(
+                    assetManager.open(fileName)));
+            String line;
+            while ((line = bf.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
+    }
+
+
     private void loadTasks(String fileName) {
         createDirIfNotExist(DIR);
         File file = new File(mContext.getFilesDir(), fileName);
@@ -74,15 +95,22 @@ public class DatabaseFileImpl implements DatabaseApi {
                 }
             }
         }
+        if (mTasks == null ) {
+            String json = getJson("tasks", mContext);
+            TasksResponse tasksResponse = mGson.fromJson(json, TasksResponse.class);
+            if (tasksResponse != null) {
+                mTasks = tasksResponse.mTasks;
+            }
+        }
         if (mTasks != null) {
-            Log.i(TAG, "Loaded " + mTasks.size() + " tasks from disk");
+            AdLog.i(TAG, "Loaded " + mTasks.size() + " tasks from disk");
             for (Task task : mTasks) {
                 if (task.isAdTask()) {
                     task.getAdTask();
                 }
             }
         } else {
-            Log.i(TAG, "Loaded 0 tasks from disk");
+            AdLog.i(TAG, "Loaded 0 tasks from disk");
         }
     }
 
@@ -106,13 +134,22 @@ public class DatabaseFileImpl implements DatabaseApi {
                 ProductsResponse productsResponse = mGson.fromJson(productInfo, ProductsResponse.class);
                 if (productsResponse != null) {
                     mProducts = productsResponse.mProducts;
+                }else{
+                    //wrong PRODUCT_FILE, check default from assests
                 }
             }
         }
+        if (mProducts == null ) {
+            String json = getJson("products", mContext);
+            ProductsResponse productsResponse = mGson.fromJson(json, ProductsResponse.class);
+            if (productsResponse != null) {
+                mProducts = productsResponse.mProducts;
+            }
+        }
         if (mProducts != null) {
-            Log.i(TAG, "Loaded " + mProducts.size() + " products from disk");
+            AdLog.i(TAG, "Loaded " + mProducts.size() + " products from disk");
         } else {
-            Log.i(TAG, "Loaded 0 products from disk");
+            AdLog.i(TAG, "Loaded 0 products from disk");
         }
     }
 
@@ -129,7 +166,7 @@ public class DatabaseFileImpl implements DatabaseApi {
             File file = new File(mContext.getFilesDir(), fileName);
             return writeOneLineToFile(file.getAbsolutePath(), mGson.toJson(mUser));
         } else {
-            Log.i(TAG, "Invalid user info");
+            AdLog.i(TAG, "Invalid user info");
             return false;
         }
     }
@@ -145,10 +182,14 @@ public class DatabaseFileImpl implements DatabaseApi {
             } else {
                 mUser = mGson.fromJson(userInfo, User.class);
             }
+            if (mUser == null ) {
+                String json = getJson("user", mContext);
+                mUser= mGson.fromJson(json, User.class);
+            }
             if (mUser != null) {
-                Log.i(TAG, "Loaded user info " + mGson.toJson(mUser));
+                AdLog.i(TAG, "Loaded user info " + mGson.toJson(mUser));
             } else {
-                Log.e(TAG, "No user info loaded");
+                AdLog.e(TAG, "No user info loaded");
             }
         }
     }
@@ -174,6 +215,7 @@ public class DatabaseFileImpl implements DatabaseApi {
         synchronized (TASK_FILE) {
             if (mTasks != null) {
                 for (Task task : mTasks) {
+                    AdLog.d(TAG, task.toString());
                     if (task.mTaskType == type) {
                         ret.add(task);
                     }
