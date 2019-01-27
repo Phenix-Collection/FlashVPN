@@ -30,6 +30,7 @@ import java.util.HashSet;
  */
 
 public class RewardInfoFetcher extends BroadcastReceiver{
+    private final static String TAG = "RewardInfoFetcher";
 
     private Context mContext;
     private static RewardInfoFetcher sInstance;
@@ -68,14 +69,17 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
     //TODO need device id?
     private void checkAndFetchInfo() {
+        MLogs.d(TAG, "checkAndFetchInfo");
         if(System.currentTimeMillis() - TaskPreference.getLastUpdateTime()
                 < UPDATE_INTERVAL) {
+            MLogs.d(TAG, "already fetched at " + TaskPreference.getLastUpdateTime());
             return;
         }
         AdApiHelper.register(AppUser.getInstance().getMyId(), new IUserStatusListener() {
             @Override
             public void onRegisterSuccess(User user) {
                 databaseApi.setUserInfo(user);
+                MLogs.d(TAG, "register success " + user);
                 AdApiHelper.getAvailableTasks( new ITaskStatusListener(){
                     @Override
                     public void onTaskSuccess(long taskId, float payment, float balance) {
@@ -90,6 +94,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                     @Override
                     public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
                         databaseApi.setActiveTasks(tasks);
+                        MLogs.d(TAG, "onGetAllAvailableTasks success ");
                         AdApiHelper.getAvailableProducts(new IProductStatusListener() {
                             @Override
                             public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
@@ -103,6 +108,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
                             @Override
                             public void onGetAllAvailableProducts(ArrayList<Product> products) {
+                                MLogs.d(TAG, "onGetAllAvailableProducts success ");
                                 databaseApi.setActiveProducts(products);
                                 TaskPreference.updateLastUpdateTime();
                                 for(IRewardInfoFetchListener listener: mRegistry) {
@@ -112,14 +118,14 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
                             @Override
                             public void onGeneralError(ADErrorCode code) {
-
+                                MLogs.d(TAG, "onError " + code);
                             }
                         });
                     }
 
                     @Override
                     public void onGeneralError(ADErrorCode code) {
-
+                        MLogs.d(TAG, "onError " + code);
                     }
                 });
             }
@@ -131,7 +137,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
             @Override
             public void onGeneralError(ADErrorCode code) {
-
+                MLogs.d(TAG, "onError " + code);
             }
         });
 
@@ -145,6 +151,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     }
 
     public void preloadRewardInfo() {
+        MLogs.d(TAG, "preloadRewardInfo");
         workHandler.removeMessages(MSG_FETCH_INFO);
         workHandler.sendMessage(
                 workHandler.obtainMessage(MSG_FETCH_INFO));

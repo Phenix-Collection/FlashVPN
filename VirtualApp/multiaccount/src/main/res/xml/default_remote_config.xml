@@ -277,4 +277,8 @@
         <value>ab_install:10000;ab_content:10000;ab:10000;fb:10000;mp:10000;fb_interstitial:10000;ab_interstitial:10000;mp_interstitial:10000;ab_native_banner:10000</value>
     </entry>
 -->
+    <entry>
+        <key>config_task_server</key>
+        <value>http://13.112.221.35</value>
+    </entry>
 </defaultsMap>

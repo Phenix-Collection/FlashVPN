@@ -34,6 +34,7 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/task_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -44,11 +45,12 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/task_reward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginRight="10dp"
-        android:text="+ 1000"
+        android:text="+1000"
         android:textColor="@color/reward_collect_coin_color"
         android:textSize="16sp" />
 </LinearLayout>

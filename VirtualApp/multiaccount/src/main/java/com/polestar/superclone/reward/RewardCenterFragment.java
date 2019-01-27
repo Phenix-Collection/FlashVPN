@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
 import com.polestar.superclone.utils.MLogs;
+import com.polestar.superclone.widgets.IconFontTextView;
 import com.polestar.task.network.datamodels.Task;
 
 /**
@@ -57,7 +58,7 @@ public class RewardCenterFragment extends BaseFragment {
 
     private void updateUserInfo() {
         TextView points = userInfoView.findViewById(R.id.user_balance_txt);
-        points.setText(String.format("%.1f%s",appUser.getMyBalance() , getActivity().getString(R.string.coin_unit)));
+        points.setText(String.format("You have %.0f%s",appUser.getMyBalance() , getActivity().getString(R.string.coin_unit)));
     }
 
     private void updateBasicTasks(){
@@ -67,12 +68,22 @@ public class RewardCenterFragment extends BaseFragment {
     }
 
     private void bindTaskViewItem(View view, Task task){
-        switch (view.getId()) {
-            case R.id.invite_task_item:
+        TextView title = view.findViewById(R.id.task_title);
+        TextView description = view.findViewById(R.id.task_description);
+        IconFontTextView icon = view.findViewById(R.id.task_icon);
+        TextView reward = view.findViewById(R.id.task_reward);
+        reward.setText("+" + String.format("%.0f", task.mPayout));
+        title.setText(task.mTitle);
+        description.setText(task.mDescription);
+        switch (task.mTaskType) {
+            case Task.TASK_TYPE_CHECKIN_TASK:
+                icon.setText((R.string.iconfont_checkin));
                 break;
-            case R.id.checkin_task_item:
+            case Task.TASK_TYPE_SHARE_TASK:
+                icon.setText((R.string.iconfont_invite));
                 break;
-            case R.id.video_task_item:
+            case Task.TASK_TYPE_REWARDVIDEO_TASK:
+                icon.setText((R.string.iconfont_video));
                 break;
         }
     }

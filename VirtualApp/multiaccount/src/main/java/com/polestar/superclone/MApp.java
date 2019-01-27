@@ -34,11 +34,13 @@ import com.polestar.superclone.component.MComponentDelegate;
 import com.polestar.superclone.component.activity.AppStartActivity;
 import com.polestar.superclone.component.receiver.PackageChangeReceiver;
 import com.polestar.superclone.constant.AppConstants;
+import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
+import com.polestar.task.network.Configuration;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -170,6 +172,8 @@ public class MApp extends MultiDexApplication {
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
+                Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
+                AppUser.getInstance();
                 if (needAd()) {
                     initAd();
                     BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
