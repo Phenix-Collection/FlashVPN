@@ -18,6 +18,9 @@ import com.polestar.task.network.services.ProductsApi;
 import com.polestar.task.network.services.TasksApi;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +37,41 @@ public class AdApiHelper {
         }
     }
 
+    private static final long API_COMMON_INTERVAL = 60 * 1000; //60 seconds
+
+    private static String KEY_REGISTER = "register";
+    private static String KEY_GET_PRODUCTS = "getProducts";
+    private static String KEY_GET_TASKS = "getTasks";
+    private static String KEY_CONSUME_PRODUCT = "consumeProduct";
+    private static String KEY_FINISH_TASK = "finishTask";
+
+    private static final HashMap<String, Date> sTimeMapping = new HashMap<>();
+
+
+    private static boolean canDoRequest(String requestKey, long thresholder) {
+        Date lastTime = sTimeMapping.get(requestKey);
+        if (lastTime == null) {
+            sTimeMapping.put(requestKey, Calendar.getInstance().getTime());
+            return true;
+        }
+
+        if (MiscUtils.tooCloseWithNow(lastTime, thresholder)) {
+            Log.w(Configuration.HTTP_TAG, "Too close with last http request time " + lastTime.toString() + " for " + requestKey);
+            return false;
+        } else {
+            sTimeMapping.put(requestKey, Calendar.getInstance().getTime());
+            return true;
+        }
+    }
+
+
     public static void register(String deviceId, final IUserStatusListener listener) {
+        if (!canDoRequest(KEY_REGISTER, API_COMMON_INTERVAL)) {
+            return;
+        }
+        //TODO may remove me;
+        Log.i(Configuration.HTTP_TAG, "sRegisterLastTime is " + sTimeMapping.get(KEY_REGISTER).toString());
+
         AuthApi service = RetrofitServiceFactory.createSimpleRetroFitService(AuthApi.class);
         Call<User> call = service.registerAnonymous(deviceId, null, null, null);
         call.enqueue(new Callback<User>(){
@@ -73,6 +110,10 @@ public class AdApiHelper {
     }
 
     public static void getAvailableProducts(final IProductStatusListener listener) {
+        if (!canDoRequest(KEY_GET_PRODUCTS, API_COMMON_INTERVAL)) {
+            return;
+        }
+
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
         Call<ProductsResponse> call = service.getAvailableProducts();
         call.enqueue(new Callback<ProductsResponse>() {
@@ -112,6 +153,10 @@ public class AdApiHelper {
     }
 
     public static void consumeProduct(String deviceId, final long id, final int amount, final IProductStatusListener listener) {
+        if (!canDoRequest(KEY_CONSUME_PRODUCT, API_COMMON_INTERVAL)) {
+            return;
+        }
+
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
         Call<UserProductResponse> call = service.consumeProduct(deviceId, id, amount);
         call.enqueue(new Callback<UserProductResponse>() {
@@ -150,6 +195,10 @@ public class AdApiHelper {
     }
 
     public static void getAvailableTasks(final ITaskStatusListener listener) {
+        if (!canDoRequest(KEY_GET_TASKS, API_COMMON_INTERVAL)) {
+            return;
+        }
+
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
         Call<TasksResponse> call = service.getAvailableTasks();
         call.enqueue(new Callback<TasksResponse>() {
@@ -188,6 +237,10 @@ public class AdApiHelper {
     }
 
     public static void finishTask(String deviceId, final long id, final ITaskStatusListener listener) {
+        if (!canDoRequest(KEY_FINISH_TASK, API_COMMON_INTERVAL)) {
+            return;
+        }
+
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
         Call<UserTaskResponse> call = service.finishTask(deviceId, id, null);
         call.enqueue(new Callback<UserTaskResponse>() {

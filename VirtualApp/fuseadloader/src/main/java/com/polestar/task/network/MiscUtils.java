@@ -3,6 +3,7 @@ package com.polestar.task.network;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -22,6 +23,34 @@ public class MiscUtils {
         } catch (java.text.ParseException e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+//    public static boolean tooClose(Date one, Date two, long milliseconds) {
+//        Calendar thisop = Calendar.getInstance();
+//        thisop.setTime(two);
+//        Calendar lastop = Calendar.getInstance();
+//        lastop.setTime(one);
+//        long timeDiff = Math.abs(thisop.getTimeInMillis() - lastop.getTimeInMillis());
+//        if (timeDiff <= milliseconds) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+
+    public static boolean tooCloseWithNow(Date one, long milliseconds) {
+        if (one == null) {
+            return false;
+        }
+        Calendar thisop = Calendar.getInstance();
+        Calendar lastop = Calendar.getInstance();
+        lastop.setTime(one);
+        long timeDiff = Math.abs(thisop.getTimeInMillis() - lastop.getTimeInMillis());
+        if (timeDiff <= milliseconds) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
