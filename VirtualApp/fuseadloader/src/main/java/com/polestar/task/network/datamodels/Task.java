@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.datamodels.AdTask;
 import com.polestar.task.database.datamodels.CheckInTask;
+import com.polestar.task.database.datamodels.ReferTask;
 import com.polestar.task.database.datamodels.RewardVideoTask;
 import com.polestar.task.database.datamodels.ShareTask;
 import com.polestar.task.network.MiscUtils;
@@ -34,8 +35,9 @@ public class Task extends TimeModel {
     public static final int TASK_TYPE_AD_TASK = 1;
     public static final int TASK_TYPE_CHECKIN_TASK = 2;
     public static final int TASK_TYPE_REWARDVIDEO_TASK = 3;
-    public static final int TASK_TYPE_SHARE_TASK = 4; //主动提交referralCode的提交人的奖励
+    public static final int TASK_TYPE_REFER_TASK = 4; //主动提交referralCode的提交人的奖励
     public static final int TASK_TYPE_REFERREE_TASK = 5; //被动提交referralCode的推荐人的奖励
+    public static final int TASK_TYPE_SHARE_TASK = 6;
 
     @SerializedName("id")
     public long mId;
@@ -80,6 +82,7 @@ public class Task extends TimeModel {
     private CheckInTask mCheckInTask;
     private RewardVideoTask mRewardVideoTask;
     private ShareTask mShareTask;
+    private ReferTask mReferTask;
 
     public boolean isAdTask() {
         return mTaskType == TASK_TYPE_AD_TASK;
@@ -152,6 +155,25 @@ public class Task extends TimeModel {
                 return null;
             }
             return mShareTask;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isReferTask() {
+        return mTaskType == TASK_TYPE_REFER_TASK;
+    }
+
+    public ReferTask getReferTask() {
+        if (isReferTask()) {
+            if (mReferTask == null) {
+                mReferTask = new ReferTask(this);
+            }
+            if (!mReferTask.parseDetailInfo()) {
+                Log.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to ReferTask");
+                return null;
+            }
+            return mReferTask;
         } else {
             return null;
         }

@@ -12,9 +12,11 @@ import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.DatabaseFileImpl;
 import com.polestar.task.database.DatabaseImplFactory;
 import com.polestar.task.database.datamodels.CheckInTask;
+import com.polestar.task.database.datamodels.ReferTask;
 import com.polestar.task.database.datamodels.RewardVideoTask;
 import com.polestar.task.database.datamodels.ShareTask;
 import com.polestar.task.network.AdApiHelper;
+import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
 import com.polestar.task.network.datamodels.User;
 import com.polestar.task.network.datamodels.UserTask;
@@ -110,17 +112,26 @@ public class AppUser {
 
     public ShareTask getInviteTask() {
         List<Task> list = databaseApi.getActiveTasksByType(Task.TASK_TYPE_SHARE_TASK);
-        return list!= null && list.size() > 0 ? (ShareTask) list.get(0):null;
+        return list!= null && list.size() > 0 ? list.get(0).getShareTask():null;
     }
 
     public CheckInTask getCheckInTask() {
         List<Task> list = databaseApi.getActiveTasksByType(Task.TASK_TYPE_CHECKIN_TASK);
-        return list!= null && list.size() > 0 ? (CheckInTask)list.get(0):null;
+        return list!= null && list.size() > 0 ? list.get(0).getCheckInTask():null;
     }
 
     public RewardVideoTask getVideoTask() {
         List<Task> list = databaseApi.getActiveTasksByType(Task.TASK_TYPE_REWARDVIDEO_TASK);
-        return list!= null && list.size() > 0 ? (RewardVideoTask) list.get(0):null;
+        return list!= null && list.size() > 0 ? list.get(0).getRewardVideoTask():null;
+    }
+
+    public ReferTask getReferTask() {
+        List<Task> list = databaseApi.getActiveTasksByType(Task.TASK_TYPE_REFER_TASK);
+        return list!= null && list.size() > 0 ? list.get(0).getReferTask():null;
+    }
+
+    public List<Product> getProducts() {
+        return databaseApi.getAllProductInfo();
     }
 
 //    public  getVideoTask() {

@@ -3,6 +3,8 @@ package com.polestar.task.network.datamodels;
 import com.google.gson.annotations.SerializedName;
 
 public class Product extends TimeModel {
+    public static final int MONEY_PRODUCT_THRESHOLDER = 1000;
+
     @SerializedName("id")
     public long mId;
 
@@ -16,4 +18,15 @@ public class Product extends TimeModel {
     public float mCost;
     @SerializedName("detail")
     public String mDetail;
+
+    public boolean isFunctionalProduct() {
+        if (mProductType < MONEY_PRODUCT_THRESHOLDER) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isMoneyProduct() {
+        return !isFunctionalProduct();
+    }
 }
