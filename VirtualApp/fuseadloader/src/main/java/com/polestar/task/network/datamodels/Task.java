@@ -1,7 +1,5 @@
 package com.polestar.task.network.datamodels;
 
-import android.text.TextUtils;
-
 import com.google.gson.annotations.SerializedName;
 import com.polestar.ad.AdLog;
 import com.polestar.task.database.DatabaseApi;
@@ -62,7 +60,8 @@ public class Task extends TimeModel {
     @SerializedName("end_time")
     public String mEndTime;
     @SerializedName("detail")
-    public JSONObject mDetail;
+    public String mDetail;
+    //private JSONObject mDetailJson;
 
     public Task(Task task) {
         mId = task.mId;
@@ -116,7 +115,7 @@ public class Task extends TimeModel {
             if (mCheckInTask == null) {
                 mCheckInTask = new CheckInTask(this);
             }
-            AdLog.d(DatabaseApi.TAG, "detail is " + mDetail.toString());
+            AdLog.d(DatabaseApi.TAG, "detail is " + mDetail);
             if (!mCheckInTask.parseDetailInfo()) {
                 AdLog.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to CheckInTask");
                 return null;
@@ -201,10 +200,14 @@ public class Task extends TimeModel {
         if (mDetail == null) {
             return false;
         }
-
-        return parseTaskDetail(mDetail);
-
-
+        try {
+            JSONObject jsonObject = new JSONObject(mDetail);
+            // call into sub class implementation
+            return parseTaskDetail(jsonObject);
+        } catch (JSONException e) {
+            AdLog.e(DatabaseApi.TAG, "Failed to parse detail string " + mDetail);
+            return false;
+        }
     }
 
     protected boolean parseTaskDetail(JSONObject jsonObject) {
