@@ -1,20 +1,20 @@
 package com.polestar.superclone.reward;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.ProductGridAdapter;
 import com.polestar.superclone.widgets.ProductGridItem;
-import com.polestar.superclone.widgets.SelectGridAppItem;
-import com.polestar.superclone.widgets.SelectPkgGridAdapter;
+import com.polestar.task.network.datamodels.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,7 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
     private GridView mMoneyProductGridView;
 
     private AppUser mAppUser;
+    public static final String EXTRA_PRODUCT = "product";
 
     private void updateGrid() {
         if (mFunctionProductList == null || mFunctionProductList.size() == 0) {
@@ -75,6 +76,17 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
 
     private void initData() {
         //loadAppListAsync();
+        ArrayList<Product> allProducts = (ArrayList<Product>) mAppUser.getProducts();
+        for (Product product : allProducts) {
+            ProductGridItem item = ProductGridItem.fromProduct(product);
+            if (product.isFunctionalProduct()) {
+                mFunctionProductList.add(item);
+            } else {
+                mMoneyProductList.add(item);
+            }
+        }
+
+        /*
         ProductGridItem item = new ProductGridItem();
         item.iconUrl = "default_product.png";
         item.name = "20 coins";
@@ -87,7 +99,7 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
         item2.name = "100 coins";
         item2.description = "222pkgdescription";
 
-        mMoneyProductList.add(item2);
+        mMoneyProductList.add(item2);*/
     }
 
     private void initView() {
@@ -102,33 +114,18 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
 //        progressBar = (ProgressBar)findViewById(R.id.progressBar);
     }
 
+    private void startProductActivity(Product product) {
+        Intent i = new Intent(this, ProductActivity.class);
+        i.putExtra(EXTRA_PRODUCT, product);
+        startActivity(i);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         ProductGridItem item = (ProductGridItem) view.getTag();
         if (item != null) {
-//            ImageView cbox = (ImageView) view.findViewById(R.id.select_cb_img);
-//            View cover = view.findViewById(R.id.cover);
-//            if (cbox != null) {
-//                item.selected = !item.selected;
-//                if (item.selected) {
-//                    selected ++;
-//                    cbox.setImageResource(R.drawable.selectd);
-//                    cover.setVisibility(View.INVISIBLE);
-//                } else {
-//                    selected --;
-//                    cbox.setImageResource(R.drawable.not_select);
-//                    cover.setVisibility(View.VISIBLE);
-//                }
-//                if (selected > 0) {
-//                    cloneButton.setText(String.format(getString(R.string.clone_action_txt), "(" + selected + ")"));
-//                    cloneButton.setEnabled(true);
-//
-//                } else {
-//                    cloneButton.setText(String.format(getString(R.string.clone_action_txt), ""));
-//                    cloneButton.setEnabled(false);
-//
-//                }
-//            }
+            Toast.makeText(this, "Product id " + item.id + " clicked", Toast.LENGTH_LONG).show();
+            startProductActivity(item.getProduct());
         }
     }
 }

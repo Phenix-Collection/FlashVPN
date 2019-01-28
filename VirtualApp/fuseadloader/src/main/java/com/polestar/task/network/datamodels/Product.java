@@ -23,7 +23,7 @@ public class Product extends TimeModel implements Parcelable {
     public String mDetail;
     @SerializedName("name")
     public String mName;
-    @SerializedName("iconUrl")
+    @SerializedName("icon_url")
     public String mIconUrl;
 
     protected Product(Parcel in) {

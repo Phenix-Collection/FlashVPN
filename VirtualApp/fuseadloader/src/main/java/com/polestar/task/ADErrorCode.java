@@ -37,6 +37,10 @@ public class ADErrorCode {
         errMsg = msg;
     }
 
+    public String toString() {
+        return "ADErr errCode:" + errCode + " errMsg:" + errMsg;
+    }
+
     public int getErrCode() {
         return errCode;
     }

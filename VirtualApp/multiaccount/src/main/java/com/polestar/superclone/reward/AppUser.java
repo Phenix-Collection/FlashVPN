@@ -4,9 +4,11 @@ import android.Manifest;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import com.polestar.ad.AdLog;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.task.ADErrorCode;
+import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.DatabaseFileImpl;
@@ -23,6 +25,8 @@ import com.polestar.task.network.datamodels.UserTask;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import mirror.android.widget.Toast;
 
 /**
  * Created by guojia on 2019/1/24.
@@ -107,6 +111,9 @@ public class AppUser {
         //2. device id
         //3. android id
         //4. Random UUID
+        if (mId == null) {
+            mId = "testme";
+        }
         return mId;
     }
 
@@ -153,5 +160,29 @@ public class AppUser {
 
     public void submitInviteCode() {
         //AdApiHelper.finishTask(getMyId(), );
+    }
+
+    public void consumeProduct(long productId, int amount) {
+        AdApiHelper.consumeProduct(getMyId(), productId, amount, new IProductStatusListener() {
+            @Override
+            public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
+                AdLog.i("onConsumeSuccess " + id + " amount " + amount + " totalCost " + totalCost + " balance " + balance);
+            }
+
+            @Override
+            public void onConsumeFail(ADErrorCode code) {
+                AdLog.i("onConsumeFail " + code.toString());
+            }
+
+            @Override
+            public void onGetAllAvailableProducts(ArrayList<Product> products) {
+
+            }
+
+            @Override
+            public void onGeneralError(ADErrorCode code) {
+                AdLog.i("onConsumeFail " + code.toString());
+            }
+        });
     }
 }

@@ -35,7 +35,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     private Context mContext;
     private static RewardInfoFetcher sInstance;
     private Handler workHandler;
-    private final static long UPDATE_INTERVAL = 3600*1000;
+    private final static long UPDATE_INTERVAL = 36*1000;
 
     private final static int MSG_FETCH_INFO = 1;
     private DatabaseApi databaseApi;
