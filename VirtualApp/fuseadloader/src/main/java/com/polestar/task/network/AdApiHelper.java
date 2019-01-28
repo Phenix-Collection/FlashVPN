@@ -37,6 +37,9 @@ public class AdApiHelper {
         }
     }
 
+    public static final int REQUEST_SUCCEED = 0;
+    public static final int ERR_REQUEST_TOO_FREQUENT = 1;
+
     private static final long API_COMMON_INTERVAL = 60 * 1000; //60 seconds
 
     private static String KEY_REGISTER = "register";
@@ -65,9 +68,9 @@ public class AdApiHelper {
     }
 
 
-    public static void register(String deviceId, final IUserStatusListener listener) {
+    public static int register(String deviceId, final IUserStatusListener listener) {
         if (!canDoRequest(KEY_REGISTER, API_COMMON_INTERVAL)) {
-            return;
+            return ERR_REQUEST_TOO_FREQUENT;
         }
         //TODO may remove me;
         Log.i(Configuration.HTTP_TAG, "sRegisterLastTime is " + sTimeMapping.get(KEY_REGISTER).toString());
@@ -107,11 +110,13 @@ public class AdApiHelper {
                 }
             }
         });
+
+        return REQUEST_SUCCEED;
     }
 
-    public static void getAvailableProducts(final IProductStatusListener listener) {
+    public static int getAvailableProducts(final IProductStatusListener listener) {
         if (!canDoRequest(KEY_GET_PRODUCTS, API_COMMON_INTERVAL)) {
-            return;
+            return ERR_REQUEST_TOO_FREQUENT;
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
@@ -150,11 +155,13 @@ public class AdApiHelper {
                 }
             }
         });
+
+        return REQUEST_SUCCEED;
     }
 
-    public static void consumeProduct(String deviceId, final long id, final int amount, final IProductStatusListener listener) {
+    public static int consumeProduct(String deviceId, final long id, final int amount, final IProductStatusListener listener) {
         if (!canDoRequest(KEY_CONSUME_PRODUCT, API_COMMON_INTERVAL)) {
-            return;
+            return ERR_REQUEST_TOO_FREQUENT;
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
@@ -192,11 +199,13 @@ public class AdApiHelper {
                 }
             }
         });
+
+        return REQUEST_SUCCEED;
     }
 
-    public static void getAvailableTasks(final ITaskStatusListener listener) {
+    public static int getAvailableTasks(final ITaskStatusListener listener) {
         if (!canDoRequest(KEY_GET_TASKS, API_COMMON_INTERVAL)) {
-            return;
+            return ERR_REQUEST_TOO_FREQUENT;
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
@@ -234,11 +243,13 @@ public class AdApiHelper {
                 }
             }
         });
+
+        return REQUEST_SUCCEED;
     }
 
-    public static void finishTask(String deviceId, final long id, final ITaskStatusListener listener) {
+    public static int finishTask(String deviceId, final long id, final ITaskStatusListener listener) {
         if (!canDoRequest(KEY_FINISH_TASK, API_COMMON_INTERVAL)) {
-            return;
+            return ERR_REQUEST_TOO_FREQUENT;
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
@@ -276,5 +287,7 @@ public class AdApiHelper {
                 }
             }
         });
+
+        return REQUEST_SUCCEED;
     }
 }
