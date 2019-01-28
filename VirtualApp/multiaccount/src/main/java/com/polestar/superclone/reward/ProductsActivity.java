@@ -9,6 +9,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.polestar.ad.AdLog;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.utils.MLogs;
@@ -72,6 +73,8 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
         initView();
         initData();
         updateGrid();
+
+        testCipher();
     }
 
     private void initData() {
@@ -127,5 +130,15 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
             Toast.makeText(this, "Product id " + item.id + " clicked", Toast.LENGTH_LONG).show();
             startProductActivity(item.getProduct());
         }
+    }
+
+    private void testCipher() {
+        String iv = "fedcba9876543210";
+        String key = "0123456789abcdef";
+        String data = "Hello World!!!!";
+        String encrypted = AdCipher.encrypt(key, iv, data);
+        String decrypted = AdCipher.decrypt(key, encrypted);
+        AdLog.i("encrypted " + encrypted + "    decrypted " + decrypted);
+
     }
 }
