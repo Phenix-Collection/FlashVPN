@@ -35,10 +35,15 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     private Context mContext;
     private static RewardInfoFetcher sInstance;
     private Handler workHandler;
-    private final static long UPDATE_INTERVAL = 36*1000;
+    private final static long UPDATE_INTERVAL = 3600*1000;
+
+    private final static long FORCE_UPDATE_INTERVAL = 2000;
+    private final static int FORCE_RETRY_TIMES = 5;
 
     private final static int MSG_FETCH_INFO = 1;
+
     private DatabaseApi databaseApi;
+    private int forceRetry;
 
     private HashSet<IRewardInfoFetchListener> mRegistry;
 
@@ -48,6 +53,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
     private RewardInfoFetcher(Context context) {
         mContext = context;
+        forceRetry = 0;
         databaseApi = DatabaseImplFactory.getDatabaseApi(context);
         mRegistry = new HashSet<>();
         HandlerThread thread = new HandlerThread("sync_task");
@@ -57,8 +63,15 @@ public class RewardInfoFetcher extends BroadcastReceiver{
             public void handleMessage(Message msg) {
                 switch(msg.what) {
                     case MSG_FETCH_INFO:
-                        checkAndFetchInfo();
-                        workHandler.sendMessageDelayed(workHandler.obtainMessage(MSG_FETCH_INFO), UPDATE_INTERVAL);
+                        checkAndFetchInfo(!databaseApi.isDataAvailable());
+                        long interval;
+                        if (databaseApi.isDataAvailable()) {
+                            forceRetry = 0;
+                            interval = UPDATE_INTERVAL;
+                        } else {
+                            interval = forceRetry++ >= FORCE_RETRY_TIMES ? UPDATE_INTERVAL : FORCE_UPDATE_INTERVAL;
+                        }
+                        workHandler.sendMessageDelayed(workHandler.obtainMessage(MSG_FETCH_INFO), interval);
                         break;
                 }
             }
@@ -68,10 +81,10 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     }
 
     //TODO need device id?
-    private void checkAndFetchInfo() {
-        MLogs.d(TAG, "checkAndFetchInfo");
-        if(System.currentTimeMillis() - TaskPreference.getLastUpdateTime()
-                < UPDATE_INTERVAL) {
+    private void checkAndFetchInfo(boolean force) {
+        MLogs.d(TAG, "checkAndFetchInfo force: " + force);
+        if(!force && (System.currentTimeMillis() - TaskPreference.getLastUpdateTime()
+                < UPDATE_INTERVAL)) {
             MLogs.d(TAG, "already fetched at " + TaskPreference.getLastUpdateTime());
             return;
         }
