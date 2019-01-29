@@ -3,10 +3,12 @@ package com.polestar.superclone.reward;
 import android.Manifest;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 
 import com.polestar.ad.AdLog;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.MLogs;
+import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
@@ -24,6 +26,7 @@ import com.polestar.task.network.datamodels.User;
 import com.polestar.task.network.datamodels.UserTask;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import mirror.android.widget.Toast;
@@ -40,18 +43,58 @@ public class AppUser {
     private static AppUser sAppUser = null;
     private DatabaseApi databaseApi;
     private final static String TAG = "AppUser";
+    private static final String CONF_REWARD_ENABLE = "conf_reward_open";
+    private Handler mainHandler;
+    private HashSet<IUserUpdateListener> mObservers;
 
     private AppUser() {
         databaseApi = DatabaseImplFactory.getDatabaseApi(MApp.getApp());
+        mainHandler = new Handler(Looper.getMainLooper());
+        mObservers = new HashSet<>();
         initData();
         RewardInfoFetcher.get(MApp.getApp()).registerUpdateObserver(new RewardInfoFetcher.IRewardInfoFetchListener() {
             @Override
             public void onFetched() {
                 MLogs.d(TAG, "onFetched");
                 initData();
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (IUserUpdateListener listener: mObservers) {
+                            listener.onUserDataUpdated();
+                        }
+                    }
+                });
             }
         });
         RewardInfoFetcher.get(MApp.getApp()).preloadRewardInfo();
+    }
+
+    //posted on main thread;
+    public interface IUserUpdateListener {
+        void onUserDataUpdated();
+    }
+
+    public void forceRefreshData() {
+        RewardInfoFetcher.get(MApp.getApp()).forceRefresh();
+    }
+
+    public void listenOnUserUpdate(IUserUpdateListener listener) {
+        mObservers.remove(listener);
+    }
+
+    public void stopListenOnUserUpdate(IUserUpdateListener listener) {
+        mObservers.add(listener);
+    }
+
+    public static boolean isRewardEnabled() {
+        return RemoteConfig.getBoolean(CONF_REWARD_ENABLE);
+    }
+
+    public boolean isRewardAvailable() {
+        //config is open && reward data available
+        return isRewardEnabled()
+                && databaseApi!=null && databaseApi.isDataAvailable();
     }
 
     private void initData() {

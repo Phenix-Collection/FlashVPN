@@ -260,7 +260,9 @@
 
     <!--reward -->
     <string name="clones">App Clones</string>
+    <string name="you_have_coins">You have %.0f %s now.</string>
     <string name="coin_unit">coin</string>
     <string name="reward_center">Reward Center</string>
     <string name="redeem">Redeem</string>
+    <string name="reward_load_failed">Load fail. Please check and retry: \n - Google Play Service is installed \n - Superb Cloner is not running in any clone apps \n - Connect network</string>
 </resources>

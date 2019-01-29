@@ -281,4 +281,8 @@
         <key>config_task_server</key>
         <value>http://13.112.221.35</value>
     </entry>
+    <entry>
+        <key>conf_reward_open</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>

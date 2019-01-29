@@ -22,6 +22,7 @@
     <string name="iconfont_coin" translatable="false">\uE016</string>
     <string name="iconfont_lock" translatable="false">\uE017</string>
     <string name="iconfont_user" translatable="false">\uE018</string>
+    <string name="iconfont_retry" translatable="false">\uE018</string>
     <!--<string name="iconfont_shortcut" translatable="false">\uE013</string>-->
     <!--<string name="iconfont_shortcut" translatable="false">\uE013</string>-->
 </resources>

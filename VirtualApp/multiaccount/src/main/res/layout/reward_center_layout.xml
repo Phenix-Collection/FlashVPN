@@ -1,106 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+<RelativeLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ScrollView
         android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:background="@color/reward_center_bg_color"
-        >
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:id="@+id/loaded_layout"
+            android:background="@color/reward_center_bg_color"
+            >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginLeft="12dp"
-            android:id = "@+id/reward_user_info_layout">
-            <com.polestar.superclone.widgets.IconFontTextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:id = "@+id/reward_coin_icon"
-                android:text="@string/iconfont_coin"
-                android:textColor="@color/reward_coin_color"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"/>
-            <TextView
-                android:id= "@+id/user_balance_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/reward_coin_icon"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                android:textSize="16sp"
-                android:textColor="@color/text_gray_dark"
-                android:text="10000pts"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/submit_button"
-                android:id="@+id/store_button"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingRight="8dp"
-                android:paddingLeft="8dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:id = "@+id/reward_user_info_layout">
                 <com.polestar.superclone.widgets.IconFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:text="@string/iconfont_shopcart"/>
+                    android:textSize="24sp"
+                    android:id = "@+id/reward_coin_icon"
+                    android:text="@string/iconfont_coin"
+                    android:textColor="@color/reward_coin_color"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"/>
                 <TextView
-                    android:layout_marginLeft="@dimen/icon_text_space"
+                    android:id= "@+id/user_balance_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="Redeem"
+                    android:layout_toRightOf="@id/reward_coin_icon"
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
                     android:textSize="16sp"
-                    android:layout_gravity="center_vertical"
-                    />
-            </LinearLayout>
-        </RelativeLayout>
+                    android:textColor="@color/text_gray_dark"
+                    android:text="10000pts"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/submit_button"
+                    android:id="@+id/store_button"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingRight="8dp"
+                    android:paddingLeft="8dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true">
+                    <com.polestar.superclone.widgets.IconFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:text="@string/iconfont_shopcart"/>
+                    <TextView
+                        android:layout_marginLeft="@dimen/icon_text_space"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Redeem"
+                        android:textSize="16sp"
+                        android:layout_gravity="center_vertical"
+                        />
+                </LinearLayout>
+            </RelativeLayout>
 
-        <include
-            android:id="@+id/invite_task_item"
-            layout="@layout/reward_general_item" />
-        
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/reward_task_item_space" />
+            <include
+                android:id="@+id/invite_task_item"
+                layout="@layout/reward_general_item" />
 
-        <include layout="@layout/reward_general_item" android:id="@+id/checkin_task_item" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/reward_task_item_space" />
+
+            <include layout="@layout/reward_general_item" android:id="@+id/checkin_task_item" />
 
 
-        <TextView
-            android:layout_width="match_parent"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="16sp"
+                android:text="Live Tasks"/>
+
+            <include layout="@layout/reward_general_item" android:id="@+id/video_task_item" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="16sp"
+                android:text="More rewarded offer is coming soon ..."/>
+
+        </LinearLayout>
+    </ScrollView>
+    <ProgressBar
+        android:id="@+id/loading_layout"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/loading_fail_layout"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:visibility="gone">
+        <com.polestar.superclone.widgets.IconFontTextView
+            android:id="@+id/retry"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             android:layout_gravity="center"
-            android:textColor="@color/text_gray_dark"
-            android:textSize="16sp"
-            android:text="Live Tasks"/>
-
-        <include layout="@layout/reward_general_item" android:id="@+id/video_task_item" />
-
+            android:textSize="50sp"
+            android:textColor="@color/text_gray_light"
+            android:text="@string/iconfont_retry"/>
         <TextView
-            android:layout_width="match_parent"
+            android:layout_marginTop="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:textColor="@color/text_gray_light"
+            android:textSize="14sp"
+            android:text="@string/reward_load_failed"
+            android:lineSpacingMultiplier="1.5"
             android:layout_gravity="center"
-            android:textColor="@color/text_gray_dark"
-            android:textSize="16sp"
-            android:text="More rewarded offer is coming soon ..."/>
-
+            />
     </LinearLayout>
-</ScrollView>
+</RelativeLayout>

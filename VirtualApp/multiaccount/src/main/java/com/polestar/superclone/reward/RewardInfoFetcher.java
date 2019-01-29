@@ -63,7 +63,6 @@ public class RewardInfoFetcher extends BroadcastReceiver{
             public void handleMessage(Message msg) {
                 switch(msg.what) {
                     case MSG_FETCH_INFO:
-                        checkAndFetchInfo(!databaseApi.isDataAvailable());
                         long interval;
                         if (databaseApi.isDataAvailable()) {
                             forceRetry = 0;
@@ -71,6 +70,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                         } else {
                             interval = forceRetry++ >= FORCE_RETRY_TIMES ? UPDATE_INTERVAL : FORCE_UPDATE_INTERVAL;
                         }
+                        checkAndFetchInfo(!databaseApi.isDataAvailable());
                         workHandler.sendMessageDelayed(workHandler.obtainMessage(MSG_FETCH_INFO), interval);
                         break;
                 }
@@ -133,14 +133,14 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                             public void onGeneralError(ADErrorCode code) {
                                 MLogs.d(TAG, "onError " + code);
                             }
-                        });
+                        },force);
                     }
 
                     @Override
                     public void onGeneralError(ADErrorCode code) {
                         MLogs.d(TAG, "onError " + code);
                     }
-                });
+                },force);
             }
 
             @Override
@@ -152,7 +152,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
             public void onGeneralError(ADErrorCode code) {
                 MLogs.d(TAG, "onError " + code);
             }
-        });
+        }, force);
 
     }
 
@@ -168,6 +168,12 @@ public class RewardInfoFetcher extends BroadcastReceiver{
         workHandler.removeMessages(MSG_FETCH_INFO);
         workHandler.sendMessage(
                 workHandler.obtainMessage(MSG_FETCH_INFO));
+    }
+
+    //Just start another round retry
+    public void forceRefresh() {
+        forceRetry = 0;
+        preloadRewardInfo();
     }
 
     public synchronized void registerUpdateObserver(IRewardInfoFetchListener listener) {

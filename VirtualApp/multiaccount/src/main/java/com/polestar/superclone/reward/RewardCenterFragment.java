@@ -1,35 +1,63 @@
 package com.polestar.superclone.reward;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.IconFontTextView;
+import com.polestar.task.database.DatabaseApi;
+import com.polestar.task.database.DatabaseImplFactory;
 import com.polestar.task.network.datamodels.Task;
 
 /**
  * Created by guojia on 2019/1/23.
  */
 
-public class RewardCenterFragment extends BaseFragment {
+public class RewardCenterFragment extends BaseFragment implements AppUser.IUserUpdateListener, View.OnClickListener{
     private View contentView;
     private View inviteItemView;
     private View checkinItemView;
     private View videoItemView;
     private View userInfoView;
     private AppUser appUser;
+    private ProgressBar loadingProgressBar;
+    private LinearLayout loadFailLayout;
+    private LinearLayout loadedLayout;
+    private Handler mainHandler;
+    private View retryView;
+
+    private static final int MSG_LOAD_TIMEOUT = 100;
+    private static final long LOAD_TIMEOUT = 10*1000;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.reward_center_layout, null);
+        appUser = AppUser.getInstance();
+        appUser.listenOnUserUpdate(this);
+        mainHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MSG_LOAD_TIMEOUT:
+                        loadedLayout.setVisibility(View.GONE);
+                        loadingProgressBar.setVisibility(View.GONE);
+                        loadFailLayout.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        };
         initView();
         initData();
         return contentView;
@@ -38,27 +66,41 @@ public class RewardCenterFragment extends BaseFragment {
     private void initView() {
         userInfoView = contentView.findViewById(R.id.reward_user_info_layout);
         View store = userInfoView.findViewById(R.id.store_button);
-        store.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onStoreClick(v);
-            }
-        });
+        store.setOnClickListener(this);
         inviteItemView = contentView.findViewById(R.id.invite_task_item);
         checkinItemView = contentView.findViewById(R.id.checkin_task_item);
         videoItemView = contentView.findViewById(R.id.video_task_item);
+        loadFailLayout = contentView.findViewById(R.id.loading_fail_layout);
+        loadingProgressBar = contentView.findViewById(R.id.loading_layout);
+        loadedLayout = contentView.findViewById(R.id.loaded_layout);
+        retryView = contentView.findViewById(R.id.retry);
+        retryView.setOnClickListener(this);
     }
 
     private void initData() {
-        appUser = AppUser.getInstance();
-        updateUserInfo();
-        updateBasicTasks();
+        if (appUser.isRewardAvailable()) {
+            loadingProgressBar.setVisibility(View.GONE);
+            loadFailLayout.setVisibility(View.GONE);
+            loadedLayout.setVisibility(View.VISIBLE);
+            updateUserInfo();
+            updateBasicTasks();
+        } else {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            loadFailLayout.setVisibility(View.GONE);
+            loadedLayout.setVisibility(View.GONE);
+            appUser.forceRefreshData();
+            mainHandler.sendEmptyMessageDelayed(MSG_LOAD_TIMEOUT, LOAD_TIMEOUT);
+        }
+    }
 
+    @Override
+    public void onUserDataUpdated() {
+        initData();
     }
 
     private void updateUserInfo() {
         TextView points = userInfoView.findViewById(R.id.user_balance_txt);
-        points.setText(String.format("You have %.0f%s",appUser.getMyBalance() , getActivity().getString(R.string.coin_unit)));
+        points.setText(String.format(getString(R.string.you_have_coins),appUser.getMyBalance() , getActivity().getString(R.string.coin_unit)));
     }
 
     private void updateBasicTasks(){
@@ -91,5 +133,25 @@ public class RewardCenterFragment extends BaseFragment {
     public void onStoreClick(View view){
         MLogs.d("onStoreClick");
 
+    }
+
+    public void onRetryClick(View view) {
+        loadedLayout.setVisibility(View.GONE);
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        loadFailLayout.setVisibility(View.GONE);
+        mainHandler.sendEmptyMessageDelayed(MSG_LOAD_TIMEOUT, LOAD_TIMEOUT);
+        appUser.forceRefreshData();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.retry:
+                onRetryClick(v);
+                break;
+            case R.id.store_button:
+                onStoreClick(v);
+                break;
+        }
     }
 }

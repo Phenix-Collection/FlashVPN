@@ -36,6 +36,7 @@ import com.polestar.superclone.component.adapter.NavigationAdapter;
 import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
+import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.reward.RewardCenterFragment;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.CloneHelper;
@@ -85,8 +86,10 @@ public class HomeActivity extends BaseActivity {
     private RelativeLayout iconAdLayout;
     private RelativeLayout giftIconLayout;
     private IAdAdapter interstitialAd;
-    private boolean av;
     private Handler mainHandler;
+
+    private View bottomNavBar;
+
 
     private static final String EXTRA_NEED_UPDATE = "extra_need_update";
     public static void enter(Activity activity, boolean needUpdate) {
@@ -160,6 +163,10 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void initView() {
+        bottomNavBar = findViewById(R.id.frag_navigate_bar);
+        if (!AppUser.isRewardEnabled()) {
+            bottomNavBar.setVisibility(View.GONE);
+        }
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         navigationList = (ListView) findViewById(R.id.navigation_list);
