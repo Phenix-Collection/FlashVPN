@@ -1,0 +1,186 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#40000000"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/mobvista_interstitial_rl_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/native_interstitial_close_bg" >
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/native_interstitial_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#ffffff"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="100dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/activity_product_product_name"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+
+                    android:textStyle="bold"
+                    android:layout_alignParentTop="true"
+                    android:text="ProductName"
+                    android:textColor="@color/text_gray_dark"
+                    android:textSize="18sp"
+                    />
+                <ImageView
+                    android:id="@+id/activity_product_product_icon"
+                    android:layout_below="@id/activity_product_product_name"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:adjustViewBounds="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="fitStart" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/activity_product_product_icon"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:id = "@+id/activity_product_price_layout">
+                    <com.polestar.superclone.widgets.IconFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:id = "@+id/activity_product_reward_coin_icon"
+                        android:text="@string/iconfont_coin"
+                        android:textColor="@color/reward_coin_color"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"/>
+                    <TextView
+                        android:id= "@+id/activity_product_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/activity_product_reward_coin_icon"
+                        android:layout_marginLeft="5dp"
+                        android:layout_centerVertical="true"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/reward_collect_coin_color"
+                        android:text="10000"/>
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/activity_product_product_description"
+                    android:layout_below="@id/activity_product_price_layout"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:maxLines="3"
+                    android:gravity="center_horizontal"
+                    android:text="ProductDescription"
+                    android:textColor="@color/text_gray_dark"
+                    android:textSize="16sp"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/activity_product_product_description"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/activity_product_email_layout"
+                    android:background="@drawable/shadow"
+                    android:orientation="horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/email"/>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:hint="Email Address"
+                        android:background="@color/white"                        android:id="@+id/activity_product_email_input"
+                        android:layout_marginLeft="10dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/activity_product_email_layout"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/activity_product_paypal_layout"
+                    android:background="@drawable/shadow"
+                    android:orientation="horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/paypal"/>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:hint="Paypal Account"
+                        android:background="@color/white"
+                        android:id="@+id/activity_product_paypal_input"
+                        android:layout_marginLeft="10dp"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/activity_product_purchase"
+                    android:layout_below="@id/activity_product_paypal_layout"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_centerHorizontal="true"
+                    android:text="Purchase"
+                    android:textColor="@color/text_gray_dark"
+                    android:background="@drawable/native_interstitial_cta"
+                    android:textSize="16sp"
+                    />
+            </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+</RelativeLayout>
