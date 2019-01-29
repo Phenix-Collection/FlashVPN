@@ -52,6 +52,7 @@ public class ProductGridAdapter extends BaseAdapter{
         view = new ProductGridCell(mContext);
         ImageView icon = (ImageView) view.findViewById(R.id.product_icon);
         TextView name = (TextView) view.findViewById(R.id.product_name);
+        TextView price = (TextView) view.findViewById(R.id.product_grid_item_price);
 
         ProductGridItem productItem = (ProductGridItem) getItem(i);
         if (productItem != null) {
@@ -60,6 +61,7 @@ public class ProductGridAdapter extends BaseAdapter{
             }
             icon.setImageDrawable(productItem.icon);
             name.setText(productItem.name);
+            price.setText("" + (int)productItem.price);
         }
         view.setTag(productItem);
         return view;

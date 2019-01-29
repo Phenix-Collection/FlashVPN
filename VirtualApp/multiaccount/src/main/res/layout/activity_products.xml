@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:id = "@+id/activity_products_user_info_layout">
+        <com.polestar.superclone.widgets.IconFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:id = "@+id/activity_products_reward_coin_icon"
+            android:text="@string/iconfont_coin"
+            android:textColor="@color/reward_coin_color"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:id= "@+id/activity_products_user_balance_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/activity_products_reward_coin_icon"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/text_gray_dark"
+            android:text="10000 coins"/>
+    </RelativeLayout>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/activity_products_user_info_layout"
         android:orientation="vertical">
 
         <LinearLayout
@@ -28,21 +60,21 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
-                    android:text="string/hot_clone_title"
+                    android:text="Get More Functions"
                     android:textColor="@color/text_gray_dark"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/hot_clone_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="string/hot_clone_detail"
-                    android:textColor="@color/text_gray_light"
-                    android:textSize="12sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/hot_clone_detail"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:layout_marginStart="10dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_marginBottom="10dp"-->
+                    <!--android:text="string/hot_clone_detail"-->
+                    <!--android:textColor="@color/text_gray_light"-->
+                    <!--android:textSize="12sp" />-->
 
                 <com.polestar.superclone.widgets.FixedGridView
                     android:id="@+id/hot_clone_grid"
@@ -81,32 +113,32 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
-                    android:text="string/other_clone_title"
+                    android:text="Get Gifts"
                     android:textColor="@color/text_gray_dark"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/other_clone_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="string/other_clone_detail"
-                    android:textSize="12sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/other_clone_detail"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:layout_marginStart="10dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_marginBottom="10dp"-->
+                    <!--android:text="string/other_clone_detail"-->
+                    <!--android:textSize="12sp" />-->
 
-                <TextView
-                    android:id="@+id/no_hot_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity = "center"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:textSize="16sp"
-                    android:visibility="visible"
-                    android:textColor="@color/text_gray_dark"
-                    android:text="string/app_slogan"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/no_hot_title"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity = "center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_marginBottom="10dp"-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:visibility="visible"-->
+                    <!--android:textColor="@color/text_gray_dark"-->
+                    <!--android:text="string/app_slogan"/>-->
 
                 <com.polestar.superclone.widgets.FixedGridView
                     android:id="@+id/other_clone_grid"
@@ -136,4 +168,4 @@
         <!--android:layout_gravity="center"-->
         <!--android:layout_height="wrap_content" />-->
 
-</FrameLayout>
+</RelativeLayout>

@@ -13,7 +13,13 @@ public class AssetHelper {
 
     private static HashMap<String, Drawable> sCache = new HashMap<>();
 
+    private static final String ASSET_PREFIX = "asset://";
+
     public static Drawable getDrawable(Context context, String url) {
+        if (!url.startsWith(ASSET_PREFIX)) {
+            return null;
+        }
+        url = url.replace(ASSET_PREFIX, "");
         Drawable ret = sCache.get(url);
         if (ret == null) {
             ret = getDrawableFromAssets(context, url);

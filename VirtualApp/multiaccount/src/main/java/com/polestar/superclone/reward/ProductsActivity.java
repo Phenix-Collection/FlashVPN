@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.polestar.ad.AdLog;
@@ -29,6 +30,7 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
     private LinearLayout mMoneyProductLayout;
     private GridView mFunctionProductGridView;
     private GridView mMoneyProductGridView;
+    private TextView mUserBlanceTextView;
 
     private AppUser mAppUser;
     public static final String EXTRA_PRODUCT = "product";
@@ -37,11 +39,11 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
         if (mFunctionProductList == null || mFunctionProductList.size() == 0) {
             mFunctionProductLayout.setVisibility(View.GONE);
             View otherTitle = findViewById(R.id.other_clone_title);
-            View otherDetail = findViewById(R.id.other_clone_detail);
-            View noHotTitle = findViewById(R.id.no_hot_title);
-            otherDetail.setVisibility(View.GONE);
+//            View otherDetail = findViewById(R.id.other_clone_detail);
+//            View noHotTitle = findViewById(R.id.no_hot_title);
+//            otherDetail.setVisibility(View.GONE);
             otherTitle.setVisibility(View.GONE);
-            noHotTitle.setVisibility(View.VISIBLE);
+//            noHotTitle.setVisibility(View.VISIBLE);
         } else {
             MLogs.d("Hot app size: " + mFunctionProductList.size());
             mFunctionProductLayout.setVisibility(View.VISIBLE);
@@ -107,11 +109,14 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
 
     private void initView() {
         setContentView(R.layout.activity_products);
-        setTitle("Products");
+        setTitle("Store");
         mFunctionProductLayout = (LinearLayout) findViewById(R.id.hot_clone_layout);
         mFunctionProductGridView = (GridView) findViewById(R.id.hot_clone_grid);
         mMoneyProductLayout = (LinearLayout) findViewById(R.id.other_clone_layout);
         mMoneyProductGridView = (GridView) findViewById(R.id.other_clone_grid);
+        mUserBlanceTextView = (TextView) findViewById(R.id.activity_products_user_balance_txt);
+
+        mUserBlanceTextView.setText(mAppUser.getMyBalance() + " coins");
 //        cloneButton = (TextView)findViewById(R.id.clone_button);
 //        cloneButton.setText(String.format(getString(R.string.clone_action_txt), ""));
 //        progressBar = (ProgressBar)findViewById(R.id.progressBar);
