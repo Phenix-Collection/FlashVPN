@@ -19,6 +19,7 @@ public class IronSourceRewardVideoAdapter extends AdAdapter {
     private Handler mainHandler;
     public IronSourceRewardVideoAdapter(Context context, String key) {
         mKey = key; //placement_id
+        LOAD_TIMEOUT = 20*1000;
         mainHandler = new Handler(Looper.getMainLooper());
     }
     @Override

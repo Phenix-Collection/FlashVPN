@@ -18,6 +18,7 @@ public class AdmobRewardVideoAdapter extends AdAdapter {
 
     public AdmobRewardVideoAdapter(Context context, String key) {
         mKey = key;
+        LOAD_TIMEOUT = 20*1000;
     }
     @Override
     public void registerPrivacyIconView(View view) {

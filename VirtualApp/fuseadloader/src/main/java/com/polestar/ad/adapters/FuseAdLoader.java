@@ -257,8 +257,10 @@ public class FuseAdLoader {
                     }
                 }
                 if (!betterLoading && mListener != null) {
+                    AdLog.d("Loaded all adapter, no fill in time");
                     mListener.onError("No Fill");
-                    //mListener = null;
+                    //In case ad loaded after time out
+                    mListener = null;
                 }
             } else {
                 loadNextNativeAd(context);
@@ -406,8 +408,8 @@ public class FuseAdLoader {
 
         @Override
         public void onError(String error) {
-            finishLoading(loadingContext, index);
             AdLog.e("Load current source " + mNativeAdConfigList.get(index).source + " error : " + error);
+            finishLoading(loadingContext, index);
         }
 
     }
