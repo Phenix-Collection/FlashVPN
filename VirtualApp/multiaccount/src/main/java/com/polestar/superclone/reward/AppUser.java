@@ -201,10 +201,6 @@ public class AppUser {
         return  false;
     }
 
-    public void submitInviteCode() {
-        //AdApiHelper.finishTask(getMyId(), );
-    }
-
     public void consumeProduct(long productId, int amount, String email, String info) {
         AdApiHelper.consumeProduct(getMyId(), productId, amount, email, info, new IProductStatusListener() {
             @Override
@@ -227,5 +223,21 @@ public class AppUser {
                 AdLog.i("onConsumeFail " + code.toString());
             }
         });
+    }
+
+    public void finishTask(Task task, ITaskStatusListener listener) {
+        AdApiHelper.finishTask(mId, task.mId, null, listener);
+    }
+
+    public void submitInviteCode(Task task, String code, ITaskStatusListener listener) {
+        AdApiHelper.finishTask(mId, task.mId, code, listener);
+    }
+
+    public int checkTask(Task task) {
+        return RewardErrorCode.TASK_OK;
+    }
+
+    public Task getTaskById(long taskId) {
+        return databaseApi.getTaskById(taskId);
     }
 }

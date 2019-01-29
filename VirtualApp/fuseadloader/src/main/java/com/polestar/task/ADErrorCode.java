@@ -13,6 +13,18 @@ public class ADErrorCode {
     private String errMsg;
 
     public static final int ERR_SERVER_DOWN_CODE = 1000;
+    public static final int USER_NOTEXIST = 1;
+    public static final int TASK_NOTEXIST = 2;
+    public static final int PRODUCT_NOTEXIST = 3;
+    public static final int TOTAL_LIMITTED = 4;
+    public static final int MISS_PARAMETER = 5;
+    public static final int NOT_ENOUGH_MONEY = 6;
+    public static final int INVALID_REFERRAL_CODE = 7;
+    public static final int ALREADY_REFERRED = 8;
+    public static final int INVALID_REQUEST = 9;
+    public static final int DAY_LIMITTED = 10;
+    public static final int OP_TOO_FREQUENT = 11;
+    public static final int MAX_SERVER_ERR_CODE = ERR_SERVER_DOWN_CODE;
 
     private static final HashMap<Integer, String> sErrMapping = createErrMapping();
 

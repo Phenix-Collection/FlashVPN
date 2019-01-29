@@ -88,8 +88,4 @@ public class ProductActivity extends Activity {
         });
     }
 
-//    private void consumeProduct() {
-//        mAppUser.consumeProduct(mProduct.mId, 1);
-//    }
-
 }
