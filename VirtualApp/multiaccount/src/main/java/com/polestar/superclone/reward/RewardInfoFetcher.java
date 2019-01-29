@@ -80,7 +80,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
             public void onRegisterSuccess(User user) {
                 databaseApi.setUserInfo(user);
                 MLogs.d(TAG, "register success " + user);
-                AdApiHelper.getAvailableTasks( new ITaskStatusListener(){
+                AdApiHelper.getAvailableTasks(AppUser.getInstance().getMyId(), new ITaskStatusListener(){
                     @Override
                     public void onTaskSuccess(long taskId, float payment, float balance) {
 
@@ -95,7 +95,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                     public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
                         databaseApi.setActiveTasks(tasks);
                         MLogs.d(TAG, "onGetAllAvailableTasks success ");
-                        AdApiHelper.getAvailableProducts(new IProductStatusListener() {
+                        AdApiHelper.getAvailableProducts(AppUser.getInstance().getMyId(), new IProductStatusListener() {
                             @Override
                             public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
 

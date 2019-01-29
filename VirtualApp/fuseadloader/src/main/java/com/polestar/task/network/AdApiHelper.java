@@ -115,17 +115,17 @@ public class AdApiHelper {
         return REQUEST_SUCCEED;
     }
 
-    public static int getAvailableProducts(final IProductStatusListener listener) {
-        return getAvailableProducts(listener, false);
+    public static int getAvailableProducts(String deviceId, final IProductStatusListener listener) {
+        return getAvailableProducts(deviceId, listener, false);
     }
 
-    public static int getAvailableProducts(final IProductStatusListener listener, boolean force) {
+    public static int getAvailableProducts(String deviceId, final IProductStatusListener listener, boolean force) {
         if (!force && !canDoRequest(KEY_GET_PRODUCTS, API_COMMON_INTERVAL)) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<ProductsResponse> call = service.getAvailableProducts();
+        Call<ProductsResponse> call = service.getAvailableProducts(deviceId);
         call.enqueue(new Callback<ProductsResponse>() {
             @Override
             public void onResponse(Call<ProductsResponse> call, Response<ProductsResponse> response) {
@@ -164,18 +164,22 @@ public class AdApiHelper {
         return REQUEST_SUCCEED;
     }
 
-    public static int consumeProduct(String deviceId, final long id, final int amount, final IProductStatusListener listener) {
-        return consumeProduct(deviceId, id, amount, listener, false);
+    public static int consumeProduct(String deviceId, final long id, final int amount,
+                                     final String email, final String info,
+                                     final IProductStatusListener listener) {
+        return consumeProduct(deviceId, id, amount, email, info, listener, false);
     }
 
-    public static int consumeProduct(String deviceId, final long id, final int amount, final IProductStatusListener listener,
+    public static int consumeProduct(String deviceId, final long id, final int amount,
+                                     final String email, final String info,
+                                     final IProductStatusListener listener,
                                         boolean force) {
         if (!force && !canDoRequest(KEY_CONSUME_PRODUCT, API_COMMON_INTERVAL)) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<UserProductResponse> call = service.consumeProduct(deviceId, id, amount);
+        Call<UserProductResponse> call = service.consumeProduct(deviceId, id, amount, email, info);
         call.enqueue(new Callback<UserProductResponse>() {
             @Override
             public void onResponse(Call<UserProductResponse> call, Response<UserProductResponse> response) {
@@ -213,17 +217,17 @@ public class AdApiHelper {
         return REQUEST_SUCCEED;
     }
 
-    public static int getAvailableTasks(final ITaskStatusListener listener) {
-        return getAvailableTasks(listener, false);
+    public static int getAvailableTasks(String deviceId, final ITaskStatusListener listener) {
+        return getAvailableTasks(deviceId, listener, false);
     }
 
-    public static int getAvailableTasks(final ITaskStatusListener listener, boolean force) {
+    public static int getAvailableTasks(String deviceId, final ITaskStatusListener listener, boolean force) {
         if (!force && !canDoRequest(KEY_GET_TASKS, API_COMMON_INTERVAL)) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<TasksResponse> call = service.getAvailableTasks();
+        Call<TasksResponse> call = service.getAvailableTasks(deviceId);
         call.enqueue(new Callback<TasksResponse>() {
             @Override
             public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {

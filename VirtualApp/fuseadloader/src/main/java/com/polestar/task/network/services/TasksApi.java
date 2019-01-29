@@ -9,11 +9,12 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface TasksApi {
     @Headers("Accept: application/json")
     @GET("api/v1/task/getAvailableTasks")
-    Call<TasksResponse> getAvailableTasks();
+    Call<TasksResponse> getAvailableTasks(@Query("device_id") String deviceID);
 
     @Headers("Accept: application/json")
     @POST("api/v1/task/finishTask")

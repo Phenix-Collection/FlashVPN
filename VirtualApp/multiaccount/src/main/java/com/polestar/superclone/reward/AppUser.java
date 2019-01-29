@@ -162,8 +162,8 @@ public class AppUser {
         //AdApiHelper.finishTask(getMyId(), );
     }
 
-    public void consumeProduct(long productId, int amount) {
-        AdApiHelper.consumeProduct(getMyId(), productId, amount, new IProductStatusListener() {
+    public void consumeProduct(long productId, int amount, String email, String info) {
+        AdApiHelper.consumeProduct(getMyId(), productId, amount, email, info, new IProductStatusListener() {
             @Override
             public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
                 AdLog.i("onConsumeSuccess " + id + " amount " + amount + " totalCost " + totalCost + " balance " + balance);

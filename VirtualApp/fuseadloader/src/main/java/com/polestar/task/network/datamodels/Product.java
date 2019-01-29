@@ -8,6 +8,10 @@ import com.google.gson.annotations.SerializedName;
 public class Product extends TimeModel implements Parcelable {
     public static final int MONEY_PRODUCT_THRESHOLDER = 1000;
 
+    public static final int PRODUCT_TYPE_AMAZON = 1001;
+    public static final int PRODUCT_TYPE_PAYPAL = 1002;
+
+
     @SerializedName("id")
     public long mId;
 
@@ -60,6 +64,10 @@ public class Product extends TimeModel implements Parcelable {
 
     public boolean isMoneyProduct() {
         return !isFunctionalProduct();
+    }
+
+    public boolean isPaypal() {
+        return mProductType == PRODUCT_TYPE_PAYPAL;
     }
 
     @Override
