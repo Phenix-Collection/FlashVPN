@@ -67,13 +67,14 @@ public class AdApiHelper {
         }
     }
 
-
     public static int register(String deviceId, final IUserStatusListener listener) {
-        if (!canDoRequest(KEY_REGISTER, API_COMMON_INTERVAL)) {
+        return register(deviceId, listener, false);
+    }
+
+    public static int register(String deviceId, final IUserStatusListener listener, boolean force) {
+        if (!force && !canDoRequest(KEY_REGISTER, API_COMMON_INTERVAL)) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
-        //TODO may remove me;
-        Log.i(Configuration.HTTP_TAG, "sRegisterLastTime is " + sTimeMapping.get(KEY_REGISTER).toString());
 
         AuthApi service = RetrofitServiceFactory.createSimpleRetroFitService(AuthApi.class);
         Call<User> call = service.registerAnonymous(deviceId, null, null, null);
@@ -115,7 +116,11 @@ public class AdApiHelper {
     }
 
     public static int getAvailableProducts(final IProductStatusListener listener) {
-        if (!canDoRequest(KEY_GET_PRODUCTS, API_COMMON_INTERVAL)) {
+        return getAvailableProducts(listener, false);
+    }
+
+    public static int getAvailableProducts(final IProductStatusListener listener, boolean force) {
+        if (!force && !canDoRequest(KEY_GET_PRODUCTS, API_COMMON_INTERVAL)) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
@@ -160,7 +165,12 @@ public class AdApiHelper {
     }
 
     public static int consumeProduct(String deviceId, final long id, final int amount, final IProductStatusListener listener) {
-        if (!canDoRequest(KEY_CONSUME_PRODUCT, API_COMMON_INTERVAL)) {
+        return consumeProduct(deviceId, id, amount, listener, false);
+    }
+
+    public static int consumeProduct(String deviceId, final long id, final int amount, final IProductStatusListener listener,
+                                        boolean force) {
+        if (!force && !canDoRequest(KEY_CONSUME_PRODUCT, API_COMMON_INTERVAL)) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
@@ -204,7 +214,11 @@ public class AdApiHelper {
     }
 
     public static int getAvailableTasks(final ITaskStatusListener listener) {
-        if (!canDoRequest(KEY_GET_TASKS, API_COMMON_INTERVAL)) {
+        return getAvailableTasks(listener, false);
+    }
+
+    public static int getAvailableTasks(final ITaskStatusListener listener, boolean force) {
+        if (!force && !canDoRequest(KEY_GET_TASKS, API_COMMON_INTERVAL)) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
@@ -247,13 +261,17 @@ public class AdApiHelper {
         return REQUEST_SUCCEED;
     }
 
-    public static int finishTask(String deviceId, final long id, final ITaskStatusListener listener) {
-        if (!canDoRequest(KEY_FINISH_TASK, API_COMMON_INTERVAL)) {
+    public static int finishTask(String deviceId, final long id, String referralCode, final ITaskStatusListener listener) {
+        return finishTask(deviceId, id, referralCode, listener, false);
+    }
+
+    public static int finishTask(String deviceId, final long id, String referralCode, final ITaskStatusListener listener, boolean force) {
+        if (!force && !canDoRequest(KEY_FINISH_TASK, API_COMMON_INTERVAL)) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<UserTaskResponse> call = service.finishTask(deviceId, id, null);
+        Call<UserTaskResponse> call = service.finishTask(deviceId, id, referralCode);
         call.enqueue(new Callback<UserTaskResponse>() {
             @Override
             public void onResponse(Call<UserTaskResponse> call, Response<UserTaskResponse> response) {
