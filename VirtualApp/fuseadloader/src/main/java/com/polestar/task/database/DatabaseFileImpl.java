@@ -37,6 +37,12 @@ public class DatabaseFileImpl implements DatabaseApi {
     private static final String PRODUCT_FILE = DIR + "/products.txt";
     private static final String USER_FILE = DIR + "/user.txt";
 
+    @Override
+    public boolean isDataAvailable() {
+        return mProducts!= null && mProducts.size() > 0
+                && mTasks != null && mTasks.size() > 0
+                && mUser != null;
+    }
 
     public static DatabaseApi getDatabaseFileImpl(Context context) {
         if (sInstance == null) {

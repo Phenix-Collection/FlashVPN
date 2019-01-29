@@ -29,4 +29,6 @@ public interface DatabaseApi {
 //    List<ProductInfoNoUse> getPurchasedProducts();
 
     Product getProductInfo(long id);
+
+    boolean isDataAvailable();
 }
