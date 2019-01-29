@@ -79,4 +79,6 @@
     <color name="reward_coin_color">#fd7921</color>
     <color name="default_foreground_color">#FFFFFF</color>
     <color name="transparent_gray_cover">#55dddddd</color>
+    <color name="reward_done">#48d27f</color>
+    <color name="reward_wait">#fd7921</color>
 </resources>

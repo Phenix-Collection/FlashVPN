@@ -41,13 +41,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="3"
             android:text="Task Description"
             android:textColor="@color/text_gray_light"
             android:textSize="12sp" />
     </LinearLayout>
 
-    <TextView
+    <com.polestar.superclone.widgets.IconFontTextView
         android:id="@+id/task_reward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

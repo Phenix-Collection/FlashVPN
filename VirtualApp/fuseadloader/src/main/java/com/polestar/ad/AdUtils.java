@@ -1,8 +1,11 @@
 package com.polestar.ad;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
@@ -57,6 +60,18 @@ public class AdUtils {
     public static String getAndroidID(Context context) {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
+
+    public static String getDeviceID(Context context) {
+        if (context.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                == PackageManager.PERMISSION_GRANTED) {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String imei = telephonyManager.getDeviceId();
+            return imei;
+        } else {
+            return null;
+        }
+    }
+
 
     private static void setGaid(Context var0, String var1) {
         SharedPreferences var2 = var0.getSharedPreferences("sdk_preference", 0);

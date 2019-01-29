@@ -16,6 +16,7 @@ final public class RewardErrorCode {
     public static final int TASK_EXCEED_DAY_LIMIT = REWARD_ERROR_CODE_BASE + 1;
     public static final int TASK_AD_NO_FILL = REWARD_ERROR_CODE_BASE + 2;
     public static final int TASK_UNEXPECTED_ERROR = REWARD_ERROR_CODE_BASE + 3;
+    public static final int TASK_AD_LOADING = REWARD_ERROR_CODE_BASE + 4;
 
     public static final String getToastMessage(int code, Object ... args) {
         return getToastMessage(MApp.getApp(), code, args);

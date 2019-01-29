@@ -2,9 +2,7 @@ package com.polestar.ad.adapters;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.ComponentCallbacks;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -260,7 +258,7 @@ public class FuseAdLoader {
                     AdLog.d("Loaded all adapter, no fill in time");
                     mListener.onError("No Fill");
                     //In case ad loaded after time out
-                    mListener = null;
+                    //mListener = null;
                 }
             } else {
                 loadNextNativeAd(context);

@@ -27,7 +27,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
                     android:id = "@+id/reward_coin_icon"
-                    android:text="@string/iconfont_coin"
+                    android:text="@string/iconfont_balance"
+                    android:textStyle="bold"
                     android:textColor="@color/reward_coin_color"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
@@ -40,8 +41,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_centerVertical="true"
                     android:textSize="16sp"
-                    android:textColor="@color/text_gray_dark"
-                    android:text="10000pts"/>
+                    android:textColor="@color/text_gray_dark" />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:text="Redeem"
+                        android:text="@string/btn_products_store"
                         android:textSize="16sp"
                         android:layout_gravity="center_vertical"
                         />
@@ -99,17 +99,24 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"
-                android:layout_gravity="center"
-                android:textColor="@color/text_gray_dark"
+                android:gravity="center"
+                android:textColor="@color/text_gray_light"
                 android:textSize="16sp"
-                android:text="More rewarded offer is coming soon ..."/>
+                android:text="@string/more_offer"/>
 
         </LinearLayout>
     </ScrollView>
     <ProgressBar
         android:id="@+id/loading_layout"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+    <ProgressBar
+        android:id="@+id/task_executing_layout"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_centerInParent="true"

@@ -1,6 +1,6 @@
 package com.polestar.task.network;
 
-import android.util.Log;
+import com.polestar.ad.AdLog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,7 +17,7 @@ public class MiscUtils {
         sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         try {
             Date date = sFormat.parse(timeInUTC);
-            Log.i(Configuration.HTTP_TAG, "timeInUTC Str:" + timeInUTC
+            AdLog.i(Configuration.HTTP_TAG, "timeInUTC Str:" + timeInUTC
                     + " inMilli:" + date.getTime() + " inLocalStr:" + date.toString());
             return date.getTime();
         } catch (java.text.ParseException e) {

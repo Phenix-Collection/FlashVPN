@@ -2,6 +2,8 @@ package com.polestar.task.network;
 
 import android.util.Log;
 
+import com.polestar.ad.AdLog;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,7 +80,7 @@ public class ErrorCodeInterceptor implements Interceptor {
         okhttp3.Response response = chain.proceed(request);
 
         String responseBody = response.body().string();
-        Log.i(Configuration.HTTP_TAG, "raw_response:" + responseBody);
+        AdLog.i(Configuration.HTTP_TAG, "raw_response:" + responseBody);
 
         try {
             // 先看看是不是有服务器返回的错误，如果有，就throw出去，让onFailure分支去处理
@@ -90,7 +92,7 @@ public class ErrorCodeInterceptor implements Interceptor {
                 throw new IOException(composeErrMsg(errCode, errMsg));
             }
         } catch (JSONException e) {
-            Log.i(Configuration.HTTP_TAG, "Invalid JSON response");
+            AdLog.i(Configuration.HTTP_TAG, "Invalid JSON response");
         }
 
         return response.newBuilder()

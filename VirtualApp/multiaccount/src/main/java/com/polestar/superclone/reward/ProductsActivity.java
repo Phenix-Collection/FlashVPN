@@ -1,5 +1,6 @@
 package com.polestar.superclone.reward;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -64,6 +65,12 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
             adapter.notifyDataSetChanged();
         }
 
+    }
+
+    public static void start(Activity activity) {
+        Intent intent = new Intent();
+        intent.setClass(activity, ProductsActivity.class);
+        activity.startActivity(intent);
     }
 
     @Override

@@ -187,6 +187,15 @@
             android:theme="@android:style/Theme.Translucent"
             android:multiprocess="true" />
 
+        <activity
+            android:name="com.polestar.superclone.reward.ProductActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="com.polestar.superclone.reward.ProductsActivity"
+            android:screenOrientation="portrait"/>
+
         <provider android:authorities="${applicationId}.sync.provider"
             android:exported="true"
             android:name="com.polestar.welive.DummyProvider"

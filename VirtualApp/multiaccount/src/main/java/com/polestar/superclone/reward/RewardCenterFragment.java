@@ -22,8 +22,6 @@ import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.IconFontTextView;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.ITaskStatusListener;
-import com.polestar.task.database.DatabaseApi;
-import com.polestar.task.database.DatabaseImplFactory;
 import com.polestar.task.database.datamodels.RewardVideoTask;
 import com.polestar.task.network.datamodels.Task;
 
@@ -34,7 +32,7 @@ import java.util.List;
  * Created by guojia on 2019/1/23.
  */
 
-public class RewardCenterFragment extends BaseFragment implements AppUser.IUserUpdateListener, View.OnClickListener, ITaskStatusListener{
+public class RewardCenterFragment extends BaseFragment implements AppUser.IUserUpdateListener, View.OnClickListener{
     private View contentView;
     private View inviteItemView;
     private View checkinItemView;
@@ -73,6 +71,12 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         return contentView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
     private void initView() {
         userInfoView = contentView.findViewById(R.id.reward_user_info_layout);
         View store = userInfoView.findViewById(R.id.store_button);
@@ -93,7 +97,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             loadFailLayout.setVisibility(View.GONE);
             loadedLayout.setVisibility(View.VISIBLE);
             updateUserInfo();
-            updateBasicTasks();
+            initTaskItems();
         } else {
             loadingProgressBar.setVisibility(View.VISIBLE);
             loadFailLayout.setVisibility(View.GONE);
@@ -109,25 +113,31 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
     }
 
     private void updateUserInfo() {
+        float balance = appUser.getMyBalance();
         TextView points = userInfoView.findViewById(R.id.user_balance_txt);
-        points.setText(String.format(getString(R.string.you_have_coins),appUser.getMyBalance() , getActivity().getString(R.string.coin_unit)));
+        if(balance == 0) {
+            points.setText(getText(R.string.finish_task_get_reward));
+        } else {
+            points.setText(String.format(getString(R.string.you_have_coins), balance , getActivity().getString(R.string.coin_unit)));
+        }
     }
 
-    private void updateBasicTasks(){
-        bindTaskViewItem(inviteItemView, appUser.getInviteTask());
-        bindTaskViewItem(checkinItemView, appUser.getCheckInTask());
-        bindTaskViewItem(videoItemView, appUser.getVideoTask());
+    private void initTaskItems(){
+        updateTaskViewItem(inviteItemView, appUser.getInviteTask(), true);
+        updateTaskViewItem(checkinItemView, appUser.getCheckInTask(), true);
+        updateTaskViewItem(videoItemView, appUser.getVideoTask(), true);
     }
 
-    private void bindTaskViewItem(View view, Task task){
+    private void updateTaskViewItem(View view, Task task, boolean isInit){
+        if (view == null || task == null) {
+            return;
+        }
         TextView title = view.findViewById(R.id.task_title);
         TextView description = view.findViewById(R.id.task_description);
         IconFontTextView icon = view.findViewById(R.id.task_icon);
-        TextView reward = view.findViewById(R.id.task_reward);
-        reward.setText("+" + String.format("%.0f", task.mPayout));
+        IconFontTextView reward = view.findViewById(R.id.task_reward);
         title.setText(task.mTitle);
         description.setText(task.mDescription);
-        view.setOnClickListener(this);
         view.setTag(task);
         switch (task.mTaskType) {
             case Task.TASK_TYPE_CHECKIN_TASK:
@@ -140,11 +150,28 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
                 icon.setText((R.string.iconfont_video));
                 break;
         }
+        int status = appUser.checkTask(task);
+        MLogs.d("task " + task.mTitle + " status: " + status);
+        if (status == RewardErrorCode.TASK_EXCEED_DAY_LIMIT && isInit) {
+            reward.setText(R.string.iconfont_wait);
+            reward.setTextColor(getResources().getColor(R.color.reward_wait));
+        } else if (status == RewardErrorCode.TASK_EXCEED_DAY_LIMIT && !isInit) {
+            reward.setText(R.string.iconfont_done);
+            reward.setTextColor(getResources().getColor(R.color.reward_done));
+        }  else {
+            reward.setText("+" + String.format("%.0f", task.mPayout));
+            if (status != RewardErrorCode.TASK_OK) {
+                reward.setTextColor(getResources().getColor(R.color.text_gray_light));
+            } else {
+               reward.setTextColor(getResources().getColor(R.color.reward_collect_coin_color));
+            }
+        }
+        view.setOnClickListener(this);
     }
 
     public void onStoreClick(View view){
         MLogs.d("onStoreClick");
-
+        ProductsActivity.start(getActivity());
     }
 
     public void onRetryClick(View view) {
@@ -156,7 +183,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
     }
 
     public void onCheckInClick(View view) {
-
+        appUser.finishTask((Task)view.getTag(), new RewardTaskListener(view));
     }
 
     public void onInviteFriendsClick(View view) {
@@ -179,7 +206,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             loader.loadAd(getActivity(), 2, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
-
+                    ad.show();
                 }
 
                 @Override
@@ -204,7 +231,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
 
                 @Override
                 public void onRewarded(IAdAdapter ad) {
-                    appUser.finishTask(task, RewardCenterFragment.this);
+                    appUser.finishTask(task, new RewardTaskListener(view));
                 }
             });
         }
@@ -242,38 +269,35 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         }
     }
 
-    @Override
-    public void onTaskSuccess(long taskId, float payment, float balance) {
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                toastDone(payment);
-            }
-        });
-    }
 
-    @Override
-    public void onTaskFail(long taskId, ADErrorCode code) {
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                toastError(code.getErrCode());
-            }
-        });
-    }
+    private class RewardTaskListener implements ITaskStatusListener {
+        private View mView;
 
-    @Override
-    public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+        public RewardTaskListener(View view) {
+            mView = view;
+        }
 
-    }
+        @Override
+        public void onTaskSuccess(long taskId, float payment, float balance) {
+            MLogs.d(taskId + " Task finish : "  + payment + " balance " + balance);
+            updateUserInfo();
+            updateTaskViewItem(mView, (Task)mView.getTag(), false);
+            toastDone(payment);
+        }
 
-    @Override
-    public void onGeneralError(ADErrorCode code) {
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                toastError(code.getErrCode());
-            }
-        });
+        @Override
+        public void onTaskFail(long taskId, ADErrorCode code) {
+            toastError(code.getErrCode());
+        }
+
+        @Override
+        public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+
+        }
+
+        @Override
+        public void onGeneralError(ADErrorCode code) {
+            toastError(code.getErrCode());
+        }
     }
 }

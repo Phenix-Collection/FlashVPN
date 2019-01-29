@@ -82,7 +82,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
     //TODO need device id?
     private void checkAndFetchInfo(boolean force) {
-        MLogs.d(TAG, "checkAndFetchInfo force: " + force);
+        MLogs.d(TAG, "checkAndFetchInfo force: " + force + " myId " + AppUser.getInstance().getMyId());
         if(!force && (System.currentTimeMillis() - TaskPreference.getLastUpdateTime()
                 < UPDATE_INTERVAL)) {
             MLogs.d(TAG, "already fetched at " + TaskPreference.getLastUpdateTime());

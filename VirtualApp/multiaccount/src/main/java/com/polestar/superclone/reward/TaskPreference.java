@@ -108,19 +108,29 @@ class TaskPreference {
         return null;
     }
 
-    public void incTaskFinishCount(long taskId) {
+    public static void incTaskFinishCount(long taskId) {
         SharedPreferences sp = getTaskSharedPreference(taskId);
         int cnt = sp.getInt("task_count" , 0) + 1;
-        sp.edit().putInt("task_count", cnt);
+        sp.edit().putInt("task_count", cnt).commit();
 
         updateTaskFinishTime(taskId, true);
     }
 
-    public int getTaskFinishCount(long taskId) {
+    public static int getTaskFinishCount(long taskId) {
         return  getTaskSharedPreference(taskId).getInt("task_count", 0);
     }
 
-    public int getTaskFinishTodayCount(long taskId) {
+    public static int getTaskFinishTodayCount(long taskId) {
         return updateTaskFinishTime(taskId, false);
+    }
+
+    public static String getMyId() {
+        SharedPreferences sp = getSharedPreference();
+        return sp.getString("my_user_id", null);
+    }
+
+    public static void setMyId(String id) {
+        SharedPreferences sp = getSharedPreference();
+        sp.edit().putString("my_user_id", id).commit();
     }
 }

@@ -4,8 +4,10 @@ import android.Manifest;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.polestar.ad.AdLog;
+import com.polestar.ad.AdUtils;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.RemoteConfig;
@@ -28,8 +30,13 @@ import com.polestar.task.network.datamodels.UserTask;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 
 import mirror.android.widget.Toast;
+
+import static com.polestar.task.ADErrorCode.ERR_SERVER_DOWN_CODE;
 
 /**
  * Created by guojia on 2019/1/24.
@@ -46,11 +53,13 @@ public class AppUser {
     private static final String CONF_REWARD_ENABLE = "conf_reward_open";
     private Handler mainHandler;
     private HashSet<IUserUpdateListener> mObservers;
+    private static final long TASK_EXECUTING_TIMEOUT = 3*1000;
 
     private AppUser() {
         databaseApi = DatabaseImplFactory.getDatabaseApi(MApp.getApp());
         mainHandler = new Handler(Looper.getMainLooper());
         mObservers = new HashSet<>();
+        mId = getMyId();
         initData();
         RewardInfoFetcher.get(MApp.getApp()).registerUpdateObserver(new RewardInfoFetcher.IRewardInfoFetchListener() {
             @Override
@@ -98,10 +107,10 @@ public class AppUser {
     }
 
     private void initData() {
+        MLogs.d(TAG, "My user id: " + mId);
         User userInfo = databaseApi.getMyUserInfo();
         if (userInfo != null) {
             mBalance = userInfo.mBalance;
-            mId = userInfo.mDeviceId;
             mInviteCode = userInfo.mReferralCode;
         }
 
@@ -154,10 +163,23 @@ public class AppUser {
         //2. device id
         //3. android id
         //4. Random UUID
-        if (mId == null) {
-            mId = "testme";
+        String id = TaskPreference.getMyId();
+        if (!TextUtils.isEmpty(id)) {
+            return id;
+        } else {
+            id = AdUtils.getGoogleAdvertisingId(MApp.getApp());
         }
-        return mId;
+        if (TextUtils.isEmpty(id)) {
+            id = AdUtils.getDeviceID(MApp.getApp());
+        }
+        if (TextUtils.isEmpty(id)) {
+            id = AdUtils.getAndroidID(MApp.getApp());
+        }
+        if (TextUtils.isEmpty(id)) {
+            id = UUID.randomUUID().toString();
+        }
+        TaskPreference.setMyId(id);
+        return id;
     }
 
     public ShareTask getInviteTask() {
@@ -189,18 +211,6 @@ public class AppUser {
 //        return list!= null && list.size() > 0 ? (RewardVideoTask) list.get(0):null;
 //    }
 
-    public void register() {
-
-    }
-
-    public void checkIn() {
-
-    }
-
-    public boolean hasCheckinToday() {
-        return  false;
-    }
-
     public void consumeProduct(long productId, int amount, String email, String info) {
         AdApiHelper.consumeProduct(getMyId(), productId, amount, email, info, new IProductStatusListener() {
             @Override
@@ -226,18 +236,96 @@ public class AppUser {
     }
 
     public void finishTask(Task task, ITaskStatusListener listener) {
-        AdApiHelper.finishTask(mId, task.mId, null, listener);
+        if (task == null) return;
+        AdApiHelper.finishTask(mId, task.mId, null, new WrapTaskStatusListener(listener));
     }
 
     public void submitInviteCode(Task task, String code, ITaskStatusListener listener) {
-        AdApiHelper.finishTask(mId, task.mId, code, listener);
+        if (task == null || TextUtils.isEmpty(code)) return;
+        AdApiHelper.finishTask(mId, task.mId, code, new WrapTaskStatusListener(listener));
     }
 
     public int checkTask(Task task) {
+        if (task == null) {
+            return RewardErrorCode.TASK_UNEXPECTED_ERROR;
+        }
+        if (TaskPreference.getTaskFinishTodayCount(task.mId) >= task.mLimitPerDay
+                || TaskPreference.getTaskFinishCount(task.mId) >= task.mLimitTotal) {
+            return RewardErrorCode.TASK_EXCEED_DAY_LIMIT;
+        }
         return RewardErrorCode.TASK_OK;
     }
 
     public Task getTaskById(long taskId) {
         return databaseApi.getTaskById(taskId);
+    }
+
+    private class WrapTaskStatusListener implements ITaskStatusListener{
+        private ITaskStatusListener mListener;
+        private Timer mTimer;
+        public WrapTaskStatusListener (ITaskStatusListener listener) {
+            mListener = listener;
+            mTimer = new Timer("task_timer");
+            mTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    onGeneralError(new ADErrorCode(ERR_SERVER_DOWN_CODE, "task timeout"));
+                    mListener = null;
+                }
+            }, TASK_EXECUTING_TIMEOUT);
+        }
+
+        @Override
+        public void onTaskSuccess(long taskId, float payment, float balance) {
+            mTimer.cancel();
+            mBalance = balance;
+            TaskPreference.incTaskFinishCount(taskId);
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mListener != null) {
+                        mListener.onTaskSuccess(taskId, payment, balance);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onTaskFail(long taskId, ADErrorCode code) {
+            mTimer.cancel();
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mListener != null) {
+                        mListener.onTaskFail(taskId, code);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+            MLogs.d("onGetAllAvailableTasks should not be here!!");
+            mTimer.cancel();
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onGetAllAvailableTasks(tasks);
+                }
+            });
+        }
+
+        @Override
+        public void onGeneralError(ADErrorCode code) {
+            mTimer.cancel();
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mListener != null) {
+                        mListener.onGeneralError(code);
+                    }
+                }
+            });
+        }
     }
 }

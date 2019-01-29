@@ -2,6 +2,7 @@ package com.polestar.task.network;
 
 import android.util.Log;
 
+import com.polestar.ad.AdLog;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
@@ -81,12 +82,12 @@ public class AdApiHelper {
         call.enqueue(new Callback<User>(){
             @Override
             public void onResponse(Call<User> call, Response<User> response){
-                Log.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
+                AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
 
                 switch(response.code()){
                     case 200:
                         User ur = response.body();
-                        Log.i(Configuration.HTTP_TAG, "onResponse: "+ ur.mReferralCode);
+                        AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ ur.mReferralCode);
                         if (listener != null) {
                             listener.onRegisterSuccess(ur);
                         }
@@ -101,7 +102,7 @@ public class AdApiHelper {
 
             @Override
             public void onFailure(Call<User> call, Throwable t){
-                Log.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
+                AdLog.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
                 if (listener != null) {
                     if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
                         listener.onRegisterFailed(ADErrorCode.createFromAdErrMsg(t.getMessage()));
@@ -129,12 +130,12 @@ public class AdApiHelper {
         call.enqueue(new Callback<ProductsResponse>() {
             @Override
             public void onResponse(Call<ProductsResponse> call, Response<ProductsResponse> response) {
-                Log.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
+                AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
 
                 switch(response.code()){
                     case 200:
                         ProductsResponse ur = response.body();
-                        Log.i(Configuration.HTTP_TAG, "onResponse product count: "+ ur.mProducts.size());
+                        AdLog.i(Configuration.HTTP_TAG, "onResponse product count: "+ ur.mProducts.size());
                         if (listener != null) {
                             listener.onGetAllAvailableProducts(ur.mProducts);
                         }
@@ -149,7 +150,7 @@ public class AdApiHelper {
 
             @Override
             public void onFailure(Call<ProductsResponse> call, Throwable t) {
-                Log.e(Configuration.HTTP_TAG, "onFailure: "+ t.getMessage());
+                AdLog.e(Configuration.HTTP_TAG, "onFailure: "+ t.getMessage());
                 // getProducts has no predefined err, so this must be server error
                 if (listener != null) {
                     if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
@@ -183,12 +184,12 @@ public class AdApiHelper {
         call.enqueue(new Callback<UserProductResponse>() {
             @Override
             public void onResponse(Call<UserProductResponse> call, Response<UserProductResponse> response) {
-                Log.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
+                AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
 
                 switch(response.code()){
                     case 200:
                         UserProductResponse ur = response.body();
-                        Log.i(Configuration.HTTP_TAG, "onResponse cost: "+ ur.mUserProduct.mCost);
+                        AdLog.i(Configuration.HTTP_TAG, "onResponse cost: "+ ur.mUserProduct.mCost);
                         if (listener != null) {
                             listener.onConsumeSuccess(id, amount, ur.mUserProduct.mCost, ur.mUser.mBalance);
                         }
@@ -203,7 +204,7 @@ public class AdApiHelper {
 
             @Override
             public void onFailure(Call<UserProductResponse> call, Throwable t) {
-                Log.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
+                AdLog.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
                 if (listener != null) {
                     if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
                         listener.onConsumeFail(ADErrorCode.createFromAdErrMsg(t.getMessage()));
@@ -231,12 +232,12 @@ public class AdApiHelper {
         call.enqueue(new Callback<TasksResponse>() {
             @Override
             public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {
-                Log.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
+                AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
 
                 switch(response.code()){
                     case 200:
                         TasksResponse ur = response.body();
-                        Log.i(Configuration.HTTP_TAG, "onResponse task count "+ ur.mTasks.size());
+                        AdLog.i(Configuration.HTTP_TAG, "onResponse task count "+ ur.mTasks.size());
                         if (listener != null) {
                             listener.onGetAllAvailableTasks(ur.mTasks);
                         }
@@ -251,7 +252,7 @@ public class AdApiHelper {
 
             @Override
             public void onFailure(Call<TasksResponse> call, Throwable t) {
-                Log.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
+                AdLog.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
                 if (listener != null) {
                     if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
                         listener.onGeneralError(ADErrorCode.createFromAdErrMsg(t.getMessage()));
@@ -279,12 +280,12 @@ public class AdApiHelper {
         call.enqueue(new Callback<UserTaskResponse>() {
             @Override
             public void onResponse(Call<UserTaskResponse> call, Response<UserTaskResponse> response) {
-                Log.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
+                AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
 
                 switch(response.code()){
                     case 200:
                         UserTaskResponse ur = response.body();
-                        Log.i(Configuration.HTTP_TAG, "onResponse paid: "+ ur.mUserTask.mPayout);
+                        AdLog.i(Configuration.HTTP_TAG, "onResponse paid: "+ ur.mUserTask.mPayout);
                         if (listener != null) {
                             listener.onTaskSuccess(id, ur.mUserTask.getPayout(), ur.mUser.mBalance);
                         }
@@ -299,7 +300,7 @@ public class AdApiHelper {
 
             @Override
             public void onFailure(Call<UserTaskResponse> call, Throwable t) {
-                Log.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
+                AdLog.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
                 if (listener != null) {
                     if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
                         listener.onTaskFail(id, ADErrorCode.createFromAdErrMsg(t.getMessage()));
