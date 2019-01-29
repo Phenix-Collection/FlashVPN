@@ -60,25 +60,6 @@ public class DatabaseFileImpl implements DatabaseApi {
         }
     }
 
-    public static String getJson(String fileName,Context context) {
-        //将json数据变成字符串
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            //获取assets资源管理器
-            AssetManager assetManager = context.getAssets();
-            //通过管理器打开文件并读取
-            BufferedReader bf = new BufferedReader(new InputStreamReader(
-                    assetManager.open(fileName)));
-            String line;
-            while ((line = bf.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return stringBuilder.toString();
-    }
-
 
     private void loadTasks(String fileName) {
         createDirIfNotExist(DIR);
@@ -95,13 +76,13 @@ public class DatabaseFileImpl implements DatabaseApi {
                 }
             }
         }
-        if (mTasks == null ) {
-            String json = getJson("tasks", mContext);
-            TasksResponse tasksResponse = mGson.fromJson(json, TasksResponse.class);
-            if (tasksResponse != null) {
-                mTasks = tasksResponse.mTasks;
-            }
-        }
+//        if (mTasks == null ) {
+//            String json = getJson("tasks", mContext);
+//            TasksResponse tasksResponse = mGson.fromJson(json, TasksResponse.class);
+//            if (tasksResponse != null) {
+//                mTasks = tasksResponse.mTasks;
+//            }
+//        }
         if (mTasks != null) {
             AdLog.i(TAG, "Loaded " + mTasks.size() + " tasks from disk");
             for (Task task : mTasks) {
@@ -139,13 +120,13 @@ public class DatabaseFileImpl implements DatabaseApi {
                 }
             }
         }
-        if (mProducts == null ) {
-            String json = getJson("products", mContext);
-            ProductsResponse productsResponse = mGson.fromJson(json, ProductsResponse.class);
-            if (productsResponse != null) {
-                mProducts = productsResponse.mProducts;
-            }
-        }
+//        if (mProducts == null ) {
+//            String json = getJson("products", mContext);
+//            ProductsResponse productsResponse = mGson.fromJson(json, ProductsResponse.class);
+//            if (productsResponse != null) {
+//                mProducts = productsResponse.mProducts;
+//            }
+//        }
         if (mProducts != null) {
             AdLog.i(TAG, "Loaded " + mProducts.size() + " products from disk");
         } else {
@@ -182,10 +163,10 @@ public class DatabaseFileImpl implements DatabaseApi {
             } else {
                 mUser = mGson.fromJson(userInfo, User.class);
             }
-            if (mUser == null ) {
-                String json = getJson("user", mContext);
-                mUser= mGson.fromJson(json, User.class);
-            }
+//            if (mUser == null ) {
+//                String json = getJson("user", mContext);
+//                mUser= mGson.fromJson(json, User.class);
+//            }
             if (mUser != null) {
                 AdLog.i(TAG, "Loaded user info " + mGson.toJson(mUser));
             } else {
