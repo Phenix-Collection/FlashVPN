@@ -98,6 +98,8 @@ public class StoreFragment extends BaseFragment implements AdapterView.OnItemCli
 
     private void initData() {
         //loadAppListAsync();
+        mFunctionProductList.clear();
+        mMoneyProductList.clear();
         ArrayList<Product> allProducts = (ArrayList<Product>) mAppUser.getProducts();
         if (allProducts != null) {
             for (Product product : allProducts) {

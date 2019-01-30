@@ -50,6 +50,8 @@ public class ProductActivity extends Activity {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_PRODUCT, product);
         intent.setClass(activity, ProductActivity.class);
+
+        activity.startActivity(intent);
     }
 
     @Override
