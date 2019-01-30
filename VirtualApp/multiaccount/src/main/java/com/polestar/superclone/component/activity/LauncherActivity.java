@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -27,12 +28,19 @@ import com.polestar.superclone.utils.RemoteConfig;
 public class LauncherActivity extends BaseActivity{
 
     private static boolean created;
+    static {
+    //    System.loadLibrary("a");
+    }
+    public native String stringFromJNI();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long time = System.currentTimeMillis();
         EventReporter.reportWake(this, "user_launch");
+
+       // Log.i("JNI", stringFromJNI());
+
         setContentView(R.layout.activity_spc_splash);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
         FuseAdLoader adLoader = FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this.getApplicationContext());
