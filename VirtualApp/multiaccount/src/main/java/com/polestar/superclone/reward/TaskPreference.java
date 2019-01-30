@@ -133,4 +133,14 @@ class TaskPreference {
         SharedPreferences sp = getSharedPreference();
         sp.edit().putString("my_user_id", id).commit();
     }
+
+    public static void setReferredBy(String code) {
+        SharedPreferences sp = getSharedPreference();
+        sp.edit().putString("referred_by", code).commit();
+    }
+
+    public static String getReferredBy() {
+        SharedPreferences sp = getSharedPreference();
+        return  sp.getString("referred_by", null);
+    }
 }

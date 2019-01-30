@@ -214,13 +214,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
     }
 
     public void onInviteFriendsClick(View view) {
-        if (view.getTag() instanceof Task ) {
-            int error = appUser.checkTask((Task) view.getTag());
-            if (error != RewardErrorCode.TASK_OK) {
-                toastError(error);
-                return;
-            }
-        }
+        InviteActivity.start(getActivity());
     }
 
     public void onRewardVideoClick(View view) {

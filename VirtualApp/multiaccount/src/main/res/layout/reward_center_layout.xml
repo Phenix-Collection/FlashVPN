@@ -93,7 +93,7 @@
                 android:layout_gravity="center"
                 android:textColor="@color/text_gray_dark"
                 android:textSize="16sp"
-                android:text="Live Tasks"/>
+                android:text="@string/live_offer"/>
 
             <include layout="@layout/reward_general_item" android:id="@+id/video_task_item" />
 

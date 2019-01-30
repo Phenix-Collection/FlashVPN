@@ -199,13 +199,25 @@ public class AppUser {
     }
 
     public void submitInviteCode(Task task, String code, ITaskStatusListener listener) {
-        if (task == null || TextUtils.isEmpty(code)) return;
+        WrapTaskStatusListener wrapTaskStatusListener = new WrapTaskStatusListener(listener);
+        if (task == null || TextUtils.isEmpty(code)){
+            return;
+        }
+        if (code.equals(mInviteCode)) {
+            wrapTaskStatusListener.onTaskFail(task.mId, new ADErrorCode(ADErrorCode.INVALID_REFERRAL_CODE, ""));
+            return;
+        }
         AdApiHelper.finishTask(mId, task.mId, code, new WrapTaskStatusListener(listener));
     }
 
     public int checkTask(Task task) {
         if (task == null) {
             return RewardErrorCode.TASK_UNEXPECTED_ERROR;
+        }
+        if (task instanceof ReferTask) {
+            if (!TextUtils.isEmpty(TaskPreference.getReferredBy() )){
+                return RewardErrorCode.TASK_CODE_ALREADY_SUBMITTED;
+            }
         }
         if (TaskPreference.getTaskFinishTodayCount(task.mId) >= task.mLimitPerDay
                 || TaskPreference.getTaskFinishCount(task.mId) >= task.mLimitTotal) {
@@ -228,6 +240,14 @@ public class AppUser {
                 }
             }
         }
+    }
+
+    public void setReferrerCode(String code) {
+        TaskPreference.setReferredBy(code);
+    }
+
+    public String getReferrerCode() {
+        return TaskPreference.getReferredBy();
     }
 
     private class WrapProductStatusListener implements IProductStatusListener {

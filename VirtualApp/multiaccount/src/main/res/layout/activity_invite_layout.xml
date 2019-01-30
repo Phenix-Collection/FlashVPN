@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#40000000"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:orientation="vertical"
+        android:id="@+id/task_container"
+        android:background="@drawable/shadow">
+
+        <LinearLayout
+            android:id="@+id/submit_code_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/theme_color2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/submit_title"
+                android:gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Are you invited by friend?"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/submit_description"
+                android:gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Are you invited by friend?"
+                android:textColor="@color/white"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:textSize="16sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/white">
+
+                <com.polestar.superclone.widgets.IconFontTextView
+                    android:id="@+id/submit_button"
+                    android:onClick="onSubmitClick"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray_dark"
+                    android:textSize="20sp"
+                    android:text="@string/iconfont_submit"/>
+                <EditText
+                    android:padding="10dp"
+                    android:layout_toLeftOf="@id/submit_button"
+                    android:id="@+id/text_input_invite_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@color/white"
+                    android:hint="@string/input_code_hint"
+                    android:textSize="14sp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@color/text_gray_dark"
+                    />
+            </RelativeLayout>
+
+            <!--<TextView-->
+                <!--android:onClick="onSubmitClick"-->
+                <!--android:paddingTop="5dp"-->
+                <!--android:paddingBottom="5dp"-->
+                <!--android:paddingLeft="10dp"-->
+                <!--android:paddingRight="10dp"-->
+                <!--android:id="@+id/submit_button"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="16sp"-->
+                <!--android:background="@drawable/shape_reward_button"-->
+                <!--android:gravity="center_horizontal"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:text="@string/button_submit"-->
+                <!--android:textStyle="bold"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/invite_friend_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/invite_title"-->
+                    <!--android:gravity="center_horizontal"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Invite friends to earn coins"-->
+                    <!--android:textColor="@color/text_gray_dark"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:textSize="20sp" />-->
+            <!--</LinearLayout>-->
+
+            <com.polestar.superclone.widgets.IconFontTextView
+                android:id="@+id/task_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:textSize="23sp"
+                android:textColor="@color/white"
+                android:text="@string/iconfont_invite"
+                android:background="@drawable/shape_new_dot"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:padding="6dp"
+                />
+
+            <TextView
+                android:id="@+id/invite_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Task Title"
+                android:textColor="@color/text_gray_dark"
+                android:layout_marginBottom="15dp"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/invite_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:text="+1000"
+                android:textColor="@color/reward_collect_coin_color"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:visibility="gone"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/gray"
+                android:onClick="onCopyClick">
+                <TextView
+                    android:id="@+id/invite_code"
+                    android:layout_margin="5dp"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="abcdefgs"
+                    android:textColor="@color/text_gray_dark"
+                    android:ellipsize="end"
+                    android:textSize="16sp"
+                    />
+                <com.polestar.superclone.widgets.IconFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="@string/iconfont_copy"
+                    />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/facebook"
+                    android:scaleType="centerInside"
+                    android:onClick="onFacebookClick"/>
+                <ImageView
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/whatsapp"
+                    android:scaleType="centerInside"
+                    android:onClick="onWhatsAppClick"/>
+                <ImageView
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/twitter"
+                    android:scaleType="centerInside"
+                    android:onClick="onTwitterClick"/>
+                <ImageView
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/email"
+                    android:scaleType="centerInside"
+                    android:onClick="onMailClick"/>
+                <ImageView
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/more"
+                    android:scaleType="centerInside"
+                    android:onClick="onMoreClick"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/invite_description"
+                android:gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Are you invited by friend?"
+                android:textColor="@color/text_gray_light"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.polestar.superclone.widgets.IconFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/iconfont_close"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_alignRight="@id/task_container"
+        android:layout_alignTop="@id/task_container"
+        android:onClick="onCloseClick"/>
+
+</RelativeLayout>

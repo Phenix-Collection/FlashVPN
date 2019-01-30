@@ -266,6 +266,8 @@
     <string name="error_ad_no_fill">Video isn\'t ready yet. Please check network and try again later.</string>
     <string name="error_day_limit">Task is done today. Please try tomorrow.</string>
     <string name="task_ok">Got %.0f coins!</string>
+    <string name="submit_code_ok">Invitation code submitted!</string>
+    <string name="submit_code_fail">Invitation code wrong or already submitted!</string>
     <string name="product_ok">Purchase product success!</string>
     <string name="no_enough_coin">You don\'t have enough coin now!</string>
     <string name="product_not_exist">Product is not available this moment!</string>
@@ -273,7 +275,9 @@
     <string name="you_have_coins">You have %.0f %s now.</string>
     <string name="coin_unit">coin</string>
     <string name="reward_center">Reward Center</string>
+    <string name="input_code_hint">Submit code and get bonus when finish 1 live offer</string>
     <string name="redeem">Redeem</string>
     <string name="more_offer">More reward offer is coming soon ...</string>
+    <string name="live_offer">Live Offers</string>
     <string name="reward_load_failed">Load fail. Please check below and retry: \n - Google Play Service is installed \n - Superb Cloner is not running in any clone apps \n - Connect network</string>
 </resources>

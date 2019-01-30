@@ -32,6 +32,8 @@
     <string name="iconfont_mail" translatable="false">\uE01E</string>
     <string name="iconfont_paypal" translatable="false">\uE020</string>
     <string name="iconfont_close" translatable="false">\uE01F</string>
+    <string name="iconfont_copy" translatable="false">\uE013</string>
+    <string name="iconfont_submit" translatable="false">\uE036</string>
     <!--<string name="iconfont_shortcut" translatable="false">\uE013</string>-->
     <!--<string name="iconfont_shortcut" translatable="false">\uE013</string>-->
 </resources>
