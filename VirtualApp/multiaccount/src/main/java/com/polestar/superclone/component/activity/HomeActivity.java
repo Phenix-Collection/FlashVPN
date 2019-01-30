@@ -38,6 +38,7 @@ import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.reward.RewardCenterFragment;
+import com.polestar.superclone.reward.StoreFragment;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
@@ -58,6 +59,7 @@ public class HomeActivity extends BaseActivity {
 
     private HomeFragment mHomeFragment;
     private RewardCenterFragment mRewardCenterFragment;
+    private StoreFragment mStoreFragment;
     private DrawerLayout drawer;
     private ListView navigationList;
     private ImageView giftIconView;
@@ -666,12 +668,23 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
-    private void doSwitchToClonesFragment() {
+    public void doSwitchToClonesFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mHomeFragment).commitAllowingStateLoss();
     }
 
-    private void doSwitchToRewardsFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_content, mRewardCenterFragment).commitAllowingStateLoss();
+    public void doSwitchToRewardsFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frag_content, mRewardCenterFragment).addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+
+    public void doSwitchToStoreFragment() {
+        if (mStoreFragment == null) {
+            mStoreFragment = new StoreFragment();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frag_content, mStoreFragment).addToBackStack(null)
+                .commitAllowingStateLoss();
     }
 
     public void onSwitchToClonesClick(View view) {

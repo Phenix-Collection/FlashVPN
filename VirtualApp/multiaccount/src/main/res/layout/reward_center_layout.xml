@@ -59,7 +59,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:textSize="16sp"
-                        android:textStyle="bold"
                         android:textColor="@color/white"
                         android:text="@string/iconfont_shopcart"/>
                     <TextView
@@ -68,6 +67,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
                         android:text="@string/btn_products_store"
+                        android:textStyle="bold"
                         android:textSize="16sp"
                         android:layout_gravity="center_vertical"
                         />
@@ -107,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:layout_weight="1"
+                android:layout_marginTop="15dp"
                 android:gravity="bottom|center_horizontal"
                 android:textColor="@color/text_gray_light"
                 android:textSize="16sp"

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:id = "@+id/activity_products_reward_coin_icon"
-            android:text="@string/iconfont_coin"
+            android:text="@string/iconfont_balance"
             android:textColor="@color/reward_coin_color"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -57,7 +57,7 @@
                     android:id="@+id/hot_clone_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:text="Get More Functions"
@@ -82,8 +82,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center|center_horizontal|center_vertical"
                     android:numColumns="3"
-                    android:horizontalSpacing="4dp"
-                    android:verticalSpacing="4dp"
+                    android:horizontalSpacing="1dp"
+                    android:verticalSpacing="1dp"
                     android:scrollbars="none"></com.polestar.superclone.widgets.FixedGridView>
             </LinearLayout>
 
@@ -110,7 +110,7 @@
                     android:id="@+id/other_clone_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:text="Get Gifts"
@@ -147,8 +147,8 @@
                     android:gravity="center|center_horizontal|center_vertical"
                     android:numColumns="3"
                     android:scrollbars="none"
-                    android:horizontalSpacing="4dp"
-                    android:verticalSpacing="4dp">
+                    android:horizontalSpacing="1dp"
+                    android:verticalSpacing="1dp">
                 </com.polestar.superclone.widgets.FixedGridView>
                 <LinearLayout
                     android:id="@+id/ad_container_2"

@@ -21,6 +21,7 @@ import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
+import com.polestar.superclone.component.activity.HomeActivity;
 import com.polestar.superclone.utils.ColorUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.IconFontTextView;
@@ -52,6 +53,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
     private View userInfoView;
     private AppUser appUser;
     private ProgressBar loadingProgressBar;
+    private ProgressBar taskRunningProgressBar;
     private LinearLayout loadFailLayout;
     private LinearLayout loadedLayout;
     private Handler mainHandler;
@@ -87,6 +89,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
     public void onResume() {
         super.onResume();
         initData();
+        taskRunningProgressBar.setVisibility(View.GONE);
     }
 
     private void initView() {
@@ -98,6 +101,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         videoItemView = contentView.findViewById(R.id.video_task_item);
         loadFailLayout = contentView.findViewById(R.id.loading_fail_layout);
         loadingProgressBar = contentView.findViewById(R.id.loading_layout);
+        taskRunningProgressBar = contentView.findViewById(R.id.task_executing_layout);
         loadedLayout = contentView.findViewById(R.id.loaded_layout);
         retryView = contentView.findViewById(R.id.retry);
         retryView.setOnClickListener(this);
@@ -186,7 +190,8 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
 
     public void onStoreClick(View view){
         MLogs.d("onStoreClick");
-        ProductsActivity.start(getActivity());
+        ((HomeActivity)getActivity()).doSwitchToStoreFragment();
+//        ProductsActivity.start(getActivity());
     }
 
     public void onRetryClick(View view) {
@@ -232,10 +237,15 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             if (loader == null) {
                 MLogs.d("Wrong adSlot config in task " + task.toString());
                 toastError(RewardErrorCode.TASK_UNEXPECTED_ERROR);
+                return;
+            }
+            if(! loader.hasValidCache() ) {
+                taskRunningProgressBar.setVisibility(View.VISIBLE);
             }
             loader.loadAd(getActivity(), 2, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
+                    taskRunningProgressBar.setVisibility(View.GONE);
                     ad.show();
                 }
 
@@ -256,6 +266,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
 
                 @Override
                 public void onError(String error) {
+                    taskRunningProgressBar.setVisibility(View.GONE);
                     toastError(RewardErrorCode.TASK_AD_NO_FILL);
                 }
 
