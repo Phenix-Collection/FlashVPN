@@ -1,5 +1,8 @@
 package com.polestar.superclone.reward;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +21,7 @@ import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
+import com.polestar.superclone.utils.ColorUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.IconFontTextView;
 import com.polestar.task.ADErrorCode;
@@ -30,7 +34,15 @@ import java.util.List;
 
 /**
  * Created by guojia on 2019/1/23.
+ * TODO
+ * 1. 切国家邀请问题
+ * 2. 价格波动提醒
+ * 3. 只有安装时间小于1天内的用户才能填邀请码
+ * 4. finishTask被限流后没有回调
+ * 5. 请求带app版本
  */
+
+
 
 public class RewardCenterFragment extends BaseFragment implements AppUser.IUserUpdateListener, View.OnClickListener{
     private View contentView;
@@ -139,23 +151,27 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         title.setText(task.mTitle);
         description.setText(task.mDescription);
         view.setTag(task);
+        view.setOnClickListener(this);
         switch (task.mTaskType) {
             case Task.TASK_TYPE_CHECKIN_TASK:
                 icon.setText((R.string.iconfont_checkin));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, Color.parseColor("#4B57C0"));
                 break;
             case Task.TASK_TYPE_SHARE_TASK:
                 icon.setText((R.string.iconfont_invite));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, Color.parseColor("#fd215c"));
                 break;
             case Task.TASK_TYPE_REWARDVIDEO_TASK:
                 icon.setText((R.string.iconfont_video));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, Color.parseColor("#4B57C0"));
                 break;
         }
         int status = appUser.checkTask(task);
         MLogs.d("task " + task.mTitle + " status: " + status);
-        if (status == RewardErrorCode.TASK_EXCEED_DAY_LIMIT && isInit) {
-            reward.setText(R.string.iconfont_wait);
-            reward.setTextColor(getResources().getColor(R.color.reward_wait));
-        } else if (status == RewardErrorCode.TASK_EXCEED_DAY_LIMIT && !isInit) {
+        if (status == RewardErrorCode.TASK_EXCEED_DAY_LIMIT) {
+//            reward.setText(R.string.iconfont_wait);
+//            reward.setTextColor(getResources().getColor(R.color.reward_wait));
+//        } else if (status == RewardErrorCode.TASK_EXCEED_DAY_LIMIT && !isInit) {
             reward.setText(R.string.iconfont_done);
             reward.setTextColor(getResources().getColor(R.color.reward_done));
         }  else {
@@ -166,7 +182,6 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
                reward.setTextColor(getResources().getColor(R.color.reward_collect_coin_color));
             }
         }
-        view.setOnClickListener(this);
     }
 
     public void onStoreClick(View view){
@@ -183,21 +198,36 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
     }
 
     public void onCheckInClick(View view) {
-        appUser.finishTask((Task)view.getTag(), new RewardTaskListener(view));
+        if (view.getTag() instanceof Task ) {
+            int error = appUser.checkTask((Task) view.getTag());
+            if (error != RewardErrorCode.TASK_OK) {
+                toastError(error);
+                return;
+            }
+        }
+        appUser.finishTask((Task) view.getTag(), new RewardTaskListener(view));
     }
 
     public void onInviteFriendsClick(View view) {
-
+        if (view.getTag() instanceof Task ) {
+            int error = appUser.checkTask((Task) view.getTag());
+            if (error != RewardErrorCode.TASK_OK) {
+                toastError(error);
+                return;
+            }
+        }
     }
 
     public void onRewardVideoClick(View view) {
-        RewardVideoTask task = (RewardVideoTask) view.getTag();
-        if (task != null) {
-            int code = appUser.checkTask(task);
-            if (code != RewardErrorCode.TASK_OK) {
-                toastError(code);
+        if (view.getTag() instanceof Task ) {
+            int error = appUser.checkTask((Task) view.getTag());
+            if (error != RewardErrorCode.TASK_OK) {
+                toastError(error);
                 return;
             }
+        }
+        RewardVideoTask task = (RewardVideoTask) view.getTag();
+        if (task != null) {
             FuseAdLoader loader = FuseAdLoader.get(task.adSlot, getActivity());
             if (loader == null) {
                 MLogs.d("Wrong adSlot config in task " + task.toString());

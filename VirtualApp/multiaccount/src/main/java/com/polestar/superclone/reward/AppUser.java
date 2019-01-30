@@ -1,13 +1,12 @@
 package com.polestar.superclone.reward;
 
-import android.Manifest;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.text.TextUtils;
 
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
+import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.RemoteConfig;
@@ -15,7 +14,6 @@ import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.database.DatabaseApi;
-import com.polestar.task.database.DatabaseFileImpl;
 import com.polestar.task.database.DatabaseImplFactory;
 import com.polestar.task.database.datamodels.CheckInTask;
 import com.polestar.task.database.datamodels.ReferTask;
@@ -25,7 +23,6 @@ import com.polestar.task.network.AdApiHelper;
 import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
 import com.polestar.task.network.datamodels.User;
-import com.polestar.task.network.datamodels.UserTask;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,8 +30,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-
-import mirror.android.widget.Toast;
 
 import static com.polestar.task.ADErrorCode.ERR_SERVER_DOWN_CODE;
 
@@ -77,6 +72,7 @@ public class AppUser {
             }
         });
         RewardInfoFetcher.get(MApp.getApp()).preloadRewardInfo();
+//        preloadRewardVideoTask();
     }
 
     //posted on main thread;
@@ -113,32 +109,6 @@ public class AppUser {
             mBalance = userInfo.mBalance;
             mInviteCode = userInfo.mReferralCode;
         }
-
-//        if (needUpdate()) {
-//            AdApiHelper.getAvailableTasks(new ITaskStatusListener() {
-//                @Override
-//                public void onTaskSuccess(long taskId, float payment, float balance) {
-//
-//                }
-//
-//                @Override
-//                public void onTaskFail(long taskId, ADErrorCode code) {
-//
-//                }
-//
-//                @Override
-//                public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
-//                    databaseApi.setActiveTasks(tasks);
-//                }
-//
-//                @Override
-//                public void onGeneralError(ADErrorCode code) {
-//
-//                }
-//            });
-//
-//
-//        }
     }
 
 
@@ -258,6 +228,18 @@ public class AppUser {
 
     public Task getTaskById(long taskId) {
         return databaseApi.getTaskById(taskId);
+    }
+
+    public void preloadRewardVideoTask() {
+        if (databaseApi.isDataAvailable()) {
+            RewardVideoTask task = getVideoTask();
+            if (task != null && checkTask(task) == RewardErrorCode.TASK_OK) {
+                FuseAdLoader adLoader = FuseAdLoader.get(task.adSlot, MApp.getApp());
+                if (adLoader != null) {
+                    adLoader.preloadAd(MApp.getApp());
+                }
+            }
+        }
     }
 
     private class WrapTaskStatusListener implements ITaskStatusListener{

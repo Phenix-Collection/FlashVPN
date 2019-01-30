@@ -22,8 +22,8 @@
     <string name="iconfont_coin" translatable="false">\uE016</string>
     <string name="iconfont_lock" translatable="false">\uE017</string>
     <string name="iconfont_user" translatable="false">\uE018</string>
-    <string name="iconfont_retry" translatable="false">\uE025</string>
-    <string name="iconfont_done" translatable="false">\uE023</string>
+    <string name="iconfont_retry" translatable="false">\uE031</string>
+    <string name="iconfont_done" translatable="false">\uE035</string>
     <string name="iconfont_ongoing" translatable="false">\uE021</string>
     <string name="iconfont_wait" translatable="false">\uE022</string>
     <string name="iconfont_settings" translatable="false">\uE02F</string>

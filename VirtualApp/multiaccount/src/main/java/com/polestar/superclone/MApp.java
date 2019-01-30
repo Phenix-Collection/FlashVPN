@@ -172,10 +172,6 @@ public class MApp extends MultiDexApplication {
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
-                if (AppUser.isRewardEnabled()) {
-                    Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
-                    AppUser.getInstance();
-                }
                 if (needAd()) {
                     initAd();
                     BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
@@ -217,6 +213,10 @@ public class MApp extends MultiDexApplication {
                             AppMonitorService.preloadCoverAd();
                         }
                     }
+                }
+                if (AppUser.isRewardEnabled()) {
+                    Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
+                    AppUser.getInstance().preloadRewardVideoTask();
                 }
                 initReceiver();
             }

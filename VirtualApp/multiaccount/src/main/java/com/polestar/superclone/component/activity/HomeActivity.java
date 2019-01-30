@@ -164,9 +164,6 @@ public class HomeActivity extends BaseActivity {
 
     private void initView() {
         bottomNavBar = findViewById(R.id.frag_navigate_bar);
-        if (!AppUser.isRewardEnabled()) {
-            bottomNavBar.setVisibility(View.GONE);
-        }
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         navigationList = (ListView) findViewById(R.id.navigation_list);
@@ -218,7 +215,11 @@ public class HomeActivity extends BaseActivity {
         View view = findViewById(R.id.content_home);
         setImmerseLayout(view);
         mHomeFragment = new HomeFragment();
-        mRewardCenterFragment = new RewardCenterFragment();
+        if (!AppUser.isRewardEnabled()) {
+            bottomNavBar.setVisibility(View.GONE);
+        } else {
+            mRewardCenterFragment = new RewardCenterFragment();
+        }
         doSwitchToClonesFragment();
     }
 
@@ -308,6 +309,9 @@ public class HomeActivity extends BaseActivity {
             hideAd();
         }
         EventReporter.reportActive(this, true, "main");
+        if (AppUser.isRewardEnabled()) {
+            AppUser.getInstance().preloadRewardVideoTask();
+        }
     }
 
     @Override
