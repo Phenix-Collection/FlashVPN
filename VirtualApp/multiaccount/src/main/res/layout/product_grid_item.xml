@@ -45,7 +45,7 @@
             <com.polestar.superclone.widgets.IconFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:id = "@+id/product_grid_item_reward_coin_icon"
                 android:text="@string/iconfont_coin"
                 android:textColor="@color/reward_coin_color"

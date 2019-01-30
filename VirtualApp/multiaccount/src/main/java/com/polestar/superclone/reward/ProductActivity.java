@@ -44,12 +44,18 @@ public class ProductActivity extends Activity {
     private EditText mEmail;
     private EditText mPaypal;
 
+    public static final String EXTRA_PRODUCT = "product";
+
+    public static void start(Activity activity, Product product) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_PRODUCT, product);
+        intent.setClass(activity, ProductActivity.class);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_1);
-
-        setTitle("Purchase");
 
         mAppUser = AppUser.getInstance();
 //
@@ -65,7 +71,7 @@ public class ProductActivity extends Activity {
         mPaypalLayout = (LinearLayout) findViewById(R.id.activity_product_paypal_layout);
 
         Intent intent = getIntent();
-        mProduct = intent.getParcelableExtra(ProductsActivity.EXTRA_PRODUCT);
+        mProduct = intent.getParcelableExtra(EXTRA_PRODUCT);
         mName.setText(mProduct.mName);
         mDescription.setText(mProduct.mDescription);
         mIcon.setImageDrawable(AssetHelper.getDrawable(this, mProduct.mIconUrl));

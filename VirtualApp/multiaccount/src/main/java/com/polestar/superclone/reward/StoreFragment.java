@@ -42,7 +42,6 @@ public class StoreFragment extends BaseFragment implements AdapterView.OnItemCli
     private View mContentView;
 
     private AppUser mAppUser;
-    public static final String EXTRA_PRODUCT = "product";
 
     private void updateGrid() {
         if (mFunctionProductList == null || mFunctionProductList.size() == 0) {
@@ -112,17 +111,11 @@ public class StoreFragment extends BaseFragment implements AdapterView.OnItemCli
         }
     }
 
-    private void startProductActivity(Product product) {
-        Intent i = new Intent(getActivity(), ProductActivity.class);
-        i.putExtra(EXTRA_PRODUCT, product);
-        startActivity(i);
-    }
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         ProductGridItem item = (ProductGridItem) view.getTag();
         if (item != null) {
-            startProductActivity(item.getProduct());
+            ProductActivity.start(getActivity(), item.getProduct());
         }
     }
 
