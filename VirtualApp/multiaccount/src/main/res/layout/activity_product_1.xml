@@ -5,17 +5,8 @@
     android:background="#40000000"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/mobvista_interstitial_rl_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/native_interstitial_close_bg" >
-    </RelativeLayout>
-
 
     <LinearLayout
-        android:id="@+id/native_interstitial_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -33,17 +24,31 @@
             android:layout_marginBottom="100dp">
 
             <RelativeLayout
+                android:id="@+id/native_interstitial_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 >
 
+                <com.polestar.superclone.widgets.IconFontTextView
+                    android:id="@+id/close"
+                    android:onClick="onClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/iconfont_close"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_gray_light">
+                </com.polestar.superclone.widgets.IconFontTextView>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/activity_product_product_name"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginLeft="10dp"
 
                     android:textStyle="bold"
@@ -117,12 +122,16 @@
                     android:background="@drawable/shadow"
                     android:orientation="horizontal"
                     >
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/email"/>
+                    <com.polestar.superclone.widgets.IconFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_gray_dark"
+                        android:text="@string/iconfont_mail"/>
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -131,8 +140,9 @@
                         android:layout_gravity="center_vertical"
                         android:textSize="16sp"
                         android:hint="Email Address"
-                        android:background="@color/white"                        android:id="@+id/activity_product_email_input"
-                        android:layout_marginLeft="10dp"/>
+                        android:background="@color/white"
+                        android:id="@+id/activity_product_email_input"
+                        />
 
                 </LinearLayout>
 
@@ -147,12 +157,16 @@
                     android:background="@drawable/shadow"
                     android:orientation="horizontal"
                     >
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/paypal"/>
+                    <com.polestar.superclone.widgets.IconFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_gray_dark"
+                        android:text="@string/iconfont_paypal"/>
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -162,22 +176,25 @@
                         android:textSize="16sp"
                         android:hint="Paypal Account"
                         android:background="@color/white"
-                        android:id="@+id/activity_product_paypal_input"
-                        android:layout_marginLeft="10dp"/>
+                        android:id="@+id/activity_product_paypal_input" />
 
                 </LinearLayout>
 
                 <Button
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingRight="15dp"
+                    android:paddingLeft="15dp"
                     android:id="@+id/activity_product_purchase"
                     android:layout_below="@id/activity_product_paypal_layout"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:layout_centerHorizontal="true"
                     android:text="Purchase"
-                    android:textColor="@color/text_gray_dark"
-                    android:background="@drawable/native_interstitial_cta"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_reward_button"
                     android:textSize="16sp"
                     />
             </RelativeLayout>

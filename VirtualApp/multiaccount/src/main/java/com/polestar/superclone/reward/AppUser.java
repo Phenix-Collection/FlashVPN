@@ -181,28 +181,16 @@ public class AppUser {
 //        return list!= null && list.size() > 0 ? (RewardVideoTask) list.get(0):null;
 //    }
 
-    public void consumeProduct(long productId, int amount, String email, String info) {
-        AdApiHelper.consumeProduct(getMyId(), productId, amount, email, info, new IProductStatusListener() {
-            @Override
-            public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
-                AdLog.i("onConsumeSuccess " + id + " amount " + amount + " totalCost " + totalCost + " balance " + balance);
-            }
+    public int checkProduct(Product product) {
+        return checkProduct(product, 1);
+    }
 
-            @Override
-            public void onConsumeFail(ADErrorCode code) {
-                AdLog.i("onConsumeFail " + code.toString());
-            }
+    public int checkProduct(Product product, int amount){
+        return RewardErrorCode.PRODUCT_OK;
+    }
 
-            @Override
-            public void onGetAllAvailableProducts(ArrayList<Product> products) {
-
-            }
-
-            @Override
-            public void onGeneralError(ADErrorCode code) {
-                AdLog.i("onConsumeFail " + code.toString());
-            }
-        });
+    public void consumeProduct(long productId, int amount, String email, String info, IProductStatusListener listener) {
+        AdApiHelper.consumeProduct(getMyId(), productId, amount, email, info, new WrapProductStatusListener(listener));
     }
 
     public void finishTask(Task task, ITaskStatusListener listener) {
@@ -239,6 +227,56 @@ public class AppUser {
                     adLoader.preloadAd(MApp.getApp());
                 }
             }
+        }
+    }
+
+    private class WrapProductStatusListener implements IProductStatusListener {
+        private IProductStatusListener mListener ;
+
+        public WrapProductStatusListener(IProductStatusListener listener) {
+            mListener = listener;
+        }
+
+        @Override
+        public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
+            mBalance = balance;
+            //TODO 发货
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onConsumeSuccess(id, amount, totalCost, balance);
+                }
+            });
+        }
+
+        @Override
+        public void onConsumeFail(ADErrorCode code) {
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onConsumeFail(code);
+                }
+            });
+        }
+
+        @Override
+        public void onGetAllAvailableProducts(ArrayList<Product> products) {
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onGetAllAvailableProducts(products);
+                }
+            });
+        }
+
+        @Override
+        public void onGeneralError(ADErrorCode code) {
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onGeneralError(code);
+                }
+            });
         }
     }
 

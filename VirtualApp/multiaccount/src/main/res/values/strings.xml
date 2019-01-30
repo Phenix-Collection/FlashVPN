@@ -266,6 +266,10 @@
     <string name="error_ad_no_fill">Video isn\'t ready yet. Please check network and try again later.</string>
     <string name="error_day_limit">Task is done today. Please try tomorrow.</string>
     <string name="task_ok">Got %.0f coins!</string>
+    <string name="product_ok">Purchase product success!</string>
+    <string name="no_enough_coin">You don\'t have enough coin now!</string>
+    <string name="product_not_exist">Product is not available this moment!</string>
+    <string name="product_unexcpected_error">Product is not available this moment!</string>
     <string name="you_have_coins">You have %.0f %s now.</string>
     <string name="coin_unit">coin</string>
     <string name="reward_center">Reward Center</string>
