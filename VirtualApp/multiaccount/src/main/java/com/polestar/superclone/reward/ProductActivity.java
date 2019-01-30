@@ -19,12 +19,14 @@ import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.ProductGridAdapter;
 import com.polestar.superclone.widgets.ProductGridItem;
+import com.polestar.task.ADErrorCode;
+import com.polestar.task.IProductStatusListener;
 import com.polestar.task.network.datamodels.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductActivity extends Activity {
+public class ProductActivity extends Activity implements IProductStatusListener{
 
 
 
@@ -50,7 +52,6 @@ public class ProductActivity extends Activity {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_PRODUCT, product);
         intent.setClass(activity, ProductActivity.class);
-
         activity.startActivity(intent);
     }
 
@@ -91,9 +92,44 @@ public class ProductActivity extends Activity {
         mPurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int status = mAppUser.checkProduct(mProduct);
+                if (status != RewardErrorCode.PRODUCT_OK) {
+                    toast(status);
+                    return;
+                }
+                mAppUser.consumeProduct(mProduct.mId, 1,
+                        mEmail.getText().toString(), mPaypal.getText().toString(), ProductActivity.this );
                 //consumeProduct();
             }
         });
     }
 
+    @Override
+    public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
+        toast(RewardErrorCode.PRODUCT_OK);
+        finish();
+    }
+
+    @Override
+    public void onConsumeFail(ADErrorCode code) {
+        toast(code.getErrCode());
+    }
+
+    @Override
+    public void onGetAllAvailableProducts(ArrayList<Product> products) {
+
+    }
+
+    @Override
+    public void onGeneralError(ADErrorCode code) {
+        toast(code.getErrCode());
+    }
+
+    private void toast(int code, Object... args){
+        Toast.makeText(this, RewardErrorCode.getToastMessage(code, args), Toast.LENGTH_SHORT).show();
+    }
+
+    public void onClose(View view) {
+        finish();
+    }
 }

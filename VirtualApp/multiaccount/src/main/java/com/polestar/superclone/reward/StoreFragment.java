@@ -92,8 +92,14 @@ public class StoreFragment extends BaseFragment implements AdapterView.OnItemCli
         initData();
         updateGrid();
 
-        testCipher();
         return mContentView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mUserBlanceTextView.setText(String.format(getString(R.string.you_have_coins),
+                mAppUser.getMyBalance() , getActivity().getString(R.string.coin_unit)));
     }
 
     private void initData() {
@@ -119,16 +125,6 @@ public class StoreFragment extends BaseFragment implements AdapterView.OnItemCli
         if (item != null) {
             ProductActivity.start(getActivity(), item.getProduct());
         }
-    }
-
-    private void testCipher() {
-        String iv = "fedcba9876543210";
-        String key = "0123456789abcdef";
-        String data = "Hello World!!!!";
-        String encrypted = AdCipher.encrypt(key, iv, data);
-        String decrypted = AdCipher.decrypt(key, encrypted);
-        AdLog.i("encrypted " + encrypted + "    decrypted " + decrypted);
-
     }
 
 }

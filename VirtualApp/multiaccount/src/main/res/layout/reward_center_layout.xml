@@ -46,7 +46,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/submit_button"
+                    android:background="@drawable/shape_reward_button"
                     android:id="@+id/store_button"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
