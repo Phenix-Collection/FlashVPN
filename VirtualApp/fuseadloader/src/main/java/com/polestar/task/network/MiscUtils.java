@@ -26,18 +26,18 @@ public class MiscUtils {
         }
     }
 
-//    public static boolean tooClose(Date one, Date two, long milliseconds) {
-//        Calendar thisop = Calendar.getInstance();
-//        thisop.setTime(two);
-//        Calendar lastop = Calendar.getInstance();
-//        lastop.setTime(one);
-//        long timeDiff = Math.abs(thisop.getTimeInMillis() - lastop.getTimeInMillis());
-//        if (timeDiff <= milliseconds) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+    public static boolean tooClose(Date one, Date two, long milliseconds) {
+        Calendar thisop = Calendar.getInstance();
+        thisop.setTime(two);
+        Calendar lastop = Calendar.getInstance();
+        lastop.setTime(one);
+        long timeDiff = Math.abs(thisop.getTimeInMillis() - lastop.getTimeInMillis());
+        if (timeDiff <= milliseconds) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static boolean tooCloseWithNow(Date one, long milliseconds) {
         if (one == null) {

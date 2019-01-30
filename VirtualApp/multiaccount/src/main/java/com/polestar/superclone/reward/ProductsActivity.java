@@ -89,12 +89,14 @@ public class ProductsActivity extends BaseActivity implements AdapterView.OnItem
     private void initData() {
         //loadAppListAsync();
         ArrayList<Product> allProducts = (ArrayList<Product>) mAppUser.getProducts();
-        for (Product product : allProducts) {
-            ProductGridItem item = ProductGridItem.fromProduct(product);
-            if (product.isFunctionalProduct()) {
-                mFunctionProductList.add(item);
-            } else {
-                mMoneyProductList.add(item);
+        if (allProducts != null) {
+            for (Product product : allProducts) {
+                ProductGridItem item = ProductGridItem.fromProduct(product);
+                if (product.isFunctionalProduct()) {
+                    mFunctionProductList.add(item);
+                } else {
+                    mMoneyProductList.add(item);
+                }
             }
         }
 

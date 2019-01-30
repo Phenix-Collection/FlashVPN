@@ -14,12 +14,14 @@ import retrofit2.http.Query;
 public interface ProductsApi {
     @Headers("Accept: application/json")
     @GET("api/v1/product/getAvailableProducts")
-    Call<ProductsResponse> getAvailableProducts(@Query("device_id") String deviceId);
+    Call<ProductsResponse> getAvailableProducts(@Query("device_id") String deviceId,
+                                                @Query("version_code") int versionCode);
 
     @Headers("Accept: application/json")
     @POST("api/v1/product/consumeProduct")
     @FormUrlEncoded
     Call<UserProductResponse> consumeProduct(@Field("device_id") String deviceID,
+                                             @Field("version_code") int versionCode,
                                              @Field("product_id") long productId,
                                              @Field("amount") int amount,
                                              @Field("email") String email,

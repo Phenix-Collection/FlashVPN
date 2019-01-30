@@ -25,18 +25,23 @@ public class ADErrorCode {
     public static final int DAY_LIMITTED = 10;
     public static final int OP_TOO_FREQUENT = 11;
     public static final int MAX_SERVER_ERR_CODE = ERR_SERVER_DOWN_CODE;
+    public static final int FLOW_CONTROL_ERR_CODE = 1001;
 
     private static final HashMap<Integer, String> sErrMapping = createErrMapping();
 
     private static HashMap<Integer, String> createErrMapping() {
         HashMap<Integer, String> ret = new HashMap<>();
         ret.put(ERR_SERVER_DOWN_CODE, "Server Down");
+        ret.put(FLOW_CONTROL_ERR_CODE, "Too Many Requests");
 
         return ret;
     }
 
     public static ADErrorCode createServerDown() {
         return new ADErrorCode(ERR_SERVER_DOWN_CODE, sErrMapping.get(ERR_SERVER_DOWN_CODE));
+    }
+    public static ADErrorCode createTooManyRequests() {
+        return new ADErrorCode(FLOW_CONTROL_ERR_CODE, sErrMapping.get(FLOW_CONTROL_ERR_CODE));
     }
 
     public static ADErrorCode createFromAdErrMsg(String msg) {

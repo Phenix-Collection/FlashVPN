@@ -14,8 +14,10 @@ public interface AuthApi {
     @POST("api/v1/user/registerAnonymous")
     @FormUrlEncoded
     Call<User> registerAnonymous(@Field("device_id") String deviceID,
+                                 @Field("version_code") int versionCode,
                                  @Field("country") String country,
                                  @Field("lang") String lang,
-                                 @Field("locale") String locale);
+                                 @Field("locale") String locale
+                                 );
 
 }

@@ -8,8 +8,6 @@ import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.IUserStatusListener;
 import com.polestar.task.network.datamodels.User;
-import com.polestar.task.network.datamodels.UserProduct;
-import com.polestar.task.network.datamodels.UserTask;
 import com.polestar.task.network.responses.ProductsResponse;
 import com.polestar.task.network.responses.TasksResponse;
 import com.polestar.task.network.responses.UserProductResponse;
@@ -22,6 +20,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +41,7 @@ public class AdApiHelper {
     public static final int REQUEST_SUCCEED = 0;
     public static final int ERR_REQUEST_TOO_FREQUENT = 1;
 
-    private static final long API_COMMON_INTERVAL = 60 * 1000; //60 seconds
+
 
     private static String KEY_REGISTER = "register";
     private static String KEY_GET_PRODUCTS = "getProducts";
@@ -51,8 +51,10 @@ public class AdApiHelper {
 
     private static final HashMap<String, Date> sTimeMapping = new HashMap<>();
 
+    private static final HashMap<String, HashSet<Date>> sRangeMapping = new HashMap<>();
 
-    private static boolean canDoRequest(String requestKey, long thresholder) {
+
+    private static boolean canDoSingleRequest(String requestKey, long thresholder) {
         Date lastTime = sTimeMapping.get(requestKey);
         if (lastTime == null) {
             sTimeMapping.put(requestKey, Calendar.getInstance().getTime());
@@ -68,17 +70,49 @@ public class AdApiHelper {
         }
     }
 
+    private static boolean canDoRangeRequest(String requestKey, long timeRange, int maxCount) {
+        Date now = Calendar.getInstance().getTime();
+        HashSet<Date> alreadyDone = sRangeMapping.get(requestKey);
+        if (alreadyDone == null) {
+            alreadyDone = new HashSet<Date>();
+            sRangeMapping.put(requestKey, alreadyDone);
+        }
+
+        HashSet<Date> toRemove = new HashSet<>();
+        for (Date date : alreadyDone) {
+            if (!MiscUtils.tooClose(date, now, timeRange)) {
+                Log.i(Configuration.HTTP_TAG, " Will remove " + date.toString() + " for " + requestKey);
+                toRemove.add(date);
+            }
+        }
+        for (Date date : toRemove) {
+            alreadyDone.remove(date);
+        }
+        Log.i(Configuration.HTTP_TAG, " After remove, " + requestKey + " has " + alreadyDone.size() + " in range " + timeRange);
+        if (alreadyDone.size() >= maxCount) {
+            return false;
+        }
+
+        alreadyDone.add(now);
+        return true;
+    }
+
     public static int register(String deviceId, final IUserStatusListener listener) {
         return register(deviceId, listener, false);
     }
 
     public static int register(String deviceId, final IUserStatusListener listener, boolean force) {
-        if (!force && !canDoRequest(KEY_REGISTER, API_COMMON_INTERVAL)) {
+        if (!force &&
+                (!canDoSingleRequest(KEY_REGISTER, Configuration.API_COMMON_INTERVAL)
+                    || !canDoRangeRequest(KEY_REGISTER, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
+            if (listener != null) {
+                listener.onGeneralError(ADErrorCode.createTooManyRequests());
+            }
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         AuthApi service = RetrofitServiceFactory.createSimpleRetroFitService(AuthApi.class);
-        Call<User> call = service.registerAnonymous(deviceId, null, null, null);
+        Call<User> call = service.registerAnonymous(deviceId, Configuration.APP_VERSION_CODE, null, null, null);
         call.enqueue(new Callback<User>(){
             @Override
             public void onResponse(Call<User> call, Response<User> response){
@@ -121,12 +155,17 @@ public class AdApiHelper {
     }
 
     public static int getAvailableProducts(String deviceId, final IProductStatusListener listener, boolean force) {
-        if (!force && !canDoRequest(KEY_GET_PRODUCTS, API_COMMON_INTERVAL)) {
+        if (!force &&
+                (!canDoSingleRequest(KEY_GET_PRODUCTS, Configuration.API_COMMON_INTERVAL)
+                || !canDoRangeRequest(KEY_GET_PRODUCTS, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
+            if (listener != null) {
+                listener.onGeneralError(ADErrorCode.createTooManyRequests());
+            }
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<ProductsResponse> call = service.getAvailableProducts(deviceId);
+        Call<ProductsResponse> call = service.getAvailableProducts(deviceId, Configuration.APP_VERSION_CODE);
         call.enqueue(new Callback<ProductsResponse>() {
             @Override
             public void onResponse(Call<ProductsResponse> call, Response<ProductsResponse> response) {
@@ -175,12 +214,16 @@ public class AdApiHelper {
                                      final String email, final String info,
                                      final IProductStatusListener listener,
                                         boolean force) {
-        if (!force && !canDoRequest(KEY_CONSUME_PRODUCT, API_COMMON_INTERVAL)) {
+        if (!force && (!canDoSingleRequest(KEY_CONSUME_PRODUCT, Configuration.API_COMMON_INTERVAL)
+                || !canDoRangeRequest(KEY_CONSUME_PRODUCT, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
+            if (listener != null) {
+                listener.onGeneralError(ADErrorCode.createTooManyRequests());
+            }
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<UserProductResponse> call = service.consumeProduct(deviceId, id, amount, email, info);
+        Call<UserProductResponse> call = service.consumeProduct(deviceId, Configuration.APP_VERSION_CODE, id, amount, email, info);
         call.enqueue(new Callback<UserProductResponse>() {
             @Override
             public void onResponse(Call<UserProductResponse> call, Response<UserProductResponse> response) {
@@ -223,12 +266,17 @@ public class AdApiHelper {
     }
 
     public static int getAvailableTasks(String deviceId, final ITaskStatusListener listener, boolean force) {
-        if (!force && !canDoRequest(KEY_GET_TASKS, API_COMMON_INTERVAL)) {
+        if (!force &&
+                (!canDoSingleRequest(KEY_GET_TASKS, Configuration.API_COMMON_INTERVAL)
+                || !canDoRangeRequest(KEY_GET_TASKS, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
+            if (listener != null) {
+                listener.onGeneralError(ADErrorCode.createTooManyRequests());
+            }
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<TasksResponse> call = service.getAvailableTasks(deviceId);
+        Call<TasksResponse> call = service.getAvailableTasks(deviceId, Configuration.APP_VERSION_CODE);
         call.enqueue(new Callback<TasksResponse>() {
             @Override
             public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {
@@ -271,12 +319,17 @@ public class AdApiHelper {
     }
 
     public static int finishTask(String deviceId, final long id, String referralCode, final ITaskStatusListener listener, boolean force) {
-        if (!force && !canDoRequest(KEY_FINISH_TASK, API_COMMON_INTERVAL)) {
+        if (!force &&
+                (!canDoSingleRequest(KEY_FINISH_TASK, Configuration.API_COMMON_INTERVAL)
+                || !canDoRangeRequest(KEY_FINISH_TASK, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
+            if (listener != null) {
+                listener.onGeneralError(ADErrorCode.createTooManyRequests());
+            }
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<UserTaskResponse> call = service.finishTask(deviceId, id, referralCode);
+        Call<UserTaskResponse> call = service.finishTask(deviceId, Configuration.APP_VERSION_CODE, id, referralCode);
         call.enqueue(new Callback<UserTaskResponse>() {
             @Override
             public void onResponse(Call<UserTaskResponse> call, Response<UserTaskResponse> response) {
