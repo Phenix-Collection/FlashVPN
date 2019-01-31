@@ -59,6 +59,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
     private LinearLayout loadedLayout;
     private Handler mainHandler;
     private View retryView;
+    private TaskExecutor mTaskExecutor;
 
     private static final int MSG_LOAD_TIMEOUT = 100;
     private static final long LOAD_TIMEOUT = 10*1000;
@@ -69,6 +70,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         contentView = inflater.inflate(R.layout.reward_center_layout, null);
         appUser = AppUser.getInstance();
         appUser.listenOnUserUpdate(this);
+        mTaskExecutor = new TaskExecutor(getActivity());
         mainHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -203,29 +205,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         appUser.forceRefreshData();
     }
 
-    public void onCheckInClick(View view) {
-        if (view.getTag() instanceof Task ) {
-            int error = appUser.checkTask((Task) view.getTag());
-            if (error != RewardErrorCode.TASK_OK) {
-                toastError(error);
-                return;
-            }
-        }
-        appUser.finishTask((Task) view.getTag(), new RewardTaskListener(view));
-    }
-
-    public void onInviteFriendsClick(View view) {
-        InviteActivity.start(getActivity());
-    }
-
     public void onRewardVideoClick(View view) {
-        if (view.getTag() instanceof Task ) {
-            int error = appUser.checkTask((Task) view.getTag());
-            if (error != RewardErrorCode.TASK_OK) {
-                toastError(error);
-                return;
-            }
-        }
         RewardVideoTask task = (RewardVideoTask) view.getTag();
         if (task != null) {
             FuseAdLoader loader = FuseAdLoader.get(task.adSlot, getActivity());
@@ -237,39 +217,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             if(! loader.hasValidCache() ) {
                 taskRunningProgressBar.setVisibility(View.VISIBLE);
             }
-            loader.loadAd(getActivity(), 2, new IAdLoadListener() {
-                @Override
-                public void onAdLoaded(IAdAdapter ad) {
-                    taskRunningProgressBar.setVisibility(View.GONE);
-                    ad.show();
-                }
-
-                @Override
-                public void onAdClicked(IAdAdapter ad) {
-
-                }
-
-                @Override
-                public void onAdClosed(IAdAdapter ad) {
-                    loader.preloadAd(getActivity());
-                }
-
-                @Override
-                public void onAdListLoaded(List<IAdAdapter> ads) {
-
-                }
-
-                @Override
-                public void onError(String error) {
-                    taskRunningProgressBar.setVisibility(View.GONE);
-                    toastError(RewardErrorCode.TASK_AD_NO_FILL);
-                }
-
-                @Override
-                public void onRewarded(IAdAdapter ad) {
-                    appUser.finishTask(task, new RewardTaskListener(view));
-                }
-            });
+            mTaskExecutor.execute(task, new RewardTaskListener(view));
         }
 
     }
@@ -294,17 +242,14 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
                 onStoreClick(v);
                 break;
             case R.id.checkin_task_item:
-                onCheckInClick(v);
-                break;
             case R.id.invite_task_item:
-                onInviteFriendsClick(v);
+                mTaskExecutor.execute((Task)v.getTag(), new RewardTaskListener(v));
                 break;
             case R.id.video_task_item:
                 onRewardVideoClick(v);
                 break;
         }
     }
-
 
     private class RewardTaskListener implements ITaskStatusListener {
         private View mView;
@@ -319,19 +264,15 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             updateUserInfo();
             Task task = (Task)mView.getTag();
             updateTaskViewItem(mView, task, false);
-            if (task != null) {
-                EventReporter.rewardEvent("task_finish_" + task.mTaskType);
-            }
             toastDone(payment);
-            if (payment > 0 ) {
-                EventReporter.setUserProperty(EventReporter.PROP_REWARDED, EventReporter.REWARD_ACTIVE);
-            }
+            taskRunningProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onTaskFail(long taskId, ADErrorCode code) {
-            EventReporter.rewardEvent("task_fail_" + code.getErrCode());
             toastError(code.getErrCode());
+            taskRunningProgressBar.setVisibility(View.GONE);
+
         }
 
         @Override
@@ -341,8 +282,8 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
 
         @Override
         public void onGeneralError(ADErrorCode code) {
-            EventReporter.rewardEvent("error_" + code.getErrCode());
             toastError(code.getErrCode());
+            taskRunningProgressBar.setVisibility(View.GONE);
         }
     }
 }

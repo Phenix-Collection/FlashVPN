@@ -152,6 +152,12 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("reward_event", prop);
     }
 
+    public static void taskEvent(long id, int code) {
+        Bundle prop = new Bundle();
+        prop.putString("name", ""+id+"_"+code);
+        mFirebaseAnalytics.logEvent("task_event", prop);
+    }
+
     public static void homeMenu(Context context) {
         generalEvent("home_menu");
     }

@@ -107,7 +107,7 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
     }
 
     public void onSubmitClick(View view) {
-        appUser.submitInviteCode(submitCodeTask, codeInput.getText().toString(), this);
+        new TaskExecutor(this).execute(submitCodeTask, this);
     }
 
     public void onFacebookClick(View view) {
