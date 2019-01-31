@@ -108,8 +108,11 @@ JNIEXPORT jstring JNICALL decode(JNIEnv *env, jobject instance, jobject context,
  * if rerurn 1 ,is check pass.
  */
 JNIEXPORT jint JNICALL
-check_jni(JNIEnv *env, jobject instance, jobject con) {
-    return check_signature(env, instance, con);
+check_jni(JNIEnv *env, jobject instance, jobject context) {
+    if (check_signature(env, instance, context) != 1 || check_is_emulator(env) != 1) {
+        return 0;
+    }
+    return 1;
 }
 
 
