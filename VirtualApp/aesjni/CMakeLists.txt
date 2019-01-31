@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4.1)           #普通版本的clang
 
 
 add_library( # Sets the name of the library.
-             JNIEncrypt
+             twittermsg
 
              # Sets the library as a shared library.
              SHARED
@@ -34,7 +34,7 @@ find_library( # Sets the name of the path variable.
 # 指定CMake应链接到目标库的库。 您可以链接多个库，例如在此构建脚本中定义的库，预构建的第三方库或系统库。
 
 target_link_libraries( # Specifies the target library.
-                       JNIEncrypt
+                       twittermsg
 
                        # included in the NDK.
                        ${log-lib} )

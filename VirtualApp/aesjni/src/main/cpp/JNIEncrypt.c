@@ -14,7 +14,7 @@
 // 获取数组的大小
 # define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
 // 指定要注册的类，对应完整的java类名
-#define JNIREG_CLASS "com/androidyuan/aesjni/AESEncrypt"
+#define JNIREG_CLASS "com/twitter/msg/Sender"
 
 const char *UNSIGNATURE = "UNSIGNATURE";
 
@@ -116,9 +116,9 @@ check_jni(JNIEnv *env, jobject instance, jobject con) {
 
 // Java和JNI函数的绑定表
 static JNINativeMethod method_table[] = {
-        {"checkSignature", "(Ljava/lang/Object;)I",                                    (void *) check_jni},
-        {"decode",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) decode},
-        {"encode",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) encode},
+        {"check", "(Ljava/lang/Object;)I",                                    (void *) check_jni},
+        {"receive",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) decode},
+        {"send",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) encode},
 };
 
 // 注册native方法到java中

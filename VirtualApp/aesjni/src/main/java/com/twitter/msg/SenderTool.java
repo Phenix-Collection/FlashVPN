@@ -1,4 +1,4 @@
-package com.androidyuan.aesjni;
+package com.twitter.msg;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -9,7 +9,7 @@ import android.content.pm.Signature;
  * Created by wei on 16-12-4.
  */
 
-public class SignatureTool {
+public class SenderTool {
 
     private static final String PKGNAME = "com.androidyuan.aesjniencrypt";
 

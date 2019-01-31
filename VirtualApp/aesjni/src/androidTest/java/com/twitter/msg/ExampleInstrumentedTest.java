@@ -1,4 +1,4 @@
-package com.androidyuan.aesjni;
+package com.twitter.msg;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
