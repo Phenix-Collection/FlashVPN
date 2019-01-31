@@ -172,20 +172,20 @@ public class AdCipher {
         return new String(hexChars);
     }
 
-    private static int getCertificateHashCode(Context context) {
-        PackageManager pm = context.getPackageManager();
-        String packageName = context.getPackageName();
-
-        try {
-            PackageInfo packageInfo = pm.getPackageInfo(packageName,
-                    PackageManager.GET_SIGNATURES);
-            Signature[] signatures = packageInfo.signatures;
-            Signature signature = signatures[0];
-            return signature.hashCode();
-        } catch (PackageManager.NameNotFoundException  e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
+//    public static int getCertificateHashCode(Context context) {
+//        PackageManager pm = context.getPackageManager();
+//        String packageName = context.getPackageName();
+//
+//        try {
+//            PackageInfo packageInfo = pm.getPackageInfo(packageName,
+//                    PackageManager.GET_SIGNATURES);
+//            Signature[] signatures = packageInfo.signatures;
+//            Signature signature = signatures[0];
+//            return signature.hashCode();
+//        } catch (PackageManager.NameNotFoundException  e) {
+//            e.printStackTrace();
+//        }
+//        return 0;
+//    }
 
 }

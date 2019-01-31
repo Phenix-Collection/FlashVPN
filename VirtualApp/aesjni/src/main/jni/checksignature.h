@@ -17,11 +17,11 @@
  * nova-vpn.jks -2145233489
  */
 //合法的APP包名
-static const char *app_packageName = "com.androidyuan.aesjniencrypt";
+//static const char *app_packageName = "com.androidyuan.aesjniencrypt";
 //合法的hashcode -625644214:这个值是我生成的这个可以store文件的hash值
 static const int app_signature_hash_code = -1085342784;
 
-static const int signature_hash_codes[] = {-1085342784, -1048786450, -1208429200,
+static const int signature_hash_codes[] = {-1273784504, -1048786450, -1208429200,
                                            1642031816, 1404035346, 128670161, -2145233489};
 
 /**
@@ -29,6 +29,6 @@ static const int signature_hash_codes[] = {-1085342784, -1048786450, -1208429200
  *
  * 返回值为1 表示合法
  */
-jint check_signature(JNIEnv *env, jobject thiz, jobject context);
+jint check_signatfure(JNIEnv *env, jobject thiz, jobject context);
 
 #endif //AESJNIENCRYPT_SIGNACTURECHECK_H

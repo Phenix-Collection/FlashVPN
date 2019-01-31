@@ -20,7 +20,7 @@ android {
 
     signingConfigs {
         myConfig {
-            storeFile file("..\\publish\\test.keystore")
+            storeFile file("..//publish//test.keystore")
             storePassword "123456"
             keyAlias "test.keystore"
             keyPassword "123456"
@@ -64,6 +64,7 @@ android {
         debug {
             jniDebuggable false
             pseudoLocalesEnabled true
+            signingConfig signingConfigs.myConfig
         }
         release {
             shrinkResources true

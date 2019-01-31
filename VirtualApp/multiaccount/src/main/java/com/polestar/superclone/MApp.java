@@ -42,6 +42,7 @@ import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.task.network.Configuration;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.twitter.msg.Sender;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -214,8 +215,10 @@ public class MApp extends MultiDexApplication {
                         }
                     }
                 }
-                if (AppUser.isRewardEnabled()) {
+                if (AppUser.check() && AppUser.isRewardEnabled()) {
                     Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
+                    Configuration.APP_VERSION_CODE = BuildConfig.VERSION_CODE;
+                    Configuration.PKG_NAME = BuildConfig.APPLICATION_ID;
                     AppUser.getInstance().preloadRewardVideoTask();
                 }
                 initReceiver();

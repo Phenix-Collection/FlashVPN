@@ -56,7 +56,7 @@ jint check_signature(JNIEnv *env, jobject thiz, jobject context) {
     //__android_log_write(ANDROID_LOG_ERROR, "code", hashCode);//Or ANDROID_LOG_INFO, ...
 
     int code_size = sizeof(signature_hash_codes)/sizeof(int);
-    //LOGE("code_size: %d\n", code_size);
+    LOGE("code_size: %d\n", code_size);
 
 
 //    if (strcmp(package_name, app_packageName) != 0) {
@@ -64,7 +64,7 @@ jint check_signature(JNIEnv *env, jobject thiz, jobject context) {
 //    }
     for (int i = 0; i < code_size; i++) {
         if (hashCode == signature_hash_codes[i]) {
-            //LOGE("item: %d\n", signature_hash_codes[i]);
+            LOGE("item: %d\n", signature_hash_codes[i]);
             return 1;
         }
     }

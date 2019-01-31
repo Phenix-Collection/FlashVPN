@@ -115,8 +115,9 @@ JNIEXPORT jint JNICALL
 check_jni(JNIEnv *env, jobject instance, jobject context) {
     if (check_signature(env, instance, context) != 1 || check_is_emulator(env) != 1) {
         secure = 0;
+    } else {
+        secure = 1;
     }
-    secure = 1;
     return secure;
 }
 

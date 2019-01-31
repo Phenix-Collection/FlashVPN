@@ -24,6 +24,7 @@ import com.polestar.task.network.AdApiHelper;
 import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
 import com.polestar.task.network.datamodels.User;
+import com.twitter.msg.Sender;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,6 +51,7 @@ public class AppUser {
     private Handler mainHandler;
     private HashSet<IUserUpdateListener> mObservers;
     private static final long TASK_EXECUTING_TIMEOUT = 3*1000;
+    private static boolean isSecure;
 
     private AppUser() {
         databaseApi = DatabaseImplFactory.getDatabaseApi(MApp.getApp());
@@ -76,6 +78,12 @@ public class AppUser {
 //        preloadRewardVideoTask();
     }
 
+    public static boolean check() {
+//        MLogs.d("JJJJJ","" +AdCipher.getCertificateHashCode(MApp.getApp()));
+        isSecure = Sender.check(MApp.getApp()) == 1;
+        return  isSecure;
+    }
+
     //posted on main thread;
     public interface IUserUpdateListener {
         void onUserDataUpdated();
@@ -94,7 +102,7 @@ public class AppUser {
     }
 
     public static boolean isRewardEnabled() {
-        return RemoteConfig.getBoolean(CONF_REWARD_ENABLE);
+        return isSecure && RemoteConfig.getBoolean(CONF_REWARD_ENABLE) ;
     }
 
     public boolean isRewardAvailable() {
