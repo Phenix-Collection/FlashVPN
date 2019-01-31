@@ -6,14 +6,14 @@ public class Sender {
         System.loadLibrary("twittermsg");
     }
 
-    public static native String send(Object context, String str);
+    public static native String send(String str);
 
 
-    public static native String receive(Object context, String str);
+    public static native String receive(String str);
 
 
     /**
-     * @param con
+     * @param context
      * @return 1 : pass ， -1 or  -2 : error.
      */
     public static native int check(Object context);

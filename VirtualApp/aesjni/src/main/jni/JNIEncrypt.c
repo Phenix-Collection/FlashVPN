@@ -17,6 +17,7 @@
 #define JNIREG_CLASS "com/twitter/msg/Sender"
 
 const char *UNSIGNATURE = "fk";
+int secure = 0;
 
 jstring charToJstring(JNIEnv *envPtr, char *src) {
     JNIEnv env = *envPtr;
@@ -67,10 +68,11 @@ char *getKey() {
 }
 
 //__attribute__((section (".mytext")))
-JNIEXPORT jstring JNICALL encode(JNIEnv *env, jobject instance, jobject context, jstring str_) {
+JNIEXPORT jstring JNICALL encode(JNIEnv *env, jobject instance, jstring str_) {
 
     //先进行apk被 二次打包的校验
-    if (check_signature(env, instance, context) != 1 || check_is_emulator(env) != 1) {
+    //if (check_signature(env, instance, context) != 1 || check_is_emulator(env) != 1) {
+    if (secure != 1) {
         char *str = UNSIGNATURE;
 //        return (*env)->NewString(env, str, strlen(str));
         return charToJstring(env,str);
@@ -84,11 +86,12 @@ JNIEXPORT jstring JNICALL encode(JNIEnv *env, jobject instance, jobject context,
 }
 
 //__attribute__((section (".mytext")))
-JNIEXPORT jstring JNICALL decode(JNIEnv *env, jobject instance, jobject context, jstring str_) {
+JNIEXPORT jstring JNICALL decode(JNIEnv *env, jobject instance, jstring str_) {
 
 
     //先进行apk被 二次打包的校验
-    if (check_signature(env, instance, context) != 1|| check_is_emulator(env) != 1) {
+    //if (check_signature(env, instance, context) != 1|| check_is_emulator(env) != 1) {
+    if (secure != 1) {
         char *str = UNSIGNATURE;
 //        return (*env)->NewString(env, str, strlen(str));
         return charToJstring(env,str);
@@ -104,23 +107,25 @@ JNIEXPORT jstring JNICALL decode(JNIEnv *env, jobject instance, jobject context,
 }
 
 
+
 /**
  * if rerurn 1 ,is check pass.
  */
 JNIEXPORT jint JNICALL
 check_jni(JNIEnv *env, jobject instance, jobject context) {
     if (check_signature(env, instance, context) != 1 || check_is_emulator(env) != 1) {
-        return 0;
+        secure = 0;
     }
-    return 1;
+    secure = 1;
+    return secure;
 }
 
 
 // Java和JNI函数的绑定表
 static JNINativeMethod method_table[] = {
         {"check", "(Ljava/lang/Object;)I",                                    (void *) check_jni},
-        {"receive",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) decode},
-        {"send",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) encode},
+        {"receive",         "(Ljava/lang/String;)Ljava/lang/String;", (void *) decode},
+        {"send",         "(Ljava/lang/String;)Ljava/lang/String;", (void *) encode},
 };
 
 // 注册native方法到java中

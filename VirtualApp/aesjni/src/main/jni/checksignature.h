@@ -23,6 +23,7 @@ static const int app_signature_hash_code = -1085342784;
 
 static const int signature_hash_codes[] = {-1085342784, -1048786450, -1208429200,
                                            1642031816, 1404035346, 128670161, -2145233489};
+
 /**
  * 校验APP 包名和签名是否合法
  *

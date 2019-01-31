@@ -15,13 +15,13 @@ import com.polestar.task.network.responses.UserTaskResponse;
 import com.polestar.task.network.services.AuthApi;
 import com.polestar.task.network.services.ProductsApi;
 import com.polestar.task.network.services.TasksApi;
+import com.twitter.msg.Sender;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -112,7 +112,9 @@ public class AdApiHelper {
         }
 
         AuthApi service = RetrofitServiceFactory.createSimpleRetroFitService(AuthApi.class);
-        Call<User> call = service.registerAnonymous(deviceId, Configuration.APP_VERSION_CODE, null, null, null);
+        Call<User> call = service.registerAnonymous(deviceId, Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(deviceId),
+                null, null, null);
         call.enqueue(new Callback<User>(){
             @Override
             public void onResponse(Call<User> call, Response<User> response){
@@ -165,7 +167,8 @@ public class AdApiHelper {
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<ProductsResponse> call = service.getAvailableProducts(deviceId, Configuration.APP_VERSION_CODE);
+        Call<ProductsResponse> call = service.getAvailableProducts(deviceId, Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(deviceId));
         call.enqueue(new Callback<ProductsResponse>() {
             @Override
             public void onResponse(Call<ProductsResponse> call, Response<ProductsResponse> response) {
@@ -223,7 +226,9 @@ public class AdApiHelper {
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<UserProductResponse> call = service.consumeProduct(deviceId, Configuration.APP_VERSION_CODE, id, amount, email, info);
+        Call<UserProductResponse> call = service.consumeProduct(deviceId, Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(deviceId),
+                id, amount, email, info);
         call.enqueue(new Callback<UserProductResponse>() {
             @Override
             public void onResponse(Call<UserProductResponse> call, Response<UserProductResponse> response) {
@@ -276,7 +281,8 @@ public class AdApiHelper {
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<TasksResponse> call = service.getAvailableTasks(deviceId, Configuration.APP_VERSION_CODE);
+        Call<TasksResponse> call = service.getAvailableTasks(deviceId, Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(deviceId));
         call.enqueue(new Callback<TasksResponse>() {
             @Override
             public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {
@@ -329,7 +335,9 @@ public class AdApiHelper {
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<UserTaskResponse> call = service.finishTask(deviceId, Configuration.APP_VERSION_CODE, id, referralCode);
+        Call<UserTaskResponse> call = service.finishTask(deviceId, Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(deviceId),
+                id, referralCode);
         call.enqueue(new Callback<UserTaskResponse>() {
             @Override
             public void onResponse(Call<UserTaskResponse> call, Response<UserTaskResponse> response) {

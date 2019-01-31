@@ -15,6 +15,8 @@ public interface AuthApi {
     @FormUrlEncoded
     Call<User> registerAnonymous(@Field("device_id") String deviceID,
                                  @Field("version_code") int versionCode,
+                                 @Field("pkg_name") String pkgName,
+                                 @Field("secret") String secret,
                                  @Field("country") String country,
                                  @Field("lang") String lang,
                                  @Field("locale") String locale
