@@ -277,7 +277,11 @@
     <string name="reward_center">Reward Center</string>
     <string name="input_code_hint">Submit code and get bonus when finish 1 live offer</string>
     <string name="redeem">Redeem</string>
+    <string name="purchase">Purchase</string>
     <string name="more_offer">More reward offer is coming soon ...</string>
     <string name="live_offer">Live Offers</string>
+    <string name="invite_friends_tip">Win your coins with this wonderful app %s.\nRemember to submit refer code %s to get bonus!\nDownload it here: %s</string>
+    <string name="invite_copied">Your invitation code is copied to clip board.</string>
+    <string name="invite_friends_mail_title">Win your coins with %s.</string>
     <string name="reward_load_failed">Load fail. Please check below and retry: \n - Google Play Service is installed \n - Superb Cloner is not running in any clone apps \n - Connect network</string>
 </resources>

@@ -15,7 +15,6 @@ import com.tencent.bugly.crashreport.BuglyLog;
  */
 public class EventReporter {
 
-    private static final String APP_KEY = "Aqc1105890917";
     private static FirebaseAnalytics mFirebaseAnalytics;
 
     public static final String PROP_CHANNEL = "channel";
@@ -23,6 +22,10 @@ public class EventReporter {
     public static final String PROP_PERMISSION = "granted_permission";
     public static final String PROP_ADFREE = "adfree";
     public static final String PROP_GMS = "gms";
+    public static final String PROP_REFERRED = "referred";
+    public static final String PROP_REWARDED = "rewarded";
+    public static final String REWARD_OPEN = "open";
+    public static final String REWARD_ACTIVE = "active";
 
     public static void init(Context context) {
         //StatConfig.asyncInit(context);
@@ -141,6 +144,12 @@ public class EventReporter {
         Bundle prop = new Bundle();
         prop.putString("name", event);
         mFirebaseAnalytics.logEvent("general_event", prop);
+    }
+
+    public static void rewardEvent(String event) {
+        Bundle prop = new Bundle();
+        prop.putString("name", event);
+        mFirebaseAnalytics.logEvent("reward_event", prop);
     }
 
     public static void homeMenu(Context context) {

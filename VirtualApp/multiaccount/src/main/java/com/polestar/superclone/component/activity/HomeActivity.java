@@ -37,7 +37,9 @@ import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.reward.AppUser;
+import com.polestar.superclone.reward.InviteActivity;
 import com.polestar.superclone.reward.RewardCenterFragment;
+import com.polestar.superclone.reward.ShareActions;
 import com.polestar.superclone.reward.StoreFragment;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.CloneHelper;
@@ -220,6 +222,10 @@ public class HomeActivity extends BaseActivity {
         if (!AppUser.isRewardEnabled()) {
             bottomNavBar.setVisibility(View.GONE);
         } else {
+            EventReporter.setUserProperty(EventReporter.PROP_REWARDED, EventReporter.REWARD_OPEN);
+            if (AppUser.getInstance().isRewardAvailable() && RemoteConfig.getBoolean("conf_auto_copy")) {
+                new ShareActions(this, AppUser.getInstance().getInviteTask()).copy(true);
+            }
             mRewardCenterFragment = new RewardCenterFragment();
         }
         doSwitchToClonesFragment();
@@ -593,7 +599,11 @@ public class HomeActivity extends BaseActivity {
                 break;
             case 5:
                 EventReporter.menuShare(this);
-                CommonUtils.shareWithFriends(this);
+                if (AppUser.isRewardEnabled() && AppUser.getInstance().isRewardAvailable()) {
+                    InviteActivity.start(this);
+                } else {
+                    CommonUtils.shareWithFriends(this);
+                }
                 break;
             case 6:
                 EventReporter.menuSettings(this);

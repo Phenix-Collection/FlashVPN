@@ -10,6 +10,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 
 import com.polestar.superclone.utils.CommonUtils;
+import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
@@ -131,6 +132,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
                             @Override
                             public void onGeneralError(ADErrorCode code) {
+                                EventReporter.rewardEvent("fetch_error_" + code.getErrCode());
                                 MLogs.d(TAG, "onError " + code);
                             }
                         },force);
@@ -138,6 +140,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
                     @Override
                     public void onGeneralError(ADErrorCode code) {
+                        EventReporter.rewardEvent("fetch_error_" + code.getErrCode());
                         MLogs.d(TAG, "onError " + code);
                     }
                 },force);
@@ -150,6 +153,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
             @Override
             public void onGeneralError(ADErrorCode code) {
+                EventReporter.rewardEvent("fetch_error_" + code.getErrCode());
                 MLogs.d(TAG, "onError " + code);
             }
         }, force);

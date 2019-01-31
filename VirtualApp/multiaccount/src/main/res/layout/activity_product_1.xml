@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/white"
+            android:background="@drawable/shadow"
             android:layout_marginLeft="35dp"
             android:layout_marginRight="35dp"
             >
@@ -26,9 +26,9 @@
                 android:id="@+id/native_interstitial_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shadow"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:background="@color/white"
                 >
 
                 <com.polestar.superclone.widgets.IconFontTextView
@@ -192,7 +192,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:layout_centerHorizontal="true"
-                    android:text="Purchase"
+                    android:text="@string/purchase"
                     android:textColor="@color/white"
                     android:background="@drawable/shape_reward_button"
                     android:textSize="16sp"

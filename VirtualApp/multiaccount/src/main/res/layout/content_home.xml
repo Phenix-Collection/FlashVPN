@@ -130,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/theme_color2">
+                android:background="@drawable/selector_setting_theme2">
                 <LinearLayout
                     android:id="@+id/button_app_clones"
                     android:layout_width="match_parent"
@@ -138,7 +138,8 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:onClick="onSwitchToClonesClick"
-                    android:layout_height="wrap_content">
+                    android:background="@drawable/selector_setting_theme2"
+                    android:layout_height="match_parent">
                     <com.polestar.superclone.widgets.IconFontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -147,6 +148,7 @@
                         android:text="@string/iconfont_apps"/>
                     <TextView
                         android:layout_marginLeft="@dimen/icon_text_space"
+                        android:layout_marginStart="@dimen/icon_text_space"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
@@ -157,7 +159,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/gray"/>
+                    android:background="@color/white"/>
                 <LinearLayout
                     android:id="@+id/button_reward_center"
                     android:layout_width="match_parent"
@@ -165,7 +167,8 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:onClick="onSwitchToRewardsClick"
-                    android:layout_height="wrap_content">
+                    android:background="@drawable/selector_setting_theme2"
+                    android:layout_height="match_parent">
                     <com.polestar.superclone.widgets.IconFontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -174,6 +177,7 @@
                         android:text="@string/iconfont_trophy"/>
                     <TextView
                         android:layout_marginLeft="@dimen/icon_text_space"
+                        android:layout_marginStart="@dimen/icon_text_space"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"

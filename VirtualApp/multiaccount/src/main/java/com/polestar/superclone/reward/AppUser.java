@@ -8,6 +8,7 @@ import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.superclone.MApp;
+import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.task.ADErrorCode;

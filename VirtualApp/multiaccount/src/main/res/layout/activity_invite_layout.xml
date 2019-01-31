@@ -197,16 +197,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:orientation="horizontal">
-                <ImageView
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:layout_weight="1"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/facebook"
-                    android:scaleType="centerInside"
-                    android:onClick="onFacebookClick"/>
                 <ImageView
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
@@ -240,6 +233,15 @@
                     android:layout_weight="1"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:src="@drawable/facebook"
+                    android:scaleType="centerInside"
+                    android:onClick="onFacebookClick"/>
+                <ImageView
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:src="@drawable/more"
                     android:scaleType="centerInside"
                     android:onClick="onMoreClick"/>
@@ -266,9 +268,10 @@
         android:layout_height="wrap_content"
         android:text="@string/iconfont_close"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="13sp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
         android:layout_alignRight="@id/task_container"
         android:layout_alignTop="@id/task_container"
         android:onClick="onCloseClick"/>

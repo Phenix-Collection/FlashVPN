@@ -18,7 +18,7 @@ import java.util.Set;
  * Created by guojia on 2019/1/26.
  */
 
-class TaskPreference {
+public class TaskPreference {
 
     private static String PREFERENCE_NAME = "reward_task";
 
@@ -143,4 +143,15 @@ class TaskPreference {
         SharedPreferences sp = getSharedPreference();
         return  sp.getString("referred_by", null);
     }
+
+    public static void setReferrerHint(String hint) {
+        SharedPreferences sp = getSharedPreference();
+        sp.edit().putString("referred_by_hint", hint).commit();
+    }
+
+    public static String getReferredHint() {
+        SharedPreferences sp = getSharedPreference();
+        return  sp.getString("referred_by_hint", null);
+    }
+
 }

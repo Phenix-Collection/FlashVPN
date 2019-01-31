@@ -50,8 +50,8 @@
                     android:id="@+id/store_button"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:paddingRight="8dp"
-                    android:paddingLeft="8dp"
+                    android:paddingRight="12dp"
+                    android:paddingLeft="12dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true">
                     <com.polestar.superclone.widgets.IconFontTextView
@@ -67,7 +67,6 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
                         android:text="@string/btn_products_store"
-                        android:textStyle="bold"
                         android:textSize="16sp"
                         android:layout_gravity="center_vertical"
                         />

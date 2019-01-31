@@ -8,6 +8,8 @@ import android.text.TextUtils;
 
 import com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver;
 import com.polestar.superclone.MApp;
+import com.polestar.superclone.reward.ShareActions;
+import com.polestar.superclone.reward.TaskPreference;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.PreferencesUtils;
@@ -75,6 +77,12 @@ public class ReferrerReceiver extends BroadcastReceiver {
             PreferencesUtils.setInstallChannel(utm_source);
             CrashReport.setAppChannel(MApp.getApp(), utm_source);
             EventReporter.reportReferrer(MApp.getApp(), utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid);
+            if (utm_source.equals(ShareActions.SOURCE_USER_SHARE)) {
+                if (!TextUtils.isEmpty(utm_content)) {
+                    EventReporter.setUserProperty(EventReporter.PROP_REFERRED, "true");
+                    TaskPreference.setReferrerHint(utm_content);
+                }
+            }
         }
         new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
     }

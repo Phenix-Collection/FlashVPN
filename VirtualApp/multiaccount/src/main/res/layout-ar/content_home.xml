@@ -43,6 +43,7 @@
                     android:layout_toLeftOf="@id/menu_btn"
                     android:layout_marginRight="16dp"
                     android:text="@string/app_alias_name"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="19sp" />
                 <RelativeLayout
@@ -105,7 +106,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_alignParentRight="true"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/mobvista_wall_new_tip" />
+                                android:src="@drawable/shape_new_dot" />
                         </RelativeLayout>
 
                     </RelativeLayout>
@@ -117,22 +118,76 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/layout_setting" >
+                android:layout_below="@id/layout_setting"
+                android:layout_above="@+id/frag_navigate_bar" >
                 <FrameLayout
                     android:id="@+id/frag_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/frag_navigate_bar"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/selector_setting_theme2">
+                <LinearLayout
+                    android:id="@+id/button_app_clones"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:onClick="onSwitchToClonesClick"
+                    android:background="@drawable/selector_setting_theme2"
+                    android:layout_height="match_parent">
+                    <com.polestar.superclone.widgets.IconFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:text="@string/iconfont_apps"/>
+                    <TextView
+                        android:layout_marginLeft="@dimen/icon_text_space"
+                        android:layout_marginStart="@dimen/icon_text_space"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:text="@string/clones"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"/>
+                <LinearLayout
+                    android:id="@+id/button_reward_center"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:onClick="onSwitchToRewardsClick"
+                    android:background="@drawable/selector_setting_theme2"
+                    android:layout_height="match_parent">
+                    <com.polestar.superclone.widgets.IconFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:text="@string/iconfont_trophy"/>
+                    <TextView
+                        android:layout_marginLeft="@dimen/icon_text_space"
+                        android:layout_marginStart="@dimen/icon_text_space"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:text="@string/reward_center"/>
+                </LinearLayout>
+            </LinearLayout>
             <!--android:layout_above="@id/image_bottom"-->
         </android.support.percent.PercentRelativeLayout>
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/blur_forground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-
     </FrameLayout>
 </FrameLayout>

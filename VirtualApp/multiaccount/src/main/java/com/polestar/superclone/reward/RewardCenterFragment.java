@@ -23,6 +23,7 @@ import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
 import com.polestar.superclone.component.activity.HomeActivity;
 import com.polestar.superclone.utils.ColorUtils;
+import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.IconFontTextView;
 import com.polestar.task.ADErrorCode;
@@ -316,12 +317,20 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         public void onTaskSuccess(long taskId, float payment, float balance) {
             MLogs.d(taskId + " Task finish : "  + payment + " balance " + balance);
             updateUserInfo();
-            updateTaskViewItem(mView, (Task)mView.getTag(), false);
+            Task task = (Task)mView.getTag();
+            updateTaskViewItem(mView, task, false);
+            if (task != null) {
+                EventReporter.rewardEvent("task_finish_" + task.mTaskType);
+            }
             toastDone(payment);
+            if (payment > 0 ) {
+                EventReporter.setUserProperty(EventReporter.PROP_REWARDED, EventReporter.REWARD_ACTIVE);
+            }
         }
 
         @Override
         public void onTaskFail(long taskId, ADErrorCode code) {
+            EventReporter.rewardEvent("task_fail_" + code.getErrCode());
             toastError(code.getErrCode());
         }
 
@@ -332,6 +341,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
 
         @Override
         public void onGeneralError(ADErrorCode code) {
+            EventReporter.rewardEvent("error_" + code.getErrCode());
             toastError(code.getErrCode());
         }
     }

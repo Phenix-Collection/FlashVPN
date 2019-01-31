@@ -286,6 +286,10 @@
         <value>true</value>
     </entry>
     <entry>
+        <key>conf_auto_copy</key>
+        <value>true</value>
+    </entry>
+    <entry>
         <key>slot_reward_center_video</key>
         <value>adm_reward:ca-app-pub-5490912237269284/1920616793:0</value>
     </entry>

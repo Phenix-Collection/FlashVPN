@@ -2,14 +2,20 @@ package com.polestar.superclone.reward;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.text.TextUtils;
+import android.widget.Toast;
 
+import com.polestar.superclone.R;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
+import com.polestar.task.database.datamodels.ShareTask;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -22,10 +28,25 @@ import java.util.Locale;
 
 public class ShareActions {
     private static Activity mCurrentActivity;
+    private String mUrl;
+    private String mCode;
+    public static final String SOURCE_USER_SHARE = "user_share";
 
     public ShareActions(Activity arg2) {
         super();
         ShareActions.mCurrentActivity = arg2;
+        mUrl = "https://play.google.com/store/apps/details?id=" + arg2.getPackageName() + "&referrer=utm_source%3D"+SOURCE_USER_SHARE;
+        mCode = "";
+    }
+
+    public ShareActions(Activity arg2, ShareTask task) {
+        ShareActions.mCurrentActivity = arg2;
+        String source = "";
+        if (!task.shareUrl.contains("&referrer=utm_source%3D")){
+            source = "&referrer=utm_source%3D" + SOURCE_USER_SHARE;
+        }
+        mUrl = task.shareUrl + source+"%26utm_content%3D"+AppUser.getInstance().getInviteCode();
+        mCode = AppUser.getInstance().getInviteCode();
     }
 
     public static boolean appInstalledOrNot(Context arg4, String arg5) {
@@ -42,43 +63,69 @@ public class ShareActions {
         return v2;
     }
 
-    public static String getMyInviteUrl() {
-        //TODO get my invitecode
+    public String getMyInviteUrl() {
 
-        return "http://abo.io/12234ssdf";
+        return mUrl;
     }
 
-    public static void shareFacebook() {
-//        AccessToken v4 = AccessToken.getCurrentAccessToken();
-//        String v5 = ShareActions.getMyInviteUrl();
-//        if(v4 == null || (v4.isExpired())) {
-//            ShareActions.mCurrentActivity.openFacebookSessionAndShare(v5);
-//        }
-//        else {
-//            ShareActions.mCurrentActivity.shareFb(v5);
-//        }
+    public boolean copy(boolean urlOnly) {
+        ClipboardManager v3 = (ClipboardManager) mCurrentActivity.getSystemService(mCurrentActivity.CLIPBOARD_SERVICE);
+        ClipData v4 = ClipData.newPlainText("Invite Friend", getCopyText(urlOnly));
+        if(v4 != null && v3 != null) {
+            ((ClipboardManager) v3).setPrimaryClip(v4);
+            return true;
+        }
+        return false;
     }
 
-    public static void shareMail() {
-//        if(DroidBountyApplication.getAppUser() != null) {
-//            String v4 = "Check out AppBounty. You can get free gift cards and other rewards just for trying out free apps.\n" + "If you enter my invite code or follow my invite link you will get 50 free credits to begin.\n\n" + "Invite link: " + ShareActions.getMyInviteUrl() + "\n" + "Invite code: " + DroidBountyApplication.getAppUser().getInviteCode() + "\n\n";
-//            Intent v5 = new Intent("android.intent.action.SEND");
-//            v5.setType("message/rfc822");
-//            v5.putExtra("android.intent.extra.EMAIL", new String[]{""});
-//            v5.putExtra("android.intent.extra.SUBJECT", "Earn free Gift Cards for trying free apps");
-//            v5.putExtra("android.intent.extra.TEXT", v4);
-//            try {
-//                ShareActions.mCurrentActivity.startActivity(Intent.createChooser(v5, "Send mail..."));
-//            }
-//            catch(ActivityNotFoundException v6) {
-//                Toast.makeText(ShareActions.mCurrentActivity, "There are no email clients installed.", 0).show();
-//            }
-//        }
+    public String getCopyText(boolean urlOnly) {
+        return urlOnly? mUrl: "Code: " + mCode + " Download: " + mUrl;
     }
 
-    public static void shareTwitter() {
-        Intent shareIntent = new Intent("android.intent.action.SEND");
-        shareIntent.putExtra("android.intent.extra.TEXT", "get free #iTunes, #Amazon, #Xbox and other gift cards with @AppBounty. Use my link for a bonus: " + ShareActions.getMyInviteUrl());
+    public void shareFacebook() {
+        shareWithFriends("com.facebook.katana");
+    }
+
+    public void shareMail() {
+        String v4 = getShareContent();
+        Uri uri = Uri.parse("mailto:"+"");
+        Intent v5 = new Intent(Intent.ACTION_SENDTO, uri);
+        v5.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+        v5.putExtra(Intent.EXTRA_SUBJECT, mCurrentActivity.getString(R.string.invite_friends_mail_title, mCurrentActivity.getString(R.string.app_name)));
+        v5.putExtra(Intent.EXTRA_TEXT, v4);
+        try {
+            ShareActions.mCurrentActivity.startActivity(Intent.createChooser(v5, "Send mail..."));
+            EventReporter.rewardEvent("share_with_mail");
+        }
+        catch(ActivityNotFoundException v6) {
+            shareWithFriends(null);
+            Toast.makeText(ShareActions.mCurrentActivity, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void shareWithFriends(String sharePackage) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        if (!TextUtils.isEmpty(sharePackage)) {
+            shareIntent.setPackage(sharePackage);
+        }
+        shareIntent.setType("text/plain");
+        String appName = mCurrentActivity.getResources().getString(R.string.app_name);
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, appName);
+
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getShareContent());
+        mCurrentActivity.startActivity(Intent.createChooser(shareIntent, mCurrentActivity.getResources().getText(R.string.share_with_friends)));
+        EventReporter.rewardEvent("general_share_"+sharePackage);
+    }
+
+    public String getShareContent() {
+        String appName = mCurrentActivity.getResources().getString(R.string.app_name);
+        String shareContent = mCurrentActivity.getResources().getString(R.string.invite_friends_tip, appName, mCode, mUrl);
+        return shareContent;
+    }
+
+    public void shareTwitter() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getShareContent());
         shareIntent.setType("application/twitter");
         PackageManager packageManager = ShareActions.mCurrentActivity.getPackageManager();
         int v7 = 0;
@@ -94,8 +141,8 @@ public class ShareActions {
         if (resolved != null) {
             shareIntent.setClassName(resolved.activityInfo.packageName, resolved.activityInfo.name);
         } else {
-            shareIntent = new Intent("android.intent.action.VIEW",
-                    Uri.parse("https://twitter.com/intent/tweet?text=" + ShareActions.urlEncode("get free #iTunes, #Amazon, #Xbox and other gift cards with @AppBounty. Use my link for a bonus: " + ShareActions.getMyInviteUrl())));
+            shareIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://twitter.com/intent/tweet?text=" + ShareActions.urlEncode(getShareContent())));
             List<ResolveInfo> resolveInfoList = packageManager.queryIntentActivities(shareIntent, 0);
             if (resolveInfoList != null && resolveInfoList.size() > 0) {
                 for (ResolveInfo ri: resolveInfoList) {
@@ -108,29 +155,16 @@ public class ShareActions {
         }
         try {
             ShareActions.mCurrentActivity.startActivity(shareIntent);
-            EventReporter.generalEvent("share_twitter_ok");
+            EventReporter.rewardEvent("share_twitter_ok");
         }catch (Throwable ex){
             MLogs.e("share Twitter error");
-            EventReporter.generalEvent("share_twitter_fail");
+            EventReporter.rewardEvent("share_twitter_fail");
+            shareWithFriends(null);
         }
     }
 
-    public static void shareWhatsApp() {
-//        if(ShareActions.appInstalledOrNot(ShareActions.mCurrentActivity, "com.whatsapp")) {
-            String v5 = "Get free Amazon, Xbox, Steam and other gift cards with AppBounty. Use my link for a bonus: " + ShareActions.getMyInviteUrl();
-            Intent v6 = new Intent("android.intent.action.SEND");
-            v6.setType("text/plain");
-            v6.putExtra("android.intent.extra.TEXT", v5);
-            v6.setPackage("com.whatsapp");
-            try {
-                EventReporter.generalEvent("share_whatsapp_ok");
-                ShareActions.mCurrentActivity.startActivity(v6);
-            }
-            catch(ActivityNotFoundException v7) {
-                EventReporter.generalEvent("share_whatsapp_fail");
-                MLogs.e("WhatsApp not installed!");
-            }
-//        }
+    public void shareWhatsApp() {
+        shareWithFriends("com.whatsapp");
     }
 
     private static String urlEncode(String arg4) {

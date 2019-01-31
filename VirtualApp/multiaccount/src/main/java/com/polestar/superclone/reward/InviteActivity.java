@@ -1,16 +1,21 @@
 package com.polestar.superclone.reward;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.polestar.superclone.R;
+import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.widgets.IconFontTextView;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.ITaskStatusListener;
@@ -40,6 +45,7 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
     private ReferTask submitCodeTask;
 
     private AppUser appUser;
+    private ShareActions shareActions;
 
     public static void start(Activity activity){
         Intent intent = new Intent();
@@ -51,6 +57,7 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_layout);
+        EventReporter.rewardEvent("enter_invite");
         initView();
         initData();
     }
@@ -71,6 +78,7 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
         appUser = AppUser.getInstance();
         inviteTask = appUser.getInviteTask();
         submitCodeTask = appUser.getReferTask();
+        shareActions = new ShareActions(this, inviteTask);
         int submitStatus = appUser.checkTask(submitCodeTask);
         if (submitStatus != RewardErrorCode.TASK_OK) {
             if (submitStatus == RewardErrorCode.TASK_CODE_ALREADY_SUBMITTED) {
@@ -85,6 +93,12 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
             submitTitle.setText(submitCodeTask.mTitle);
             submitDesc.setText(submitCodeTask.mDescription);
         }
+        if (submitStatus != RewardErrorCode.TASK_CODE_ALREADY_SUBMITTED) {
+            String hint = TaskPreference.getReferredHint();
+            if (!TextUtils.isEmpty(hint) && hint.length() < 16){
+                codeInput.setText(hint);
+            }
+        }
         inviteTitle.setText(inviteTask.mTitle);
         inviteDesc.setText(inviteTask.mDescription);
         inviteCoins.setText("+"+(int)inviteTask.mPayout);
@@ -97,24 +111,34 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
     }
 
     public void onFacebookClick(View view) {
-
+        copyCode();
+        shareActions.shareFacebook();
     }
     public void onTwitterClick(View view) {
-
+        copyCode();
+        shareActions.shareTwitter();
     }
     public void onWhatsAppClick(View view) {
-
+        copyCode();
+        shareActions.shareWhatsApp();
     }
     public void onMoreClick(View view) {
-
+        copyCode();
+        shareActions.shareWithFriends("");
     }
 
     public void onMailClick(View view) {
-        ShareActions.shareMail();
+        copyCode();
+        shareActions.shareMail();
     }
 
+    private void copyCode() {
+        if(shareActions.copy(false)) {
+            Toast.makeText(this, R.string.invite_copied, Toast.LENGTH_SHORT).show();
+        }
+    }
     public void onCopyClick(View view) {
-
+        copyCode();
     }
 
     public void onCloseClick(View View) {

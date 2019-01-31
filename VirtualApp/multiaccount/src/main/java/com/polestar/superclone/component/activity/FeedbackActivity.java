@@ -24,6 +24,7 @@ import com.polestar.clone.remote.InstalledAppInfo;
 import com.polestar.superclone.BuildConfig;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
+import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.ToastUtils;
@@ -114,6 +115,12 @@ public class FeedbackActivity extends BaseActivity {
                 data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about Superb Cloner");
                 String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "Rating: "+ rating +  "Superb Cloner version: " + BuildConfig.VERSION_NAME
                         + "\n" + "Model info: " + Build.FINGERPRINT + "\nGMS state: " + PreferencesUtils.isGMSEnable() + "\n";
+                String userContent = "Reward enabled: " + AppUser.isRewardEnabled();
+                if (AppUser.isRewardEnabled() && AppUser.getInstance().isRewardAvailable()) {
+                    userContent = userContent + "\n id: " + AppUser.getInstance().getMyId() + " balance: " + AppUser.getInstance().getMyBalance();
+                }
+                fullContent = fullContent + userContent;
+
                 for (InstalledAppInfo appInfo: VirtualCore.get().getInstalledApps(0)) {
                     String pkgInfo = "\n Package: " + appInfo.packageName + " path: " + appInfo.apkPath;
                     fullContent += pkgInfo;
