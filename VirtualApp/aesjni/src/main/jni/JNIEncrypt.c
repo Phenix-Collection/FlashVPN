@@ -1,6 +1,7 @@
 #include <jni.h>
 #include "aes.h"
 #include "checksignature.h"
+#include "check_emulator.h"
 #include <string.h>
 #include <sys/ptrace.h>
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
@@ -13,79 +14,9 @@
 // 获取数组的大小
 # define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
 // 指定要注册的类，对应完整的java类名
-#define JNIREG_CLASS "com/androidyuan/aesjni/AESEncrypt"
+#define JNIREG_CLASS "com/twitter/msg/Sender"
 
-const char *UNSIGNATURE = "UNSIGNATURE";
-
-//__attribute__((section (".mytext")))//隐藏字符表 并没有什么卵用 只是针对初阶hacker的一个小方案而已
-char *getKey() {
-    int n = 0;
-    char s[23];//"NMTIzNDU2Nzg5MGFiY2RlZg";
-
-    s[n++] = 'N';
-    s[n++] = 'M';
-    s[n++] = 'T';
-    s[n++] = 'I';
-    s[n++] = 'z';
-    s[n++] = 'N';
-    s[n++] = 'D';
-    s[n++] = 'U';
-    s[n++] = '2';
-    s[n++] = 'N';
-    s[n++] = 'z';
-    s[n++] = 'g';
-    s[n++] = '5';
-    s[n++] = 'M';
-    s[n++] = 'G';
-    s[n++] = 'F';
-    s[n++] = 'i';
-    s[n++] = 'Y';
-    s[n++] = '2';
-    s[n++] = 'R';
-    s[n++] = 'l';
-    s[n++] = 'Z';
-    s[n++] = 'g';
-    char *encode_str = s + 1;
-    return b64_decode(encode_str, strlen(encode_str));
-
-    //初版hidekey的方案
-}
-
-//__attribute__((section (".mytext")))
-JNIEXPORT jstring JNICALL encode(JNIEnv *env, jobject instance, jobject context, jstring str_) {
-
-    //先进行apk被 二次打包的校验
-    if (checkSignature(env, instance, context) != 1) {
-        char *str = UNSIGNATURE;
-        return (*env)->NewString(env, str, strlen(str));
-    }
-
-    uint8_t *AES_KEY = (uint8_t *) getKey();
-    const char *in = (*env)->GetStringUTFChars(env, str_, JNI_FALSE);
-    char *baseResult = AES_128_ECB_PKCS5Padding_Encrypt(in, AES_KEY);
-    (*env)->ReleaseStringUTFChars(env, str_, in);
-    return (*env)->NewStringUTF(env, baseResult);
-}
-
-__attribute__((section (".mytext")))
-JNIEXPORT jstring JNICALL decode(JNIEnv *env, jobject instance, jobject context, jstring str_) {
-
-
-    //先进行apk被 二次打包的校验
-    if (checkSignature(env, instance, context) != 1) {
-        char *str = UNSIGNATURE;
-        return (*env)->NewString(env, str, strlen(str));
-    }
-
-    uint8_t *AES_KEY = (uint8_t *) getKey();
-    const char *str = (*env)->GetStringUTFChars(env, str_, JNI_FALSE);
-    char *desResult = AES_128_ECB_PKCS5Padding_Decrypt(str, AES_KEY);
-    (*env)->ReleaseStringUTFChars(env, str_, str);
-    return (*env)->NewStringUTF(env, desResult);
-    //不用系统自带的方法NewStringUTF是因为如果desResult是乱码,会抛出异常
-    //return charToJstring(env,desResult);
-}
-
+const char *UNSIGNATURE = "fk";
 
 jstring charToJstring(JNIEnv *envPtr, char *src) {
     JNIEnv env = *envPtr;
@@ -101,22 +32,92 @@ jstring charToJstring(JNIEnv *envPtr, char *src) {
     return (jstring) env->NewObject(envPtr, clsstring, mid, barr, strencode);
 }
 
+//__attribute__((section (".mytext")))//隐藏字符表 并没有什么卵用 只是针对初阶hacker的一个小方案而已
+char *getKey() {
+    int n = 0;
+    char s[23];//"NMTIzNDU2Nzg5MGFiY2RlZg"; //NjEzNzU2MjgxMGRlZmFiYw
+
+    s[n++] = 'J';
+    s[n++] = 'N';
+    s[n++] = 'j';
+    s[n++] = 'E';
+    s[n++] = 'z';
+    s[n++] = 'N';
+    s[n++] = 'z';
+    s[n++] = 'U';
+    s[n++] = '2';
+    s[n++] = 'M';
+    s[n++] = 'j';
+    s[n++] = 'g';
+    s[n++] = 'x';
+    s[n++] = 'M';
+    s[n++] = 'G';
+    s[n++] = 'R';
+    s[n++] = 'l';
+    s[n++] = 'Z';
+    s[n++] = 'm';
+    s[n++] = 'F';
+    s[n++] = 'i';
+    s[n++] = 'Y';
+    s[n++] = 'w';
+    char *encode_str = s + 1;
+    return b64_decode(encode_str, strlen(encode_str));
+
+    //初版hidekey的方案
+}
+
+//__attribute__((section (".mytext")))
+JNIEXPORT jstring JNICALL encode(JNIEnv *env, jobject instance, jobject context, jstring str_) {
+
+    //先进行apk被 二次打包的校验
+    if (check_signature(env, instance, context) != 1 || check_is_emulator(env) != 1) {
+        char *str = UNSIGNATURE;
+//        return (*env)->NewString(env, str, strlen(str));
+        return charToJstring(env,str);
+    }
+
+    uint8_t *AES_KEY = (uint8_t *) getKey();
+    const char *in = (*env)->GetStringUTFChars(env, str_, JNI_FALSE);
+    char *baseResult = AES_128_ECB_PKCS5Padding_Encrypt(in, AES_KEY);
+    (*env)->ReleaseStringUTFChars(env, str_, in);
+    return (*env)->NewStringUTF(env, baseResult);
+}
+
+//__attribute__((section (".mytext")))
+JNIEXPORT jstring JNICALL decode(JNIEnv *env, jobject instance, jobject context, jstring str_) {
+
+
+    //先进行apk被 二次打包的校验
+    if (check_signature(env, instance, context) != 1|| check_is_emulator(env) != 1) {
+        char *str = UNSIGNATURE;
+//        return (*env)->NewString(env, str, strlen(str));
+        return charToJstring(env,str);
+    }
+
+    uint8_t *AES_KEY = (uint8_t *) getKey();
+    const char *str = (*env)->GetStringUTFChars(env, str_, JNI_FALSE);
+    char *desResult = AES_128_ECB_PKCS5Padding_Decrypt(str, AES_KEY);
+    (*env)->ReleaseStringUTFChars(env, str_, str);
+//    return (*env)->NewStringUTF(env, desResult);
+    //不用系统自带的方法NewStringUTF是因为如果desResult是乱码,会抛出异常
+    return charToJstring(env,desResult);
+}
+
 
 /**
  * if rerurn 1 ,is check pass.
  */
 JNIEXPORT jint JNICALL
-check(JNIEnv *env, jobject instance, jobject con) {
-
-    return checkSignature(env, instance, con);
+check_jni(JNIEnv *env, jobject instance, jobject con) {
+    return check_signature(env, instance, con);
 }
 
 
 // Java和JNI函数的绑定表
 static JNINativeMethod method_table[] = {
-        {"checkSignature", "(Ljava/lang/Object;)I",                                    (void *) check},
-        {"decode",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) decode},
-        {"encode",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) encode},
+        {"check", "(Ljava/lang/Object;)I",                                    (void *) check_jni},
+        {"receive",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) decode},
+        {"send",         "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", (void *) encode},
 };
 
 // 注册native方法到java中

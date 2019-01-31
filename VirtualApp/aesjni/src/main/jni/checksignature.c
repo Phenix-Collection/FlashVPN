@@ -8,7 +8,7 @@
 #include "checksignature.h"
 
 
-jint checkSignature(JNIEnv *env, jobject thiz, jobject context) {
+jint check_signature(JNIEnv *env, jobject thiz, jobject context) {
     //Context的类
     jclass context_clazz = (*env)->GetObjectClass(env, context);
     // 得到 getPackageManager 方法的 ID
@@ -53,12 +53,24 @@ jint checkSignature(JNIEnv *env, jobject thiz, jobject context) {
                                                       "hashCode", "()I");
     jint hashCode = (*env)->CallIntMethod(env, signature, methodID_hashcode);
     //LOGE("hashcode: %d\n", hashCode);
+    //__android_log_write(ANDROID_LOG_ERROR, "code", hashCode);//Or ANDROID_LOG_INFO, ...
 
-    if (strcmp(package_name, app_packageName) != 0) {
-        return -1;
+    int code_size = sizeof(signature_hash_codes)/sizeof(int);
+    //LOGE("code_size: %d\n", code_size);
+
+
+//    if (strcmp(package_name, app_packageName) != 0) {
+//        return -1;
+//    }
+    for (int i = 0; i < code_size; i++) {
+        if (hashCode == signature_hash_codes[i]) {
+            //LOGE("item: %d\n", signature_hash_codes[i]);
+            return 1;
+        }
     }
-    if (hashCode != app_signature_hash_code) {
-        return -2;
-    }
-    return 1;
+    return -2;
+//    if (hashCode != app_signature_hash_code) {
+//        return -2;
+//    }
+//    return 1;
 }

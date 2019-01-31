@@ -132,6 +132,7 @@ dependencies {
     //compile 'com.facebook.android:audience-network-sdk:4.+'
     compile project(':libmultiple')
     compile project(':fuseadloader')
+    compile project(':aesjni')
     compile project(':Booster')
 
     compile 'com.android.billingclient:billing:dp-1'

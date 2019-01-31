@@ -2,15 +2,17 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := JNIEncrypt
+LOCAL_MODULE    := twittermsg
 LOCAL_SRC_FILES := JNIEncrypt.c	\
                     aes.c \
                     checksignature.c \
-                    base64.c
+                    base64.c \
+                    check_emulator.c \
+                    debugger.c
 
 
-LOCAL_CFLAGS := -fvisibility=hidden   -mllvm -sub -mllvm -fla -mllvm -bcf
-
+#LOCAL_CFLAGS := -fvisibility=hidden   -mllvm -sub -mllvm -fla -mllvm -bcf
+#LOCAL_CFLAGS := -fvisibility=hidden   -mllvm -sub -mllvm -fla -mllvm -bcf
 
 
 

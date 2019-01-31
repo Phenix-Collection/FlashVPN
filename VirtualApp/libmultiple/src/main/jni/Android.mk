@@ -49,4 +49,4 @@ include $(BUILD_SHARED_LIBRARY)
 ifeq ($(USE_HOOKZZ),y)
     include $(MAIN_LOCAL_PATH)/HookZz/Android.mk
 endif
-include $(MAIN_LOCAL_PATH)/a/Android.mk
+include $(MAIN_LOCAL_PATH)/crashlogger/Android.mk
