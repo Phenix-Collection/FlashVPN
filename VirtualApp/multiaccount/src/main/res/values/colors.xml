@@ -81,4 +81,5 @@
     <color name="transparent_gray_cover">#55dddddd</color>
     <color name="reward_done">#48d27f</color>
     <color name="reward_wait">#fd7921</color>
+    <color name="reward_btn_color">#fd7921</color>
 </resources>

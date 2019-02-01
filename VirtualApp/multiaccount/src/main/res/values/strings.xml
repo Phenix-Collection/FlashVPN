@@ -284,4 +284,5 @@
     <string name="invite_copied">Your invitation code is copied to clip board.</string>
     <string name="invite_friends_mail_title">Win your coins with %s.</string>
     <string name="reward_load_failed">Load fail. Please check below and retry: \n - Google Play Service is installed \n - Superb Cloner is not running in any clone apps \n - Connect network</string>
+    <string name="need_coin_for_clone">Get coins to finish clone</string>
 </resources>

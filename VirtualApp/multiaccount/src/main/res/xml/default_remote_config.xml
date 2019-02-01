@@ -287,7 +287,11 @@
     </entry>
     <entry>
         <key>conf_auto_copy</key>
-        <value>true</value>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>conf_clone_threshold</key>
+        <value>5</value>
     </entry>
     <entry>
         <key>slot_reward_center_video</key>

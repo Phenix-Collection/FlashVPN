@@ -79,7 +79,7 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
         inviteTask = appUser.getInviteTask();
         submitCodeTask = appUser.getReferTask();
         shareActions = new ShareActions(this, inviteTask);
-        int submitStatus = appUser.checkTask(submitCodeTask);
+        int submitStatus = TaskExecutor.checkTask(submitCodeTask);
         if (submitStatus != RewardErrorCode.TASK_OK) {
             if (submitStatus == RewardErrorCode.TASK_CODE_ALREADY_SUBMITTED) {
                 submitButton.setTextColor(getResources().getColor(R.color.reward_done));

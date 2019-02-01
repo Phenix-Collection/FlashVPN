@@ -50,8 +50,8 @@ public class AppUser {
     private static final String CONF_REWARD_ENABLE = "conf_reward_open";
     private Handler mainHandler;
     private HashSet<IUserUpdateListener> mObservers;
-    private static final long TASK_EXECUTING_TIMEOUT = 3*1000;
     private static boolean isSecure;
+    private static final int APP_ID = 1;
 
     private AppUser() {
         databaseApi = DatabaseImplFactory.getDatabaseApi(MApp.getApp());
@@ -136,6 +136,10 @@ public class AppUser {
         return mBalance;
     }
 
+    public void updateMyBalance(float balance)  {
+        mBalance = balance;
+    }
+
     public String getMyId() {
         //0. preference
         //1. google aid
@@ -157,6 +161,7 @@ public class AppUser {
         if (TextUtils.isEmpty(id)) {
             id = UUID.randomUUID().toString();
         }
+        id = id + "-" + APP_ID;
         TaskPreference.setMyId(id);
         return id;
     }
@@ -190,33 +195,38 @@ public class AppUser {
 //        return list!= null && list.size() > 0 ? (RewardVideoTask) list.get(0):null;
 //    }
 
+    public List<Task> getRecommendTasks() {
+        ArrayList<Task> res = new ArrayList<>();
+        res.add(getVideoTask());
+        res.add(getInviteTask());
+        return res;
+//        List<Task> list;
+//        list = databaseApi.get
+//        list.add(databaseApi.)
+    }
+
     public int checkProduct(Product product) {
         return checkProduct(product, 1);
     }
 
     public int checkProduct(Product product, int amount){
-        return RewardErrorCode.PRODUCT_OK;
-    }
-
-    public void consumeProduct(long productId, int amount, String email, String info, IProductStatusListener listener) {
-        AdApiHelper.consumeProduct(getMyId(), productId, amount, email, info, new WrapProductStatusListener(listener));
-    }
-
-    public void finishTask(Task task, ITaskStatusListener listener) {
-        if (task == null) return;
-        AdApiHelper.finishTask(mId, task.mId, null, new WrapTaskStatusListener(listener));
-    }
-
-    public void submitInviteCode(Task task, String code, ITaskStatusListener listener) {
-        WrapTaskStatusListener wrapTaskStatusListener = new WrapTaskStatusListener(listener);
-        if (task == null || TextUtils.isEmpty(code)){
-            return;
+        if (getMyBalance() >= (product.mCost*amount)){
+            return RewardErrorCode.PRODUCT_OK;
+        } else {
+            return RewardErrorCode.PRODUCT_NO_ENOUGH_COIN;
         }
-        if (code.equals(mInviteCode)) {
-            wrapTaskStatusListener.onTaskFail(task.mId, new ADErrorCode(ADErrorCode.INVALID_REFERRAL_CODE, ""));
-            return;
-        }
-        AdApiHelper.finishTask(mId, task.mId, code, new WrapTaskStatusListener(listener));
+    }
+
+    void buyProduct(long productId, int amount, String email, String info, IProductStatusListener listener) {
+        AdApiHelper.consumeProduct(getMyId(), productId, amount, email, info, listener);
+    }
+
+    void finishTask(Task task, ITaskStatusListener listener) {
+        AdApiHelper.finishTask(mId, task.mId, null, listener);
+    }
+
+    void submitInviteCode(Task task, String code, ITaskStatusListener listener) {
+        AdApiHelper.finishTask(mId, task.mId, code, listener);
     }
 
     public int checkTask(Task task) {
@@ -235,20 +245,29 @@ public class AppUser {
         return RewardErrorCode.TASK_OK;
     }
 
-    public Task getTaskById(long taskId) {
-        return databaseApi.getTaskById(taskId);
-    }
-
     public void preloadRewardVideoTask() {
         if (databaseApi.isDataAvailable()) {
             RewardVideoTask task = getVideoTask();
-            if (task != null && checkTask(task) == RewardErrorCode.TASK_OK) {
+            if (task != null && TaskExecutor.checkTask(task) == RewardErrorCode.TASK_OK) {
                 FuseAdLoader adLoader = FuseAdLoader.get(task.adSlot, MApp.getApp());
                 if (adLoader != null) {
                     adLoader.preloadAd(MApp.getApp());
                 }
             }
         }
+    }
+
+    public boolean isRewardVideoTaskReady() {
+        if (databaseApi.isDataAvailable()) {
+            RewardVideoTask task = getVideoTask();
+            if (task != null && TaskExecutor.checkTask(task) == RewardErrorCode.TASK_OK) {
+                FuseAdLoader adLoader = FuseAdLoader.get(task.adSlot, MApp.getApp());
+                if (adLoader != null) {
+                    return adLoader.hasValidCache();
+                }
+            }
+        }
+        return true;
     }
 
     public void setReferrerCode(String code) {
@@ -259,122 +278,4 @@ public class AppUser {
         return TaskPreference.getReferredBy();
     }
 
-    private class WrapProductStatusListener implements IProductStatusListener {
-        private IProductStatusListener mListener ;
-
-        public WrapProductStatusListener(IProductStatusListener listener) {
-            mListener = listener;
-        }
-
-        @Override
-        public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
-            mBalance = balance;
-            //TODO 发货
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onConsumeSuccess(id, amount, totalCost, balance);
-                }
-            });
-        }
-
-        @Override
-        public void onConsumeFail(ADErrorCode code) {
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onConsumeFail(code);
-                }
-            });
-        }
-
-        @Override
-        public void onGetAllAvailableProducts(ArrayList<Product> products) {
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onGetAllAvailableProducts(products);
-                }
-            });
-        }
-
-        @Override
-        public void onGeneralError(ADErrorCode code) {
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onGeneralError(code);
-                }
-            });
-        }
-    }
-
-    private class WrapTaskStatusListener implements ITaskStatusListener{
-        private ITaskStatusListener mListener;
-        private Timer mTimer;
-        public WrapTaskStatusListener (ITaskStatusListener listener) {
-            mListener = listener;
-            mTimer = new Timer("task_timer");
-            mTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    onGeneralError(new ADErrorCode(ERR_SERVER_DOWN_CODE, "task timeout"));
-                    mListener = null;
-                }
-            }, TASK_EXECUTING_TIMEOUT);
-        }
-
-        @Override
-        public void onTaskSuccess(long taskId, float payment, float balance) {
-            mTimer.cancel();
-            mBalance = balance;
-            TaskPreference.incTaskFinishCount(taskId);
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mListener != null) {
-                        mListener.onTaskSuccess(taskId, payment, balance);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFail(long taskId, ADErrorCode code) {
-            mTimer.cancel();
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mListener != null) {
-                        mListener.onTaskFail(taskId, code);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
-            MLogs.d("onGetAllAvailableTasks should not be here!!");
-            mTimer.cancel();
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onGetAllAvailableTasks(tasks);
-                }
-            });
-        }
-
-        @Override
-        public void onGeneralError(ADErrorCode code) {
-            mTimer.cancel();
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mListener != null) {
-                        mListener.onGeneralError(code);
-                    }
-                }
-            });
-        }
-    }
 }

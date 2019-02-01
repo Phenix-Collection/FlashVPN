@@ -28,7 +28,10 @@ import com.polestar.superclone.component.adapter.AppListAdapter;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.pbinterface.DataObserver;
+import com.polestar.superclone.reward.AppUser;
+import com.polestar.superclone.reward.HotTaskDialog;
 import com.polestar.superclone.utils.AppListUtils;
+import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
@@ -162,21 +165,14 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent data = new Intent();
-                data.putExtra(AppConstants.EXTRA_APP_MODEL, mPopularModels.get(position));
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                checkAndClone(mPopularModels.get(position));
             }
         });
 
         mRecommandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent data = new Intent();
-                data.putExtra(AppConstants.EXTRA_APP_MODEL, mRecommandModels.get(i));
-                EventReporter.greyAttribute(AppListActivity.this, "recommend_clone", mRecommandModels.get(i).getPackageName());
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                checkAndClone(mRecommandModels.get(i));
             }
         });
 
@@ -184,16 +180,26 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent data = new Intent();
-                data.putExtra(AppConstants.EXTRA_APP_MODEL, mInstalledModels.get(position));
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                checkAndClone(mInstalledModels.get(position));
             }
         });
         adContainer = (LinearLayout) findViewById(R.id.ad_container);
         sponsorText = (TextView) findViewById(R.id.sponsor_text);
     }
 
+    private void checkAndClone(AppModel model) {
+        if (AppUser.isRewardEnabled() && AppUser.getInstance().isRewardAvailable()
+                && AppUser.getInstance().isRewardVideoTaskReady()
+                && AppManager.getClonedApp(this).size() > RemoteConfig.getLong("conf_clone_threshold")) {
+            HotTaskDialog dialog = new HotTaskDialog.Builder(this).setTitle(getString(R.string.need_coin_for_clone)).build();
+            dialog.show();
+        } else {
+            Intent data = new Intent();
+            data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
+            setResult(Activity.RESULT_OK, data);
+            finish();
+        }
+    }
     private void showMoreApps() {
         ObjectAnimator alpha = ObjectAnimator.ofFloat(mTextMore, "alpha", 0.0f, 1.0f);
         alpha.setDuration(300);

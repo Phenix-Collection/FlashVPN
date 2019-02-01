@@ -5,26 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.polestar.superclone.R;
-import com.polestar.superclone.component.BaseActivity;
-import com.polestar.superclone.utils.MLogs;
-import com.polestar.superclone.widgets.ProductGridAdapter;
-import com.polestar.superclone.widgets.ProductGridItem;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.network.datamodels.Product;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProductActivity extends Activity implements IProductStatusListener{
 
@@ -97,9 +90,8 @@ public class ProductActivity extends Activity implements IProductStatusListener{
                     toast(status);
                     return;
                 }
-                mAppUser.consumeProduct(mProduct.mId, 1,
-                        mEmail.getText().toString(), mPaypal.getText().toString(), ProductActivity.this );
-                //consumeProduct();
+                ProductManager.getInstance().buyProduct(mProduct, ProductActivity.this,mEmail.getText().toString(), mPaypal.getText().toString());
+                //buyProduct();
             }
         });
     }

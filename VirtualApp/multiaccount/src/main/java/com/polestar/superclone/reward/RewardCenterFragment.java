@@ -173,7 +173,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
                 icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, Color.parseColor("#4B57C0"));
                 break;
         }
-        int status = appUser.checkTask(task);
+        int status = TaskExecutor.checkTask(task);
         MLogs.d("task " + task.mTitle + " status: " + status);
         if (status == RewardErrorCode.TASK_EXCEED_DAY_LIMIT) {
 //            reward.setText(R.string.iconfont_wait);
@@ -214,7 +214,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
                 toastError(RewardErrorCode.TASK_UNEXPECTED_ERROR);
                 return;
             }
-            if(! loader.hasValidCache() ) {
+            if(! appUser.isRewardVideoTaskReady() ) {
                 taskRunningProgressBar.setVisibility(View.VISIBLE);
             }
             mTaskExecutor.execute(task, new RewardTaskListener(view));
