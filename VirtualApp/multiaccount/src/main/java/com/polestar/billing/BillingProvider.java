@@ -9,10 +9,12 @@ import android.os.Looper;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.MLogs;
+import com.polestar.superclone.utils.PreferencesUtils;
 
 import java.util.List;
 
@@ -23,50 +25,50 @@ public class BillingProvider {
     private static BillingProvider sInstance;
     private BillingManager manager;
     private final String TAG = "BillingProvider";
-    private boolean isAdFreeVIP;
-    public static final String KEY ="~&{\u007FCq^cN%A/GN9wt}S# Ft{DUf#B@PD^]ZPxW'nU@uuX%]A]D\\nco$=g]Bp9be^!!}B\\@FbSt}g\\yO=sox_ZRNl\"C{\"Gn~pF\\\"Yu%|%S^uyAtn=zBUTECN";
 
     private OnStatusUpdatedListener statusUpdatedListener;
 
     private BillingProvider() {
-        if (VirtualCore.get().isMainProcess()) {
-            manager = new BillingManager(MApp.getApp(), new BillingManager.BillingUpdatesListener() {
-                @Override
-                public void onBillingClientSetupFinished() {
-                    MLogs.d(TAG, "onBillingClientSetupFinished");
-                }
+        manager = new BillingManager(MApp.getApp(), new BillingManager.BillingUpdatesListener() {
+            @Override
+            public void onBillingClientSetupFinished() {
+                MLogs.d(TAG, "onBillingClientSetupFinished");
+            }
 
-                @Override
-                public void onConsumeFinished(String token, @BillingClient.BillingResponse int result) {
+            @Override
+            public void onConsumeFinished(String token, @BillingClient.BillingResponse int result) {
 
-                }
+            }
 
-                @Override
-                public void onPurchasesUpdated(List<Purchase> purchases) {
-                    for (Purchase purchase : purchases) {
-                        MLogs.d(TAG, "SKU:  " + purchase.getSku()+ " time: " + purchase.getPurchaseTime()
-                                + " state: " + purchase.getPurchaseState());
-                        switch (purchase.getSku()) {
-                            case BillingConstants.SKU_AD_FREE:
+            @Override
+            public void onPurchasesUpdated(List<Purchase> purchases) {
+                for (Purchase purchase : purchases) {
+                    MLogs.d(TAG, "SKU:  " + purchase);
+                    switch (purchase.getSku()) {
+//                            case BillingConstants.SKU_PREMIUM_1_MONTH:
+//                            case BillingConstants.SKU_PREMIUM_3_MONTH:
+//                            case BillingConstants.SKU_PREMIUM_12_MONTH:
+                        default:
+                            if(purchase.isAutoRenewing()) {
                                 MLogs.d(TAG, "Got a AD free version!!! ");
-                                isAdFreeVIP = (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED);
-                                break;
-                        }
-                    }
-                    if (statusUpdatedListener != null) {
-                        new Handler(Looper.myLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (statusUpdatedListener != null) {
-                                    statusUpdatedListener.onStatusUpdated();
-                                }
+                                PreferencesUtils.setAdFree(true);
+//                                MApp.getInstance(NovaApp.getApp()).setVIP(true);
                             }
-                        });
+                            break;
                     }
-                    AppManager.reloadLockerSetting();
                 }
-            });
-        }
+                if (statusUpdatedListener != null) {
+                    new Handler(Looper.myLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (statusUpdatedListener != null) {
+                                statusUpdatedListener.onStatusUpdated();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     synchronized public static BillingProvider get() {
@@ -80,10 +82,6 @@ public class BillingProvider {
         return manager;
     }
 
-    public boolean isAdFreeVIP() {
-        return isAdFreeVIP;
-    }
-
     public interface OnStatusUpdatedListener {
         void onStatusUpdated();
     }
@@ -92,6 +90,12 @@ public class BillingProvider {
         statusUpdatedListener = listener;
         if (manager != null) {
             manager.queryPurchases();
+        }
+    }
+
+    public void querySkuDetails( final String itemType, final SkuDetailsResponseListener listener){
+        if (manager != null) {
+            manager.querySkuDetailsAsync(itemType, BillingConstants.getSkuList(itemType), listener);
         }
     }
 }

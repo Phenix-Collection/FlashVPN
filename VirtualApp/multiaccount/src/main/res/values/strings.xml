@@ -93,9 +93,8 @@
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
     <string name="settings_gms">Enable Google Play service for clones</string>
     <string name="settings_gms_title">Google Play Service</string>
-    <string name="settings_adfree_title">Remove Ads</string>
-    <string name="adfree_dialog_title">Upgrade to Ad Free Version</string>
-    <string name="settings_adfree_content">Turn off Ads in the app</string>
+    <string name="settings_adfree_title">Join VIP</string>
+    <string name="settings_adfree_content">Become premium user of Superb Cloner</string>
     <string name="adfree_dialog_content">Become premium user of Superb Cloner and turn off all ADs in this app. Do you want to buy now?</string>
     <string name="settings_gms_enable_toast">Google Play Service is enabled</string>
     <string name="settings_gms_disable_toast">Google Play Service is disabled</string>
@@ -286,4 +285,11 @@
     <string name="invite_friends_mail_title">Win your coins with %s.</string>
     <string name="reward_load_failed">Load fail. Please check below and retry: \n - Google Play Service is installed \n - Superb Cloner is not running in any clone apps \n - Connect network</string>
     <string name="need_coin_for_clone">Get coins to finish clone</string>
+    <string name="user_activity_title">Premium User</string>
+    <string name="become_vip_tips1">Remove all ads</string>
+    <string name="become_vip_tips2">Enjoy unlimited clones</string>
+    <string name="become_vip_tips3">Compatible for most app and games with 64bit support</string>
+    <string name="become_vip_tips4">Timely response for issue reports via feedback</string>
+    <string name="become_vip">Become VIP user of Superb Cloner</string>
+    <string name="free_trial_text">+%d days free trial</string>
 </resources>

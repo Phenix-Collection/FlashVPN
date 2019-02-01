@@ -198,15 +198,17 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         Product product;
         if (AppUser.isRewardEnabled()
                 && AppUser.getInstance().isRewardAvailable()
+                && !AppUser.getInstance().checkAndConsumeClone(1)
+                //TODO
                 && AppUser.getInstance().isRewardVideoTaskReady()
                 && AppManager.getClonedApp(this).size() > RemoteConfig.getLong("conf_clone_threshold")
-                && !AppUser.getInstance().checkAndConsumeClone(1)
                 && (product = AppUser.getInstance().get1CloneProduct()) != null) {
             ProductManager productManager = ProductManager.getInstance();
             if (productManager.canBuyProduct(product) == RewardErrorCode.PRODUCT_OK) {
                 productManager.buyProduct(product, new IProductStatusListener() {
                     @Override
                     public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
+                        AppUser.getInstance().checkAndConsumeClone(1);
                         RewardErrorCode.toastMessage(AppListActivity.this, RewardErrorCode.PRODUCT_OK, totalCost);
                         Intent data = new Intent();
                         data.putExtra(AppConstants.EXTRA_APP_MODEL, model);

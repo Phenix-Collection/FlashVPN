@@ -297,4 +297,8 @@
         <key>slot_reward_center_video</key>
         <value>adm_reward:ca-app-pub-5490912237269284/1920616793:0</value>
     </entry>
+    <entry>
+        <key>active_sub_sku_items</key>
+        <value>premium_service_one_month;premium_service_3_month;premium_service_1_year</value>
+    </entry>
 </defaultsMap>

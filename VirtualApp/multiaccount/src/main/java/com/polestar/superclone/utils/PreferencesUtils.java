@@ -417,7 +417,7 @@ public class PreferencesUtils {
     }
 
     public static boolean isAdFree() {
-        boolean purchased =  BillingProvider.get().isAdFreeVIP()? getBoolean(MApp.getApp(), "ad_free") : false;
+        boolean purchased =  getBoolean(MApp.getApp(), "ad_free") ;
 
         boolean rewarded = AppUser.isRewardEnabled() && AppUser.getInstance().checkAdFree();
         return purchased || rewarded;

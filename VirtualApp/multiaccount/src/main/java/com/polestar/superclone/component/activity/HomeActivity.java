@@ -310,9 +310,6 @@ public class HomeActivity extends BaseActivity {
             if (autoShowInterstitial && !isAutoInterstitialShown) {
                 loadHomeInterstitial();
             }
-            if (requestAdFree) {
-                updateBillingStatus();
-            }
         } else {
             hideAd();
         }
@@ -407,22 +404,6 @@ public class HomeActivity extends BaseActivity {
         }
         boolean needShowRate = guideRateIfNeeded();
         boolean showAdFree = false;
-        if (!needShowRate && !BillingProvider.get().isAdFreeVIP()) {
-            long interval = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL) * 60 * 60 * 1000;
-            long interval2 = RemoteConfig.getLong(CONFIG_AD_FREE_DIALOG_INTERVAL_2) * 60 * 60 * 1000;
-            interval = PreferencesUtils.getAdFreeClickStatus() ? interval : interval2;
-            long last = PreferencesUtils.getLastAdFreeDialogTime();
-            if ((System.currentTimeMillis() - last) > interval ) {
-                showAdFree = true;
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAdFreeDialog();
-                    }
-                }, 800);
-                PreferencesUtils.updateLastAdFreeDialogTime();
-            }
-        }
         if (!showAdFree && !isAutoInterstitialShown && autoShowInterstitial) {
             if (interstitialAd != null && !PreferencesUtils.isAdFree()) {
                 try {
@@ -439,50 +420,6 @@ public class HomeActivity extends BaseActivity {
     }
 
     private boolean requestAdFree = false;
-    private void showAdFreeDialog() {
-        EventReporter.generalClickEvent(HomeActivity.this, "ad_free_dialog_from_home");
-        UpDownDialog.show(HomeActivity.this, getString(R.string.adfree_dialog_title), getString(R.string.adfree_dialog_content),
-                getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i) {
-                            case UpDownDialog.POSITIVE_BUTTON:
-                                BillingProvider.get().getBillingManager()
-                                        .initiatePurchaseFlow(HomeActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
-                                requestAdFree = true;
-                                PreferencesUtils.updateAdFreeClickStatus(true);
-                                EventReporter.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_yes");
-                                break;
-                            case UpDownDialog.NEGATIVE_BUTTON:
-                                PreferencesUtils.updateAdFreeClickStatus(false);
-                                EventReporter.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
-                                break;
-                        }
-                    }
-                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                PreferencesUtils.updateAdFreeClickStatus(false);
-                EventReporter.generalClickEvent(HomeActivity.this, "click_home_ad_free_dialog_no");
-            }
-        });
-    }
-
-    private void updateBillingStatus() {
-        BillingProvider.get().updateStatus(new BillingProvider.OnStatusUpdatedListener() {
-            @Override
-            public void onStatusUpdated() {
-                MLogs.d("Billing onStatusUpdated");
-                if (requestAdFree) {
-                    if (BillingProvider.get().isAdFreeVIP()) {
-                        PreferencesUtils.setAdFree(true);
-                        hideAd();
-                    }
-                    requestAdFree = false;
-                }
-            }
-        });
-    }
 
     private void hideAd() {
         giftIconLayout.setVisibility(View.GONE);

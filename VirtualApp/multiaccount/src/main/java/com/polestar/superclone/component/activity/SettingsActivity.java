@@ -14,6 +14,7 @@ import com.polestar.billing.BillingProvider;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.constant.AppConstants;
+import com.polestar.superclone.reward.VIPActivity;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.PreferencesUtils;
@@ -26,9 +27,7 @@ import com.polestar.superclone.widgets.UpDownDialog;
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
     private BlueSwitch gmsSwitch;
-    private BlueSwitch adFreeSwitch;
-
-    private boolean requestAdFree;
+    private View vipItem;
 
     private final static int REQUEST_UNLOCK_SETTINGS = 1;
 
@@ -100,48 +99,13 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
-        adFreeSwitch = (BlueSwitch) findViewById(R.id.adfree_switch);
-        adFreeSwitch.setOnClickListener(new View.OnClickListener() {
+        vipItem = findViewById(R.id.vip_item);
+        vipItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventReporter.generalClickEvent(SettingsActivity.this, "click_ad_free_switch");
-                if (BillingProvider.get().isAdFreeVIP()) {
-                    PreferencesUtils.setAdFree(adFreeSwitch.isChecked());
-                    updateBillingStatus();
-                } else {
-                    EventReporter.generalClickEvent(SettingsActivity.this, "ad_free_dialog_from_setting");
-                    PreferencesUtils.updateLastAdFreeDialogTime();
-                    UpDownDialog.show(SettingsActivity.this, getString(R.string.adfree_dialog_title), getString(R.string.adfree_dialog_content),
-                            getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    switch (i) {
-                                        case UpDownDialog.POSITIVE_BUTTON:
-                                            BillingProvider.get().getBillingManager()
-                                                    .initiatePurchaseFlow(SettingsActivity.this, BillingConstants.SKU_AD_FREE, BillingClient.SkuType.INAPP);
-                                            requestAdFree = true;
-                                            PreferencesUtils.updateAdFreeClickStatus(true);
-                                            EventReporter.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_yes");
-                                            break;
-                                        case UpDownDialog.NEGATIVE_BUTTON:
-                                            PreferencesUtils.updateAdFreeClickStatus(false);
-                                            EventReporter.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
-                                            break;
-                                    }
-                                    adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
-                                }
-                            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface) {
-                            PreferencesUtils.updateAdFreeClickStatus(false);
-                            EventReporter.generalClickEvent(SettingsActivity.this, "click_ad_free_dialog_no");
-                            adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
-                        }
-                    });
-                }
+                VIPActivity.start(SettingsActivity.this, VIPActivity.FROM_SETTING);
             }
         });
-        adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
     }
 
     public void onNotificationSettingClick(View view) {
@@ -180,25 +144,10 @@ public class SettingsActivity extends BaseActivity {
         }
     }
 
-    private void updateBillingStatus() {
-        BillingProvider.get().updateStatus(new BillingProvider.OnStatusUpdatedListener() {
-            @Override
-            public void onStatusUpdated() {
-                MLogs.d("Billing onStatusUpdated");
-                if (requestAdFree) {
-                    if (BillingProvider.get().isAdFreeVIP()) {
-                        PreferencesUtils.setAdFree(true);
-                    }
-                    requestAdFree = false;
-                }
-                adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
-            }
-        });
-    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        updateBillingStatus();
     }
 
     @Override

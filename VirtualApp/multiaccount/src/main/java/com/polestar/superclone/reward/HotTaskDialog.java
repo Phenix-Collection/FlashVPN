@@ -50,7 +50,7 @@ public class HotTaskDialog extends Dialog {
         vipView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VIPActivity.start(activity);
+                VIPActivity.start(activity, VIPActivity.FROM_TASK_DIALOG);
             }
         });
         mTaskList = AppUser.getInstance().getRecommendTasks();

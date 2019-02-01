@@ -200,14 +200,15 @@
                 android:textColor="@color/text_gray_light"
                 android:textSize="10sp" />
         </RelativeLayout>
-        <include layout="@layout/setting_line_splitter" android:visibility="gone"/>
+        <include layout="@layout/setting_line_splitter" android:visibility="visible"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@android:color/white"
             android:paddingLeft="22dp"
             android:paddingStart="22dp"
-            android:visibility="gone"
+            android:visibility="visible"
+            android:id="@+id/vip_item"
             >
 
             <com.polestar.superclone.widgets.BlueSwitch
@@ -220,7 +221,8 @@
                 android:paddingBottom="28dp"
                 android:paddingLeft="22dp"
                 android:paddingRight="22dp"
-                android:paddingTop="28dp" />
+                android:paddingTop="28dp"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/adfree_title"

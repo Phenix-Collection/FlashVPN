@@ -135,7 +135,7 @@ dependencies {
     compile project(':fuseadloader')
     compile project(':Booster')
 
-    compile 'com.android.billingclient:billing:dp-1'
+    api 'com.android.billingclient:billing:1.0'
     implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
 
     //Avazu

@@ -7,18 +7,16 @@ package com.polestar.billing;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClient.BillingResponse;
-import com.android.billingclient.api.BillingClient.FeatureType;
-import com.android.billingclient.api.BillingClient.SkuType;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.Purchase.PurchasesResult;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails.SkuDetailsResult;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.polestar.superclone.utils.MLogs;
 
@@ -67,7 +65,7 @@ public class BillingManager implements PurchasesUpdatedListener {
      * want to make it easy for an attacker to replace the public key with one
      * of their own and then fake messages from the server.
      */
-    private static final String BASE_64_ENCODED_PUBLIC_KEY = "ArtdUkbxgaPFIg68T4jLZIcamls+0ShzawmOX7+JEd9yjzKRfnmQoCdr2P7ZX2HVXpjIRdxQIDAQAB";
+    private static final String BASE_64_ENCODED_PUBLIC_KEY = "CONSTRUCT_YOUR_KEY_AND_PLACE_IT_HERE";
 
     /**
      * Listener to the updates that happen when purchases list was updated or consumption of the
@@ -75,51 +73,24 @@ public class BillingManager implements PurchasesUpdatedListener {
      */
     public interface BillingUpdatesListener {
         void onBillingClientSetupFinished();
-        void onConsumeFinished(String token, @BillingResponse int result);
+        void onConsumeFinished(String token, @BillingClient.BillingResponse int result);
         void onPurchasesUpdated(List<Purchase> purchases);
     }
 
-    private static final String KEY = "we=\\\"e~SnrU|}gCwX.rc&\\O#SY9\"\u007F }sdw RE$z[DQd'9fs.ocU@%PRe9\\r/f\"UYT=f~O\"uN%G_[f%P\"ztUSq ";
-    private static final String KEY2 = ".Q.S_^UB^yo#n'_OwGXU_o\u007F^ \"\u007F}CTf!&&{=&uqp#ez@]SB\"n$n=B\\NX[SaP\"U\\wtu}uLdB%s`ZC \"DLpg@GzsLxPlR#DcG_RWGWT";
-    private static String hash = null;
-    private static String getKey() {
-        if (hash == null) {
-            StringBuffer str3 = new StringBuffer();  //存储解密后的字符串
-            for (int i = 0; i < BillingConstants.BILL_KEY.length(); i++) {
-                char c = (char) (BillingConstants.BILL_KEY.charAt(i) ^ 22);
-                str3.append(c);
-            }
-            for (int i = 0; i < KEY.length(); i++) {
-                char c = (char) (KEY.charAt(i) ^ 22);
-                str3.append(c);
-            }
-            for (int i = 0; i < BillingProvider.KEY.length(); i++) {
-                char c = (char) (BillingProvider.KEY.charAt(i) ^ 22);
-                str3.append(c);
-            }
-            for (int i = 0; i < KEY2.length(); i++) {
-                char c = (char) (KEY2.charAt(i) ^ 22);
-                str3.append(c);
-            }
-            hash = str3.toString();
-        }
-        return hash;
-    }
     /**
      * Listener for the Billing client state to become connected
      */
     public interface ServiceConnectedListener {
-        void onServiceConnected(@BillingResponse int resultCode);
+        void onServiceConnected(@BillingClient.BillingResponse int resultCode);
     }
 
-    public BillingManager(Context ctx, final BillingUpdatesListener updatesListener) {
+    public BillingManager(Context context, final BillingUpdatesListener updatesListener) {
         MLogs.d(TAG, "Creating Billing client.");
-        mContext = ctx;
+        mContext = context;
         mBillingUpdatesListener = updatesListener;
-        mBillingClient = new BillingClient.Builder(mContext).setListener(this).build();
+        mBillingClient = BillingClient.newBuilder(mContext).setListener(this).build();
 
         MLogs.d(TAG, "Starting setup.");
-        getKey();
 
         // Start setup. This is asynchronous and the specified listener will be called
         // once setup completes.
@@ -141,22 +112,22 @@ public class BillingManager implements PurchasesUpdatedListener {
      */
     @Override
     public void onPurchasesUpdated(int resultCode, List<Purchase> purchases) {
-        if (resultCode == BillingResponse.OK) {
+        if (resultCode == BillingClient.BillingResponse.OK) {
             for (Purchase purchase : purchases) {
                 handlePurchase(purchase);
             }
             mBillingUpdatesListener.onPurchasesUpdated(mPurchases);
-        } else if (resultCode == BillingResponse.USER_CANCELED) {
-            MLogs.i(TAG, "onPurchasesUpdated() - user cancelled the purchase flow - skipping");
+        } else if (resultCode == BillingClient.BillingResponse.USER_CANCELED) {
+            MLogs.d(TAG, "onPurchasesUpdated() - user cancelled the purchase flow - skipping");
         } else {
-            MLogs.e(TAG, "onPurchasesUpdated() got unknown resultCode: " + resultCode);
+            MLogs.d(TAG, "onPurchasesUpdated() got unknown resultCode: " + resultCode);
         }
     }
 
     /**
      * Start a purchase flow
      */
-    public void initiatePurchaseFlow(final Activity activity, final String skuId, final @SkuType String billingType) {
+    public void initiatePurchaseFlow(final Activity activity, final String skuId, final @BillingClient.SkuType String billingType) {
         initiatePurchaseFlow(activity, skuId, null, billingType);
     }
 
@@ -164,12 +135,12 @@ public class BillingManager implements PurchasesUpdatedListener {
      * Start a purchase or subscription replace flow
      */
     public void initiatePurchaseFlow(final Activity activity, final String skuId, final ArrayList<String> oldSkus,
-                                     final @SkuType String billingType) {
+                                     final @BillingClient.SkuType String billingType) {
         Runnable purchaseFlowRequest = new Runnable() {
             @Override
             public void run() {
                 MLogs.d(TAG, "Launching in-app purchase flow. Replace old SKU? " + (oldSkus != null));
-                BillingFlowParams purchaseParams = new BillingFlowParams.Builder()
+                BillingFlowParams purchaseParams = BillingFlowParams.newBuilder()
                         .setSku(skuId).setType(billingType).setOldSkus(oldSkus).build();
                 mBillingClient.launchBillingFlow(activity, purchaseParams);
             }
@@ -194,18 +165,21 @@ public class BillingManager implements PurchasesUpdatedListener {
         }
     }
 
-    public void querySkuDetailsAsync(@SkuType final String itemType, final List<String> skuList,
+    public void querySkuDetailsAsync(@BillingClient.SkuType final String itemType, final List<String> skuList,
                                      final SkuDetailsResponseListener listener) {
         // Creating a runnable from the request to use it inside our connection retry policy below
         Runnable queryRequest = new Runnable() {
             @Override
             public void run() {
                 // Query the purchase async
-                mBillingClient.querySkuDetailsAsync(itemType, skuList,
+                SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+                params.setSkusList(skuList).setType(itemType);
+                mBillingClient.querySkuDetailsAsync(params.build(),
                         new SkuDetailsResponseListener() {
                             @Override
-                            public void onSkuDetailsResponse(SkuDetailsResult result) {
-                                listener.onSkuDetailsResponse(result);
+                            public void onSkuDetailsResponse(int responseCode,
+                                                             List<SkuDetails> skuDetailsList) {
+                                listener.onSkuDetailsResponse(responseCode, skuDetailsList);
                             }
                         });
             }
@@ -221,7 +195,7 @@ public class BillingManager implements PurchasesUpdatedListener {
         if (mTokensToBeConsumed == null) {
             mTokensToBeConsumed = new HashSet<>();
         } else if (mTokensToBeConsumed.contains(purchaseToken)) {
-            MLogs.i(TAG, "Token was already scheduled to be consumed - skipping...");
+            MLogs.d(TAG, "Token was already scheduled to be consumed - skipping...");
             return;
         }
         mTokensToBeConsumed.add(purchaseToken);
@@ -229,10 +203,10 @@ public class BillingManager implements PurchasesUpdatedListener {
         // Generating Consume Response listener
         final ConsumeResponseListener onConsumeListener = new ConsumeResponseListener() {
             @Override
-            public void onConsumeResponse(String outToken, @BillingResponse int billingResult) {
+            public void onConsumeResponse(@BillingClient.BillingResponse int responseCode, String purchaseToken) {
                 // If billing service was disconnected, we try to reconnect 1 time
                 // (feel free to introduce your retry policy here).
-                mBillingUpdatesListener.onConsumeFinished(outToken, billingResult);
+                mBillingUpdatesListener.onConsumeFinished(purchaseToken, responseCode);
             }
         };
 
@@ -266,7 +240,7 @@ public class BillingManager implements PurchasesUpdatedListener {
      */
     private void handlePurchase(Purchase purchase) {
         if (!verifyValidSignature(purchase.getOriginalJson(), purchase.getSignature())) {
-            MLogs.i(TAG, "Got a purchase: " + purchase + "; but signature is bad. Skipping...");
+            MLogs.d(TAG, "Got a purchase: " + purchase + "; but signature is bad. Skipping...");
             return;
         }
 
@@ -280,8 +254,8 @@ public class BillingManager implements PurchasesUpdatedListener {
      */
     private void onQueryPurchasesFinished(Purchase.PurchasesResult result) {
         // Have we been disposed of in the meantime? If so, or bad result code, then quit
-        if (mBillingClient == null || result.getResponseCode() != BillingResponse.OK) {
-            MLogs.e(TAG, "Billing client was null or result code (" + result.getResponseCode()
+        if (mBillingClient == null || result.getResponseCode() != BillingClient.BillingResponse.OK) {
+            MLogs.d(TAG, "Billing client was null or result code (" + result.getResponseCode()
                     + ") was bad - quitting");
             return;
         }
@@ -290,7 +264,7 @@ public class BillingManager implements PurchasesUpdatedListener {
 
         // Update the UI and purchases inventory with new list of purchases
         mPurchases.clear();
-        onPurchasesUpdated(BillingResponse.OK, result.getPurchasesList());
+        onPurchasesUpdated(BillingClient.BillingResponse.OK, result.getPurchasesList());
     }
 
     /**
@@ -301,11 +275,11 @@ public class BillingManager implements PurchasesUpdatedListener {
      * </p>
      */
     public boolean areSubscriptionsSupported() {
-        int responseCode = mBillingClient.isFeatureSupported(FeatureType.SUBSCRIPTIONS);
-        if (responseCode != BillingResponse.OK) {
-            MLogs.e(TAG, "areSubscriptionsSupported() got an error response: " + responseCode);
+        int responseCode = mBillingClient.isFeatureSupported(BillingClient.FeatureType.SUBSCRIPTIONS);
+        if (responseCode != BillingClient.BillingResponse.OK) {
+            MLogs.d(TAG, "areSubscriptionsSupported() got an error response: " + responseCode);
         }
-        return responseCode == BillingResponse.OK;
+        return responseCode == BillingClient.BillingResponse.OK;
     }
 
     /**
@@ -317,40 +291,30 @@ public class BillingManager implements PurchasesUpdatedListener {
             @Override
             public void run() {
                 long time = System.currentTimeMillis();
-                PurchasesResult purchasesResult = null;
-                try {
-                    purchasesResult = mBillingClient.queryPurchases(SkuType.INAPP);
-                    MLogs.i(TAG, "Querying purchases elapsed time: " + (System.currentTimeMillis() - time)
-                            + "ms");
-                    // If there are subscriptions supported, we add subscription rows as well
-                    if (areSubscriptionsSupported()) {
-                        PurchasesResult subscriptionResult
-                                = mBillingClient.queryPurchases(SkuType.SUBS);
-                        MLogs.i(TAG, "Querying purchases and subscriptions elapsed time: "
-                                + (System.currentTimeMillis() - time) + "ms");
-                        MLogs.i(TAG, "Querying subscriptions result code: "
-                                + subscriptionResult.getResponseCode());
-                        if (subscriptionResult.getPurchasesList() != null) {
-                            MLogs.i(TAG, " res: " + subscriptionResult.getPurchasesList().size());
-                        }
+                Purchase.PurchasesResult purchasesResult = mBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
+                MLogs.d(TAG, "Querying purchases elapsed time: " + (System.currentTimeMillis() - time)
+                        + "ms");
+                // If there are subscriptions supported, we add subscription rows as well
+                if (areSubscriptionsSupported()) {
+                    Purchase.PurchasesResult subscriptionResult
+                            = mBillingClient.queryPurchases(BillingClient.SkuType.SUBS);
+                    MLogs.d(TAG, "Querying purchases and subscriptions elapsed time: "
+                            + (System.currentTimeMillis() - time) + "ms");
+                    MLogs.d(TAG, "Querying subscriptions result code: "
+                            + subscriptionResult.getResponseCode()
+                            + " res: " + subscriptionResult.getPurchasesList().size());
 
-                        if (subscriptionResult.getResponseCode() == BillingResponse.OK) {
-                            purchasesResult.getPurchasesList().addAll(
-                                    subscriptionResult.getPurchasesList());
-                        } else {
-                            MLogs.logBug(TAG, "Got an error response trying to query subscription purchases");
-                        }
-                    } else if (purchasesResult.getResponseCode() == BillingResponse.OK) {
-                        MLogs.i(TAG, "Skipped subscription purchases query since they are not supported");
+                    if (subscriptionResult.getResponseCode() == BillingClient.BillingResponse.OK) {
+                        purchasesResult.getPurchasesList().addAll(
+                                subscriptionResult.getPurchasesList());
                     } else {
-                        MLogs.e(TAG, "queryPurchases() got an error response code: "
-                                + purchasesResult.getResponseCode());
+                        Log.e(TAG, "Got an error response trying to query subscription purchases");
                     }
-                } catch (Exception e) {
-                    MLogs.logBug(TAG, MLogs.getStackTraceString(e));
-                }
-                if (purchasesResult == null) {
-                    purchasesResult = new PurchasesResult(null, BillingResponse.SERVICE_DISCONNECTED);
+                } else if (purchasesResult.getResponseCode() == BillingClient.BillingResponse.OK) {
+                    MLogs.d(TAG, "Skipped subscription purchases query since they are not supported");
+                } else {
+                    MLogs.d(TAG, "queryPurchases() got an error response code: "
+                            + purchasesResult.getResponseCode());
                 }
                 onQueryPurchasesFinished(purchasesResult);
             }
@@ -362,10 +326,10 @@ public class BillingManager implements PurchasesUpdatedListener {
     public void startServiceConnection(final Runnable executeOnSuccess) {
         mBillingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onBillingSetupFinished(@BillingResponse int billingResponseCode) {
+            public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
                 MLogs.d(TAG, "Setup finished. Response code: " + billingResponseCode);
 
-                if (billingResponseCode == BillingResponse.OK) {
+                if (billingResponseCode == BillingClient.BillingResponse.OK) {
                     mIsServiceConnected = true;
                     if (executeOnSuccess != null) {
                         executeOnSuccess.run();
@@ -400,11 +364,15 @@ public class BillingManager implements PurchasesUpdatedListener {
     private boolean verifyValidSignature(String signedData, String signature) {
         // Some sanity checks to see if the developer (that's you!) really followed the
         // instructions to run this sample (don't put these checks on your app!)
+//        if (BASE_64_ENCODED_PUBLIC_KEY.contains("CONSTRUCT_YOUR")) {
+//            throw new RuntimeException("Please update your app's public key at: "
+//                    + "BASE_64_ENCODED_PUBLIC_KEY");
+//        }
 
         try {
-            return Security.verifyPurchase(getKey(), signedData, signature);
+            return Security.verifyPurchase(BillingConstants.BILL_KEY, signedData, signature);
         } catch (IOException e) {
-            MLogs.e(TAG, "Got an exception trying to validate a purchase: " + e);
+            Log.e(TAG, "Got an exception trying to validate a purchase: " + e);
             return false;
         }
     }
