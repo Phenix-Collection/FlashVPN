@@ -15,7 +15,6 @@
  */
 package com.polestar.billing;
 
-import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClient.SkuType;
 import com.polestar.superclone.utils.RemoteConfig;
 
@@ -30,7 +29,13 @@ public final class BillingConstants {
     // SKUs for our products: the premium upgrade (non-consumable) and gas (consumable)
     //public static final String SKU_AD_FREE = "test_not_buy";
 
-    private static String[] IN_APP_SUBS;
+    public static final String VIP_1_MONTH = "premium_service_one_month";
+    public static final String VIP_3_MONTH = "premium_service_3_month";
+    public static final String VIP_1_YEAR = "premium_service_1_year";
+
+    private static String[] IN_APP_SUBS = new String[] {
+            VIP_1_MONTH,VIP_3_MONTH,VIP_1_YEAR
+    };
 
     public static final String BILL_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoFJpEUoPNkUa5vhq7wakFXaIAG/YW+04U0P+/gMg4fGP9uRg9N5kAvXRAe+FcEeHbXHtSlavjQs7yNzgoatGtCdsYlMGwKG9UAyAIItO6i1FABwYNCY1Nr69mObx5aZMMTv50aWif4UPQ3kjS0mtOnodnsqMS87JvA1HdueNz0pEamB7vJFIn9lrzJG1kuTUVWYopA7oD5NL7gbwsbHd6fz3q0Wg7aS233Sk2qVVMtBCmZ/aB0plnziWl+qwAyf4IMbT7R2l42Cj4JtLrcp4IIFXFISEjP8rpYCrC9AIPewxNO5LMQKsq7Rx6ve0cqxAlPcEF4HHNwGfhKJYrQ9iJQIDAQAB";
 

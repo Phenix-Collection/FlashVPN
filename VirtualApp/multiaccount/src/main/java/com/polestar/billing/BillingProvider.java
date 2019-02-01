@@ -10,9 +10,7 @@ import android.os.Looper;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.superclone.MApp;
-import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
 
@@ -28,6 +26,8 @@ public class BillingProvider {
 
     private OnStatusUpdatedListener statusUpdatedListener;
 
+    private boolean isVIP;
+
     private BillingProvider() {
         manager = new BillingManager(MApp.getApp(), new BillingManager.BillingUpdatesListener() {
             @Override
@@ -42,21 +42,35 @@ public class BillingProvider {
 
             @Override
             public void onPurchasesUpdated(List<Purchase> purchases) {
+                isVIP = false;
                 for (Purchase purchase : purchases) {
                     MLogs.d(TAG, "SKU:  " + purchase);
+                    if (purchase.isAutoRenewing()) {
+                        MLogs.d(TAG, "Got a AD free version!!! ");
+                        isVIP = true;
+                        break;
+                    }
                     switch (purchase.getSku()) {
-//                            case BillingConstants.SKU_PREMIUM_1_MONTH:
-//                            case BillingConstants.SKU_PREMIUM_3_MONTH:
-//                            case BillingConstants.SKU_PREMIUM_12_MONTH:
-                        default:
-                            if(purchase.isAutoRenewing()) {
-                                MLogs.d(TAG, "Got a AD free version!!! ");
-                                PreferencesUtils.setAdFree(true);
-//                                MApp.getInstance(NovaApp.getApp()).setVIP(true);
+                        case BillingConstants.VIP_1_MONTH:
+                            if ((System.currentTimeMillis() - purchase.getPurchaseTime()) < 30*24*3600) {
+                                isVIP = true;
                             }
+                            break;
+                        case BillingConstants.VIP_3_MONTH:
+                            if ((System.currentTimeMillis() - purchase.getPurchaseTime()) < 3*30*24*3600) {
+                                isVIP = true;
+                            }
+                            break;
+                        case BillingConstants.VIP_1_YEAR:
+                            if ((System.currentTimeMillis() - purchase.getPurchaseTime()) < 12*30*24*3600) {
+                                isVIP = true;
+                            }
+                            break;
+                        default:
                             break;
                     }
                 }
+                PreferencesUtils.setVIP(isVIP);
                 if (statusUpdatedListener != null) {
                     new Handler(Looper.myLooper()).post(new Runnable() {
                         @Override

@@ -218,6 +218,7 @@ public class HomeFragment extends BaseFragment {
             if (showLucky) {
                 size ++;
             }
+            size = size + 3 ;
 //            if ( size < 15 ) {
 //                if (adShowed) {
 //                    size = 15;

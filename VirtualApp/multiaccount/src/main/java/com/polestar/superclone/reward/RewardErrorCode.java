@@ -1,6 +1,7 @@
 package com.polestar.superclone.reward;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.polestar.superclone.MApp;
@@ -39,8 +40,14 @@ final public class RewardErrorCode {
             case ADErrorCode.TOTAL_LIMITTED:
                 return context.getString(R.string.error_day_limit);
             case TASK_OK:
-                float payment = (float) args[0];
-                return context.getString(R.string.task_ok, payment);
+                if (args.length == 1) {
+                    float payment = (float) args[0];
+                    if (payment > 0) {
+                        return context.getString(R.string.task_ok_with_coin, payment);
+                    }
+                } else {
+                    return context.getString(R.string.task_ok);
+                }
             case TASK_SUBMIT_CODE_OK:
                 return context.getString(R.string.submit_code_ok);
             case TASK_CODE_ALREADY_SUBMITTED:
@@ -61,12 +68,16 @@ final public class RewardErrorCode {
             default:
                 break;
         }
-        return context.getString(R.string.error_unexpected);
+//        return context.getString(R.string.error_unexpected);
+        return null;
     }
 
     public static void toastMessage(Context context, int code, Object... args) {
-        Toast.makeText(context,
-                RewardErrorCode.getToastMessage(code, args), Toast.LENGTH_SHORT).show();
+        String msg = RewardErrorCode.getToastMessage(code, args);
+        if (!TextUtils.isEmpty(msg)) {
+            Toast.makeText(context,
+                    RewardErrorCode.getToastMessage(code, args), Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

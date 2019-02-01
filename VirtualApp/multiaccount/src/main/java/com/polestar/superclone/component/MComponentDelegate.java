@@ -45,9 +45,10 @@ public class MComponentDelegate implements ComponentDelegate {
         mInterstitialActivitySet.add("com.mopub.mobileads.MraidActivity");
         mInterstitialActivitySet.add("com.mopub.common.MoPubBrowser");
         mInterstitialActivitySet.add("com.mopub.mobileads.MraidVideoPlayerActivity");
-        mInterstitialActivitySet.add("com.batmobi.BatMobiActivity");
         mInterstitialActivitySet.add("com.facebook.ads.AudienceNetworkActivity");
         mInterstitialActivitySet.add("com.facebook.ads.InterstitialAdActivity");
+        mInterstitialActivitySet.add("com.ironsource.sdk.controller.InterstitialActivity");
+        mInterstitialActivitySet.add("com.applovin.adview.AppLovinInterstitialActivity");
     }
     private IAppMonitor uiAgent;
     public void asyncInit() {
@@ -157,7 +158,7 @@ public class MComponentDelegate implements ComponentDelegate {
     @Override
     public void reloadSetting(String lockKey, boolean adFree, long lockInterval, boolean quickSwitch) {
         PreferencesUtils.setEncodedPatternPassword(MApp.getApp(),lockKey);
-        PreferencesUtils.setAdFree(adFree);
+        PreferencesUtils.setVIP(adFree);
         PreferencesUtils.setLockInterval(lockInterval);
     }
 

@@ -152,6 +152,12 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("reward_event", prop);
     }
 
+    public static void productEvent(String event) {
+        Bundle prop = new Bundle();
+        prop.putString("name", event);
+        mFirebaseAnalytics.logEvent("product_event", prop);
+    }
+
     public static void taskEvent(long id, int code) {
         Bundle prop = new Bundle();
         prop.putString("name", ""+id+"_"+code);
@@ -238,12 +244,6 @@ public class EventReporter {
             mFirebaseAnalytics.setUserProperty(PROP_CAMP, utm_campaign);
         }
         mFirebaseAnalytics.logEvent("install_referrer", prop);
-    }
-
-    public static void greyAttribute(Context context, String event, String pkg) {
-        Bundle prop = new Bundle();
-        prop.putString(event, pkg);
-        mFirebaseAnalytics.logEvent("grey_attribute", prop);
     }
 
     public static void generalClickEvent(Context context, String event) {

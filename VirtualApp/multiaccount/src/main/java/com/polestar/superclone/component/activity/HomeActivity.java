@@ -41,6 +41,7 @@ import com.polestar.superclone.reward.InviteActivity;
 import com.polestar.superclone.reward.RewardCenterFragment;
 import com.polestar.superclone.reward.ShareActions;
 import com.polestar.superclone.reward.StoreFragment;
+import com.polestar.superclone.reward.VIPActivity;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
@@ -233,17 +234,58 @@ public class HomeActivity extends BaseActivity {
 
 
     private void showGiftIcon() {
-        int giftRes = R.drawable.gift_ad;
-        giftIconView.setImageResource(giftRes);
-        giftIconView.setVisibility(View.VISIBLE);
-        giftIconLayout.setVisibility(View.VISIBLE);
+        int giftRes;
         long interval = System.currentTimeMillis() - PreferencesUtils.getLastIconAdClickTime(HomeActivity.this);
+        int random = new Random().nextInt(100);
         RelativeLayout layout = (RelativeLayout) giftIconLayout.findViewById(R.id.gift_new_tip);
         if (interval > 24 * 60 * 60 * 1000) {
             layout.setVisibility(View.VISIBLE);
         } else {
             layout.setVisibility(View.INVISIBLE);
         }
+        if (PreferencesUtils.isVIP()) {
+            giftRes = R.drawable.vip;
+            layout.setVisibility(View.INVISIBLE);
+            iconAdLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    VIPActivity.start(HomeActivity.this, VIPActivity.FROM_HOME_GIFT_ICON);
+                }
+            });
+        } else if (PreferencesUtils.isAdFree()){
+            giftRes = R.drawable.vip;
+            layout.setVisibility(View.INVISIBLE);
+            iconAdLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    VIPActivity.start(HomeActivity.this, VIPActivity.FROM_HOME_GIFT_ICON);
+                }
+            });
+        } else {
+            if (random < RemoteConfig.getLong("config_no_ad_icon_percent")) {
+                giftRes = R.drawable.no_ad;
+                iconAdLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PreferencesUtils.updateIconAdClickTime(HomeActivity.this);
+                        doSwitchToStoreFragment();
+                    }
+                });
+            } else {
+                giftRes = R.drawable.gift_ad;
+                iconAdLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
+                        startActivity(intent);
+                        EventReporter.homeGiftClick(HomeActivity.this, "lucky_icon");
+                    }
+                });
+            }
+        }
+        giftIconView.setImageResource(giftRes);
+        giftIconView.setVisibility(View.VISIBLE);
+        giftIconLayout.setVisibility(View.VISIBLE);
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIconView, "scaleX", 0.7f, 1.3f, 1.0f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIconView, "scaleY", 0.7f, 1.3f, 1.0f);
         AnimatorSet animSet = new AnimatorSet();
@@ -298,15 +340,15 @@ public class HomeActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isAutoInterstitialShown " + isAutoInterstitialShown);
+        giftIconLayout.setVisibility(View.GONE);
+        giftIconView.setVisibility(View.GONE);
+        giftIconView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showGiftIcon();
+            }
+        },800);
         if (!PreferencesUtils.isAdFree()) {
-            giftIconLayout.setVisibility(View.GONE);
-            giftIconView.setVisibility(View.GONE);
-            giftIconView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showGiftIcon();
-                }
-            },800);
             if (autoShowInterstitial && !isAutoInterstitialShown) {
                 loadHomeInterstitial();
             }
@@ -422,8 +464,6 @@ public class HomeActivity extends BaseActivity {
     private boolean requestAdFree = false;
 
     private void hideAd() {
-        giftIconLayout.setVisibility(View.GONE);
-        giftIconView.setVisibility(View.GONE);
         if (mHomeFragment != null) {
             mHomeFragment.hideAd();
         }
@@ -445,18 +485,6 @@ public class HomeActivity extends BaseActivity {
         } else {
             LockSettingsActivity.start(HomeActivity.this,"home");
         }
-    }
-
-    public void onIconAdClick(View view) {
-        MLogs.d("onIconAdClick  " );
-        PreferencesUtils.updateIconAdClickTime(this);
-        if (PreferencesUtils.isAdFree()) {
-            return;
-        }
-
-        Intent intent = new Intent(this, NativeInterstitialActivity.class);
-        startActivity(intent);
-        EventReporter.homeGiftClick(this, "lucky_icon");
     }
 
     private final static String QUIT_RATE_RANDOM = "quit_rating_random";

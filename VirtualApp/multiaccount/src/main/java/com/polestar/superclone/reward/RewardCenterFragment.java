@@ -162,15 +162,15 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         switch (task.mTaskType) {
             case Task.TASK_TYPE_CHECKIN_TASK:
                 icon.setText((R.string.iconfont_checkin));
-                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, Color.parseColor("#4B57C0"));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, getResources().getColor(R.color.checkin_task_btn));
                 break;
             case Task.TASK_TYPE_SHARE_TASK:
                 icon.setText((R.string.iconfont_invite));
-                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, Color.parseColor("#fd215c"));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, getResources().getColor(R.color.share_task_btn));
                 break;
             case Task.TASK_TYPE_REWARDVIDEO_TASK:
                 icon.setText((R.string.iconfont_video));
-                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, Color.parseColor("#4B57C0"));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, getResources().getColor(R.color.checkin_task_btn));
                 break;
         }
         int status = TaskExecutor.checkTask(task);
@@ -211,7 +211,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             FuseAdLoader loader = FuseAdLoader.get(task.adSlot, getActivity());
             if (loader == null) {
                 MLogs.d("Wrong adSlot config in task " + task.toString());
-                toastError(RewardErrorCode.TASK_UNEXPECTED_ERROR);
+                RewardErrorCode.toastMessage(getActivity(), RewardErrorCode.TASK_UNEXPECTED_ERROR);
                 return;
             }
             if(! appUser.isRewardVideoTaskReady() ) {
@@ -220,16 +220,6 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             mTaskExecutor.execute(task, new RewardTaskListener(view));
         }
 
-    }
-
-    private void toastError(int code) {
-        Toast.makeText(getActivity(), RewardErrorCode.getToastMessage(code), Toast.LENGTH_SHORT).show();
-    }
-
-    private void toastDone(float payment) {
-        if(payment > 0) {
-            Toast.makeText(getActivity(), RewardErrorCode.getToastMessage(RewardErrorCode.TASK_OK, payment), Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -264,13 +254,14 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             updateUserInfo();
             Task task = (Task)mView.getTag();
             updateTaskViewItem(mView, task, false);
-            toastDone(payment);
+            RewardErrorCode.toastMessage(getActivity(), RewardErrorCode.TASK_OK, payment);
+
             taskRunningProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onTaskFail(long taskId, ADErrorCode code) {
-            toastError(code.getErrCode());
+            RewardErrorCode.toastMessage(getActivity(), code.getErrCode());
             taskRunningProgressBar.setVisibility(View.GONE);
 
         }
@@ -282,7 +273,7 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
 
         @Override
         public void onGeneralError(ADErrorCode code) {
-            toastError(code.getErrCode());
+            RewardErrorCode.toastMessage(getActivity(), code.getErrCode());
             taskRunningProgressBar.setVisibility(View.GONE);
         }
     }

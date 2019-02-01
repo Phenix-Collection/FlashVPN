@@ -282,6 +282,18 @@
         <value>http://13.112.221.35</value>
     </entry>
     <entry>
+        <key>config_no_ad_icon_percent</key>
+        <value>20</value>
+    </entry>
+    <entry>
+        <key>config_update_interval_sec</key>
+        <value>3600</value>
+    </entry>
+    <entry>
+        <key>conf_clone_if_no_video</key>
+        <value>true</value>
+    </entry>
+    <entry>
         <key>conf_reward_open</key>
         <value>true</value>
     </entry>

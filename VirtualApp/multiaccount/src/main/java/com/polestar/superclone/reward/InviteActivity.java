@@ -72,6 +72,8 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
         inviteCoins = findViewById(R.id.invite_reward);
         inviteCode = findViewById(R.id.invite_code);
         submitButton = findViewById(R.id.submit_button);
+        IconFontTextView icon = findViewById(R.id.task_icon);
+        icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, getResources().getColor(R.color.share_task_btn));
     }
 
     private void initData() {

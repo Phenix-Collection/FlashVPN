@@ -1,6 +1,7 @@
 package com.polestar.superclone.component.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.reward.HotTaskDialog;
 import com.polestar.superclone.reward.ProductManager;
 import com.polestar.superclone.reward.RewardErrorCode;
+import com.polestar.superclone.reward.TaskExecutor;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.DisplayUtils;
@@ -45,6 +47,7 @@ import com.polestar.superclone.widgets.FixedListView;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.network.datamodels.Product;
+import com.polestar.task.network.datamodels.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +72,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private LinearLayout adContainer;
     private FuseAdLoader mNativeAdLoader;
     private TextView sponsorText;
+    private Dialog mHotTaskDialog;
     public static final String SLOT_APPLIST_NATIVE = "slot_applist_native";
 
     private static final String CONFIG_APPLIST_NATIVE_PRIOR_TIME = "applist_native_prior_time";
@@ -94,6 +98,14 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     protected void onResume() {
         super.onResume();
         AppListUtils.getInstance(this).registerObserver(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mHotTaskDialog != null) {
+            mHotTaskDialog.dismiss();
+        }
     }
 
     @Override
@@ -194,31 +206,55 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         sponsorText = (TextView) findViewById(R.id.sponsor_text);
     }
 
+    private void goClone(AppModel model) {
+        Intent data = new Intent();
+        data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
+        setResult(Activity.RESULT_OK, data);
+        finish();
+    }
+
+    private void goEarnCoin(AppModel model) {
+        AppUser appUser = AppUser.getInstance();
+        boolean canDoVideo = appUser.isRewardVideoTaskReady()
+                && appUser.checkTask(appUser.getVideoTask()) == RewardErrorCode.TASK_OK;
+        if (canDoVideo
+                || !RemoteConfig.getBoolean("conf_clone_if_no_video")) {
+            if(mHotTaskDialog == null) {
+                mHotTaskDialog = new HotTaskDialog.Builder(this).setTitle(getString(R.string.need_coin_for_clone)).build();
+            }
+            mHotTaskDialog.show();
+        } else {
+            goClone(model);
+        }
+    }
+
     private void checkAndClone(AppModel model) {
         Product product;
         if (AppUser.isRewardEnabled()
                 && AppUser.getInstance().isRewardAvailable()
-                && !AppUser.getInstance().checkAndConsumeClone(1)
-                //TODO
-                && AppUser.getInstance().isRewardVideoTaskReady()
+                && (product = AppUser.getInstance().get1CloneProduct()) != null
                 && AppManager.getClonedApp(this).size() > RemoteConfig.getLong("conf_clone_threshold")
-                && (product = AppUser.getInstance().get1CloneProduct()) != null) {
+                && !AppUser.getInstance().checkAndConsumeClone(1) ){
             ProductManager productManager = ProductManager.getInstance();
-            if (productManager.canBuyProduct(product) == RewardErrorCode.PRODUCT_OK) {
+            int status = productManager.canBuyProduct(product);
+            if(status == RewardErrorCode.PRODUCT_OK) {
                 productManager.buyProduct(product, new IProductStatusListener() {
                     @Override
                     public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
                         AppUser.getInstance().checkAndConsumeClone(1);
                         RewardErrorCode.toastMessage(AppListActivity.this, RewardErrorCode.PRODUCT_OK, totalCost);
-                        Intent data = new Intent();
-                        data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
-                        setResult(Activity.RESULT_OK, data);
-                        finish();
+                        goClone(model);
                     }
 
                     @Override
                     public void onConsumeFail(ADErrorCode code) {
-                        RewardErrorCode.toastMessage(AppListActivity.this, code.getErrCode());
+                        if (code.getErrCode() == ADErrorCode.NOT_ENOUGH_MONEY
+                                || code.getErrCode() == RewardErrorCode.PRODUCT_NO_ENOUGH_COIN) {
+//                           RewardErrorCode RewardErrorCode.toastMessage(AppListActivity.this, code.getErrCode());
+                            goEarnCoin(model);
+                        } else {
+                            goClone(model);
+                        }
                     }
 
                     @Override
@@ -228,18 +264,17 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
                     @Override
                     public void onGeneralError(ADErrorCode code) {
-                        RewardErrorCode.toastMessage(AppListActivity.this, code.getErrCode());
+                        goClone(model);
                     }
                 });
+            } else if (status == ADErrorCode.NOT_ENOUGH_MONEY
+                    || status == RewardErrorCode.PRODUCT_NO_ENOUGH_COIN) {
+                goEarnCoin(model);
             } else {
-                HotTaskDialog dialog = new HotTaskDialog.Builder(this).setTitle(getString(R.string.need_coin_for_clone)).build();
-                dialog.show();
+                goClone(model);
             }
         } else {
-            Intent data = new Intent();
-            data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
-            setResult(Activity.RESULT_OK, data);
-            finish();
+            goClone(model);
         }
     }
 

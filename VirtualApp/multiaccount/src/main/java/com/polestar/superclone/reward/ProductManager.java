@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.polestar.superclone.MApp;
+import com.polestar.superclone.utils.EventReporter;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.network.AdApiHelper;
@@ -76,6 +77,7 @@ public class ProductManager {
         public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
             appUser.updateMyBalance(balance);
             storeProduct(mProduct, amount);
+            EventReporter.productEvent("consume_"+id);
             //TODO 发货
             mainHandler.post(new Runnable() {
                 @Override
@@ -87,6 +89,7 @@ public class ProductManager {
 
         @Override
         public void onConsumeFail(ADErrorCode code) {
+            EventReporter.productEvent("consume_fail_"+code.getErrCode());
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -107,6 +110,7 @@ public class ProductManager {
 
         @Override
         public void onGeneralError(ADErrorCode code) {
+            EventReporter.rewardEvent("error_"+code.getErrCode());
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {

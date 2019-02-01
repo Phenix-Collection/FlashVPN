@@ -417,14 +417,18 @@ public class PreferencesUtils {
     }
 
     public static boolean isAdFree() {
-        boolean purchased =  getBoolean(MApp.getApp(), "ad_free") ;
+        boolean purchased =  isVIP();
 
         boolean rewarded = AppUser.isRewardEnabled() && AppUser.getInstance().checkAdFree();
         return purchased || rewarded;
     }
 
-    public static void setAdFree(boolean enable) {
-        putBoolean(MApp.getApp(), "ad_free" , enable);
+    public static boolean isVIP() {
+        return getBoolean(MApp.getApp(), "isVIP" , false);
+    }
+
+    public static void setVIP(boolean enable) {
+        putBoolean(MApp.getApp(), "isVIP" , enable);
     }
 
     public static long getLastAdFreeDialogTime() {

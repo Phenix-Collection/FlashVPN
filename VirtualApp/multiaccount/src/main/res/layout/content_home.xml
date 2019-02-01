@@ -69,7 +69,6 @@
                     android:id="@+id/icon_ad"
                     android:layout_toLeftOf="@id/lock_setting"
                     android:layout_alignParentTop="true"
-                    android:onClick="onIconAdClick"
                     android:background="@drawable/selector_setting_theme2">
                     <RelativeLayout
                         android:id="@+id/gift_icon_layout"

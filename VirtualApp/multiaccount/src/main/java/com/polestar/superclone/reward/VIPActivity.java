@@ -104,6 +104,7 @@ public class VIPActivity extends BaseActivity implements SkuDetailsResponseListe
     @Override
     protected void onResume() {
         super.onResume();
+        BillingProvider.get().updateStatus(null);
     }
 
     private long basePrice;

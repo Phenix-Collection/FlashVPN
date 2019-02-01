@@ -172,7 +172,9 @@ public class MApp extends MultiDexApplication {
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
-                BillingProvider.get();
+                if (!isSupportPkg()) {
+                    BillingProvider.get().updateStatus(null);
+                }
                 if (needAd()) {
                     initAd();
                     BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();

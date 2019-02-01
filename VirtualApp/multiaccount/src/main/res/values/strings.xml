@@ -261,10 +261,11 @@
     <string name="clones">App Clones</string>
     <string name="finish_task_get_reward">Finish tasks to collect coins now!</string>
     <string name="btn_products_store">Store</string>
-    <string name="error_unexpected">Task isn\'t finished. Please try again later.</string>
+    <string name="error_unexpected">Please try again later.</string>
     <string name="error_ad_no_fill">Video isn\'t ready yet. Please check network and try again later.</string>
     <string name="error_day_limit">Task is done today. Please try tomorrow.</string>
-    <string name="task_ok">Got %.0f coins!</string>
+    <string name="task_ok">Task finished!</string>
+    <string name="task_ok_with_coin">Got %.0f coins!</string>
     <string name="submit_code_ok">Invitation code submitted!</string>
     <string name="submit_code_fail">Invitation code wrong or already submitted!</string>
     <string name="product_ok">Purchase product success!</string>
@@ -285,11 +286,13 @@
     <string name="invite_friends_mail_title">Win your coins with %s.</string>
     <string name="reward_load_failed">Load fail. Please check below and retry: \n - Google Play Service is installed \n - Superb Cloner is not running in any clone apps \n - Connect network</string>
     <string name="need_coin_for_clone">Get coins to finish clone</string>
-    <string name="user_activity_title">Premium User</string>
+    <string name="user_activity_title">Premium Service</string>
     <string name="become_vip_tips1">Remove all ads</string>
     <string name="become_vip_tips2">Enjoy unlimited clones</string>
-    <string name="become_vip_tips3">Compatible for most app and games with 64bit support</string>
-    <string name="become_vip_tips4">Timely response for issue reports via feedback</string>
+    <string name="become_vip_tips3">Multiple account for game and social apps</string>
+    <string name="become_vip_tips4">Timely support for issue reports</string>
     <string name="become_vip">Become VIP user of Superb Cloner</string>
     <string name="free_trial_text">+%d days free trial</string>
+    <string name="price_change_hint">Purchase products with your coins now. The price could change according to app economy.</string>
+    <string name="cash_rewards">Cash Rewards</string>
 </resources>

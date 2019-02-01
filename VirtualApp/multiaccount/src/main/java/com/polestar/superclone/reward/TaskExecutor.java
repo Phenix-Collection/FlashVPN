@@ -108,22 +108,14 @@ public class TaskExecutor {
 
     private class WrapTaskStatusListener implements ITaskStatusListener{
         private ITaskStatusListener mListener;
-        private Timer mTimer;
         public WrapTaskStatusListener (ITaskStatusListener listener) {
             mListener = listener;
-            mTimer = new Timer("task_timer");
-            mTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    onGeneralError(new ADErrorCode(ERR_SERVER_DOWN_CODE, "task timeout"));
-                    mListener = null;
-                }
-            }, TASK_EXECUTING_TIMEOUT);
+
         }
 
         @Override
         public void onTaskSuccess(long taskId, float payment, float balance) {
-            mTimer.cancel();
+            MLogs.d("onTaskSuccess " + payment);
             mAppUser.updateMyBalance(balance);
             TaskPreference.incTaskFinishCount(taskId);
             if (payment > 0 ) {
@@ -142,7 +134,6 @@ public class TaskExecutor {
 
         @Override
         public void onTaskFail(long taskId, ADErrorCode code) {
-            mTimer.cancel();
             EventReporter.taskEvent(taskId, code.getErrCode());
             mActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -157,7 +148,6 @@ public class TaskExecutor {
         @Override
         public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
             MLogs.d("onGetAllAvailableTasks should not be here!!");
-            mTimer.cancel();
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -168,7 +158,6 @@ public class TaskExecutor {
 
         @Override
         public void onGeneralError(ADErrorCode code) {
-            mTimer.cancel();
             EventReporter.taskEvent(-1, code.getErrCode());
             mActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -216,12 +205,7 @@ public class TaskExecutor {
 
             @Override
             public void onError(String error) {
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onTaskFail(task.mId, new ADErrorCode(RewardErrorCode.TASK_AD_NO_FILL, ""));
-                    }
-                });
+                listener.onTaskFail(task.mId, new ADErrorCode(RewardErrorCode.TASK_AD_NO_FILL, ""));
             }
 
             @Override

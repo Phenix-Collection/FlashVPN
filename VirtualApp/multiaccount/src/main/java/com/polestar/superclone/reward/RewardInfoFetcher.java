@@ -12,6 +12,7 @@ import android.os.Message;
 import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
+import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
@@ -36,7 +37,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     private Context mContext;
     private static RewardInfoFetcher sInstance;
     private Handler workHandler;
-    private final static long UPDATE_INTERVAL = 3600*1000;
+    private static long UPDATE_INTERVAL = 3600*1000;
 
     private final static long FORCE_UPDATE_INTERVAL = 2000;
     private final static int FORCE_RETRY_TIMES = 5;
@@ -53,6 +54,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     }
 
     private RewardInfoFetcher(Context context) {
+        UPDATE_INTERVAL = RemoteConfig.getLong("config_update_interval_sec")*1000;
         mContext = context;
         forceRetry = 0;
         databaseApi = DatabaseImplFactory.getDatabaseApi(context);

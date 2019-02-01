@@ -8,55 +8,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textSize="16sp"
-        android:textColor="@color/text_gray_dark"
-        android:text="Hot Tasks"
-        android:id="@+id/dialog_title"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="16sp"
+            android:textColor="@color/text_gray_dark"
+            android:text="Hot Tasks"
+            android:id="@+id/dialog_title"/>
 
-    <com.polestar.superclone.widgets.IconFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:layout_alignBaseline="@id/dialog_title"
-        android:id="@+id/vip"
-        android:text="@string/iconfont_crown"/>
+        <View
+            android:id="@+id/splitter"
+            android:layout_below="@id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/text_gray_light"/>
 
-    <View
-        android:id="@+id/splitter"
-        android:layout_below="@id/dialog_title"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_gray_light"/>
-
-    <GridView
-        android:layout_below="@id/splitter"
-        android:id="@+id/task_slot_grid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:horizontalSpacing="0.5dp"
-        android:listSelector="#00000000"
-        android:numColumns="4"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="0.5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
-        >
-    </GridView>
+        <GridView
+            android:layout_below="@id/splitter"
+            android:id="@+id/task_slot_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="0.5dp"
+            android:listSelector="#00000000"
+            android:numColumns="4"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="0.5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            >
+        </GridView>
     </RelativeLayout>
 
 </RelativeLayout>

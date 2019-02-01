@@ -130,7 +130,6 @@
                 android:textSize="23sp"
                 android:textColor="@color/white"
                 android:text="@string/iconfont_invite"
-                android:background="@drawable/shape_new_dot"
                 android:layout_margin="8dp"
                 android:gravity="center"
                 android:padding="6dp"

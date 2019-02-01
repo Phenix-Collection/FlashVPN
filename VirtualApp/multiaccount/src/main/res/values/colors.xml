@@ -82,6 +82,10 @@
     <color name="reward_done">#48d27f</color>
     <color name="reward_wait">#fd7921</color>
     <color name="reward_btn_color">#fd7921</color>
+    <color name="vip_btn_color">#fd7921</color>
+    <color name="share_task_btn">#ff2dbbfb</color>
+    <color name="video_task_btn">#4B57C0</color>
+    <color name="checkin_task_btn">#4B57C0</color>
     <color name="vip_card_first">#ff2dbbfb</color>
     <color name="vip_card_second">#0fcb51</color>
     <color name="vip_card_third">#ff7316</color>
