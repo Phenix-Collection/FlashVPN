@@ -327,6 +327,7 @@ public class MApp extends MultiDexApplication {
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_PACKAGE_ADDED);
             filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+            filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
             filter.addDataScheme("package");
             getApp().registerReceiver(new PackageChangeReceiver(),
                     filter);

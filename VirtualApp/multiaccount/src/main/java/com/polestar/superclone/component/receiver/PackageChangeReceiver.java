@@ -25,7 +25,8 @@ public class PackageChangeReceiver extends BroadcastReceiver{
         if (packageName != null && packageName.startsWith("package:")) {
             packageName = packageName.replaceFirst("package:", "");
         }
-        boolean replacing = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
+        boolean replacing = intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) ||
+                intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
         MLogs.e("PackageChange: " + intent.getAction() + " packageName = " + packageName + " replacing: " + replacing);
         if (intent.getAction().equals("android.intent.action.PACKAGE_REMOVED")) {
             DbManager.notifyChanged();
