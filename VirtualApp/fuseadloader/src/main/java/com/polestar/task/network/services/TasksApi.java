@@ -14,18 +14,16 @@ import retrofit2.http.Query;
 public interface TasksApi {
     @Headers("Accept: application/json")
     @GET("api/v1/task/getAvailableTasks")
-    Call<TasksResponse> getAvailableTasks(@Query("device_id") String deviceID,
-                                          @Query("version_code") int versionCode,
-                                          @Query("pkg_name") String pkgName,
+    Call<TasksResponse> getAvailableTasks(@Query("version_code") int versionCode,
+                                          @Query("app") String pkgName,
                                           @Query("secret") String secret
                                           );
 
     @Headers("Accept: application/json")
     @POST("api/v1/task/finishTask")
     @FormUrlEncoded
-    Call<UserTaskResponse> finishTask(@Field("device_id") String deviceID,
-                                      @Field("version_code") int versionCode,
-                                      @Field("pkg_name") String pkgName,
+    Call<UserTaskResponse> finishTask(@Field("version_code") int versionCode,
+                                      @Field("app") String pkgName,
                                       @Field("secret") String secret,
                                       @Field("task_id") long productId,
                                       @Field("referral_code") String referralCode);

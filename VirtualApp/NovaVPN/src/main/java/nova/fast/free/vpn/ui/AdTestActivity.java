@@ -44,7 +44,6 @@ public class AdTestActivity extends AppCompatActivity {
 
         DatabaseImplFactory.getDatabaseApi(AdTestActivity.this);
 
-        AdApiHelper.register("fakedeviceId", null);
 
        /* getAvailableProducts(null);
         getAvailableTasks(new ITaskStatusListener() {

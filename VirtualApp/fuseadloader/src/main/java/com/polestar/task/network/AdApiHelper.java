@@ -44,8 +44,6 @@ public class AdApiHelper {
     public static final int REQUEST_SUCCEED = 0;
     public static final int ERR_REQUEST_TOO_FREQUENT = 1;
 
-
-
     private static String KEY_REGISTER = "register";
     private static String KEY_GET_PRODUCTS = "getProducts";
     private static String KEY_GET_TASKS = "getTasks";
@@ -56,6 +54,9 @@ public class AdApiHelper {
 
     private static final HashMap<String, HashSet<Date>> sRangeMapping = new HashMap<>();
 
+    private static String getSecret(String deviceId) {
+        return deviceId + "#" + Calendar.getInstance().getTimeInMillis();
+    }
 
     private static boolean canDoSingleRequest(String requestKey, long thresholder) {
         Date lastTime = sTimeMapping.get(requestKey);
@@ -122,8 +123,8 @@ public class AdApiHelper {
         } else {
             locale = configuration.locale;
         }
-        Call<User> call = service.registerAnonymous(deviceId, Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(deviceId),
+        Call<User> call = service.registerAnonymous(Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)),
                 configuration.mcc, configuration.mnc, locale.toString());
         call.enqueue(new Callback<User>(){
             @Override
@@ -177,8 +178,8 @@ public class AdApiHelper {
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<ProductsResponse> call = service.getAvailableProducts(deviceId, Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(deviceId));
+        Call<ProductsResponse> call = service.getAvailableProducts(Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)));
         call.enqueue(new Callback<ProductsResponse>() {
             @Override
             public void onResponse(Call<ProductsResponse> call, Response<ProductsResponse> response) {
@@ -236,8 +237,8 @@ public class AdApiHelper {
         }
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
-        Call<UserProductResponse> call = service.consumeProduct(deviceId, Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(deviceId),
+        Call<UserProductResponse> call = service.consumeProduct(Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)),
                 id, amount, email, info);
         call.enqueue(new Callback<UserProductResponse>() {
             @Override
@@ -291,8 +292,8 @@ public class AdApiHelper {
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<TasksResponse> call = service.getAvailableTasks(deviceId, Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(deviceId));
+        Call<TasksResponse> call = service.getAvailableTasks(Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)));
         call.enqueue(new Callback<TasksResponse>() {
             @Override
             public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {
@@ -345,8 +346,8 @@ public class AdApiHelper {
         }
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
-        Call<UserTaskResponse> call = service.finishTask(deviceId, Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(deviceId),
+        Call<UserTaskResponse> call = service.finishTask(Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)),
                 id, referralCode);
         call.enqueue(new Callback<UserTaskResponse>() {
             @Override
