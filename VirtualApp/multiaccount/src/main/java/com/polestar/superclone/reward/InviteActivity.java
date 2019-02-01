@@ -86,6 +86,8 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
                 submitButton.setText(R.string.iconfont_done);
                 codeInput.setText(appUser.getReferrerCode());
                 codeInput.setEnabled(false);
+                submitTitle.setText(submitCodeTask.mTitle);
+                submitDesc.setText(submitCodeTask.mDescription);
             } else {
                 submitLayout.setVisibility(View.GONE);
             }
@@ -107,7 +109,7 @@ public class InviteActivity extends Activity implements ITaskStatusListener {
     }
 
     public void onSubmitClick(View view) {
-        new TaskExecutor(this).execute(submitCodeTask, this);
+        new TaskExecutor(this).submitInviteCode(submitCodeTask, codeInput.getText().toString(), this);
     }
 
     public void onFacebookClick(View view) {
