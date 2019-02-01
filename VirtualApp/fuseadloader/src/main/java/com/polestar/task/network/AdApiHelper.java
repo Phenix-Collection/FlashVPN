@@ -1,5 +1,7 @@
 package com.polestar.task.network;
 
+import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import com.polestar.ad.AdLog;
@@ -22,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -97,11 +100,11 @@ public class AdApiHelper {
         return true;
     }
 
-    public static int register(String deviceId, final IUserStatusListener listener) {
-        return register(deviceId, listener, false);
+    public static int register(Context context, String deviceId, final IUserStatusListener listener) {
+        return register(context, deviceId, listener, false);
     }
 
-    public static int register(String deviceId, final IUserStatusListener listener, boolean force) {
+    public static int register(Context context, String deviceId, final IUserStatusListener listener, boolean force) {
         if (!force &&
                 (!canDoSingleRequest(KEY_REGISTER, Configuration.API_COMMON_INTERVAL)
                     || !canDoRangeRequest(KEY_REGISTER, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
@@ -112,9 +115,16 @@ public class AdApiHelper {
         }
 
         AuthApi service = RetrofitServiceFactory.createSimpleRetroFitService(AuthApi.class);
+        android.content.res.Configuration configuration = context.getResources().getConfiguration();
+        Locale locale;
+        if (Build.VERSION.SDK_INT >= 24) {
+            locale = configuration.getLocales().get(0);
+        } else {
+            locale = configuration.locale;
+        }
         Call<User> call = service.registerAnonymous(deviceId, Configuration.APP_VERSION_CODE,
                 Configuration.PKG_NAME, Sender.send(deviceId),
-                null, null, null);
+                configuration.mcc, configuration.mnc, locale.toString());
         call.enqueue(new Callback<User>(){
             @Override
             public void onResponse(Call<User> call, Response<User> response){

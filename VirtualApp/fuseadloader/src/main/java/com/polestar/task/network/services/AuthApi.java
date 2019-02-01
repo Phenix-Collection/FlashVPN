@@ -17,8 +17,8 @@ public interface AuthApi {
                                  @Field("version_code") int versionCode,
                                  @Field("pkg_name") String pkgName,
                                  @Field("secret") String secret,
-                                 @Field("country") String country,
-                                 @Field("lang") String lang,
+                                 @Field("mcc") int mcc,
+                                 @Field("mnc") int mnc,
                                  @Field("locale") String locale
                                  );
 

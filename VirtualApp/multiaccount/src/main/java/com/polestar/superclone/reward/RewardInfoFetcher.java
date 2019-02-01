@@ -89,7 +89,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
             MLogs.d(TAG, "already fetched at " + TaskPreference.getLastUpdateTime());
             return;
         }
-        AdApiHelper.register(AppUser.getInstance().getMyId(), new IUserStatusListener() {
+        AdApiHelper.register(mContext, AppUser.getInstance().getMyId(), new IUserStatusListener() {
             @Override
             public void onRegisterSuccess(User user) {
                 databaseApi.setUserInfo(user);
