@@ -103,6 +103,14 @@
                 <action android:name="com.polestar.messaging.wake" />
             </intent-filter>
         </receiver>
+        <receiver android:name="com.polestar.domultiple.components.receiver.PackageChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 
         <provider android:authorities="${applicationId}.sync.provider"
             android:exported="true"

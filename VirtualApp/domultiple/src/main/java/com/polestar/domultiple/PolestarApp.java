@@ -3,7 +3,9 @@ package com.polestar.domultiple;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -26,6 +28,7 @@ import com.polestar.domultiple.billing.BillingProvider;
 import com.polestar.domultiple.clone.CloneApiDelegate;
 import com.polestar.domultiple.clone.CloneComponentDelegate;
 import com.polestar.domultiple.components.AppMonitorService;
+import com.polestar.domultiple.components.receiver.PackageChangeReceiver;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.CommonUtils;
@@ -171,7 +174,6 @@ public class PolestarApp extends MultiDexApplication {
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 //ImageLoaderUtil.asyncInit(gDefault);
-                initRawData();
                 //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
                 BillingProvider.get();
@@ -225,6 +227,7 @@ public class PolestarApp extends MultiDexApplication {
                             AppMonitorService.preloadCoverAd();
                         }
                     }
+                    initReceiver();
 //                }
             }
 
@@ -355,7 +358,16 @@ public class PolestarApp extends MultiDexApplication {
         Thread.setDefaultUncaughtExceptionHandler(new MAppCrashHandler(context, Thread.getDefaultUncaughtExceptionHandler()));
     }
 
-    private void initRawData() {
+    private void initReceiver() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+            filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+            filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+            filter.addDataScheme("package");
+            getApp().registerReceiver(new PackageChangeReceiver(),
+                    filter);
+        }
     }
 
     private void initBugly(Context context) {
