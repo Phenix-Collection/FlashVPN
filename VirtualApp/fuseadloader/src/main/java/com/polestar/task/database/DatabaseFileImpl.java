@@ -273,6 +273,21 @@ public class DatabaseFileImpl implements DatabaseApi {
         return null;
     }
 
+    @Override
+    public List<Product> getProductInfoByType(int type) {
+        ArrayList<Product> ret = new ArrayList<>();
+        synchronized (PRODUCT_FILE) {
+            if (mProducts != null) {
+                for (Product product : mProducts) {
+                    if (product.mProductType == type) {
+                        ret.add(product);
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
     public static String readOnelineFromFile(String fileName) {
         InputStream instream = null;
         String line = null;

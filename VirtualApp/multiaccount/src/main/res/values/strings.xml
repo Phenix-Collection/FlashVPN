@@ -269,6 +269,7 @@
     <string name="submit_code_ok">Invitation code submitted!</string>
     <string name="submit_code_fail">Invitation code wrong or already submitted!</string>
     <string name="product_ok">Purchase product success!</string>
+    <string name="consume_coins">Used %.0f coins!</string>
     <string name="no_enough_coin">You don\'t have enough coin now!</string>
     <string name="product_not_exist">Product is not available this moment!</string>
     <string name="product_unexcpected_error">Product is not available this moment!</string>

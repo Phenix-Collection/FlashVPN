@@ -85,7 +85,7 @@ public class ProductActivity extends Activity implements IProductStatusListener{
         mPurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int status = mAppUser.checkProduct(mProduct);
+                int status = ProductManager.getInstance().canBuyProduct(mProduct);
                 if (status != RewardErrorCode.PRODUCT_OK) {
                     toast(status);
                     return;
@@ -98,7 +98,7 @@ public class ProductActivity extends Activity implements IProductStatusListener{
 
     @Override
     public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
-        toast(RewardErrorCode.PRODUCT_OK);
+        toast(RewardErrorCode.PRODUCT_OK, totalCost);
         finish();
     }
 

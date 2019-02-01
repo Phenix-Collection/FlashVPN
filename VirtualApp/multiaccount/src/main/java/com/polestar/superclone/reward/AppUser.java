@@ -247,16 +247,10 @@ public class AppUser {
 //        list.add(databaseApi.)
     }
 
-    public int checkProduct(Product product) {
-        return checkProduct(product, 1);
-    }
-
-    public int checkProduct(Product product, int amount){
-        if (getMyBalance() >= (product.mCost*amount)){
-            return RewardErrorCode.PRODUCT_OK;
-        } else {
-            return RewardErrorCode.PRODUCT_NO_ENOUGH_COIN;
-        }
+    public Product get1CloneProduct() {
+        List<Product> list = databaseApi.getProductInfoByType(Product.PRODUCT_TYPE_1_CLONE);
+        MLogs.d(TAG, "1clone " + list.size());
+        return list!= null && list.size() > 0 ? list.get(0):null;
     }
 
     void buyProduct(long productId, int amount, String email, String info, IProductStatusListener listener) {
@@ -318,6 +312,14 @@ public class AppUser {
 
     public String getReferrerCode() {
         return TaskPreference.getReferredBy();
+    }
+
+    public boolean checkAdFree() {
+        return ProductManager.getInstance().checkAndConsumeAdFreeTime();
+    }
+
+    public boolean checkAndConsumeClone(int num) {
+        return ProductManager.getInstance().checkAndConsumeClone(num);
     }
 
 }

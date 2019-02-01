@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.polestar.billing.BillingProvider;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.constant.AppConstants;
+import com.polestar.superclone.reward.AppUser;
 
 import java.io.File;
 
@@ -416,12 +417,14 @@ public class PreferencesUtils {
     }
 
     public static boolean isAdFree() {
-        return BillingProvider.get().isAdFreeVIP()? getBoolean(MApp.getApp(), "ad_free") : false;
+        boolean purchased =  BillingProvider.get().isAdFreeVIP()? getBoolean(MApp.getApp(), "ad_free") : false;
+
+        boolean rewarded = AppUser.isRewardEnabled() && AppUser.getInstance().checkAdFree();
+        return purchased || rewarded;
     }
 
     public static void setAdFree(boolean enable) {
         putBoolean(MApp.getApp(), "ad_free" , enable);
-        EventReporter.setUserProperty(EventReporter.PROP_ADFREE, enable?"on":"off");
     }
 
     public static long getLastAdFreeDialogTime() {

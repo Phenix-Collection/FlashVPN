@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.nineoldandroids.animation.Animator;
@@ -30,6 +31,8 @@ import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.pbinterface.DataObserver;
 import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.reward.HotTaskDialog;
+import com.polestar.superclone.reward.ProductManager;
+import com.polestar.superclone.reward.RewardErrorCode;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.DisplayUtils;
@@ -39,7 +42,11 @@ import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.superclone.widgets.FixedGridView;
 import com.polestar.superclone.widgets.FixedListView;
+import com.polestar.task.ADErrorCode;
+import com.polestar.task.IProductStatusListener;
+import com.polestar.task.network.datamodels.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -188,11 +195,44 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     }
 
     private void checkAndClone(AppModel model) {
-        if (AppUser.isRewardEnabled() && AppUser.getInstance().isRewardAvailable()
+        Product product;
+        if (AppUser.isRewardEnabled()
+                && AppUser.getInstance().isRewardAvailable()
                 && AppUser.getInstance().isRewardVideoTaskReady()
-                && AppManager.getClonedApp(this).size() > RemoteConfig.getLong("conf_clone_threshold")) {
-            HotTaskDialog dialog = new HotTaskDialog.Builder(this).setTitle(getString(R.string.need_coin_for_clone)).build();
-            dialog.show();
+                && AppManager.getClonedApp(this).size() > RemoteConfig.getLong("conf_clone_threshold")
+                && !AppUser.getInstance().checkAndConsumeClone(1)
+                && (product = AppUser.getInstance().get1CloneProduct()) != null) {
+            ProductManager productManager = ProductManager.getInstance();
+            if (productManager.canBuyProduct(product) == RewardErrorCode.PRODUCT_OK) {
+                productManager.buyProduct(product, new IProductStatusListener() {
+                    @Override
+                    public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
+                        RewardErrorCode.toastMessage(AppListActivity.this, RewardErrorCode.PRODUCT_OK, totalCost);
+                        Intent data = new Intent();
+                        data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
+                        setResult(Activity.RESULT_OK, data);
+                        finish();
+                    }
+
+                    @Override
+                    public void onConsumeFail(ADErrorCode code) {
+                        RewardErrorCode.toastMessage(AppListActivity.this, code.getErrCode());
+                    }
+
+                    @Override
+                    public void onGetAllAvailableProducts(ArrayList<Product> products) {
+
+                    }
+
+                    @Override
+                    public void onGeneralError(ADErrorCode code) {
+                        RewardErrorCode.toastMessage(AppListActivity.this, code.getErrCode());
+                    }
+                });
+            } else {
+                HotTaskDialog dialog = new HotTaskDialog.Builder(this).setTitle(getString(R.string.need_coin_for_clone)).build();
+                dialog.show();
+            }
         } else {
             Intent data = new Intent();
             data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
@@ -200,6 +240,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             finish();
         }
     }
+
     private void showMoreApps() {
         ObjectAnimator alpha = ObjectAnimator.ofFloat(mTextMore, "alpha", 0.0f, 1.0f);
         alpha.setDuration(300);

@@ -1,9 +1,11 @@
 package com.polestar.superclone.reward;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
+import com.polestar.superclone.component.activity.AppListActivity;
 import com.polestar.task.ADErrorCode;
 
 /**
@@ -46,7 +48,12 @@ final public class RewardErrorCode {
             case ADErrorCode.INVALID_REFERRAL_CODE:
                 return context.getString(R.string.submit_code_fail);
             case PRODUCT_OK:
-                return context.getString(R.string.product_ok);
+                if (args.length == 1) {
+                    float amount = (float) args[0];
+                    return context.getString(R.string.consume_coins, amount);
+                } else {
+                    return context.getString(R.string.product_ok);
+                }
             case ADErrorCode.NOT_ENOUGH_MONEY:
                 return context.getString(R.string.no_enough_coin);
             case ADErrorCode.PRODUCT_NOTEXIST:
@@ -55,5 +62,11 @@ final public class RewardErrorCode {
                 break;
         }
         return context.getString(R.string.error_unexpected);
+    }
+
+    public static void toastMessage(Context context, int code, Object... args) {
+        Toast.makeText(context,
+                RewardErrorCode.getToastMessage(code, args), Toast.LENGTH_SHORT).show();
+
     }
 }

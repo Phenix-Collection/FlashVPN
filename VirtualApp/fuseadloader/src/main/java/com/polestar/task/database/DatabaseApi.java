@@ -30,5 +30,7 @@ public interface DatabaseApi {
 
     Product getProductInfo(long id);
 
+    List<Product> getProductInfoByType(int type);
+
     boolean isDataAvailable();
 }

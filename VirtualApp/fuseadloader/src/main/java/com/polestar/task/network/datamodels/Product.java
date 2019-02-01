@@ -10,6 +10,10 @@ public class Product extends TimeModel implements Parcelable {
     public static final int PRODUCT_TYPE_REMOVE_AD_7DAY = 1;
     public static final int PRODUCT_TYPE_REMOVE_AD_30DAY = 2;
 
+    public static final int PRODUCT_TYPE_1_CLONE = 3;
+    public static final int PRODUCT_TYPE_10_CLONE = 4;
+
+
     public static final int MONEY_PRODUCT_THRESHOLDER = 1000;
 
     public static final int PRODUCT_TYPE_AMAZON = 1001;
