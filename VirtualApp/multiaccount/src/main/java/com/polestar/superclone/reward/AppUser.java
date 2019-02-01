@@ -1,5 +1,6 @@
 package com.polestar.superclone.reward;
 
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -51,7 +52,6 @@ public class AppUser {
     private Handler mainHandler;
     private HashSet<IUserUpdateListener> mObservers;
     private static boolean isSecure;
-    private static final int APP_ID = 1;
 
     private AppUser() {
         databaseApi = DatabaseImplFactory.getDatabaseApi(MApp.getApp());
@@ -79,9 +79,52 @@ public class AppUser {
     }
 
     public static boolean check() {
+        isSecure = checkInternal();
+        return isSecure;
+    }
+
+    private static boolean checkInternal() {
 //        MLogs.d("JJJJJ","" +AdCipher.getCertificateHashCode(MApp.getApp()));
-        isSecure = Sender.check(MApp.getApp()) == 1;
-        return  isSecure;
+        if (Sender.check(MApp.getApp()) != 1) {
+            EventReporter.rewardEvent("check_1");
+            return false;
+        }
+        PackageManager pm = MApp.getApp().getPackageManager();
+        String fakeClass = null;
+        try {
+            pm.getApplicationInfo("a.b", 0);
+            EventReporter.rewardEvent("check_2");
+            return false;
+        } catch (Exception ex) {
+            for(StackTraceElement element: ex.getStackTrace()) {
+                String lower = element.getClassName().toLowerCase();
+                if (lower.contains("vclient")
+                        || lower.contains("hook")
+                        || lower.contains("lody")
+                        || lower.contains("lbe")
+                        || lower.contains("mochat")
+                        || lower.contains("dual")
+                        || lower.contains("xpose")){
+                    fakeClass = lower;
+                    break;
+                }
+                if (lower.startsWith("android.")
+                        || lower.startsWith("com.polestar.")
+                        || lower.startsWith("com.android.")
+                        || lower.startsWith("java.")){
+                    continue;
+                }
+                fakeClass = lower;
+                break;
+
+            }
+        }
+        if (fakeClass !=  null) {
+            EventReporter.rewardEvent("check_"+fakeClass);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     //posted on main thread;
@@ -161,7 +204,6 @@ public class AppUser {
         if (TextUtils.isEmpty(id)) {
             id = UUID.randomUUID().toString();
         }
-        id = id + "-" + APP_ID;
         TaskPreference.setMyId(id);
         return id;
     }
