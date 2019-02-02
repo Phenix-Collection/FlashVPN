@@ -230,7 +230,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
     private void checkAndClone(AppModel model) {
         Product product;
-        if (AppUser.isRewardEnabled()
+        if ((!PreferencesUtils.isVIP()) && AppUser.isRewardEnabled()
                 && AppUser.getInstance().isRewardAvailable()
                 && (product = AppUser.getInstance().get1CloneProduct()) != null
                 && AppManager.getClonedApp(this).size() > RemoteConfig.getLong("conf_clone_threshold")

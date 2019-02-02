@@ -62,6 +62,7 @@ final public class RewardErrorCode {
                     return context.getString(R.string.product_ok);
                 }
             case ADErrorCode.NOT_ENOUGH_MONEY:
+            case PRODUCT_NO_ENOUGH_COIN:
                 return context.getString(R.string.no_enough_coin);
             case ADErrorCode.PRODUCT_NOTEXIST:
                 return context.getString(R.string.product_not_exist);

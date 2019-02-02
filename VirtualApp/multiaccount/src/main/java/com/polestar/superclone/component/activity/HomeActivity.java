@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -249,6 +250,7 @@ public class HomeActivity extends BaseActivity {
             iconAdLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    EventReporter.homeGiftClick(HomeActivity.this, "lucky_icon_vip_vip");
                     VIPActivity.start(HomeActivity.this, VIPActivity.FROM_HOME_GIFT_ICON);
                 }
             });
@@ -258,6 +260,7 @@ public class HomeActivity extends BaseActivity {
             iconAdLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    EventReporter.homeGiftClick(HomeActivity.this, "lucky_icon_vip_adfree");
                     VIPActivity.start(HomeActivity.this, VIPActivity.FROM_HOME_GIFT_ICON);
                 }
             });
@@ -268,7 +271,9 @@ public class HomeActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         PreferencesUtils.updateIconAdClickTime(HomeActivity.this);
+                        EventReporter.homeGiftClick(HomeActivity.this, "lucky_icon_no_ad");
                         doSwitchToStoreFragment();
+                        Toast.makeText(HomeActivity.this, R.string.earn_coin_remove_ads, Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
@@ -276,9 +281,10 @@ public class HomeActivity extends BaseActivity {
                 iconAdLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        PreferencesUtils.updateIconAdClickTime(HomeActivity.this);
                         Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
                         startActivity(intent);
-                        EventReporter.homeGiftClick(HomeActivity.this, "lucky_icon");
+                        EventReporter.homeGiftClick(HomeActivity.this, "lucky_icon_ad");
                     }
                 });
             }

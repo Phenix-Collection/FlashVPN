@@ -87,7 +87,7 @@ public class ProductActivity extends Activity implements IProductStatusListener{
             public void onClick(View view) {
                 int status = ProductManager.getInstance().canBuyProduct(mProduct);
                 if (status != RewardErrorCode.PRODUCT_OK) {
-                    toast(status);
+                    RewardErrorCode.toastMessage(ProductActivity.this, status);
                     return;
                 }
                 ProductManager.getInstance().buyProduct(mProduct, ProductActivity.this,mEmail.getText().toString(), mPaypal.getText().toString());
@@ -98,13 +98,14 @@ public class ProductActivity extends Activity implements IProductStatusListener{
 
     @Override
     public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
-        toast(RewardErrorCode.PRODUCT_OK, totalCost);
+        RewardErrorCode.toastMessage(ProductActivity.this, RewardErrorCode.PRODUCT_OK, totalCost);
         finish();
     }
 
     @Override
     public void onConsumeFail(ADErrorCode code) {
-        toast(code.getErrCode());
+
+        RewardErrorCode.toastMessage(ProductActivity.this, code.getErrCode());
     }
 
     @Override
@@ -114,11 +115,8 @@ public class ProductActivity extends Activity implements IProductStatusListener{
 
     @Override
     public void onGeneralError(ADErrorCode code) {
-        toast(code.getErrCode());
-    }
 
-    private void toast(int code, Object... args){
-        Toast.makeText(this, RewardErrorCode.getToastMessage(code, args), Toast.LENGTH_SHORT).show();
+        RewardErrorCode.toastMessage(ProductActivity.this, code.getErrCode());
     }
 
     public void onClose(View view) {

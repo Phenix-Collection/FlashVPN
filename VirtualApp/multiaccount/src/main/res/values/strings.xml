@@ -257,6 +257,9 @@
     <string name="hue">Hue</string>
     <string name="badge">Tag</string>
 
+    <string name="install_64bit_library">Installing 64bit support ...</string>
+    <string name="arm64_installed_toast">Installed 64bit library. Please launch clones from Superb Cloner. </string>
+
     <!--reward -->
     <string name="clones">App Clones</string>
     <string name="finish_task_get_reward">Finish tasks to collect coins now!</string>
@@ -295,6 +298,5 @@
     <string name="free_trial_text">+%d days free trial</string>
     <string name="price_change_hint">Purchase products with your coins now. The price could change according to app economy.</string>
     <string name="cash_rewards">Cash Rewards</string>
-    <string name="install_64bit_library">Installing 64bit support ...</string>
-    <string name="arm64_installed_toast">Installed 64bit library. Please launch clones from Superb Cloner. </string>
+    <string name="earn_coin_remove_ads">Earn coins and select product to remove ads</string>
 </resources>
