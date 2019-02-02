@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.text.TextUtils;
 
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.env.Constants;
 import com.polestar.clone.client.fixer.ComponentFixer;
@@ -33,6 +34,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import mirror.android.content.pm.ApplicationInfoL;
@@ -227,6 +230,7 @@ public class PackageParserEx {
         }
     }
 
+//    private static HashMap<String, String> mLabelCache = new HashMap<>();
     private static void initApplicationAsUser(ApplicationInfo ai, int userId) {
         ai.dataDir = VEnvironment.getDataUserPackageDirectory(userId, ai.packageName).getPath();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -241,6 +245,18 @@ public class PackageParserEx {
             ApplicationInfoN.deviceProtectedDataDir.set(ai, ai.dataDir);
             ApplicationInfoN.credentialProtectedDataDir.set(ai, ai.dataDir);
         }
+//        try {
+//            String key = ai.packageName + userId;
+//            String label = mLabelCache.get(key);
+//            if (label == null) {
+//                CustomizeAppData data = CustomizeAppData.loadFromPref(ai.packageName, userId);
+//                label = data.label;
+//                mLabelCache.put(key, data.label);
+//            }
+//            ai.nonLocalizedLabel = label;
+//        }catch (Throwable ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     private static void addOwner(VPackage p) {

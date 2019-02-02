@@ -202,24 +202,24 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <provider android:authorities="${applicationId}.sync.provider"
-            android:exported="true"
-            android:name="com.polestar.welive.DummyProvider"
-            android:syncable="true" />
+        <!--<provider android:authorities="${applicationId}.sync.provider"-->
+            <!--android:exported="true"-->
+            <!--android:name="com.polestar.welive.DummyProvider"-->
+            <!--android:syncable="true" />-->
 
-        <service android:exported="true" android:name="com.polestar.welive.SyncService">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter" android:resource="@xml/syncadapter" />
-        </service>
-        <service android:name="com.polestar.welive.WeLiveJobService" android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service android:exported="true" android:name="com.polestar.welive.AuthService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
-            </intent-filter>
-            <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator" />
-        </service>
+        <!--<service android:exported="true" android:name="com.polestar.welive.SyncService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.content.SyncAdapter" />-->
+            <!--</intent-filter>-->
+            <!--<meta-data android:name="android.content.SyncAdapter" android:resource="@xml/syncadapter" />-->
+        <!--</service>-->
+        <!--<service android:name="com.polestar.welive.WeLiveJobService" android:permission="android.permission.BIND_JOB_SERVICE" />-->
+        <!--<service android:exported="true" android:name="com.polestar.welive.AuthService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.accounts.AccountAuthenticator" />-->
+            <!--</intent-filter>-->
+            <!--<meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator" />-->
+        <!--</service>-->
     </application>
 
 </manifest>

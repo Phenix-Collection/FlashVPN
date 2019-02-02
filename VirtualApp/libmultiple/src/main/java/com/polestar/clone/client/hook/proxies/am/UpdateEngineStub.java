@@ -25,8 +25,8 @@ public class UpdateEngineStub extends BinderInvocationProxy {
         addMethodProxy(new ResultStaticMethodProxy("resume", null));
     }
 
-    @Override
-    public void inject() throws Throwable {
-        ServiceManager.sCache.get().put(mServiceName, new Binder());
-    }
+//    @Override
+//    public void inject() throws Throwable {
+//        ServiceManager.sCache.get().put(mServiceName, new Binder());
+//    }
 }

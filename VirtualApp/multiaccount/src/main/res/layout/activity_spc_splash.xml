@@ -27,6 +27,18 @@
         android:id="@+id/slogan"/>
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="17sp"
+        android:text="@string/install_64bit_library"
+        android:textColor="@color/white"
+        android:id="@+id/txt_tips"
+        android:visibility="invisible"/>
+
+    <TextView
         android:layout_below="@id/slogan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

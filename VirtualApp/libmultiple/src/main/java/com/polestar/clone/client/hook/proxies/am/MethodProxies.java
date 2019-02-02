@@ -1,5 +1,6 @@
 package com.polestar.clone.client.hook.proxies.am;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -1008,6 +1009,7 @@ class MethodProxies {
         static {
             BLOCK_COMPONENT_LIST.add("com.google.android.finsky.contentfilter.impl.ContentFiltersService");
             BLOCK_COMPONENT_LIST.add("com.google.android.gsf.update.SystemUpdateService");
+            BLOCK_COMPONENT_LIST.add("com.google.android.gms.clearcut.uploader.QosUploaderChimeraService");
             //BLOCK_COMPONENT_LIST.add("com.google.android.finsky.wear.WearSupportService");
         }
 
@@ -1279,6 +1281,12 @@ class MethodProxies {
 //            if (permission.startsWith("com.google")) {
 //                return PackageManager.PERMISSION_GRANTED;
 //            }
+            if (Manifest.permission.ACCOUNT_MANAGER.equals(permission)) {
+                return PackageManager.PERMISSION_GRANTED;
+            }
+            if (!permission.startsWith("android.permission")) {
+                return PackageManager.PERMISSION_GRANTED;
+            }
             if (PermissionCompat.DANGEROUS_PERMISSION.contains(permission)
                     && !VirtualCore.get().getHostRequestDangerPermissions().contains(permission)) {
                 //Request permission that host not request
@@ -1530,6 +1538,10 @@ class MethodProxies {
                 int userId = intent.getIntExtra("_VA_|_user_id_", -1);
                 VLog.d("RegisterReceiver", "Accept uid " + uid + " userid:"+userId
                         + " vuid:"+VClientImpl.get().getVUid() + " myuserId: " + VUserHandle.myUserId());
+                if (intent.getAction() != null &&
+                        intent.getAction().contains("com.google.android.chimera.MODULE_CONFIGURATION_CHANGED")) {
+                    return false;
+                }
                 if (uid != -1) {
                     return VClientImpl.get().getVUid() == uid;
                 }
@@ -1648,7 +1660,10 @@ class MethodProxies {
             int nameIdx = getProviderNameIndex();
             String name = (String) args[nameIdx];
             int userId = VUserHandle.myUserId();
-            if (name != null && name.contains(ServiceManagerNative.SERVICE_CP_AUTH)) {
+            if (name != null &&
+                    (name.contains(ServiceManagerNative.SERVICE_CP_AUTH)
+                    || name.contains(VirtualCore.get().getHostPkg() + ".virtual_stub_"))) {
+                VLog.d(TAG, "direct invoke " + name);
                 return method.invoke(who, args);
             }
             ProviderInfo info = VPackageManager.get().resolveContentProvider(name, 0, userId);
@@ -1846,6 +1861,7 @@ class MethodProxies {
             ACTION_BLACK_LIST.add("com.google.android.gms.walletp2p.phenotype.ACTION_PHENOTYPE_REGISTER");
             ACTION_BLACK_LIST.add("com.facebook.zero.ACTION_ZERO_REFRESH_TOKEN");
             ACTION_BLACK_LIST.add("com.google.android.gms.magictether.SCANNED_DEVICE");
+            ACTION_BLACK_LIST.add("com.google.android.chimera.MODULE_CONFIGURATION_CHANGED");
         }
 
         @Override

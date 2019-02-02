@@ -39,12 +39,12 @@ public class AutoFillManagerStub extends BinderInvocationProxy {
     public void inject() throws Throwable {
         super.inject();
         try {
-            Object v1 = this.getContext().getSystemService("autofill");
+            Object v1 = getContext().getSystemService("autofill");
             if(v1 == null) {
                 throw new NullPointerException("AutoFillManagerInstance is null.");
             }
 
-            Object v0_1 = this.getInvocationStub().getProxyInterface();
+            Object v0_1 = getInvocationStub().getProxyInterface();
             if(v0_1 == null) {
                 throw new NullPointerException("AutoFillManagerProxy is null.");
             }
@@ -53,23 +53,38 @@ public class AutoFillManagerStub extends BinderInvocationProxy {
 
             v2.setAccessible(true);
             v2.set(v1, v0_1);
+            VLog.d("Autofill", "injected");
         }
         catch(Throwable v0) {
             VLog.e("AutoFillManagerStub", "AutoFillManagerStub inject error.", v0);
             return;
         }
-        addMethodProxy(new ResultStaticMethodProxy("isServiceSupported",false));
-        addMethodProxy(new ResultStaticMethodProxy("isServiceEnabled",false));
-        addMethodProxy(new ReplacePkgAndComponentProxy("startSession"));
-        addMethodProxy(new ReplacePkgAndComponentProxy("updateOrRestartSession"));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("isServiceEnabled"));
     }
 
-//    @Override
-//    protected void onBindMethods() {
-//        super.onBindMethods();
+    @Override
+    protected void onBindMethods() {
+        super.onBindMethods();
+        addMethodProxy(new ResultStaticMethodProxy("isServiceSupported",false));
+        addMethodProxy(new ResultStaticMethodProxy("isServiceEnabled",false));
+        addMethodProxy(new ReplacePkgAndComponentProxy("startSession"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    VLog.d("Autofill", "startSession");
+                    return super.call(who, method, args);
+                }catch (Throwable ex) {
+                    return Integer.MIN_VALUE;
+                }
+            }
+        });
+        addMethodProxy(new ReplacePkgAndComponentProxy("updateOrRestartSession"));
+        addMethodProxy(new ResultStaticMethodProxy("addClient", 0));
+
+
+//        addMethodProxy(new ReplaceLastPkgMethodProxy("isServiceEnabled"));
+
 //        addMethodProxy(new ResultStaticMethodProxy("isServiceSupported",false));
 //        addMethodProxy(new ResultStaticMethodProxy("isServiceEnabled",false));
 //        addMethodProxy(new ResultStaticMethodProxy("startSession",Integer.MIN_VALUE));
-//    }
+    }
 }

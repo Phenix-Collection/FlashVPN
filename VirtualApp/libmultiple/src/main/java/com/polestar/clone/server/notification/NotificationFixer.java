@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.widget.RemoteViews;
 
+import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.helper.utils.OSUtils;
 import com.polestar.clone.helper.utils.Reflect;
@@ -83,20 +84,23 @@ import mirror.com.android.internal.R_Hide;
         if (icon == null) {
             return;
         }
-        VLog.d("FixIcon", "installed: " + installed + " pkg: " + appContext.getPackageName());
         int type = mirror.android.graphics.drawable.Icon.mType.get(icon);
+        VLog.d("FixIcon", "type: " + type +" installed: " + installed + " pkg: " + appContext.getPackageName());
         if (type == mirror.android.graphics.drawable.Icon.TYPE_RESOURCE) {
             if (installed && (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)) {
                 mirror.android.graphics.drawable.Icon.mObj1.set(icon, appContext.getResources());
                 mirror.android.graphics.drawable.Icon.mString1.set(icon, appContext.getPackageName());
             } else {
                 try {
-                Drawable drawable = icon.loadDrawable(appContext);
-                    if (drawable == null) {
-                        drawable = VirtualCore.get().getUnHookPackageManager().getApplicationIcon(appContext.getPackageName());
-                    }
-                Bitmap bitmap = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), drawable, VUserHandle.myUserId());
-                mirror.android.graphics.drawable.Icon.mObj1.set(icon, bitmap);
+                    mirror.android.graphics.drawable.Icon.mObj1.set(icon,
+                            BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(),icon.loadDrawable(appContext), VUserHandle.myUserId()));
+
+//                    Drawable drawable = icon.loadDrawable(appContext);
+//                    if (drawable == null) {
+//                        drawable = VirtualCore.get().getUnHookPackageManager().getApplicationIcon(appContext.getPackageName());
+//                    }
+//                Bitmap bitmap = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), drawable, VUserHandle.myUserId());
+//                mirror.android.graphics.drawable.Icon.mObj1.set(icon, bitmap);
                 mirror.android.graphics.drawable.Icon.mString1.set(icon, null);
                 mirror.android.graphics.drawable.Icon.mType.set(icon, mirror.android.graphics.drawable.Icon.TYPE_BITMAP);
                 } catch (Exception e) {
@@ -104,6 +108,18 @@ import mirror.com.android.internal.R_Hide;
                 }
 
             }
+        } else if (type == mirror.android.graphics.drawable.Icon.TYPE_BITMAP) {
+            try {
+                Object obj = mirror.android.graphics.drawable.Icon.mObj1.get(icon);
+                if (obj instanceof Bitmap) {
+                    Bitmap newBits = BitmapUtils.createBadgeIcon(
+                            VirtualCore.get().getContext(), new BitmapDrawable((Bitmap) obj), VUserHandle.myUserId());
+                    mirror.android.graphics.drawable.Icon.mObj1.set(icon, newBits);
+                }
+            }catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+
         }
     }
 
@@ -222,7 +238,7 @@ import mirror.com.android.internal.R_Hide;
             if (!hasIconBitmap && notification.largeIcon == null) {
                 Drawable drawable = resources.getDrawable(notification.icon);
                 drawable.setLevel(notification.iconLevel);
-                Bitmap bitmap = drawableToBitMap(drawable);
+                Bitmap bitmap = BitmapUtils.createBadgeIcon(VirtualCore.get().getContext(), drawable, VUserHandle.myUserId());
                 remoteViews.setImageViewBitmap(id, bitmap);
                 //emui
                 if(OSUtils.getInstance().isEmui()) {

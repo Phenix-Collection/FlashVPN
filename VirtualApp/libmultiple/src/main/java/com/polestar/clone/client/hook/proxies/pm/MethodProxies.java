@@ -739,12 +739,12 @@ class MethodProxies {
 //            if (permName.startsWith("com.google")) {
 //                return PackageManager.PERMISSION_GRANTED;
 //            }
-//            if (Manifest.permission.ACCOUNT_MANAGER.equals(permName)) {
-//                return PackageManager.PERMISSION_GRANTED;
-//            }
-//            if (!permName.startsWith("android.permission")) {
-//                return PackageManager.PERMISSION_GRANTED;
-//            }
+            if (Manifest.permission.ACCOUNT_MANAGER.equals(permName)) {
+                return PackageManager.PERMISSION_GRANTED;
+            }
+            if (!permName.startsWith("android.permission")) {
+                return PackageManager.PERMISSION_GRANTED;
+            }
             if (PermissionCompat.DANGEROUS_PERMISSION.contains(permName)
                     && !VirtualCore.get().getHostRequestDangerPermissions().contains(permName)) {
                 //Request permission that host not request

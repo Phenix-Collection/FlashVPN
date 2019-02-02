@@ -3,6 +3,25 @@ apply plugin: 'com.android.application'
 def releaseTime() {
     return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
 }
+
+def getSignInfo(propFileName) {
+    def com.android.build.gradle.internal.dsl.SigningConfig signingConfig = new com.android.build.gradle.internal.dsl.SigningConfig("signInfo")
+    File propFile = file(propFileName);
+    if (propFile.exists()) {
+        def Properties props = new Properties()
+        props.load(new FileInputStream(propFile))
+        signingConfig.storeFile = file(props['STORE_FILE'])
+        signingConfig.storePassword = props['STORE_PASSWORD']
+        signingConfig.keyAlias = props['KEY_ALIAS']
+        signingConfig.keyPassword = props['KEY_PASSWORD']
+        println('signConfig is exits')
+    } else {
+        println('sign config is null')
+        signingConfig = null
+    }
+    return signingConfig;
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'

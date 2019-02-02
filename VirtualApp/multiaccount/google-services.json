@@ -35,6 +35,38 @@
         "ads_service": {
           "status": 2
         }
+      },
+      "admob_app_id": "ca-app-pub-5490912237269284~1647548421"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968851718454:android:7299813a92fc257b",
+        "android_client_info": {
+          "package_name": "com.polestar.superb.cloner.arm64"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "968851718454-iv8uk966vdqp95qhen9dkf4ccsm8vk89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3AemH2e83uB4YW2xe7lJeJUd1RAgF554"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
       }
     }
   ],

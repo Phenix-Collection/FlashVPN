@@ -108,7 +108,7 @@
     <string name="settings_follow_us">Follow us on Facebook Page</string>
     <string name="settings_join_us">Join Our Community</string>
     <string name="settings_right" translatable="false">Polestar Applab All rights reserved</string>
-    <string name="toast_arm64_package">Missing 32bit library in this cloned app. Please check FAQ if clone not work.</string>
+    <string name="toast_arm64_package">Detected 64bit library in this clone. Please install 64bit support library if error happen.</string>
 
 
     <array name="navigationItem">
@@ -295,4 +295,6 @@
     <string name="free_trial_text">+%d days free trial</string>
     <string name="price_change_hint">Purchase products with your coins now. The price could change according to app economy.</string>
     <string name="cash_rewards">Cash Rewards</string>
+    <string name="install_64bit_library">Installing 64bit support ...</string>
+    <string name="arm64_installed_toast">Installed 64bit library. Please launch clones from Superb Cloner. </string>
 </resources>

@@ -5,6 +5,25 @@ apply plugin: 'org.greenrobot.greendao'
 def releaseTime() {
     return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
 }
+
+def getSignInfo(propFileName) {
+    def com.android.build.gradle.internal.dsl.SigningConfig signingConfig = new com.android.build.gradle.internal.dsl.SigningConfig("signInfo")
+    File propFile = file(propFileName);
+    if (propFile.exists()) {
+        def Properties props = new Properties()
+        props.load(new FileInputStream(propFile))
+        signingConfig.storeFile = file(props['STORE_FILE'])
+        signingConfig.storePassword = props['STORE_PASSWORD']
+        signingConfig.keyAlias = props['KEY_ALIAS']
+        signingConfig.keyPassword = props['KEY_PASSWORD']
+        println('signConfig is exits')
+    } else {
+        println('sign config is null')
+        signingConfig = null
+    }
+    return signingConfig;
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
@@ -39,6 +58,7 @@ android {
                 abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
             }
             dimension "arch"
+            signingConfig getSignInfo("./sign-arm64.properties")
         }
         arm32 {
             applicationId "do.multiple.cloner"
@@ -47,6 +67,7 @@ android {
                 abiFilters 'armeabi-v7a'//, 'x86_64', 'arm64-v8a'
             }
             dimension "arch"
+            signingConfig getSignInfo("./sign-arm32.properties")
         }
         develop {
             minSdkVersion 16
@@ -61,8 +82,8 @@ android {
             minSdkVersion 16
             targetSdkVersion 26
             multiDexEnabled = true
-            versionCode 21308
-            versionName "2.13.08.${releaseTime()}"
+            versionCode 21402
+            versionName "2.14.02.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             dimension "channel"
         }
@@ -76,7 +97,7 @@ android {
         release {
             shrinkResources true
             pseudoLocalesEnabled true
-            signingConfig signingConfigs.myConfig
+//            signingConfig signingConfigs.myConfig
             minifyEnabled true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'lib-proguard.txt'

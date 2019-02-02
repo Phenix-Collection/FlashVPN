@@ -5,10 +5,12 @@ import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PersistableBundle;
 import android.os.RemoteException;
+import android.view.autofill.AutofillManager;
 
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.VirtualCore;
@@ -18,8 +20,11 @@ import com.polestar.clone.client.interfaces.IInjector;
 import com.polestar.clone.client.ipc.ActivityClientRecord;
 import com.polestar.clone.client.ipc.VActivityManager;
 import com.polestar.clone.helper.compat.BundleCompat;
+import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.os.VUserHandle;
 import com.polestar.clone.server.interfaces.IUiCallback;
+
+import java.lang.reflect.Field;
 
 import mirror.android.app.ActivityThread;
 
@@ -80,6 +85,21 @@ public final class AppInstrumentation extends InstrumentationDelegate implements
         }
         ContextFixer.fixContext(activity);
         ActivityFixer.fixActivity(activity);
+        if (Build.VERSION.SDK_INT >= 26) {
+            AutofillManager am = activity.getSystemService(AutofillManager.class);
+            if (am != null && am.isEnabled()) {
+                am.disableAutofillServices();
+                try {
+                    Field v2 = am.getClass().getDeclaredField("mService");
+
+                    v2.setAccessible(true);
+                    v2.set(am, null);
+                }catch (Throwable ex) {
+                    VLog.d(TAG, ex.toString());
+                }
+                VLog.d(TAG,"fk: " + am.isEnabled());
+            }
+        }
         ActivityInfo info = null;
         if (r != null) {
             info = r.info;
@@ -95,6 +115,21 @@ public final class AppInstrumentation extends InstrumentationDelegate implements
         }
         super.callActivityOnCreate(activity, icicle);
         VirtualCore.get().getComponentDelegate().afterActivityCreate(activity);
+//        if (Build.VERSION.SDK_INT >= 26) {
+//            AutofillManager am = activity.getSystemService(AutofillManager.class);
+//            if (am != null && am.isAutofillSupported() ) {
+//                am.disableAutofillServices();
+//                try {
+//                    Field v2 = am.getClass().getDeclaredField("mService");
+//
+//                    v2.setAccessible(true);
+//                    v2.set(am, null);
+//                }catch (Throwable ex) {
+//                    VLog.e(TAG, ex);
+//                }
+//                VLog.e(TAG, "fk2: " + am.isAutofillSupported());
+//            }
+//        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IInterface;
 import android.os.ParcelFileDescriptor;
+import android.os.RemoteException;
 
 import com.polestar.clone.client.hook.base.MethodBox;
 import com.polestar.clone.helper.utils.VLog;
@@ -48,6 +49,18 @@ public class ProviderHook implements InvocationHandler {
             @Override
             public ProviderHook fetch(boolean external, IInterface provider) {
                 return new DownloadProviderHook(provider);
+            }
+        });
+        PROVIDER_MAP.put("com.android.badge", new HookFetcher() {
+            @Override
+            public ProviderHook fetch(boolean external, IInterface provider) {
+                return new BadgeProviderHook(provider);
+            }
+        });
+        PROVIDER_MAP.put("com.huawei.android.launcher.settings", new HookFetcher() {
+            @Override
+            public ProviderHook fetch(boolean external, IInterface provider) {
+                return new BadgeProviderHook(provider);
             }
         });
     }
@@ -226,12 +239,13 @@ public class ProviderHook implements InvocationHandler {
             VLog.d("ProviderHook", "error: " + e);
             if (e instanceof InvocationTargetException) {
                 VLog.d("ProviderHook", "error: " + e.getCause() + VLog.getStackTraceString(e.getCause()));
-                if (e.getCause() instanceof SecurityException) {
+                if (e.getCause() instanceof SecurityException ||
+                        e.getCause() instanceof RuntimeException) {
                     VLog.d("ProviderHook", "call: with SecurityException" );
                    // return null;
                 } else {
-                throw e.getCause();
-            }
+                    throw e.getCause();
+                }
             }
             //throw e;
             return fakeReturn;
