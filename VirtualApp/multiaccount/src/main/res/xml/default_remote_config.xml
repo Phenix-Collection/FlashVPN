@@ -20,7 +20,7 @@
     </entry>
     <entry>
         <key>slot_app_lock</key>
-        <value>null</value>
+        <value>ab_banner:ca-app-pub-5490912237269284/1186167352:0;adm:ca-app-pub-5490912237269284/2571277503:0</value>
     </entry>
     <entry>
         <key>slot_install_ad</key>
@@ -106,7 +106,7 @@
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
-        <value>null</value>
+        <value>adm:ca-app-pub-5490912237269284/4770189147:0</value>
     </entry>
     <entry>
         <key>fb_follow_page</key>
@@ -219,7 +219,7 @@
     </entry>
     <entry>
         <key>slot_app_start_native</key>
-        <value>null</value>
+        <value>ab_banner:ca-app-pub-5490912237269284/7368432327:0</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
@@ -257,7 +257,7 @@
     </entry>
     <entry>
         <key>slot_intercept_ad</key>
-        <value>null</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/3090152257:0</value>
     </entry>
     <entry>
         <key>home_ad_refresh_interval_s</key>
@@ -287,7 +287,7 @@
     </entry>
     <entry>
         <key>config_no_ad_icon_percent</key>
-        <value>20</value>
+        <value>50</value>
     </entry>
     <entry>
         <key>config_update_interval_sec</key>
@@ -307,7 +307,7 @@
     </entry>
     <entry>
         <key>conf_clone_threshold</key>
-        <value>5</value>
+        <value>8</value>
     </entry>
     <entry>
         <key>slot_reward_center_video</key>

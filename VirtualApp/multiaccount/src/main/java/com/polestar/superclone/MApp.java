@@ -175,18 +175,20 @@ public class MApp extends MultiDexApplication {
                     BillingProvider.get().updateStatus(null);
                 }
                 initAd();
+
+                if (AppUser.check() && AppUser.isRewardEnabled()) {
+                    Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
+                    Configuration.APP_VERSION_CODE = BuildConfig.VERSION_CODE;
+                    Configuration.PKG_NAME = BuildConfig.APPLICATION_ID;
+                    FuseAdLoader.setUserId(AppUser.getInstance().getMyId());
+                    AppUser.getInstance().preloadRewardVideoTask();
+                }
                 //Do some ad preload
                 if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
                     AppStartActivity.preloadAd(gDefault);
                     if (AppMonitorService.needLoadCoverAd(true, null)) {
                         AppMonitorService.preloadCoverAd();
                     }
-                }
-                if (AppUser.check() && AppUser.isRewardEnabled()) {
-                    Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
-                    Configuration.APP_VERSION_CODE = BuildConfig.VERSION_CODE;
-                    Configuration.PKG_NAME = BuildConfig.APPLICATION_ID;
-                    AppUser.getInstance().preloadRewardVideoTask();
                 }
                 initReceiver();
             }

@@ -45,6 +45,7 @@ public class FuseAdLoader {
     private boolean mAdReturned;
     private static ConfigFetcher sConfigFetcher;
     private static SDKConfiguration sConfiguration;
+    private static String sUserId;
     //Some SDK e.g. Mopub, IronSource needs to be initialized with Activity context
     private static boolean sInitializedWithActivity;
 
@@ -67,6 +68,10 @@ public class FuseAdLoader {
         return adLoader;
     }
 
+    public static void setUserId(String userId) {
+        sUserId = userId;
+    }
+
     private static void initMopub (Activity activity) {
         SdkConfiguration.Builder builder = new SdkConfiguration.Builder(sConfiguration.mopubInitAdId);
         MoPub.initializeSdk(activity, builder.build(), new SdkInitializationListener() {
@@ -85,6 +90,9 @@ public class FuseAdLoader {
             IronSource.setAdaptersDebug(true);
         }
         IronSource.setConsent(true);
+        if (!TextUtils.isEmpty(sUserId)) {
+            IronSource.setUserId(sUserId);
+        }
         IronSource.shouldTrackNetworkState(activity , true);
     }
 //    public static void init( ConfigFetcher depends) {
