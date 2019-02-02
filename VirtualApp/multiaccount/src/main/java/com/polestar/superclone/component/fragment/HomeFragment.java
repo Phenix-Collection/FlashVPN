@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +37,8 @@ import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.clone.CustomizeAppData;
+import com.polestar.superclone.reward.AppUser;
+import com.polestar.superclone.reward.TaskExecutor;
 import com.polestar.superclone.utils.AnimatorHelper;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.CloneHelper;
@@ -96,8 +101,6 @@ public class HomeFragment extends BaseFragment {
 //        if (adShowed) {
 //            return;
 //        }
-        adShowTime = System.currentTimeMillis();
-        adShowed = true;
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_subtitle_text)
@@ -124,18 +127,26 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        contentView = inflater.inflate(R.layout.fragment_home, null);
-        mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
-        mExplosionField = ExplosionField.attachToWindow(mActivity);
-        initView();
+        if (contentView == null ) {
+            contentView = inflater.inflate(R.layout.fragment_home, null);
+            initView();
+            mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
+            mExplosionField = ExplosionField.attachToWindow(mActivity);
+            mDragController = new DragController(mActivity);
+            mDragController.setDragListener(mDragListener);
+            mDragController.setWindowToken(contentView.getWindowToken());
+            mDragLayer.setDragController(mDragController);
+        }
         initData();
-        mDragController = new DragController(mActivity);
-        mDragController.setDragListener(mDragListener);
-        mDragController.setWindowToken(contentView.getWindowToken());
-        mDragLayer.setDragController(mDragController);
         if (!PreferencesUtils.isAdFree()) {
             boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
                     && PreferencesUtils.hasCloned();
@@ -496,6 +507,16 @@ public class HomeFragment extends BaseFragment {
         if (PreferencesUtils.isAdFree()) {
             hideAd();
         }
+//        else {
+//            boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
+//                    && PreferencesUtils.hasCloned();
+//            MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
+//            headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
+//            if (showHeaderAd && nativeAd == null && headerNativeAdConfigs.size() > 0) {
+//                loadHeadNativeAd();
+//            }
+//
+//        }
         if (pkgGridAdapter != null) {
             pkgGridAdapter.notifyDataSetChanged();
         }

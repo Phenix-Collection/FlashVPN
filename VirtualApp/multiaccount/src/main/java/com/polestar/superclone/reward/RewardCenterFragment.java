@@ -1,5 +1,6 @@
 package com.polestar.superclone.reward;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -16,13 +17,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdSize;
+import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
 import com.polestar.superclone.component.activity.HomeActivity;
+import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.utils.ColorUtils;
+import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.IconFontTextView;
@@ -46,7 +52,8 @@ import java.util.List;
 
 
 
-public class RewardCenterFragment extends BaseFragment implements AppUser.IUserUpdateListener, View.OnClickListener{
+public class RewardCenterFragment extends BaseFragment
+        implements AppUser.IUserUpdateListener, View.OnClickListener, IAdLoadListener{
     private View contentView;
     private View inviteItemView;
     private View checkinItemView;
@@ -60,14 +67,24 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
     private Handler mainHandler;
     private View retryView;
     private TaskExecutor mTaskExecutor;
+    private FuseAdLoader adLoader;
+    private IAdAdapter nativeAd;
 
     private static final int MSG_LOAD_TIMEOUT = 100;
     private static final long LOAD_TIMEOUT = 10*1000;
 
-    @Nullable
+    public static final String SLOT_REWARD_CENER_NATIVE = "slot_reward_center_native";
+
+    public static AdSize getBannerSize() {
+        int dpWidth = DisplayUtils.px2dip(MApp.getApp(), DisplayUtils.getScreenWidth(MApp.getApp()));
+        dpWidth = dpWidth < 290 ? dpWidth : dpWidth-10;
+        return new AdSize(dpWidth, 135);
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        contentView = inflater.inflate(R.layout.reward_center_layout, null);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        nativeAd = null;
         appUser = AppUser.getInstance();
         appUser.listenOnUserUpdate(this);
         mTaskExecutor = new TaskExecutor(getActivity());
@@ -83,8 +100,22 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
                 }
             }
         };
-        initView();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (contentView == null) {
+            contentView = inflater.inflate(R.layout.reward_center_layout, null);
+            initView();
+        }
+        MLogs.d(" reward onCreateView");
         initData();
+//        if (nativeAd == null) {
+            adLoader = FuseAdLoader.get(SLOT_REWARD_CENER_NATIVE, getActivity());
+            adLoader.setBannerAdSize(getBannerSize());
+            adLoader.loadAd(getActivity(), 2, 1000, this);
+//        }
         return contentView;
     }
 
@@ -93,6 +124,16 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
         super.onResume();
         initData();
         taskRunningProgressBar.setVisibility(View.GONE);
+        MLogs.d(" reward onResume");
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (nativeAd != null) {
+            nativeAd.destroy();
+        }
     }
 
     private void initView() {
@@ -276,5 +317,54 @@ public class RewardCenterFragment extends BaseFragment implements AppUser.IUserU
             RewardErrorCode.toastMessage(getActivity(), code.getErrCode());
             taskRunningProgressBar.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onAdLoaded(IAdAdapter ad) {
+        nativeAd = ad;
+        MLogs.d("reward loaded ad");
+        ViewGroup adContainer = contentView.findViewById(R.id.ad_container);
+        AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.native_ad_reward_center)
+                .titleId(R.id.ad_title)
+                .textId(R.id.ad_subtitle_text)
+                .mainMediaId(R.id.ad_cover_image)
+                .fbMediaId(R.id.ad_fb_mediaview)
+                .admMediaId(R.id.ad_adm_mediaview)
+                .iconImageId(R.id.ad_icon_image)
+                .callToActionId(R.id.ad_cta_text)
+                .privacyInformationId(R.id.ad_choices_image)
+                .adFlagId(R.id.ad_flag)
+                .build();
+        View adView = ad.getAdView(getActivity(), viewBinder);
+        if (adView != null) {
+            adContainer.removeAllViews();
+            adContainer.addView(adView);
+            adContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onAdClicked(IAdAdapter ad) {
+
+    }
+
+    @Override
+    public void onAdClosed(IAdAdapter ad) {
+
+    }
+
+    @Override
+    public void onAdListLoaded(List<IAdAdapter> ads) {
+
+    }
+
+    @Override
+    public void onError(String error) {
+
+    }
+
+    @Override
+    public void onRewarded(IAdAdapter ad) {
+
     }
 }

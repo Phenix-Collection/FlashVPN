@@ -59,7 +59,7 @@
     </entry>
     <entry>
         <key>slot_home_header_native</key>
-        <value>null</value>
+        <value>adm:ca-app-pub-5490912237269284/1669259370:0</value>
     </entry>
     <entry>
         <key>home_show_header_ad</key>
@@ -67,7 +67,7 @@
     </entry>
     <entry>
         <key>slot_applist_native</key>
-        <value>null</value>
+        <value>adm:ca-app-pub-5490912237269284/6538442674:0</value>
     </entry>
     <entry>
         <key>clone_rate_package</key>
@@ -277,6 +277,10 @@
         <value>ab_install:10000;ab_content:10000;ab:10000;fb:10000;mp:10000;fb_interstitial:10000;ab_interstitial:10000;mp_interstitial:10000;ab_native_banner:10000</value>
     </entry>
 -->
+    <entry>
+        <key>slot_reward_center_native</key>
+        <value>adm:ca-app-pub-5490912237269284/9902972611:0</value>
+    </entry>
     <entry>
         <key>config_task_server</key>
         <value>http://13.112.221.35</value>

@@ -23,6 +23,7 @@ import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.reward.AppUser;
+import com.polestar.superclone.reward.RewardCenterFragment;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.EventReporter;
@@ -54,6 +55,11 @@ public class LauncherActivity extends BaseActivity{
         FuseAdLoader adLoader = FuseAdLoader.get(HomeFragment.SLOT_HOME_HEADER_NATIVE, this.getApplicationContext());
         adLoader.setBannerAdSize(HomeFragment.getBannerSize());
         adLoader.preloadAd(this);
+
+        adLoader = FuseAdLoader.get(RewardCenterFragment.SLOT_REWARD_CENER_NATIVE, this.getApplicationContext());
+        adLoader.setBannerAdSize(RewardCenterFragment.getBannerSize());
+        adLoader.preloadAd(this);
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

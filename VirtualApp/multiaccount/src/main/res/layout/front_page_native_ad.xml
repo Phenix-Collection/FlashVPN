@@ -2,7 +2,7 @@
     android:id="@+id/native_ad_layout_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_native_header_ad"
+    android:background="@drawable/shadow"
     android:orientation="vertical">
     <!--<View-->
     <!--android:layout_width="match_parent"-->
@@ -51,82 +51,88 @@
             android:orientation="horizontal"
             android:layout_gravity="top|right"/>
 
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:background="@color/white"
-        android:orientation="horizontal">
-
-        <com.polestar.imageloader.widget.BasicLazyLoadImageView
-            android:id="@+id/ad_icon_image"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_weight="0"
-            android:scaleType="centerCrop"
-            />
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/ad_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:text="this is title"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/text_gray_dark"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/ad_subtitle_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="this is sub"
-                android:textColor="@color/text_gray_dark"
-                android:textSize="10sp" />
+            android:layout_gravity="bottom|center_vertical"
+            android:background="@color/home_native_txt_bg"
+            android:orientation="horizontal">
 
-        </LinearLayout>
+            <com.polestar.imageloader.widget.BasicLazyLoadImageView
+                android:id="@+id/ad_icon_image"
+                android:layout_marginLeft="8dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_weight="0"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerCrop"
+                />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/ad_cta_text"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:background="@drawable/native_cta_text_btn"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="install"
-                android:textColor="@color/native_ad_text_white"
-                android:textSize="16sp" />
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/ad_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:text="this is title"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/ad_subtitle_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="this is sub"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/ad_cta_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:background="@drawable/native_cta_text_btn"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="install"
+                    android:textColor="@color/native_ad_text_white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
+
 
 </LinearLayout>
