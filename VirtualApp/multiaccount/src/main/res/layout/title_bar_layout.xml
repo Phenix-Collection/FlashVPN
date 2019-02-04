@@ -18,6 +18,7 @@
         android:id="@+id/title"
         style="@style/TextStyle_Activity_Title"
         android:layout_toRightOf="@id/navigation_bar"
+        android:layout_toEndOf="@id/navigation_bar"
         android:layout_width="wrap_content"
         android:paddingTop="16dp"
         android:layout_height="wrap_content" />

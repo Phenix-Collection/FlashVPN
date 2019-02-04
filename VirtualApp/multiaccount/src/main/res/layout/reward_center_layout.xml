@@ -39,7 +39,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/reward_coin_icon"
+                    android:layout_toEndOf="@id/reward_coin_icon"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_centerVertical="true"
                     android:textSize="16sp"
                     android:textColor="@color/text_gray_dark" />
@@ -53,6 +55,7 @@
                     android:paddingRight="12dp"
                     android:paddingLeft="12dp"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true">
                     <com.polestar.superclone.widgets.IconFontTextView
                         android:layout_width="wrap_content"
@@ -63,6 +66,7 @@
                         android:text="@string/iconfont_shopcart"/>
                     <TextView
                         android:layout_marginLeft="@dimen/icon_text_space"
+                        android:layout_marginStart="@dimen/icon_text_space"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
