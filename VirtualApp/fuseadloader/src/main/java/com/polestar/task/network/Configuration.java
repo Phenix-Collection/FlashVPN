@@ -1,8 +1,8 @@
 package com.polestar.task.network;
 
 public class Configuration {
-    //public static String URL_PREFIX = "http://13.112.221.35";
-    public static String URL_PREFIX = "http://192.168.1.3:8000";
+    public static String URL_PREFIX = "http://13.112.221.35";
+    //public static String URL_PREFIX = "http://192.168.1.3:8000";
 
     public static long API_COMMON_INTERVAL = 5 * 1000; //5 seconds 单次操作的时间间隔
 
