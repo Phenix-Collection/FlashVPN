@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string name = "appwall_title">Обнаружение</string>
+
+        <string name = "action_settings">Настройки</string>
+        <string name = "most_popular_apps">Самые популярные</string>
+        <string name = "more_apps">Больше поддерживаемых</string>
+        <string name = "sponsor_text">Спонсор</string>
+        <string name = "btn_clone">Клон</string>
+        <string name = "start">Start</string>
+        <string name = "about">About</string>
+        <string name = "cancel">Отмена</string>
+        <string name = "cloning_tips">%s клонируется ...</string>
+        <string name = "clone_error">Извините, во время клонирования произошла ошибка. Пожалуйста, перезапустите Superb Cloner и попробуйте снова.</string>
+        <string name = "app_starting_tips">%s запускается ...</string>
+        <string name = "first_start_tips">Для первого запуска может потребоваться немного больше времени.</string>
+        <string name = "start_with_arm64">Начиная с 64-битной библиотеки поддержки Superb Cloner ...</string>
+        <string name = "upgrade_start_tips">Это может занять немного больше времени, так как это приложение было только что обновлено.</string>
+        <string name = "clone_success">%s готов. Наслаждайся им сейчас!</string>
+
+        <!-- навигационное меню-->
+        <string name = "notifications">Уведомления</string>
+        <string name = "feedback">Feedback</string>
+        <string name = "rate_us">Оцените нас</string>
+        <string name = "поздравления">Поздравляем!</string>
+        <string name = "share_with_friends">Поделиться с друзьями</string>
+        <string name = "settings">Настройки</string>
+        <string name = "content_popular">Горячее клонирование</string>
+        <string name = "content_recommend">Выбор редактора</string>
+        <string name = "install">Install</string>
+
+        <!-- home-->
+        <string name = "delete_dialog_title">Осторожно</string>
+        <string name = "delete_dialog_content">Удаление этого клонированного приложения означает \n удаление всех его данных.</string>
+        <string name = "delete_dialog_left">Отмена</string>
+        <string name = "delete_dialog_right">Удалить</string>
+        <string name = "update_dialog_title">Обновление</string>
+        <string name = "update_dialog_content">Новая версия! Мы значительно улучшили версию %s. Хотите обновить ваш Superb Cloner сейчас?</string>
+        <string name = "update_dialog_left">Игнорировать</string>
+        <string name = "update_dialog_right">Update</string>
+        <string name = "dialog_rating_us_content">Наслаждайтесь использованием приложения Superb Cloner?</string>
+        <string name = "dialog_feedback_content">Не могли бы вы дать нам свой отзыв, чтобы помочь улучшить его?</string>
+        <string name = "not_really">Not Really</string>
+        <string name = "no_thanks">Нет, спасибо</string>
+        <string name = "dialog_love_title">Love Superb Cloner</string>
+        <string name = "dialog_permission_title">Предоставить разрешение</string>
+        <string name = "dialog_permission_content">Пожалуйста, разрешите запрос разрешения от Superb Cloner, в противном случае некоторые клонированные приложения и служба Google Play будут работать неправильно.</string>
+        <string name = "dialog_love_content">Не могли бы вы дать нам 5-звездочный рейтинг в Play Store? Это вдохновит нас, и мы ценим вашу поддержку!</string>
+        <string name = "remind_me_later">Напомнить мне позже</string>
+        <string name = "star_rating">Пройдите 5-звездочный рейтинг сейчас</string>
+        <string name = "yes">Да</string>
+        <string name = "installFailure">Извините, это приложение еще не поддерживается, и мы скоро выйдем с ним.</string>
+        <string name = "start_tips">Давайте начнем с клонирования \n вашего первого приложения здесь!</string>
+        <string name = "long_press_tips">Длительное нажатие &amp; перетащите его, чтобы добавить ярлык на главном экране или удалить его.</string>
+        <string name = "arm64_dialog_title">Примечание</string>
+        <string name = "arm64_dialog_content">Обнаружены 64-битные библиотеки в %s. Предложите установить 64-битные пакеты поддержки, если встречаете ошибку Вы хотите установить сейчас?</string>
+
+
+        <!-- уведомление-->
+        <string name = "messages_decription">Включение или отключение уведомлений из клонированного приложения</string>
+        <string name = "messages_detail_setting">Включить уведомление для приложения</string>
+        <string name = "enable_notification">Включить уведомление</string>
+
+        <string name = "share_with_friends_tip">Я рад пригласить вас использовать это замечательное приложение %s. Вы можете скачать его здесь:</string>
+
+        <!-- обратная связь-->
+        <string name = "feedback_hint">Пожалуйста, расскажите нам подробности о проблеме, с которой вы столкнулись, и, пожалуйста, расскажите нам, как воспроизвести ее, а также лучше с помощью скриншота.</string>
+        <string name = "button_submit">Отправить</string>
+        <string name = "submit_success">Спасибо за отзыв!</string>
+        <string name = "feedback_no_description">Описание не может быть пустым!</string>
+        <string name = "feedback_go_faq">Нажмите здесь, чтобы проверить наш удобный FAQ.</string>
+        <string name = "extra_feedback_decription">Мы решим эту проблему как можно скорее и будем признательны за вашу помощь в улучшении продукта!</string>
+
+        <string name = "toast_shortcut_added">Ярлык</string>
+   <string name = "toast_shortcut_invalid">Ярлык недействителен</string>
+        <string name = "toast_no_lucky">Извините, на этот раз не повезло. Пожалуйста, попробуйте позже.</string>
+
+        <!-- настройки-->
+        <string name = "settings_shortcut_title">Ярлык</string>
+        <string name = "check_update"><u>Проверить обновление</u></string>
+        <string name = "create_shortcut">Создать ярлык</string>
+        <string name = "settings_shortcut_content">Включить автоматическое добавление ярлыка при клонировании приложений</string>
+        <string name = "settings_gms">Включить службу Google Play для клонов</string>
+        <string name = "settings_gms_title">Сервис Google Play</string>
+        <string name = "settings_adfree_title">Присоединиться к VIP</string>
+        <string name = "settings_adfree_content">Станьте премиум-пользователем Superb Cloner</string>
+        <string name = "settings_gms_enable_toast">Служба Google Play включена</string>
+        <string name = "settings_gms_disable_toast">Служба Google Play отключена</string>
+        <string name = "settings_gms_disable_notice">Отключение службы Google play снизит потребление памяти и энергии, а также оптимизирует скорость запуска клонированного приложения. Но некоторые приложения могут не работать должным образом, если отключить его. Вы действительно хотите отключить службу Google Play?</string>
+        <string name = "settings_gms_enable_notice">Включение службы Google Play может занять больше памяти и ЦП Хотите включить службу Google Play?</string>
+        <string name = "settings_privacy_locker_content">Нажмите, чтобы установить блокировку конфиденциальности для клонированных приложений</string>
+        <string name = "settings_notification_content">Нажмите, чтобы включить / отключить уведомление от клонированных приложений</string>
+        <string name = "settings_privacy_policy">Политика конфиденциальности</string>
+        <string name = "settings_terms_of_service">Условия предоставления услуг</string>
+        <string name = "settings_terms_text">Условия обслуживания и Политика конфиденциальности</string>
+        <string name = "settings_follow_us">Следуйте за нами на странице Facebook</string>
+        <string name = "settings_join_us">Присоединяйтесь к нашему сообществу</string>
+        <string name = "settings_right" transurable = "false">Appleb Polestar Все права защищены</string>
+        <string name = "toast_arm64_package">Обнаружена 64-битная библиотека в этом клоне. Пожалуйста, установите 64-битную библиотеку поддержки, если произошла ошибка.</string>
+
+
+        <array name = "navigationItem">
+            <item name = "navigation_notifications">Конфиденциальность</item>
+            <item name = "navigation_notifications">Уведомления</item>
+            <item name = "navigation_FAQ">FAQ</item>
+            <item name = "navigation_feedback">Обратная связь</item>
+            <item name = "navigation_rate_us">Понравилось</item>
+            <item name = "navigation_share">Поделиться с друзьями</item>
+            <item name = "navigation_setting">Настройки</item>
+        </array>
+
+   <string name = "clone_apps_title">Клонировать приложения</string>
+
+        <string name = "crash_hint">Извините, произошла ошибка, и мы исправим ее в следующей версии.</string>
+
+        <string name = "text_Q1_title">Q1. Почему я не могу получать уведомления о сообщениях из приложений с поддержкой Superb Cloner?</string>
+        <string name = "text_Q1_content_2">A1: убедитесь, что у Superb Cloner есть доступ к сети</string>
+        <string name = "text_Q2_title">Q2: Будет ли Superb Cloner собирать и использовать мою личную информацию?</string>
+        <string name = "text_Q2_content">A2: Нет, Superb Cloner будет собирать только небольшие объемы ваших «общедоступных данных» (например, аватара, псевдонима и т. д.), и они будут использоваться только на вашем устройстве, чтобы создать для вас лучший пользовательский опыт. , Превосходный Клонер обещает, что ни одна из ваших личных данных не будет собрана или использована.</string>
+        <string name = "text_Q3_title">Вопрос 3. Почему увеличивается потребление памяти Superb Cloner?</string>
+        <string name = "text_Q3_content">A3: все дополнительные учетные записи, добавленные на ваше устройство, по умолчанию перечислены в разделе Superb Cloner в операционной системе Android. Например, когда вы добавляете субсчет Facebook на свое устройство, все хранилище, используемое для вашей второй учетной записи (приложения) Facebook, отображается в разделе Superb Cloner. Таким образом, потребление памяти, указанное для Superb Cloner, значительно возрастет, когда вы добавите дополнительные учетные записи. Будьте уверены, что потребление памяти Superb Cloner на самом деле значительно не увеличивается.</string>
+        <string name = "text_Q4_title">Q4: Почему Superb Cloner использовал так много места для хранения?</string>
+        <string name = "text_Q4_content">A4: все дополнительные учетные записи, добавленные на вашем устройстве, по умолчанию перечислены в разделе Superb Cloner в операционной системе Android. Большой объем хранилища, указанный в разделе «Superb Cloner», представляет собой общий объем хранилища, используемый для всех добавленных вами дополнительных учетных записей. Superb Cloner сам по себе занимает мало места.</string>
+        <string name = "text_Q5_title">Q5: Каким образом функция частного приложения Superb Cloner защищает мою конфиденциальность?</string>
+        <string name = "text_Q5_content">A5: пароль необходим для доступа к частным приложениям при каждом пробуждении вашего устройства. Кроме того, все частные приложения установлены на Superb Cloner, и поэтому все данные частных приложений не доступны никаким внешним программам.</string>
+        <string name = "text_Q6_title">Вопрос 6. Почему блокировка конфиденциальности не отображается при запуске приложения?</string>
+        <string name = "text_Q6_content">A6: пожалуйста, проверьте, включили ли вы блокировщик для этого приложения, и дайте разрешение Superb Cloner показывать плавающее окно. Например, на устройстве Xiaomi «Настройки»-->«Управление приложениями»-->«Превосходный клонер»-->«Управление разрешениями»-->«Плавающее окно».</string>
+        <string name = "text_Q7_title">В7. Почему нельзя создать ярлык или камера не работает?</string>
+        <string name = "text_Q7_content">A7: проверьте, предоставили ли вы эти разрешения Superb Cloner в настройках вашей системы.</string>
+        <string name = "text_Q8_title">Q8: почему некоторые клоны не работают и пропускают 32-битную библиотеку при запуске?</string>
+        <string name = "text_Q8_content">A8: при загрузке приложения из Google Play оно динамически перепаковывает пакет в соответствии с моделью вашего устройства и в некоторых случаях оптимизирует 32-битную библиотеку. Для совместимости Superb Cloner содержит только 32-битный движок клонирования для поддержки большинства приложений. Но если при открытии клонированного приложения произойдет ошибка, предложите попробовать загрузить полный пакет клонированного приложения с веб-сайтов. Как правило, вы можете загрузить полный apk со страницы загрузки официального сайта или сайта apk, например apkpure.com.</string>
+
+        <string name = "powered_by_app" translatable = "false">Работает на Superb Cloner</string>
+
+        <!-- заблокировать настройки-->
+        <string name = "lock_settings_title">Настройки шкафчика</string>
+        <string name = "enable_lock_settings_title">Locker конфиденциальности</string>
+        <string name = "lock_interval_settings_title">Интервал повторной блокировки</string>
+        <string name = "lock_interval_settings_content">Интервал для блокировки приложения после того, как вы его оставили</string>
+        <string name = "enable_lock_settings_content">Переключите, чтобы включить или отключить функцию блокировки конфиденциальности</string>
+        <string name = "password_setting_title">Настройка пароля</string>
+        <string name = "password_set_no_question">Безопасный вопрос не задан.</string>
+        <string name = "password_set_complete">Пароль был установлен.</string>
+        <string name = "no_password_set">Сначала установите пароль для шкафчика.</string>
+        <string name = "password_setting_content">Нажмите, чтобы установить пароль и контрольный вопрос</string>
+        <string name = "Forgot_password">Забыли пароль</string>
+        <string name = "lock_settings_for_apps">Включить блокировку конфиденциальности для клонированных приложений</string>
+
+   <string name = "al_enter_passcode">Введите код доступа</string>
+        <string name = "al_lockpattern_unlock_to_continue">Подтвердите свою личность</string>
+        <string name = "al_lockpattern_draw_unlock_pattern">Рисование шаблона для разблокировки</string>
+        <string name = "al_use_passcode">Изменить на PIN-код</string>
+        <string name = "al_use_unlock_pattern">Изменить на шаблон</string>
+        <string name = "al_lockpattern_create_new_password_subtitle">Пароль будет использоваться для защиты приложений</string>
+        <string name = "al_lockpattern_create_new_password">Установить новый пароль</string>
+        <string name = "al_lockpattern_confirm_password">Подтвердите пароль</string>
+        <string name = "al_change_enter_again">Введите еще раз</string>
+        <string name = "al_lockpattern_confirm_unlock_pattern">Пожалуйста, подтвердите шаблон</string>
+        <string name = "al_lockpattern_confirm_unlock_pattern_hint">Рисовать снова</string>
+        <string name = "al_btn_reset">Сброс</string>
+        <string name = "al_lockpattern_release_hint">Отпустите палец, когда закончите</string>
+        <string name = "al_lockpattern_try_again">Шаблоны не совпадают, повторите попытку.</string>
+        <string name = "applock_permission_contacts_toast">Это поможет вам восстановить пароль.</string>
+        <string name = "al_lockpattern_create_unlock_pattern">Установить новый шаблон</string>
+        <string name = "al_lockpattern_number_no_correct">Пожалуйста, подключитесь как минимум на 4 точки</string>
+        <string name = "al_lockpattern_create_new_password_outofbound">​​Пароль должен содержать не более 10 цифр</string>
+        <string name = "al_btn_finish">Подтвердить</string>
+        <string name = "al_btn_next">Далее</string>
+        <string name = "al_lockpattern_error">Неправильный шаблон, повторите попытку.</string>
+        <string name = "al_changepassword">Изменить пароль</string>
+        <string name = "al_unlcok_pattern">Шаблон разблокировки</string>
+        <string name = "al_passcode">Код доступа</string>
+        <string name = "al_invisable_patterns">Скрыть шаблон</string>
+        <string name = "al_change_security_question">Изменить секретный вопрос</string>
+        <string name = "app_lock_safe_info_hint">Чтобы подтвердить свою личность при сбросе пароля</string>
+        <string name = "app_lock_safe_question_hint">Задать секретный вопрос</string>
+        <string name = "app_lock_safe_answer_hint">Введите ответ (до 20 символов)</string>
+        <string name = "app_lock_verifier_tile">Задать защищенный вопрос</string>
+        <string name = "app_lock_reset_password">Сброс паролей</string>
+
+        <string name = "app_lock_safe_answer_reset_hint">Пожалуйста, введите ответ</string>
+        <string name = "app_lock_date_picker_month">месяц</string>
+        <string name = "app_lock_safe_question_toast_ask_Question">Вы не задали защищенный вопрос</string>
+        <string name = "app_lock_safe_question_toast_ask_Answer">Вы еще не ввели ответ.</string>
+        <string name = "app_lock_safe_question_toast_error">Ошибка аутентификации, пожалуйста, введите снова</string>
+        <string name = "applock_window_title">Клонированный %s</string>
+        <string name = "applock_forgot_password"><u>Забыли пароль?</u></string>
+        <string name = "need_set_secure_answer">Пожалуйста, задайте ответ для безопасного вопроса, а затем нажмите кнопку подтверждения.</string>
+
+   <string name = "customize_title">Настройка</string>
+        <string name = "customize_setting_desc">Нажмите, чтобы настроить значок и метку для клонов</string>
+        <string name = "saturation">Насыщенность</string>
+        <string name = "light">Lightness</string>
+        <string name = "hue">Hue</string>
+        <string name = "badge">Tag</string>
+
+        <string name = "install_64bit_library">Установка 64-битной поддержки ...</string>
+        <string name = "arm64_installed_toast">Установленная 64-битная библиотека. Пожалуйста, запустите клоны из Superb Cloner.</string>
+
+        <!-- награда-->
+        <string name = "clones">Клоны приложений</string>
+        <string name = "finish_task_get_reward">Завершите задачи по сбору монет прямо сейчас!</string>
+        <string name = "btn_products_store">Store</string>
+        <string name = "error_unexpected">Пожалуйста, повторите попытку позже.</string>
+        <string name = "error_ad_no_fill">Видео еще не готово. Пожалуйста, проверьте сеть и повторите попытку позже.</string>
+        <string name = "error_day_limit">Задача выполнена сегодня. Пожалуйста, попробуйте завтра.</string>
+        <string name = "task_ok">Задача выполнена!</string>
+        <string name = "task_ok_with_coin">Получил %.0f монет!</string>
+        <string name = "submit_code_ok">Код приглашения отправлен!</string>
+        <string name = "submit_code_fail">Код приглашения неверный или уже отправлен!</string>
+        <string name = "product_ok">Покупка товара успешно завершена!</string>
+        <string name = "потребление_coins">Использовано %.0f монет!</string>
+        <string name = "no_enough_coin">Вам не хватает монет сейчас!</string>
+        <string name = "product_not_exist">В данный момент товар недоступен!</string>
+        <string name = "product_unexcpected_error">В данный момент товар недоступен!</string>
+        <string name = "you_have_coins">Теперь у вас есть %.0f %s .</string>
+        <string name = "coin_unit" transhable = "false">монета</string>
+        <string name = "reward_center">Центр вознаграждений</string>
+        <string name = "input_code_hint">Отправьте код и получите бонус, когда закончите 1 живое предложение</string>
+        <string name = "покупка">покупка</string>
+        <string name = "more_offer">Скоро будет предложено больше вознаграждений ...</string>
+        <string name = "live_offer">Live-предложения</string>
+        <string name = "Invite_copied">Ваш код приглашения скопирован в буфер обмена.</string>
+        <string name = "reward_load_failed">Ошибка загрузки. Пожалуйста, проверьте ниже и повторите попытку: \n - Служба Google Play установлена ​​\n - Превосходный Cloner не работает ни в каких приложениях клонирования \n - Подключите сеть</string>
+        <string name = "need_coin_for_clone">Получить монеты, чтобы закончить клон</string>
+        <string name = "user_activity_title">Премиум-сервис</string>
+        <string name = "становиться_vip_tips1">удалить все объявления</string>
+        <string name = "into_vip_tips2">наслаждайтесь неограниченным количеством клонов</string>
+        <string name = "into_vip_tips3">несколько учетных записей для игровых и социальных приложений</string>
+        <string name = "into_vip_tips4">Своевременная поддержка отчетов о проблемах</string>
+        <string name = "становиться_vip">станьте VIP-пользователем Superb Cloner</string>
+        <string name = "free_trial_text">+ %d дней бесплатной пробной версии</string>
+        <string name = "price_change_hint">Покупайте товары сейчас за свои монеты. Цена может меняться в зависимости от экономики приложения.</string>
+        <string name = "cash_rewards">денежные вознаграждения</string>
+        <string name = "earn_coin_remove_ads">Зарабатывайте монеты и выберите продукт, чтобы удалить рекламу</string>
+</resources>

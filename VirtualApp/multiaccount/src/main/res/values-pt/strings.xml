@@ -173,7 +173,7 @@
     <string name="settings_adfree_content">Desativar anúncios no aplicativo</string>
     <string name="adfree_dialog_title">Remover propagandas</string>
     <string name="adfree_dialog_content">Seja um usuário premium do Superb Cloner e desative todos os ADs neste aplicativo. Você quer comprar agora?</string>
-    <string name="text_Q6_content">A6: Verifique se você ativou o armário para este aplicativo e concede permissão ao Superb Cloner para mostrar a janela flutuante. Por exemplo, no dispositivo Xiaomi, Configurações-> Gerenciamento de aplicativos-> Superb Cloner-> Controle de permissão-> Janela flutuante.</string>
+    <string name="text_Q6_content">A6: Verifique se você ativou o armário para este aplicativo e concede permissão ao Superb Cloner para mostrar a janela flutuante. Por exemplo, no dispositivo Xiaomi, Configurações->Gerenciamento de aplicativos->Superb Cloner->Controle de permissão->Janela flutuante.</string>
     <string name="text_Q6_title">Q6: Por que o armário de privacidade não aparece quando o lançamento do aplicativo?</string>
     <string name="text_Q7_content">A7: Verifique se você concedeu essas permissões ao Superb Cloner na configuração do seu sistema.</string>
     <string name="text_Q7_title">Q7: Por que o atalho não pode ser criado ou a câmera, o local não funciona?</string>
@@ -196,4 +196,48 @@
     <string name="dialog_permission_title">Conceder permissão</string>
     <string name="dialog_permission_content">Por favor, permita o pedido de permissão do Superb Cloner, caso contrário, alguns aplicativos clonados e o Google Play Service não funcionarão corretamente.</string>
     <string name="toast_arm64_package">Detectada biblioteca de 64 bits neste clone. Por favor, instale a biblioteca de suporte de 64 bits se ocorrer erro.</string>
+    <string name="clone_error">Desculpe, algum erro aconteceu durante o clone. Por favor, reinicie o Superb Cloner e tente novamente.</string>
+    <string name="start_with_arm64">Começando com a biblioteca de suporte Superb Cloner 64bit ...</string>
+    <string name="install">Instalar</string>
+    <string name="arm64_dialog_title">Nota</string>
+
+
+     <string name = "clones">Clones de aplicativos</string>
+         <string name = "finish_task_get_reward">Conclua as tarefas para coletar moedas agora!</string>
+         <string name = "btn_products_store">Armazenar</string>
+         <string name = "error_unexpected">Por favor, tente novamente mais tarde.</string>
+         <string name = "error_ad_no_fill">O vídeo ainda não está pronto. Por favor, verifique a rede e tente novamente mais tarde.</string>
+         <string name = "error_day_limit">A tarefa está concluída hoje. Por favor, tente amanhã.</string>
+         <string name = "task_ok">Tarefa finalizada!</string>
+         <string name = "task_ok_with_coin">Obteve %.0f moedas!</string>
+         <string name = "submit_code_ok">Código de convite enviado!</string>
+         <string name = "submit_code_fail">Código de convite errado ou já enviado!</string>
+         <string name = "product_ok">Compre o sucesso do produto!</string>
+    <string name = "consume_coins">Usado %.0f moedas!</string>
+         <string name = "no_enough_coin">Você não tem moedas suficientes agora!</string>
+         <string name = "product_not_exist">O produto não está disponível neste momento!</string>
+         <string name = "product_unexcpected_error">O produto não está disponível neste momento!</string>
+         <string name = "you_have_coins">Você tem %.0f %s agora.</string>
+         <string name = "coin_unit" traduzível = "false">coin</string>
+         <string name = "reward_center">Centro de Recompensas</string>
+         <string name = "input_code_hint">Envie o código e receba bônus ao terminar 1 oferta ao vivo</string>
+         <string name = "resgatar">Resgatar</string>
+         <string name = "purchase">Compra</string>
+         <string name = "more_offer">Mais ofertas de recompensas estão chegando em breve ...</string>
+         <string name = "live_offer">Ofertas ao vivo</string>
+
+        <string name = "invite_copied">Seu código de convite é copiado para o quadro de recados.</string>
+        <string name = "reward_load_failed">Falha na carga. Verifique abaixo e tente novamente: \n - O Google Play Service está instalado \n - O Superb Cloner não está sendo executado em nenhum aplicativo clone \n - Conectar rede</string>
+        <string name = "need_coin_for_clone">Obter moedas para concluir o clone</string>
+        <string name = "user_activity_title">Serviço Premium</string>
+        <string name = "become_vip_tips1">Remover todos os anúncios</string>
+        <string name = "become_vip_tips2">Desfrute de clones ilimitados</string>
+        <string name = "become_vip_tips3">Múltiplas contas para aplicativos sociais e de jogos</string>
+        <string name = "become_vip_tips4">Suporte oportuno para relatórios de problemas</string>
+        <string name = "become_vip">Torne-se usuário VIP do Superb Cloner</string>
+        <string name = "free_trial_text">+ %d dias de teste gratuito</string>
+        <string name = "price_change_hint">Compre produtos com suas moedas agora. O preço pode mudar de acordo com a economia do aplicativo.</string>
+        <string name = "cash_rewards">Recompensas em dinheiro</string>
+        <string name = "earn_coin_remove_ads">Ganhe moedas e selecione o produto para remover anúncios</string>
+
 </resources>

@@ -195,4 +195,42 @@
     <string name="dialog_permission_title">ให้สิทธิ์</string>
     <string name="dialog_permission_content">โปรดอนุญาตให้มีการขออนุญาตจาก Superb Cloner มิฉะนั้นแอปพลิเคชันโคลนและบริการ Google Play บางอย่างจะทำงานได้ไม่ถูกต้อง</string>
     <string name="toast_arm64_package">ตรวจพบไลบรารี 64 บิตในโคลนนี้ โปรดติดตั้งไลบรารีการสนับสนุน 64 บิตหากเกิดข้อผิดพลาด</string>
+    <string name="clone_error">ขออภัยเกิดข้อผิดพลาดบางอย่างในระหว่างการโคลน โปรดรีสตาร์ท Superb Cloner แล้วลองอีกครั้ง</string>
+    <string name="start_with_arm64">เริ่มต้นด้วยห้องสมุดสนับสนุน Superb Cloner 64 บิต ...</string>
+    <string name="install">ติดตั้ง</string>
+    <string name="arm64_dialog_title">บันทึก</string>
+
+
+        <string name = "finish_task_get_reward">เสร็จงานเพื่อเก็บเหรียญทันที!</string>
+        <string name = "error_unexpected">โปรดลองอีกครั้งในภายหลัง</string>
+        <string name = "error_ad_no_fill"> ิดีโอยังไม่พร้อม โปรดตรวจสอบเครือข่ายแล้วลองอีกครั้งในภายหลัง</string>
+        <string name = "error_day_limit">งานเสร็จแล้ววันนี้ โปรดลองในวันพรุ่งนี้</string>
+        <string name = "task_ok">งานเสร็จแล้ว!</string>
+        <string name = "task_ok_with_coin">ได้รับ %.0f เหรียญ!</string>
+        <string name = "submit_code_ok">ส่งรหัสเชิญแล้ว!</string>
+        <string name = "submit_code_fail">รหัสคำเชิญผิดหรือถูกส่งไปแล้ว!</string>
+        <string name = "product_ok">ซื้อความสำเร็จของผลิตภัณฑ์!</string>
+        <string name = "consum_coins">ใช้เหรียญ %.0f แล้ว!</string>
+        <string name = "no_enough_coin">คุณไม่มีเงินมากพอ!</string>
+        <string name = "product_not_exist">ผลิตภัณฑ์ไม่สามารถใช้งานได้ในขณะนี้!</string>
+        <string name = "product_unexcpected_error">ผลิตภัณฑ์ไม่สามารถใช้งานได้ในขณะนี้!</string>
+        <string name = "you_have_coins">คุณมี %.0f %s ตอนนี้</string>
+        <string name = "reward_center">ศูนย์รางวัล</string>
+        <string name = "input_code_hint">ส่งรหัสและรับโบนัสเมื่อเสร็จสิ้น 1 ข้อเสนอสด</string>
+        <string name = "redeem">แลก</string>
+        <string name = "purchase">การซื้อ</string>
+        <string name = "more_offer">ข้อเสนอพิเศษอื่น ๆ กำลังจะมาเร็ว ๆ นี้ ...</string>
+        <string name = "live_offer">ข้อเสนอสด</string>
+        <string name = "invitation_copied">รหัสคำเชิญของคุณถูกคัดลอกไปยังบอร์ดคลิป</string>
+        <string name = "reward_load_failed">การโหลดล้มเหลว โปรดตรวจสอบด้านล่างและลองอีกครั้ง: \n - ติดตั้งบริการ Google Play \n - สุดยอด Cloner ไม่ได้ทำงานในแอปโคลน \n - เชื่อมต่อเครือข่าย</string>
+        <string name = "need_coin_for_clone">รับเหรียญเพื่อทำการโคลน</string>
+        <string name = "user_activity_title">บริการพรีเมียม</string>
+        <string name = "Become_vip_tips1">ลบโฆษณาทั้งหมด</string>
+        <string name = "Become_vip_tips2">เพลิดเพลินไปกับการโคลนนิ่งแบบไม่ จำกัด</string>
+        <string name = "Become_vip_tips3">หลายบัญชีสำหรับแอปเกมและโซเชียล</string>
+        <string name = "Bec_vip">เป็นผู้ใช้ VIP ของ Superb Cloner</string>
+        <string name = "free_trial_text">+ %d วันทดลองใช้ฟรี</string>
+        <string name = "price_change_hint">ซื้อผลิตภัณฑ์ด้วยเหรียญของคุณทันที ราคาสามารถเปลี่ยนแปลงได้ตามความประหยัดของแอป</string>
+        <string name = "cash_rewards">รางวัลเงินสด</string>
+        <string name = "earn_coin_remove_ads">รับเหรียญและเลือกผลิตภัณฑ์เพื่อลบโฆษณา</string>
 </resources>

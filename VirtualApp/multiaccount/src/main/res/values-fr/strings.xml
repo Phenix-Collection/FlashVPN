@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Paramètres</string>
-    <string name="adfree_dialog_content">Devenez l\'utilisateur premium de Superb Cloner et désactivez tous les AD dans cette application. Voulez-vous acheter maintenant?</string>
-    <string name="adfree_dialog_title">Mettre à jour vers la version gratuite de l\'annonce</string>
     <string name="al_btn_finish">Confirmer</string>
     <string name="al_btn_next">Prochain</string>
     <string name="al_btn_reset">Réinitialiser</string>
@@ -64,8 +62,8 @@
     <string name="settings_gms_enable_notice">Activer le service Google Play peut consommer plus de mémoire et de CPU. Voulez-vous activer le service Google Play?</string>
     <string name="settings_gms_disable_toast">Le service Google Play est désactivé</string>
     <string name="settings_gms_disable_notice">Désactiver le service Google Play réduira la mémoire et l\'utilisation de l\'alimentation, et optimisera la vitesse de lancement pour l\'application clonée. Mais une application peut ne pas fonctionner correctement si elle la désactive. Êtes-vous sûr de désactiver le service Google Play?</string>
-    <string name="settings_adfree_title">Hilangkan iklan</string>
-    <string name="settings_adfree_content">Désactiver les annonces dans l\'application</string>
+    <string name="settings_adfree_title">Rejoignez VIP</string>
+    <string name="settings_adfree_content">Devenir un utilisateur premium de Superb Cloner</string>
     <string name="settings">Paramètres</string>
     <string name="settings_gms">Activer le service Google Play pour les clones</string>
     <string name="settings_follow_us">Suivez-nous sur la page Facebook</string>
@@ -145,7 +143,7 @@
     <string name="update_dialog_left">Ignorer</string>
     <string name="update_dialog_content">Une nouvelle version arrive! Nous avons beaucoup amélioré la dernière version %s. Voulez-vous mettre à jour votre Superb Cloner maintenant?</string>
     <string name="crash_hint">Désolé, des erreurs se produisent, et nous allons le réparer dans la prochaine version.</string>
-    <string name="clone_error"></string>
+    <string name="clone_error">Désolé, une erreur est survenue pendant le clone. Veuillez redémarrer Superb Cloner et réessayer.</string>
     <string name="check_update"><u>Vérifier la mise à jour</u></string>
     <string name="saturation">Saturation</string>
     <string name="about">Sur</string>
@@ -154,4 +152,33 @@
     <string name="dialog_permission_title">Donner la permission</string>
     <string name="dialog_permission_content">Veuillez autoriser la demande d\'autorisation de Superb Cloner, sinon certaines applications clonées et le service Google Play ne fonctionneront pas correctement.</string>
     <string name="toast_arm64_package">Bibliothèque 64 bits détectée dans ce clone. Veuillez installer la bibliothèque de support 64 bits si une erreur survient.</string>
+    <string name="start_with_arm64">À partir de la bibliothèque de support Superb Cloner 64bit ...</string>
+    <string name="install">Installer</string>
+
+        <string name = "finish_task_get_reward">Terminez les tâches pour collecter des pièces maintenant!</string>
+        <string name = "btn_products_store">Store</string>
+        <string name = "error_unexpected">Veuillez réessayer ultérieurement.</string>
+        <string name = "error_ad_no_fill">La vidéo n’est pas encore prête. Veuillez vérifier le réseau et réessayer plus tard.</string>
+        <string name = "task_ok">La tâche est terminée!</string>
+        <string name = "task_ok_with_coin">Pièces de %.0f obtenues!</string>
+        <string name = "product_ok">Achetez le produit avec succès!</string>
+        <string name = "no_enough_coin">Vous n’avez pas assez de pièces maintenant!</string>
+        <string name = "you_have_coins">Vous avez maintenant %.0f %s</string>
+        <string name = "récompense_center">Centre de récompenses</string>
+        <string name = "input_code_hint">Soumettez le code et obtenez un bonus à la fin de la première offre en direct</string>
+        <string name = "racheter">racheter</string>
+        <string name = "purchase">Achat</string>
+        <string name = "more_offer">Une autre offre de récompense arrive bientôt ...</string>
+        <string name = "live_offer">Offres en direct</string>
+        <string name = "récompense_load_failed">Echec du chargement. Veuillez vérifier ci-dessous et réessayer: \n - Le service Google Play est installé \n - Superb Cloner ne s'exécute dans aucune application de clonage \n - Connexion au réseau</string>
+        <string name = "need_coin_for_clone">Obtenir les pièces pour terminer le clonage</string>
+        <string name = "user_activity_title">Service Premium</string>
+        <string name = "devenir_vip_tips1">Supprimer toutes les annonces</string>
+        <string name = "devenir_vip_tips2">Profitez de clones illimités</string>
+        <string name = "devenir_vip_tips3">Plusieurs comptes pour les applications de jeux et les applications sociales</string>
+        <string name = "devenir_vip_tips4">Prise en charge ponctuelle des rapports de problème</string>
+        <string name = "devenir_vip">Devenir utilisateur VIP de Superb Cloner</string>
+        <string name = "free_trial_text">+ %d essai gratuit</string>
+        <string name = "cash_rewards">Récompenses en espèces</string>
+        <string name = "earn_coin_remove_ads">Gagnez des pièces et sélectionnez un produit pour supprimer les annonces</string>
 </resources>

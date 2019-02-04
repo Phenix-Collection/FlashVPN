@@ -95,7 +95,6 @@
     <string name="settings_gms_title">Google Play Service</string>
     <string name="settings_adfree_title">Join VIP</string>
     <string name="settings_adfree_content">Become premium user of Superb Cloner</string>
-    <string name="adfree_dialog_content">Become premium user of Superb Cloner and turn off all ADs in this app. Do you want to buy now?</string>
     <string name="settings_gms_enable_toast">Google Play Service is enabled</string>
     <string name="settings_gms_disable_toast">Google Play Service is disabled</string>
     <string name="settings_gms_disable_notice">Disable Google play service will decrease memory and power usage, and optimize the launch speed for cloned application. But some application may not work properly if disable it. Are you sure to disable Google play service?</string>
@@ -277,16 +276,16 @@
     <string name="product_not_exist">Product is not available this moment!</string>
     <string name="product_unexcpected_error">Product is not available this moment!</string>
     <string name="you_have_coins">You have %.0f %s now.</string>
-    <string name="coin_unit">coin</string>
+    <string name="coin_unit" translatable="false">coin</string>
     <string name="reward_center">Reward Center</string>
     <string name="input_code_hint">Submit code and get bonus when finish 1 live offer</string>
     <string name="redeem">Redeem</string>
     <string name="purchase">Purchase</string>
     <string name="more_offer">More reward offer is coming soon ...</string>
     <string name="live_offer">Live Offers</string>
-    <string name="invite_friends_tip">Win your coins with this wonderful app %s.\nRemember to submit refer code %s to get bonus!\nDownload it here: %s</string>
+    <string name="invite_friends_tip" translatable="false">Win your coins with this wonderful app %s.\nRemember to submit refer code %s to get bonus!\nDownload it here: %s</string>
     <string name="invite_copied">Your invitation code is copied to clip board.</string>
-    <string name="invite_friends_mail_title">Win your coins with %s.</string>
+    <string name="invite_friends_mail_title" translatable="false">Win your coins with %s.</string>
     <string name="reward_load_failed">Load fail. Please check below and retry: \n - Google Play Service is installed \n - Superb Cloner is not running in any clone apps \n - Connect network</string>
     <string name="need_coin_for_clone">Get coins to finish clone</string>
     <string name="user_activity_title">Premium Service</string>
