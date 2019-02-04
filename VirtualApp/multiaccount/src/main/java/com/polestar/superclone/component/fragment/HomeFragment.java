@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -77,7 +78,7 @@ public class HomeFragment extends BaseFragment {
     private ExplosionField mExplosionField;
     private DragController mDragController;
     private DragLayer mDragLayer;
-    private LinearLayout nativeAdContainer;
+    private FrameLayout nativeAdContainer;
     private AppModel mPendingStart;
 
     private IAdAdapter nativeAd;
@@ -293,9 +294,9 @@ public class HomeFragment extends BaseFragment {
 
     private void initView() {
         //nativeAdContainer = (LinearLayout) mActivity.findViewById(R.id.native_ad_container);
-        nativeAdContainer = new LinearLayout(mActivity);
-        nativeAdContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        nativeAdContainer.setOrientation(LinearLayout.VERTICAL);
+        nativeAdContainer = new FrameLayout(mActivity);
+        nativeAdContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        nativeAdContainer.setOrientation(LinearLayout.VERTICAL);
 
         mDragLayer = (DragLayer)contentView.findViewById(R.id.drag_layer);
         pkgGridView = (HeaderGridView) contentView.findViewById(R.id.grid_app);
