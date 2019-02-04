@@ -4,18 +4,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
+import com.facebook.ads.AdOptionsView;
 import com.facebook.ads.AdSettings;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdLayout;
+import com.facebook.ads.NativeAdListener;
+import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.AdLog;
 import com.polestar.ad.AdViewBinder;
@@ -47,14 +55,25 @@ public class FBNativeAdapter extends AdAdapter {
         }
         mRawAd = new NativeAd(context, mKey);
         adListener = listener;
-        mRawAd.setAdListener(new AdListener() {
+
+        mRawAd.setAdListener(new NativeAdListener() {
+            @Override
+            public void onMediaDownloaded(Ad ad) {
+                AdLog.d("FB onMediaDownloaded");
+
+            }
+
             @Override
             public void onLoggingImpression(com.facebook.ads.Ad ad) {
+
+                AdLog.d("FB onLoggingImpression");
 
             }
 
             @Override
             public void onError(com.facebook.ads.Ad ad, AdError adError) {
+                AdLog.d("FB onError");
+
                 if(adListener != null) {
                     adListener.onError(adError.getErrorMessage());
                 }
@@ -63,6 +82,12 @@ public class FBNativeAdapter extends AdAdapter {
 
             @Override
             public void onAdLoaded(com.facebook.ads.Ad ad) {
+                AdLog.d("FB onAdLoaded");
+
+                if(ad == null || ad!= mRawAd) {
+                    AdLog.d("FB onAdLoaded race condition");
+                }
+
                 mLoadedTime = System.currentTimeMillis();
                 if(adListener != null) {
                     adListener.onAdLoaded(FBNativeAdapter.this);
@@ -73,12 +98,14 @@ public class FBNativeAdapter extends AdAdapter {
             @Override
             public void onAdClicked(com.facebook.ads.Ad ad) {
                 //TODO
+                AdLog.d("FB onAdClicked");
                 if (adListener != null) {
                     adListener.onAdClicked(FBNativeAdapter.this);
                 }
             }
         });
         mRawAd.loadAd(NativeAd.MediaCacheFlag.ALL);
+
         startMonitor();
     }
 
@@ -89,22 +116,22 @@ public class FBNativeAdapter extends AdAdapter {
 
     @Override
     public String getBody() {
-        return mRawAd == null ? null : mRawAd.getAdBody();
+        return mRawAd == null ? null : mRawAd.getAdBodyText();
     }
 
     @Override
     public String getCoverImageUrl() {
-        return mRawAd == null ? null : mRawAd.getAdCoverImage().getUrl().toString();
+        return null;
     }
 
     @Override
     public String getIconImageUrl() {
-        return mRawAd == null ? null : mRawAd.getAdIcon().getUrl().toString();
+        return null;
     }
 
     @Override
     public String getSubtitle() {
-        return mRawAd == null ? null : mRawAd.getAdSubtitle();
+        return mRawAd == null ? null : mRawAd.getAdBodyText();
     }
 
     @Override
@@ -114,7 +141,7 @@ public class FBNativeAdapter extends AdAdapter {
 
     @Override
     public String getTitle() {
-        return mRawAd == null ? null : mRawAd.getAdTitle();
+        return mRawAd == null ? null : mRawAd.getAdHeadline();
     }
 
     @Override
@@ -135,41 +162,53 @@ public class FBNativeAdapter extends AdAdapter {
     @Override
     public void registerViewForInteraction(View view) {
         super.registerViewForInteraction(view);
-        if (mRawAd != null) {
-            mRawAd.registerViewForInteraction(view);
-        }
+//        if (mRawAd != null) {
+//            mRawAd.registerViewForInteraction(view);
+//        }
     }
 
     @Override
     public void registerPrivacyIconView(final View view) {
         //AdChoicesView choicesView = new AdChoicesView(mContext, mRawAd, true);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mRawAd != null && mRawAd.getAdChoicesLinkUrl() != null) {
-                    Intent intent = new Intent();
-                    intent.setAction("android.intent.action.VIEW");
-                    Uri content_url = Uri.parse(mRawAd.getAdChoicesLinkUrl());
-                    intent.setData(content_url);
-                    intent.setFlags(
-                            Intent.FLAG_ACTIVITY_NEW_TASK
-                                    | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                    view.getContext().startActivity(intent);
-                }
-            }
-        });
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mRawAd != null && mRawAd.getAdChoicesLinkUrl() != null) {
+//                    Intent intent = new Intent();
+//                    intent.setAction("android.intent.action.VIEW");
+//                    Uri content_url = Uri.parse(mRawAd.getAdChoicesLinkUrl());
+//                    intent.setData(content_url);
+//                    intent.setFlags(
+//                            Intent.FLAG_ACTIVITY_NEW_TASK
+//                                    | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//                    view.getContext().startActivity(intent);
+//                }
+//            }
+//        });
     }
 
     @Override
     public String getPrivacyIconUrl() {
-        return mRawAd == null? null : mRawAd.getAdChoicesIcon().getUrl().toString();
+        return null;
+//        return mRawAd == null? null : mRawAd.getAdChoicesIcon().getUrl().toString();
     }
 
     @Override
     public View getAdView(Context context, AdViewBinder viewBinder) {
-        View adView = LayoutInflater.from(context).inflate(viewBinder.layoutId, null);
+        NativeAdLayout adView = new NativeAdLayout(context);
+
+         View inflateView = LayoutInflater.from(context).inflate(viewBinder.layoutId, null);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        adView.setLayoutParams(params);
+        adView.addView(inflateView);
+//        // Create and add Facebook's AdOptions to the overlay view.
+//        ((ViewGroup)inflateView).addView(adOptionsView);
+//        // We know that the overlay view is a FrameLayout, so we get the FrameLayout's
+//        // LayoutParams from the AdOptionsView.
+//        FrameLayout.LayoutParams params =
+//                (FrameLayout.LayoutParams) adOptionsView.getLayoutParams();
+//
+//            params.gravity = Gravity.TOP | Gravity.RIGHT;
         if (adView != null) {
             View main = adView.findViewById(viewBinder.mainMediaId);
             MediaView  coverView;
@@ -181,7 +220,6 @@ public class FBNativeAdapter extends AdAdapter {
                 AdLog.e("Wrong layoutid " + viewBinder.layoutId);
                 return null;
             }
-            coverView.setNativeAd(mRawAd);
             coverView.setVisibility(View.VISIBLE);
             ImageView iconView = (ImageView) adView.findViewById(viewBinder.iconImageId);
             if (iconView instanceof BasicLazyLoadImageView) {
@@ -202,14 +240,13 @@ public class FBNativeAdapter extends AdAdapter {
                     starLevelLayout.setRating((int) getStarRating());
                 }
             }
-            registerViewForInteraction(adView);
             List<View> clickableViews = new ArrayList<>();
-            if (coverView != null) {
-                clickableViews.add(coverView);
-            }
-            if (iconView != null) {
-                clickableViews.add(iconView);
-            }
+//            if (coverView != null) {
+//                clickableViews.add(coverView);
+//            }
+//            if (iconView != null) {
+//                clickableViews.add(iconView);
+//            }
             if (titleView != null) {
                 clickableViews.add(titleView);
             }
@@ -219,12 +256,17 @@ public class FBNativeAdapter extends AdAdapter {
             if (ctaView != null) {
                 clickableViews.add(ctaView);
             }
-            mRawAd.registerViewForInteraction(adView,clickableViews);
             LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(viewBinder.privacyInformationId);
             if (adChoicesContainer != null) {
-                AdChoicesView adChoicesView = new AdChoicesView(context, mRawAd, true);
-                adChoicesContainer.addView(adChoicesView);
+                AdOptionsView adOptionsView = new AdOptionsView(context,mRawAd,adView);
+                adChoicesContainer.addView(adOptionsView);
             }
+//            mRawAd.registerViewForInteraction(inflateView,coverView, iconView, clickableViews);
+            mRawAd.registerViewForInteraction(inflateView,coverView, iconView);
+            registerViewForInteraction(adView);
+
+            adView.requestLayout();
+
         }
         return  adView;
     }

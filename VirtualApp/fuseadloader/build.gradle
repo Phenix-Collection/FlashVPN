@@ -45,7 +45,6 @@ dependencies {
     compile 'com.google.firebase:firebase-core:16.0.6'
     compile 'com.google.firebase:firebase-config:16.1.2'
     compile 'com.google.firebase:firebase-ads:17.1.2'
-    compile 'com.facebook.android:audience-network-sdk:4.28.2'
 //    implementation 'com.google.ads.mediation:facebook:4.23.0.0'
 
     compileOnly('com.mopub:mopub-sdk-banner:5.2.0@aar') {
@@ -65,8 +64,11 @@ dependencies {
         transitive = true
     }
 
+    implementation 'com.android.support:recyclerview-v7:25.3.1' // Required by Facebook network
+    implementation 'com.facebook.android:audience-network-sdk:5.1.0'
+    implementation 'com.google.ads.mediation:facebook:5.1.0.0'
+
     implementation 'com.google.ads.mediation:mopub:5.2.0.0'
-    implementation 'com.google.ads.mediation:facebook:4.28.2.0'
 
     compileOnly 'com.ironsource.sdk:mediationsdk:6.8.1@jar'
 
