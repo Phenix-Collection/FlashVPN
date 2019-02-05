@@ -113,14 +113,13 @@ JNIEXPORT jstring JNICALL decode(JNIEnv *env, jobject instance, jstring str_) {
  */
 JNIEXPORT jint JNICALL
 check_jni(JNIEnv *env, jobject instance, jobject context) {
-    if (check_signature(env, instance, context) != 1 || check_is_emulator(env) != 1) {
+    if (check_signature_sha1(env, instance, context) != 1 || check_is_emulator(env) != 1) {
         secure = 0;
     } else {
         secure = 1;
     }
     return secure;
 }
-
 
 // Java和JNI函数的绑定表
 static JNINativeMethod method_table[] = {

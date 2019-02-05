@@ -24,11 +24,15 @@ static const int app_signature_hash_code = -1085342784;
 static const int signature_hash_codes[] = {-1273784504, -1048786450, -1208429200,
                                            1642031816, 1404035346, 128670161, -2145233489};
 
+static const char* signature_sha1_codes[] = {
+        "C074A141F112791F44D948B30D4364E736DA542A",
+};
 /**
  * 校验APP 包名和签名是否合法
  *
  * 返回值为1 表示合法
  */
-jint check_signatfure(JNIEnv *env, jobject thiz, jobject context);
+jint check_signature(JNIEnv *env, jobject thiz, jobject context);
+jint check_signature_sha1(JNIEnv *env, jobject type, jobject context);
 
 #endif //AESJNIENCRYPT_SIGNACTURECHECK_H
