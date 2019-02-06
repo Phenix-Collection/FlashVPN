@@ -102,22 +102,24 @@ public class HomeFragment extends BaseFragment {
 //        if (adShowed) {
 //            return;
 //        }
-        final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
-                .titleId(R.id.ad_title)
-                .textId(R.id.ad_subtitle_text)
-                .mainMediaId(R.id.ad_cover_image)
-                .iconImageId(R.id.ad_icon_image)
-                .fbMediaId(R.id.ad_fb_mediaview)
-                .admMediaId(R.id.ad_adm_mediaview)
-                .callToActionId(R.id.ad_cta_text)
-                .privacyInformationId(R.id.ad_choices_image)
-                .adFlagId(R.id.ad_flag)
-                .build();
-        View adView = ad.getAdView(getActivity(),viewBinder);
-        nativeAdContainer.removeAllViews();
-        nativeAdContainer.addView(adView);
-        pkgGridAdapter.notifyDataSetChanged();
-        dismissLongClickGuide();
+        if (mActivity != null && ad != null) {
+            final AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.front_page_native_ad)
+                    .titleId(R.id.ad_title)
+                    .textId(R.id.ad_subtitle_text)
+                    .mainMediaId(R.id.ad_cover_image)
+                    .iconImageId(R.id.ad_icon_image)
+                    .fbMediaId(R.id.ad_fb_mediaview)
+                    .admMediaId(R.id.ad_adm_mediaview)
+                    .callToActionId(R.id.ad_cta_text)
+                    .privacyInformationId(R.id.ad_choices_image)
+                    .adFlagId(R.id.ad_flag)
+                    .build();
+            View adView = ad.getAdView(mActivity, viewBinder);
+            nativeAdContainer.removeAllViews();
+            nativeAdContainer.addView(adView);
+            pkgGridAdapter.notifyDataSetChanged();
+            dismissLongClickGuide();
+        }
     }
 
     public void hideAd() {

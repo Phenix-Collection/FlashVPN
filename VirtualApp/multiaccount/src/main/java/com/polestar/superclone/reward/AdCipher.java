@@ -8,6 +8,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.polestar.superclone.component.activity.LauncherActivity;
+import com.polestar.superclone.utils.MLogs;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +20,43 @@ import javax.security.cert.CertificateEncodingException;
 import javax.security.cert.X509Certificate;
 
 public class AdCipher {
+//
+//    private static byte[] getCertificateSHA1Fingerprint(Context context) {
+//        PackageManager pm = context.getPackageManager();
+//        String packageName = context.getPackageName();
+//
+//        try {
+//            PackageInfo packageInfo = pm.getPackageInfo(packageName,
+//                    PackageManager.GET_SIGNATURES);
+//            Signature[] signatures = packageInfo.signatures;
+//            byte[] cert = signatures[0].toByteArray();
+//            X509Certificate x509 = X509Certificate.getInstance(cert);
+//            MessageDigest md = MessageDigest.getInstance("SHA1");
+//            return md.digest(x509.getEncoded());
+//        } catch (PackageManager.NameNotFoundException | CertificateEncodingException |
+//                NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } catch (javax.security.cert.CertificateException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+//    public static String bytesToHex(byte[] bytes) {
+//        char[] hexChars = new char[bytes.length * 2];
+//        for ( int j = 0; j < bytes.length; j++ ) {
+//            int v = bytes[j] & 0xFF;
+//            hexChars[j * 2] = hexArray[v >>> 4];
+//            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+//        }
+//        return new String(hexChars);
+//    }
+//
+//    public static String getCertificateSHA(Context context) {
+//        String s = bytesToHex(getCertificateSHA1Fingerprint(context));
+//        Log.d("JJJJJ", s);
+//        return s;
+//    }
 //    private static String CIPHER_NAME = "AES/ECB/PKCS5PADDING";
 //    private static int CIPHER_KEY_LEN = 16; //128 bits
 //

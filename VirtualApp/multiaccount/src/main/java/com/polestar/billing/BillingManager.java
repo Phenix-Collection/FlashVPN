@@ -300,9 +300,9 @@ public class BillingManager implements PurchasesUpdatedListener {
                             = mBillingClient.queryPurchases(BillingClient.SkuType.SUBS);
                     MLogs.d(TAG, "Querying purchases and subscriptions elapsed time: "
                             + (System.currentTimeMillis() - time) + "ms");
-                    MLogs.d(TAG, "Querying subscriptions result code: "
-                            + subscriptionResult.getResponseCode()
-                            + " res: " + subscriptionResult.getPurchasesList().size());
+//                    MLogs.d(TAG, "Querying subscriptions result code: "
+//                            + subscriptionResult.getResponseCode()
+//                            + " res: " + subscriptionResult.getPurchasesList().size());
 
                     if (subscriptionResult.getResponseCode() == BillingClient.BillingResponse.OK) {
                         purchasesResult.getPurchasesList().addAll(
