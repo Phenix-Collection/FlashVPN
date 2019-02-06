@@ -112,9 +112,9 @@ public class RewardCenterFragment extends BaseFragment
         MLogs.d(" reward onCreateView");
         initData();
 //        if (nativeAd == null) {
-            adLoader = FuseAdLoader.get(SLOT_REWARD_CENER_NATIVE, getActivity());
+            adLoader = FuseAdLoader.get(SLOT_REWARD_CENER_NATIVE, mActivity);
             adLoader.setBannerAdSize(getBannerSize());
-            adLoader.loadAd(getActivity(), 2, 1000, this);
+            adLoader.loadAd(mActivity, 2, 1000, this);
 //        }
         return contentView;
     }
@@ -322,24 +322,26 @@ public class RewardCenterFragment extends BaseFragment
     @Override
     public void onAdLoaded(IAdAdapter ad) {
         nativeAd = ad;
-        MLogs.d("reward loaded ad");
-        ViewGroup adContainer = contentView.findViewById(R.id.ad_container);
-        AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.native_ad_reward_center)
-                .titleId(R.id.ad_title)
-                .textId(R.id.ad_subtitle_text)
-                .mainMediaId(R.id.ad_cover_image)
-                .fbMediaId(R.id.ad_fb_mediaview)
-                .admMediaId(R.id.ad_adm_mediaview)
-                .iconImageId(R.id.ad_icon_image)
-                .callToActionId(R.id.ad_cta_text)
-                .privacyInformationId(R.id.ad_choices_image)
-                .adFlagId(R.id.ad_flag)
-                .build();
-        View adView = ad.getAdView(getActivity(), viewBinder);
-        if (adView != null) {
-            adContainer.removeAllViews();
-            adContainer.addView(adView);
-            adContainer.setVisibility(View.VISIBLE);
+        if (ad != null && mActivity != null) {
+            MLogs.d("reward loaded ad");
+            ViewGroup adContainer = contentView.findViewById(R.id.ad_container);
+            AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.native_ad_reward_center)
+                    .titleId(R.id.ad_title)
+                    .textId(R.id.ad_subtitle_text)
+                    .mainMediaId(R.id.ad_cover_image)
+                    .fbMediaId(R.id.ad_fb_mediaview)
+                    .admMediaId(R.id.ad_adm_mediaview)
+                    .iconImageId(R.id.ad_icon_image)
+                    .callToActionId(R.id.ad_cta_text)
+                    .privacyInformationId(R.id.ad_choices_image)
+                    .adFlagId(R.id.ad_flag)
+                    .build();
+            View adView = ad.getAdView(mActivity, viewBinder);
+            if (adView != null) {
+                adContainer.removeAllViews();
+                adContainer.addView(adView);
+                adContainer.setVisibility(View.VISIBLE);
+            }
         }
     }
 

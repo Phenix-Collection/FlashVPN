@@ -26,6 +26,7 @@ static const int signature_hash_codes[] = {-1273784504, -1048786450, -1208429200
 
 static const char* signature_sha1_codes[] = {
         "C074A141F112791F44D948B30D4364E736DA542A",
+        "55B1DF321918B74E75683E9CD92C155476E74D5C",
 };
 /**
  * 校验APP 包名和签名是否合法

@@ -452,12 +452,12 @@ public class HomeFragment extends BaseFragment {
 
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
-            mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, getActivity().getApplicationContext());
+            mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, mActivity.getApplicationContext());
             mNativeAdLoader.setBannerAdSize(getBannerSize());
         }
 
         if ( mNativeAdLoader.hasValidAdSource()) {
-            mNativeAdLoader.loadAd(getActivity(), 2, RemoteConfig.getLong(CONFIG_HOME_NATIVE_PRIOR_TIME), new IAdLoadListener() {
+            mNativeAdLoader.loadAd(mActivity, 2, RemoteConfig.getLong(CONFIG_HOME_NATIVE_PRIOR_TIME), new IAdLoadListener() {
                 @Override
                 public void onAdClicked(IAdAdapter ad) {
 
