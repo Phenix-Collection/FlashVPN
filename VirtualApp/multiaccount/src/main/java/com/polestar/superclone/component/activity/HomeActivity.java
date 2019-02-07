@@ -55,6 +55,7 @@ import com.polestar.superclone.widgets.UpDownDialog;
 import com.polestar.superclone.utils.RemoteConfig;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -342,9 +343,30 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    private void callUpActivity() {
+        try {
+            Class activityClass = Activity.class;
+            Field callField = activityClass.getDeclaredField("mCalled");
+            callField.setAccessible(true);
+            callField.setBoolean(HomeActivity.this, true);
+//            MLogs.d("JJJJ", "callUpActivity");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onResume() {
-        super.onResume();
+        try {
+            super.onResume();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            callUpActivity();
+
+        }
+//        callUpActivity();
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isAutoInterstitialShown " + isAutoInterstitialShown);
         giftIconLayout.setVisibility(View.GONE);
         giftIconView.setVisibility(View.GONE);

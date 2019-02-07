@@ -710,6 +710,6 @@ public class HomeFragment extends BaseFragment {
             mApplistAdLoader = FuseAdLoader.get(AppListActivity.SLOT_APPLIST_NATIVE, mActivity.getApplicationContext());
             mApplistAdLoader.setBannerAdSize(AppListActivity.getBannerAdSize());
         }
-        mApplistAdLoader.preloadAd(getActivity());
+        mApplistAdLoader.preloadAd(mActivity);
     }
 }
