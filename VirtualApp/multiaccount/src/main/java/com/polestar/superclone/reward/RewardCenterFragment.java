@@ -87,7 +87,7 @@ public class RewardCenterFragment extends BaseFragment
         nativeAd = null;
         appUser = AppUser.getInstance();
         appUser.listenOnUserUpdate(this);
-        mTaskExecutor = new TaskExecutor(getActivity());
+        mTaskExecutor = new TaskExecutor(mActivity);
         mainHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -178,7 +178,7 @@ public class RewardCenterFragment extends BaseFragment
         if(balance == 0) {
             points.setText(getText(R.string.finish_task_get_reward));
         } else {
-            points.setText(String.format(getString(R.string.you_have_coins), balance , getActivity().getString(R.string.coin_unit)));
+            points.setText(String.format(getString(R.string.you_have_coins), balance , mActivity.getString(R.string.coin_unit)));
         }
     }
 
@@ -234,7 +234,7 @@ public class RewardCenterFragment extends BaseFragment
 
     public void onStoreClick(View view){
         MLogs.d("onStoreClick");
-        ((HomeActivity)getActivity()).doSwitchToStoreFragment();
+        ((HomeActivity)mActivity).doSwitchToStoreFragment();
 //        ProductsActivity.start(getActivity());
     }
 
@@ -249,10 +249,10 @@ public class RewardCenterFragment extends BaseFragment
     public void onRewardVideoClick(View view) {
         RewardVideoTask task = (RewardVideoTask) view.getTag();
         if (task != null) {
-            FuseAdLoader loader = FuseAdLoader.get(task.adSlot, getActivity());
+            FuseAdLoader loader = FuseAdLoader.get(task.adSlot, mActivity);
             if (loader == null) {
                 MLogs.d("Wrong adSlot config in task " + task.toString());
-                RewardErrorCode.toastMessage(getActivity(), RewardErrorCode.TASK_UNEXPECTED_ERROR);
+                RewardErrorCode.toastMessage(mActivity, RewardErrorCode.TASK_UNEXPECTED_ERROR);
                 return;
             }
             if(! appUser.isRewardVideoTaskReady() ) {
@@ -295,14 +295,14 @@ public class RewardCenterFragment extends BaseFragment
             updateUserInfo();
             Task task = (Task)mView.getTag();
             updateTaskViewItem(mView, task, false);
-            RewardErrorCode.toastMessage(getActivity(), RewardErrorCode.TASK_OK, payment);
+            RewardErrorCode.toastMessage(mActivity, RewardErrorCode.TASK_OK, payment);
 
             taskRunningProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onTaskFail(long taskId, ADErrorCode code) {
-            RewardErrorCode.toastMessage(getActivity(), code.getErrCode());
+            RewardErrorCode.toastMessage(mActivity, code.getErrCode());
             taskRunningProgressBar.setVisibility(View.GONE);
 
         }
@@ -314,7 +314,7 @@ public class RewardCenterFragment extends BaseFragment
 
         @Override
         public void onGeneralError(ADErrorCode code) {
-            RewardErrorCode.toastMessage(getActivity(), code.getErrCode());
+            RewardErrorCode.toastMessage(mActivity, code.getErrCode());
             taskRunningProgressBar.setVisibility(View.GONE);
         }
     }
