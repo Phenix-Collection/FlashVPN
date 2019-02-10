@@ -178,7 +178,7 @@ public class RewardCenterFragment extends BaseFragment
         if(balance == 0) {
             points.setText(getText(R.string.finish_task_get_reward));
         } else {
-            points.setText(String.format(getString(R.string.you_have_coins), balance , mActivity.getString(R.string.coin_unit)));
+            points.setText(String.format(mActivity.getString(R.string.you_have_coins), balance , mActivity.getString(R.string.coin_unit)));
         }
     }
 

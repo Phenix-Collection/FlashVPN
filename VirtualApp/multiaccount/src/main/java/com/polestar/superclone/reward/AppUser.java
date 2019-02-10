@@ -111,6 +111,7 @@ public class AppUser {
                 if (lower.startsWith("android.")
                         || lower.startsWith("com.polestar.")
                         || lower.startsWith("com.android.")
+                        || lower.startsWith("dalvik.system.")
                         || lower.startsWith("java.")){
                     continue;
                 }
