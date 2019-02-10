@@ -32,7 +32,7 @@
                 android:layout_height="38.0dip"
                 android:layout_gravity="center"
                 android:background="@drawable/smile"
-                android:onClick="onReset"
+                android:onClick="onResetClick"
                 android:drawingCacheQuality="auto" />
 
             <LinearLayout

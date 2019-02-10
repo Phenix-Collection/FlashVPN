@@ -127,9 +127,6 @@ public class GameActivity extends Activity{
         if (inGameAdLoader == null) {
             inGameAdLoader = FuseAdLoader.get(SLOT_GAME_INTERSTITIAL, this);
         }
-        if (adInterval != 0) {
-            inGameAdLoader.preloadAd(this);
-        }
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -290,15 +287,17 @@ public class GameActivity extends Activity{
         }
     }
 
-    public void onReset(View view) {
-        if (!useRewardAd()) {
+    public void onResetClick(View view) {
+        if (needGetLife()) {
+            showGetLifeDialog();
+        } else {
             MLogs.d("interval " + adInterval + " reset: " + mResetTimes);
             if (adInterval != 0 && (++mResetTimes % adInterval) == 0
                     && PreferenceUtils.hasShownRateDialog()) {
                 MLogs.d("need show ad");
                 if (inGameAdLoader.hasValidCache()) {
                     MLogs.d("hasValidCache");
-                    inGameAdLoader.loadAd(this, 1, new IAdLoadListener() {
+                    inGameAdLoader.loadAd(this, 2,500, new IAdLoadListener() {
                         @Override
                         public void onRewarded(IAdAdapter ad) {
 
@@ -336,26 +335,17 @@ public class GameActivity extends Activity{
                         }
                     });
                 } else {
+                    mResetTimes--;
+                    inGameAdLoader.preloadAd(GameActivity.this);
                     MLogs.d("no cache");
                 }
             } else {
                 MLogs.d("no need to show ");
-            }
-            if (adInterval != 0) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        inGameAdLoader.preloadAd(GameActivity.this);
-                    }
-                });
+                if (adInterval != 0) {
+                    inGameAdLoader.preloadAd(GameActivity.this);
+                }
             }
             doReset();
-        } else {
-            if (needGetLife()) {
-                showRewardVideoDialog();
-            } else {
-                doReset();
-            }
         }
     }
 
@@ -426,7 +416,7 @@ public class GameActivity extends Activity{
                 });
     }
 
-    private void showRewardVideoDialog() {
+    private void showGetLifeDialog() {
         FuseAdLoader.get(SLOT_GAME_LIVES_REWARD_VIDEO, GameActivity.this).loadAd(GameActivity.this, 2, 0, null);
         CustomDialog.show(this, RemoteConfig.getString("reward_dialog_title"),
                 RemoteConfig.getString("reward_dialog_content"), null, RemoteConfig.getString("reward_dialog_button"),
@@ -564,6 +554,9 @@ public class GameActivity extends Activity{
         if (useRewardAd()) {
             FuseAdLoader.get(SLOT_GAME_LIVES_REWARD_VIDEO, this).preloadAd(this);
         }
+        if (adInterval != 0) {
+            inGameAdLoader.preloadAd(this);
+        }
     }
 
     private void updateTime(){
@@ -664,11 +657,7 @@ public class GameActivity extends Activity{
             }
         }
         resetButton.setBackgroundResource(R.drawable.sorrow);
-        if (needGetLife()) {
-            showRewardVideoDialog();
-        } else {
-            showRateDialogNeeded(RateDialog.FROM_GAME_FAIL);
-        }
+        showRateDialogNeeded(RateDialog.FROM_GAME_FAIL);
     }
 
     private void success() {

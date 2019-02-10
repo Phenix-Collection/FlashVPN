@@ -34,11 +34,11 @@
     </entry>
     <entry>
         <key>slot_scanner_ad</key>
-        <value>adm_reward:ca-app-pub-5490912237269284/8291060357:0</value>
+        <value>adm_reward:ca-app-pub-5490912237269284/8291060357:0;ir_reward:collect_scanners:0</value>
     </entry>
     <entry>
         <key>conf_reward_lives</key>
-        <value>5</value>
+        <value>10</value>
     </entry>
     <entry>
         <key>ad_interval</key>
