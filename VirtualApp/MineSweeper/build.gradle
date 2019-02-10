@@ -54,8 +54,8 @@ android {
         }
         play {
             dimension "channel"
-            versionCode 2048
-            versionName "2.0.48.${releaseTime()}"
+            versionCode 2051
+            versionName "2.0.51.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
@@ -66,9 +66,10 @@ android {
             multiDexEnabled true
         }
         release {
-            signingConfig signingConfigs.myConfig
+//            signingConfig signingConfigs.myConfig
             minifyEnabled true
             multiDexEnabled true
+            signingConfig getSignInfo("./sign.properties")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
