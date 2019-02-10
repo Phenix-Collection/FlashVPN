@@ -11,11 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.minesweeperclassic.BuildConfig;
 import com.polestar.minesweeperclassic.R;
 import com.polestar.minesweeperclassic.utils.CommonUtils;
@@ -24,6 +29,8 @@ import com.polestar.minesweeperclassic.utils.EventReporter;
 import com.polestar.minesweeperclassic.utils.MLogs;
 import com.polestar.minesweeperclassic.utils.PreferenceUtils;
 import com.polestar.minesweeperclassic.widget.RateDialog;
+
+import java.util.List;
 
 public class SettingsActivity extends Activity {
     private TextView titleTv;
@@ -37,6 +44,7 @@ public class SettingsActivity extends Activity {
 
     private int minCellSize = 50;
     private int maxCellSize;
+    private ProgressBar loadingProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +106,8 @@ public class SettingsActivity extends Activity {
 
         versionTv.setText(getString(R.string.settings_right) + "\n" + "Version: " + BuildConfig.VERSION_NAME);
         cellTable = (TableLayout)findViewById(R.id.mine_table);
+        loadingProgress = findViewById(R.id.reward_loading_progress);
+        loadingProgress.setVisibility(View.GONE);
 
         seekBar = (SeekBar) findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -180,5 +190,54 @@ public class SettingsActivity extends Activity {
                 + context.getPackageName() +  "&referrer=utm_source%3Duser_share";
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
         context.startActivity(Intent.createChooser(shareIntent, getString(R.string.share_tips)));
+    }
+
+
+
+    public void onCollectScanner(View view) {
+        FuseAdLoader adLoader = FuseAdLoader.get(GameActivity.SLOT_SCANNER_REWARD_VIDEO, this);
+        if (!adLoader.hasValidCache()) {
+            loadingProgress.setVisibility(View.VISIBLE);
+        }
+        adLoader.loadAd(this, 2, new IAdLoadListener() {
+            @Override
+            public void onAdLoaded(IAdAdapter ad) {
+                ad.show();
+                loadingProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdClicked(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdClosed(IAdAdapter ad) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FuseAdLoader.get(GameActivity.SLOT_SCANNER_REWARD_VIDEO, SettingsActivity.this).preloadAd(SettingsActivity.this);
+                    }
+                });
+            }
+
+            @Override
+            public void onAdListLoaded(List<IAdAdapter> ads) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+                loadingProgress.setVisibility(View.GONE);
+                Toast.makeText(SettingsActivity.this, R.string.toast_no_reward_content, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewarded(IAdAdapter ad) {
+                EventReporter.reportReward("settings_scanner_"+ad.getAdType());
+                Toast.makeText(SettingsActivity.this, R.string.toast_get_scanner, Toast.LENGTH_SHORT).show();
+                PreferenceUtils.incScannerNumber(SettingsActivity.this);
+            }
+        });
     }
 }

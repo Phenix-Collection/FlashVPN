@@ -78,4 +78,10 @@ public class EventReporter {
         prop.putString("name", event);
         mFirebaseAnalytics.logEvent("general_event", prop);
     }
+
+    public static void reportReward(String name) {
+        Bundle prop = new Bundle();
+        prop.putString("name", name);
+        mFirebaseAnalytics.logEvent("reward_event", prop);
+    }
 }

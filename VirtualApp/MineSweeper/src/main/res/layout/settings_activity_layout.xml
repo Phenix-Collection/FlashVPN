@@ -22,7 +22,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:onClick="onDifficultyClick"
             android:background="@color/white"
             android:paddingLeft="22dp">
@@ -31,8 +31,8 @@
                 android:id="@+id/difficulty_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_alignParentLeft="true"
                 android:text="@string/settings_difficulty"
                 android:textColor="@color/text_gray_dark"
@@ -44,6 +44,41 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/difficulty_title"
                 android:text="Easy"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/text_gray_light"
+                android:textSize="14sp" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onCollectScanner"
+            android:background="@color/white"
+            android:paddingLeft="22dp">
+
+            <TextView
+                android:id="@+id/scanner_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentLeft="true"
+                android:text="@string/scanner_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/scanner_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/scanner_title"
+                android:layout_marginBottom="5dp"
+                android:text="@string/scanner_description"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:textColor="@color/text_gray_light"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -233,4 +268,10 @@
         android:textColor="@color/text_gray_light"
         android:gravity="center_horizontal"
         android:textSize="13sp" />
+    <ProgressBar
+        android:id="@+id/reward_loading_progress"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 </RelativeLayout>

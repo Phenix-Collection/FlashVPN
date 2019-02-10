@@ -30,7 +30,11 @@
     </entry>
     <entry>
         <key>slot_game_lives_ad</key>
-        <value>ir_reward:get_life_in_game:0;adm_reward:ca-app-pub-5490912237269284/8428718810:0</value>
+        <value>adm_reward:ca-app-pub-5490912237269284/8428718810:0;ir_reward:get_life_in_game:0</value>
+    </entry>
+    <entry>
+        <key>slot_scanner_ad</key>
+        <value>adm_reward:ca-app-pub-5490912237269284/8291060357:0</value>
     </entry>
     <entry>
         <key>conf_reward_lives</key>
@@ -82,5 +86,9 @@
     <entry>
         <key>reward_dialog_button</key>
         <value>Watch Now!</value>
+    </entry>
+    <entry>
+        <key>default_scanners</key>
+        <value>1</value>
     </entry>
 </defaultsMap>

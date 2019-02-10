@@ -12,10 +12,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -87,12 +89,15 @@ public class GameActivity extends Activity{
 
     public final static String SLOT_ENTER_INTERSTITIAL = "slot_app_start";
     private final static String CONF_APP_START_INTERVAL = "app_start_ad_interval_sec";
-    private final static String SLOT_REWARD_VIDEO = "slot_game_lives_ad";
+    private final static String SLOT_GAME_LIVES_REWARD_VIDEO = "slot_game_lives_ad";
+    public final static String SLOT_SCANNER_REWARD_VIDEO = "slot_scanner_ad";
     private final static String CONF_REWARD_LIVES = "conf_reward_lives";
 
     private boolean isScanner = false;
     private TextView textScannerNum;
-    private RelativeLayout layoutSacnner;
+    private RelativeLayout layoutScanner;
+    private ProgressBar rewardProgressBar;
+    
 
     public static boolean needAppStartAd() {
         boolean ret = PreferenceUtils.hasShownRateDialog() &&
@@ -107,7 +112,7 @@ public class GameActivity extends Activity{
 
     private boolean needGetLife() {
         return useRewardAd() && failTimes >= rewardLives && PreferenceUtils.hasShownRateDialog() &&
-                FuseAdLoader.get(SLOT_REWARD_VIDEO, this).hasValidCache();
+                FuseAdLoader.get(SLOT_GAME_LIVES_REWARD_VIDEO, this).hasValidCache();
     }
 
     @Override
@@ -136,6 +141,10 @@ public class GameActivity extends Activity{
                 }
             }
         };
+
+        if (PreferenceUtils.getScannerNumber(this ) <= 1) {
+            FuseAdLoader.get(GameActivity.SLOT_SCANNER_REWARD_VIDEO, this).preloadAd(this);
+        }
 
         FuseAdLoader enterAdLoader = FuseAdLoader.get(SLOT_ENTER_INTERSTITIAL, this);
         if (needAppStartAd() && enterAdLoader.hasValidCache()) {
@@ -191,7 +200,26 @@ public class GameActivity extends Activity{
 
 
     public void onScannerClick(View view) {
+        if (!isScanner) {
+            if (PreferenceUtils.getScannerNumber(this) > 0) {
+                isScanner = true;
+            } else {
+                //showDialog
+                showScannerDialog();
+            }
+        } else {
+            isScanner = false;
+        }
+        updateScannerLayout();
+    }
 
+    private void updateScannerLayout() {
+        textScannerNum.setText(""+PreferenceUtils.getScannerNumber(this));
+        if (!isScanner) {
+            layoutScanner.setBackgroundColor(getResources().getColor(R.color.color_not_scanner_mode));
+        } else {
+            layoutScanner.setBackgroundColor(getResources().getColor(R.color.color_scanner_mode));
+        }
     }
 
     private void initData() {
@@ -331,14 +359,82 @@ public class GameActivity extends Activity{
         }
     }
 
+    private void showScannerDialog() {
+        FuseAdLoader.get(SLOT_SCANNER_REWARD_VIDEO, GameActivity.this).loadAd(GameActivity.this, 2, 0, null);
+        CustomDialog.show(this, getString(R.string.scanner_title),
+                getString(R.string.scanner_description), null, RemoteConfig.getString("reward_dialog_button"),
+                R.drawable.reward_video, R.layout.reward_video_dialog,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FuseAdLoader adLoader = FuseAdLoader.get(SLOT_SCANNER_REWARD_VIDEO, GameActivity.this);
+                        if (!adLoader.hasValidCache()) {
+                            rewardProgressBar.setVisibility(View.VISIBLE);
+                        }
+                        FuseAdLoader.get(SLOT_SCANNER_REWARD_VIDEO, GameActivity.this).loadAd(GameActivity.this, 2, 0, new IAdLoadListener() {
+                            @Override
+                            public void onAdLoaded(IAdAdapter ad) {
+                                ad.show();
+                                rewardProgressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAdClicked(IAdAdapter ad) {
+
+                            }
+
+                            @Override
+                            public void onAdClosed(IAdAdapter ad) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        rewardProgressBar.setVisibility(View.GONE);
+                                        FuseAdLoader.get(SLOT_SCANNER_REWARD_VIDEO, GameActivity.this).preloadAd(GameActivity.this);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                rewardProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(GameActivity.this, R.string.toast_no_reward_content, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onRewarded(IAdAdapter ad) {
+                                MLogs.d("onRewarded");
+                                PreferenceUtils.incScannerNumber(GameActivity.this);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        isScanner = true;
+                                        Toast.makeText(GameActivity.this, R.string.toast_get_scanner, Toast.LENGTH_SHORT).show();
+                                        updateScannerLayout();
+                                    }
+                                });
+                                EventReporter.setUserProperty(EventReporter.PROP_REWARD_USER, "true");
+                                EventReporter.generalEvent("reward_" + ad.getAdType());
+                                EventReporter.reportReward("game_scanner_"+ad.getAdType());
+                            }
+                        });
+                    }
+                });
+    }
+
     private void showRewardVideoDialog() {
+        FuseAdLoader.get(SLOT_GAME_LIVES_REWARD_VIDEO, GameActivity.this).loadAd(GameActivity.this, 2, 0, null);
         CustomDialog.show(this, RemoteConfig.getString("reward_dialog_title"),
                 RemoteConfig.getString("reward_dialog_content"), null, RemoteConfig.getString("reward_dialog_button"),
                 R.drawable.reward_video, R.layout.reward_video_dialog,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        FuseAdLoader.get(SLOT_REWARD_VIDEO, GameActivity.this).loadAd(GameActivity.this, 2, 0, new IAdLoadListener() {
+                        FuseAdLoader.get(SLOT_GAME_LIVES_REWARD_VIDEO, GameActivity.this).loadAd(GameActivity.this, 2, 0, new IAdLoadListener() {
                             @Override
                             public void onAdLoaded(IAdAdapter ad) {
                                 ad.show();
@@ -354,7 +450,7 @@ public class GameActivity extends Activity{
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        FuseAdLoader.get(SLOT_REWARD_VIDEO, GameActivity.this).preloadAd(GameActivity.this);
+                                        FuseAdLoader.get(SLOT_GAME_LIVES_REWARD_VIDEO, GameActivity.this).preloadAd(GameActivity.this);
                                     }
                                 });
                             }
@@ -375,6 +471,7 @@ public class GameActivity extends Activity{
                                 MLogs.d("onRewarded");
                                 EventReporter.setUserProperty(EventReporter.PROP_REWARD_USER, "true");
                                 EventReporter.generalEvent("reward_" + ad.getAdType());
+                                EventReporter.reportReward("game_live_"+ad.getAdType());
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -397,8 +494,11 @@ public class GameActivity extends Activity{
     private void initView() {
         setContentView(R.layout.game_main_layout);
         flagMineButton = (Button) findViewById(R.id.ButtonMineFlag);
-        layoutSacnner = findViewById(R.id.scanner_layout);
+        layoutScanner = findViewById(R.id.scanner_layout);
         textScannerNum = findViewById(R.id.text_scanner_num);
+        rewardProgressBar = findViewById(R.id.reward_loading_progress);
+        rewardProgressBar.setVisibility(View.GONE);
+        updateScannerLayout();
         if (isFlagMode) {
             flagMineButton.setBackgroundResource(R.drawable.flagmineswitcher_flag);
         } else {
@@ -460,8 +560,9 @@ public class GameActivity extends Activity{
             initData();
             initView();
         }
+        updateScannerLayout();
         if (useRewardAd()) {
-            FuseAdLoader.get(SLOT_REWARD_VIDEO, this).preloadAd(this);
+            FuseAdLoader.get(SLOT_GAME_LIVES_REWARD_VIDEO, this).preloadAd(this);
         }
     }
 
@@ -590,8 +691,24 @@ public class GameActivity extends Activity{
             onMineCellClick(cell, isFlagMode, countStep);
         }
     }
-    private void onMineCellClick(MineCell cell, boolean isFlagMode, boolean countStep) {
+    private void onMineCellClick(final MineCell cell, boolean isFlagMode, boolean countStep) {
         if (cell.state == MineCell.STATE_CLICKED) {
+            return;
+        }
+        if (cell.state == MineCell.STATE_INIT
+                && isScanner) {
+            cell.updateState(MineCell.STATE_SHOW);
+            cell.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isGameFinish) {
+                        cell.updateState(MineCell.STATE_INIT);
+                    }
+                }
+            }, 1000);
+            PreferenceUtils.decScannerNumber(this);
+            isScanner = false;
+            updateScannerLayout();
             return;
         }
         if (countStep) steps ++;

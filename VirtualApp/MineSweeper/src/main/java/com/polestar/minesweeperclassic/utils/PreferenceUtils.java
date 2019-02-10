@@ -304,6 +304,6 @@ public class PreferenceUtils {
     }
 
     public static int getScannerNumber(Context c) {
-        return getInt(c, "scanner_number", 0);
+        return getInt(c, "scanner_number", (int)RemoteConfig.getLong("default_scanners"));
     }
 }

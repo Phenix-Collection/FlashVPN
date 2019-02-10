@@ -31,6 +31,11 @@
     <string name="yes">Yes</string>
     <string name="ok">OK</string>
 
+    <string name="scanner_title">Collect Scanner Tool</string>
+    <string name="toast_get_scanner">Collect 1 scanner tool!</string>
+    <string name="toast_no_reward_content">No reward content at this moment! Please check network and try again later.</string>
+    <string name="scanner_description">Complete watching a reward video to get a scanner tool to uncover mines that you are not sure.</string>
+
     <!-- feedback -->
     <string name="feedback_hint">Please tell us the detail about the problem you met , and please tell us the steps to reproduce it and better with screenshot.</string>
     <string name="button_submit">Submit</string>
