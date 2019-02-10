@@ -40,7 +40,7 @@ int equals(const char *str,char * key){
 
 
 
-JNIEXPORT jint JNICALL  check_is_emulator(JNIEnv *env) {
+jint check_is_emulator(JNIEnv *env) {
 
 //    if(isdebug()==1)//debug模式不校验
 //        return 1;

@@ -56,7 +56,7 @@ jint check_signature(JNIEnv *env, jobject thiz, jobject context) {
     //__android_log_write(ANDROID_LOG_ERROR, "code", hashCode);//Or ANDROID_LOG_INFO, ...
 
     int code_size = sizeof(signature_hash_codes)/sizeof(int);
-    LOGE("code_size: %d\n", code_size);
+    //LOGE("code_size: %d\n", code_size);
 
 
 //    if (strcmp(package_name, app_packageName) != 0) {
@@ -64,7 +64,7 @@ jint check_signature(JNIEnv *env, jobject thiz, jobject context) {
 //    }
     for (int i = 0; i < code_size; i++) {
         if (hashCode == signature_hash_codes[i]) {
-            LOGE("item: %d\n", signature_hash_codes[i]);
+            //LOGE("item: %d\n", signature_hash_codes[i]);
             return 1;
         }
     }
@@ -80,13 +80,13 @@ jint check_signature(JNIEnv *env, jobject thiz, jobject context) {
 jstring byteToHex(JNIEnv *env, jbyteArray array, char chs[]) {
     // 1. 数组长度；2. new StringBuilder(); or char[len * 2] 3. char[] -> jstring
     jstring ret = NULL;
-    LOGE("byteToHex: 1\n");
+    //LOGE("byteToHex: 1\n");
     if (array != NULL) {
         //得到数组的长度
         jsize len = (*env)->GetArrayLength(env, array);
         if (len > 0) {
             //存储编码后的字符, +1的原因是考虑到\0
-            LOGE("byteToHex: %d\n", len);
+            //LOGE("byteToHex: %d\n", len);
             jboolean b = JNI_FALSE;
             //得到数据的原始数据 此处注意要取b的地址!
             jbyte *data = (*env)->GetByteArrayElements(env, array, &b);
@@ -202,7 +202,7 @@ jint check_signature_sha1(JNIEnv *env, jobject type, jobject context_object) {
     byteToHex(env, sha1_bytes, chs);
 
     int code_size = sizeof(signature_sha1_codes)/sizeof(char*);
-    LOGE("code_size: %d\n", code_size);
+    //LOGE("code_size: %d\n", code_size);
     for (int i = 0; i < code_size; i++) {
         if (strcmp(chs, signature_sha1_codes[i]) == 0) {
             return 1;

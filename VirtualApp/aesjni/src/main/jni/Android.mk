@@ -11,7 +11,6 @@ LOCAL_SRC_FILES := JNIEncrypt.c	\
                     debugger.c
 
 
-#LOCAL_CFLAGS := -fvisibility=hidden   -mllvm -sub -mllvm -fla -mllvm -bcf
 LOCAL_CFLAGS := -fvisibility=hidden   -mllvm -sub -mllvm -fla -mllvm -bcf
 
 

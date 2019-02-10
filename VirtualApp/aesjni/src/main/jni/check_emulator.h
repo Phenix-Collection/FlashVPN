@@ -11,7 +11,7 @@
  * @param context
  * @return  1:通过(非模拟器) else :不通过(是模拟器)
  */
-JNIEXPORT jint JNICALL  check_is_emulator(JNIEnv *env);
+jint check_is_emulator(JNIEnv *env);
 
 #endif
 
