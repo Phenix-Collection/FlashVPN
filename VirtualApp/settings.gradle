@@ -1,2 +1,2 @@
-include ':libmultiple', ':multiaccount', ':Booster', ':domultiple', ':fuseadloader', ':MineSweeper',":whatsclone", ":NovaVPN", ":aesjni"
+include ':libmultiple', ':multiaccount', ':Booster', ':domultiple', ':fuseadloader', ':MineSweeper', ':jniprebuilt',":whatsclone", ":NovaVPN", ":aesjni", ":jniprebuilt"
 
