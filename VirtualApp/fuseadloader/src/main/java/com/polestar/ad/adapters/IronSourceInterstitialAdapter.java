@@ -137,7 +137,14 @@ public class IronSourceInterstitialAdapter extends AdAdapter {
 
             @Override
             public void onInterstitialAdClicked() {
-
+                postOnMainHandler(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (adListener != null) {
+                            adListener.onAdClicked(IronSourceInterstitialAdapter.this);
+                        }
+                    }
+                });
             }
         });
         if (!IronSource.isInterstitialReady()) {

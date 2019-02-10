@@ -111,6 +111,14 @@ public class IronSourceRewardVideoAdapter extends AdAdapter {
             @Override
             public void onRewardedVideoAdClicked(Placement placement) {
                 AdLog.d("onRewardedVideoAdClicked");
+                postOnMainHandler(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (adListener != null) {
+                            adListener.onAdClicked(IronSourceRewardVideoAdapter.this);
+                        }
+                    }
+                });
             }
         });
         if (IronSource.isRewardedVideoAvailable()) {

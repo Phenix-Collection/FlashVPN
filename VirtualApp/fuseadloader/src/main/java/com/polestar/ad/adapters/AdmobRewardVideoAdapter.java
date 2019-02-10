@@ -56,7 +56,10 @@ public class AdmobRewardVideoAdapter extends AdAdapter {
 
             @Override
             public void onRewardedVideoAdClosed() {
-
+                AdLog.d("onRewardedVideoAdClosed");
+                if (adListener != null) {
+                    adListener.onAdClosed(AdmobRewardVideoAdapter.this);
+                }
             }
 
             @Override
@@ -69,7 +72,10 @@ public class AdmobRewardVideoAdapter extends AdAdapter {
 
             @Override
             public void onRewardedVideoAdLeftApplication() {
-
+                AdLog.d("onRewardedVideoAdLeftApplication");
+                if (adListener != null) {
+                    adListener.onAdClicked(AdmobRewardVideoAdapter.this);
+                }
             }
 
             @Override
