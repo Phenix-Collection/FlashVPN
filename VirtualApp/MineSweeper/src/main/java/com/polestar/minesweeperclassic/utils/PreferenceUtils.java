@@ -293,4 +293,17 @@ public class PreferenceUtils {
     public static void updateLastAppStartAdTime(Context c) {
         putLong(c, "last_start_ad_time", System.currentTimeMillis() );
     }
+
+    public static void incScannerNumber(Context c) {
+        putInt(c, "scanner_number", getScannerNumber(c) + 1);
+    }
+
+    public static void decScannerNumber(Context c) {
+        int num = getScannerNumber(c);
+        putInt(c, "scanner_number", num > 0? num - 1: 0);
+    }
+
+    public static int getScannerNumber(Context c) {
+        return getInt(c, "scanner_number", 0);
+    }
 }

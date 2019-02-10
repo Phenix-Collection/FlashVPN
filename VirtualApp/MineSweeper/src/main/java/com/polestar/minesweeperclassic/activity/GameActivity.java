@@ -12,8 +12,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -87,6 +89,10 @@ public class GameActivity extends Activity{
     private final static String CONF_APP_START_INTERVAL = "app_start_ad_interval_sec";
     private final static String SLOT_REWARD_VIDEO = "slot_game_lives_ad";
     private final static String CONF_REWARD_LIVES = "conf_reward_lives";
+
+    private boolean isScanner = false;
+    private TextView textScannerNum;
+    private RelativeLayout layoutSacnner;
 
     public static boolean needAppStartAd() {
         boolean ret = PreferenceUtils.hasShownRateDialog() &&
@@ -183,9 +189,15 @@ public class GameActivity extends Activity{
         DaemonService.startup(this);
     }
 
+
+    public void onScannerClick(View view) {
+
+    }
+
     private void initData() {
         int screenWidth = DisplayUtils.getScreenWidth(this);
         int screenHeight = DisplayUtils.getScreenHeight(this);
+        isScanner = false;
         cellSize = PreferenceUtils.getCellSize();
         lineOfMine= screenWidth/cellSize;
         int headHeight = DisplayUtils.dip2px(this, 50);
@@ -385,6 +397,8 @@ public class GameActivity extends Activity{
     private void initView() {
         setContentView(R.layout.game_main_layout);
         flagMineButton = (Button) findViewById(R.id.ButtonMineFlag);
+        layoutSacnner = findViewById(R.id.scanner_layout);
+        textScannerNum = findViewById(R.id.text_scanner_num);
         if (isFlagMode) {
             flagMineButton.setBackgroundResource(R.drawable.flagmineswitcher_flag);
         } else {

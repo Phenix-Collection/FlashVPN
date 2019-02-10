@@ -10,6 +10,9 @@
     <color name="report_detail_color">#0ba5fe</color>
     <color name="text_button_color">#4884d2</color>
     <color name="colorAccent">#5999ff</color>
+    <color name="color_scanner_number">#ff5967</color>
+    <color name="color_scanner_mode">#818181</color>
+    <color name="color_not_scanner_mode">#A5A5A5</color>
 
     <color name="gray">#A9A5A3</color>
     <color name="dialog_guide_button_negative_text">#ff454545</color>

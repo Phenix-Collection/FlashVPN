@@ -70,9 +70,33 @@
                 android:layout_width="38.0dip"
                 android:layout_height="38.0dip"
                 android:layout_gravity="center|left"
-                android:layout_marginLeft="80.0dip"
+                android:layout_marginLeft="70.0dip"
                 android:background="@drawable/settings_icon"
                 android:onClick="onSettingClick"/>
+            <RelativeLayout
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="120.0dip"
+                android:layout_width="38.0dip"
+                android:layout_height="38.0dip"
+                android:onClick="onScannerClick"
+                android:id="@+id/scanner_layout">
+
+                <ImageView
+                    android:layout_width="38.0dip"
+                    android:layout_height="38.0dip"
+                    android:src="@drawable/scanner"
+                    android:scaleType="fitXY"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom|right"
+                    android:textSize="12sp"
+                    android:text="12"
+                    android:textStyle="bold"
+                    android:paddingRight="5dp"
+                    android:id="@+id/text_scanner_num"
+                    android:textColor="@color/color_scanner_number"/>
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="38.0dip"
