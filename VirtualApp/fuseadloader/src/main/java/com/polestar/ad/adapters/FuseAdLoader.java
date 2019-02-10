@@ -179,7 +179,7 @@ public class FuseAdLoader {
     public static final HashSet<String> SUPPORTED_TYPES = new HashSet<>();
 
     public void preloadAd(Context context) {
-        loadAd(context, 1, null);
+        loadAd(context, 1,0, null);
     }
 
     public FuseAdLoader setBannerAdSize(AdSize adSize) {
@@ -206,7 +206,7 @@ public class FuseAdLoader {
             }
             return;
         }
-        if (burstNum == 1) { protectTime = 0;}
+        //if (burstNum == 1) { protectTime = 0;}
         mProtectOverTime = System.currentTimeMillis() + protectTime;
         mListener = listener;
         mAdReturned = false;
@@ -336,9 +336,10 @@ public class FuseAdLoader {
         return false;
     }
 
+    @Deprecated
     public void loadAd(Context context, int burstNum, IAdLoadListener listener) {
         AdLog.d("load " + mSlot + " listen: " + listener);
-        loadAd(context, burstNum, 0 , listener);
+        loadAd(context, burstNum, 1000 , listener);
     }
 
     public void addAdConfig(AdConfig adConfig) {
