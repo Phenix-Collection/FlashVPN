@@ -11,6 +11,7 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdControlInfo;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
+import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.clone.PackageConfig;
 
@@ -38,6 +39,8 @@ public class RemoteConfig {
             public void onSuccess(Void aVoid) {
                 MLogs.logBug(TAG, "Fetch Succeeded");
                 mFirebaseRemoteConfig.activateFetched();
+                PreferencesUtils.putString(PolestarApp.getApp(), "conf_intercept_class", RemoteConfig.getString("conf_intercept_class"));
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

@@ -48,7 +48,7 @@
     <entry>
         <key>slot_home_lucky</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/2348074352:0</value>
+        <value>fb_interstitial:302444040464257_302445403797454:0;ab_interstitial:ca-app-pub-5490912237269284/2348074352:0</value>
     </entry>
     <entry>
         <key>slot_home_native</key>
@@ -141,7 +141,7 @@
     </entry>
     <entry>
         <key>guide_quick_switch_times</key>
-        <value>3</value>
+        <value>5</value>
     </entry>
     <!--<entry>-->
         <!--<key>slot_boost_ad</key>-->
@@ -193,5 +193,9 @@
     <entry>
         <key>force_requested_permission</key>
         <value>android.permission.READ_PHONE_STATE;android.permission.WRITE_EXTERNAL_STORAGE</value>
+    </entry>
+    <entry>
+        <key>conf_intercept_class</key>
+        <value></value>
     </entry>
 </defaultsMap>

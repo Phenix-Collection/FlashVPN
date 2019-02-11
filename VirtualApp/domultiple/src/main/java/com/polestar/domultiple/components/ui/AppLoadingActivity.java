@@ -382,7 +382,7 @@ public class AppLoadingActivity extends BaseActivity {
         mNativeAdLoader = FuseAdLoader.get(SLOT_APP_START_NATIVE, this);
         mNativeAdLoader.setBannerAdSize(getBannerSize());
         if(mNativeAdLoader.hasValidAdSource()){
-            mNativeAdLoader.loadAd(this, 2, new IAdLoadListener() {
+            mNativeAdLoader.loadAd(this, 2, 1000, new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 

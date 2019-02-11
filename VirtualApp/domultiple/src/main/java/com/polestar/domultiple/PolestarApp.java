@@ -218,7 +218,6 @@ public class PolestarApp extends MultiDexApplication {
                         }
                     });
 
-                    PreferencesUtils.putString(gDefault, "grey_source_id", RemoteConfig.getString("grey_source_id"));
                     //BoosterSdk.setMemoryThreshold(20);
                     //BoosterSdk.showSettings(this);
                     if (!PreferencesUtils.isAdFree()) {
@@ -235,6 +234,11 @@ public class PolestarApp extends MultiDexApplication {
             public void onVirtualProcess() {
                 MLogs.d("Virtual process create");
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
+                String conf = PreferencesUtils.getString(getApp(), "conf_intercept_class", null);
+                if (conf != null) {
+                    String[] arr = conf.split(";");
+                    delegate.addClasses(arr);
+                }
                 delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
 
@@ -262,6 +266,11 @@ public class PolestarApp extends MultiDexApplication {
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
+                String conf = PreferencesUtils.getString(getApp(), "conf_intercept_class", null);
+                if (conf != null) {
+                    String[] arr = conf.split(";");
+                    delegate.addClasses(arr);
+                }
                 delegate.asyncInit();
                 VirtualCore.get().setComponentDelegate(delegate);
                 initAd();

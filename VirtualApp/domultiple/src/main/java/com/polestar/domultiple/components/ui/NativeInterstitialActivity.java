@@ -117,7 +117,7 @@ public class NativeInterstitialActivity extends Activity {
     }
 
     public void fuseLoadNative() {
-        mFuseLoader.loadAd(this, 1, new IAdLoadListener() {
+        mFuseLoader.loadAd(this, 2, 2000, new IAdLoadListener() {
             @Override
             public void onRewarded(IAdAdapter ad) {
 
@@ -127,7 +127,7 @@ public class NativeInterstitialActivity extends Activity {
             public void onAdLoaded(IAdAdapter ad) {
                 hideLoadding();
                 fillInterstitialLayout(ad);
-                mFuseLoader.loadAd(NativeInterstitialActivity.this, 1, null);
+                mFuseLoader.preloadAd(NativeInterstitialActivity.this);
                 mHandler.removeMessages(MSG_TIMEOUT);
 //                loadAdmobNativeExpress();
             }
