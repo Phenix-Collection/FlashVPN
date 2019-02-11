@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 
+import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.hook.base.BinderInvocationProxy;
 import com.polestar.clone.client.hook.base.MethodProxy;
 import com.polestar.clone.client.hook.base.ReplaceLastPkgMethodProxy;
@@ -34,12 +35,29 @@ public class AppOpsManagerStub extends BinderInvocationProxy {
         addMethodProxy(new BaseMethodProxy("startOperation", 2, 3));
         addMethodProxy(new BaseMethodProxy("finishOperation", 2, 3));
         addMethodProxy(new BaseMethodProxy("startWatchingMode", -1, 1));
-        addMethodProxy(new BaseMethodProxy("checkPackage", 0, 1));
+        addMethodProxy(new BaseMethodProxy("checkPackage", 0, 1){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                if(GmsSupport.isGmsFamilyPackage((String)args[1])) {
+                    return 0;
+                }
+                return super.call(who, method, args);
+            }
+        });
         addMethodProxy(new BaseMethodProxy("getOpsForPackage", 0, 1));
         addMethodProxy(new BaseMethodProxy("setMode", 1, 2));
         addMethodProxy(new BaseMethodProxy("checkAudioOperation", 2, 3));
         addMethodProxy(new BaseMethodProxy("setAudioRestriction", 2, -1));
-        addMethodProxy(new ReplaceLastPkgMethodProxy("resetAllModes"));
+        addMethodProxy(new ReplaceLastPkgMethodProxy("resetAllModes"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                if (args[0] instanceof Integer) {
+                    //userId
+                    args[0] = 0;
+                }
+                return 0;
+            }
+        });
         addMethodProxy(new MethodProxy() {
             @Override
             public String getMethodName() {
