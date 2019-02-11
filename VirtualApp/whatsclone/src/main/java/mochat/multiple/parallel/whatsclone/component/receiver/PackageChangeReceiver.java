@@ -51,10 +51,6 @@ public class PackageChangeReceiver extends BroadcastReceiver{
                     }
                 }).start();
             }
-            if (!replacing && !installed) {
-                MLogs.d("call booster onInstall");
-                BoostMgr.getInstance(context).onInstall(pkg);
-            }
         }
     }
 }

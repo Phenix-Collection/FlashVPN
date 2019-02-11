@@ -35,12 +35,12 @@ public class PackageChangeReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
             final String pkg = packageName;
             boolean installed = false;
-            try{
+            try {
                 installed = VirtualCore.get() != null && VirtualCore.get().isAppInstalled(packageName);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 MLogs.logBug(VLog.getStackTraceString(e));
             }
-            if( replacing && installed) {
+            if (replacing && installed) {
                 MLogs.d("app install: replacing upgrade ");
                 new Thread(new Runnable() {
                     @Override
@@ -48,10 +48,6 @@ public class PackageChangeReceiver extends BroadcastReceiver {
                         CloneManager.upgradeApp(pkg);
                     }
                 }).start();
-            }
-            if (!replacing && !installed) {
-                MLogs.d("call booster onInstall");
-                BoostMgr.getInstance(context).onInstall(pkg);
             }
         }
     }

@@ -42,7 +42,6 @@ public class BoosterActivity extends Activity {
             finish();
         }
         initView();
-        BoosterSdk.useRealUserPresent(true);
         if (mListener != null) {
             mListener.onActivityCreate(this);
         }

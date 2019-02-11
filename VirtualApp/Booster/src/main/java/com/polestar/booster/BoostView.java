@@ -692,7 +692,6 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
     public void onClick(View view) {
         if (view.getId() == R.id.boostersdk_btn_settings) {
             closeImmediate();
-            BoosterSdk.showSettings(mContext);
             return;
         }
 

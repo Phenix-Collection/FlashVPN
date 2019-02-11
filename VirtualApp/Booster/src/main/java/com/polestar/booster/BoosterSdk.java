@@ -30,21 +30,15 @@ public class BoosterSdk {
     }
     public static class BoosterConfig {
         public String boostAdSlot = "slot_boost_ad";
-        public String installAdSlot = "slot_install_ad";
-        public String unlockAdSlot = "slot_unlock_ad";
         public boolean isAutoClean = false;
         public boolean isAutoCreateShortcut = true;
         public boolean isInstallAd = true;
         public boolean isUnlockAd = true;
-        public boolean isPreloadOnUnlock = false;
-        public boolean allowPreloadAdTimer = false;
-        public long preloadAdTimerInterval = 45*60*1000;
         public int autoDismissTime = 20*1000;
         public long autoCreateInterval = 3*24*60*60*1000;
         public long autoCleanInterval = 5*60*60*1000;
         public long autoAdFirstInterval = 3*24*60*60*1000;
         public long autoAdInterval = BuildConfig.DEBUG? 0: 8*60*60*1000;
-        public int memoryThreshold = 70;
         public boolean avoidShowIfHistory = true;
         public boolean showNotification = true;
         public String accountName = "Clone Messaging Daemon";
@@ -72,9 +66,7 @@ public class BoosterSdk {
         // start init
         boosterConfig = config;
         boosterRes = res;
-        if(!context.getPackageName().equals("com.polestar.superclone")) {
-            WeLive.ACCOUNT_TYPE = context.getPackageName() + ".clone.daemon";
-        }
+        WeLive.ACCOUNT_TYPE = context.getPackageName() + ".clone.daemon";
         Booster.startInit(sContext);
         BoosterLog.log("Booster init");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -83,34 +75,8 @@ public class BoosterSdk {
         WeLive.startJob(context);
     }
 
-    public static void useRealUserPresent(boolean useRealUserPresent) {
-       // Booster.startUpdateConfigUseRealUserPresent(sContext, config);
-    }
-
-    public static boolean isAutoCleanEnabled() {
-        return  boosterConfig.isAutoClean;
-    }
-
-    public static void setAutoCleanEnabled(boolean autoCleanEnabled) {
-        boosterConfig.isAutoClean = true;
-    }
-
-    public static int getMemoryThreshold() {
-        return boosterConfig.memoryThreshold;
-    }
-
-    public static void setMemoryThreshold(int memoryThreshold) {
-        boosterConfig.memoryThreshold = memoryThreshold;
-    }
-
     public static void startClean(Context context, String from) {
         Booster.startCleanShortcutClick(context.getApplicationContext(), from);
-    }
-
-    public static void showSettings(Context context) {
-//        Intent intent = new Intent(context, BoosterSettingActivity.class);
-//        if (!(context instanceof Activity)) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(intent);
     }
 
     public static void checkCreateCleanShortcut() {
