@@ -26,6 +26,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.PolestarApp;
@@ -208,6 +209,13 @@ public class CommonUtils {
 //            i.putExtra("START_OUTTER_APP_FLAG", true);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
+        }
+    }
+
+    public static void jumpToUrl(Context context, String url){
+        if (!TextUtils.isEmpty(url)) {
+            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+            context.startActivity(viewIntent);
         }
     }
 

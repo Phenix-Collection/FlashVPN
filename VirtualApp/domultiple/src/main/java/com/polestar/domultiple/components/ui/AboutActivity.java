@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -79,7 +80,12 @@ public class AboutActivity extends BaseActivity {
     }
 
     public void onCheckUpdateClick(View view) {
-        CommonUtils.jumpToMarket(this, getPackageName());
+        String forceUpdateUrl = RemoteConfig.getString("force_update_to");
+        if (!TextUtils.isEmpty(forceUpdateUrl)) {
+            CommonUtils.jumpToUrl(this,forceUpdateUrl);
+        } else {
+            CommonUtils.jumpToMarket(this, getPackageName());
+        }
     }
 
     public void onJoinUsClick(View view) {

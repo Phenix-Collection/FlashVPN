@@ -256,7 +256,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                                 break;
                             case UpDownDialog.POSITIVE_BUTTON:
                                 dialogInterface.dismiss();
-                                CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                String forceUpdateUrl = RemoteConfig.getString("force_update_to");
+                                if (!TextUtils.isEmpty(forceUpdateUrl)) {
+                                    CommonUtils.jumpToUrl(HomeActivity.this,forceUpdateUrl);
+                                } else {
+                                    CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                }
                                 EventReporter.generalEvent("update_go");
                                 break;
                         }
