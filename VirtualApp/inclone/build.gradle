@@ -1,0 +1,194 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'org.greenrobot.greendao'
+
+def releaseTime() {
+    return new Date().format("MMdd", TimeZone.getTimeZone("UTC+8"))
+}
+
+def getSignInfo(propFileName) {
+    def com.android.build.gradle.internal.dsl.SigningConfig signingConfig = new com.android.build.gradle.internal.dsl.SigningConfig("signInfo")
+    File propFile = file(propFileName);
+    if (propFile.exists()) {
+        def Properties props = new Properties()
+        props.load(new FileInputStream(propFile))
+        signingConfig.storeFile = file(props['STORE_FILE'])
+        signingConfig.storePassword = props['STORE_PASSWORD']
+        signingConfig.keyAlias = props['KEY_ALIAS']
+        signingConfig.keyPassword = props['KEY_PASSWORD']
+        println('signConfig is exits')
+    } else {
+        println('sign config is null')
+        signingConfig = null
+    }
+    return signingConfig;
+}
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
+    useLibrary 'org.apache.http.legacy'
+
+//    defaultConfig {
+//        minSdkVersion 16
+//        targetSdkVersion 21
+//        multiDexEnabled = true
+//        ndk {
+//            // 设置支持的SO库架构
+//            abiFilters 'armeabi-v7a'//, 'x86_64', 'arm64-v8a'
+//        }
+//    }
+
+    signingConfigs {
+        myConfig {
+            storeFile file("..\\publish\\test.keystore")
+            storePassword "123456"
+            keyAlias "test.keystore"
+            keyPassword "123456"
+        }
+    }
+
+    flavorDimensions("arch","channel")
+
+    productFlavors {
+        arm64 {
+            applicationId "in.dualspace.cloner.arm64"
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'arm64-v8a'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            }
+            dimension "arch"
+            signingConfig getSignInfo("./sign-arm64.properties")
+        }
+        arm32 {
+            applicationId "in.dualspace.cloner"
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'armeabi-v7a'//, 'x86_64', 'arm64-v8a'
+            }
+            dimension "arch"
+            signingConfig getSignInfo("./sign-arm32.properties")
+        }
+        develop {
+            minSdkVersion 16
+            targetSdkVersion 26
+            multiDexEnabled = true
+            versionCode 9999
+            versionName '9999'
+            manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
+            dimension "channel"
+        }
+        play {
+            minSdkVersion 16
+            targetSdkVersion 26
+            multiDexEnabled = true
+            versionCode 21502
+            versionName "2.15.02.${releaseTime()}"
+            manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
+            dimension "channel"
+        }
+    }
+
+    buildTypes {
+        debug {
+            jniDebuggable false
+            pseudoLocalesEnabled true
+        }
+        release {
+            shrinkResources true
+            pseudoLocalesEnabled true
+//            signingConfig signingConfigs.myConfig
+            minifyEnabled true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'lib-proguard.txt'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+repositories {
+    flatDir {
+        dirs 'libs',project(':fuseadloader').file('libs')
+    }
+    maven {
+        url "https://dl.bintray.com/ironsource-mobile/android-sdk"
+    }
+    maven {
+        //IronSource Adapters
+        url "http://dl.bintray.com/ironsource-mobile/android-adapters"
+    }
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    testImplementation 'junit:junit:4.12'
+
+    implementation 'org.greenrobot:greendao:3.0.1'
+    implementation 'com.tencent.bugly:crashreport:2.6.5'
+
+    implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
+
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-config:16.0.0'
+    arm32Implementation 'com.google.firebase:firebase-ads:15.0.1'
+    implementation 'com.android.billingclient:billing:dp-1'
+    arm32Implementation 'com.facebook.android:audience-network-sdk:5.1.0'
+
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.nineoldandroids:library:2.4.0'
+
+
+
+    arm32Implementation('com.mopub:mopub-sdk-banner:5.2.0@aar') {
+        transitive = true
+    }
+    // For native static (images).
+    arm32Implementation('com.mopub:mopub-sdk-native-static:5.2.0@aar') {
+        transitive = true
+    }
+    // For native video. This will automatically also include native static
+//    implementation('com.mopub:mopub-sdk-native-video:4.20.0@aar') {
+//        transitive = true
+//    }
+
+    // For interstitials
+    arm32Implementation('com.mopub:mopub-sdk-interstitial:5.2.0@aar') {
+        transitive = true
+    }
+
+    arm32Implementation 'com.ironsource.sdk:mediationsdk:6.8.1@jar'
+    //Admob
+    arm32Implementation 'com.ironsource.adapters:admobadapter:4.3.0@jar'
+    //Applovin
+    arm32Implementation 'com.ironsource.adapters:applovinadapter:4.3.1@jar'
+   // compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+
+    implementation project(':libmultiple')
+    implementation project(':fuseadloader')
+//    implementation project(':Booster')
+
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion '26.1.0'
+                }
+            }
+        }
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'
