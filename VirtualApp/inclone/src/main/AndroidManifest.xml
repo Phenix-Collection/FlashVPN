@@ -1,0 +1,139 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="in.dualspace.cloner"
+>
+    <application android:allowBackup="true" android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true" android:theme="@style/AppTheme"
+        android:name="in.dualspace.cloner.DualApp">
+        <activity
+            android:name="in.dualspace.cloner.components.ui.SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="in.dualspace.cloner.components.ui.ShortcutActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher"
+            android:exported="true">
+        </activity>
+        <activity android:name="in.dualspace.cloner.components.ui.HomeActivity" android:screenOrientation="portrait" android:launchMode="singleTask"/>
+        <activity android:name="in.dualspace.cloner.components.ui.AddCloneActivity" android:screenOrientation="portrait" android:exported="false"/>
+        <activity android:name="in.dualspace.cloner.components.ui.NotificationActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.FaqActivity" android:screenOrientation="portrait" android:exported="false"/>
+        <activity android:name="in.dualspace.cloner.components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.LockSecureQuestionActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.LockSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.AboutActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.NativeInterstitialActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name="in.dualspace.cloner.components.ui.AppLoadingActivity" android:screenOrientation="portrait" android:exported="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="in.dualspace.cloner.components.ui.CustomizeSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="in.dualspace.cloner.components.ui.Arm64Activity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="in.dualspace.cloner.components.ui.CustomizeIconActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivityStyle"/>
+        <activity
+            android:name="in.dualspace.cloner.components.ui.AppLockActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.lody.virtual.vt"
+            android:theme="@style/AppTheme.Launcher"/>
+
+        <activity
+            android:name="in.dualspace.cloner.components.ui.WrapCoverAdActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.lody.virtual.vt"
+            android:theme="@style/AppTheme.Launcher"/>
+
+        <service android:name="in.dualspace.cloner.components.AppMonitorService" android:exported="true" />
+
+        <receiver android:name="in.dualspace.cloner.components.receiver.CrashReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="appclone.intent.action.SHOW_CRASH_DIALOG"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="in.dualspace.cloner.components.receiver.ReferReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="in.dualspace.cloner.components.receiver.WakeReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.EVENT_REMINDER" />
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_DATA_CLEARED" />
+                <action android:name="android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED" />
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.polestar.messaging.wake" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="in.dualspace.cloner.components.receiver.PackageChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <!--<provider android:authorities="${applicationId}.sync.provider"-->
+            <!--android:exported="true"-->
+            <!--android:name="com.polestar.welive.DummyProvider"-->
+            <!--android:syncable="true" />-->
+
+        <!--<meta-data-->
+            <!--android:name="com.google.android.gms.ads.APPLICATION_ID"-->
+            <!--android:value="ca-app-pub-5490912237269284~2442960626"/>-->
+
+        <!--<service android:exported="true" android:name="com.polestar.welive.SyncService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.content.SyncAdapter" />-->
+            <!--</intent-filter>-->
+            <!--<meta-data android:name="android.content.SyncAdapter" android:resource="@xml/syncadapter" />-->
+        <!--</service>-->
+        <!--<service android:name="com.polestar.welive.WeLiveJobService" android:permission="android.permission.BIND_JOB_SERVICE" />-->
+        <!--<service android:exported="true" android:name="com.polestar.welive.AuthService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.accounts.AccountAuthenticator" />-->
+            <!--</intent-filter>-->
+            <!--<meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator" />-->
+        <!--</service>-->
+    </application>
+
+</manifest>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@color/colorPrimary"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/title_bar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left|start"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center_vertical|right|end"
+            android:paddingLeft="5dp"
+            android:paddingEnd="5dp"
+            android:paddingRight="5dp"
+            android:onClick="onMenuClick"
+            android:id="@+id/menu_more"
+            android:src="@drawable/more_dot" />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:layout_gravity="center_vertical|right|end"
+            android:layout_toLeftOf="@id/menu_more"
+            android:layout_toStartOf="@id/menu_more"
+            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:onClick="onBoosterClick"
+            android:id="@+id/booster"
+            android:src="@drawable/icon_booster" />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:layout_gravity="center_vertical|right|end"
+            android:layout_toLeftOf="@id/booster"
+            android:layout_toStartOf="@id/booster"
+            android:paddingLeft="8dp"
+            android:paddingEnd="8dp"
+            android:paddingRight="10dp"
+            android:onClick="onGiftClick"
+            android:id="@+id/gift_ad"
+            android:src="@drawable/icon_gift_ad" />
+        <ImageView
+            android:id="@+id/newtip_dot"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_marginTop="20dp"
+            android:paddingRight="12dp"
+            android:paddingEnd="12dp"
+            android:layout_alignRight="@id/gift_ad"
+            android:layout_alignEnd="@id/gift_ad"
+            android:scaleType="fitCenter"
+            android:background="@drawable/new_tips_dot" />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="1">
+        <com.polestar.domultiple.widget.DropableLinearLayout
+            android:id="@+id/create_shortcut_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/shortcut_drop_button">
+                <ImageView
+                    android:layout_margin="15dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/icon_add_shortcut"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center|start"
+                android:padding="5dp"
+                android:text="@string/create_shortcut"
+                android:textColor="@android:color/white"
+                android:id="@+id/shortcut_drop_text"/>
+
+        </com.polestar.domultiple.widget.DropableLinearLayout>
+
+        <com.polestar.domultiple.widget.DropableLinearLayout
+            android:id="@+id/delete_app_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/delete_drop_button">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="15dp"
+                    android:src="@mipmap/icon_delete"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center|start"
+                android:padding="5dp"
+                android:text="@string/delete"
+                android:textColor="@android:color/white"
+                android:id="@+id/delete_drop_text"/>
+        </com.polestar.domultiple.widget.DropableLinearLayout>
+
+
+    </LinearLayout>
+</FrameLayout>

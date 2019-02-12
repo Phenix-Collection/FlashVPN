@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_background_color">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical">
+
+        <include layout="@layout/setting_wide_splitter" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@color/default_foreground_color"
+            android:paddingLeft="22dp">
+
+            <TextView
+                android:id="@+id/text_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/notification"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/text_notification_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/text_notification"
+                android:layout_below="@id/text_notification"
+                android:text="@string/notification_decription"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp"/>
+
+            <com.polestar.domultiple.widget.BlueSwitch
+                android:id="@+id/switch_notification"
+                android:layout_width="82.5dp"
+                android:layout_height="70dp"
+                android:paddingBottom="28dp"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:paddingTop="28dp"
+                android:layout_alignParentRight="true">
+            </com.polestar.domultiple.widget.BlueSwitch>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/enable_per_app_txt"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="22dp"
+            android:text="@string/notification_detail_setting"
+            android:textColor="@color/text_gray_light"
+            android:textSize="12sp" />
+
+        <com.polestar.domultiple.widget.FixedListView
+            android:id="@+id/switch_notifications_apps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:background="@color/default_foreground_color">
+        </com.polestar.domultiple.widget.FixedListView>
+
+    </LinearLayout>
+
+</ScrollView>
