@@ -18,6 +18,7 @@ import com.polestar.clone.os.VUserHandle;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.IAppMonitor;
 import com.polestar.superclone.MApp;
+import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.utils.AppManager;
@@ -189,12 +190,23 @@ public class MComponentDelegate implements ComponentDelegate {
         String targetPkg = MApp.getApp().getPackageName();
         if (targetPkg.endsWith(".arm64")) {
             targetPkg = targetPkg.replace(".arm64","");
-        }
-        try{
-            ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(targetPkg, 0);
-        }catch (PackageManager.NameNotFoundException ex) {
-            MLogs.logBug(ex.toString());
-            return  null;
+            boolean foundTarget;
+            try{
+                ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(targetPkg, 0);
+                foundTarget = (ai != null);
+            }catch (PackageManager.NameNotFoundException ex) {
+                MLogs.logBug(ex.toString());
+                foundTarget = false;
+            }
+            if (!foundTarget) {
+                targetPkg = AppConstants.PRIMARY_PKG;
+            }
+            try{
+                ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(targetPkg, 0);
+            }catch (PackageManager.NameNotFoundException ex) {
+                MLogs.logBug(ex.toString());
+                return null;
+            }
         }
         if (Looper.getMainLooper() == Looper.myLooper()) {
             throw new RuntimeException("Cannot getAgent in main thread!");
