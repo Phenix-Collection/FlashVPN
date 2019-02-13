@@ -85,17 +85,7 @@ public class MApp extends MultiDexApplication {
                 if (ai != null) {
                     return true;
                 }
-            }catch(Exception ex){
-
-            }
-            return false;
-        }
-    }
-
-    public static boolean isPrimaryPkgExist() {
-        if(isSupportPkg()) {
-            try{
-                ApplicationInfo ai = getApp().getPackageManager().getApplicationInfo(getApp().getPackageName().replace(".arm64",""),0);
+                ai =  getApp().getPackageManager().getApplicationInfo(AppConstants.SUPPORT_PKG, 0);
                 if (ai != null) {
                     return true;
                 }
@@ -103,8 +93,6 @@ public class MApp extends MultiDexApplication {
 
             }
             return false;
-        } else {
-            return true;
         }
     }
 
@@ -136,9 +124,9 @@ public class MApp extends MultiDexApplication {
                 builder.disableAdType(s);
             }
         } else {
-            builder.mopubAdUnit("5a17369b6c344b1e92aac6857c4194bb")
-                    .admobAppId("ca-app-pub-5490912237269284~1647548421")
-                    .ironSourceAppKey("86621d4d");
+            builder.mopubAdUnit("f1dcb1c1bd324c23a914a3dd8334bbe6")
+                    .admobAppId("ca-app-pub-5490912237269284~7700296749")
+                    .ironSourceAppKey("88e91dc5");
         }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
