@@ -163,7 +163,7 @@ public class BitmapUtils {
                                  dip2px(context, 5.0f), width - dip2px(context, 6f), paint);
                     }
                 }
-            } else if(context.getPackageName().startsWith("com.polestar.superb.cloner"))  {
+            } else if(context.getPackageName().startsWith("com.polestar.super.clone"))  {
                      if (userId >= 1) {
                          paint.setColor(Color.parseColor("#FFFFFF"));
                          paint.setAntiAlias(true);
