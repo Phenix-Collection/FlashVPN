@@ -16,11 +16,11 @@
     <entry>
         <key>slot_home_lucky_new</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/6474720305:0;fb_interstitial:1740234616081080_1743598385744703:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/8079037865:0</value>
     </entry>
     <entry>
         <key>slot_app_lock</key>
-        <value>ab_banner:ca-app-pub-5490912237269284/1186167352:0;adm:ca-app-pub-5490912237269284/2571277503:0</value>
+        <value>ab_banner:ca-app-pub-5490912237269284/2749268685:0</value>
     </entry>
     <entry>
         <key>slot_install_ad</key>
@@ -55,11 +55,11 @@
     <entry>
         <key>slot_home_gift_interstitial</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>ab_interstitial:ca-app-pub-5490912237269284/6474720305:0;fb_interstitial:1740234616081080_1743598385744703:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/8079037865:0</value>
     </entry>
     <entry>
         <key>slot_home_header_native</key>
-        <value>adm:ca-app-pub-5490912237269284/1669259370:0</value>
+        <value>adm:ca-app-pub-5490912237269284/4327495113:0</value>
     </entry>
     <entry>
         <key>home_show_header_ad</key>
@@ -67,12 +67,12 @@
     </entry>
     <entry>
         <key>slot_applist_native</key>
-        <value>adm:ca-app-pub-5490912237269284/6538442674:0</value>
+        <value>adm:ca-app-pub-5490912237269284/2310995420:0</value>
     </entry>
     <entry>
         <key>clone_rate_package</key>
         <!--off to close; * for all; package:package: -->
-        <value>com.facebook.orca:com.whatsapp</value>
+        <value>*</value>
     </entry>
     <entry>
         <key>clone_rate_interval</key>
@@ -106,7 +106,7 @@
     </entry>
     <entry>
         <key>slot_ad_after_clone</key>
-        <value>adm:ca-app-pub-5490912237269284/4770189147:0</value>
+        <value>adm:ca-app-pub-5490912237269284/9422488245:0</value>
     </entry>
     <entry>
         <key>fb_follow_page</key>
@@ -219,7 +219,7 @@
     </entry>
     <entry>
         <key>slot_app_start_native</key>
-        <value>ab_banner:ca-app-pub-5490912237269284/7368432327:0</value>
+        <value>ab_banner:ca-app-pub-5490912237269284/8005464794:0</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
@@ -257,7 +257,7 @@
     </entry>
     <entry>
         <key>slot_intercept_ad</key>
-        <value>ab_interstitial:ca-app-pub-5490912237269284/3090152257:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/5455323073:0</value>
     </entry>
     <entry>
         <key>home_ad_refresh_interval_s</key>
@@ -279,7 +279,7 @@
 -->
     <entry>
         <key>slot_reward_center_native</key>
-        <value>adm:ca-app-pub-5490912237269284/9902972611:0</value>
+        <value>adm:ca-app-pub-5490912237269284/2801950011:0</value>
     </entry>
     <entry>
         <key>config_task_server</key>
@@ -311,7 +311,7 @@
     </entry>
     <entry>
         <key>slot_reward_center_video</key>
-        <value>adm_reward:ca-app-pub-5490912237269284/1920616793:0</value>
+        <value>adm_reward:ca-app-pub-5490912237269284/9531009899:0</value>
     </entry>
     <entry>
         <key>active_sub_sku_items</key>
