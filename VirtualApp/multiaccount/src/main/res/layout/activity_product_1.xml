@@ -114,74 +114,6 @@
                     android:textColor="@color/text_gray_dark"
                     android:textSize="16sp"
                     />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/activity_product_product_description"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:id="@+id/activity_product_email_layout"
-                    android:background="@drawable/shadow"
-                    android:orientation="horizontal"
-                    >
-                    <com.polestar.superclone.widgets.IconFontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:gravity="center"
-                        android:layout_gravity="center"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_gray_dark"
-                        android:text="@string/iconfont_mail"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginRight="10dp"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="16sp"
-                        android:hint="Email Address"
-                        android:background="@color/white"
-                        android:id="@+id/activity_product_email_input"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/activity_product_email_layout"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:id="@+id/activity_product_paypal_layout"
-                    android:background="@drawable/shadow"
-                    android:orientation="horizontal"
-                    >
-                    <com.polestar.superclone.widgets.IconFontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:gravity="center"
-                        android:layout_gravity="center"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_gray_dark"
-                        android:text="@string/iconfont_paypal"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginRight="10dp"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="16sp"
-                        android:hint="Paypal Account"
-                        android:background="@color/white"
-                        android:id="@+id/activity_product_paypal_input" />
-
-                </LinearLayout>
 
                 <Button
                     android:layout_width="wrap_content"
@@ -191,7 +123,7 @@
                     android:paddingRight="15dp"
                     android:paddingLeft="15dp"
                     android:id="@+id/activity_product_purchase"
-                    android:layout_below="@id/activity_product_paypal_layout"
+                    android:layout_below="@id/activity_product_product_description"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:layout_centerHorizontal="true"

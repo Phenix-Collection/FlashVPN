@@ -33,11 +33,6 @@ public class ProductActivity extends Activity implements IProductStatusListener{
 
     private AppUser mAppUser;
 
-    private LinearLayout mEmailLayout;
-    private LinearLayout mPaypalLayout;
-
-    private EditText mEmail;
-    private EditText mPaypal;
 
     public static final String EXTRA_PRODUCT = "product";
 
@@ -60,11 +55,6 @@ public class ProductActivity extends Activity implements IProductStatusListener{
         mPurchase = (Button) findViewById(R.id.activity_product_purchase);
         mIcon = (ImageView) findViewById(R.id.activity_product_product_icon);
         mPrice = (TextView) findViewById(R.id.activity_product_price);
-        mEmail = (EditText) findViewById(R.id.activity_product_email_input);
-        mPaypal = (EditText) findViewById(R.id.activity_product_paypal_input);
-
-        mEmailLayout = (LinearLayout) findViewById(R.id.activity_product_email_layout);
-        mPaypalLayout = (LinearLayout) findViewById(R.id.activity_product_paypal_layout);
 
         Intent intent = getIntent();
         mProduct = intent.getParcelableExtra(EXTRA_PRODUCT);
@@ -73,14 +63,6 @@ public class ProductActivity extends Activity implements IProductStatusListener{
         mIcon.setImageDrawable(AssetHelper.getDrawable(this, mProduct.mIconUrl));
         mPrice.setText("" + (int) mProduct.mCost);
 
-        if (mProduct.isFunctionalProduct()) {
-            mEmailLayout.setVisibility(View.GONE);
-            mPaypalLayout.setVisibility(View.GONE);
-        } else {
-            if (!mProduct.isPaypal()) {
-                mPaypalLayout.setVisibility(View.GONE);
-            }
-        }
 
         mPurchase.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +72,7 @@ public class ProductActivity extends Activity implements IProductStatusListener{
                     RewardErrorCode.toastMessage(ProductActivity.this, status);
                     return;
                 }
-                ProductManager.getInstance().buyProduct(mProduct, ProductActivity.this,mEmail.getText().toString(), mPaypal.getText().toString());
+                ProductManager.getInstance().buyProduct(mProduct, ProductActivity.this);
                 //buyProduct();
             }
         });
