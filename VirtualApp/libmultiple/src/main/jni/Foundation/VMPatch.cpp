@@ -335,8 +335,10 @@ static bool inWhiteList(const char *hostPackageName) {
             "Y29tLnBvbGVzdGFyLmRvbXVsdGlwbGUuYXJtNjQ=", // "com.polestar.domultiple.arm64"
             "bW9jaGF0Lm11bHRpcGxlLnBhcmFsbGVsLndoYXRzY2xvbmU=", // "mochat.multiple.parallel.whatsclone"
             "bW9jaGF0Lm11bHRpcGxlLnBhcmFsbGVsLndoYXRzY2xvbmUuYXJtNjQ=", // "mochat.multiple.parallel.whatsclone.arm64"
-            "Y29tLnBvbGVzdGFyLnN1cGVyYi5jbG9uZXI=", // "com.polestar.superb.cloner"
-            "Y29tLnBvbGVzdGFyLnN1cGVyYi5jbG9uZXIuYXJtNjQ=" // "com.polestar.superb.cloner.arm64"
+            "Y29tLnBvbGVzdGFyLnN1cGVyLmNsb25l", // "com.polestar.super.clone"
+            "Y29tLnBvbGVzdGFyLnN1cGVyYi5jbG9uZXIuYXJtNjQ=", // "com.polestar.superb.cloner.arm64"
+            "aW4uZHVhbHNwYWNlLmNsb25lci5hcm02NA==", // "in.dualspace.cloner.arm64"
+            "aW4uZHVhbHNwYWNlLmNsb25lcg==", // "in.dualspace.cloner"
     };
     const char * const *iter = &white_list[0];
     const char * const *iter_end = &white_list[sizeof(white_list) / sizeof(white_list[0])];

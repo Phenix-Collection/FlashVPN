@@ -186,6 +186,8 @@ public class CloneAgent64 {
         String supportPkg ;
         if (mContext.getPackageName().equals("do.multiple.cloner")) {
             supportPkg = "com.polestar.domultiple.arm64";
+        } else if  (mContext.getPackageName().equals("com.polestar.super.clone")) {
+            supportPkg = "com.polestar.superb.cloner.arm64";
         } else {
             supportPkg = mContext.getPackageName()+".arm64";
         }
