@@ -292,7 +292,7 @@ public class AppStartActivity extends BaseActivity {
                                                         doLaunchMyself();
                                                         break;
                                                     case UpDownDialog.POSITIVE_BUTTON:
-                                                        CommonUtils.jumpToMarket(AppStartActivity.this, getPackageName() + ".arm64");
+                                                        CommonUtils.jumpToMarket(AppStartActivity.this, AppConstants.SUPPORT_PKG);
                                                         EventReporter.reportArm64(appModel.getPackageName(), "go");
                                                         break;
                                                 }

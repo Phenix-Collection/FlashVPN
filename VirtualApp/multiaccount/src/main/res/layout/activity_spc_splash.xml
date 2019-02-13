@@ -13,17 +13,13 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/logo"/>
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="24dp"
         android:layout_below="@id/logo"
         android:layout_marginTop="35dp"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textSize="25sp"
-        android:text="@string/app_alias_name"
-        android:textColor="@color/white"
-        android:textAllCaps="true"
+        android:src="@mipmap/logo"
         android:id="@+id/slogan"/>
 
     <TextView

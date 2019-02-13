@@ -40,6 +40,7 @@ public class AppConstants {
     public final static String CONF_UPDATE_VERSION = "push_update_version";
     public final static String CONF_LATEST_VERSION = "current_version";
     public final static String PRIMARY_PKG = "com.polestar.super.clone";
+    public final static String SUPPORT_PKG = "com.polestar.superb.cloner.arm64";
 
     public class PreferencesKey {
         public static final String SHOWN_CLONE_GUIDE = "shown_clone_guide";
