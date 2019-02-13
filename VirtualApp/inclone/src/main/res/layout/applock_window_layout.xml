@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.polestar.domultiple.widget.locker.BlurBackground
+<in.dualspace.cloner.widget.locker.BlurBackground
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/applock_window"
     android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:orientation="vertical"
         android:paddingTop="50dp">
 
-        <com.polestar.domultiple.widget.locker.LockIconImageView
+        <in.dualspace.cloner.widget.locker.LockIconImageView
             android:id="@+id/window_applock_icon"
             android:layout_width="70dp"
             android:layout_height="70dp"
@@ -55,7 +55,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:clipChildren="false">
-        <com.polestar.domultiple.widget.locker.LockPatternView
+        <in.dualspace.cloner.widget.locker.LockPatternView
             android:id="@+id/applock_pattern_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -72,4 +72,4 @@
         android:layout_gravity="bottom|center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-</com.polestar.domultiple.widget.locker.BlurBackground>
+</in.dualspace.cloner.widget.locker.BlurBackground>

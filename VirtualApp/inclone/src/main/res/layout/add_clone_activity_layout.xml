@@ -44,7 +44,7 @@
                     android:textColor="@color/text_gray_light"
                     android:textSize="12sp" />
 
-                <com.polestar.domultiple.widget.FixedGridView
+                <in.dualspace.cloner.widget.FixedGridView
                     android:id="@+id/hot_clone_grid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                     android:numColumns="3"
                     android:horizontalSpacing="4dp"
                     android:verticalSpacing="4dp"
-                    android:scrollbars="none"></com.polestar.domultiple.widget.FixedGridView>
+                    android:scrollbars="none"></in.dualspace.cloner.widget.FixedGridView>
             </LinearLayout>
 
 
@@ -108,7 +108,7 @@
                     android:textColor="@color/text_gray_dark"
                     android:text="@string/app_slogan"/>
 
-                <com.polestar.domultiple.widget.FixedGridView
+                <in.dualspace.cloner.widget.FixedGridView
                     android:id="@+id/other_clone_grid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                     android:scrollbars="none"
                     android:horizontalSpacing="4dp"
                     android:verticalSpacing="4dp">
-                </com.polestar.domultiple.widget.FixedGridView>
+                </in.dualspace.cloner.widget.FixedGridView>
                 <LinearLayout
                     android:id="@+id/ad_container_2"
                     android:layout_marginTop="10dp"

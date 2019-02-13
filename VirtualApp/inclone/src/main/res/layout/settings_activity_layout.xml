@@ -26,7 +26,7 @@
             android:background="@android:color/white"
             android:paddingLeft="22dp">
 
-            <com.polestar.domultiple.widget.BlueSwitch
+            <in.dualspace.cloner.widget.BlueSwitch
                 android:id="@+id/shortcut_swichbtn"
                 android:layout_width="82.5dp"
                 android:layout_height="70dp"
@@ -150,7 +150,7 @@
             android:background="@android:color/white"
             android:paddingLeft="22dp">
 
-            <com.polestar.domultiple.widget.BlueSwitch
+            <in.dualspace.cloner.widget.BlueSwitch
                 android:id="@+id/quick_switch_btn"
                 android:layout_width="82.5dp"
                 android:layout_height="70dp"
@@ -188,7 +188,7 @@
             android:background="@android:color/white"
             android:paddingLeft="22dp">
 
-            <com.polestar.domultiple.widget.BlueSwitch
+            <in.dualspace.cloner.widget.BlueSwitch
                 android:id="@+id/lite_switch_btn"
                 android:layout_width="82.5dp"
                 android:layout_height="70dp"
@@ -228,7 +228,7 @@
             android:paddingLeft="22dp"
             android:visibility="gone">
 
-            <com.polestar.domultiple.widget.BlueSwitch
+            <in.dualspace.cloner.widget.BlueSwitch
                 android:id="@+id/adfree_switch"
                 android:layout_width="82.5dp"
                 android:layout_height="70dp"

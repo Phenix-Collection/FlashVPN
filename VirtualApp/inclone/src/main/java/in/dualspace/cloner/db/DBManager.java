@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DBManager {
     private static DaoSession daoSession;
-    private static final String NEW_DB_NAME = "do-multiple.db";
+    private static final String NEW_DB_NAME = "incloner.db";
 
     public static synchronized DaoSession getDaoSession(Context context) {
         DaoMaster.OpenHelper openHelper = new DaoMaster.DevOpenHelper(context, NEW_DB_NAME) {

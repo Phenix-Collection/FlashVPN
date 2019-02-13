@@ -117,9 +117,9 @@
             <!--android:name="com.polestar.welive.DummyProvider"-->
             <!--android:syncable="true" />-->
 
-        <!--<meta-data-->
-            <!--android:name="com.google.android.gms.ads.APPLICATION_ID"-->
-            <!--android:value="ca-app-pub-5490912237269284~2442960626"/>-->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7413370106066330~5810831707"/>
 
         <!--<service android:exported="true" android:name="com.polestar.welive.SyncService">-->
             <!--<intent-filter>-->

@@ -19,13 +19,13 @@
             android:textColor="@color/text_gray_dark"
             android:textSize="14sp" />
 
-        <com.polestar.domultiple.widget.FixedListView
+        <in.dualspace.cloner.widget.FixedListView
             android:id="@+id/customize_apps"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
             android:background="@color/white">
-        </com.polestar.domultiple.widget.FixedListView>
+        </in.dualspace.cloner.widget.FixedListView>
 
     </LinearLayout>
 

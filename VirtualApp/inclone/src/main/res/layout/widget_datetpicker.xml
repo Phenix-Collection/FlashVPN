@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     android:orientation="horizontal">
 
-    <com.polestar.domultiple.widget.WheelView
+    <in.dualspace.cloner.widget.WheelView
         android:id="@+id/month"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         app:selectedTextSize="18sp"
         app:unitHeight="50dp" />
 
-    <com.polestar.domultiple.widget.WheelView
+    <in.dualspace.cloner.widget.WheelView
         android:id="@+id/day"
         android:layout_width="80dp"
         android:layout_height="wrap_content"

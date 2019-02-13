@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.polestar.domultiple.widget.dragdrop.DragLayer xmlns:android="http://schemas.android.com/apk/res/android"
+<in.dualspace.cloner.widget.dragdrop.DragLayer xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:layout="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drag_layer"
     android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <com.polestar.domultiple.widget.FixedGridView
+                    <in.dualspace.cloner.widget.FixedGridView
                         android:id="@+id/clone_grid_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -37,16 +37,16 @@
                         android:scrollbars="none"
                         android:verticalSpacing="1dp">
 
-                    </com.polestar.domultiple.widget.FixedGridView>
+                    </in.dualspace.cloner.widget.FixedGridView>
 
                     <include layout="@layout/setting_wide_splitter" />
 
-                    <com.polestar.domultiple.widget.NarrowPromotionCard
+                    <in.dualspace.cloner.widget.NarrowPromotionCard
                         android:id="@+id/narrow_function_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    </com.polestar.domultiple.widget.NarrowPromotionCard>
+                    </in.dualspace.cloner.widget.NarrowPromotionCard>
 
                     <include layout="@layout/setting_wide_splitter" />
                     <LinearLayout
@@ -83,4 +83,4 @@
         </FrameLayout>
 
     </LinearLayout>
-</com.polestar.domultiple.widget.dragdrop.DragLayer>
+</in.dualspace.cloner.widget.dragdrop.DragLayer>
