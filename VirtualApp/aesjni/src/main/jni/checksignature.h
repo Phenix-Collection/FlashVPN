@@ -35,6 +35,7 @@ static const char* signature_sha1_codes[] = {
         "7F964242C609B5857BD1B4665CC62B1D7C3FB009", //polestar-team.jks
         "2CA149BC1AB9F433959B38EB02433EA751059BCE", //domultipe-new.jks
         "308E8326F5FAC9A48B14E0E0FFAF08A1DF4E5AB8", //nova-vpn.jks
+        "5FF4F71BCC7C0B79AC0F5C882EE0628AAC28521C", //super at google console
 };
 /**
  * 校验APP 包名和签名是否合法
