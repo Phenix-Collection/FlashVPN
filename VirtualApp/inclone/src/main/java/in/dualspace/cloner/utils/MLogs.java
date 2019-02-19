@@ -11,7 +11,7 @@ import in.dualspace.cloner.BuildConfig;
 public class MLogs {
 
     public static boolean DEBUG = BuildConfig.DEBUG ;
-    public final static String DEFAULT_TAG = "DoMultiple";
+    public final static String DEFAULT_TAG = "InClone";
 
     public static void e(String msg) {
         e(DEFAULT_TAG, msg);

@@ -25,11 +25,11 @@ public class WakeReceiver extends BroadcastReceiver {
         ServiceManagerNative.getService(ServiceManagerNative.APP);
         EventReporter.reportWake(DualApp.getApp(), intent.getAction());
 
-        PackageManager pm = context.getPackageManager();
-        if (pm.getComponentEnabledSetting(new ComponentName(context, SplashActivity.class))
-                != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-            pm.setComponentEnabledSetting(new ComponentName(context, SplashActivity.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        }
+//        PackageManager pm = context.getPackageManager();
+//        if (pm.getComponentEnabledSetting(new ComponentName(context, SplashActivity.class))
+//                != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+//            pm.setComponentEnabledSetting(new ComponentName(context, SplashActivity.class),
+//                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+//        }
     }
 }

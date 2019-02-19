@@ -493,4 +493,13 @@ public class PreferencesUtils {
     public static void setShownPermissionGuide(boolean shown) {
         putBoolean(DualApp.getApp(), "shown_permission_guide", shown);
     }
+
+    public static int getDeleteDialogTimes() {
+        return getInt(DualApp.getApp(), "delete_dialog_times", 0);
+    }
+
+    public static void incDeleteDialogTimes() {
+        putInt(DualApp.getApp(), "delete_dialog_times",
+                1 + getInt(DualApp.getApp(), "delete_dialog_times", 0));
+    }
 }

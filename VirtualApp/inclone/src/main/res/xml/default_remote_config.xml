@@ -198,4 +198,8 @@
         <key>conf_intercept_class</key>
         <value></value>
     </entry>
+    <entry>
+        <key>conf_delete_dialog_times</key>
+        <value>1</value>
+    </entry>
 </defaultsMap>

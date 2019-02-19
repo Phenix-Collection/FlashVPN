@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">DO Multiple Space</string>
+    <string name="app_name" translatable="false">Insta Clone</string>
     <string name="clone_label_tag" translatable="false">%s +</string>
     <string name="share_with_friends">Share With Friends</string>
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
@@ -17,6 +17,7 @@
     <string name="no_selection_for_clone">Please click and select items to clone.</string>
     <string name="create_shortcut">Shortcut</string>
     <string name="delete">Delete</string>
+    <string name="more">More</string>
     <string name="toast_shortcut_added">Shortcut added</string>
     <string name="toast_shortcut_invalid">Shortcut is invalid</string>
     <string name="delete_dialog_title">Caution</string>

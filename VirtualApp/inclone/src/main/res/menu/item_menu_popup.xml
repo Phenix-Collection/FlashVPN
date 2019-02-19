@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/item_locker"
+        android:title="@string/privacy_locker"
+        />
+    <item
+        android:id="@+id/item_shortcut"
+        android:title="@string/create_shortcut"
+        />
+    <item
+        android:id="@+id/item_customize"
+        android:title="@string/customize_title"
+        />
+    <item
+        android:id="@+id/item_delete"
+        android:title="@string/delete"
+        />
+    <item
+        android:id="@+id/item_setting"
+        android:title="@string/more"
+        />
+</menu>
