@@ -126,4 +126,9 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
+    <style name="anim_bottombar">
+        <item name="android:windowEnterAnimation">@anim/bottombar_in</item>
+        <item name="android:windowExitAnimation">@anim/bottombar_out</item>
+    </style>
 </resources>

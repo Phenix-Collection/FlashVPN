@@ -1,11 +1,15 @@
 package in.dualspace.cloner.components.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -17,7 +21,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +31,7 @@ import com.polestar.clone.CloneAgent64;
 import com.polestar.clone.CustomizeAppData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import in.dualspace.cloner.R;
@@ -37,6 +44,7 @@ import in.dualspace.cloner.utils.EventReporter;
 import in.dualspace.cloner.utils.MLogs;
 import in.dualspace.cloner.utils.PreferencesUtils;
 import in.dualspace.cloner.utils.RemoteConfig;
+import in.dualspace.cloner.widget.BottomProgressPopup;
 import in.dualspace.cloner.widget.ExplosionField;
 import in.dualspace.cloner.widget.PageIndicatorView;
 import in.dualspace.cloner.widget.PageRecyclerView;
@@ -63,10 +71,11 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     private int luckyPos;
     private int adTaskPos;
 
-    private PopupMenu itemMenuPopup;
     private ExplosionField mExplosionField;
     private static final int PAGE_ITEM_SIZE = 3*3;
+    private BottomProgressPopup bottomProgress;
 
+    private int lastCloneIdx = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +137,9 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             }
 
         }));
+
+        bottomProgress = new BottomProgressPopup(this);
+
         initData();
 
     }
@@ -135,11 +147,53 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     @Override
     protected void onResume() {
         super.onResume();
+        if (CloneManager.getInstance(this).hasPendingClones()) {
+            MLogs.d("Has pending clones");
+            bottomProgress.setTitle(getString(R.string.creating_clones));
+            bottomProgress.setIconRes(R.mipmap.ic_launcher);
+            bottomProgress.setMinDuration(2000);
+            bottomProgress.setAutoDismissDuration(10*1000);
+            bottomProgress.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    listAdapter.notifyDataSetChanged();
+                    listAdapter.updatePage();
+                    if (lastCloneIdx > 0 && lastCloneIdx < mItemList.size()) {
+                        listAdapter.scrollToPage((lastCloneIdx) / (PAGE_ITEM_SIZE));
+                        CustomizedCloneItem item = mItemList.get(lastCloneIdx);
+                        MLogs.d("lastCloneIdx : " + lastCloneIdx + " type: "  + item.type);
+                        pageRecyclerView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (item.icon != null) {
+                                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(item.icon, "scaleX", 0.7f, 1.2f, 1.0f);
+                                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(item.icon, "scaleY", 0.7f, 1.2f, 1.0f);
+                                    AnimatorSet animSet = new AnimatorSet();
+                                    animSet.play(scaleX).with(scaleY);
+                                    animSet.setInterpolator(new BounceInterpolator());
+                                    animSet.setDuration(3000).start();
+                                }
+                            }
+                        }, 500);
+
+
+                    }
+                }
+            });
+            bottomProgress.popup();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bottomProgress.cancel();
     }
 
     private void initData() {
         cm = CloneManager.getInstance(this);
         cm.loadClonedApps(this, this);
+        lastCloneIdx = -1;
         initItemList(null);
     }
 
@@ -243,6 +297,9 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         if (result) {
             addCloneItem(clonedApp);
         }
+        if (!CloneManager.getInstance(this).hasPendingClones()) {
+            bottomProgress.dismiss();
+        }
     }
 
     @Override
@@ -266,18 +323,23 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     }
 
     private void addCloneItem(CloneModel model) {
-        int idx = -1;
+        int lastCloneIdx = -1;
+        int samePackageIdx = -1;
         int i = 0;
         for(CustomizedCloneItem item: mItemList) {
             if (item.type == CustomizedCloneItem.TYPE_CLONE) {
-                idx = i;
+                lastCloneIdx = i;
+                if (item.model.getPackageName().equals(model.getPackageName()) ) {
+                    samePackageIdx = i;
+                }
             }
             i ++;
         }
-        mItemList.add(idx + 1, new CustomizedCloneItem(model));
-        listAdapter.notifyDataSetChanged();
-        listAdapter.updatePage();
-        listAdapter.scrollToPage((idx + 1)/(PAGE_ITEM_SIZE));
+        int insertIdx = samePackageIdx == -1 ? lastCloneIdx + 1: samePackageIdx + 1;
+        mItemList.add(insertIdx, new CustomizedCloneItem(model));
+        if (!CloneManager.getInstance(this).hasPendingClones()) {
+            this.lastCloneIdx = insertIdx;
+        }
     }
 
     private void deleteCloneItem(CloneModel model) {
@@ -302,9 +364,22 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     }
     private void initItemList(List<CloneModel> cloneModels) {
         mItemList.clear();
+        HashMap<String, ArrayList<CloneModel>> sortMap = new HashMap<>();
         if (cloneModels != null) {
             for (CloneModel model: cloneModels) {
-                mItemList.add(new CustomizedCloneItem(model));
+                ArrayList list = sortMap.get(model.getPackageName());
+                if (list == null) {
+                    list = new ArrayList();
+                }
+                list.add(model);
+                sortMap.put(model.getPackageName(), list);
+            }
+        }
+        for (ArrayList<CloneModel> list: sortMap.values()) {
+            if (list != null && list.size() > 0) {
+                for(CloneModel model: list) {
+                    mItemList.add(new CustomizedCloneItem(model));
+                }
             }
         }
         mItemList.add(new CustomizedCloneItem(CustomizedCloneItem.TYPE_LUCKY));
@@ -325,6 +400,10 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
 
         public CloneModel model = null;
         private CustomizeAppData customizeAppData = null;
+
+        public ImageView icon;
+        public TextView title;
+        public ImageView newDot;
 
         public CustomizedCloneItem(CloneModel model) {
             type = TYPE_CLONE;
@@ -380,6 +459,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         }
 
         public void fillTitleView(TextView textView) {
+            title = textView;
             textView.setVisibility(View.VISIBLE);
             textView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             textView.setTextColor(getResources().getColor(R.color.white));
@@ -404,6 +484,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         }
 
         public void fillIconView(ImageView icon) {
+            this.icon = icon;
             icon.setVisibility(View.VISIBLE);
             switch (type){
                 case TYPE_CLONE:
@@ -422,6 +503,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         }
 
         public void fillNewDotView(ImageView newdot) {
+            newDot = newdot;
             switch (type){
                 case TYPE_CLONE:
                     if (model.getLaunched() == 0) {
@@ -529,24 +611,25 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
             @Override
             public void onExplodeFinish(View v) {
-            }
-        });
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                PreferencesUtils.resetStarted(model.getName());
-                CloneManager.getInstance(MainActivity.this).deleteClone(MainActivity.this, model);
-                new Thread(new Runnable() {
+                v.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        CloneAgent64 agent64 = new CloneAgent64(MainActivity.this);
-                        if(agent64.hasSupport() && agent64.isCloned(model.getPackageName(),model.getPkgUserId())) {
-                            agent64.deleteClone(model.getPackageName(), model.getPkgUserId());
-                        }
+                        CloneManager.getInstance(MainActivity.this).deleteClone(MainActivity.this, model);
+                        PreferencesUtils.resetStarted(model.getName());
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CloneAgent64 agent64 = new CloneAgent64(MainActivity.this);
+                                if(agent64.hasSupport() && agent64.isCloned(model.getPackageName(),model.getPkgUserId())) {
+                                    agent64.deleteClone(model.getPackageName(), model.getPkgUserId());
+                                }
+                            }
+                        }).start();
                     }
-                }).start();
+                }, 500);
             }
-        }, 1000);
+        });
+
     }
 
     private void showDeleteDialog(CloneModel info, View explosionView) {
