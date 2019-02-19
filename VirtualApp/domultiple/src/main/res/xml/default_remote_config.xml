@@ -84,7 +84,7 @@
     </entry>
     <entry>
         <key>slot_app_start_native_freq_min</key>
-        <value>30</value>
+        <value>0</value>
     </entry>
     <entry>
         <key>slot_app_start_native_ramp_min</key>
