@@ -30,7 +30,9 @@ jstring charToJstring(JNIEnv *envPtr, char *src) {
     jbyteArray barr = env->NewByteArray(envPtr, len);
     env->SetByteArrayRegion(envPtr, barr, 0, len, (jbyte *) src);
 
-    return (jstring) env->NewObject(envPtr, clsstring, mid, barr, strencode);
+    jstring ret = (jstring) env->NewObject(envPtr, clsstring, mid, barr, strencode);
+    free(src);
+    return ret;
 }
 
 //__attribute__((section (".mytext")))//隐藏字符表 并没有什么卵用 只是针对初阶hacker的一个小方案而已
@@ -82,7 +84,10 @@ JNIEXPORT jstring JNICALL encode(JNIEnv *env, jobject instance, jstring str_) {
     const char *in = (*env)->GetStringUTFChars(env, str_, JNI_FALSE);
     char *baseResult = AES_128_ECB_PKCS5Padding_Encrypt(in, AES_KEY);
     (*env)->ReleaseStringUTFChars(env, str_, in);
-    return (*env)->NewStringUTF(env, baseResult);
+    jstring ret = (*env)->NewStringUTF(env, baseResult);
+    free(AES_KEY);
+    free(baseResult);
+    return ret;
 }
 
 //__attribute__((section (".mytext")))
@@ -103,6 +108,7 @@ JNIEXPORT jstring JNICALL decode(JNIEnv *env, jobject instance, jstring str_) {
     (*env)->ReleaseStringUTFChars(env, str_, str);
 //    return (*env)->NewStringUTF(env, desResult);
     //不用系统自带的方法NewStringUTF是因为如果desResult是乱码,会抛出异常
+    free(AES_KEY);
     return charToJstring(env,desResult);
 }
 
@@ -123,9 +129,9 @@ check_jni(JNIEnv *env, jobject instance, jobject context) {
 
 // Java和JNI函数的绑定表
 static JNINativeMethod method_table[] = {
-        {"check", "(Ljava/lang/Object;)I",                                    (void *) check_jni},
-        {"receive",         "(Ljava/lang/String;)Ljava/lang/String;", (void *) decode},
-        {"send",         "(Ljava/lang/String;)Ljava/lang/String;", (void *) encode},
+        {"check",   "(Ljava/lang/Object;)I", (void *) check_jni},
+        {"receive", "(Ljava/lang/String;)Ljava/lang/String;", (void *) decode},
+        {"send",    "(Ljava/lang/String;)Ljava/lang/String;", (void *) encode},
 };
 
 // 注册native方法到java中

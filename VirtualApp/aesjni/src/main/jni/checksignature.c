@@ -7,7 +7,7 @@
 #include <jni.h>
 #include "checksignature.h"
 
-
+/*
 jint check_signature(JNIEnv *env, jobject thiz, jobject context) {
     //Context的类
     jclass context_clazz = (*env)->GetObjectClass(env, context);
@@ -73,7 +73,7 @@ jint check_signature(JNIEnv *env, jobject thiz, jobject context) {
 //        return -2;
 //    }
 //    return 1;
-}
+}*/
 
 //chs length must be array_len*2+1; return jstring, and chars are inside parameter chs
 // for now, always return null in order to avoid potential memory leak
@@ -129,41 +129,43 @@ jint check_signature_sha1(JNIEnv *env, jobject type, jobject context_object) {
     //上下文对象
     jclass context_class = (*env)->GetObjectClass(env, context_object);
 
+    LOGE("%s %s\n",getPackageManagerFunc(), getPackageManagerSigFunc());
     //反射获取PackageManager
-    jmethodID methodId = (*env)->GetMethodID(env, context_class, "getPackageManager", "()Landroid/content/pm/PackageManager;");
+    jmethodID methodId = (*env)->GetMethodID(env, context_class, getPackageManagerFunc(), getPackageManagerSigFunc());
     jobject package_manager = (*env)->CallObjectMethod(env, context_object, methodId);
     if (package_manager == NULL) {
-        LOGE("package_manager is NULL!!!");
+        //LOGE("package_manager is NULL!!!");
         return NULL;
     }
 
     //反射获取包名
-    methodId = (*env)->GetMethodID(env, context_class, "getPackageName", "()Ljava/lang/String;");
+    LOGE("%s, %s\n", getPackageNameFunc(), getPackageNameSigFunc());
+    methodId = (*env)->GetMethodID(env, context_class, getPackageNameFunc(), getPackageNameSigFunc());
     jstring package_name = (jstring)(*env)->CallObjectMethod(env, context_object, methodId);
     if (package_name == NULL) {
-        LOGE("package_name is NULL!!!");
+        //LOGE("package_name is NULL!!!");
         return NULL;
     }
     (*env)->DeleteLocalRef(env, context_class);
 
     //获取PackageInfo对象
     jclass pack_manager_class = (*env)->GetObjectClass(env, package_manager);
-    methodId = (*env)->GetMethodID(env, pack_manager_class, "getPackageInfo", "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;");
+    methodId = (*env)->GetMethodID(env, pack_manager_class, getPackageInfoFunc(), getPackageInfoSigFunc());
     (*env)->DeleteLocalRef(env, pack_manager_class);
     jobject package_info = (*env)->CallObjectMethod(env, package_manager, methodId, package_name, 0x40);
     if (package_info == NULL) {
-        LOGE("getPackageInfo() is NULL!!!");
+        //LOGE("getPackageInfo() is NULL!!!");
         return NULL;
     }
     (*env)->DeleteLocalRef(env, package_manager);
 
     //获取签名信息
     jclass package_info_class = (*env)->GetObjectClass(env, package_info);
-    jfieldID fieldId = (*env)->GetFieldID(env, package_info_class, "signatures", "[Landroid/content/pm/Signature;");
+    jfieldID fieldId = (*env)->GetFieldID(env, package_info_class, signaturesFunc(), signaturesSigFunc());
     (*env)->DeleteLocalRef(env, package_info_class);
     jobjectArray signature_object_array = (jobjectArray)(*env)->GetObjectField(env, package_info, fieldId);
     if (signature_object_array == NULL) {
-        LOGE("signature is NULL!!!");
+        //LOGE("signature is NULL!!!");
         return NULL;
     }
     jobject signature_object = (*env)->GetObjectArrayElement(env, signature_object_array, 0);
@@ -171,28 +173,28 @@ jint check_signature_sha1(JNIEnv *env, jobject type, jobject context_object) {
 
     //签名信息转换成sha1值
     jclass signature_class = (*env)->GetObjectClass(env, signature_object);
-    methodId = (*env)->GetMethodID(env, signature_class, "toByteArray", "()[B");
+    methodId = (*env)->GetMethodID(env, signature_class, toByteArrayFunc(), toByteArraySigFunc());
     (*env)->DeleteLocalRef(env, signature_class);
     jbyteArray signature_byte = (jbyteArray) (*env)->CallObjectMethod(env, signature_object, methodId);
-    jclass byte_array_input_class=(*env)->FindClass(env, "java/io/ByteArrayInputStream");
-    methodId=(*env)->GetMethodID(env, byte_array_input_class,"<init>","([B)V");
+    jclass byte_array_input_class=(*env)->FindClass(env, ByteArrayInputStreamFunc());
+    methodId=(*env)->GetMethodID(env, byte_array_input_class,initFunc(),initSigFunc());
     jobject byte_array_input=(*env)->NewObject(env, byte_array_input_class,methodId,signature_byte);
-    jclass certificate_factory_class=(*env)->FindClass(env, "java/security/cert/CertificateFactory");
-    methodId=(*env)->GetStaticMethodID(env, certificate_factory_class,"getInstance","(Ljava/lang/String;)Ljava/security/cert/CertificateFactory;");
-    jstring x_509_jstring=(*env)->NewStringUTF(env, "X.509");
+    jclass certificate_factory_class=(*env)->FindClass(env, CertificateFactoryFunc());
+    methodId=(*env)->GetStaticMethodID(env, certificate_factory_class,getInstanceFunc(), getInstanceSigFunc());
+    jstring x_509_jstring=(*env)->NewStringUTF(env, X509Func());
     jobject cert_factory=(*env)->CallStaticObjectMethod(env, certificate_factory_class,methodId,x_509_jstring);
-    methodId=(*env)->GetMethodID(env, certificate_factory_class,"generateCertificate",("(Ljava/io/InputStream;)Ljava/security/cert/Certificate;"));
+    methodId=(*env)->GetMethodID(env, certificate_factory_class, generateCertificateFunc(),(generateCertificateSigFunc()));
     jobject x509_cert=(*env)->CallObjectMethod(env, cert_factory,methodId,byte_array_input);
     (*env)->DeleteLocalRef(env, certificate_factory_class);
     jclass x509_cert_class=(*env)->GetObjectClass(env, x509_cert);
-    methodId=(*env)->GetMethodID(env, x509_cert_class,"getEncoded","()[B");
+    methodId=(*env)->GetMethodID(env, x509_cert_class,getEncodedFunc(),getEncodedSigFunc());
     jbyteArray cert_byte=(jbyteArray)(*env)->CallObjectMethod(env, x509_cert,methodId);
     (*env)->DeleteLocalRef(env, x509_cert_class);
-    jclass message_digest_class=(*env)->FindClass(env, "java/security/MessageDigest");
-    methodId=(*env)->GetStaticMethodID(env, message_digest_class,"getInstance","(Ljava/lang/String;)Ljava/security/MessageDigest;");
-    jstring sha1_jstring=(*env)->NewStringUTF(env, "SHA1");
+    jclass message_digest_class=(*env)->FindClass(env, MessageDigestFunc());
+    methodId=(*env)->GetStaticMethodID(env, message_digest_class, getInstanceFunc(),getInstanceMDSigFunc());
+    jstring sha1_jstring=(*env)->NewStringUTF(env, SHA1Func());
     jobject sha1_digest=(*env)->CallStaticObjectMethod(env, message_digest_class,methodId,sha1_jstring);
-    methodId=(*env)->GetMethodID(env, message_digest_class,"digest","([B)[B");
+    methodId=(*env)->GetMethodID(env, message_digest_class,digestFunc(),digestSigFunc());
     jbyteArray sha1_bytes=(jbyteArray)(*env)->CallObjectMethod(env, sha1_digest,methodId,cert_byte);
     (*env)->DeleteLocalRef(env, message_digest_class);
 
@@ -202,7 +204,8 @@ jint check_signature_sha1(JNIEnv *env, jobject type, jobject context_object) {
     byteToHex(env, sha1_bytes, chs);
 
     int code_size = sizeof(signature_sha1_codes)/sizeof(char*);
-    //LOGE("code_size: %d\n", code_size);
+    LOGE("code_size: %d\n", code_size);
+    LOGE("sig %s\n", chs);
     for (int i = 0; i < code_size; i++) {
         if (strcmp(chs, signature_sha1_codes[i]) == 0) {
             return 1;
