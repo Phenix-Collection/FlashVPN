@@ -324,6 +324,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         cm = CloneManager.getInstance(this);
         cm.loadClonedApps(this, this);
         lastCloneIdx = -1;
+        luckyPos = (int)RemoteConfig.getLong("conf_home_lucky_pos");
         initItemList(null);
     }
 
@@ -520,7 +521,8 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                 }
             }
         }
-        mItemList.add(new CustomizedCloneItem(CustomizedCloneItem.TYPE_LUCKY));
+        int pos = luckyPos > mItemList.size() ? mItemList.size(): luckyPos;
+        mItemList.add(pos, new CustomizedCloneItem(CustomizedCloneItem.TYPE_LUCKY));
         mItemList.add(new CustomizedCloneItem(CustomizedCloneItem.TYPE_ADD));
         listAdapter.notifyDataSetChanged();
         listAdapter.updatePage();
