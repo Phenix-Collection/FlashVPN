@@ -112,10 +112,14 @@ public class FeedbackActivity extends BaseActivity {
 
                 Intent data=new Intent(Intent.ACTION_SENDTO);
                 data.setData(Uri.parse("mailto:polestar.applab@gmail.com"));
-                data.putExtra(Intent.EXTRA_SUBJECT, "Feedback about Superb Cloner");
-                String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "Rating: "+ rating +  "Superb Cloner version: " + BuildConfig.VERSION_NAME
+                String title = "Feedback about Super Clone";
+                if (PreferencesUtils.isVIP()) {
+                    title = "VIP " + title;
+                }
+                data.putExtra(Intent.EXTRA_SUBJECT, title);
+                String fullContent = content + "\n\n\n\n"  + "Additional Info: \n" + "Rating: "+ rating +  "Super Clone version: " + BuildConfig.VERSION_NAME
                         + "\n" + "Model info: " + Build.FINGERPRINT + "\nGMS state: " + PreferencesUtils.isGMSEnable() + "\n";
-                String userContent = "Reward enabled: " + AppUser.isRewardEnabled();
+                String userContent = "Reward enabled: " + AppUser.isRewardEnabled() + "\n Ad Free: " + PreferencesUtils.isAdFree();
                 if (AppUser.isRewardEnabled() && AppUser.getInstance().isRewardAvailable()) {
                     userContent = userContent + "\n id: " + AppUser.getInstance().getMyId() + " balance: " + AppUser.getInstance().getMyBalance();
                 }
