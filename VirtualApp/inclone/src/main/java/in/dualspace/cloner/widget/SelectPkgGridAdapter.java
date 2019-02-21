@@ -60,6 +60,8 @@ public class SelectPkgGridAdapter  extends BaseAdapter{
 
         SelectGridAppItem appModel = (SelectGridAppItem) getItem(i);
         if (appModel != null) {
+//            MLogs.d(appModel.name + " getView pos " + i + " selected: " + appModel.selected);
+
             int userId = CloneManager.getInstance(mContext).getNextAvailableUserId(appModel.pkg);
             if (userId > 0) {
                 appIcon.setImageBitmap(BitmapUtils.createBadgeIcon(mContext, appModel.icon, userId));

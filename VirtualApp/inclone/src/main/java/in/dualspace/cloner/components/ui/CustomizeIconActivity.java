@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 
 
@@ -40,7 +41,7 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
     private SeekBar seekBarSat;
     private SeekBar seekBarLight;
     private EditText labelText;
-    private CheckBox badgeCheckBox;
+    private RadioButton badgeCheckBox;
     private String pkg;
     private CustomizeAppData mData;
     private CloneModel appModel;
@@ -73,14 +74,21 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
         seekBarLight.setOnSeekBarChangeListener(this);
         seekBarSat.setOnSeekBarChangeListener(this);
         labelText = (EditText) findViewById(R.id.app_label);
-        badgeCheckBox = (CheckBox) findViewById(R.id.badge_checkbox);
-        badgeCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        badgeCheckBox = (RadioButton) findViewById(R.id.badge_checkbox);
+        badgeCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                mData.badge = b;
+            public void onClick(View v) {
+                mData.badge = !mData.badge;
                 updateView();
             }
         });
+//        badgeCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                mData.badge = b;
+//                updateView();
+//            }
+//        });
         iconImg = (ImageView) findViewById(R.id.app_icon);
         pkg = getIntent().getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
         userId = getIntent().getIntExtra(AppConstants.EXTRA_CLONED_APP_USERID, VUserHandle.myUserId());
@@ -140,10 +148,6 @@ public class CustomizeIconActivity extends Activity implements SeekBar.OnSeekBar
 
     public void onConfirm(View view) {
         saveData();
-    }
-
-    public void onCancel(View view) {
-        finish();
     }
 
     public void initData() {

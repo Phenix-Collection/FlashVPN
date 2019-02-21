@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -47,6 +49,7 @@ import in.dualspace.cloner.widget.BottomProgressPopup;
 import in.dualspace.cloner.widget.ExplosionField;
 import in.dualspace.cloner.widget.PageIndicatorView;
 import in.dualspace.cloner.widget.PageRecyclerView;
+import in.dualspace.cloner.widget.RateDialog;
 import in.dualspace.cloner.widget.UpDownDialog;
 
 /**
@@ -67,6 +70,14 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     private static final int REQUEST_APPLY_PERMISSION = 101;
     private static final int REQUEST_UNLOCK_SETTINGS = 102;
 
+
+    private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
+    private static final String CONFIG_CLONE_RATE_INTERVAL = "clone_rate_interval";
+    private boolean rateDialogShowed = false;
+    private static final String RATE_FROM_QUIT = "quit";
+    private static final String RATE_AFTER_CLONE = "clone";
+    private static final String RATE_FROM_MENU = "menu";
+
     private int luckyPos;
     private int adTaskPos;
 
@@ -78,6 +89,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     private CustomizedCloneItem pendingStartItem;
 
     private int lastCloneIdx = -1;
+    private int longClickPos = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +142,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                     myHolder.icon.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
+                            longClickPos = position;
                             item.onLongClick(v);
                             return true;
                         }
@@ -151,44 +164,87 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     @Override
     protected void onResume() {
         super.onResume();
-        if (CloneManager.getInstance(this).hasPendingClones()) {
-            MLogs.d("Has pending clones");
-            bottomProgress.setTitle(getString(R.string.creating_clones));
-            bottomProgress.setTips(null);
-            bottomProgress.setIconRes(R.mipmap.ic_launcher);
-            bottomProgress.setMinDuration(2000);
-            bottomProgress.setAutoDismissDuration(10*1000);
-            bottomProgress.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    listAdapter.notifyDataSetChanged();
-                    listAdapter.updatePage();
-                    if (lastCloneIdx > 0 && lastCloneIdx < mItemList.size()) {
-                        listAdapter.scrollToPage((lastCloneIdx) / (PAGE_ITEM_SIZE));
-                        CustomizedCloneItem item = mItemList.get(lastCloneIdx);
-                        MLogs.d("lastCloneIdx : " + lastCloneIdx + " type: "  + item.type);
-                        pageRecyclerView.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (item.icon != null) {
-                                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(item.icon, "scaleX", 0.7f, 1.2f, 1.0f);
-                                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(item.icon, "scaleY", 0.7f, 1.2f, 1.0f);
-                                    AnimatorSet animSet = new AnimatorSet();
-                                    animSet.play(scaleX).with(scaleY);
-                                    animSet.setInterpolator(new BounceInterpolator());
-                                    animSet.setDuration(3000).start();
-                                }
-                            }
-                        }, 500);
+        if (pendingStartItem != null) {
+            startAppItem(pendingStartItem);
+        } else {
+            if (!guideRateIfNeeded()) {
+//                guideQuickSwitchIfNeeded();
+            }
+            //保证每次弹框尽可能只会在启动分身后，回到主界面时做一次判断，而不包含从后台切到主界面的时候
+            startingPkg = null;
+        }
+        if (longClickPos >= 0 && longClickPos < mItemList.size()) {
+            MLogs.d("update pos for long click: " + longClickPos);
+            listAdapter.notifyItemChanged(longClickPos);
+        }
+    }
 
+    private void showRateDialog(String from, String pkg){
+        if (RATE_AFTER_CLONE.equals(from) || RATE_FROM_QUIT.equals(from)){
+            if (rateDialogShowed ) {
+                MLogs.d("Already showed dialog this time");
+                return;
+            }
+            rateDialogShowed= true;
+        }
+        PreferencesUtils.updateRateDialogTime(this);
+        String s = from+"_"+pkg;
+        RateDialog rateDialog = new RateDialog(this, s);
+        rateDialog.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                EventReporter.reportRate(s+"_cancel", s);
+                PreferencesUtils.setLoveApp(false);
+            }
+        });
+    }
 
+    private boolean guideRateIfNeeded() {
+        if (startingPkg != null) {
+            String pkg = startingPkg;
+            //startingPkg = null;
+            MLogs.d("Cloning package: " + pkg);
+            if (PreferencesUtils.isRated()) {
+                return false;
+            }
+            String config = RemoteConfig.getString(CONFIG_CLONE_RATE_PACKAGE);
+            if ("off".equalsIgnoreCase(config)) {
+                MLogs.d("Clone rate off");
+                return false;
+            }
+            if(PreferencesUtils.getLoveApp() == -1) {
+                // not love, should wait for interval
+                long interval = RemoteConfig.getLong(CONFIG_CLONE_RATE_INTERVAL) * 60 * 60 * 1000;
+                if ((System.currentTimeMillis() - PreferencesUtils.getRateDialogTime(this)) < interval) {
+                    MLogs.d("Not love, need wait longer");
+                    return false;
+                }
+            }
+            boolean match = "*".equals(config);
+            if (!match) {
+                String[] pkgList = config.split(":");
+                if (pkgList != null && pkgList.length > 0) {
+                    for (String s: pkgList) {
+                        if(s.equalsIgnoreCase(pkg)) {
+                            match = true;
+                            break;
+                        }
                     }
                 }
-            });
-            bottomProgress.popup();
-        } else if (pendingStartItem != null) {
-            startAppItem(pendingStartItem);
+            }
+            if (match) {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showRateDialog(RATE_AFTER_CLONE, pkg);
+                    }
+                }, 800);
+                return true;
+            } else {
+                MLogs.d("No matching package for clone rate");
+            }
         }
+        return false;
     }
 
     private void startAppItem(CustomizedCloneItem item) {

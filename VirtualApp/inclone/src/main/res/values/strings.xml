@@ -15,7 +15,7 @@
     <string name="no_selection_for_clone">Please click and select items to clone.</string>
     <string name="create_shortcut">Shortcut</string>
     <string name="delete">Delete</string>
-    <string name="more">More</string>
+    <string name="more">Settings</string>
     <string name="toast_shortcut_added">Shortcut added</string>
     <string name="toast_shortcut_invalid">Shortcut is invalid</string>
     <string name="delete_dialog_title">Caution</string>
@@ -39,7 +39,7 @@
     <string name="feedback">Feedback</string>
     <string name="ad_free">Remove Ads</string>
     <string name="share">Share</string>
-    <string name="like_it" translatable="false">Like It</string>
+    <string name="like_it" translatable="false">Love Insta Clone</string>
     <string name="rate_us">Rate Us</string>
     <string name="join_us">Join Community</string>
     <string name="follow_us" translatable="false">Follow Us</string>
@@ -73,7 +73,7 @@
     <string name="lock_settings_for_apps">Enable privacy locker for cloned applications</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Please Confirm Pattern</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">Draw again</string>
-    <string name="al_btn_reset"><u>Reset</u></string>
+    <string name="al_btn_reset">Reset</string>
     <string name="al_lockpattern_try_again">Patterns Do Not Match, Please Try Again.</string>
     <string name="applock_permission_contacts_toast">This helps you to retrieve your password.</string>
     <string name="al_lockpattern_create_unlock_pattern">Set a New Pattern</string>
@@ -213,7 +213,7 @@
         <item>0</item>
     </string-array>
 
-    <string name="customize_title">Customization</string>
+    <string name="customize_title">Customize Clone</string>
     <string name="customize_setting_desc">Click to customize icon and label for clones</string>
     <string name="customize_setting_no_clone">Please clone apps and then customize it</string>
     <string name="saturation">Saturation</string>

@@ -179,6 +179,10 @@ public class SettingsActivity extends BaseActivity {
         showRateDialog();
     }
 
+    public void onFeedbackClick(View view) {
+        FeedbackActivity.start(this,  0);
+    }
+
     private void showRateDialog(){
         PreferencesUtils.updateRateDialogTime(this);
         RateDialog rateDialog = new RateDialog(this, "settings" );

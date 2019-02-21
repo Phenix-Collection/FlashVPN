@@ -1,6 +1,8 @@
 package in.dualspace.cloner.widget;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -8,7 +10,6 @@ import android.content.pm.ResolveInfo;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,7 +41,7 @@ import in.dualspace.cloner.utils.RemoteConfig;
  * Created by guojia on 2019/2/20.
  */
 
-public class AddClonePopup implements AdapterView.OnItemClickListener, View.OnClickListener{
+public class AddClonePopup extends BroadcastReceiver implements AdapterView.OnItemClickListener, View.OnClickListener{
     private PopupWindow popupWindow;
     private View popupView;
     private Activity activity;
@@ -62,6 +63,7 @@ public class AddClonePopup implements AdapterView.OnItemClickListener, View.OnCl
     private SelectPkgGridAdapter moreAdapter;
 
     private LinearLayout appGridLayout;
+    private PopupWindow.OnDismissListener mListener;
 
     public AddClonePopup(Activity context) {
         activity = context;
@@ -94,18 +96,16 @@ public class AddClonePopup implements AdapterView.OnItemClickListener, View.OnCl
         moreAppGridView.setAdapter(moreAdapter);
         moreAppGridView.setOnItemClickListener(this);
 
-        popupView.setOnKeyListener(new View.OnKeyListener() {
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dismiss();
-                    return true;
+            public void onDismiss() {
+                if(mListener != null) {
+                    mListener.onDismiss();
                 }
-                return false;
+                reset();
             }
         });
         selected = 0;
-        cloneButton.setText(String.format(activity.getString(R.string.clone_action_txt), ""));
     }
 
     public void loadAppListAsync() {
@@ -177,22 +177,23 @@ public class AddClonePopup implements AdapterView.OnItemClickListener, View.OnCl
             progressBar.setVisibility(View.GONE);
             hotAdapter.notifyDataSetChanged();
             moreAdapter.notifyDataSetChanged();
-            cloneButton.setClickable(true);
         } else  {
             appGridLayout.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
-            cloneButton.setClickable(false);
+            cloneButton.setEnabled(false);
         }
+        cloneButton.setText(String.format(activity.getString(R.string.clone_action_txt), ""));
+        cloneButton.setEnabled(false);
         //setGrideViewHeightBasedOnChildren(hotAppGridView);
     }
 
     public void cancel() {
-        MLogs.d("cancel");
+//        MLogs.d("cancel");
         doDismiss();
     }
 
     public void popup() {
-        MLogs.d("popup");
+//        MLogs.d("popup");
         if (popupWindow != null) {
             View root = activity.findViewById(android.R.id.content);
             if (root != null) {
@@ -212,6 +213,7 @@ public class AddClonePopup implements AdapterView.OnItemClickListener, View.OnCl
     }
 
     private void reset() {
+//        MLogs.d("reset");
         selected = 0;
         cloneButton.setText(String.format(activity.getString(R.string.clone_action_txt), ""));
         for (SelectGridAppItem item: hotAppList) {
@@ -220,29 +222,20 @@ public class AddClonePopup implements AdapterView.OnItemClickListener, View.OnCl
         for (SelectGridAppItem item: otherAppList) {
             item.selected = false;
         }
-        if (popupWindow != null) {
-            popupWindow.setOnDismissListener(null);
-        }
+        mListener = null;
     }
 
     public void dismiss() {
-        MLogs.d("dismiss");
+//        MLogs.d("dismiss");
         doDismiss();
     }
 
     public void setOnDismissListener(PopupWindow.OnDismissListener listener) {
-        if (popupWindow != null) {
-            popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    listener.onDismiss();
-                }
-            });
-        }
+        mListener = listener;
     }
 
     private void doDismiss() {
-        MLogs.d("do dismiss");
+//        MLogs.d("do dismiss");
         if (popupWindow != null) {
             popupWindow.dismiss();
         }
@@ -333,5 +326,10 @@ public class AddClonePopup implements AdapterView.OnItemClickListener, View.OnCl
 
                 break;
         }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
     }
 }

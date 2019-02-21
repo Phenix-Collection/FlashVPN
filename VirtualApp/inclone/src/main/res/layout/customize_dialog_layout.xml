@@ -9,154 +9,169 @@
         android:orientation="vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:background="@color/white"
+        android:background="@drawable/shape_white_round_rect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:textColor="@color/text_gray_dark"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/customize_title"/>
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="15dp"
-            android:id="@+id/app_icon"
-            android:src="@mipmap/ic_launcher"/>
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/line_split"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
+                android:id="@+id/app_icon"
+                android:src="@mipmap/ic_launcher"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:id="@+id/app_label"
-            android:textColor="@color/text_gray_dark"
-            android:maxLines="1"
-            android:maxLength="36"
-            android:textSize="16sp"
-            android:inputType="textPersonName"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp">
-            <TextView
-                android:layout_width="80dp"
+            <EditText
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:id="@+id/app_label"
                 android:textColor="@color/text_gray_dark"
-                android:textSize="14sp"
-                android:text="@string/hue"/>
-            <SeekBar
-                android:id="@+id/seek_bar_hue"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginTop="10.0dip"
-                android:layout_gravity="right"
-                android:progressBackgroundTint="@color/colorPrimaryDark"
-                android:max="255"  />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_gray_dark"
-                android:textSize="14sp"
-                android:text="@string/saturation"/>
-            <SeekBar
-                android:id="@+id/seek_bar_sat"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginTop="10.0dip"
-                android:layout_gravity="right"
-                android:progressBackgroundTint="@color/colorPrimaryDark"
-                android:max="255" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_gray_dark"
-                android:textSize="14sp"
-                android:text="@string/light"/>
-            <SeekBar
-                android:id="@+id/seek_bar_light"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginTop="10.0dip"
-                android:layout_gravity="right"
-                android:progressBackgroundTint="@color/colorPrimaryDark"
-                android:max="255"  />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_gray_dark"
-                android:textSize="14sp"
-                android:text="@string/badge"/>
-
-            <CheckBox
-                android:id="@+id/badge_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@drawable/checkbox_selector"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop = "30dp"
-            android:layout_marginBottom= "15dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/al_btn_reset"
+                android:maxLines="1"
+                android:maxLength="36"
                 android:textSize="16sp"
-                android:textColor="@color/button_enabled_color"
-                android:layout_weight="1"
-                android:onClick="onReset"/>
+                android:inputType="textPersonName"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:textSize="16sp"
-                android:textColor="@color/button_enabled_color"
-                android:onClick="onCancel"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray_dark"
+                    android:textSize="14sp"
+                    android:text="@string/hue"/>
+                <SeekBar
+                    android:id="@+id/seek_bar_hue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:layout_gravity="right"
+                    android:progressBackgroundTint="@color/colorPrimaryDark"
+                    android:max="255"  />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/ok"
-                android:textSize="16sp"
-                android:onClick="onConfirm"
-                android:textColor="@color/button_enabled_color"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray_dark"
+                    android:textSize="14sp"
+                    android:text="@string/saturation"/>
+                <SeekBar
+                    android:id="@+id/seek_bar_sat"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:layout_gravity="right"
+                    android:progressBackgroundTint="@color/colorPrimaryDark"
+                    android:max="255" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray_dark"
+                    android:textSize="14sp"
+                    android:text="@string/light"/>
+                <SeekBar
+                    android:id="@+id/seek_bar_light"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:layout_gravity="right"
+                    android:progressBackgroundTint="@color/colorPrimaryDark"
+                    android:max="255"  />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray_dark"
+                    android:textSize="14sp"
+                    android:text="@string/badge"/>
+
+                <RadioButton
+                    android:id="@+id/badge_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop = "30dp"
+                android:layout_marginBottom= "15dp">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/al_btn_reset"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/general_button"
+                    android:layout_weight="1"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:onClick="onReset"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"/>
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ok"
+                    android:textSize="16sp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:gravity="center"
+                    android:onClick="onConfirm"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:background="@drawable/general_button"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"/>
+            </LinearLayout>
         </LinearLayout>
+
+
 
     </LinearLayout>
 </RelativeLayout>

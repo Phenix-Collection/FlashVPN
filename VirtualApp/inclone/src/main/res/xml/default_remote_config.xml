@@ -28,12 +28,11 @@
     <entry>
         <key>clone_rate_package</key>
         <!--off to close; * for all; package:package: -->
-        <value>com.facebook.orca:com.whatsapp</value>
+        <value>*</value>
     </entry>
     <entry>
         <key>show_rate_menu</key>
-        <!-- if not love should wait for hours -->
-        <value>false</value>
+        <value>true</value>
     </entry>
     <entry>
         <key>clone_rate_interval</key>

@@ -11,6 +11,7 @@
     <color name="lucky_red">#fd215c</color>
     <color name="theme_text_color">#FF4A4A4A</color>
     <color name="grid_line">#d3d3d3</color>
+    <color name="line_split">#d7d7d7</color>
     <color name="grid_pressed">#b7b7b7</color>
     <color name="grid_bg">#e8e8e8</color>
     <color name="delete_text_color">#f0eb0729</color>

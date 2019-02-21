@@ -114,34 +114,6 @@
                 android:textSize="10sp" />
         </RelativeLayout>
 
-        <include layout="@layout/setting_line_splitter" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="@android:color/white"
-            android:onClick="onCustomizeClick"
-            android:paddingLeft="22dp">
-
-            <TextView
-                android:id="@+id/customize_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="13dp"
-                android:layout_marginTop="18dp"
-                android:text="@string/customize_title"
-                android:textColor="@color/text_gray_dark"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/customize_title"
-                android:text="@string/customize_setting_desc"
-                android:textColor="@color/text_gray_light"
-                android:textSize="10sp" />
-        </RelativeLayout>
-
         <include layout="@layout/setting_wide_splitter" />
         <!--android:text="@string/settings_more"-->
         <RelativeLayout
@@ -271,6 +243,19 @@
             android:paddingLeft="22dp"
             android:paddingRight="22dp"
             android:text="@string/rate_us"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+        <include layout="@layout/setting_line_splitter" />
+        <TextView
+            android:id="@+id/feedback_txt"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/default_foreground_color"
+            android:gravity="center_vertical"
+            android:onClick="onFeedbackClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/feedback"
             android:textColor="@color/text_gray_dark"
             android:textSize="15sp" />
         <include layout="@layout/setting_line_splitter" />
