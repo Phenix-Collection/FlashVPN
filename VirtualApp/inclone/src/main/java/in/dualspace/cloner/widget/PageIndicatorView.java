@@ -21,8 +21,8 @@ import in.dualspace.cloner.utils.DisplayUtils;
 public class PageIndicatorView extends LinearLayout {
 
     private Context mContext = null;
-    private int dotSize = 15; // 指示器的大小（dp）
-    private int margins = 4; // 指示器间距（dp）
+    private int dotSize = 9; // 指示器的大小（dp）
+    private int margins = 3; // 指示器间距（dp）
     private List<View> indicatorViews = null; // 存放指示器
 
     public PageIndicatorView(Context context) {

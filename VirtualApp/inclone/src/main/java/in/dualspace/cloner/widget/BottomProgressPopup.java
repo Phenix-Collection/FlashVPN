@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.polestar.clone.CustomizeAppData;
 
 import in.dualspace.cloner.R;
+import in.dualspace.cloner.utils.DisplayUtils;
 import in.dualspace.cloner.utils.MLogs;
 
 /**
@@ -33,13 +35,13 @@ public class BottomProgressPopup {
 
     private PopupWindow popupWindow;
     private View popupView;
-    private boolean mIsShowing;
     private Activity activity;
     private long minDuration = 0;
     private long autoDismissDuration = -1;
     private boolean hasCallDismiss;
     private long popupTime = 0;
     private Handler mainHandler;
+    private boolean isShowing;
 
     private static final int MSG_MIN_DURATION_PASS = 1;
     private static final int MSG_AUTO_DISSMISS_DURATION_PASS = 2;
@@ -49,11 +51,10 @@ public class BottomProgressPopup {
         popupView = View.inflate(context, R.layout.bar_progress_layout, null);
         popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setTouchable(false);
-        popupView.setFocusable(false);
+        popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(false);
 //        popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
         popupWindow.setAnimationStyle(R.style.anim_bottombar);
-        mIsShowing = false;
         mainHandler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
@@ -81,8 +82,12 @@ public class BottomProgressPopup {
 
     public void setTips(String s) {
         TextView textView = popupView.findViewById(R.id.loading_tips);
-        textView.setText(s);
-        textView.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(s)) {
+            textView.setText(s);
+            textView.setVisibility(View.VISIBLE);
+        } else {
+            textView.setVisibility(View.GONE);
+        }
     }
 
     public void setIconRes(int resId) {
@@ -120,14 +125,14 @@ public class BottomProgressPopup {
                 if (autoDismissDuration > 0) {
                     mainHandler.sendEmptyMessageDelayed(MSG_AUTO_DISSMISS_DURATION_PASS, autoDismissDuration);
                 }
-                popupWindow.showAtLocation(root,Gravity.BOTTOM, 0, 0);
+                popupWindow.showAtLocation(root, Gravity.BOTTOM, DisplayUtils.dip2px(activity, 10), DisplayUtils.dip2px(activity, 10));
                 ImageView icon = popupView.findViewById(R.id.img_app_icon);
                 ObjectAnimator scaleX = ObjectAnimator.ofFloat(icon, "scaleX", 0.7f, 1.2f, 1.0f);
                 ObjectAnimator scaleY = ObjectAnimator.ofFloat(icon, "scaleY", 0.7f, 1.2f, 1.0f);
                 AnimatorSet animSet = new AnimatorSet();
                 animSet.play(scaleX).with(scaleY);
                 animSet.setInterpolator(new BounceInterpolator());
-                animSet.setDuration(500).start();
+                animSet.setDuration(800).start();
 
                 ScaleAnimation sa = new ScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 sa.setDuration(1000);
@@ -149,14 +154,20 @@ public class BottomProgressPopup {
 //
 //                mIsShowing = true;
 //            }
+            isShowing = true;
         }
 
     }
 
     private void reset() {
         hasCallDismiss = false;
+        isShowing = false;
         mainHandler.removeMessages(MSG_AUTO_DISSMISS_DURATION_PASS);
         mainHandler.removeMessages(MSG_MIN_DURATION_PASS);
+        popupTime = 0;
+        if (popupWindow != null) {
+            popupWindow.setOnDismissListener(null);
+        }
     }
 
     public void dismiss() {
@@ -189,5 +200,9 @@ public class BottomProgressPopup {
             popupWindow.dismiss();
         }
         reset();
+    }
+
+    public boolean isShowing() {
+        return isShowing;
     }
 }

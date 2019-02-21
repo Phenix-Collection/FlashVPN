@@ -104,8 +104,8 @@
         <value>null</value>
     </entry>
     <entry>
-        <key>slot_test</key>
-        <value>null</value>
+        <key>conf_start_by_bottom_bar</key>
+        <value>true</value>
     </entry>
     <entry>
         <key>slot_app_start_filter</key>
@@ -201,5 +201,9 @@
     <entry>
         <key>conf_delete_dialog_times</key>
         <value>1</value>
+    </entry>
+    <entry>
+        <key>conf_add_clone_ad_pos</key>
+        <value>6</value>
     </entry>
 </defaultsMap>

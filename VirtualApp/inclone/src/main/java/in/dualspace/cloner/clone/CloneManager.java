@@ -1,6 +1,7 @@
 package in.dualspace.cloner.clone;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -13,6 +14,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.polestar.clone.CloneAgent64;
 import com.polestar.clone.GmsSupport;
@@ -27,12 +29,17 @@ import com.polestar.clone.remote.InstallResult;
 import com.polestar.clone.remote.InstalledAppInfo;
 import in.dualspace.cloner.AppConstants;
 import in.dualspace.cloner.DualApp;
+import in.dualspace.cloner.R;
 import in.dualspace.cloner.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
 import in.dualspace.cloner.db.DBManager;
+import in.dualspace.cloner.utils.CommonUtils;
+import in.dualspace.cloner.utils.EventReporter;
 import in.dualspace.cloner.utils.MLogs;
 import in.dualspace.cloner.utils.PreferencesUtils;
 import in.dualspace.cloner.utils.RemoteConfig;
+import in.dualspace.cloner.widget.UpDownDialog;
+import android.app.Activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,37 +114,6 @@ public class CloneManager {
 //        new LoadClonedAppTask(context).execute();
     }
 
-    @Deprecated
-    public void createClone(Context context, CloneModel appModel) {
-        mPendingClones.add(appModel);
-        mWorkHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    appModel.setClonedTime(System.currentTimeMillis());
-                    appModel.setIndex(mClonedApps.size());
-                    InstallResult result = VirtualCore.get().installPackage(appModel.getPackageName(), appModel.getApkPath(context),
-                            InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
-                    if(result.isSuccess) {
-                        DBManager.insertCloneModel(context, appModel);
-                        mClonedApps.add(appModel);
-                    }
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mPendingClones.remove(appModel);
-                            if (loadedListener != null) {
-                                loadedListener.onInstalled(appModel, result.isSuccess);
-                            }
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     public void createClone(Context context, CloneModel appModel, int userId) {
         mPendingClones.add(appModel);
         mWorkHandler.post(new Runnable() {
@@ -145,6 +121,7 @@ public class CloneManager {
             public void run() {
                 boolean success = false;
                 try {
+                    Thread.sleep(1000);
                     appModel.setClonedTime(System.currentTimeMillis());
                     appModel.formatIndex(mClonedApps.size(), userId);
                     InstalledAppInfo info = VirtualCore.get().getInstalledAppInfo(appModel.getPackageName(), 0);
@@ -274,7 +251,7 @@ public class CloneManager {
                 Bitmap bmp = data.getCustomIcon();
                 //appIcon.setImageBitmap(bmp);
                 model.setCustomIcon(bmp);
-                //model.setCustomIcon(CommonUtils.createCustomIcon(context, model.getIconDrawable(context)));
+                //model.setCustomIcon(CommonUtils.createCustomIcon(context, clone.getIconDrawable(context)));
             }
         }
         DBManager.deleteAppModeList(context, uninstalledApp);
@@ -352,27 +329,92 @@ public class CloneManager {
         }
     }
 
-    @Deprecated
-    public static void launchApp(String packageName) {
-        //Check app version and trying to upgrade if necessary
-        try {
-            MLogs.d(TAG, "launchApp packageName = " + packageName);
-            mPackageLaunchTime.put(packageName, System.currentTimeMillis());
-            Intent intent = VirtualCore.get().getLaunchIntent(packageName, VUserHandle.myUserId());
-            VActivityManager.get().startActivity(intent, VUserHandle.myUserId());
-        } catch (Exception e) {
-            MLogs.e(e);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+    public static void launchApp(Activity dialogContext, String packageName, int userId, boolean needDialog){
+        mPackageLaunchTime.put(getMapKey(packageName, userId), System.currentTimeMillis());
+        boolean needAbiSupport = CloneAgent64.needArm64Support(DualApp.getApp(), packageName);
+        if (needAbiSupport) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    CloneAgent64 agent = new CloneAgent64(dialogContext);
+                    if(agent.hasSupport()) {
+                        if(agent.isCloned(packageName, userId)) {
+                            if (agent.isNeedUpgrade(packageName)) {
+                                agent.upgradeApp(packageName);
+                            }
+                        } else {
+                            agent.createClone(packageName, userId);
+                        }
+                        agent.launchApp(packageName, userId);
+                        if(dialogContext != null) {
+                            Toast.makeText(dialogContext, dialogContext.getString(R.string.start_with_arm64), Toast.LENGTH_SHORT).show();
+                        }
+                    } else{
+                        //Guide download support package
+                        EventReporter.reportArm64(packageName, "start");
+                        if (needDialog && dialogContext != null) {
+                            dialogContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CharSequence appName = null;
+                                    try {
+                                        ApplicationInfo ai = DualApp.getApp().getPackageManager().getApplicationInfo(packageName, 0);
+                                        if (ai != null) {
+                                            appName = DualApp.getApp().getPackageManager().getApplicationLabel(ai);
+                                        }
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+                                    if (appName == null) {
+                                        return;
+                                    }
+                                    UpDownDialog.show(dialogContext, dialogContext.getString(R.string.arm64_dialog_title), dialogContext.getString(R.string.arm64_dialog_content, appName),
+                                            dialogContext.getString(R.string.no_thanks), dialogContext.getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    switch (i) {
+                                                        case UpDownDialog.NEGATIVE_BUTTON:
+                                                            EventReporter.reportArm64(packageName, "cancel");
+                                                            launchAppMySelf(packageName, userId);
+                                                            break;
+                                                        case UpDownDialog.POSITIVE_BUTTON:
+                                                            CommonUtils.jumpToMarket(dialogContext, AppConstants.ARM64_SUPPORT_PKG);
+                                                            EventReporter.reportArm64(packageName, "go");
+                                                            break;
+                                                    }
+                                                }
+                                            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                        @Override
+                                        public void onCancel(DialogInterface dialogInterface) {
+                                            launchAppMySelf(packageName, userId);
+                                        }
+                                    });
+                                }
+                            });
+                        } else{
+                            launchAppMySelf(packageName, userId);
+                        }
+                    }
+                }
+            }).start();
+        } else {
+            launchAppMySelf(packageName, userId);
         }
     }
 
-    public static void updateLaunchTime(String pkg, int userId) {
-        mPackageLaunchTime.put(getMapKey(pkg, userId), System.currentTimeMillis());
+    public static void launchApp(Activity dialogContext, CloneModel model, boolean needDialog) {
+        launchApp(dialogContext, model.getPackageName(),model.getPkgUserId(), needDialog);
     }
 
-    public static void launchApp(String packageName, int userId) {
+//    public static void updateLaunchTime(String pkg, int userId) {
+//        mPackageLaunchTime.put(getMapKey(pkg, userId), System.currentTimeMillis());
+//    }
+
+    private static void launchAppMySelf(String packageName, int userId) {
         //Check app version and trying to upgrade if necessary
+        if (needUpgrade(packageName)) {
+            upgradeApp(packageName);
+        }
         try {
             MLogs.d(TAG, "launchApp packageName = " + packageName);
             mPackageLaunchTime.put(getMapKey(packageName, userId), System.currentTimeMillis());
@@ -383,10 +425,7 @@ public class CloneManager {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-    }
 
-    public static void launchApp(CloneModel model) {
-        launchApp(model.getPackageName(), model.getPkgUserId());
     }
 
     public boolean isClonable(String pkg) {
@@ -409,9 +448,6 @@ public class CloneManager {
                 return false;
             }
             if (blackList.contains(ai.packageName)) {
-                return false;
-            }
-            if (ai.packageName.equals("com.polestar.multiaccount")) {
                 return false;
             }
         } catch (PackageManager.NameNotFoundException e) {

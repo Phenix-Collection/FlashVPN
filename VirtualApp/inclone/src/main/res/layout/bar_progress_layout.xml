@@ -1,77 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:gravity="bottom"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="#00000000">
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:gravity="bottom"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/shape_white_round_rect">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <RelativeLayout
-            android:id="@+id/progress_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp">
-            <ImageView
-                android:id="@+id/img_success_bg1"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/circle_install_success_bg"/>
-            <ImageView
-                android:id="@+id/img_success_bg2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/circle_install_success_bg"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <RelativeLayout
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_centerInParent="true">
+                android:id="@+id/progress_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
                 <ImageView
-                    android:id="@+id/img_app_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_centerInParent="true" />
+                    android:id="@+id/img_success_bg1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/circle_install_success_bg"/>
+                <ImageView
+                    android:id="@+id/img_success_bg2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/circle_install_success_bg"/>
+                <RelativeLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_centerInParent="true">
+                    <ImageView
+                        android:id="@+id/img_app_icon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_toRightOf="@id/progress_layout"
+                android:layout_toEndOf="@id/progress_layout"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/loading_title"
+                    android:textSize="20sp"
+                    android:textColor="@color/text_gray_dark"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/loading_tips"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_gray_light"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:visibility="gone"/>
+            </LinearLayout>
         </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_toRightOf="@id/progress_layout"
-            android:layout_toEndOf="@id/progress_layout"
-            android:layout_centerVertical="true">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/loading_title"
-                android:textSize="20sp"
-                android:textColor="@color/text_gray_dark"
-                android:maxLines="1"
-                android:ellipsize="end"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/loading_tips"
-                android:textSize="14sp"
-                android:textColor="@color/text_gray_light"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:visibility="gone"/>
-        </LinearLayout>
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:id="@+id/progress_ad_container"></LinearLayout>
-</LinearLayout>
+            android:visibility="gone"
+            android:id="@+id/progress_ad_container"></LinearLayout>
+    </LinearLayout>
+</FrameLayout>

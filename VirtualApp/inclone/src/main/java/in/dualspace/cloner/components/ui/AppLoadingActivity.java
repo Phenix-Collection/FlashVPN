@@ -82,7 +82,6 @@ public class AppLoadingActivity extends BaseActivity {
     public final static String CONFIG_NEED_PRELOAD_LOADING = "conf_need_preload_start_ad";
     private static HashSet<String> filterPkgs ;
     private LinearLayout mNativeContainer;
-    private boolean needAbiSupport;
     private Handler mainHandler;
     private boolean isAppRunning;
 
@@ -160,7 +159,6 @@ public class AppLoadingActivity extends BaseActivity {
             finish();
             return false;
         } else {
-            needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = CloneManager.needUpgrade(appModel.getPackageName());
             isAppRunning = CloneManager.isAppLaunched(appModel);
             MLogs.d("isAppRunning " + isAppRunning);
@@ -172,15 +170,6 @@ public class AppLoadingActivity extends BaseActivity {
         return true;
     }
 
-    private void doLaunchMyself(){
-        // Todo: if app is already launched, just switch it to front, no need re-launch
-        if (needDoUpGrade) {
-            CloneManager.upgradeApp(appModel.getPackageName());
-        }
-        CloneManager.launchApp(appModel);
-        finishIfTimeout();
-    }
-
     private void finishIfTimeout(){
         mainHandler.postDelayed(new Runnable() {
             @Override
@@ -190,77 +179,14 @@ public class AppLoadingActivity extends BaseActivity {
         }, 5000);
     }
 
-    private void doLaunchFromAgent() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                CloneAgent64 agent = new CloneAgent64(AppLoadingActivity.this);
-                if(agent.hasSupport()) {
-                    if(agent.isCloned(appModel.getPackageName(), appModel.getPkgUserId())) {
-                        if (agent.isNeedUpgrade(appModel.getPackageName())) {
-                            agent.upgradeApp(appModel.getPackageName());
-                        }
-                    } else {
-                        agent.createClone(appModel.getPackageName(), appModel.getPkgUserId());
-                    }
-                    agent.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
-                    CloneManager.updateLaunchTime(appModel.getPackageName(), appModel.getPkgUserId());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(AppLoadingActivity.this, getString(R.string.start_with_arm64), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    finishIfTimeout();
-                } else{
-                    //Guide download support package
-                    EventReporter.reportArm64(appModel.getPackageName(), "start");
-                    if (firstStart) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                UpDownDialog.show(AppLoadingActivity.this, getString(R.string.arm64_dialog_title), getString(R.string.arm64_dialog_content, appModel.getName()),
-                                        getString(R.string.no_thanks), getString(R.string.install), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                switch (i) {
-                                                    case UpDownDialog.NEGATIVE_BUTTON:
-                                                        EventReporter.reportArm64(appModel.getPackageName(), "cancel");
-                                                        doLaunchMyself();
-                                                        break;
-                                                    case UpDownDialog.POSITIVE_BUTTON:
-                                                        CommonUtils.jumpToMarket(AppLoadingActivity.this, AppConstants.ARM64_SUPPORT_PKG);
-                                                        EventReporter.reportArm64(appModel.getPackageName(), "go");
-                                                        break;
-                                                }
-                                            }
-                                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialogInterface) {
-                                        doLaunchMyself();
-                                    }
-                                });
-                            }
-                        });
-                    } else{
-                        doLaunchMyself();
-                    }
-                }
-            }
-        }).start();
-    }
-
     private void doLaunch(){
         mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(!needAbiSupport) {
-                    doLaunchMyself();
-                } else{
-                    doLaunchFromAgent();
-                }
+                CloneManager.launchApp(AppLoadingActivity.this, appModel, firstStart);
             }
         }, isAppRunning? 0: 500);
+        finishIfTimeout();
     }
 
     private void initView() {

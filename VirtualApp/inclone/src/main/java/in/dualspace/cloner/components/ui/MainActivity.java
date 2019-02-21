@@ -1,6 +1,5 @@
 package in.dualspace.cloner.components.ui;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
@@ -9,10 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -34,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import in.dualspace.cloner.AppConstants;
 import in.dualspace.cloner.R;
 import in.dualspace.cloner.clone.CloneManager;
 import in.dualspace.cloner.db.CloneModel;
@@ -44,6 +42,7 @@ import in.dualspace.cloner.utils.EventReporter;
 import in.dualspace.cloner.utils.MLogs;
 import in.dualspace.cloner.utils.PreferencesUtils;
 import in.dualspace.cloner.utils.RemoteConfig;
+import in.dualspace.cloner.widget.AddClonePopup;
 import in.dualspace.cloner.widget.BottomProgressPopup;
 import in.dualspace.cloner.widget.ExplosionField;
 import in.dualspace.cloner.widget.PageIndicatorView;
@@ -74,6 +73,9 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     private ExplosionField mExplosionField;
     private static final int PAGE_ITEM_SIZE = 3*3;
     private BottomProgressPopup bottomProgress;
+    private AddClonePopup addClonePopup;
+
+    private CustomizedCloneItem pendingStartItem;
 
     private int lastCloneIdx = -1;
 
@@ -139,6 +141,8 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         }));
 
         bottomProgress = new BottomProgressPopup(this);
+        addClonePopup = new AddClonePopup(this);
+        addClonePopup.loadAppListAsync();
 
         initData();
 
@@ -150,6 +154,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         if (CloneManager.getInstance(this).hasPendingClones()) {
             MLogs.d("Has pending clones");
             bottomProgress.setTitle(getString(R.string.creating_clones));
+            bottomProgress.setTips(null);
             bottomProgress.setIconRes(R.mipmap.ic_launcher);
             bottomProgress.setMinDuration(2000);
             bottomProgress.setAutoDismissDuration(10*1000);
@@ -181,9 +186,78 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                 }
             });
             bottomProgress.popup();
+        } else if (pendingStartItem != null) {
+            startAppItem(pendingStartItem);
         }
     }
 
+    private void startAppItem(CustomizedCloneItem item) {
+        if (item == null || item.clone == null) {
+            MLogs.d("Invalid pending start item");
+            return;
+        }
+        startingPkg = item.clone.getPackageName();
+        if (item.clone.getLaunched() == 0) {
+            item.clone.setLaunched(1);
+            if (item.newDot != null) {
+                item.newDot.setVisibility(View.INVISIBLE);
+            }
+            DBManager.updateCloneModel(MainActivity.this, item.clone);
+        }
+        doLaunchItem(item);
+        pendingStartItem = null;
+    }
+
+    private void doLaunchItem(CustomizedCloneItem item) {
+        if (!RemoteConfig.getBoolean("conf_start_by_bottom_bar")) {
+            AppLoadingActivity.startAppStartActivity(MainActivity.this, item.clone);
+            return;
+        }
+        boolean needDoUpGrade = CloneManager.needUpgrade(item.clone.getPackageName());
+        if (needDoUpGrade) {
+            CloneManager.killApp(item.clone.getPackageName());
+        }
+        boolean isAppRunning = CloneManager.isAppLaunched(item.clone);
+        boolean isFirstStart = PreferencesUtils.isFirstStart(item.clone.getName());
+        if (isFirstStart) {
+            PreferencesUtils.setStarted(item.clone.getName());
+        }
+        bottomProgress.setIconBitmap(item.customizeAppData != null? item.customizeAppData.getCustomIcon() : item.clone.getCustomIcon());
+        bottomProgress.setTitle(getString(R.string.app_starting_tips,
+                item.customizeAppData != null && item.customizeAppData.customized ? item.customizeAppData.label: item.clone.getName()));
+        if (isFirstStart) {
+            bottomProgress.setTips(getString(R.string.first_start_tips));
+        } else if(needDoUpGrade) {
+            bottomProgress.setTips(getString(R.string.upgrade_start_tips));
+        } else {
+            bottomProgress.setTips(null);
+        }
+        long delay = 0;
+        if (isFirstStart || needDoUpGrade) {
+            delay = 4000;
+            bottomProgress.setAutoDismissDuration(10*1000);
+        } else if (!isAppRunning) {
+            delay = 2500;
+            bottomProgress.setAutoDismissDuration(5*1000);
+        }
+        if (delay > 0) {
+            bottomProgress.popup();
+            pageRecyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    CloneManager.launchApp(MainActivity.this, item.clone,isFirstStart);
+                }
+            }, delay);
+        }  else {
+            bottomProgress.cancel();
+            CloneManager.launchApp(MainActivity.this, item.clone, isFirstStart);
+        }
+        EventReporter.appStart(!isAppRunning,
+                item.clone.getLockerState() != AppConstants.AppLockState.DISABLED,
+                "home", item.clone.getPackageName(), item.clone.getPkgUserId());
+
+    }
+    
     @Override
     protected void onPause() {
         super.onPause();
@@ -296,9 +370,17 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     public void onInstalled(CloneModel clonedApp, boolean result) {
         if (result) {
             addCloneItem(clonedApp);
+            bottomProgress.setIconBitmap(clonedApp.getCustomIcon());
+            bottomProgress.setTips(getString(R.string.clone_success_tips, clonedApp.getName()));
         }
         if (!CloneManager.getInstance(this).hasPendingClones()) {
-            bottomProgress.dismiss();
+            pageRecyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bottomProgress.dismiss();
+                }
+            }, 500);
+
         }
     }
 
@@ -329,7 +411,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         for(CustomizedCloneItem item: mItemList) {
             if (item.type == CustomizedCloneItem.TYPE_CLONE) {
                 lastCloneIdx = i;
-                if (item.model.getPackageName().equals(model.getPackageName()) ) {
+                if (item.clone.getPackageName().equals(model.getPackageName()) ) {
                     samePackageIdx = i;
                 }
             }
@@ -347,8 +429,8 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         int i = 0;
         for(CustomizedCloneItem item: mItemList) {
             if (item.type == CustomizedCloneItem.TYPE_CLONE) {
-                if (item.model.getPackageName().equals(model.getPackageName())
-                        && item.model.getPkgUserId() == model.getPkgUserId()) {
+                if (item.clone.getPackageName().equals(model.getPackageName())
+                        && item.clone.getPkgUserId() == model.getPkgUserId()) {
                     idx = i;
                     break;
                 }
@@ -398,7 +480,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         public final static int TYPE_EMPTY= 5;
         public int type;
 
-        public CloneModel model = null;
+        public CloneModel clone = null;
         private CustomizeAppData customizeAppData = null;
 
         public ImageView icon;
@@ -407,7 +489,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
 
         public CustomizedCloneItem(CloneModel model) {
             type = TYPE_CLONE;
-            this.model = model;
+            this.clone = model;
             customizeAppData = CustomizeAppData.loadFromPref(model.getPackageName(),
                     model.getPkgUserId());
 //            if (appModel.getCustomIcon() == null) {
@@ -425,17 +507,60 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         }
 
         public void onClick(View view) {
+            if (bottomProgress.isShowing()) {
+                return;
+            }
             switch (type) {
                 case TYPE_CLONE:
-                    AppLoadingActivity.startAppStartActivity(MainActivity.this, model);
-                    startingPkg = model.getPackageName();
-                    if (model.getLaunched() == 0) {
-                        model.setLaunched(1);
-                        DBManager.updateCloneModel(MainActivity.this, model);
+                    if(!applyPermissionIfNeeded()) {
+                        startAppItem(this);
+                    } else {
+                        pendingStartItem = this;
                     }
                     break;
                 case TYPE_ADD:
-                    startActivity(new Intent(MainActivity.this, AddCloneActivity.class));
+                    addClonePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            if (CloneManager.getInstance(MainActivity.this).hasPendingClones()) {
+                                MLogs.d("Has pending clones");
+                                bottomProgress.setTitle(getString(R.string.creating_clones));
+                                bottomProgress.setTips(null);
+                                bottomProgress.setIconRes(R.mipmap.ic_launcher);
+                                bottomProgress.setMinDuration(2000);
+                                bottomProgress.setAutoDismissDuration(10*1000);
+                                bottomProgress.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss() {
+                                        listAdapter.notifyDataSetChanged();
+                                        listAdapter.updatePage();
+                                        if (lastCloneIdx > 0 && lastCloneIdx < mItemList.size()) {
+                                            listAdapter.scrollToPage((lastCloneIdx) / (PAGE_ITEM_SIZE));
+                                            CustomizedCloneItem item = mItemList.get(lastCloneIdx);
+                                            MLogs.d("lastCloneIdx : " + lastCloneIdx + " type: "  + item.type);
+                                            pageRecyclerView.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (item.icon != null) {
+                                                        ObjectAnimator scaleX = ObjectAnimator.ofFloat(item.icon, "scaleX", 0.7f, 1.2f, 1.0f);
+                                                        ObjectAnimator scaleY = ObjectAnimator.ofFloat(item.icon, "scaleY", 0.7f, 1.2f, 1.0f);
+                                                        AnimatorSet animSet = new AnimatorSet();
+                                                        animSet.play(scaleX).with(scaleY);
+                                                        animSet.setInterpolator(new BounceInterpolator());
+                                                        animSet.setDuration(3000).start();
+                                                    }
+                                                }
+                                            }, 500);
+
+
+                                        }
+                                    }
+                                });
+                                bottomProgress.popup();
+                            }
+                        }
+                    });
+                    addClonePopup.popup();
                     break;
                 case TYPE_LUCKY:
                     Intent intent = new Intent(MainActivity.this, NativeInterstitialActivity.class);
@@ -445,17 +570,20 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         }
 
         public void onLongClick(View view) {
+            if (bottomProgress.isShowing()) {
+                return;
+            }
             MLogs.d("onLongClick");
             switch (type) {
                 case TYPE_EMPTY:
                     break;
                 case TYPE_ADD:
+                    addClonePopup.popup();
                     break;
                 default:
                     showItemMenu(view);
                     break;
             }
-
         }
 
         public void fillTitleView(TextView textView) {
@@ -465,7 +593,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             textView.setTextColor(getResources().getColor(R.color.white));
             switch (type) {
                 case TYPE_CLONE:
-                    String title = customizeAppData.customized? customizeAppData.label: model.getName();
+                    String title = customizeAppData.customized? customizeAppData.label: clone.getName();
                     textView.setText(title);
                     break;
                 case TYPE_ADD:
@@ -506,7 +634,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             newDot = newdot;
             switch (type){
                 case TYPE_CLONE:
-                    if (model.getLaunched() == 0) {
+                    if (clone.getLaunched() == 0) {
                         newdot.setImageResource(R.drawable.shape_new_dot);
                         newdot.setVisibility(View.VISIBLE);
                     } else {
@@ -554,25 +682,25 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                             }
                             break;
                         case R.id.item_customize:
-                            if (model != null) {
-                                CustomizeIconActivity.start(MainActivity.this, model.getPackageName(),
-                                        model.getPkgUserId());
+                            if (clone != null) {
+                                CustomizeIconActivity.start(MainActivity.this, clone.getPackageName(),
+                                        clone.getPkgUserId());
                             }
                             break;
                         case R.id.item_delete:
-                            if (model != null) {
+                            if (clone != null) {
                                 if (PreferencesUtils.getDeleteDialogTimes() < RemoteConfig.getLong("conf_delete_dialog_times")) {
-                                    showDeleteDialog(model, view);
+                                    showDeleteDialog(clone, view);
                                 } else {
-                                    deleteWithAnimation(model, view);
+                                    deleteWithAnimation(clone, view);
                                 }
                             }
                             break;
                         case R.id.item_shortcut:
-                            if (model != null) {
+                            if (clone != null) {
                                 int result =  getPackageManager().checkPermission("com.android.launcher.permission.INSTALL_SHORTCUT",  getPackageName());
                                 MLogs.d("permission result: "+result);
-                                CommonUtils.createShortCut(MainActivity.this, ((CloneModel) model));
+                                CommonUtils.createShortCut(MainActivity.this, ((CloneModel) clone));
                                 view.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {

@@ -67,23 +67,7 @@ public class WrapCoverAdActivity extends Activity {
             @Override
             public void onAdClosed(IAdAdapter ad) {
                 MLogs.d(TAG, " onCoverAdClosed");
-                if(!CloneAgent64.needArm64Support(WrapCoverAdActivity.this,pkg)) {
-                    CloneManager.launchApp(pkg, userId);
-                } else {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            CloneAgent64 agent64 = new CloneAgent64(WrapCoverAdActivity.this);
-                            if (agent64.hasSupport() && agent64.isCloned(pkg, userId)) {
-                                MLogs.d(TAG, " launch from agent");
-                                agent64.launchApp(pkg, userId);
-                            } else {
-                                CloneManager.launchApp(pkg,userId);
-                            }
-                            agent64.destroy();
-                        }
-                    }).start();
-                }
+                CloneManager.launchApp(WrapCoverAdActivity.this, pkg, userId, false);
                 AppMonitorService.onCoverAdClosed(pkg, userId);
                 FuseAdLoader.get(slot, WrapCoverAdActivity.this).preloadAd(WrapCoverAdActivity.this);
                 finish();

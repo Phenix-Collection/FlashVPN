@@ -378,8 +378,8 @@ public class QuickSwitchNotification {
     private void startApp(String pkg, int userId) {
         if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
             MLogs.d(TAG, "startApp for cloned pkg" + pkg);
-            if (VirtualCore.get().isAppRunning(pkg, userId)) {
-                CloneManager.launchApp(pkg, userId);
+            if (CloneManager.isAppRunning(pkg, userId)) {
+                CloneManager.launchApp(null, pkg, userId, false);
             } else {
                 Intent intent = new Intent(mContext, AppLoadingActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
