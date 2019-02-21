@@ -6,17 +6,23 @@ import android.util.Log;
 
 import com.polestar.ad.AdLog;
 import com.polestar.task.ADErrorCode;
+import com.polestar.task.IGeneralErrorListener;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.IUserStatusListener;
+import com.polestar.task.IVpnStatusListener;
 import com.polestar.task.network.datamodels.User;
+import com.polestar.task.network.datamodels.VpnRequirement;
 import com.polestar.task.network.responses.ProductsResponse;
+import com.polestar.task.network.responses.ServersResponse;
+import com.polestar.task.network.responses.SucceedResponse;
 import com.polestar.task.network.responses.TasksResponse;
 import com.polestar.task.network.responses.UserProductResponse;
 import com.polestar.task.network.responses.UserTaskResponse;
 import com.polestar.task.network.services.AuthApi;
 import com.polestar.task.network.services.ProductsApi;
 import com.polestar.task.network.services.TasksApi;
+import com.polestar.task.network.services.VpnApi;
 import com.twitter.msg.Sender;
 
 import java.io.IOException;
@@ -49,6 +55,10 @@ public class AdApiHelper {
     private static String KEY_GET_TASKS = "getTasks";
     private static String KEY_CONSUME_PRODUCT = "consumeProduct";
     private static String KEY_FINISH_TASK = "finishTask";
+
+    private static String KEY_GET_VPN_SERVERS = "getVpnServers";
+    private static String KEY_ACQUIRE = "acquire";
+    private static String KEY_RELEASE = "release";
 
     private static final HashMap<String, Date> sTimeMapping = new HashMap<>();
 
@@ -101,17 +111,24 @@ public class AdApiHelper {
         return true;
     }
 
+    private static int checkRequestTooFrequent(String key, final IGeneralErrorListener listener, boolean force) {
+        if (!force &&
+                (!canDoSingleRequest(key, Configuration.API_COMMON_INTERVAL)
+                        || !canDoRangeRequest(key, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
+            if (listener != null) {
+                listener.onGeneralError(ADErrorCode.createTooManyRequests());
+            }
+            return ERR_REQUEST_TOO_FREQUENT;
+        }
+        return REQUEST_SUCCEED;
+    }
+
     public static int register(Context context, String deviceId, final IUserStatusListener listener) {
         return register(context, deviceId, listener, false);
     }
 
     public static int register(Context context, String deviceId, final IUserStatusListener listener, boolean force) {
-        if (!force &&
-                (!canDoSingleRequest(KEY_REGISTER, Configuration.API_COMMON_INTERVAL)
-                    || !canDoRangeRequest(KEY_REGISTER, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
-            if (listener != null) {
-                listener.onGeneralError(ADErrorCode.createTooManyRequests());
-            }
+        if (checkRequestTooFrequent(KEY_REGISTER, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
@@ -168,12 +185,7 @@ public class AdApiHelper {
     }
 
     public static int getAvailableProducts(String deviceId, final IProductStatusListener listener, boolean force) {
-        if (!force &&
-                (!canDoSingleRequest(KEY_GET_PRODUCTS, Configuration.API_COMMON_INTERVAL)
-                || !canDoRangeRequest(KEY_GET_PRODUCTS, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
-            if (listener != null) {
-                listener.onGeneralError(ADErrorCode.createTooManyRequests());
-            }
+        if (checkRequestTooFrequent(KEY_GET_PRODUCTS, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
@@ -228,13 +240,10 @@ public class AdApiHelper {
                                      final String email, final String info,
                                      final IProductStatusListener listener,
                                         boolean force) {
-        if (!force && (!canDoSingleRequest(KEY_CONSUME_PRODUCT, Configuration.API_COMMON_INTERVAL)
-                || !canDoRangeRequest(KEY_CONSUME_PRODUCT, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
-            if (listener != null) {
-                listener.onGeneralError(ADErrorCode.createTooManyRequests());
-            }
+        if (checkRequestTooFrequent(KEY_CONSUME_PRODUCT, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
+
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
         Call<UserProductResponse> call = service.consumeProduct(Configuration.APP_VERSION_CODE,
@@ -282,12 +291,7 @@ public class AdApiHelper {
     }
 
     public static int getAvailableTasks(String deviceId, final ITaskStatusListener listener, boolean force) {
-        if (!force &&
-                (!canDoSingleRequest(KEY_GET_TASKS, Configuration.API_COMMON_INTERVAL)
-                || !canDoRangeRequest(KEY_GET_TASKS, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
-            if (listener != null) {
-                listener.onGeneralError(ADErrorCode.createTooManyRequests());
-            }
+        if (checkRequestTooFrequent(KEY_GET_TASKS, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
@@ -336,12 +340,7 @@ public class AdApiHelper {
     }
 
     public static int finishTask(String deviceId, final long id, String referralCode, final ITaskStatusListener listener, boolean force) {
-        if (!force &&
-                (!canDoSingleRequest(KEY_FINISH_TASK, Configuration.API_COMMON_INTERVAL)
-                || !canDoRangeRequest(KEY_FINISH_TASK, Configuration.API_RANGE_INTERVAL, Configuration.API_RANGE_MAX_COUNT))) {
-            if (listener != null) {
-                listener.onGeneralError(ADErrorCode.createTooManyRequests());
-            }
+        if (checkRequestTooFrequent(KEY_FINISH_TASK, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
@@ -376,6 +375,151 @@ public class AdApiHelper {
                 if (listener != null) {
                     if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
                         listener.onTaskFail(id, ADErrorCode.createFromAdErrMsg(t.getMessage()));
+                    } else {
+                        listener.onGeneralError(ADErrorCode.createServerDown());
+                    }
+                }
+            }
+        });
+
+        return REQUEST_SUCCEED;
+    }
+
+    public static int getVpnServers(String deviceId, final IVpnStatusListener listener) {
+        return getVpnServers(deviceId, listener, false);
+    }
+
+    public static int getVpnServers(String deviceId, final IVpnStatusListener listener, boolean force) {
+        if (checkRequestTooFrequent(KEY_GET_VPN_SERVERS, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
+            return ERR_REQUEST_TOO_FREQUENT;
+        }
+
+        VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
+        Call<ServersResponse> call = service.getAvailableVpnServers(Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)));
+        call.enqueue(new Callback<ServersResponse>() {
+            @Override
+            public void onResponse(Call<ServersResponse> call, Response<ServersResponse> response) {
+                AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
+
+                switch(response.code()){
+                    case 200:
+                        ServersResponse ur = response.body();
+                        AdLog.i(Configuration.HTTP_TAG, "onResponse vpnServers count "+ ur.mVpnServers.size());
+                        if (listener != null) {
+                            listener.onGetAllServers(ur.mVpnServers);
+                        }
+                        break;
+                    default:
+                        if (listener != null) {
+                            listener.onGeneralError(createADErrorFromResponse(response));
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServersResponse> call, Throwable t) {
+                AdLog.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
+                if (listener != null) {
+                    if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
+                        listener.onGeneralError(ADErrorCode.createFromAdErrMsg(t.getMessage()));
+                    } else {
+                        listener.onGeneralError(ADErrorCode.createServerDown());
+                    }
+                }
+            }
+        });
+
+        return REQUEST_SUCCEED;
+    }
+
+    public static int acquireVpnServer(String deviceId, final String publicIp, final IVpnStatusListener listener) {
+        return acquireVpnServer(deviceId, publicIp, listener, false);
+    }
+
+    public static int acquireVpnServer(String deviceId, final String publicIp, final IVpnStatusListener listener, boolean force) {
+        if (checkRequestTooFrequent(KEY_ACQUIRE, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
+            return ERR_REQUEST_TOO_FREQUENT;
+        }
+
+        VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
+        Call<VpnRequirement> call = service.acquire(Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, publicIp, Sender.send(getSecret(deviceId)));
+        call.enqueue(new Callback<VpnRequirement>() {
+            @Override
+            public void onResponse(Call<VpnRequirement> call, Response<VpnRequirement> response) {
+                AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
+
+                switch(response.code()){
+                    case 200:
+                        VpnRequirement ur = response.body();
+                        if (listener != null) {
+                            listener.onAcquireSucceed(ur);
+                        }
+                        break;
+                    default:
+                        if (listener != null) {
+                            listener.onGeneralError(createADErrorFromResponse(response));
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VpnRequirement> call, Throwable t) {
+                AdLog.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
+                if (listener != null) {
+                    if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
+                        listener.onAcquireFailed(publicIp, ADErrorCode.createFromAdErrMsg(t.getMessage()));
+                    } else {
+                        listener.onGeneralError(ADErrorCode.createServerDown());
+                    }
+                }
+            }
+        });
+
+        return REQUEST_SUCCEED;
+    }
+
+    public static int releaseVpnServer(String deviceId, final String publicIp, final IVpnStatusListener listener) {
+        return releaseVpnServer(deviceId, publicIp, listener, false);
+    }
+
+    public static int releaseVpnServer(String deviceId, final String publicIp, final IVpnStatusListener listener, boolean force) {
+        if (checkRequestTooFrequent(KEY_RELEASE, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
+            return ERR_REQUEST_TOO_FREQUENT;
+        }
+
+        VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
+        Call<SucceedResponse> call = service.release(Configuration.APP_VERSION_CODE,
+                Configuration.PKG_NAME, publicIp, Sender.send(getSecret(deviceId)));
+        call.enqueue(new Callback<SucceedResponse>() {
+            @Override
+            public void onResponse(Call<SucceedResponse> call, Response<SucceedResponse> response) {
+                AdLog.i(Configuration.HTTP_TAG, "onResponse: "+ response.toString());
+
+                switch(response.code()){
+                    case 200:
+                        SucceedResponse ur = response.body();
+                        if (listener != null) {
+                            listener.onReleaseSucceed(publicIp);
+                        }
+                        break;
+                    default:
+                        if (listener != null) {
+                            listener.onGeneralError(createADErrorFromResponse(response));
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SucceedResponse> call, Throwable t) {
+                AdLog.e(Configuration.HTTP_TAG, "onFailure: " + t.getMessage());
+                if (listener != null) {
+                    if (ErrorCodeInterceptor.isAdErrorMsg(t.getMessage())) {
+                        listener.onReleaseFailed(publicIp, ADErrorCode.createFromAdErrMsg(t.getMessage()));
                     } else {
                         listener.onGeneralError(ADErrorCode.createServerDown());
                     }

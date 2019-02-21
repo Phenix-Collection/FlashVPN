@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by guojia on 2019/1/19.
  */
 
-public interface ITaskStatusListener {
+public interface ITaskStatusListener extends IGeneralErrorListener {
 
     /**
      *
@@ -20,5 +20,4 @@ public interface ITaskStatusListener {
     void onTaskFail(long taskId, ADErrorCode code);
 
     void onGetAllAvailableTasks(ArrayList<Task> tasks);
-    void onGeneralError(ADErrorCode code);
 }

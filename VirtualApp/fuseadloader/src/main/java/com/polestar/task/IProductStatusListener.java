@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by guojia on 2019/1/19.
  */
 
-public interface IProductStatusListener {
+public interface IProductStatusListener extends IGeneralErrorListener {
     /**
      * callback when svr confirmed the purchase finished, and coins deducted from users balance
      * after purchase success, app will enable functions for user, e.g remove ads, clone num, vpn hour
@@ -21,6 +21,4 @@ public interface IProductStatusListener {
     void onConsumeFail(ADErrorCode code);
 
     void onGetAllAvailableProducts(ArrayList<Product> products);
-
-    void onGeneralError(ADErrorCode code);
 }

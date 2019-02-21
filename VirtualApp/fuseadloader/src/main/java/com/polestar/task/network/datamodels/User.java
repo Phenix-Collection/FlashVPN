@@ -11,4 +11,6 @@ public class User extends TimeModel {
     public float mBalance;
     @SerializedName("subscribe_status")
     public int mSubscribeStatus;
+    @SerializedName("vpn_vip_left")
+    public int mVpnVipLeft;
 }
