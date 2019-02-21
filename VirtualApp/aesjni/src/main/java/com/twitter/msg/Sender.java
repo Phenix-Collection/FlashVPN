@@ -18,4 +18,8 @@ public class Sender {
      */
     public static native int check(Object context);
 
+    public static native String ssend(Object context, String str);
+
+
+    public static native String rreceive(Object context, String str);
 }
