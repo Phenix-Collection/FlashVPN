@@ -223,6 +223,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
                 mHotTaskDialog = new HotTaskDialog.Builder(this).setTitle(getString(R.string.need_coin_for_clone)).build();
             }
             mHotTaskDialog.show();
+            EventReporter.rewardEvent("show_hot_task_dialog");
         } else {
             goClone(model);
         }
