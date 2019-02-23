@@ -57,7 +57,10 @@ public class AppMonitorService extends Service {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case MSG_DELAY_LOCK_APP:
-                    QuickSwitchNotification.getInstance(VirtualCore.get().getContext()).updateLruPackages((String)msg.obj);
+                    String mapKey = (String)msg.obj;
+                    if (!getPackageName().equals(CloneManager.getNameFromKey(mapKey))) {
+                        QuickSwitchNotification.getInstance(VirtualCore.get().getContext()).updateLruPackages(mapKey);
+                    }
                     lastUnlockKey = null;
                     MLogs.d("relock lastUnlockKey " + lastUnlockKey);
                     break;
@@ -206,17 +209,40 @@ public class AppMonitorService extends Service {
 
         public void onAppSwitchForeground(String pkg, int userId){
             MLogs.d(TAG, "OnAppForeground: " + pkg + " user: " + userId);
+            String key = CloneManager.getMapKey(pkg, userId);
             CloneModel model = CloneManager.getInstance(AppMonitorService.this).getCloneModel(pkg, userId);
             boolean locked = false;
-            String key = CloneManager.getMapKey(pkg, userId);
             MLogs.d(TAG, "key unlockKey: " + key + " vs " + lastUnlockKey);
-            if(model.getLockerState()!= AppConstants.AppLockState.DISABLED
+//            if (PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
+//                if ((getPackageName().equals(pkg) && PreferencesUtils.isMainAppLocked())
+//                        || (model != null && model.getLockerState() != AppConstants.AppLockState.DISABLED)) {
+//                    if (!key.equals(lastUnlockKey)) {
+//                        AppLockActivity.start(AppMonitorService.this, pkg, userId);
+//                        locked = true;
+//                    } else {
+//                        mainHandler.removeMessages(MSG_DELAY_LOCK_APP);
+//                    }
+//                }
+//            }
+
+            if(model != null ){
+                if( model.getLockerState()!= AppConstants.AppLockState.DISABLED
                     && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
-                if (!key.equals(lastUnlockKey)){
-                    AppLockActivity.start(AppMonitorService.this, pkg, userId);
-                    locked = true;
-                } else {
-                    mainHandler.removeMessages(MSG_DELAY_LOCK_APP);
+                    if (!key.equals(lastUnlockKey)) {
+                        AppLockActivity.start(AppMonitorService.this, pkg, userId);
+                        locked = true;
+                    } else {
+                        mainHandler.removeMessages(MSG_DELAY_LOCK_APP);
+                    }
+                }
+            } else {
+                if (PreferencesUtils.isMainAppLocked() && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
+                    if (!key.equals(lastUnlockKey)) {
+                        AppLockActivity.start(AppMonitorService.this, pkg, userId);
+                        locked = true;
+                    } else {
+                        mainHandler.removeMessages(MSG_DELAY_LOCK_APP);
+                    }
                 }
             }
             if (!locked && needLoadCoverAd(false, pkg)) {
@@ -237,6 +263,23 @@ public class AppMonitorService extends Service {
         public void onAppLock(String pkg, int userId){
             MLogs.d(TAG, "onAppLock: " + pkg + " user: " + userId);
             AppLockActivity.start(AppMonitorService.this, pkg, userId);
+        }
+
+    }
+
+    public static boolean isUnlocked(String pkg, int userId) {
+        String key = CloneManager.getMapKey(pkg, userId);
+        if (!PreferencesUtils.isLockerEnabled(DualApp.getApp())) {
+            return true;
+        }
+        if (key.equals(lastUnlockKey)) {
+            return true;
+        }
+        if (pkg.equals(DualApp.getApp().getPackageName())) {
+            return false;
+        } else {
+            CloneModel model = CloneManager.getInstance(DualApp.getApp()).getCloneModel(pkg, userId);
+            return model == null? true: model.getLockerState() == AppConstants.AppLockState.DISABLED;
         }
     }
 }

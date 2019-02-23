@@ -3,6 +3,7 @@ package in.dualspace.cloner.widget.locker;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -47,13 +48,17 @@ public class BlurBackground extends LinearLayout {
         mDefaultThemeLogic.setUseBigIcon(true, true);
     }
 
-    public void reloadWithTheme(String packageName, int userId) {
-        if(TextUtils.isEmpty(packageName) ){
-            return;
-        }
-        CustomizeAppData data = CustomizeAppData.loadFromPref(packageName, userId);
-//        mCenterIcon.setImageBitmap(data.getCustomIcon());
-        mDefaultThemeLogic.setBackground(packageName, new BitmapDrawable( data.getCustomIcon()));
+//    public void reloadWithTheme(String packageName, int userId) {
+//        if(TextUtils.isEmpty(packageName) ){
+//            return;
+//        }
+//        CustomizeAppData data = CustomizeAppData.loadFromPref(packageName, userId);
+////        mCenterIcon.setImageBitmap(data.getCustomIcon());
+//        mDefaultThemeLogic.setBackground(packageName, new BitmapDrawable( data.getCustomIcon()));
+//    }
+
+    public void reloadWithTheme(String packageName, Drawable icon) {
+        mDefaultThemeLogic.setBackground(packageName, icon);
     }
 
     public void resetLayout() {

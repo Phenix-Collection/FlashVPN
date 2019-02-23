@@ -32,10 +32,12 @@ import com.polestar.clone.CustomizeAppData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import in.dualspace.cloner.AppConstants;
 import in.dualspace.cloner.R;
 import in.dualspace.cloner.clone.CloneManager;
+import in.dualspace.cloner.components.AppMonitorService;
 import in.dualspace.cloner.db.CloneModel;
 import in.dualspace.cloner.db.DBManager;
 import in.dualspace.cloner.notification.QuickSwitchNotification;
@@ -68,7 +70,6 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
 
     private static final String CONFIG_FORCE_REQUESTED_PERMISSIONS = "force_requested_permission";
     private static final int REQUEST_APPLY_PERMISSION = 101;
-    private static final int REQUEST_UNLOCK_SETTINGS = 102;
 
 
     private static final String CONFIG_CLONE_RATE_PACKAGE = "clone_rate_package";
@@ -90,6 +91,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
 
     private int lastCloneIdx = -1;
     private int longClickPos = -1;
+    private int pendingUnlockPos = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,10 +131,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                 MLogs.d("onBindViewHolder " + position + " type: " + item.type);
                 if (item != null) {
                     holder.itemView.setTag(item);
-                    item.fillIconView(myHolder.icon);
-                    myHolder.icon.setTag(myHolder);
-                    item.fillTitleView(myHolder.title);
-                    item.fillNewDotView(myHolder.newdot);
+                    item.fillViewHolder(myHolder);
                     myHolder.icon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -173,9 +172,24 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             //保证每次弹框尽可能只会在启动分身后，回到主界面时做一次判断，而不包含从后台切到主界面的时候
             startingPkg = null;
         }
-        if (longClickPos >= 0 && longClickPos < mItemList.size()) {
+        if (pendingUnlockPos >= 0 ) {
+            int idx = convertDisplayPosAndIdx(pendingUnlockPos);
+            MLogs.d("update pos for unlock click: " + pendingUnlockPos + " idx: " + idx);
+            CustomizedCloneItem item = mItemList.get(idx);
+            if (AppMonitorService.isUnlocked(getPackageName(), 0)
+                    || AppMonitorService.isUnlocked(item.clone.getPackageName(), item.clone.getPkgUserId())) {
+                item.clone.setLockerState(AppConstants.AppLockState.DISABLED);
+                DBManager.updateCloneModel(MainActivity.this, item.clone);
+                CloneManager.reloadLockerSetting();
+                Toast.makeText(this, getString(R.string.been_unlocked, item.title.getText()), Toast.LENGTH_SHORT).show();
+            }
+            listAdapter.notifyItemChanged(pendingUnlockPos);
+            pendingUnlockPos = -1;
+        }
+        if (longClickPos >= 0 ) {
             MLogs.d("update pos for long click: " + longClickPos);
             listAdapter.notifyItemChanged(longClickPos);
+            longClickPos = -1;
         }
     }
 
@@ -333,12 +347,14 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         public TextView title = null;
         public ImageView icon = null;
         public ImageView newdot = null;
+        public ImageView lockIcon = null;
 
         public MyHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.app_name);
             icon = (ImageView) itemView.findViewById(R.id.app_icon);
             newdot = (ImageView) itemView.findViewById(R.id.new_dot);
+            lockIcon = (ImageView) itemView.findViewById(R.id.lock_icon_badge);
 
         }
     }
@@ -644,7 +660,21 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             }
         }
 
-        public void fillTitleView(TextView textView) {
+        public void fillViewHolder(MyHolder holder) {
+            fillIconView(holder.icon);
+            holder.icon.setTag(holder);
+            fillTitleView(holder.title);
+            fillNewDotView(holder.newdot);
+            if (clone != null && PreferencesUtils.isLockerEnabled(MainActivity.this)
+                    && clone.getLockerState() != AppConstants.AppLockState.DISABLED) {
+                holder.lockIcon.setVisibility(View.VISIBLE);
+            } else {
+                holder.lockIcon.setVisibility(View.INVISIBLE);
+            }
+
+        }
+
+        private void fillTitleView(TextView textView) {
             title = textView;
             textView.setVisibility(View.VISIBLE);
             textView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
@@ -669,7 +699,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             }
         }
 
-        public void fillIconView(ImageView icon) {
+        private void fillIconView(ImageView icon) {
             this.icon = icon;
             icon.setVisibility(View.VISIBLE);
             switch (type){
@@ -688,7 +718,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             }
         }
 
-        public void fillNewDotView(ImageView newdot) {
+        private void fillNewDotView(ImageView newdot) {
             newDot = newdot;
             switch (type){
                 case TYPE_CLONE:
@@ -714,8 +744,20 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                 case CustomizedCloneItem.TYPE_BOOSTER:
                 case CustomizedCloneItem.TYPE_ICON_ADTASK:
                     itemMenuPopup.getMenu().removeItem(R.id.item_customize);
-                    itemMenuPopup.getMenu().removeItem(R.id.item_locker);
+                    itemMenuPopup.getMenu().removeItem(R.id.item_locker_enable);
+                    itemMenuPopup.getMenu().removeItem(R.id.item_locker_disable);
                     itemMenuPopup.getMenu().removeItem(R.id.item_shortcut);
+                    break;
+                case CustomizedCloneItem.TYPE_CLONE:
+                    if (!PreferencesUtils.isLockerEnabled(MainActivity.this)) {
+                        itemMenuPopup.getMenu().removeItem(R.id.item_locker_disable);
+                    } else {
+                        if (clone.getLockerState() == AppConstants.AppLockState.DISABLED) {
+                            itemMenuPopup.getMenu().removeItem(R.id.item_locker_disable);
+                        } else {
+                            itemMenuPopup.getMenu().removeItem(R.id.item_locker_enable);
+                        }
+                    }
                     break;
             }
             //菜单项的监听
@@ -732,9 +774,40 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                         case R.id.item_setting:
                             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                             break;
-                        case R.id.item_locker:
+                        case R.id.item_locker_disable:
+                        case R.id.item_locker_enable:
                             if (PreferencesUtils.isLockerEnabled(MainActivity.this) ) {
-                                LockPasswordSettingActivity.start(MainActivity.this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
+                                boolean changed = false;
+                                if(clone.getLockerState() != AppConstants.AppLockState.ENABLED_FOR_CLONE) {
+                                    clone.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                                    DBManager.updateCloneModel(MainActivity.this, clone);
+                                    CloneManager.reloadLockerSetting();
+                                    changed  = true;
+                                } else {
+                                    boolean isUnlocked  = AppMonitorService.isUnlocked(getPackageName(), 0)
+                                                || AppMonitorService.isUnlocked(clone.getPackageName(), clone.getPkgUserId());
+
+                                    MLogs.d("isUnlocked: " + isUnlocked);
+                                    if (isUnlocked) {
+                                        clone.setLockerState(AppConstants.AppLockState.DISABLED);
+                                        DBManager.updateCloneModel(MainActivity.this, clone);
+                                        CloneManager.reloadLockerSetting();
+                                        changed = true;
+                                    } else {
+                                        pendingUnlockPos = longClickPos;
+                                        AppLockActivity.start(MainActivity.this, getPackageName(), 0, getString(R.string.unlock_before_disable), false, true);
+                                    }
+                                }
+                                if (longClickPos >= 0 && changed) {
+                                    MLogs.d("update pos for long click: " + longClickPos);
+                                    if (clone.getLockerState() == AppConstants.AppLockState.DISABLED) {
+                                        Toast.makeText(MainActivity.this, getString(R.string.been_unlocked, title.getText()), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(MainActivity.this, getString(R.string.been_locked, title.getText()), Toast.LENGTH_SHORT).show();
+                                    }
+                                    listAdapter.notifyItemChanged(longClickPos);
+                                    longClickPos = -1;
+                                }
                             } else {
                                 LockSettingsActivity.start(MainActivity.this,"home");
                             }
@@ -855,5 +928,35 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         }
         return -1;
 //        return displayPos;
+    }
+
+    private final static String QUIT_RATE_RANDOM = "quit_rating_random";
+    private final static String QUIT_RATE_INTERVAL = "quit_rating_interval";
+    private final static String QUIT_RATE_CLONED_APP_GATE = "quit_rating_cloned_app_gate";
+
+    @Override
+    public void onBackPressed() {
+        boolean showRate = false;
+        if (! PreferencesUtils.isRated()) {
+            MLogs.d("Quit Rate config:" +  RemoteConfig.getLong(QUIT_RATE_INTERVAL)+" , "
+                    + RemoteConfig.getLong(QUIT_RATE_RANDOM) + " , gate " +RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
+            long interval = RemoteConfig.getLong(QUIT_RATE_INTERVAL) * 60 * 60 * 1000;
+            long lastTime = PreferencesUtils.getRateDialogTime(this);
+            if (PreferencesUtils.getLoveApp() != -1) {
+                //Don't love app
+                int random = new Random().nextInt(100);
+                int clonedCnt = mItemList == null? 0 : mItemList.size();
+                boolean isShowRateDialog = PreferencesUtils.getLoveApp() == 1 ||
+                        ((random < RemoteConfig.getLong(QUIT_RATE_RANDOM)) && clonedCnt >= RemoteConfig.getLong(QUIT_RATE_CLONED_APP_GATE));
+                if (isShowRateDialog && (System.currentTimeMillis() - lastTime) > interval) {
+                    showRate = true;
+                    showRateDialog(RATE_FROM_QUIT, null);
+                }
+            }
+        }
+        if (!showRate) {
+            super.onBackPressed();
+        }
+
     }
 }

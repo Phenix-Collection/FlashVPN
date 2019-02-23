@@ -1,10 +1,14 @@
 package in.dualspace.cloner.components.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -58,9 +62,17 @@ public class AppLockActivity extends BaseActivity {
 
     private AppLockPasswordLogic mAppLockPasswordLogic = null;
 
-    public final static String EXTRA_USER_ID = "extra_clone_userid";
+    private final static String EXTRA_USER_ID = "extra_clone_userid";
+    private final static String EXTRA_TITLE = "extra_lock_title";
+    private final static String EXTRA_CANCELABLE = "extra_lock_can_cancel";
+    private final static String EXTRA_SHOW_AD = "extra_lock_show_ad";
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
     public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
+
+    private boolean showAd;
+    private String title;
+    private boolean cancelOnBackPressed;
+    private Drawable icon;
 
     public static final void start(Context context, String pkg, int userId) {
         MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
@@ -74,6 +86,24 @@ public class AppLockActivity extends BaseActivity {
                 |FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS|FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
+
+    public static final void start(Activity activity,  String pkg, int userId, String title, boolean showAd, boolean cancelOnBackPressed) {
+        MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
+        if (pkg == null) {
+            return;
+        }
+        Intent intent = new Intent(activity, AppLockActivity.class);
+        intent.putExtra(Intent.EXTRA_PACKAGE_NAME, pkg);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_CANCELABLE, cancelOnBackPressed);
+        intent.putExtra(EXTRA_SHOW_AD, showAd);
+        intent.putExtra(EXTRA_TITLE, title);
+        intent.setFlags(FLAG_ACTIVITY_SINGLE_TOP|FLAG_ACTIVITY_NO_HISTORY
+                |FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS|FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+    }
+
+
     public static AdSize getBannerSize() {
         int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
         dpWidth = Math.max(280, dpWidth*9/10);
@@ -81,9 +111,11 @@ public class AppLockActivity extends BaseActivity {
     }
 
     private void updateTitleBar() {
+        mToolbarText.setVisibility(View.VISIBLE);
+        mToolbarIcon.setVisibility(View.VISIBLE);
         mToolbarIcon.setImageDrawable(mCenterIcon.getDrawable());
         mToolbarIcon.setBackground(null);
-        mToolbarText.setText(mCenterAppText.getText());
+        mToolbarText.setText(title);
     }
 
     private void inflatNativeAd(IAdAdapter ad) {
@@ -162,7 +194,11 @@ public class AppLockActivity extends BaseActivity {
     }
     @Override
     public void onBackPressed() {
-        mBlurBackground.onIncorrectPassword(mAdInfoContainer);
+        if (!cancelOnBackPressed) {
+            mBlurBackground.onIncorrectPassword(mAdInfoContainer);
+        } else {
+            finish();
+        }
     }
 
     @Override
@@ -177,7 +213,7 @@ public class AppLockActivity extends BaseActivity {
         super.onResume();
         initData();
         initView();
-        if (!PreferencesUtils.isAdFree()) {
+        if (showAd && !PreferencesUtils.isAdFree()) {
             loadNative();
         }
     }
@@ -188,9 +224,25 @@ public class AppLockActivity extends BaseActivity {
         }
         mPkgName = getIntent().getStringExtra(Intent.EXTRA_PACKAGE_NAME);
         mUserId = getIntent().getIntExtra(EXTRA_USER_ID, 0);
-    }
-
-    private void initToolbar() {
+        cancelOnBackPressed = getIntent().getBooleanExtra(EXTRA_CANCELABLE, false);
+        showAd = getIntent().getBooleanExtra(EXTRA_SHOW_AD, true);
+        title = getIntent().getStringExtra(EXTRA_TITLE);
+        if (mPkgName.equals(getPackageName())) {
+            icon = getApplicationInfo().loadIcon(getPackageManager());
+            if (TextUtils.isEmpty(title)) {
+                title = getString(R.string.unlock_main_app);
+            }
+        } else {
+            CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
+            icon = new BitmapDrawable(data.getCustomIcon());
+            if (TextUtils.isEmpty(title)){
+                if (!data.customized) {
+                    title = CloneManager.getInstance(DualApp.getApp()).getModelName(mPkgName, mUserId);
+                } else {
+                    title = data.label;
+                }
+            }
+        }
     }
 
     private void initView() {
@@ -224,22 +276,19 @@ public class AppLockActivity extends BaseActivity {
 
         mToolbarIcon = (ImageView) findViewById(R.id.lock_bar_icon);
         mToolbarText = (TextView) findViewById(R.id.lock_bar_text);
+        mToolbarText.setText(title);
+        if (mPkgName.equals(getPackageName())) {
+            mToolbarIcon.setVisibility(View.INVISIBLE);
+            mToolbarText.setVisibility(View.INVISIBLE);
+        }
 
-        initToolbar();
-        MLogs.d("AppLockWindow initialized 0");
         mAdInfoContainer = (LinearLayout)findViewById(R.id.layout_appinfo_container);
 
         mCenterIcon = (LockIconImageView) findViewById(R.id.window_applock_icon);
         mCenterAppText = (TextView) findViewById(R.id.window_applock_name);
-        CustomizeAppData data = CustomizeAppData.loadFromPref(mPkgName, mUserId);
-        mCenterIcon.setImageBitmap(data.getCustomIcon());
-        if (!data.customized) {
-            mCenterAppText.setText(
-                    CloneManager.getInstance(DualApp.getApp()).getModelName(mPkgName, mUserId));
-        } else {
-            mCenterAppText.setText(data.label);
-        }
-        MLogs.d("AppLockWindow initialized 1");
+        mCenterAppText.setText(title);
+        mCenterIcon.setImageDrawable(icon);
+
         mForgotPasswordTv = (TextView)findViewById(R.id.forgot_password_tv);
         mForgotPasswordTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,7 +299,7 @@ public class AppLockActivity extends BaseActivity {
         MLogs.d("AppLockWindow initialized");
 
         mBlurBackground.init();
-        mBlurBackground.reloadWithTheme(mPkgName, mUserId);
+        mBlurBackground.reloadWithTheme(mPkgName, icon);
         mAppLockPasswordLogic.onShow();
     }
 

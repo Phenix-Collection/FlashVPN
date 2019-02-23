@@ -502,4 +502,20 @@ public class PreferencesUtils {
         putInt(DualApp.getApp(), "delete_dialog_times",
                 1 + getInt(DualApp.getApp(), "delete_dialog_times", 0));
     }
+
+    public static boolean isMainAppLocked() {
+        return getBoolean(DualApp.getApp(), "lock_main_app", false);
+    }
+
+    public static void setLockMainApp(boolean enabled) {
+         putBoolean(DualApp.getApp(), "lock_main_app", enabled);
+    }
+
+    public static boolean useFingerprint() {
+        return getBoolean(DualApp.getApp(), "use_fingerprint", true);
+    }
+
+    public static void setUseFingerprint(boolean enabled) {
+        putBoolean(DualApp.getApp(), "use_fingerprint", enabled);
+    }
 }

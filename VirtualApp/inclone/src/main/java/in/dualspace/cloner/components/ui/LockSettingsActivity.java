@@ -77,6 +77,7 @@ public class LockSettingsActivity extends BaseActivity {
     }
 
     private void initData() {
+        doInitLocker();
         from = getIntent().getStringExtra(LockSettingsActivity.EXTRA_KEY_FROM);
         mClonedModels = CloneManager.getInstance(this).getClonedApps();
         mAppsAdapter = new PackageSwitchListAdapter(LockSettingsActivity.this);
@@ -121,10 +122,10 @@ public class LockSettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 isSettingChanged = true;
-                onLockerEnabled(lockerEnableSwitch.isChecked(), true);
+                PreferencesUtils.setLockMainApp(lockerEnableSwitch.isChecked());
             }
         });
-        onLockerEnabled(lockerEnableSwitch.isChecked(), false);
+        lockerEnableSwitch.setChecked(PreferencesUtils.isMainAppLocked());
         mCloneAppsListView = (ListView)findViewById(R.id.switch_lock_apps);
         lockIntervalSpinner.setSelection(getIntervalIdx(PreferencesUtils.getLockInterval()), true);
         lockIntervalSpinner.setDropDownVerticalOffset(DisplayUtils.dip2px(this, 15));
@@ -142,6 +143,12 @@ public class LockSettingsActivity extends BaseActivity {
         });
     }
 
+    private void doInitLocker() {
+        if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+            LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
+            Toast.makeText(this,getString(R.string.no_password_set), Toast.LENGTH_SHORT).show();
+        }
+    }
     private void onLockerEnabled(boolean enabled, boolean report) {
         if (enabled) {
             if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
@@ -155,6 +162,17 @@ public class LockSettingsActivity extends BaseActivity {
             detailedSettingLayout.setVisibility(View.GONE);
             PreferencesUtils.setEncodedPatternPassword(this,"");
             PreferencesUtils.setLockerEnabled(this, false);
+        }
+    }
+
+    private void passwordSetDone(boolean success) {
+        if (success
+                || (!TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))
+                        && !TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this)))) {
+            detailedSettingLayout.setVisibility(View.VISIBLE);
+            PreferencesUtils.setLockerEnabled(this, true);
+        } else {
+            finish();
         }
     }
 
@@ -172,15 +190,10 @@ public class LockSettingsActivity extends BaseActivity {
             case REQUEST_SET_PASSWORD:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        onLockerEnabled(true, true);
+                        passwordSetDone(true);
                         break;
                     case Activity.RESULT_CANCELED:
-                        if (!PreferencesUtils.isLockerEnabled(this)
-                                || TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))
-                                || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
-                            onLockerEnabled(false, true);
-                            lockerEnableSwitch.setChecked(false);
-                        }
+                        passwordSetDone(false);
                         break;
                 }
                 break;

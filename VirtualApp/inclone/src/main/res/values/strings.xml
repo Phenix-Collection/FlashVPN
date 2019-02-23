@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Insta Clone</string>
+    <string name="app_name" translatable="false">Power Cloner</string>
     <string name="clone_label_tag" translatable="false">%s +</string>
     <string name="share_with_friends">Share With Friends</string>
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
@@ -10,7 +10,7 @@
     <string name="hot_clone_detail">Enjoy double fun with double accounts online meanwhile!</string>
     <string name="other_clone_title">More Supported</string>
     <string name="other_clone_detail">Create clone in another space and enjoy more fun!</string>
-    <string name="clone_action_txt" translatable="false">Clone with Insta Clone %s</string>
+    <string name="clone_action_txt" translatable="false">Clone with Power Cloner %s</string>
     <string name="app_slogan" translatable="false">DO Multiple, DO More Fun!</string>
     <string name="no_selection_for_clone">Please click and select items to clone.</string>
     <string name="create_shortcut">Shortcut</string>
@@ -25,21 +25,23 @@
     <string name="yes">Yes</string>
     <string name="notification">Notification</string>
     <string name="privacy_locker">Privacy Locker</string>
+    <string name="enable_locker">Enable Lock</string>
+    <string name="disable_locker">Disable Lock</string>
     <string name="faq" translatable="false">FAQ</string>
     <string name="ok" translatable="false">OK</string>
     <string name="congratulations">Congratulations</string>
-    <string name="dialog_rating_us_content">Enjoy using Insta Clone app?</string>
+    <string name="dialog_rating_us_content">Enjoy using Power Cloner app?</string>
     <string name="dialog_feedback_content">Would you kindly give us some feedback to help improve it?</string>
     <string name="not_really">Not Really</string>
     <string name="no_thanks">No, thanks</string>
-    <string name="dialog_love_title" translatable="false">Love Insta Clone</string>
+    <string name="dialog_love_title" translatable="false">Love Power Cloner</string>
     <string name="dialog_love_content">Would you mind give us a 5-star rating on the Play Store? It will inspire us and we appreciate your support!</string>
     <string name="remind_me_later">Remind me later</string>
     <string name="star_rating">Go 5-star rating</string>
     <string name="feedback">Feedback</string>
     <string name="ad_free">Remove Ads</string>
     <string name="share">Share</string>
-    <string name="like_it" translatable="false">Love Insta Clone</string>
+    <string name="like_it" translatable="false">Love Power Cloner</string>
     <string name="rate_us">Rate Us</string>
     <string name="join_us">Join Community</string>
     <string name="follow_us" translatable="false">Follow Us</string>
@@ -51,19 +53,23 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="settings_right" translatable="false">2018 RiverStone Tech. All rights reserved</string>
     <string name="toast_no_lucky">Sorry, no lucky content this time. Please try again later.</string>
-    <string translatable="false" name="boost_title">DO Booster</string>
+    <string translatable="false" name="boost_title">Power Booster</string>
     <!-- app loading -->
     <string name="app_starting_tips">%s is starting ...</string>
-    <string name="start_with_arm64">Starting with Insta Clone 64bit support library...</string>
+    <string name="start_with_arm64">Starting with Power Cloner 64bit support library...</string>
     <string name="first_start_tips">It may take a little longer for the first start.</string>
     <string name="upgrade_start_tips">It may take a little longer as this app was just upgraded.</string>
 
     <!-- locker -->
     <string name="lock_settings_title">Locker Settings</string>
-    <string name="enable_lock_settings_title">Privacy Locker</string>
+    <string name="enable_lock_settings_title">Lock Power Cloner</string>
+    <string name="been_locked">Privacy locker will protect %s.</string>
+    <string name="unlock_main_app">Privacy Locker Is Protecting</string>
+    <string name="unlock_before_disable">Privacy Locker Is Protecting</string>
+    <string name="been_unlocked">%s is unlocked.</string>
     <string name="lock_interval_settings_title" translatable="false">Re-Lock Interval</string>
     <string name="lock_interval_settings_content">The interval to relock the app after you left it</string>
-    <string name="enable_lock_settings_content">Toggle to enable or disable privacy locker feature</string>
+    <string name="enable_lock_settings_content">Unlock before enter into main application of Power Cloner</string>
     <string name="password_setting_title">Password Setting</string>
     <string name="password_set_no_question">No secure question set.</string>
     <string name="password_set_complete">Password was set.</string>
@@ -85,7 +91,7 @@
     <string name="app_lock_safe_info_hint">To verify your identity when reset password</string>
     <string name="app_lock_safe_question_hint">Set a Secure Question</string>
     <string name="app_lock_safe_answer_hint">Enter the answer (Up to 20 characters)</string>
-    <string name="app_lock_verifier_tile">Set a Secure Question</string>
+    <string name="app_lock_verifier_tile">Set Secure Question</string>
     <string name="app_lock_reset_password">Reset passwords</string>
 
     <string name="app_lock_safe_answer_reset_hint">Please enter the answer</string>
@@ -122,7 +128,7 @@
     <string name="settings_adfree_title" translatable="false">Remove Ads</string>
     <string name="adfree_dialog_title">Become VIP user</string>
     <string name="settings_adfree_content">Enable VIP service and remove Ads</string>
-    <string name="adfree_dialog_content">Donate to developer and become premium user of Insta Clone and turn off all ADs in this app. Do you want to buy now?</string>
+    <string name="adfree_dialog_content">Donate to developer and become premium user of Power Cloner and turn off all ADs in this app. Do you want to buy now?</string>
 
     <!-- notification -->
     <string name="notification_decription">Enable or disable notifications from cloned application</string>
@@ -131,7 +137,7 @@
     <!-- update & about -->
     <string name="check_update"><u>Check Update</u></string>
     <string name="update_dialog_title">Update</string>
-    <string name="update_dialog_content">New version is coming! We improved a lot on version %s. Would you like to update Insta Clone now?</string>
+    <string name="update_dialog_content">New version is coming! We improved a lot on version %s. Would you like to update Power Cloner now?</string>
     <string name="update_dialog_left">Ignore this version</string>
     <string name="update_dialog_right">Update</string>
     <string name="about">About</string>
@@ -146,24 +152,24 @@
     <string name="extra_feedback_decription">We will resolve the issue for you ASAP and appreciate your help to improve the product!</string>
 
     <!-- FAQ -->
-    <string name="text_Q1_title" translatable="false">Q1: Why cannot I receive message notifications from Insta Clone enabled apps?</string>
-    <string name="text_Q1_content_2" translatable="false">A1: Please ensure that Insta Clone has network access</string>
-    <string name="text_Q2_title">Q2: Will Insta Clone collect and use my private information?</string>
-    <string name="text_Q2_content">A2: No, Insta Clone will only collect small amounts of your “public data” (e.g. Avatar, nickname etc), and these will only be used within your device to create a better user experience for you. Insta Clone promises that none of your private data will be collected or used.</string>
-    <string name="text_Q3_title">Q3: Why is Insta Clone’s storage consumption increasing?</string>
-    <string name="text_Q3_content">A3: All sub-accounts added on your device are by default listed under Insta Clone by the Android operating system. For example, when you add a Facebook sub-account to your device, all of the storage used for your second Facebook account (app) is listed under Insta Clone. Therefore, the storage consumption listed for Insta Clone will appear to increase significantly when you add more sub-accounts. Rest assured that the storage consumption of Insta Clone itself is not actually increasing by much.</string>
-    <string name="text_Q4_title">Q4: Why has Insta Clone used up so much storage space?</string>
-    <string name="text_Q4_content">A4: All sub-accounts added on your device are by default listed under Insta Clone by the Android operating system. The large amount of storage consumption listed under Insta Clone is the overall total storage used for all sub-accounts you’ve added. Insta Clone itself uses little storage.</string>
-    <string name="text_Q5_title">Q5: How does Insta Clone’s Private App function protects my privacy?</string>
-    <string name="text_Q5_content">A5: A password is required to access Private Apps each time you wake your device. Additionally, all Private Apps are installed on Insta Clone, and therefore all Private Apps’ data are not accessible by any external programs.</string>
+    <string name="text_Q1_title" translatable="false">Q1: Why cannot I receive message notifications from Power Cloner enabled apps?</string>
+    <string name="text_Q1_content_2" translatable="false">A1: Please ensure that Power Cloner has network access</string>
+    <string name="text_Q2_title">Q2: Will Power Cloner collect and use my private information?</string>
+    <string name="text_Q2_content">A2: No, Power Cloner will only collect small amounts of your “public data” (e.g. Avatar, nickname etc), and these will only be used within your device to create a better user experience for you. Power Cloner promises that none of your private data will be collected or used.</string>
+    <string name="text_Q3_title">Q3: Why is Power Cloner’s storage consumption increasing?</string>
+    <string name="text_Q3_content">A3: All sub-accounts added on your device are by default listed under Power Cloner by the Android operating system. For example, when you add a Facebook sub-account to your device, all of the storage used for your second Facebook account (app) is listed under Power Cloner. Therefore, the storage consumption listed for Power Cloner will appear to increase significantly when you add more sub-accounts. Rest assured that the storage consumption of Power Cloner itself is not actually increasing by much.</string>
+    <string name="text_Q4_title">Q4: Why has Power Cloner used up so much storage space?</string>
+    <string name="text_Q4_content">A4: All sub-accounts added on your device are by default listed under Power Cloner by the Android operating system. The large amount of storage consumption listed under Power Cloner is the overall total storage used for all sub-accounts you’ve added. Power Cloner itself uses little storage.</string>
+    <string name="text_Q5_title">Q5: How does Power Cloner’s Private App function protects my privacy?</string>
+    <string name="text_Q5_content">A5: A password is required to access Private Apps each time you wake your device. Additionally, all Private Apps are installed on Power Cloner, and therefore all Private Apps’ data are not accessible by any external programs.</string>
     <string name="text_Q6_title">Q6: Why privacy locker not show up when app launch?</string>
-    <string name="text_Q6_content">A6: Please check whether you enabled locker for this app and grant permission to Insta Clone to show floating window. For example, on Xiaomi device, Settings->App Management->Insta Clone->Permission Control->Floating Window.</string>
+    <string name="text_Q6_content">A6: Please check whether you enabled locker for this app and grant permission to Power Cloner to show floating window. For example, on Xiaomi device, Settings->App Management->Power Cloner->Permission Control->Floating Window.</string>
     <string name="text_Q7_title">Q7: Why shortcut cannot be created or camera, location not work?</string>
-    <string name="text_Q7_content">A7: Please check whether you granted these permissions to Insta Clone in your system setting.</string>
+    <string name="text_Q7_content">A7: Please check whether you granted these permissions to Power Cloner in your system setting.</string>
 
-    <string name="powered_by_app" translatable="false">Powered by Insta Clone</string>
+    <string name="powered_by_app" translatable="false">Protected by Power Cloner</string>
     <string name="dialog_permission_title">Grant Permission</string>
-    <string name="dialog_permission_content">Please allow permission request from Insta Clone, otherwise some cloned apps and Google Play Service will not work properly.</string>
+    <string name="dialog_permission_content">Please allow permission request from Power Cloner, otherwise some cloned apps and Google Play Service will not work properly.</string>
 
 
     <string-array name="month">

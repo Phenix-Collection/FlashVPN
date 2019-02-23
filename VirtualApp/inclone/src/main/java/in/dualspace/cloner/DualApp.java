@@ -1,5 +1,6 @@
 package in.dualspace.cloner;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -26,9 +27,12 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import in.dualspace.cloner.billing.BillingProvider;
 import in.dualspace.cloner.clone.CloneApiDelegate;
 import in.dualspace.cloner.clone.CloneComponentDelegate;
+import in.dualspace.cloner.clone.MainAppComponentDelegate;
 import in.dualspace.cloner.components.AppMonitorService;
 import in.dualspace.cloner.components.receiver.PackageChangeReceiver;
 import in.dualspace.cloner.components.ui.AppLoadingActivity;
+import in.dualspace.cloner.components.ui.AppLockActivity;
+import in.dualspace.cloner.components.ui.WrapCoverAdActivity;
 import in.dualspace.cloner.notification.QuickSwitchNotification;
 import in.dualspace.cloner.utils.CommonUtils;
 import in.dualspace.cloner.utils.EventReporter;
@@ -166,14 +170,49 @@ public class DualApp extends MultiDexApplication {
         });
         VirtualCore virtualCore = VirtualCore.get();
         virtualCore.initialize(new VirtualCore.VirtualInitializer() {
-
             @Override
             public void onMainProcess() {
                 MLogs.d("Main process create");
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 //ImageLoaderUtil.asyncInit(gDefault);
-                //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
+                MainAppComponentDelegate delegate = new MainAppComponentDelegate();
+                registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+                    @Override
+                    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+                    }
+
+                    @Override
+                    public void onActivityStarted(Activity activity) {
+
+                    }
+
+                    @Override
+                    public void onActivityResumed(Activity activity) {
+                        delegate.afterActivityResume(activity);
+                    }
+
+                    @Override
+                    public void onActivityPaused(Activity activity) {
+                        delegate.afterActivityPause(activity);
+                    }
+
+                    @Override
+                    public void onActivityStopped(Activity activity) {
+
+                    }
+
+                    @Override
+                    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+                    }
+
+                    @Override
+                    public void onActivityDestroyed(Activity activity) {
+
+                    }
+                });
                 EventReporter.init(gDefault);
                 BillingProvider.get();
 //                if (needAd()) {
@@ -198,7 +237,6 @@ public class DualApp extends MultiDexApplication {
                     String[] arr = conf.split(";");
                     delegate.addClasses(arr);
                 }
-                delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
 
                 virtualCore.setAppApiDelegate(new CloneApiDelegate());
@@ -230,7 +268,6 @@ public class DualApp extends MultiDexApplication {
                     String[] arr = conf.split(";");
                     delegate.addClasses(arr);
                 }
-                delegate.asyncInit();
                 VirtualCore.get().setComponentDelegate(delegate);
                 initAd();
                 if (QuickSwitchNotification.getInstance(gDefault).isEnable()) {

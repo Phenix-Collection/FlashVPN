@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/item_locker"
-        android:title="@string/privacy_locker"
+        android:id="@+id/item_locker_enable"
+        android:title="@string/enable_locker"
+        />
+    <item
+        android:id="@+id/item_locker_disable"
+        android:title="@string/disable_locker"
         />
     <item
         android:id="@+id/item_shortcut"

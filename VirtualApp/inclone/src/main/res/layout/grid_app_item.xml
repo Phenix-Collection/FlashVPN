@@ -5,20 +5,36 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimaryDark">
 
-        <in.dualspace.cloner.widget.dragdrop.DragImageView
-            android:id="@+id/app_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerHorizontal="true"
+        <RelativeLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:layout_marginTop = "15dp"
-            android:scaleType="centerCrop" />
+            android:layout_centerHorizontal="true"
+            android:id="@+id/app_icon_layout">
+                <in.dualspace.cloner.widget.dragdrop.DragImageView
+                    android:id="@+id/app_icon"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerInside" />
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:id="@+id/lock_icon_badge"
+                    android:src="@drawable/icon_lock_small"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:visibility="invisible"/>
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/app_icon"
+            android:layout_below="@id/app_icon_layout"
             android:ellipsize="end"
             android:singleLine="true"
             android:layout_marginTop="10dp"
@@ -32,6 +48,5 @@
             android:layout_below="@id/app_name"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:background="@drawable/shape_new_dot"
             android:visibility="invisible"/>
 </RelativeLayout>
