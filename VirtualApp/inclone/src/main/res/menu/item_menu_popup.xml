@@ -9,13 +9,21 @@
         android:id="@+id/item_locker_disable"
         android:title="@string/disable_locker"
         />
-    <item
-        android:id="@+id/item_shortcut"
-        android:title="@string/create_shortcut"
+    <!--<item-->
+        <!--android:id="@+id/item_notification_enable"-->
+        <!--android:title="@string/enable_notification"-->
+        <!--/>-->
+    <!--<item-->
+        <!--android:id="@+id/item_notification_disable"-->
+        <!--android:title="@string/disable_notification"-->
         />
     <item
         android:id="@+id/item_customize"
         android:title="@string/customize_title"
+        />
+    <item
+        android:id="@+id/item_shortcut"
+        android:title="@string/create_shortcut"
         />
     <item
         android:id="@+id/item_delete"

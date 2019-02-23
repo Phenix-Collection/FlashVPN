@@ -89,33 +89,6 @@
 
         <include layout="@layout/setting_line_splitter" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="@android:color/white"
-            android:onClick="onNotificationSettingClick"
-            android:paddingLeft="22dp">
-
-            <TextView
-                android:id="@+id/notification_setting_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="13dp"
-                android:layout_marginTop="18dp"
-                android:text="@string/notification"
-                android:textColor="@color/text_gray_dark"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/notification_setting_title"
-                android:text="@string/settings_notification_content"
-                android:textColor="@color/text_gray_light"
-                android:textSize="10sp" />
-        </RelativeLayout>
-
-        <include layout="@layout/setting_wide_splitter" />
         <!--android:text="@string/settings_more"-->
         <RelativeLayout
             android:layout_width="match_parent"

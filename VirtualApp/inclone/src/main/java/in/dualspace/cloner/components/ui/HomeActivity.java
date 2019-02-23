@@ -750,7 +750,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.item_notification:
-                        startActivity(new Intent(HomeActivity.this, NotificationActivity.class));
+//                        startActivity(new Intent(HomeActivity.this, NotificationActivity.class));
                         break;
                     case R.id.item_faq:
                         startActivity(new Intent(HomeActivity.this, FaqActivity.class));

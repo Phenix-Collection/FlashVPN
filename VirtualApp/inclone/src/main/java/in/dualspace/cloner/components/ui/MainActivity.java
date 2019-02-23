@@ -757,6 +757,11 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                             itemMenuPopup.getMenu().removeItem(R.id.item_locker_enable);
                         }
                     }
+                    if (clone.getNotificationEnable()) {
+                        itemMenuPopup.getMenu().removeItem(R.id.item_notification_enable);
+                    } else {
+                        itemMenuPopup.getMenu().removeItem(R.id.item_notification_disable);
+                    }
                     break;
             }
             //菜单项的监听

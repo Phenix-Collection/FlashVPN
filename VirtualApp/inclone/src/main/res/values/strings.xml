@@ -27,6 +27,8 @@
     <string name="privacy_locker">Privacy Locker</string>
     <string name="enable_locker">Enable Lock</string>
     <string name="disable_locker">Disable Lock</string>
+    <string name="disable_notification">Disable Notification</string>
+    <string name="enable_notification">Enable Notification</string>
     <string name="faq" translatable="false">FAQ</string>
     <string name="ok" translatable="false">OK</string>
     <string name="congratulations">Congratulations</string>
@@ -67,6 +69,8 @@
     <string name="unlock_main_app">Privacy Locker Is Protecting</string>
     <string name="unlock_before_disable">Privacy Locker Is Protecting</string>
     <string name="been_unlocked">%s is unlocked.</string>
+    <string name="notification_enabled">Notification of %s is enabled.</string>
+    <string name="notification_disabled">Notification of %s is disabled.</string>
     <string name="lock_interval_settings_title" translatable="false">Re-Lock Interval</string>
     <string name="lock_interval_settings_content">The interval to relock the app after you left it</string>
     <string name="enable_lock_settings_content">Unlock before enter into main application of Power Cloner</string>

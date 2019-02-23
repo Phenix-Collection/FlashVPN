@@ -88,17 +88,6 @@ public class AboutActivity extends BaseActivity {
         }
     }
 
-    public void onJoinUsClick(View view) {
-        try {
-            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://plus.google.com/communities/104830818454731991305"));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-            startActivity(intent);
-            EventReporter.generalEvent( "join_us_click");
-        } catch (Exception localException1) {
-            localException1.printStackTrace();
-        }
-    }
-
     public void onFollowUsClick(View view) {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo("com.facebook.katana", 0);

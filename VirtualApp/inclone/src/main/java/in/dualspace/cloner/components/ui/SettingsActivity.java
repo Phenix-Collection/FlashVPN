@@ -157,11 +157,6 @@ public class SettingsActivity extends BaseActivity {
         adFreeSwitch.setChecked(PreferencesUtils.isAdFree());
     }
 
-    public void onNotificationSettingClick(View view) {
-        Intent notification = new Intent(this, NotificationActivity.class);
-        startActivity(notification);
-    }
-
     public void onPrivacyLockerClick(View view) {
         if (PreferencesUtils.isLockerEnabled(this) ) {
             LockPasswordSettingActivity.start(this, false, getString(R.string.lock_settings_title), REQUEST_UNLOCK_SETTINGS);
@@ -192,11 +187,6 @@ public class SettingsActivity extends BaseActivity {
                 EventReporter.reportRate("settings_cancel", "settings");
             }
         });
-    }
-
-    public void onCustomizeClick(View view) {
-        Intent intent = new Intent(this, CustomizeSettingActivity.class);
-        startActivity(intent);
     }
 
     private void updateBillingStatus() {
