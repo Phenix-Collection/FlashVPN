@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,7 +29,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.clone.CloneAgent64;
+
 import in.dualspace.cloner.AppConstants;
 import in.dualspace.cloner.BuildConfig;
 import in.dualspace.cloner.DualApp;
@@ -45,7 +44,6 @@ import in.dualspace.cloner.utils.EventReporter;
 import in.dualspace.cloner.utils.MLogs;
 import in.dualspace.cloner.utils.PreferencesUtils;
 import in.dualspace.cloner.utils.RemoteConfig;
-import in.dualspace.cloner.widget.UpDownDialog;
 
 import java.util.HashSet;
 import java.util.List;
@@ -135,7 +133,7 @@ public class AppLoadingActivity extends BaseActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         intent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, packageName);
-        intent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_HOME);
+        intent.putExtra(AppConstants.EXTRA_FROM, AppConstants.FROM_HOME);
         intent.putExtra(EXTRA_FIRST_START, model.getLaunched() == 0);
         intent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, model.getPkgUserId());
 

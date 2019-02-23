@@ -7,10 +7,10 @@ public class AppConstants {
     public static final String DEVELOP_CHANNEL = "develop";
 
     public static final String EXTRA_CLONED_APP_PACKAGENAME = "app_packagename";
-    public static final String EXTRA_FROM = "From where";
-    public static final String VALUE_FROM_SHORTCUT = "From shortcut";
-    public static final String VALUE_FROM_HOME = "From home";
-    public static final String VALUE_FROM_NOTIFY = "From notify";
+    public static final String EXTRA_FROM = "extra_from";
+    public static final String FROM_SHORTCUT = "shortcut";
+    public static final String FROM_HOME = "home";
+    public static final String FROM_NOTIFY = "notify";
     public static final String EXTRA_CLONED_APP_USERID = "app_userid";
 
     public static final int APP_ICON_WIDTH = 50;//dp

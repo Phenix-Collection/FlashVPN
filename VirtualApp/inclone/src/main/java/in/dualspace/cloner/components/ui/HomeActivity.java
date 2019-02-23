@@ -104,6 +104,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     public static final String SLOT_HOME_NATIVE = "slot_home_native";
     private FuseAdLoader adLoader ;
+    private long adShowTime = 0;
+
     private LinearLayout nativeAdContainer;
 
     private String startingPkg;
@@ -115,7 +117,6 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private static final String CONFIG_FORCE_REQUESTED_PERMISSIONS = "force_requested_permission";
     private static final int REQUEST_APPLY_PERMISSION = 101;
 
-    private long adShowTime = 0;
     public static void enter(Activity activity, boolean needUpdate) {
         MLogs.d("Enter home: update: " + needUpdate);
         Intent intent = new Intent(activity, HomeActivity.class);

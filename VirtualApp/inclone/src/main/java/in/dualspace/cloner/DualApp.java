@@ -27,6 +27,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import in.dualspace.cloner.billing.BillingProvider;
 import in.dualspace.cloner.clone.CloneApiDelegate;
 import in.dualspace.cloner.clone.CloneComponentDelegate;
+import in.dualspace.cloner.clone.CloneManager;
 import in.dualspace.cloner.clone.MainAppComponentDelegate;
 import in.dualspace.cloner.components.AppMonitorService;
 import in.dualspace.cloner.components.receiver.PackageChangeReceiver;
@@ -224,7 +225,9 @@ public class DualApp extends MultiDexApplication {
                             AppMonitorService.preloadCoverAd();
                         }
                     }
-                    initReceiver();
+                initReceiver();
+
+                CloneManager.getInstance(getApp()).loadClonedApps(getApp(), null);
 //                }
             }
 

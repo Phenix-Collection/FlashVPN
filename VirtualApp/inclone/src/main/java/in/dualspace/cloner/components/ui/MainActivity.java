@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -22,10 +23,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdSize;
+import com.polestar.ad.AdViewBinder;
+import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.clone.CloneAgent64;
 import com.polestar.clone.CustomizeAppData;
 
@@ -35,6 +42,7 @@ import java.util.List;
 import java.util.Random;
 
 import in.dualspace.cloner.AppConstants;
+import in.dualspace.cloner.DualApp;
 import in.dualspace.cloner.R;
 import in.dualspace.cloner.clone.CloneManager;
 import in.dualspace.cloner.components.AppMonitorService;
@@ -42,6 +50,7 @@ import in.dualspace.cloner.db.CloneModel;
 import in.dualspace.cloner.db.DBManager;
 import in.dualspace.cloner.notification.QuickSwitchNotification;
 import in.dualspace.cloner.utils.CommonUtils;
+import in.dualspace.cloner.utils.DisplayUtils;
 import in.dualspace.cloner.utils.EventReporter;
 import in.dualspace.cloner.utils.MLogs;
 import in.dualspace.cloner.utils.PreferencesUtils;
@@ -89,6 +98,11 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
 
     private CustomizedCloneItem pendingStartItem;
 
+    private LinearLayout nativeAdContainer;
+    public static final String SLOT_HOME_NATIVE = "slot_home_native";
+    private FuseAdLoader adLoader ;
+    private long adShowTime = 0;
+
     private int lastCloneIdx = -1;
     private int longClickPos = -1;
     private int pendingUnlockPos = -1;
@@ -98,6 +112,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_activity_layout);
+        nativeAdContainer = findViewById(R.id.ad_container);
         mExplosionField = ExplosionField.attachToWindow(this);
         pageRecyclerView = (PageRecyclerView) findViewById(R.id.cusom_swipe_view);
         // 设置指示器
@@ -157,6 +172,28 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         addClonePopup.loadAppListAsync();
 
         initData();
+
+        adLoader = FuseAdLoader.get(SLOT_HOME_NATIVE, this);
+
+        String from = getIntent().getStringExtra(AppConstants.EXTRA_FROM);
+        if (TextUtils.isEmpty(from)) {
+            from = "main";
+        }
+        EventReporter.reportWake(this, "user_launch_" + from);
+        if (!PreferencesUtils.isShortCutCreated()) {
+            PreferencesUtils.setShortCutCreated();
+            CommonUtils.createLaunchShortcut(this);
+        }
+
+        if (needUpdate()) {
+            MLogs.d("need update");
+            pageRecyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showUpdateDialog();
+                }
+            }, 500);
+        }
     }
 
     @Override
@@ -166,7 +203,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             startAppItem(pendingStartItem);
         } else {
             if (!guideRateIfNeeded()) {
-//                guideQuickSwitchIfNeeded();
+                guideQuickSwitchIfNeeded();
             }
             //保证每次弹框尽可能只会在启动分身后，回到主界面时做一次判断，而不包含从后台切到主界面的时候
             startingPkg = null;
@@ -189,6 +226,10 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             MLogs.d("update pos for long click: " + longClickPos);
             listAdapter.notifyItemChanged(longClickPos);
             longClickPos = -1;
+        }
+        long current = System.currentTimeMillis();
+        if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
+            loadAd();
         }
     }
 
@@ -474,6 +515,11 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     @Override
     public void onLoaded(List<CloneModel> clonedApp) {
         initItemList(cm.getClonedApps());
+        if (clonedApp.size() <= RemoteConfig.getLong("add_clone_preload_gate")
+                && !PreferencesUtils.isAdFree()) {
+            FuseAdLoader.get(AddCloneActivity.SLOT_ADD_CLONE_AD, DualApp.getApp())
+                    .setBannerAdSize(AddCloneActivity.getBannerAdSize()).preloadAd(this);
+        }
     }
 
     private void addCloneItem(CloneModel model) {
@@ -757,11 +803,6 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                             itemMenuPopup.getMenu().removeItem(R.id.item_locker_enable);
                         }
                     }
-                    if (clone.getNotificationEnable()) {
-                        itemMenuPopup.getMenu().removeItem(R.id.item_notification_enable);
-                    } else {
-                        itemMenuPopup.getMenu().removeItem(R.id.item_notification_disable);
-                    }
                     break;
             }
             //菜单项的监听
@@ -958,4 +999,202 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     public void onSettingsClick(View view) {
         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
     }
+
+    private boolean needUpdate() {
+        try {
+            PackageInfo vinfo = getPackageManager().getPackageInfo(getPackageName(),0);
+            int versionCode = vinfo.versionCode;
+            long pushVersion = RemoteConfig.getLong(AppConstants.CONF_UPDATE_VERSION);
+            long latestVersion = RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION);
+            long ignoreVersion = PreferencesUtils.getIgnoreVersion();
+            MLogs.d("local: " + versionCode + " push: " + pushVersion + " latest: " + latestVersion + " ignore: "+ ignoreVersion);
+            if (versionCode <= pushVersion
+                    && ignoreVersion < latestVersion) {
+                return true;
+            }
+        }catch (Exception e) {
+            MLogs.e(e);
+        }
+        return false;
+    }
+
+    private void showUpdateDialog() {
+        EventReporter.generalEvent("update_dialog");
+        UpDownDialog.show(this, getString(R.string.update_dialog_title),
+                getString(R.string.update_dialog_content, "" + RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION)),
+                getString(R.string.update_dialog_left), getString(R.string.update_dialog_right),
+                -1, R.layout.dialog_up_down,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                PreferencesUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                String forceUpdateUrl = RemoteConfig.getString("force_update_to");
+                                if (!TextUtils.isEmpty(forceUpdateUrl)) {
+                                    CommonUtils.jumpToUrl(MainActivity.this,forceUpdateUrl);
+                                } else {
+                                    CommonUtils.jumpToMarket(MainActivity.this, getPackageName());
+                                }
+                                EventReporter.generalEvent("update_go");
+                                break;
+                        }
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                PreferencesUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
+            }
+        });
+    }
+
+    private void loadAd() {
+        loadEmbedNative();
+        if (RemoteConfig.getBoolean(AppLoadingActivity.CONFIG_NEED_PRELOAD_LOADING) && !PreferencesUtils.isAdFree()) {
+            AppLoadingActivity.preloadAd(this);
+        }
+    }
+
+    public static AdSize getBannerAdSize() {
+        int dpWidth = DisplayUtils.px2dip(DualApp.getApp(), DisplayUtils.getScreenWidth(DualApp.getApp()));
+        return new AdSize(dpWidth, 320);
+    }
+    private void inflateNativeAdView(IAdAdapter ad) {
+        if (ad == null) {
+            return;
+        }
+        final AdViewBinder viewBinder;
+        switch (ad.getAdType()) {
+            default:
+                viewBinder =  new AdViewBinder.Builder(R.layout.home_native_ad_default)
+                        .titleId(R.id.ad_title)
+                        .textId(R.id.ad_subtitle_text)
+                        .mainMediaId(R.id.ad_cover_image)
+                        .fbMediaId(R.id.ad_fb_mediaview)
+                        .admMediaId(R.id.ad_adm_mediaview)
+                        .callToActionId(R.id.ad_cta_text)
+                        .privacyInformationId(R.id.ad_choices_container)
+                        .adFlagId(R.id.ad_flag)
+                        .build();
+                break;
+        }
+
+        View adView = ad.getAdView(this, viewBinder);
+        if (adView != null) {
+            nativeAdContainer.removeAllViews();
+            nativeAdContainer.addView(adView);
+            nativeAdContainer.setVisibility(View.VISIBLE);
+            adShowTime = System.currentTimeMillis();
+        }
+    }
+    private void loadEmbedNative() {
+        if (adLoader == null) {
+            adLoader = FuseAdLoader.get(SLOT_HOME_NATIVE, MainActivity.this);
+        }
+        if (adLoader.hasValidAdSource()) {
+            adLoader.setBannerAdSize(getBannerAdSize());
+            adLoader.loadAd(this, 2, 2000, new IAdLoadListener() {
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdLoaded(IAdAdapter ad) {
+                    inflateNativeAdView(ad);
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                }
+
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+                    MLogs.e(SLOT_HOME_NATIVE + " load error: " + error);
+                }
+            });
+        }
+    }
+
+    private static final String CONFIG_QUICK_SWITCH_INTERVAL = "guide_quick_switch_interval_s";
+    private static final String CONFIG_QUICK_SWITCH_TIMES = "guide_quick_switch_times";
+    private boolean guideQuickSwitchIfNeeded() {
+        if (startingPkg == null) {
+            MLogs.d("No starting package");
+            return false;
+        }
+        if (QuickSwitchNotification.isEnable()) {
+            MLogs.d("Already enabled quick switch");
+            return false;
+        }
+        long allowCnt = RemoteConfig.getLong(CONFIG_QUICK_SWITCH_TIMES);
+        int times = PreferencesUtils.getGuideQuickSwitchTimes();
+        if (times >= allowCnt) {
+            MLogs.d("Guide quick switch hit cnt");
+            return false;
+        }
+        if( System.currentTimeMillis() - PreferencesUtils.getLastGuideQuickSwitchTime()
+                < times*1000*RemoteConfig.getLong(CONFIG_QUICK_SWITCH_INTERVAL)) {
+            MLogs.d("not guide quick switch too frequent");
+            return false;
+        } else {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PreferencesUtils.updateLastGuideQuickSwitchTime();
+                    PreferencesUtils.setGuideQuickSwitchTimes(times + 1);
+                    showQuickSwitchDialog( );
+                }
+            }, 800);
+
+        }
+        return true;
+    }
+
+    private void showQuickSwitchDialog() {
+        EventReporter.generalEvent("quick_switch_dialog");
+        MLogs.d("showQuickSwitchDialog");
+        UpDownDialog.show(this, this.getResources().getString(R.string.quick_switch_title),
+                this.getResources().getString(R.string.quick_switch_dialog_content),
+                this.getResources().getString(R.string.no_thanks), this.getResources().getString(R.string.ok),
+                R.drawable.dialog_tag_congratulations, R.layout.dialog_up_down,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                QuickSwitchNotification.enable();
+                                EventReporter.generalEvent("quick_switch_dialog_go");
+                                break;
+                        }
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+    }
+
 }

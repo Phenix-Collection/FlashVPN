@@ -25,7 +25,7 @@ import in.dualspace.cloner.DualApp;
 import in.dualspace.cloner.R;
 import in.dualspace.cloner.clone.CloneManager;
 import in.dualspace.cloner.components.ui.AppLoadingActivity;
-import in.dualspace.cloner.components.ui.HomeActivity;
+import in.dualspace.cloner.components.ui.MainActivity;
 import in.dualspace.cloner.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
 import in.dualspace.cloner.db.DBManager;
@@ -244,12 +244,14 @@ public class QuickSwitchNotification {
                 notificationManager.createNotificationChannel(notificationChannel);
             }
         }
+        Intent mainIntent = new Intent(mContext,MainActivity.class);
+        mainIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.FROM_NOTIFY);
         NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(mContext)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContent(remoteViews).setOngoing(true)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setChannelId(channel_id)
-                .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext,HomeActivity.class), 0));
+                .setContentIntent(PendingIntent.getActivity(mContext, 0, mainIntent, 0));
         Notification notification = mBuilder.build();
         notification.flags = Notification.FLAG_NO_CLEAR|Notification.FLAG_ONGOING_EVENT;
         notification.priority = Notification.PRIORITY_MAX;
@@ -385,7 +387,7 @@ public class QuickSwitchNotification {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, pkg);
-                intent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_NOTIFY);
+                intent.putExtra(AppConstants.EXTRA_FROM, AppConstants.FROM_NOTIFY);
                 intent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, userId);
                 mContext.startActivity(intent);
             }

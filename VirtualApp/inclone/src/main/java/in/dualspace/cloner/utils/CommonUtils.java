@@ -12,13 +12,6 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.ConnectivityManager;
@@ -32,7 +25,7 @@ import in.dualspace.cloner.AppConstants;
 import in.dualspace.cloner.DualApp;
 import in.dualspace.cloner.R;
 import in.dualspace.cloner.components.ui.AppLoadingActivity;
-import in.dualspace.cloner.components.ui.ShortcutActivity;
+import in.dualspace.cloner.components.ui.MainActivity;
 import in.dualspace.cloner.components.ui.SplashActivity;
 import in.dualspace.cloner.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
@@ -55,8 +48,8 @@ public class CommonUtils {
 
     public static void createLaunchShortcut(Context context){
         MLogs.d("create shortcut");
-        Intent extra = new Intent(context.getApplicationContext(), ShortcutActivity.class);
-        extra.putExtra(SplashActivity.EXTRA_FROM_SHORTCUT, true);
+        Intent extra = new Intent(context.getApplicationContext(), MainActivity.class);
+        extra.putExtra(AppConstants.EXTRA_FROM, AppConstants.FROM_SHORTCUT);
         extra.setAction(Intent.ACTION_MAIN);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
@@ -106,7 +99,7 @@ public class CommonUtils {
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppLoadingActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
-        actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
+        actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.FROM_SHORTCUT);
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         createShortcut(context, actionIntent, appName, appModel.getPackageName(), appModel.getPkgUserId(), false, iconBitmap);
@@ -118,7 +111,7 @@ public class CommonUtils {
         Intent actionIntent = new Intent(Intent.ACTION_DEFAULT);
         actionIntent.setClassName(context.getPackageName(), AppLoadingActivity.class.getName());
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, appModel.getPackageName());
-        actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_SHORTCUT);
+        actionIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.FROM_SHORTCUT);
         actionIntent.putExtra(AppConstants.EXTRA_CLONED_APP_USERID, appModel.getPkgUserId());
         actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         removeShortcut(context, actionIntent, appName, appModel.getPackageName(), appModel.getPkgUserId());
