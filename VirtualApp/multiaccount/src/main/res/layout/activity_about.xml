@@ -43,27 +43,6 @@
         android:textColor="@color/about_text_light"/>
 
     <LinearLayout
-        android:layout_marginTop="45dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:onClick="onJoinUsClick">
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/google_join_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:text="@string/settings_join_us"/>
-    </LinearLayout>
-    <LinearLayout
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
