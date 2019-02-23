@@ -88,7 +88,7 @@ public abstract class BaseComponentDelegate implements ComponentDelegate {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 5000);
+        timer.schedule(task, 1000);
         try {
             VirtualCore.get().getContext().bindService(intent,
                     agentServiceConnection,

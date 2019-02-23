@@ -95,7 +95,7 @@ public class PackageSwitchListAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                boolean val = ((BlueSwitch) v).isChecked();
+                boolean val = ((RoundSwitch) v).isChecked();
                 if (mListener != null) {
                     mListener.onCheckStatusChangedListener(model, val);
                 }
@@ -108,13 +108,13 @@ public class PackageSwitchListAdapter extends BaseAdapter {
     private static class ViewHolder {
         private ImageView iconView;
         private TextView nameView;
-        private BlueSwitch switchView;
+        private RoundSwitch switchView;
         private View divider;
 
         public ViewHolder(View itemView) {
             iconView = (ImageView) itemView.findViewById(R.id.item_notification_icon);
             nameView = (TextView) itemView.findViewById(R.id.item_notification_app_name);
-            switchView = (BlueSwitch) itemView.findViewById(R.id.item_notification_switch);
+            switchView = (RoundSwitch) itemView.findViewById(R.id.item_notification_switch);
             divider = itemView.findViewById(R.id.item_divider);
         }
     }

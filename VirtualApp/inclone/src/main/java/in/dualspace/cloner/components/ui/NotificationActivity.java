@@ -15,7 +15,7 @@ import in.dualspace.cloner.clone.CloneManager;
 import in.dualspace.cloner.db.CloneModel;
 import in.dualspace.cloner.db.DBManager;
 import in.dualspace.cloner.utils.PreferencesUtils;
-import in.dualspace.cloner.widget.BlueSwitch;
+import in.dualspace.cloner.widget.RoundSwitch;
 import in.dualspace.cloner.widget.FixedListView;
 import in.dualspace.cloner.widget.PackageSwitchListAdapter;
 
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class NotificationActivity extends BaseActivity {
 
-    private BlueSwitch mMasterSwitch;
+    private RoundSwitch mMasterSwitch;
     private FixedListView mListView;
     private PackageSwitchListAdapter mNotificationAdapter;
     private List<CloneModel> mClonedModels;
@@ -51,7 +51,7 @@ public class NotificationActivity extends BaseActivity {
     private void initView() {
         setTitle(getString(R.string.notification));
 
-        mMasterSwitch = (BlueSwitch) findViewById(R.id.switch_notification);
+        mMasterSwitch = (RoundSwitch) findViewById(R.id.switch_notification);
         mListView = (FixedListView) findViewById(R.id.switch_notifications_apps);
         mNotificationAdapter = new PackageSwitchListAdapter(mContext);
         mNotificationAdapter.setOnCheckStatusChangedListener(new PackageSwitchListAdapter.OnCheckStatusChangedListener() {
@@ -87,7 +87,7 @@ public class NotificationActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String pName = mContext.getPackageName();
-                boolean val = ((BlueSwitch) v).isChecked();
+                boolean val = ((RoundSwitch) v).isChecked();
                 PreferencesUtils.putBoolean(mContext, AppConstants.PreferencesKey.NOTIFICATION_MASTER_SWITCH, val);
                 if (val) {
                     mListView.setVisibility(View.VISIBLE);

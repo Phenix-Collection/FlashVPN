@@ -157,7 +157,6 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         addClonePopup.loadAppListAsync();
 
         initData();
-
     }
 
     @Override
@@ -765,15 +764,6 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
-//                    case R.id.item_notification:
-//                        startActivity(new Intent(MainActivity.this, NotificationActivity.class));
-//                        break;
-//                    case R.id.item_faq:
-//                        startActivity(new Intent(MainActivity.this, FaqActivity.class));
-//                        break;
-                        case R.id.item_setting:
-                            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                            break;
                         case R.id.item_locker_disable:
                         case R.id.item_locker_enable:
                             if (PreferencesUtils.isLockerEnabled(MainActivity.this) ) {
@@ -958,5 +948,9 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             super.onBackPressed();
         }
 
+    }
+
+    public void onSettingsClick(View view) {
+        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
     }
 }

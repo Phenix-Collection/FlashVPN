@@ -19,7 +19,7 @@ import in.dualspace.cloner.notification.QuickSwitchNotification;
 import in.dualspace.cloner.utils.EventReporter;
 import in.dualspace.cloner.utils.PreferencesUtils;
 import in.dualspace.cloner.utils.RemoteConfig;
-import in.dualspace.cloner.widget.BlueSwitch;
+import in.dualspace.cloner.widget.RoundSwitch;
 import in.dualspace.cloner.widget.RateDialog;
 import in.dualspace.cloner.widget.UpDownDialog;
 
@@ -28,10 +28,10 @@ import in.dualspace.cloner.widget.UpDownDialog;
  */
 
 public class SettingsActivity extends BaseActivity {
-    private BlueSwitch shortCutSwich;
-    private BlueSwitch quickSwitch;
-    private BlueSwitch liteSwitch;
-    private BlueSwitch adFreeSwitch;
+    private RoundSwitch shortCutSwich;
+    private RoundSwitch quickSwitch;
+    private RoundSwitch liteSwitch;
+    private RoundSwitch adFreeSwitch;
     private boolean requestAdFree;
 
     private final static int REQUEST_UNLOCK_SETTINGS = 1;
@@ -49,7 +49,7 @@ public class SettingsActivity extends BaseActivity {
         if(!RemoteConfig.getBoolean("show_rate_menu")) {
             rateUs.setVisibility(View.GONE);
         }
-        shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
+        shortCutSwich = (RoundSwitch) findViewById(R.id.shortcut_swichbtn);
         shortCutSwich.setChecked(PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,false));
         shortCutSwich.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class SettingsActivity extends BaseActivity {
                 PreferencesUtils.putBoolean(SettingsActivity.this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,shortCutSwich.isChecked());
             }
         });
-        quickSwitch = (BlueSwitch) findViewById(R.id.quick_switch_btn);
+        quickSwitch = (RoundSwitch) findViewById(R.id.quick_switch_btn);
         quickSwitch.setChecked(QuickSwitchNotification.isEnable());
         quickSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +70,7 @@ public class SettingsActivity extends BaseActivity {
                 quickSwitch.setChecked(QuickSwitchNotification.isEnable());
             }
         });
-        liteSwitch = (BlueSwitch) findViewById(R.id.lite_switch_btn);
+        liteSwitch = (RoundSwitch) findViewById(R.id.lite_switch_btn);
         liteSwitch.setChecked(PreferencesUtils.isLiteMode());
         DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener(){
             @Override
@@ -118,7 +118,7 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
-        adFreeSwitch = (BlueSwitch) findViewById(R.id.adfree_switch);
+        adFreeSwitch = (RoundSwitch) findViewById(R.id.adfree_switch);
         adFreeSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

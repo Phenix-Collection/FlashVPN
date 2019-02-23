@@ -15,16 +15,15 @@
         android:background="@color/default_foreground_color"
         android:paddingLeft="22dp">
 
-        <in.dualspace.cloner.widget.BlueSwitch
+        <in.dualspace.cloner.widget.RoundSwitch
             android:id="@+id/enable_lock_switch"
-            android:layout_width="82.5dp"
-            android:layout_height="70dp"
-            android:paddingLeft="22dp"
-            android:paddingRight="22dp"
-            android:paddingTop="28dp"
-            android:paddingBottom="28dp"
-            android:gravity="center_horizontal"
-            android:layout_alignParentRight="true"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
 
         <TextView
             android:id="@+id/enable_lock_title"

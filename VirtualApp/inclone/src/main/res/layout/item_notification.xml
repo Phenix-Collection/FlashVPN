@@ -21,17 +21,15 @@
         android:layout_toRightOf="@id/item_notification_icon"
         android:textColor="@color/text_gray_dark"/>
 
-    <in.dualspace.cloner.widget.BlueSwitch
+    <in.dualspace.cloner.widget.RoundSwitch
         android:id="@+id/item_notification_switch"
-        android:layout_width="82.5dp"
-        android:layout_height="80dp"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp"
-        android:paddingTop="33dp"
-        android:paddingBottom="33dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true">
-    </in.dualspace.cloner.widget.BlueSwitch>
+        android:layout_alignParentEnd="true"/>
 
     <View
         android:id="@+id/item_divider"

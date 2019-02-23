@@ -21,8 +21,8 @@ import in.dualspace.cloner.db.DBManager;
 import in.dualspace.cloner.utils.DisplayUtils;
 import in.dualspace.cloner.utils.MLogs;
 import in.dualspace.cloner.utils.PreferencesUtils;
-import in.dualspace.cloner.widget.BlueSwitch;
 import in.dualspace.cloner.widget.PackageSwitchListAdapter;
+import in.dualspace.cloner.widget.RoundSwitch;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class LockSettingsActivity extends BaseActivity {
     public static final int REQUEST_SET_PASSWORD = 0;
     private Context mContext;
 
-    private BlueSwitch lockerEnableSwitch;
+    private RoundSwitch lockerEnableSwitch;
     private LinearLayout detailedSettingLayout;
     private List<CloneModel> mClonedModels;
     private PackageSwitchListAdapter mAppsAdapter;
@@ -115,7 +115,7 @@ public class LockSettingsActivity extends BaseActivity {
 
     private void initView(){
         detailedSettingLayout = (LinearLayout)findViewById(R.id.locker_detailed_settings);
-        lockerEnableSwitch = (BlueSwitch)findViewById(R.id.enable_lock_switch);
+        lockerEnableSwitch = (RoundSwitch)findViewById(R.id.enable_lock_switch);
         lockIntervalSpinner = (Spinner) findViewById(R.id.lock_interval_spinner);
         lockerEnableSwitch.setChecked(PreferencesUtils.getBoolean(mContext,AppConstants.PreferencesKey.LOCKER_FEATURE_ENABLED));
         lockerEnableSwitch.setOnClickListener(new View.OnClickListener() {
