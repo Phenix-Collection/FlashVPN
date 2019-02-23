@@ -185,7 +185,7 @@ public class SplashActivity extends BaseActivity {
                 CommonUtils.createLaunchShortcut(this);
                 created = true;
             }
-            HomeActivity.enter(this, needUpdate());
+//            HomeActivity.enter(this, needUpdate());
             finish();
         }
     }

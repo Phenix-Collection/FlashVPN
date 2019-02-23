@@ -32,7 +32,6 @@
             android:theme="@style/AppTheme.Launcher"
             android:exported="true">
         </activity>
-        <activity android:name="in.dualspace.cloner.components.ui.HomeActivity" android:screenOrientation="portrait" android:launchMode="singleTask"/>
         <activity android:name="in.dualspace.cloner.components.ui.AddCloneActivity" android:screenOrientation="portrait" android:exported="false"/>
         <activity android:name="in.dualspace.cloner.components.ui.FaqActivity" android:screenOrientation="portrait" android:exported="false"/>
         <activity android:name="in.dualspace.cloner.components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />

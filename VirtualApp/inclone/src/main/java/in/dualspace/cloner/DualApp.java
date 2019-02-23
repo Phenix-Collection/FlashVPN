@@ -12,10 +12,8 @@ import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
-import com.google.android.gms.ads.MobileAds;
 import com.polestar.ad.SDKConfiguration;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.VirtualCore;
@@ -32,8 +30,7 @@ import in.dualspace.cloner.clone.MainAppComponentDelegate;
 import in.dualspace.cloner.components.AppMonitorService;
 import in.dualspace.cloner.components.receiver.PackageChangeReceiver;
 import in.dualspace.cloner.components.ui.AppLoadingActivity;
-import in.dualspace.cloner.components.ui.AppLockActivity;
-import in.dualspace.cloner.components.ui.WrapCoverAdActivity;
+import in.dualspace.cloner.components.ui.MainActivity;
 import in.dualspace.cloner.notification.QuickSwitchNotification;
 import in.dualspace.cloner.utils.CommonUtils;
 import in.dualspace.cloner.utils.EventReporter;
@@ -229,6 +226,11 @@ public class DualApp extends MultiDexApplication {
 
                 CloneManager.getInstance(getApp()).loadClonedApps(getApp(), null);
 //                }
+                if (!DualApp.isArm64()) {
+                    FuseAdLoader adLoader = FuseAdLoader.get(MainActivity.SLOT_HOME_NATIVE, DualApp.getApp());
+                    adLoader.setBannerAdSize(MainActivity.getBannerAdSize());
+                    adLoader.preloadAd(DualApp.getApp());
+                }
             }
 
             @Override
