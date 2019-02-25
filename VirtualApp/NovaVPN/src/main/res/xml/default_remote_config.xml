@@ -16,7 +16,7 @@
     </entry>
     <entry>
         <key>slot_home_enter_ad_interval_sec</key>
-        <value>36000</value>
+        <value>1200</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>

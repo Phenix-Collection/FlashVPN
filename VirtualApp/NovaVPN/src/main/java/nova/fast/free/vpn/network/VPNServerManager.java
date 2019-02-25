@@ -43,7 +43,8 @@ public class VPNServerManager {
     private Handler mainHandler;
     private Handler workHandler;
 
-    String def = "{\"servers\": [{\"id\": 0,\"geo\": \"kr\",\"city\": \"Seoul\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 1,\"geo\": \"kr\",\"city\": \"Seoul-2\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 2,\"geo\": \"us\",\"city\": \"New York\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 3,\"geo\": \"sg\",\"city\": \"Singapore\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 4,\"geo\": \"us\",\"city\": \"Los Angles\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 5,\"geo\": \"jp\",\"city\": \"Tokyo\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 6,\"geo\": \"de\",\"city\": \"Berlin\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 7,\"geo\": \"br\",\"city\": \"Sao Paulo\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"}]}";
+    //String def = "{\"servers\": [{\"id\": 0,\"geo\": \"kr\",\"city\": \"Seoul\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 1,\"geo\": \"kr\",\"city\": \"Seoul-2\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 2,\"geo\": \"us\",\"city\": \"New York\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 3,\"geo\": \"sg\",\"city\": \"Singapore\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 4,\"geo\": \"us\",\"city\": \"Los Angles\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 5,\"geo\": \"jp\",\"city\": \"Tokyo\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 6,\"geo\": \"de\",\"city\": \"Berlin\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 7,\"geo\": \"br\",\"city\": \"Sao Paulo\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"}]}";
+    //String def = "{ \"servers\": [{ \"id\": 0, \"geo\": \"fr\", \"city\": \"Paris\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@51.15.118.154:28388\" }, { \"id\": 1, \"geo\": \"fr\", \"city\": \"Paris\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@51.15.252.169:28388\" }, { \"id\": 2, \"geo\": \"us\", \"city\": \"SantaClara\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.149.104:28388\" }, { \"id\": 3, \"geo\": \"us\", \"city\": \"Miami\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.132.133:28388\" }, { \"id\": 4, \"geo\": \"nl\", \"city\": \"Amsterdam\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.184.97:28388\" }, { \"id\": 5, \"geo\": \"us\", \"city\": \"Miami\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.132.133:28388\" }, { \"id\": 6, \"geo\": \"lu\", \"city\": \"Luxembourg\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.223.105.86:28388\" }, { \"id\": 7, \"geo\": \"ru\", \"city\": \"Moscow\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.152.101:28388\" }, { \"id\": 8, \"geo\": \"us\", \"city\": \"Chicago\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.176.35:28388\" }] }";
     private VPNServerManager(Context appContext){
         mainHandler = new Handler(Looper.getMainLooper());
         HandlerThread thread = new HandlerThread("sync");
@@ -165,23 +166,49 @@ public class VPNServerManager {
 
     private void updatePing(List<ServerInfo> serverInfos){
         ArrayList<ServerInfo> copy = new ArrayList(serverInfos);
+        ArrayList<Thread> pingThreads = new ArrayList<>();
         for (ServerInfo si: copy) {
             String ip = si.config.ServerAddress.getAddress().getHostAddress();
             PingNetEntity pingNetEntity=new PingNetEntity(ip,
                     3,5,new StringBuffer());
-            pingNetEntity=PingNet.ping(pingNetEntity);
+            PingThread pingThread = new PingThread(pingNetEntity, si);
+            pingThreads.add(pingThread);
+            pingThread.start();
+        }
 
-            if (pingNetEntity.isResult()) {
+        for(int i = 0; i < pingThreads.size(); i++) {
+            try {
+                pingThreads.get(i).join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        MLogs.d("Ping threads all finished");
+    }
+
+    private class PingThread extends Thread {
+        private PingNetEntity mPingNetEntity;
+        private ServerInfo mServerInfo;
+        public PingThread(PingNetEntity pingNetEntity, ServerInfo serverInfo) {
+            mPingNetEntity = pingNetEntity;
+            mServerInfo = serverInfo;
+        }
+
+        @Override
+        public void run() {
+            mPingNetEntity=PingNet.ping(mPingNetEntity);
+
+            if (mPingNetEntity.isResult()) {
                 try {
                     Pattern p = Pattern.compile("\\d+");
-                    Matcher m = p.matcher(pingNetEntity.getPingTime());
+                    Matcher m = p.matcher(mPingNetEntity.getPingTime());
                     m.find();
-                    si.pingDelayMs = Integer.valueOf(m.group());
+                    mServerInfo.pingDelayMs = Integer.valueOf(m.group());
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-            MLogs.d("Ping " + ip + " res: " + si.pingDelayMs);
+            MLogs.d("Thread " + Thread.currentThread().getId() + " Ping " + mPingNetEntity.getIp() + " res: " + mServerInfo.pingDelayMs);
         }
     }
 

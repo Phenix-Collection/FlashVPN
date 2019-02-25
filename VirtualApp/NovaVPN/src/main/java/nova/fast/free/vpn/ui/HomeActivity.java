@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -31,12 +32,12 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.grey.Fingerprint;
+import com.twitter.msg.Sender;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nova.fast.free.vpn.BuildConfig;
 import nova.fast.free.vpn.NovaUser;
 import nova.fast.free.vpn.R;
 import nova.fast.free.vpn.core.AppProxyManager;
@@ -66,6 +67,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private boolean connectingFailed;
     private ViewGroup rewardLayout;
     private IAdAdapter rewardAd;
+    private long adShowTime = 0;
 
     private Timer timer;
     private TimerTask timeCountTask;
@@ -252,6 +254,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     showRateDialog(RATE_FROM_DIALOG);
                 }
             }, 1000);
+        }
+
+        if (!NovaUser.getInstance(this).isVIP()) {
+            long current = System.currentTimeMillis();
+            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
+                loadAds();
+            }
         }
     }
 
@@ -575,12 +584,16 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         });
 
         timer = new Timer();
+        loadAds();
+//        startActivity(new Intent().setClass(this, MainActivity.class));
+//        finish();
+    }
+
+    private void loadAds() {
         if (!NovaUser.getInstance(this).isVIP()) {
             loadHomeNativeAd();
             loadRewardAd();
         }
-//        startActivity(new Intent().setClass(this, MainActivity.class));
-//        finish();
     }
 
     @Override
