@@ -397,6 +397,23 @@ public class VAppManagerService extends IAppManager.Stub {
         return false;
     }
 
+    public synchronized boolean installPackageAsUser(int userId, String packageName, boolean notify) {
+        if (VUserManagerService.get().exists(userId)) {
+            PackageSetting ps = PackageCacheManager.getSetting(packageName);
+            if (ps != null) {
+                if (!ps.isInstalled(userId)) {
+                    ps.setInstalled(userId, true);
+                    if (notify) {
+                        notifyAppInstalled(ps, userId);
+                    }
+                    mPersistenceLayer.save();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void chmodPackageDictionary(File packageFile) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

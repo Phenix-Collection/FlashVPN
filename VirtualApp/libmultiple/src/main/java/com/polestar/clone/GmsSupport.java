@@ -107,7 +107,7 @@ public class GmsSupport {
             if (userId == 0) {
                     service.installPackage(packageName, info.sourceDir, InstallStrategy.DEPEND_SYSTEM_IF_EXIST, false);
             } else {
-                    service.installPackageAsUser(userId, packageName);
+                    service.installPackageAsUser(userId, packageName,false);
                 }
             }
         }
