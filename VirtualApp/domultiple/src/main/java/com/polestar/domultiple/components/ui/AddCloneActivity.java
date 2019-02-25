@@ -272,6 +272,14 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                         otherAppList.add(item);
                     }
                 }
+                if (otherAppList != null && otherAppList.size() > 0) {
+                    List<SelectGridAppItem> newList = new ArrayList<>(otherAppList.size());
+
+                    for (int i = otherAppList.size() - 1; i >= 0; i--) {
+                        newList.add(otherAppList.get(i));
+                    }
+                    otherAppList = newList;
+                }
                 mHandler.sendEmptyMessage(APP_LIST_READY);
             }
         }).start();

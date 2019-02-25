@@ -65,6 +65,7 @@ import com.polestar.domultiple.widget.dragdrop.DragSource;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -381,7 +382,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 @Override
                 public void run() {
                     mProgressBar.setVisibility(View.GONE);
-                    mClonedList = cm.getClonedApps();
+                    mClonedList = getSortedCloneList(cm.getClonedApps());
                     gridAdapter.notifyDataSetChanged(mClonedList);
                 }
             }, 60*1000);
@@ -671,9 +672,32 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         nativeAdContainer = (LinearLayout) findViewById(R.id.ad_container);
     }
 
+    private List<CloneModel> getSortedCloneList(List<CloneModel> cloneModels) {
+        List<CloneModel> ret = new ArrayList<>();
+        HashMap<String, ArrayList<CloneModel>> sortMap = new HashMap<>();
+        if (cloneModels != null) {
+            for (CloneModel model: cloneModels) {
+                ArrayList list = sortMap.get(model.getPackageName());
+                if (list == null) {
+                    list = new ArrayList();
+                }
+                list.add(model);
+                sortMap.put(model.getPackageName(), list);
+            }
+        }
+        for (ArrayList<CloneModel> list: sortMap.values()) {
+            if (list != null && list.size() > 0) {
+                for(CloneModel model: list) {
+                    ret.add(model);
+                }
+            }
+        }
+        return  ret;
+    }
+
     @Override
     public void onInstalled(CloneModel clonedApp, boolean result) {
-        mClonedList = cm.getClonedApps();
+        mClonedList = getSortedCloneList(cm.getClonedApps());
         MLogs.d("onInstalled: " + clonedApp.getPackageName());
         if (result && PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
             CommonUtils.createShortCut(this, clonedApp);
@@ -691,7 +715,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     @Override
     public void onUnstalled(CloneModel clonedApp, boolean result) {
-        mClonedList = cm.getClonedApps();
+        mClonedList = getSortedCloneList(cm.getClonedApps());
         if (result) {
             CommonUtils.removeShortCut(this, clonedApp);
             // remove customized data
@@ -706,7 +730,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     @Override
     public void onLoaded(List<CloneModel> clonedApp) {
-        mClonedList = cm.getClonedApps();
+        mClonedList = getSortedCloneList(cm.getClonedApps());
         long gate = RemoteConfig.getLong(CONF_LUCKY_GATE);
         showLucky = showLucky || mClonedList.size() >= gate && !PreferencesUtils.isAdFree();
         gridAdapter.setShowLucky(showLucky );
