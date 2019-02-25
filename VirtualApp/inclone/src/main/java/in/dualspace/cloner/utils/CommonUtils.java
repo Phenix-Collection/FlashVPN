@@ -26,7 +26,6 @@ import in.dualspace.cloner.DualApp;
 import in.dualspace.cloner.R;
 import in.dualspace.cloner.components.ui.AppLoadingActivity;
 import in.dualspace.cloner.components.ui.MainActivity;
-import in.dualspace.cloner.components.ui.SplashActivity;
 import in.dualspace.cloner.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
 

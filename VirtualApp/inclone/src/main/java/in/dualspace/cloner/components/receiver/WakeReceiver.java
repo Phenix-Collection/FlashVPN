@@ -1,14 +1,11 @@
 package in.dualspace.cloner.components.receiver;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 
 import com.polestar.clone.client.ipc.ServiceManagerNative;
 import in.dualspace.cloner.DualApp;
-import in.dualspace.cloner.components.ui.SplashActivity;
 import in.dualspace.cloner.utils.EventReporter;
 import in.dualspace.cloner.utils.MLogs;
 

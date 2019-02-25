@@ -110,6 +110,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferencesUtils.setLiteMode(true);
 
         setContentView(R.layout.main_activity_layout);
         nativeAdContainer = findViewById(R.id.ad_container);
