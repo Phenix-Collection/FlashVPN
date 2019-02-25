@@ -15,6 +15,7 @@ import android.os.Message;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.helper.collection.ArrayMap;
+import com.polestar.clone.helper.utils.Reflect;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.remote.PendingResultData;
 import com.polestar.clone.server.pm.PackageSetting;
@@ -102,7 +103,16 @@ public class BroadcastSystem {
             if (packageInfo != null) {
                 Object receiverResource = LoadedApkHuaWei.mReceiverResource.get(packageInfo);
                 if (receiverResource != null) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        Map map = Reflect.on(receiverResource).get("mWhiteListMap");
+                        List list = (List) map.get(0);
+                        if(list == null) {
+                            list = new ArrayList();
+                            map.put(Integer.valueOf(0), list);
+                        }
+
+                        list.add(this.mContext.getPackageName());
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         if (ReceiverResourceN.mWhiteList != null) {
                             List<String> whiteList = ReceiverResourceN.mWhiteList.get(receiverResource);
                             List<String> newWhiteList = new ArrayList<>();

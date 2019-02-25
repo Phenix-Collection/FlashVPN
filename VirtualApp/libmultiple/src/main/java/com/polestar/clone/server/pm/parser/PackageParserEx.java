@@ -22,6 +22,7 @@ import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.env.Constants;
 import com.polestar.clone.client.fixer.ComponentFixer;
 import com.polestar.clone.helper.collection.ArrayMap;
+import com.polestar.clone.helper.compat.BuildCompat;
 import com.polestar.clone.helper.compat.PackageParserCompat;
 import com.polestar.clone.helper.utils.FileUtils;
 import com.polestar.clone.helper.utils.VLog;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import mirror.android.content.pm.ApplicationInfoL;
@@ -141,6 +143,11 @@ public class PackageParserEx {
         }
     }
 
+    private static Signature[] getSignature(PackageParser.Package arg1) {
+        Signature[] v0 = BuildCompat.isPie() ? arg1.mSigningDetails.signatures : arg1.mSignatures;
+        return v0;
+    }
+
     private static VPackage buildPackageCache(PackageParser.Package p) {
         VPackage cache = new VPackage();
         cache.activities = new ArrayList<>(p.activities.size());
@@ -176,7 +183,7 @@ public class PackageParserEx {
             }
         }
         cache.applicationInfo = p.applicationInfo;
-        cache.mSignatures = p.mSignatures;
+        cache.mSignatures = getSignature(p);
         cache.mAppMetaData = p.mAppMetaData;
         cache.packageName = p.packageName;
         cache.mPreferredOrder = p.mPreferredOrder;
@@ -185,7 +192,6 @@ public class PackageParserEx {
         cache.mSharedUserLabel = p.mSharedUserLabel;
         cache.usesLibraries = p.usesLibraries;
         cache.mVersionCode = p.mVersionCode;
-        cache.mAppMetaData = p.mAppMetaData;
         cache.configPreferences = p.configPreferences;
         cache.reqFeatures = p.reqFeatures;
         addOwner(cache);

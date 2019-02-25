@@ -12,10 +12,12 @@ import android.os.RemoteException;
 import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.InstallStrategy;
 import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.env.VirtualRuntime;
 import com.polestar.clone.client.ipc.VPackageManager;
 import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.helper.ArtDexOptimizer;
+import com.polestar.clone.helper.collection.ArraySet;
 import com.polestar.clone.helper.collection.IntArray;
 import com.polestar.clone.helper.compat.NativeLibraryHelperCompat;
 import com.polestar.clone.helper.utils.ArrayUtils;
@@ -23,6 +25,7 @@ import com.polestar.clone.helper.utils.FileUtils;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.os.VEnvironment;
 import com.polestar.clone.os.VUserHandle;
+import com.polestar.clone.os.VUserManager;
 import com.polestar.clone.remote.InstallResult;
 import com.polestar.clone.remote.InstalledAppInfo;
 import com.polestar.clone.server.IAppManager;
@@ -39,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -94,6 +98,12 @@ public class VAppManagerService extends IAppManager.Stub {
             }
             if (VASettings.ENABLE_GMS && !GmsSupport.isGoogleFrameworkInstalled()) {
                 GmsSupport.installGApps(0);
+            }
+            int[] users = VUserManagerService.get().getUserIds();
+            if (users != null) {
+                for (int i: users) {
+                    GmsSupport.installPackages(SpecialComponentList.getPreInstallPackages(), i);
+                }
             }
             PrivilegeAppOptimizer.get().performOptimizeAllApps();
             mBooting = false;

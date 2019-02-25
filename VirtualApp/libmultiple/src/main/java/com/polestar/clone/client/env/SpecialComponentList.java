@@ -38,7 +38,10 @@ public final class SpecialComponentList {
     private static final HashSet<String> IO_REDIRECT_BLACK_LIST = new HashSet<>(1);
 
     private static final HashSet<String> BROADCAST_START_WHITE_LIST = new HashSet<>();
+
+    private static final HashSet<String> PRE_INSTALL_PACKAGE_LIST = new HashSet<>();
     static {
+        PRE_INSTALL_PACKAGE_LIST.add("com.huawei.hwid");
         SYSTEM_BROADCAST_ACTION.add(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_ON);
 //        SYSTEM_BROADCAST_ACTION.add(Intent.ACTION_SCREEN_OFF);
@@ -154,6 +157,10 @@ public final class SpecialComponentList {
 
     public static boolean isConflictingInstrumentation(String packageName) {
         return INSTRUMENTATION_CONFLICTING.contains(packageName);
+    }
+
+    public static Set<String> getPreInstallPackages() {
+        return PRE_INSTALL_PACKAGE_LIST;
     }
 
     /**

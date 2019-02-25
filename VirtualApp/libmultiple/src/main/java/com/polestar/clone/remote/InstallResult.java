@@ -3,6 +3,8 @@ package com.polestar.clone.remote;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.polestar.clone.helper.utils.VLog;
+
 /**
  * @author Lody
  *
@@ -38,6 +40,7 @@ public class InstallResult implements Parcelable {
 	public static InstallResult makeFailure(String error) {
 		InstallResult res = new InstallResult();
 		res.error = error;
+		VLog.d("install", res.toString());
 		return res;
 	}
 

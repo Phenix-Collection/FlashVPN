@@ -86,7 +86,7 @@ public class GmsSupport {
         return VirtualCore.get().isOutsideInstalled("com.google.android.gms");
     }
 
-    private static void installPackages(Set<String> list, int userId) {
+    public static void installPackages(Set<String> list, int userId) {
         VAppManagerService service = VAppManagerService.get();
         Iterator iterator = list.iterator();
         while (iterator.hasNext()) {
