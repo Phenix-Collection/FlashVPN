@@ -63,7 +63,8 @@ public class NovaApp extends MultiDexApplication {
         SDKConfiguration.Builder builder = new SDKConfiguration.Builder();
 
         builder.mopubAdUnit("8e77a1b50d5c4a9fb204d212e2bd530a")
-                .admobAppId("ca-app-pub-5490912237269284~7387660650");
+                .admobAppId("ca-app-pub-5490912237269284~7387660650")
+                .ironSourceAppKey("8a16ee3d");
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
