@@ -1,9 +1,5 @@
 package com.polestar.superclone.reward;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,21 +11,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.imageloader.TaskManager;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
 import com.polestar.superclone.component.activity.HomeActivity;
-import com.polestar.superclone.component.fragment.HomeFragment;
-import com.polestar.superclone.utils.ColorUtils;
 import com.polestar.superclone.utils.DisplayUtils;
-import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.widgets.IconFontTextView;
 import com.polestar.task.ADErrorCode;
@@ -53,7 +46,7 @@ import java.util.List;
 
 
 public class RewardCenterFragment extends BaseFragment
-        implements AppUser.IUserUpdateListener, View.OnClickListener, IAdLoadListener{
+        implements AppUser.IUserUpdateListener, View.OnClickListener{
     private View contentView;
     private View inviteItemView;
     private View checkinItemView;
@@ -67,13 +60,15 @@ public class RewardCenterFragment extends BaseFragment
     private Handler mainHandler;
     private View retryView;
     private TaskExecutor mTaskExecutor;
-    private FuseAdLoader adLoader;
+    private FuseAdLoader nativeAdLoader;
+    private FuseAdLoader chechInAdLoader;
     private IAdAdapter nativeAd;
 
     private static final int MSG_LOAD_TIMEOUT = 100;
     private static final long LOAD_TIMEOUT = 10*1000;
 
     public static final String SLOT_REWARD_CENER_NATIVE = "slot_reward_center_native";
+    public static final String SLOT_CHECKIN_INTERSTITIAL = "slot_checkin_interstitial";
 
     public static AdSize getBannerSize() {
         int dpWidth = DisplayUtils.px2dip(MApp.getApp(), DisplayUtils.getScreenWidth(MApp.getApp()));
@@ -112,9 +107,60 @@ public class RewardCenterFragment extends BaseFragment
         MLogs.d(" reward onCreateView");
         initData();
 //        if (nativeAd == null) {
-            adLoader = FuseAdLoader.get(SLOT_REWARD_CENER_NATIVE, mActivity);
-            adLoader.setBannerAdSize(getBannerSize());
-            adLoader.loadAd(mActivity, 2, 1000, this);
+            nativeAdLoader = FuseAdLoader.get(SLOT_REWARD_CENER_NATIVE, mActivity);
+            nativeAdLoader.setBannerAdSize(getBannerSize());
+            nativeAdLoader.loadAd(mActivity, 2, 1000, new IAdLoadListener() {
+                @Override
+                public void onAdLoaded(IAdAdapter ad) {
+                    nativeAd = ad;
+                    if (ad != null && mActivity != null) {
+                        MLogs.d("reward loaded ad");
+                        ViewGroup adContainer = contentView.findViewById(R.id.ad_container);
+                        AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.native_ad_reward_center)
+                                .titleId(R.id.ad_title)
+                                .textId(R.id.ad_subtitle_text)
+                                .mainMediaId(R.id.ad_cover_image)
+                                .fbMediaId(R.id.ad_fb_mediaview)
+                                .admMediaId(R.id.ad_adm_mediaview)
+                                .iconImageId(R.id.ad_icon_image)
+                                .callToActionId(R.id.ad_cta_text)
+                                .privacyInformationId(R.id.ad_choices_image)
+                                .adFlagId(R.id.ad_flag)
+                                .build();
+                        View adView = ad.getAdView(mActivity, viewBinder);
+                        if (adView != null) {
+                            adContainer.removeAllViews();
+                            adContainer.addView(adView);
+                            adContainer.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onAdClicked(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdClosed(IAdAdapter ad) {
+
+                }
+
+                @Override
+                public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+
+                @Override
+                public void onRewarded(IAdAdapter ad) {
+
+                }
+            });
 //        }
         return contentView;
     }
@@ -227,7 +273,11 @@ public class RewardCenterFragment extends BaseFragment
             if (status != RewardErrorCode.TASK_OK) {
                 reward.setTextColor(getResources().getColor(R.color.text_gray_light));
             } else {
-               reward.setTextColor(getResources().getColor(R.color.reward_collect_coin_color));
+                if (task.mTaskType == Task.TASK_TYPE_CHECKIN_TASK) {
+                    chechInAdLoader = FuseAdLoader.get(SLOT_CHECKIN_INTERSTITIAL, mActivity);
+                    chechInAdLoader.loadAd(mActivity, 2, 1000, null);
+                }
+                reward.setTextColor(getResources().getColor(R.color.reward_collect_coin_color));
             }
         }
     }
@@ -296,7 +346,40 @@ public class RewardCenterFragment extends BaseFragment
             Task task = (Task)mView.getTag();
             updateTaskViewItem(mView, task, false);
             RewardErrorCode.toastMessage(mActivity, RewardErrorCode.TASK_OK, payment);
+            if (task.mTaskType == Task.TASK_TYPE_CHECKIN_TASK) {
+                chechInAdLoader = FuseAdLoader.get(SLOT_CHECKIN_INTERSTITIAL, mActivity);
+                chechInAdLoader.loadAd(mActivity, 2, 100, new IAdLoadListener() {
+                    @Override
+                    public void onAdLoaded(IAdAdapter ad) {
+                        ad.show();
+                    }
 
+                    @Override
+                    public void onAdClicked(IAdAdapter ad) {
+
+                    }
+
+                    @Override
+                    public void onAdClosed(IAdAdapter ad) {
+
+                    }
+
+                    @Override
+                    public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+
+                    @Override
+                    public void onRewarded(IAdAdapter ad) {
+
+                    }
+                });
+            }
             taskRunningProgressBar.setVisibility(View.GONE);
         }
 
@@ -304,7 +387,6 @@ public class RewardCenterFragment extends BaseFragment
         public void onTaskFail(long taskId, ADErrorCode code) {
             RewardErrorCode.toastMessage(mActivity, code.getErrCode());
             taskRunningProgressBar.setVisibility(View.GONE);
-
         }
 
         @Override
@@ -317,56 +399,5 @@ public class RewardCenterFragment extends BaseFragment
             RewardErrorCode.toastMessage(mActivity, code.getErrCode());
             taskRunningProgressBar.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onAdLoaded(IAdAdapter ad) {
-        nativeAd = ad;
-        if (ad != null && mActivity != null) {
-            MLogs.d("reward loaded ad");
-            ViewGroup adContainer = contentView.findViewById(R.id.ad_container);
-            AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.native_ad_reward_center)
-                    .titleId(R.id.ad_title)
-                    .textId(R.id.ad_subtitle_text)
-                    .mainMediaId(R.id.ad_cover_image)
-                    .fbMediaId(R.id.ad_fb_mediaview)
-                    .admMediaId(R.id.ad_adm_mediaview)
-                    .iconImageId(R.id.ad_icon_image)
-                    .callToActionId(R.id.ad_cta_text)
-                    .privacyInformationId(R.id.ad_choices_image)
-                    .adFlagId(R.id.ad_flag)
-                    .build();
-            View adView = ad.getAdView(mActivity, viewBinder);
-            if (adView != null) {
-                adContainer.removeAllViews();
-                adContainer.addView(adView);
-                adContainer.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    @Override
-    public void onAdClicked(IAdAdapter ad) {
-
-    }
-
-    @Override
-    public void onAdClosed(IAdAdapter ad) {
-
-    }
-
-    @Override
-    public void onAdListLoaded(List<IAdAdapter> ads) {
-
-    }
-
-    @Override
-    public void onError(String error) {
-
-    }
-
-    @Override
-    public void onRewarded(IAdAdapter ad) {
-
     }
 }

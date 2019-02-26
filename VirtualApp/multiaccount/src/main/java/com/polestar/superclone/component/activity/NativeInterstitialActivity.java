@@ -34,13 +34,9 @@ import android.widget.RelativeLayout;
  */
 public class NativeInterstitialActivity extends Activity {
 
-    private static final String TAG = NativeInterstitialActivity.class.getName();
-    private static final String UNIT_ID = "8998";
-    public int BIG_IMG_REQUEST_AD_NUM = 1;
     private RelativeLayout mRlClose;
     private ProgressBar mProgressBar;
     private FuseAdLoader mFuseLoader;
-    private NativeExpressAdView mAdmobExpressView;
     private LinearLayout mAdContainer;
 
     private static final String CONFIG_SLOT_HOME_LUCKY = "slot_home_lucky_new";

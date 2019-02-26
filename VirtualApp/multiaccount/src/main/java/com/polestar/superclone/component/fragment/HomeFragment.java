@@ -96,7 +96,6 @@ public class HomeFragment extends BaseFragment {
     private boolean showLucky;
     private boolean showBooster;
 
-    private boolean adShowed = false;
 
     public void inflateNativeAd(IAdAdapter ad) {
 //        if (adShowed) {
@@ -117,6 +116,8 @@ public class HomeFragment extends BaseFragment {
             View adView = ad.getAdView(mActivity, viewBinder);
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(adView);
+            nativeAdContainer.setVisibility(View.VISIBLE);
+            adShowTime = System.currentTimeMillis();
             pkgGridAdapter.notifyDataSetChanged();
             dismissLongClickGuide();
         }
@@ -150,19 +151,6 @@ public class HomeFragment extends BaseFragment {
             mDragLayer.setDragController(mDragController);
         }
         initData();
-        if (!PreferencesUtils.isAdFree()) {
-            boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
-                    && PreferencesUtils.hasCloned();
-            MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
-            headerNativeAdConfigs = RemoteConfig.getAdConfigList(SLOT_HOME_HEADER_NATIVE);
-            if (showHeaderAd && headerNativeAdConfigs.size() > 0) {
-                loadHeadNativeAd();
-            }
-            if (RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
-                AppStartActivity.preloadAd(mActivity);
-            }
-
-        }
         return contentView;
     }
 
@@ -509,6 +497,17 @@ public class HomeFragment extends BaseFragment {
         }
         if (PreferencesUtils.isAdFree()) {
             hideAd();
+        } else {
+            boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
+                    && PreferencesUtils.hasCloned();
+            MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
+            if (showHeaderAd && System.currentTimeMillis() - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
+                loadHeadNativeAd();
+            }
+            if (RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
+                AppStartActivity.preloadAd(mActivity);
+            }
+
         }
 //        else {
 //            boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
