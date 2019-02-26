@@ -204,14 +204,17 @@ public class AppManager {
         return success;
     }
 
-    @Deprecated
-    public static boolean uninstallApp(String packageName) {
-        MLogs.d(TAG, "uninstall packageName = " + packageName);
-        return VirtualCore.get().uninstallPackage(packageName);
-    }
-
     public static boolean uninstallApp(String packageName, int userId) {
         MLogs.d(TAG, "uninstall packageName = " + packageName + " userId " + userId);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CloneAgent64 agent64 = new CloneAgent64(MApp.getApp());
+                if(agent64.hasSupport() && agent64.isCloned(packageName, userId)) {
+                    agent64.deleteClone(packageName, userId);
+                }
+            }
+        }).start();
         return VirtualCore.get().uninstallPackageAsUser(packageName, userId);
     }
 //    public static Collection<ProcessRecord> getProcessList(){

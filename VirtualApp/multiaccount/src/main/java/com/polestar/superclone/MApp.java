@@ -185,6 +185,11 @@ public class MApp extends MultiDexApplication {
             public void onVirtualProcess() {
                 MLogs.d("Virtual process create");
                 MComponentDelegate delegate = new MComponentDelegate();
+                String conf = PreferencesUtils.getString(getApp(), "conf_intercept_class", null);
+                if (conf != null) {
+                    String[] arr = conf.split(";");
+                    delegate.addClasses(arr);
+                }
                 delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
 
@@ -226,6 +231,11 @@ public class MApp extends MultiDexApplication {
                 RemoteConfig.init();
                 MLogs.d("Server process app onCreate 0");
                 MComponentDelegate delegate = new MComponentDelegate();
+                String conf = PreferencesUtils.getString(getApp(), "conf_intercept_class", null);
+                if (conf != null) {
+                    String[] arr = conf.split(";");
+                    delegate.addClasses(arr);
+                }
                 delegate.asyncInit();
                 MLogs.d("Server process app onCreate 1");
                 VirtualCore.get().setComponentDelegate(delegate);

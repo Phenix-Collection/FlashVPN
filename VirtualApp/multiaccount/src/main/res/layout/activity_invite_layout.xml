@@ -268,10 +268,12 @@
         android:text="@string/iconfont_close"
         android:textColor="@color/white"
         android:textSize="13sp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="10dp"
+        android:paddingRight="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="10dp"
         android:layout_alignRight="@id/task_container"
+        android:layout_alignEnd="@id/task_container"
         android:layout_alignTop="@id/task_container"
         android:onClick="onCloseClick"/>
 

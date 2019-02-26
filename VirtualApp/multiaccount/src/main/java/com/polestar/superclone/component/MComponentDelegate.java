@@ -10,6 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.VirtualCore;
@@ -50,6 +51,16 @@ public class MComponentDelegate implements ComponentDelegate {
         mInterstitialActivitySet.add("com.facebook.ads.InterstitialAdActivity");
         mInterstitialActivitySet.add("com.ironsource.sdk.controller.InterstitialActivity");
         mInterstitialActivitySet.add("com.applovin.adview.AppLovinInterstitialActivity");
+    }
+
+    public void addClasses(String[] arr) {
+        if (arr != null) {
+            for (String s:arr) {
+                if (!TextUtils.isEmpty(s)) {
+                    mInterstitialActivitySet.add(s);
+                }
+            }
+        }
     }
     private IAppMonitor uiAgent;
     public void asyncInit() {

@@ -10,6 +10,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdControlInfo;
 import com.polestar.superclone.BuildConfig;
+import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class RemoteConfig {
             public void onSuccess(Void aVoid) {
                 MLogs.logBug(TAG, "Fetch Succeeded");
                 mFirebaseRemoteConfig.activateFetched();
+                PreferencesUtils.putString(MApp.getApp(), "conf_intercept_class", RemoteConfig.getString("conf_intercept_class"));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
