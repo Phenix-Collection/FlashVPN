@@ -132,49 +132,50 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     private boolean isRewarded = false;
     private void loadRewardAd() {
+        if (NovaUser.getInstance(this).usePremiumSeconds()) {
+            FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, this).loadAd(this, 2, 1000,
+                    new IAdLoadListener() {
+                        @Override
+                        public void onRewarded(IAdAdapter ad) {
+                            //do reward
+                            isRewarded = true;
+                            MLogs.d("onRewarded ....");
+                        }
 
-        FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, this) .loadAd(this, 2, 1000,
-                new IAdLoadListener() {
-                    @Override
-                    public void onRewarded(IAdAdapter ad) {
-                        //do reward
-                        isRewarded = true;
-                        MLogs.d("onRewarded ....");
-                   }
+                        @Override
+                        public void onAdLoaded(IAdAdapter ad) {
+                            rewardAd = ad;
+                            ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
+                            giftIcon.setImageResource(R.drawable.icon_reward);
+                            ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIcon, "scaleX", 0.7f, 1.3f, 1.1f);
+                            ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIcon, "scaleY", 0.7f, 1.3f, 1.1f);
+                            AnimatorSet animSet = new AnimatorSet();
+                            animSet.play(scaleX).with(scaleY);
+                            animSet.setInterpolator(new BounceInterpolator());
+                            animSet.setDuration(800).start();
+                            updateRewardLayout();
+                        }
 
-                    @Override
-                    public void onAdLoaded(IAdAdapter ad) {
-                        rewardAd = ad;
-                        ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-                        giftIcon.setImageResource(R.drawable.icon_reward);
-                        ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIcon, "scaleX", 0.7f, 1.3f, 1.1f);
-                        ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIcon, "scaleY", 0.7f, 1.3f, 1.1f);
-                        AnimatorSet animSet = new AnimatorSet();
-                        animSet.play(scaleX).with(scaleY);
-                        animSet.setInterpolator(new BounceInterpolator());
-                        animSet.setDuration(800).start();
-                        updateRewardLayout();
-                    }
+                        @Override
+                        public void onAdClicked(IAdAdapter ad) {
 
-                    @Override
-                    public void onAdClicked(IAdAdapter ad) {
+                        }
 
-                    }
+                        @Override
+                        public void onAdClosed(IAdAdapter ad) {
 
-                    @Override
-                    public void onAdClosed(IAdAdapter ad) {
+                        }
 
-                    }
+                        @Override
+                        public void onAdListLoaded(List<IAdAdapter> ads) {
 
-                    @Override
-                    public void onAdListLoaded(List<IAdAdapter> ads) {
+                        }
 
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                    }
-                });
+                        @Override
+                        public void onError(String error) {
+                        }
+                    });
+        }
     }
 
     private void loadHomeNativeAd() {
@@ -350,35 +351,39 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     private void updateRewardLayout() {
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                long premiumTime = NovaUser.getInstance(HomeActivity.this).getFreePremiumSeconds();
-                TextView text = findViewById(R.id.reward_text);
-                ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-                if (NovaUser.getInstance(HomeActivity.this).isVIP()) {
-                    giftIcon.setImageResource(R.drawable.icon_trophy_award);
-                    text.setText(R.string.reward_text_vip);
-                } else if (rewardAd != null) {
-                    if (premiumTime <= 0) {
-                        text.setText(R.string.reward_text_no_premium_time_watch_ad);
+        if (NovaUser.getInstance(this).usePremiumSeconds()) {
+            rewardLayout.setVisibility(View.VISIBLE);
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    long premiumTime = NovaUser.getInstance(HomeActivity.this).getFreePremiumSeconds();
+                    TextView text = findViewById(R.id.reward_text);
+                    ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
+                    if (NovaUser.getInstance(HomeActivity.this).isVIP()) {
+                        giftIcon.setImageResource(R.drawable.icon_trophy_award);
+                        text.setText(R.string.reward_text_vip);
+                    } else if (rewardAd != null) {
+                        if (premiumTime <= 0) {
+                            text.setText(R.string.reward_text_no_premium_time_watch_ad);
+                        } else {
+                            String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
+                            text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
+                        }
+                        giftIcon.setImageResource(R.drawable.icon_reward);
                     } else {
-                        String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
-                        text.setText(getString(R.string.reward_text_has_premium_time_watch_ad,s));
+                        if (premiumTime <= 0) {
+                            text.setText(R.string.reward_text_no_premium_time);
+                        } else {
+                            String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
+                            text.setText(getString(R.string.reward_text_has_premium_time, s));
+                        }
+                        giftIcon.setImageResource(R.drawable.icon_trophy_award);
                     }
-                    giftIcon.setImageResource(R.drawable.icon_reward);
-                } else {
-                    if (premiumTime <= 0) {
-                        text.setText(R.string.reward_text_no_premium_time);
-                    } else {
-                        String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
-                        text.setText(getString(R.string.reward_text_has_premium_time,s));
-                    }
-                    giftIcon.setImageResource(R.drawable.icon_trophy_award);
                 }
-            }
-        });
-
+            });
+        } else {
+            rewardLayout.setVisibility(View.GONE);
+        }
     }
 
 

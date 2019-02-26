@@ -115,4 +115,16 @@
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>off</value>
     </entry>
+
+    <!-- 2019-02-26 要不要倒计时以及倒计时的初始时间-->
+    <entry>
+        <key>init_premium_seconds</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>3600</value>
+    </entry>
+    <entry>
+        <key>use_premium_seconds</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>false</value>
+    </entry>
 </defaultsMap>

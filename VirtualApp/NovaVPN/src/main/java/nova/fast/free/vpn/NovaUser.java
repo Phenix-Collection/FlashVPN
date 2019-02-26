@@ -19,6 +19,9 @@ public class NovaUser{
 
     private final static int MSG_SAVE = 0;
 
+    private final static String RC_USE_PREMIUM_SECONDS = "use_premium_seconds";
+    private final static String RC_INIT_PREMIUM_SECONDS = "init_premium_seconds";
+
     private NovaUser(Context context) {
         mContext = context;
         mHandler = new Handler(Looper.getMainLooper()){
@@ -31,7 +34,7 @@ public class NovaUser{
                 }
             }
         };
-        freePremiumTime = PreferenceUtils.getLong(mContext, "premium_seconds", 3600);
+        freePremiumTime = PreferenceUtils.getLong(mContext, "premium_seconds", RemoteConfig.getLong(RC_INIT_PREMIUM_SECONDS));
     }
 
     synchronized public static NovaUser  getInstance(Context context) {
@@ -47,16 +50,20 @@ public class NovaUser{
     }
 
     public void doRewardFreePremium() {
-        long add =  RemoteConfig.getLong("gift_reward_sec");
-        freePremiumTime += add;
-        MLogs.d("add reward: " + add);
-        scheduleSave();
+        if (usePremiumSeconds()) {
+            long add = RemoteConfig.getLong("gift_reward_sec");
+            freePremiumTime += add;
+            MLogs.d("add reward: " + add);
+            scheduleSave();
+        }
     }
 
     public void costFreePremiumSec(long sec) {
-        freePremiumTime -= sec;
-        if (freePremiumTime < 0) freePremiumTime = 0;
-        scheduleSave();
+        if (usePremiumSeconds()) {
+            freePremiumTime -= sec;
+            if (freePremiumTime < 0) freePremiumTime = 0;
+            scheduleSave();
+        }
     }
 
     private void scheduleSave() {
@@ -67,6 +74,10 @@ public class NovaUser{
 
     public boolean isVIP() {
         return PreferenceUtils.getBoolean(NovaApp.getApp(), "is_vip", false);
+    }
+
+    public boolean usePremiumSeconds() {
+        return RemoteConfig.getBoolean(RC_USE_PREMIUM_SECONDS);
     }
 
     public void setVIP(boolean enable) {

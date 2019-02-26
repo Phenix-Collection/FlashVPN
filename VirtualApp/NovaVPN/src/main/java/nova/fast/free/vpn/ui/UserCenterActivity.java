@@ -94,64 +94,70 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
         if (NovaUser.getInstance(this).isVIP()|| rewardAd == null) {
             rewardLayout.setVisibility(View.GONE);
         } else {
-            rewardLayout.setVisibility(View.VISIBLE);
-            long premiumTime = NovaUser.getInstance(this).getFreePremiumSeconds();
-            TextView text = findViewById(R.id.reward_text);
-            ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-            if (premiumTime <= 0) {
-                text.setText(R.string.reward_text_no_premium_time_watch_ad);
-            } else {
-                String s = CommonUtils.formatSeconds(this, premiumTime);
-                text.setText(getString(R.string.reward_text_has_premium_time_watch_ad,s));
-            }
-            giftIcon.setImageResource(R.drawable.icon_reward);
+            if (NovaUser.getInstance(this).usePremiumSeconds()) {
+                rewardLayout.setVisibility(View.VISIBLE);
+                long premiumTime = NovaUser.getInstance(this).getFreePremiumSeconds();
+                TextView text = findViewById(R.id.reward_text);
+                ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
+                if (premiumTime <= 0) {
+                    text.setText(R.string.reward_text_no_premium_time_watch_ad);
+                } else {
+                    String s = CommonUtils.formatSeconds(this, premiumTime);
+                    text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
+                }
+                giftIcon.setImageResource(R.drawable.icon_reward);
 
-            rewardLayout.setVisibility(View.VISIBLE);
-            ObjectAnimator scaleX = ObjectAnimator.ofFloat(rewardLayout, "scaleX", 0.7f, 1.0f, 1.0f);
-            ObjectAnimator scaleY = ObjectAnimator.ofFloat(rewardLayout, "scaleY", 0.7f, 1.0f, 1.0f);
-            AnimatorSet animSet = new AnimatorSet();
-            animSet.play(scaleX).with(scaleY);
-            animSet.setInterpolator(new BounceInterpolator());
-            animSet.setDuration(800).start();
+                rewardLayout.setVisibility(View.VISIBLE);
+                ObjectAnimator scaleX = ObjectAnimator.ofFloat(rewardLayout, "scaleX", 0.7f, 1.0f, 1.0f);
+                ObjectAnimator scaleY = ObjectAnimator.ofFloat(rewardLayout, "scaleY", 0.7f, 1.0f, 1.0f);
+                AnimatorSet animSet = new AnimatorSet();
+                animSet.play(scaleX).with(scaleY);
+                animSet.setInterpolator(new BounceInterpolator());
+                animSet.setDuration(800).start();
+            } else {
+                rewardLayout.setVisibility(View.GONE);
+            }
         }
     }
 
     private void loadRewardAd() {
+        if (NovaUser.getInstance(this).usePremiumSeconds()) {
 
-        FuseAdLoader.get(SLOT_USER_CENTER_REWARD, this) .loadAd(this, 2, 1000,
-                new IAdLoadListener() {
-                    @Override
-                    public void onRewarded(IAdAdapter ad) {
-                        //do reward
-                        isRewarded = true;
-                        MLogs.d("onRewarded ....");
-                    }
+            FuseAdLoader.get(SLOT_USER_CENTER_REWARD, this).loadAd(this, 2, 1000,
+                    new IAdLoadListener() {
+                        @Override
+                        public void onRewarded(IAdAdapter ad) {
+                            //do reward
+                            isRewarded = true;
+                            MLogs.d("onRewarded ....");
+                        }
 
-                    @Override
-                    public void onAdLoaded(IAdAdapter ad) {
-                        rewardAd = ad;
-                        updateRewardLayout();
-                    }
+                        @Override
+                        public void onAdLoaded(IAdAdapter ad) {
+                            rewardAd = ad;
+                            updateRewardLayout();
+                        }
 
-                    @Override
-                    public void onAdClicked(IAdAdapter ad) {
+                        @Override
+                        public void onAdClicked(IAdAdapter ad) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onAdClosed(IAdAdapter ad) {
+                        @Override
+                        public void onAdClosed(IAdAdapter ad) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onAdListLoaded(List<IAdAdapter> ads) {
+                        @Override
+                        public void onAdListLoaded(List<IAdAdapter> ads) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError(String error) {
-                    }
-                });
+                        @Override
+                        public void onError(String error) {
+                        }
+                    });
+        }
     }
 
 
