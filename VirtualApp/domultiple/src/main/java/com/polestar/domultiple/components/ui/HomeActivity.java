@@ -320,7 +320,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         }
         if (adLoader.hasValidAdSource()) {
             adLoader.setBannerAdSize(getBannerAdSize());
-            adLoader.loadAd(this, 2, 2000, new IAdLoadListener() {
+            adLoader.loadAd(this, 2, 1200, new IAdLoadListener() {
                 @Override
                 public void onRewarded(IAdAdapter ad) {
 
@@ -665,31 +665,32 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             }
         });
 
-        mExplosionField = ExplosionField.attachToWindow(this);
         functionCard = (NarrowPromotionCard) findViewById(R.id.narrow_function_card);
         functionCard.init(R.drawable.icon_locker_small, R.string.privacy_locker, new Intent(this, LockSettingsActivity.class));
 
         nativeAdContainer = (LinearLayout) findViewById(R.id.ad_container);
     }
-
-    private List<CloneModel> getSortedCloneList(List<CloneModel> cloneModels) {
+    
+    private List<CloneModel> getSortedCloneList(List<CloneModel> CloneModels) {
         List<CloneModel> ret = new ArrayList<>();
         HashMap<String, ArrayList<CloneModel>> sortMap = new HashMap<>();
-        if (cloneModels != null) {
-            for (CloneModel model: cloneModels) {
+        ArrayList<String> sortedPackages = new ArrayList<>();
+        if (CloneModels != null) {
+            for (CloneModel model: CloneModels) {
                 ArrayList list = sortMap.get(model.getPackageName());
                 if (list == null) {
                     list = new ArrayList();
+                    sortedPackages.add(model.getPackageName());
                 }
                 list.add(model);
                 sortMap.put(model.getPackageName(), list);
+                MLogs.d("sort " + model.getPackageName());
             }
         }
-        for (ArrayList<CloneModel> list: sortMap.values()) {
-            if (list != null && list.size() > 0) {
-                for(CloneModel model: list) {
-                    ret.add(model);
-                }
+        for(String s: sortedPackages) {
+            ArrayList list = sortMap.get(s);
+            if (list != null) {
+                ret.addAll(list);
             }
         }
         return  ret;
@@ -860,7 +861,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                 @Override
                 public void run() {
                     MLogs.d("Delete clone model!");
-                    showDeleteDialog((CloneModel) info);
+                    if (PreferencesUtils.hasShownDeleteDialog()) {
+                        deleteWithAnim((CloneModel) info);
+                    } else {
+                        showDeleteDialog((CloneModel) info);
+
+                    }
                 }
             },500);
         }
@@ -884,6 +890,39 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         return  -1;
     }
 
+    private void deleteWithAnim(CloneModel info) {
+        int pos = getPosForModel(info);
+        if (pos == -1) {
+            MLogs.logBug("Unkown package");
+        }
+        View view = cloneGridView.getChildAt(pos);
+        if(view != null) {
+            mExplosionField = ExplosionField.attachToWindow(HomeActivity.this);
+            mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
+                @Override
+                public void onExplodeFinish(View v) {
+                }
+            });
+            view.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PreferencesUtils.resetStarted(info.getName());
+                    CloneManager.getInstance(HomeActivity.this).deleteClone(HomeActivity.this, info);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CloneAgent64 agent64 = new CloneAgent64(HomeActivity.this);
+                            if(agent64.hasSupport() && agent64.isCloned(info.getPackageName(),info.getPkgUserId())) {
+                                agent64.deleteClone(info.getPackageName(), info.getPkgUserId());
+                            }
+                        }
+                    }).start();
+                    ExplosionField.detachFromWindow(HomeActivity.this, mExplosionField);
+                }
+            }, 1500);
+        }
+    }
+
     private void showDeleteDialog(CloneModel info) {
         UpDownDialog.show(HomeActivity.this, getString(R.string.delete_dialog_title), getString(R.string.delete_dialog_content),
                 getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
@@ -893,38 +932,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                             case UpDownDialog.NEGATIVE_BUTTON:
                                 break;
                             case UpDownDialog.POSITIVE_BUTTON:
-                                int pos = getPosForModel(info);
-                                if (pos == -1) {
-                                    MLogs.logBug("Unkown package");
-                                }
-                                View view = cloneGridView.getChildAt(pos);
-                                if(view != null) {
-                                    mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
-                                        @Override
-                                        public void onExplodeFinish(View v) {
-                                        }
-                                    });
-                                    view.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            PreferencesUtils.resetStarted(info.getName());
-                                            CloneManager.getInstance(HomeActivity.this).deleteClone(HomeActivity.this, info);
-                                            new Thread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    CloneAgent64 agent64 = new CloneAgent64(HomeActivity.this);
-                                                    if(agent64.hasSupport() && agent64.isCloned(info.getPackageName(),info.getPkgUserId())) {
-                                                        agent64.deleteClone(info.getPackageName(), info.getPkgUserId());
-                                                    }
-                                                }
-                                            }).start();
-                                        }
-                                    }, 1000);
-                                }
+                                deleteWithAnim(info);
                                 break;
                         }
                     }
                 });
+        PreferencesUtils.setShownDeleteDialog(true);
     }
 
     @Override

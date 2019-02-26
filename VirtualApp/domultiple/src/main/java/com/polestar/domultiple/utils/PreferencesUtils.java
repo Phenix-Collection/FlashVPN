@@ -493,4 +493,12 @@ public class PreferencesUtils {
     public static void setShownPermissionGuide(boolean shown) {
         putBoolean(PolestarApp.getApp(), "shown_permission_guide", shown);
     }
+
+    public static void setShownDeleteDialog(boolean shown) {
+        putBoolean(PolestarApp.getApp(), "shown_delete_guide", shown);
+    }
+
+    public static boolean hasShownDeleteDialog() {
+        return getBoolean(PolestarApp.getApp(), "shown_delete_guide", false);
+    }
 }
