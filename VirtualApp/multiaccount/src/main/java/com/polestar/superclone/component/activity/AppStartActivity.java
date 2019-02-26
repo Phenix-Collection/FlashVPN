@@ -339,7 +339,7 @@ public class AppStartActivity extends BaseActivity {
                     doLaunchFromAgent();
                 }
             }
-        }, isAppLaunched ? 0: 3000);
+        }, isAppLaunched ? 200: 3000);
     }
     private void initView() {
         mLoadingView = (ProgressBar) findViewById(R.id.loading);
@@ -406,12 +406,11 @@ public class AppStartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         EventReporter.reportWake(this, "app_shortcut");
         mainHandler = new Handler();
+        initData();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         setContentView(R.layout.activity_start);
-
-        initData();
+        initView();
         if (appModel != null && !isAppLaunched) {
-            initView();
             if ( needLoadNativeAd(false, appModel.getPackageName())) {
                 loadNativeAd();
             }

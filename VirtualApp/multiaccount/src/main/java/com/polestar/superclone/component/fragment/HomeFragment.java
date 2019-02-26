@@ -62,6 +62,7 @@ import com.polestar.superclone.widgets.dragdrop.DragLayer;
 import com.polestar.superclone.widgets.dragdrop.DragSource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -533,7 +534,31 @@ public class HomeFragment extends BaseFragment {
 
     private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
     public static final String SLOT_HOME_HEADER_NATIVE = "slot_home_header_native";
-    private List<AdConfig> headerNativeAdConfigs ;
+
+    private List<AppModel> getSortedCloneList(List<AppModel> AppModels) {
+        List<AppModel> ret = new ArrayList<>();
+        HashMap<String, ArrayList<AppModel>> sortMap = new HashMap<>();
+        ArrayList<String> sortedPackages = new ArrayList<>();
+        if (AppModels != null) {
+            for (AppModel model: AppModels) {
+                ArrayList list = sortMap.get(model.getPackageName());
+                if (list == null) {
+                    list = new ArrayList();
+                    sortedPackages.add(model.getPackageName());
+                }
+                list.add(model);
+                sortMap.put(model.getPackageName(), list);
+                MLogs.d("sort " + model.getPackageName());
+            }
+        }
+        for(String s: sortedPackages) {
+            ArrayList list = sortMap.get(s);
+            if (list != null) {
+                ret.addAll(list);
+            }
+        }
+        return  ret;
+    }
 
     private void initData(){
         showBooster = RemoteConfig.getBoolean(CONFIG_SHOW_BOOSTER) && PreferencesUtils.hasCloned();
@@ -546,7 +571,7 @@ public class HomeFragment extends BaseFragment {
                         if (!PreferencesUtils.hasCloned()) {
                             PreferencesUtils.setHasCloned();
                         }
-                        appInfos = clonedApp;
+                        appInfos = getSortedCloneList(clonedApp);
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
                         }
@@ -555,7 +580,7 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void onUnstalled(List<AppModel> clonedApp) {
                         MLogs.d("onUninstalled");
-                        appInfos = clonedApp;
+                        appInfos = getSortedCloneList(clonedApp);
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
                         }
@@ -564,7 +589,7 @@ public class HomeFragment extends BaseFragment {
 
                     @Override
                     public void onLoaded(List<AppModel> clonedApp) {
-                        appInfos = clonedApp;
+                        appInfos = getSortedCloneList(clonedApp);
                         preloadAppListAd(false);
                         MLogs.d("onLoaded applist");
                         long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
