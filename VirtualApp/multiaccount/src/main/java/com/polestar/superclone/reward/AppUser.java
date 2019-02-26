@@ -147,7 +147,7 @@ public class AppUser {
     }
 
     public static boolean isRewardEnabled() {
-        return isSecure && RemoteConfig.getBoolean(CONF_REWARD_ENABLE) ;
+        return (!MApp.isSupportPkg()) && isSecure && RemoteConfig.getBoolean(CONF_REWARD_ENABLE) ;
     }
 
     public boolean isRewardAvailable() {
