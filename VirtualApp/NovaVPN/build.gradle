@@ -46,8 +46,8 @@ android {
         multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1201
-        versionName "1.2.01.${releaseTime()}"
+        versionCode 1202
+        versionName "1.2.02.${releaseTime()}"
     }
 
     signingConfigs {
