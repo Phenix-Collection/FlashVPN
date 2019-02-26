@@ -33,7 +33,7 @@ import java.util.Locale;
  * Created by hxx on 9/7/16.
  */
 public class AppListUtils implements DataObserver {
-    private static final Collator COLLATOR = Collator.getInstance(Locale.CHINA);
+//    private static final Collator COLLATOR = Collator.getInstance(Locale.CHINA);
     private static AppListUtils sInstance;
     private List<AppModel> mPopularModels = new ArrayList<>();
     private List<AppModel> mInstalledModels = new ArrayList<>();
@@ -252,10 +252,6 @@ public class AppListUtils implements DataObserver {
             if (blackList.contains(ai.packageName)) {
                 return false;
             }
-
-            if ("com.polestar.domultiple".equals(ai.packageName)) {
-                return false;
-            }
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
@@ -317,14 +313,25 @@ public class AppListUtils implements DataObserver {
                 list.add(model);
             }
         }
-
-       // Collections.sort(list, (lhs, rhs) -> COLLATOR.compare(lhs.getName(), rhs.getName()));
         Collections.sort(list, new Comparator<AppModel>() {
             @Override
             public int compare(AppModel lhs, AppModel rhs) {
-                return COLLATOR.compare(lhs.getName(), rhs.getName());
+                try {
+                    return CommonUtils.getInstallTime(mContext,lhs.getPackageName())
+                            - CommonUtils.getInstallTime(mContext,rhs.getPackageName()) > 0 ? -1: 1;
+                }catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                return -1;
             }
         });
+       // Collections.sort(list, (lhs, rhs) -> COLLATOR.compare(lhs.getName(), rhs.getName()));
+//        Collections.sort(list, new Comparator<AppModel>() {
+//            @Override
+//            public int compare(AppModel lhs, AppModel rhs) {
+//                return COLLATOR.compare(lhs.getName(), rhs.getName());
+//            }
+//        });
     }
 
     private boolean isAppInstalled(String pName) {
