@@ -218,9 +218,14 @@ public class FuseAdLoader {
                     if (mListener != null) {
                         IAdAdapter cache = getValidCache();
                         if (cache != null) {
-                            mAdReturned = true;
-                            cache.setAdListener(mListener);
-                            mListener.onAdLoaded(cache);
+                            if (!mAdReturned) {
+                                AdLog.d(mSlot + " cache return to " + mListener);
+                                mAdReturned = true;
+                                cache.setAdListener(mListener);
+                                mListener.onAdLoaded(cache);
+                            } else {
+                                AdLog.d(mSlot + " already returned" );
+                            }
                             //mListener = null;
                         }
                     }
