@@ -81,6 +81,11 @@ public class LocalVpnService extends VpnService implements Runnable {
     private long lastUpBytes;
     private final int MSG_UPDATE_NOTIFICATION = 100;
 
+    private float mAvgDownloadSpeed;
+    private float mAvgUploadSpeed;
+    private float mMaxDownloadSpeed;
+    private float mMaxUploadSpeed;
+
     private final String CONF_VIP_SPEED_BOOST = "conf_vip_speed_boost";
     private final String CONF_NORMAL_SPEED_BOOST = "conf_normal_speed_boost";
 
@@ -115,6 +120,24 @@ public class LocalVpnService extends VpnService implements Runnable {
         m_VPNThread.start();
         m_Handler.sendMessageDelayed(m_Handler.obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
         super.onCreate();
+    }
+
+    private void resetSpeeds() {
+        mAvgDownloadSpeed = 0;
+        mAvgUploadSpeed = 0;
+        mMaxDownloadSpeed = 0;
+        mMaxUploadSpeed = 0;
+    }
+
+    private void recalculateSpeed(float currentDownloadSpeed, float currentUploadSpeed) {
+        if (currentDownloadSpeed > mMaxDownloadSpeed) {
+            mMaxDownloadSpeed = currentDownloadSpeed;
+        }
+        if (currentUploadSpeed > mMaxUploadSpeed) {
+            mMaxUploadSpeed = currentUploadSpeed;
+        }
+        mAvgUploadSpeed = (mAvgUploadSpeed + currentUploadSpeed)/2;
+        mAvgDownloadSpeed = (mAvgDownloadSpeed + currentDownloadSpeed)/2;
     }
 
     private void updateNotification() {
@@ -170,17 +193,29 @@ public class LocalVpnService extends VpnService implements Runnable {
 
     }
 
+    private float[] getRealNetworkSpeed() {
+        return getNetworkSpeedInternal(false);
+    }
 
     private float[] getNetworkSpeed() {
+        return getNetworkSpeedInternal(true);
+    }
+
+    private float[] getNetworkSpeedInternal(boolean tryBoost) {
         float boost = 1.0f;
         if (IsRunning) {
-            boost = (NovaUser.getInstance(this).isVIP() || NovaUser.getInstance(this).getFreePremiumSeconds() > 0)
+            boost = (tryBoost && (NovaUser.getInstance(this).isVIP() || NovaUser.getInstance(this).getFreePremiumSeconds() > 0))
                     ? ((float) RemoteConfig.getLong(CONF_VIP_SPEED_BOOST)) / 100
                     : ((float) RemoteConfig.getLong(CONF_NORMAL_SPEED_BOOST)) / 100;
         }
         long current = System.currentTimeMillis();
         long sent = TrafficStats.getTotalTxBytes();
         long received = TrafficStats.getTotalRxBytes();
+
+        float realDownloadSpeed = ((float)(received - lastDownBytes))*1000/(current - lastSpeedCalTime);
+        float realUploadSpeed = ((float)(sent - lastUpBytes))*1000/(current - lastSpeedCalTime);;
+        recalculateSpeed(realDownloadSpeed, realUploadSpeed);
+
         float[] result = new float[2];
         result[0] = ((float)(received - lastDownBytes))*boost*1000/(current - lastSpeedCalTime);
         result[1] = ((float)(sent - lastUpBytes))*boost*1000/(current - lastSpeedCalTime);
@@ -198,7 +233,8 @@ public class LocalVpnService extends VpnService implements Runnable {
     }
 
     public interface onStatusChangedListener {
-        public void onStatusChanged(String status, Boolean isRunning);
+        public void onStatusChanged(String status, Boolean isRunning, float avgDownloadSpeed, float avgUploadSpeed,
+                                    float maxDownloadSpeed, float maxUploadSpeed);
 
         public void onLogReceived(String logString);
     }
@@ -215,12 +251,15 @@ public class LocalVpnService extends VpnService implements Runnable {
         }
     }
 
-    private void onStatusChanged(final String status, final boolean isRunning) {
+    private void onStatusChanged(final String status, final boolean isRunning,
+                                final float avgDownloadSpeed, final float avgUploadSpeed,
+                                 final float maxDownloadSpeed, final float maxUploadSpeed) {
         m_Handler.post(new Runnable() {
             @Override
             public void run() {
                 for (Map.Entry<onStatusChangedListener, Object> entry : m_OnStatusChangedListeners.entrySet()) {
-                    entry.getKey().onStatusChanged(status, isRunning);
+                    entry.getKey().onStatusChanged(status, isRunning, avgDownloadSpeed, avgUploadSpeed,
+                                                                        maxDownloadSpeed, maxUploadSpeed);
                 }
             }
         });
@@ -333,7 +372,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                             errString = e.toString();
                         }
                         IsRunning = false;
-                        onStatusChanged(errString, false);
+                        onStatusChanged(errString, false, mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
                         continue;
                     }
                     String welcomeInfoString = ProxyConfig.Instance.getWelcomeInfo();
@@ -490,6 +529,8 @@ public class LocalVpnService extends VpnService implements Runnable {
     }
 
     private ParcelFileDescriptor establishVPN() throws Exception {
+        resetSpeeds();
+
         Builder builder = new Builder();
         builder.setMtu(ProxyConfig.Instance.getMTU());
         if (ProxyConfig.IS_DEBUG)
@@ -594,7 +635,8 @@ public class LocalVpnService extends VpnService implements Runnable {
 
         builder.setSession(ProxyConfig.Instance.getSessionName());
         ParcelFileDescriptor pfdDescriptor = builder.establish();
-        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true);
+        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true,
+                            mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
         return pfdDescriptor;
     }
 
@@ -607,7 +649,8 @@ public class LocalVpnService extends VpnService implements Runnable {
         } catch (Exception e) {
             // ignore
         }
-        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_disconnected_status), false);
+        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_disconnected_status), false,
+                mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
         this.m_VPNOutputStream = null;
     }
 

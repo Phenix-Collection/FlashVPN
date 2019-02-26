@@ -42,10 +42,47 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("rate", bundle);
     }
 
+    public static void reportConnectted(Context context, String name) {
+        Bundle bundle = new Bundle();
+        bundle.putString("server", name);
+        mFirebaseAnalytics.logEvent("connectted", bundle);
+    }
+
+    public static void reportDisConnectted(Context context, String name) {
+        Bundle bundle = new Bundle();
+        bundle.putString("server", name);
+        mFirebaseAnalytics.logEvent("disconnetted", bundle);
+    }
+
     public static void reportConnect(Context context, String name) {
         Bundle bundle = new Bundle();
         bundle.putString("server", name);
         mFirebaseAnalytics.logEvent("connect", bundle);
+    }
+
+    public static void reportDisConnect(Context context, String name) {
+        Bundle bundle = new Bundle();
+        bundle.putString("server", name);
+        mFirebaseAnalytics.logEvent("disconnect", bundle);
+    }
+
+    public static int getSpeedGrade(float speed) {
+        if (speed > 100000) {
+            return 10;
+        } else {
+            return ((int)(speed/10000));
+        }
+    }
+
+    public static void reportSpeed(Context context, String server, float avgDownload,
+                                        float avgUpload, float maxDownload, float maxUpload) {
+        Bundle bundle = new Bundle();
+        bundle.putString("avgDownload", server + "_" + getSpeedGrade(avgDownload));
+        bundle.putString("avgUpload", server + "_" + getSpeedGrade(avgUpload));
+
+        bundle.putString("maxDownload", server + "_" + getSpeedGrade(maxDownload));
+        bundle.putString("maxUpload", server + "_" + getSpeedGrade(maxUpload));
+        mFirebaseAnalytics.logEvent("speed", bundle);
     }
 
     public static void loveApp(Context context, boolean love, String from) {

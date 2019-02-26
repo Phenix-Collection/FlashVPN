@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nova.fast.free.vpn.AppConstants;
 import nova.fast.free.vpn.NovaUser;
 import nova.fast.free.vpn.R;
 import nova.fast.free.vpn.core.AppProxyManager;
@@ -45,6 +46,7 @@ import nova.fast.free.vpn.core.LocalVpnService;
 import nova.fast.free.vpn.network.ServerInfo;
 import nova.fast.free.vpn.network.VPNServerManager;
 import nova.fast.free.vpn.ui.widget.RateDialog;
+import nova.fast.free.vpn.ui.widget.UpDownDialog;
 import nova.fast.free.vpn.utils.CommonUtils;
 import nova.fast.free.vpn.utils.EventReporter;
 import nova.fast.free.vpn.utils.MLogs;
@@ -71,6 +73,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     private Timer timer;
     private TimerTask timeCountTask;
+    private ServerInfo mCurrentSI;
 
     private static final String SLOT_HOME_NATIVE = "slot_home_native";
     private static final String SLOT_HOME_GIFT_REWARD = "slot_home_gift_reward";
@@ -303,11 +306,11 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                                 case 0:
                                     connectTips.setVisibility(View.VISIBLE);
                                     connectTips.setText(R.string.connecting_tip1);
-                                    mainHandler.postDelayed(this, 1000);
+                                    mainHandler.postDelayed(this, 2000);
                                     break;
                                 case 1:
                                     connectTips.setText(R.string.connecting_tip2);
-                                    mainHandler.postDelayed(this, 1000);
+                                    mainHandler.postDelayed(this, 2000);
                                     break;
                                 case 2:
                                     updateConnectState(STATE_CONNECTED);
@@ -436,8 +439,9 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 MLogs.d("IsRunning " + LocalVpnService.IsRunning);
                 int id = PreferenceUtils.getPreferServer();
                 ServerInfo si = VPNServerManager.getInstance(HomeActivity.this).getServerInfo(id);
-                EventReporter.reportConnect(HomeActivity.this, si == null?"auto":si.country+"_"+si.city  );
+                mCurrentSI = si;
                 if (!LocalVpnService.IsRunning) {
+                    EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentSI));
                     Intent intent = LocalVpnService.prepare(HomeActivity.this);
                     if (intent == null) {
                         startVPNService();
@@ -445,11 +449,16 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                         startActivityForResult(intent, START_VPN_SERVICE_REQUEST_CODE);
                     }
                 } else {
+                    EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentSI));
                     LocalVpnService.IsRunning = false;
                     updateConnectState(STATE_DISCONNECTED);
                 }
             }
         });
+    }
+
+    private String getSIReportValue(ServerInfo si) {
+        return si == null?"auto":si.country+"_"+si.city;
     }
 
     @Override
@@ -567,7 +576,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             mainHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                  //  showUpdateDialog();
+                    showUpdateDialog();
                 }
             }, 1000);
         }
@@ -592,6 +601,41 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         loadAds();
 //        startActivity(new Intent().setClass(this, MainActivity.class));
 //        finish();
+    }
+
+    private void showUpdateDialog() {
+        EventReporter.generalEvent(this, "update_dialog");
+        UpDownDialog.show(this, this.getResources().getString(R.string.update_dialog_title),
+                this.getResources().getString(R.string.update_dialog_content, "" + RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION)),
+                this.getResources().getString(R.string.update_dialog_left), this.getResources().getString(R.string.update_dialog_right),
+                -1, R.layout.dialog_up_down,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                PreferenceUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                String forceUpdateUrl = RemoteConfig.getString("force_update_to");
+                                if (!TextUtils.isEmpty(forceUpdateUrl)) {
+                                    CommonUtils.jumpToUrl(HomeActivity.this,forceUpdateUrl);
+                                } else {
+                                    CommonUtils.jumpToMarket(HomeActivity.this, getPackageName());
+                                }
+                                EventReporter.generalEvent(HomeActivity.this, "update_go");
+                                break;
+                        }
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                PreferenceUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
+            }
+        });
     }
 
     private void loadAds() {
@@ -621,8 +665,10 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     @Override
-    public void onStatusChanged(String status, Boolean isRunning) {
+    public void onStatusChanged(String status, Boolean isRunning, float avgDownloadSpeed, float avgUploadSpeed,
+                                float maxDownloadSpeed, float maxUploadSpeed) {
         if (isRunning) {
+            EventReporter.reportConnectted(this, getSIReportValue(mCurrentSI));
             connectingFailed = false;
             if (PreferenceUtils.hasShownRateDialog(this)
                     && !NovaUser.getInstance(this).isVIP()) {
@@ -659,6 +705,10 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 });
             }
         } else {
+            EventReporter.reportDisConnectted(this, getSIReportValue(mCurrentSI));
+            EventReporter.reportSpeed(this, getSIReportValue(mCurrentSI),
+                    avgDownloadSpeed, avgUploadSpeed,
+                    maxDownloadSpeed, maxUploadSpeed);
             connectingFailed = true;
         }
     }

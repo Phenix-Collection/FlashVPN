@@ -125,5 +125,12 @@
             allocate dedicate bandwidth when you connected.
         </item>
     </array>
+
+    <!-- update & about -->
+    <string name="update_dialog_title">Update</string>
+    <string name="update_dialog_content">New version is coming! We improved a lot on version %s. Would you like to update NovaVPN now?</string>
+    <string name="update_dialog_left">Ignore this version</string>
+    <string name="update_dialog_right">Update</string>
+
     <string name="title_activity_ad_test">AdTestActivity</string>
 </resources>

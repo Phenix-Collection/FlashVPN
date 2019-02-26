@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 import nova.fast.free.vpn.BuildConfig;
 import nova.fast.free.vpn.NovaApp;
 import nova.fast.free.vpn.R;
+import nova.fast.free.vpn.core.LocalVpnService;
 import nova.fast.free.vpn.utils.Crypto;
 import nova.fast.free.vpn.utils.FileUtils;
 import nova.fast.free.vpn.utils.MLogs;
@@ -238,7 +239,12 @@ public class VPNServerManager {
             public void run() {
                 if (NetworkUtils.isNetConnected(NovaApp.getApp())) {
                     lastPingUpdateTime = System.currentTimeMillis();
-                    updatePing(activeServers);
+                    if (LocalVpnService.IsRunning) {
+                        MLogs.i("asyncUpdatePing do nothing since localVpnService is running");
+                    } else {
+                        updatePing(activeServers);
+                    }
+
                     synchronized (this) {
                         Collections.sort(activeServers);
                     }

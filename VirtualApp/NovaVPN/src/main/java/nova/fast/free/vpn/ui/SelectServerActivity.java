@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import nova.fast.free.vpn.R;
+import nova.fast.free.vpn.core.LocalVpnService;
 import nova.fast.free.vpn.network.ServerInfo;
 import nova.fast.free.vpn.network.VPNServerManager;
 import nova.fast.free.vpn.utils.MLogs;
