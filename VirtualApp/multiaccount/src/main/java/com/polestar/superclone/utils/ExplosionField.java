@@ -82,9 +82,20 @@ public class ExplosionField extends View {
     public static ExplosionField attachToWindow(Activity activity) {
         ViewGroup rootView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
         ExplosionField explosionField = new ExplosionField(activity);
-        rootView.addView(explosionField, new ViewGroup.LayoutParams(
+        rootView.addView(explosionField,  new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         return explosionField;
+    }
+
+    public static void detachFromWindow(Activity activity, ExplosionField field) {
+        if (field != null && activity != null) {
+            try {
+                ViewGroup rootView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
+                rootView.removeView(field);
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public static ExplosionField attachToWindow(ViewGroup rootView, Activity activity) {

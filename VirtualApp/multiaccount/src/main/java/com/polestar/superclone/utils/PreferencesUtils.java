@@ -487,4 +487,12 @@ public class PreferencesUtils {
     public static void setShownPermissionGuide(boolean shown) {
         putBoolean(MApp.getApp(), "shown_permission_guide", shown);
     }
+
+    public static void setShownDeleteDialog() {
+        putBoolean(MApp.getApp(), "shown_delete_dialog", true);
+    }
+
+    public static boolean hasShownDeleteDialog() {
+        return getBoolean(MApp.getApp(), "shown_delete_dialog", false);
+    }
 }

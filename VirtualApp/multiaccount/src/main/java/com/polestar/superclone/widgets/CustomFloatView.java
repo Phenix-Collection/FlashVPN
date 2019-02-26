@@ -205,6 +205,7 @@ public class CustomFloatView extends View implements DropTarget{
             return;
         }
         currentState = STATE_ANIMATION_TO_EXPAND;
+        selectedBtn = SELECT_BTN_NONE;
 
         ValueAnimator extandsAnimator = ValueAnimator.ofFloat(0f, 1f);
         extandsAnimator.setInterpolator(new AnticipateOvershootInterpolator(2f));

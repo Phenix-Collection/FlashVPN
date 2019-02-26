@@ -143,7 +143,7 @@
     <entry>
         <key>home_preload_applist_gate</key>
         <!-- greater or equal than gate then no preload -->
-        <value>1</value>
+        <value>2</value>
     </entry>
     <entry>
         <key>auto_home_interstitial_rate</key>
@@ -298,5 +298,9 @@
     <entry>
         <key>active_sub_sku_items</key>
         <value>premium_service_one_month;premium_service_3_month;premium_service_1_year</value>
+    </entry>
+    <entry>
+        <key>slot_checkin_interstitial</key>
+        <value>fb_interstitial:1902528246540287_1902554409871004:0;ab_interstitial:ca-app-pub-5490912237269284~7700296749:0</value>
     </entry>
 </defaultsMap>

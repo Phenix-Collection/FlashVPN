@@ -144,7 +144,6 @@ public class HomeFragment extends BaseFragment {
             contentView = inflater.inflate(R.layout.fragment_home, null);
             initView();
             mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
-            mExplosionField = ExplosionField.attachToWindow(mActivity);
             mDragController = new DragController(mActivity);
             mDragController.setDragListener(mDragListener);
             mDragController.setWindowToken(contentView.getWindowToken());
@@ -182,7 +181,11 @@ public class HomeFragment extends BaseFragment {
                     floatView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            showDeleteDialog((AppModel) info);
+                            if (!PreferencesUtils.hasShownDeleteDialog()) {
+                                showDeleteDialog((AppModel) info);
+                            } else {
+                                deleteAppWithAnim((AppModel) info);
+                            }
                         }
                     },CustomFloatView.ANIM_DURATION / 2);
                     break;
@@ -612,6 +615,7 @@ public class HomeFragment extends BaseFragment {
                         }
                     }
                 });
+        PreferencesUtils.setShownDeleteDialog();
     }
 
     private void deleteAppWithAnim(AppModel appModel){
@@ -620,9 +624,11 @@ public class HomeFragment extends BaseFragment {
         pkgGridAdapter.notifyDataSetChanged();
         View view = pkgGridView.getChildAt(pkgGridAdapter.getPosition(appModel) + pkgGridView.getGridItemStartOffset());
         if(view != null) {
+            mExplosionField = ExplosionField.attachToWindow(mActivity);
             mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
                 @Override
                 public void onExplodeFinish(View v) {
+
                 }
             });
         }
@@ -630,8 +636,9 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void run() {
                 deleteApp(appModel);
+                ExplosionField.detachFromWindow(mActivity, mExplosionField);
             }
-        }, 1000);
+        }, 1500);
 
     }
 
