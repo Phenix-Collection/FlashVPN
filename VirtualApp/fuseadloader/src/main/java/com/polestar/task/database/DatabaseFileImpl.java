@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.polestar.ad.AdLog;
 import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
@@ -76,9 +77,13 @@ public class DatabaseFileImpl implements DatabaseApi {
             if (taskInfo == null) {
                 mTasks = null;
             } else {
-                TasksResponse tasksResponse = mGson.fromJson(taskInfo, TasksResponse.class);
-                if (tasksResponse != null) {
-                    mTasks = tasksResponse.mTasks;
+                try {
+                    TasksResponse tasksResponse = mGson.fromJson(taskInfo, TasksResponse.class);
+                    if (tasksResponse != null) {
+                        mTasks = tasksResponse.mTasks;
+                    }
+                } catch (JsonSyntaxException jse) {
+                    mTasks = null;
                 }
             }
         }
@@ -118,11 +123,15 @@ public class DatabaseFileImpl implements DatabaseApi {
             if (productInfo == null) {
                 mProducts = null;
             } else {
-                ProductsResponse productsResponse = mGson.fromJson(productInfo, ProductsResponse.class);
-                if (productsResponse != null) {
-                    mProducts = productsResponse.mProducts;
-                }else{
-                    //wrong PRODUCT_FILE, check default from assests
+                try {
+                    ProductsResponse productsResponse = mGson.fromJson(productInfo, ProductsResponse.class);
+                    if (productsResponse != null) {
+                        mProducts = productsResponse.mProducts;
+                    }else{
+                        //wrong PRODUCT_FILE, check default from assests
+                    }
+                } catch (JsonSyntaxException jse) {
+                    mProducts = null;
                 }
             }
         }
@@ -167,7 +176,11 @@ public class DatabaseFileImpl implements DatabaseApi {
             if (userInfo == null) {
                 mUser = null;
             } else {
-                mUser = mGson.fromJson(userInfo, User.class);
+                try {
+                    mUser = mGson.fromJson(userInfo, User.class);
+                } catch (JsonSyntaxException jse) {
+                    mUser = null;
+                }
             }
 //            if (mUser == null ) {
 //                String json = getJson("user", mContext);

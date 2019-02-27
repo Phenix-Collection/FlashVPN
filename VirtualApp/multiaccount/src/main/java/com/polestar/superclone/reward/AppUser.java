@@ -18,6 +18,7 @@ import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.DatabaseImplFactory;
 import com.polestar.task.database.datamodels.CheckInTask;
+import com.polestar.task.database.datamodels.RandomAwardTask;
 import com.polestar.task.database.datamodels.ReferTask;
 import com.polestar.task.database.datamodels.RewardVideoTask;
 import com.polestar.task.database.datamodels.ShareTask;
@@ -227,6 +228,11 @@ public class AppUser {
     public ReferTask getReferTask() {
         List<Task> list = databaseApi.getActiveTasksByType(Task.TASK_TYPE_REFER_TASK);
         return list!= null && list.size() > 0 ? list.get(0).getReferTask():null;
+    }
+
+    public RandomAwardTask getRandomAwardTask() {
+        List<Task> list = databaseApi.getActiveTasksByType(Task.TASK_TYPE_RANDOM_AWARD);
+        return list!= null && list.size() > 0 ? list.get(0).getRandomAwardTask():null;
     }
 
     public List<Product> getProducts() {

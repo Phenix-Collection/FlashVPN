@@ -5,6 +5,7 @@ import com.polestar.ad.AdLog;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.datamodels.AdTask;
 import com.polestar.task.database.datamodels.CheckInTask;
+import com.polestar.task.database.datamodels.RandomAwardTask;
 import com.polestar.task.database.datamodels.ReferTask;
 import com.polestar.task.database.datamodels.RewardVideoTask;
 import com.polestar.task.database.datamodels.ShareTask;
@@ -29,6 +30,11 @@ public class Task extends TimeModel {
      $table->integer('lang_id')->nullable();
 
      $table->bigInteger('created_by')->unsigned();
+
+     "payout_rs": 1,
+     "payout_re": 5,
+     "hidden": 0,
+     "is_random": 1,
      */
 
     public static final int TASK_TYPE_AD_TASK = 1;
@@ -37,6 +43,7 @@ public class Task extends TimeModel {
     public static final int TASK_TYPE_REFER_TASK = 4; //主动提交referralCode的提交人的奖励
     public static final int TASK_TYPE_REFERREE_TASK = 5; //被动提交referralCode的推荐人的奖励
     public static final int TASK_TYPE_SHARE_TASK = 6;
+    public static final int TASK_TYPE_RANDOM_AWARD = 7;
 
     @SerializedName("id")
     public long mId;
@@ -62,6 +69,12 @@ public class Task extends TimeModel {
     @SerializedName("detail")
     public String mDetail;
     //private JSONObject mDetailJson;
+    @SerializedName("payout_rs")
+    public float mPayoutRandomStart;
+    @SerializedName("payout_re")
+    public float mPayoutRandomEnd;
+    @SerializedName("is_random")
+    public int mIsRandom;
 
     public Task(Task task) {
         mId = task.mId;
@@ -75,6 +88,9 @@ public class Task extends TimeModel {
         mLimitTotal = task.mLimitTotal;
         mEndTime = task.mEndTime;
         mDetail = task.mDetail;
+        mPayoutRandomStart = task.mPayoutRandomStart;
+        mPayoutRandomEnd = task.mPayoutRandomEnd;
+        mIsRandom = task.mIsRandom;
 
         parseDetailInfo();
     }
@@ -86,6 +102,7 @@ public class Task extends TimeModel {
     private RewardVideoTask mRewardVideoTask;
     private ShareTask mShareTask;
     private ReferTask mReferTask;
+    private RandomAwardTask mRandomAwardTask;
 
     public boolean isAdTask() {
         return mTaskType == TASK_TYPE_AD_TASK;
@@ -179,6 +196,25 @@ public class Task extends TimeModel {
                 return null;
             }
             return mReferTask;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isRandomAwardTask() {
+        return mTaskType == TASK_TYPE_RANDOM_AWARD;
+    }
+
+    public RandomAwardTask getRandomAwardTask() {
+        if (isRandomAwardTask()) {
+            if (mRandomAwardTask == null) {
+                mRandomAwardTask = new RandomAwardTask(this);
+            }
+            if (!mRandomAwardTask.parseDetailInfo()) {
+                AdLog.e(DatabaseApi.TAG, "Failed to parse " + mDetail + " to RandomAwardTask");
+                return null;
+            }
+            return mRandomAwardTask;
         } else {
             return null;
         }
