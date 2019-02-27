@@ -258,6 +258,10 @@ public static *** e(...);
 -keep class * extends android.os.Binder {}
 -keep class * extends android.os.IInterface {}
 -keep class * extends android.app.IServiceConnection.Stub {}
+
+-keep class * extends com.android.internal.widget.** {*;}
+-keepclassmembers class * extends com.android.internal.widget.** {*;}
+-keepnames class * extends com.android.internal.widget.** {*;}
 -keepclassmembers class com.polestar.clone.client.hook.secondary.ServiceConnectionDelegate { public *;}
 
 -keep class com.ironsource.adapters.** { *;

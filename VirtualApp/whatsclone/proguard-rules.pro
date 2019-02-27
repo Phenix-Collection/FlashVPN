@@ -252,6 +252,9 @@ public static java.lang.String TABLENAME;
  -keep class * extends android.os.IInterface {}
  -keep class * extends android.app.IServiceConnection.Stub {}
  -keepclassmembers class com.polestar.clone.client.hook.secondary.ServiceConnectionDelegate { public *;}
+-keep class * extends com.android.internal.widget.** {*;}
+-keepclassmembers class * extends com.android.internal.widget.** {*;}
+-keepnames class * extends com.android.internal.widget.** {*;}
 
 -keep class com.ironsource.adapters.** { *;
  }
