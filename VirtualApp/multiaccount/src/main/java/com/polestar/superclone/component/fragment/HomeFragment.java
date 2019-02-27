@@ -1,5 +1,9 @@
 package com.polestar.superclone.component.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -38,10 +43,7 @@ import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.clone.CustomizeAppData;
-import com.polestar.superclone.reward.AppUser;
-import com.polestar.superclone.reward.TaskExecutor;
 import com.polestar.superclone.utils.AnimatorHelper;
-import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.DisplayUtils;
@@ -87,7 +89,6 @@ public class HomeFragment extends BaseFragment {
 
     private FuseAdLoader mNativeAdLoader;
     private FuseAdLoader mApplistAdLoader;
-    private View mLockSettingIcon;
     private static final String CONFIG_HOME_NATIVE_PRIOR_TIME = "home_native_prior_time";
     private static final String CONFIG_HOME_SHOW_LUCKY_RATE = "home_show_lucky_rate";
     private static final String CONFIG_HOME_PRELOAD_APPLIST_GATE= "home_preload_applist_gate";
@@ -144,7 +145,6 @@ public class HomeFragment extends BaseFragment {
         if (contentView == null ) {
             contentView = inflater.inflate(R.layout.fragment_home, null);
             initView();
-            mLockSettingIcon = mActivity.findViewById(R.id.lock_setting_icon);
             mDragController = new DragController(mActivity);
             mDragController.setDragListener(mDragListener);
             mDragController.setWindowToken(contentView.getWindowToken());
@@ -165,7 +165,9 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void onDragEnd(DragSource source, Object info, int action) {
             MLogs.d("onDragEnd + " + floatView.getSelectedState());
-            switch (floatView.getSelectedState()) {
+            int state = floatView.getSelectedState();
+            floatView.animToIdel();
+            switch (state) {
                 case CustomFloatView.SELECT_BTN_LEFT:
                     EventReporter.addShortCut(mActivity, ((AppModel) info).getPackageName());
                     CommonUtils.createShortCut(mActivity,((AppModel) info));
@@ -188,12 +190,11 @@ public class HomeFragment extends BaseFragment {
                                 deleteAppWithAnim((AppModel) info);
                             }
                         }
-                    },CustomFloatView.ANIM_DURATION / 2);
+                    }, 330  );
                     break;
                 default:
                     break;
             }
-            floatView.animToIdel();
             mDragController.removeDropTarget(floatView);
         }
     };
@@ -287,7 +288,6 @@ public class HomeFragment extends BaseFragment {
 //                    appName.setText(R.string.booster_title);
                 }
             }
-
             return view;
         }
     }
@@ -574,10 +574,8 @@ public class HomeFragment extends BaseFragment {
                 CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
                     @Override
                     public void onInstalled(List<AppModel> clonedApp) {
-                        if (!PreferencesUtils.hasCloned()) {
-                            PreferencesUtils.setHasCloned();
-                        }
-                        appInfos = getSortedCloneList(clonedApp);
+                        PreferencesUtils.setHasCloned();
+                        appInfos = getSortedCloneList(CloneHelper.getInstance(mActivity).getClonedApps());
                         if(pkgGridAdapter != null){
                             pkgGridAdapter.notifyDataSetChanged();
                         }
@@ -585,9 +583,10 @@ public class HomeFragment extends BaseFragment {
 
                     @Override
                     public void onUnstalled(List<AppModel> clonedApp) {
+                        //TODO never been called
                         MLogs.d("onUninstalled");
-                        appInfos = getSortedCloneList(clonedApp);
-                        if(pkgGridAdapter != null){
+                        appInfos = getSortedCloneList(CloneHelper.getInstance(mActivity).getClonedApps());
+                        if(pkgGridAdapter != null && mExplosionField == null){
                             pkgGridAdapter.notifyDataSetChanged();
                         }
                         preloadAppListAd(false);
@@ -651,41 +650,32 @@ public class HomeFragment extends BaseFragment {
 
     private void deleteAppWithAnim(AppModel appModel){
         if (appModel == null) return;
+        MLogs.d("deleteApp " + appModel.getPackageName());
         appModel.setUnEnable(true);
-        pkgGridAdapter.notifyDataSetChanged();
+//        pkgGridAdapter.notifyDataSetChanged();
         View view = pkgGridView.getChildAt(pkgGridAdapter.getPosition(appModel) + pkgGridView.getGridItemStartOffset());
         if(view != null) {
             mExplosionField = ExplosionField.attachToWindow(mActivity);
             mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
                 @Override
                 public void onExplodeFinish(View v) {
-
+                    ExplosionField.detachFromWindow(mActivity, mExplosionField);
+                    mExplosionField = null;
+                    pkgGridAdapter.notifyDataSetChanged();
                 }
             });
+            CloneHelper.getInstance(mActivity).unInstallApp(mActivity, appModel);
         }
-        pkgGridView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                deleteApp(appModel);
-                ExplosionField.detachFromWindow(mActivity, mExplosionField);
-            }
-        }, 1500);
-
-    }
-
-    private void deleteApp(AppModel appModel){
-        MLogs.d("deleteApp " + appModel.getPackageName());
-        appInfos.remove(appModel);
+//
         EventReporter.deleteClonedApp(mActivity, appModel.getPackageName());
-//        updateModelIndex(itemPosition,appInfos.size() - 1);
-        AppManager.uninstallApp(appModel.getPackageName(), appModel.getPkgUserId());
-        CommonUtils.removeShortCut(mActivity,appModel);
-        CustomizeAppData.removePerf(appModel.getPackageName(), appModel.getPkgUserId());
-        PreferencesUtils.resetStarted(appModel.getName());
-        DbManager.deleteAppModel(mActivity, appModel);
-        DbManager.notifyChanged();
-        pkgGridAdapter.notifyDataSetChanged();
-        //adapter.deleteComplete();
+
+//        pkgGridView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                ExplosionField.detachFromWindow(mActivity, mExplosionField);
+//                CloneHelper.getInstance(mActivity).unInstallApp(mActivity, appModel);
+//            }
+//        }, 1100);
     }
 
     private void startAppLaunchActivity(String packageName, int userId){

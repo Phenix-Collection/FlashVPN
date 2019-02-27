@@ -75,6 +75,7 @@ public class AppManager {
             for (AppModel model : uninstalledApp) {
                 CommonUtils.removeShortCut(context, model);
                 CustomizeAppData.removePerf(model.getPackageName(), model.getPkgUserId());
+                PreferencesUtils.resetStarted(model.getName());
                 uninstallApp(model.getPackageName(), model.getPkgUserId());
             }
             DbManager.deleteAppModeList(context, uninstalledApp);
@@ -192,19 +193,10 @@ public class AppManager {
                     InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
             success = result.isSuccess;
         }
-
-        if (success) {
-            appModel.setClonedTime(System.currentTimeMillis());
-            appModel.formatIndex(CloneHelper.getInstance(MApp.getApp()).getClonedApps().size(), userId);
-        }
-
-        if (success && PreferencesUtils.getBoolean(context, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
-            CommonUtils.createShortCut(context, appModel);
-        }
         return success;
     }
 
-    public static boolean uninstallApp(String packageName, int userId) {
+    private static boolean uninstallApp(String packageName, int userId) {
         MLogs.d(TAG, "uninstall packageName = " + packageName + " userId " + userId);
         new Thread(new Runnable() {
             @Override

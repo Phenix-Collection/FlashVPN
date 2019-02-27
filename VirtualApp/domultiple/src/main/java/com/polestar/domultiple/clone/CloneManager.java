@@ -231,7 +231,8 @@ public class CloneManager {
                     CloneModel model = DBManager.queryCloneModelByPackageName(context,packageName, userId);
                     if (model != null) {
                         boolean res = VirtualCore.get().uninstallPackageAsUser(packageName, userId);
-                        if (res) {
+//                        if (res) {
+                        //in case the clone is in support package
                             DBManager.deleteCloneModel(context,model);
                             ListIterator<CloneModel> iter = mClonedApps.listIterator();
                             while (iter.hasNext()) {
@@ -242,7 +243,7 @@ public class CloneManager {
                                     break;
                                 }
                             }
-                        }
+//                        }
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {

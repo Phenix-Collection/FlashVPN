@@ -151,28 +151,30 @@ public class AppCloneActivity extends BaseActivity {
                         installed = false;
                         //EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
                         MLogs.d("To install app " + mPkgName);
-                        isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel, mUserId);
+//                        isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel, mUserId);
+                        isInstallSuccess = CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
                     } else {
                         isInstallSuccess = true;
                         MLogs.d("Hit pre clone pkg " + mPkgName);
                     }
                     isInstallDone = true;
                     if (isInstallSuccess) {
-                        PackageManager pm = getPackageManager();
-                        try {
-                            ApplicationInfo ai = pm.getApplicationInfo(mPkgName, 0);
-                            CharSequence label = pm.getApplicationLabel(ai);
-                            appModel.setName(AppManager.getCompatibleName("" + label, mUserId));
-                        } catch (PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
-                                isDBUpdated = true;
-                            }
-                        });
+                        isDBUpdated = true;
+//                        PackageManager pm = getPackageManager();
+//                        try {
+//                            ApplicationInfo ai = pm.getApplicationInfo(mPkgName, 0);
+//                            CharSequence label = pm.getApplicationLabel(ai);
+//                            appModel.setName(AppManager.getCompatibleName("" + label, mUserId));
+//                        } catch (PackageManager.NameNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
+//                                isDBUpdated = true;
+//                            }
+//                        });
                         EventReporter.applistClone(AppCloneActivity.this, appModel.getPackageName());
                         // showAd(installAd);
                     } else {

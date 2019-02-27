@@ -121,7 +121,7 @@ public class ExplosionField extends View {
         mExpandInset[1] = dy;
     }
 
-    public void explode(Bitmap bitmap, Rect bound, long startDelay, long duration) {
+    public void explode(Bitmap bitmap, Rect bound, long startDelay, long duration, OnExplodeFinishListener listener) {
         final ExplosionAnimator explosion = new ExplosionAnimator(this, bitmap, bound);
         explosion.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -132,6 +132,29 @@ public class ExplosionField extends View {
         explosion.setStartDelay(startDelay);
         explosion.setDuration(duration);
         mExplosions.add(explosion);
+        explosion.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (listener != null) {
+                    listener.onExplodeFinish(null);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
         explosion.start();
     }
 
@@ -151,7 +174,7 @@ public class ExplosionField extends View {
         getLocationOnScreen(location);
         r.offset(-location[0], -location[1]);
         r.inset(-mExpandInset[0], -mExpandInset[1]);
-        int startDelay = 100;
+        int startDelay = 0;
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f).setDuration(150);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             Random random = new Random();
@@ -163,17 +186,9 @@ public class ExplosionField extends View {
             }
 
         });
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (listener != null) {
-                    listener.onExplodeFinish(view);
-                }
-            }
-        });
         animator.start();
         view.animate().setDuration(150).setStartDelay(startDelay).scaleX(0f).scaleY(0f).alpha(0f).start();
-        explode(createBitmapFromView(view), r, startDelay, ExplosionAnimator.DEFAULT_DURATION);
+        explode(createBitmapFromView(view), r, startDelay, ExplosionAnimator.DEFAULT_DURATION, listener);
     }
 
     public void clear() {

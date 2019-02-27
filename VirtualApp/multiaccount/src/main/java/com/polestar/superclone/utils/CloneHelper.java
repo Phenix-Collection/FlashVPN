@@ -1,10 +1,13 @@
 package com.polestar.superclone.utils;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.polestar.superclone.MApp;
+import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
 
@@ -39,13 +42,32 @@ public class CloneHelper {
 //        new LoadClonedAppTask(context).execute();
     }
 
-    public void installApp(Context context,AppModel appModel){
+    public boolean installApp(Context context,AppModel appModel){
         try {
             // moved to AppManager.installApp
             // appModel.setClonedTime(System.currentTimeMillis());
             // appModel.setIndex(mClonedApps.size());
+            int userId = AppListUtils.getInstance(context).isCloned(appModel.getPackageName())?
+                    AppManager.getNextAvailableUserId(appModel.getPackageName()):0;
+            if (!AppManager.installApp(context,appModel,userId)){
+                return false;
+            }
+            PackageManager pm = context.getPackageManager();
+            try {
+                ApplicationInfo ai = pm.getApplicationInfo(appModel.getPackageName(), 0);
+                CharSequence label = pm.getApplicationLabel(ai);
+                appModel.setName(AppManager.getCompatibleName("" + label, userId));
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+            appModel.setClonedTime(System.currentTimeMillis());
+            appModel.formatIndex(CloneHelper.getInstance(MApp.getApp()).getClonedApps().size(), userId);
+
+            if (PreferencesUtils.getBoolean(context, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
+                CommonUtils.createShortCut(context, appModel);
+            }
             DbManager.insertAppModel(context, appModel);
-            DbManager.notifyChanged();
             AppManager.incPackageIndex(appModel.getPackageName());
             synchronized (mClonedApps) {
                 mClonedApps.add(appModel);
@@ -54,14 +76,19 @@ public class CloneHelper {
                 @Override
                 public void run() {
                     if (loadedListener != null) {
-                        loadedListener.onInstalled(mClonedApps);
+                        DbManager.notifyChanged();
+                        List ret = new ArrayList();
+                        ret.add(appModel);
+                        loadedListener.onInstalled(ret);
                     }
                 }
             });
         }catch (Exception ex) {
             MLogs.logBug(MLogs.getStackTraceString(ex));
             EventReporter.keyLog(MApp.getApp(), EventReporter.KeyLogTag.AERROR, "installError:" + appModel.getPackageName());
+            return false;
         }
+        return true;
     }
 
     public void unInstallApp(Context context,String packageName){
@@ -88,30 +115,39 @@ public class CloneHelper {
         });
     }
 
+    public void unInstallApp(Context context, AppModel model) {
+        if (model != null) {
+            String packageName = model.getPackageName();
+            int userId = model.getPkgUserId();
+            synchronized (mClonedApps) {
+                ListIterator<AppModel> iter = mClonedApps.listIterator();
+                while (iter.hasNext()) {
+                    AppModel cm = iter.next();
+                    if (cm.getPackageName().equals(packageName) &&
+                            cm.getPkgUserId() == userId) {
+                        iter.remove();
+                        break;
+                    }
+                }
+            }
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (loadedListener != null) {
+                        loadedListener.onUnstalled(mClonedApps);
+                    }
+                }
+            });
+            AppManager.deleteApp(context, model);
+        }
+    }
+
     public void unInstallApp(Context context, String packageName, int userId) {
         if (packageName != null) {
             AppModel model = DbManager.queryAppModelByPackageName(context, packageName, userId);
-            AppManager.deleteApp(context, model);
+            unInstallApp(context, model);
         }
-        synchronized (mClonedApps) {
-            ListIterator<AppModel> iter = mClonedApps.listIterator();
-            while (iter.hasNext()) {
-                AppModel cm = iter.next();
-                if (cm.getPackageName().equals(packageName) &&
-                        cm.getPkgUserId() == userId) {
-                    iter.remove();
-                    break;
-                }
-            }
-        }
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (loadedListener != null) {
-                    loadedListener.onUnstalled(mClonedApps);
-                }
-            }
-        });
+
     }
 
     public void preLoadClonedApp(Context context){
