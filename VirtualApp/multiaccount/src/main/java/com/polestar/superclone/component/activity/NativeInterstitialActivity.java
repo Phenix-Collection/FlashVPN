@@ -1,5 +1,6 @@
 package com.polestar.superclone.component.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.gms.ads.AdSize;
@@ -9,10 +10,17 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.superclone.R;
+import com.polestar.superclone.reward.AppUser;
+import com.polestar.superclone.reward.RewardErrorCode;
+import com.polestar.superclone.reward.TaskExecutor;
 import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.superclone.utils.ToastUtils;
+import com.polestar.task.ADErrorCode;
+import com.polestar.task.ITaskStatusListener;
+import com.polestar.task.database.datamodels.RandomAwardTask;
+import com.polestar.task.network.datamodels.Task;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -131,7 +139,33 @@ public class NativeInterstitialActivity extends Activity {
 
             @Override
             public void onAdClosed(IAdAdapter ad) {
+                if (AppUser.isRewardEnabled()) {
+                    RandomAwardTask luckyTask = AppUser.getInstance().getRandomAwardTask();
+                    if (luckyTask != null && luckyTask.isValid()) {
+                        MLogs.d("Go lucky task!");
+                        new TaskExecutor(NativeInterstitialActivity.this).execute(luckyTask, new ITaskStatusListener() {
+                            @Override
+                            public void onTaskSuccess(long taskId, float payment, float balance) {
+                                RewardErrorCode.toastMessage(NativeInterstitialActivity.this, RewardErrorCode.TASK_OK, payment);
+                            }
 
+                            @Override
+                            public void onTaskFail(long taskId, ADErrorCode code) {
+                                ToastUtils.ToastDefult(NativeInterstitialActivity.this, getString(R.string.toast_no_lucky_award));
+                            }
+
+                            @Override
+                            public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+
+                            }
+
+                            @Override
+                            public void onGeneralError(ADErrorCode code) {
+                                ToastUtils.ToastDefult(NativeInterstitialActivity.this, getString(R.string.toast_no_lucky_award));
+                            }
+                        });
+                    }
+                }
             }
 
             @Override

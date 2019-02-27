@@ -67,6 +67,7 @@ public class TaskExecutor {
                 }
                 break;
             case Task.TASK_TYPE_CHECKIN_TASK:
+            case Task.TASK_TYPE_RANDOM_AWARD:
                 mAppUser.finishTask(task, listener);
                 break;
             case Task.TASK_TYPE_REWARDVIDEO_TASK:

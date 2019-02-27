@@ -259,6 +259,8 @@ public class HomeFragment extends BaseFragment {
 
             ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
             TextView appName = (TextView) view.findViewById(R.id.app_name);
+            TextView adFlag = (TextView) view.findViewById(R.id.ad_flag);
+            adFlag.setVisibility(View.INVISIBLE);
 
             AppModel appModel = (AppModel) getItem(i);
             if (appModel != null) {
@@ -272,6 +274,10 @@ public class HomeFragment extends BaseFragment {
                 int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
                 int boosterIdx = appInfos.size();
                 if (showLucky && i == luckIdx) {
+                    boolean showAdFlag = RemoteConfig.getBoolean("conf_adflag_for_icon");
+                    if (showAdFlag) {
+                        adFlag.setVisibility(View.VISIBLE);
+                    }
                     appIcon.setImageResource(R.drawable.icon_feel_lucky);
                     appName.setText(R.string.feel_lucky);
                     appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));

@@ -40,8 +40,10 @@ import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.reward.InviteActivity;
 import com.polestar.superclone.reward.RewardCenterFragment;
+import com.polestar.superclone.reward.RewardErrorCode;
 import com.polestar.superclone.reward.ShareActions;
 import com.polestar.superclone.reward.StoreFragment;
+import com.polestar.superclone.reward.TaskExecutor;
 import com.polestar.superclone.reward.VIPActivity;
 import com.polestar.superclone.utils.AppListUtils;
 import com.polestar.superclone.utils.CloneHelper;
@@ -53,6 +55,7 @@ import com.polestar.superclone.widgets.LeftRightDialog;
 import com.polestar.superclone.widgets.RateDialog;
 import com.polestar.superclone.widgets.UpDownDialog;
 import com.polestar.superclone.utils.RemoteConfig;
+import com.polestar.task.ADErrorCode;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -266,7 +269,9 @@ public class HomeActivity extends BaseActivity {
                 }
             });
         } else {
-            if (random < RemoteConfig.getLong("config_no_ad_icon_percent")) {
+            if (random < RemoteConfig.getLong("config_no_ad_icon_percent")
+                    || (AppUser.isRewardEnabled()
+                            && RewardErrorCode.TASK_OK != TaskExecutor.checkTask(AppUser.getInstance().getRandomAwardTask()))) {
                 giftRes = R.drawable.no_ad;
                 iconAdLayout.setOnClickListener(new View.OnClickListener() {
                     @Override

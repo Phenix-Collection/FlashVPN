@@ -298,4 +298,5 @@
     <string name="price_change_hint">Purchase products with your coins now. The price could change according to app economy.</string>
     <string name="cash_rewards">Cash Rewards</string>
     <string name="earn_coin_remove_ads">Earn coins and select product to remove ads</string>
+    <string name="toast_no_lucky_award">Aha, no luck this time, please try tomorrow.</string>
 </resources>

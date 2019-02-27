@@ -10,13 +10,29 @@
             android:orientation="vertical"
             android:gravity="center|center_horizontal|center_vertical">
 
-                <com.polestar.superclone.widgets.dragdrop.DragImageView
-                    android:id="@+id/app_icon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_centerHorizontal="true"
-                    android:scaleType="centerCrop" />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                        <com.polestar.superclone.widgets.dragdrop.DragImageView
+                            android:id="@+id/app_icon"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="centerCrop" />
+                        <TextView
+                            android:id="@+id/ad_flag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AD"
+                            android:textColor="@color/native_ad_text_white"
+                            android:background="@color/native_ad_transparent_black"
+                            android:layout_gravity="bottom|right|end"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp"
+                            android:textSize="8sp" />
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/app_name"

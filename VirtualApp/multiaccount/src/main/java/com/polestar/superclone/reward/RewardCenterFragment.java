@@ -24,6 +24,7 @@ import com.polestar.superclone.component.BaseFragment;
 import com.polestar.superclone.component.activity.HomeActivity;
 import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.MLogs;
+import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.widgets.IconFontTextView;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.ITaskStatusListener;
@@ -107,6 +108,7 @@ public class RewardCenterFragment extends BaseFragment
         MLogs.d(" reward onCreateView");
         initData();
 //        if (nativeAd == null) {
+        if (!PreferencesUtils.isAdFree()) {
             nativeAdLoader = FuseAdLoader.get(SLOT_REWARD_CENER_NATIVE, mActivity);
             nativeAdLoader.setBannerAdSize(getBannerSize());
             nativeAdLoader.loadAd(mActivity, 2, 1000, new IAdLoadListener() {
@@ -116,6 +118,7 @@ public class RewardCenterFragment extends BaseFragment
                     if (ad != null && mActivity != null) {
                         MLogs.d("reward loaded ad");
                         ViewGroup adContainer = contentView.findViewById(R.id.ad_container);
+                        adContainer.setVisibility(View.VISIBLE);
                         AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.native_ad_reward_center)
                                 .titleId(R.id.ad_title)
                                 .textId(R.id.ad_subtitle_text)
@@ -161,7 +164,10 @@ public class RewardCenterFragment extends BaseFragment
 
                 }
             });
-//        }
+        } else {
+            ViewGroup adContainer = contentView.findViewById(R.id.ad_container);
+            adContainer.setVisibility(View.GONE);
+        }
         return contentView;
     }
 
