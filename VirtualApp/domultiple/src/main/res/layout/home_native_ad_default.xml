@@ -52,6 +52,8 @@
                 android:background="@drawable/shape_round_corner_line"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:text="AD"
                 android:id="@+id/ad_flag"
                 android:textColor="@color/text_gray_light"

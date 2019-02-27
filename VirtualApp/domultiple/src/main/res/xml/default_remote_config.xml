@@ -198,4 +198,8 @@
         <key>conf_intercept_class</key>
         <value></value>
     </entry>
+    <entry>
+        <key>conf_adflag_for_icon</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>

@@ -17,6 +17,7 @@
     <color name="shortcut_text_color">#f048d27f</color>
     <color name="text_gray_dark">#3f3f3f</color>
     <color name="text_gray_light">#989898</color>
+    <color name="text_ad_flag">#989898</color>
     <color name="default_foreground_color">#FFFFFF</color>
     <color name="default_background_color">#ededed</color>
     <color name="home_pressed_color">#e1e1e1</color>

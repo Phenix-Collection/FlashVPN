@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.polestar.domultiple.R;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
+import com.polestar.domultiple.utils.RemoteConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +77,9 @@ public class HomeGridAdapter extends BaseAdapter {
 
         ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
         TextView appName = (TextView) view.findViewById(R.id.app_name);
+        TextView adFlag = (TextView) view.findViewById(R.id.ad_flag);
         ImageView newDot = (ImageView) view.findViewById(R.id.new_dot);
+        adFlag.setVisibility(View.INVISIBLE);
 
         CloneModel appModel = (CloneModel) getItem(i);
         if (appModel != null) {
@@ -106,6 +109,10 @@ public class HomeGridAdapter extends BaseAdapter {
                 appName.setText(R.string.feel_lucky);
                 appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 appName.setTextColor(mContext.getResources().getColor(R.color.lucky_red));
+                boolean showFlag = RemoteConfig.getBoolean("conf_adflag_for_icon");
+                if (showFlag) {
+                    adFlag.setVisibility(View.VISIBLE);
+                }
             }
             if (i == addIdx) {
                 appIcon.setImageResource(R.drawable.icon_add);
