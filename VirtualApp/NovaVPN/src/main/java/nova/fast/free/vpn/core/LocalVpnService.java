@@ -19,6 +19,7 @@ import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.app.NotificationCompat;
 
+import nova.fast.free.vpn.NovaApp;
 import nova.fast.free.vpn.NovaUser;
 import nova.fast.free.vpn.R;
 import nova.fast.free.vpn.core.ProxyConfig.IPAddress;
@@ -31,6 +32,7 @@ import nova.fast.free.vpn.tcpip.TCPHeader;
 import nova.fast.free.vpn.tcpip.UDPHeader;
 import nova.fast.free.vpn.ui.HomeActivity;
 import nova.fast.free.vpn.utils.CommonUtils;
+import nova.fast.free.vpn.utils.EventReporter;
 import nova.fast.free.vpn.utils.MLogs;
 import nova.fast.free.vpn.utils.PreferenceUtils;
 import nova.fast.free.vpn.utils.RemoteConfig;
@@ -42,6 +44,7 @@ import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -362,6 +365,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                         } else {
                             url = VPNServerManager.getInstance(LocalVpnService.this).getServerInfo(id).url;
                         }
+                        MLogs.d("Will use url " + url);
                         ProxyUrl = url;
                         ProxyConfig.Instance.addProxyToList(url);
                         MLogs.d("Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
@@ -529,6 +533,7 @@ public class LocalVpnService extends VpnService implements Runnable {
     }
 
     private ParcelFileDescriptor establishVPN() throws Exception {
+        long start = Calendar.getInstance().getTimeInMillis();
         resetSpeeds();
 
         Builder builder = new Builder();
@@ -637,6 +642,9 @@ public class LocalVpnService extends VpnService implements Runnable {
         ParcelFileDescriptor pfdDescriptor = builder.establish();
         onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true,
                             mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
+
+        long establishTime = Calendar.getInstance().getTimeInMillis() - start;
+        EventReporter.reportEstablishTime(NovaApp.getApp(), establishTime);
         return pfdDescriptor;
     }
 

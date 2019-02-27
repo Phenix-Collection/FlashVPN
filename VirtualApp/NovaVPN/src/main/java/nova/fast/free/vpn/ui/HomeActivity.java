@@ -39,6 +39,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nova.fast.free.vpn.AppConstants;
+import nova.fast.free.vpn.NovaApp;
 import nova.fast.free.vpn.NovaUser;
 import nova.fast.free.vpn.R;
 import nova.fast.free.vpn.core.AppProxyManager;
@@ -104,7 +105,9 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     public static void preloadAd(Context context) {
         FuseAdLoader.get(SLOT_HOME_NATIVE, context).preloadAd(context);
-        FuseAdLoader.get(SLOT_HOME_GIFT_REWARD,context).preloadAd(context);
+        if (NovaUser.getInstance(NovaApp.getApp()).usePremiumSeconds()) {
+            FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, context).preloadAd(context);
+        }
     }
 
     private void inflateHomeNativeAd(IAdAdapter ad) {

@@ -111,4 +111,11 @@ public class EventReporter {
         }
         MLogs.d("Wake from " + src + " original: " + sWakeSrc);
     }
+
+    public static void reportEstablishTime(Context context, long timeInMilli) {
+        long toreport = timeInMilli/1000;
+        Bundle bundle = new Bundle();
+        bundle.putLong("time", toreport);
+        mFirebaseAnalytics.logEvent("establish_time", bundle);
+    }
 }
