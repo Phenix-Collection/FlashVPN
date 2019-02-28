@@ -317,21 +317,21 @@ public class AppListUtils implements DataObserver {
             @Override
             public int compare(AppModel lhs, AppModel rhs) {
                 try {
-                    return CommonUtils.getInstallTime(mContext,lhs.getPackageName())
-                            - CommonUtils.getInstallTime(mContext,rhs.getPackageName()) > 0 ? -1: 1;
+                    long l =  CommonUtils.getInstallTime(mContext,lhs.getPackageName());
+                    long r = CommonUtils.getInstallTime(mContext,rhs.getPackageName());
+                    if (l > r) {
+                        return -1;
+                    }else if (l < r) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 return -1;
             }
         });
-       // Collections.sort(list, (lhs, rhs) -> COLLATOR.compare(lhs.getName(), rhs.getName()));
-//        Collections.sort(list, new Comparator<AppModel>() {
-//            @Override
-//            public int compare(AppModel lhs, AppModel rhs) {
-//                return COLLATOR.compare(lhs.getName(), rhs.getName());
-//            }
-//        });
     }
 
     private boolean isAppInstalled(String pName) {

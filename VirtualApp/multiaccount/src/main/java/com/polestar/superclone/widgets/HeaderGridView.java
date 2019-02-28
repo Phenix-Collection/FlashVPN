@@ -285,7 +285,8 @@ public class HeaderGridView extends GridView {
                     return mAdapter.isEnabled(adjPosition);
                 }
             }
-            throw new ArrayIndexOutOfBoundsException(position);
+            return false;
+//            throw new ArrayIndexOutOfBoundsException(position);
         }
         @Override
         public Object getItem(int position) {
