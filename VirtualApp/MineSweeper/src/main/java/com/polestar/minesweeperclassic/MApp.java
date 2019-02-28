@@ -9,11 +9,8 @@ import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.android.gms.ads.MobileAds;
 import com.polestar.ad.SDKConfiguration;
-import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -79,42 +76,10 @@ public class MApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         }, gDefault, sdkConfiguration);
-        BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
-        res.titleString = R.string.app_name;
-        res.boosterShorcutIcon = R.drawable.ic_launcher;
-        res.innerWheelImage = R.drawable.ic_launcher;
-        res.outterWheelImage = R.drawable.ic_launcher;
-        BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();
-        boosterConfig.showNotification = false;
-        if (BuildConfig.DEBUG) {
-            boosterConfig.autoAdFirstInterval = 0;
-            boosterConfig.autoAdInterval = 0;
-            boosterConfig.isUnlockAd = true;
-            boosterConfig.isInstallAd = true;
-            boosterConfig.avoidShowIfHistory = false;
-        } else {
-            boosterConfig.autoAdFirstInterval = RemoteConfig.getLong("auto_ad_first_interval") * 1000;
-            boosterConfig.autoAdInterval = RemoteConfig.getLong("auto_ad_interval") * 1000;
-            boosterConfig.isUnlockAd = RemoteConfig.getBoolean("allow_unlock_ad");
-            boosterConfig.isInstallAd = RemoteConfig.getBoolean("allow_install_ad");
-            boosterConfig.avoidShowIfHistory = RemoteConfig.getBoolean("avoid_ad_if_history");
-        }
-        BoosterSdk.init(gDefault, boosterConfig, res, new BoosterSdk.IEventReporter() {
-            @Override
-            public void reportEvent(String s, Bundle b) {
-                FirebaseAnalytics.getInstance(MApp.getApp()).logEvent(s, b);
-            }
-
-            @Override
-            public void reportWake(String s) {
-                EventReporter.reportWake(gDefault, s);;
-            }
-        });
         if (isOpenLog() || BuildConfig.DEBUG ) {
             MLogs.DEBUG = true;
             MLogs.d(MLogs.DEFAULT_TAG, "VLOG is opened");
             AdConstants.DEBUG = true;
-            BoosterSdk.DEBUG = true;
         }
         if (GameActivity.needAppStartAd()) {
             FuseAdLoader.get(GameActivity.SLOT_ENTER_INTERSTITIAL, gDefault).preloadAd(gDefault);
