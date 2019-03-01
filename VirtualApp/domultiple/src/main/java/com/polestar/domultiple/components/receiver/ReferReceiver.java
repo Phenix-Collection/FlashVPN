@@ -70,12 +70,9 @@ public class ReferReceiver extends BroadcastReceiver {
             }
         }
 
+        EventReporter.reportReferrer(EventReporter.REFERRER_TYPE_BROADCAST, referrer);
+
         MLogs.d("Receive refer: " + referrer + " utm_source : " + utm_source);
-        if(!TextUtils.isEmpty(utm_source)) {
-            PreferencesUtils.setInstallChannel(utm_source);
-            CrashReport.setAppChannel(PolestarApp.getApp(), utm_source);
-            EventReporter.reportReferrer(utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid);
-        }
-        new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
+//        new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
     }
 }
