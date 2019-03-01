@@ -4,11 +4,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.android.installreferrer.api.InstallReferrerClient;
+import com.android.installreferrer.api.InstallReferrerStateListener;
+import com.android.installreferrer.api.ReferrerDetails;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.component.receiver.ReferrerReceiver;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import com.tencent.bugly.crashreport.BuglyLog;
+import com.tencent.bugly.crashreport.CrashReport;
+
+import java.net.URLDecoder;
 
 /**
  * Created by hxx on 8/2/16.
@@ -19,9 +25,15 @@ public class EventReporter {
 
     public static final String PROP_CHANNEL = "channel";
     public static final String PROP_CAMP = "campaign";
+    public static final String PROP_SOURCE = "source";
+    public static final String PROP_MEDIUM = "medium";
     public static final String PROP_PERMISSION = "granted_permission";
     public static final String PROP_ADFREE = "adfree";
     public static final String PROP_GMS = "gms";
+    public static final String PROP_REFERRED = "referred";
+    public static final String PROP_REWARDED = "rewarded";
+    public static final String REWARD_OPEN = "open";
+    public static final String REWARD_ACTIVE = "active";
 
 
     public static void setUserProperty(String name, String prop) {
@@ -37,6 +49,10 @@ public class EventReporter {
         String referChannel = PreferencesUtils.getInstallChannel();
         mFirebaseAnalytics.setUserProperty(PROP_CHANNEL, referChannel);
         MLogs.e("MTA channel: " + channel + " refer: " + referChannel);
+        int referStatus = getReferrerStatus();
+        if (referStatus != REFERRER_STATUS_API || referStatus != REFERRER_STATUS_API_FAIL) {
+            initReferFromApi();
+        }
     }
 
     public static void setChannel(String channel) {
@@ -204,19 +220,150 @@ public class EventReporter {
         generalEvent("menu_settings");
     }
 
-    public static void reportReferrer(Context context, String utm_source, String utm_medium, String utm_campaign,
-                                      String utm_content, String utm_term, String gclid) {
-        Bundle prop = new Bundle();
-        prop.putString(ReferrerReceiver.UTM_CONTENT, utm_content == null? "" : utm_content);
-        prop.putString(ReferrerReceiver.GCLID, gclid == null? "" : gclid);
-        prop.putString(ReferrerReceiver.UTM_TERM, utm_term == null? "" : utm_term);
-        prop.putString(ReferrerReceiver.UTM_SOURCE, utm_source == null? "" : utm_source);
-        prop.putString(ReferrerReceiver.UTM_MEDIUM, utm_medium == null? "" : utm_medium);
-        prop.putString(ReferrerReceiver.UTM_CAMPAIGN, utm_campaign == null? "" : utm_campaign);
-        if (!TextUtils.isEmpty(utm_campaign)) {
-            mFirebaseAnalytics.setUserProperty(PROP_CAMP, utm_campaign);
+    private static final String UTM_SOURCE = "utm_source";
+    private static final String UTM_MEDIUM = "utm_medium";
+    private static final String UTM_CAMPAIGN = "utm_campaign";
+    private static final String UTM_TERM = "utm_term";
+    private static final String UTM_CONTENT = "utm_content";
+    private static final String GCLID = "gclid";
+    private static final String CTIT = "ctit";
+    private static final String CTAT = "ctat";
+    public static final String REFERRER_TYPE_BROADCAST = "br";
+    private static final String REFERRER_TYPE_API = "api";
+    private static final int REFERRER_STATUS_NO = 0;
+    private static final int REFERRER_STATUS_BROADCAST = 1;
+    private static final int REFERRER_STATUS_API = 2;
+    private static final int REFERRER_STATUS_API_FAIL = 3;
+
+
+    private static void reportReferrer(String type, String referrer, long ctit, long ctat ){
+        try {
+            if(REFERRER_TYPE_API.equals(type)){
+                updateReferrerStatus(REFERRER_STATUS_API);
+            }else if(REFERRER_TYPE_BROADCAST.equals(type)) {
+                updateReferrerStatus(REFERRER_STATUS_BROADCAST);
+            }
+            String referUrl = URLDecoder.decode(referrer, "UTF-8");
+            String[] parms = referUrl.split("&");
+            if (parms == null || parms.length == 0) {
+                return;
+            }
+            String utm_source = null, utm_medium = null, utm_campaign = null, utm_term = null, utm_content = null, gclid = null;
+            for (String s : parms) {
+                String arr[] = s.split("=");
+                if (arr == null || arr.length != 2) {
+                    continue;
+                }
+                MLogs.d(arr[0], " " + URLDecoder.decode(arr[1], "UTF-8"));
+                switch (arr[0]) {
+                    case UTM_CAMPAIGN:
+                        utm_campaign = URLDecoder.decode(arr[1], "UTF-8");
+                        break;
+                    case GCLID:
+                        gclid = URLDecoder.decode(arr[1], "UTF-8");
+                        break;
+                    case UTM_SOURCE:
+                        utm_source = URLDecoder.decode(arr[1], "UTF-8");
+                        break;
+                    case UTM_TERM:
+                        utm_term = URLDecoder.decode(arr[1], "UTF-8");
+                        break;
+                    case UTM_MEDIUM:
+                        utm_medium = URLDecoder.decode(arr[1], "UTF-8");
+                        break;
+                    case UTM_CONTENT:
+                        utm_content = URLDecoder.decode(arr[1], "UTF-8");
+                        break;
+                }
+            }
+
+            MLogs.d("Receive refer: " + referrer + " utm_source : " + utm_source);
+            if (!TextUtils.isEmpty(utm_source)) {
+                PreferencesUtils.setInstallChannel(utm_source);
+                CrashReport.setAppChannel(MApp.getApp(), utm_source);
+                Bundle prop = new Bundle();
+                prop.putString(UTM_CONTENT, utm_content == null? "" : type+"_"+utm_content);
+                prop.putString(GCLID, gclid == null? "" : type+"_"+gclid);
+                prop.putString(UTM_TERM, utm_term == null? "" : type+"_"+utm_term);
+                prop.putString(UTM_SOURCE, utm_source == null? "" : type+"_"+utm_source);
+                prop.putString(UTM_MEDIUM, utm_medium == null? "" : type+"_"+utm_medium);
+                prop.putString(UTM_CAMPAIGN, utm_campaign == null? "" : type+"_"+utm_campaign);
+                prop.putString(UTM_CAMPAIGN, utm_campaign == null? "" : type+"_"+utm_campaign);
+                prop.putLong(CTIT, ctit);
+                prop.putLong(CTAT, ctat);
+                if (!TextUtils.isEmpty(utm_campaign)) {
+                    mFirebaseAnalytics.setUserProperty(PROP_CAMP, utm_campaign);
+                }
+                if (!TextUtils.isEmpty(utm_source)) {
+                    mFirebaseAnalytics.setUserProperty(PROP_SOURCE, utm_source);
+                }
+                if (!TextUtils.isEmpty(utm_medium)) {
+                    mFirebaseAnalytics.setUserProperty(PROP_MEDIUM, utm_medium);
+                }
+                if (utm_source.equals("user_share")) {
+                    if (!TextUtils.isEmpty(utm_content)) {
+                        EventReporter.setUserProperty(EventReporter.PROP_REFERRED, "true");
+                    }
+                }
+                mFirebaseAnalytics.logEvent("install_referrer", prop);
+            }
+        }catch (Exception ex) {
+
         }
-        mFirebaseAnalytics.logEvent("install_referrer", prop);
+    }
+
+    private static void updateReferrerStatus(int s) {
+        PreferencesUtils.putInt(MApp.getApp(),"referrer_status", s);
+    }
+
+    private static int getReferrerStatus() {
+        return PreferencesUtils.getInt(MApp.getApp(),"referrer_status", REFERRER_STATUS_NO);
+    }
+
+    public static void reportReferrer(String type, String referrer) {
+        reportReferrer(type, referrer, 0, 0);
+    }
+
+    private static void initReferFromApi() {
+        InstallReferrerClient referrerClient;
+        referrerClient = InstallReferrerClient.newBuilder(MApp.getApp()).build();
+        referrerClient.startConnection(new InstallReferrerStateListener() {
+            @Override
+            public void onInstallReferrerSetupFinished(int responseCode) {
+                switch (responseCode) {
+                    case InstallReferrerClient.InstallReferrerResponse.OK:
+                        // Connection established
+                        try {
+                            ReferrerDetails response = referrerClient.getInstallReferrer();
+                            long clickTime = response.getReferrerClickTimestampSeconds();
+                            long installStartTime = response.getInstallBeginTimestampSeconds();
+                            MLogs.d("Refer got: " + response);
+                            long now = System.currentTimeMillis()/1000;
+                            reportReferrer(REFERRER_TYPE_API, response.getInstallReferrer(), installStartTime-clickTime, now - clickTime);
+                        }catch (Exception ex) {
+
+                        }
+                        referrerClient.endConnection();
+                        break;
+                    case InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
+                        // API not available on the current Play Store app
+                        MLogs.d("Refer API FEATURE_NOT_SUPPORTED");
+                        updateReferrerStatus(REFERRER_STATUS_API_FAIL);
+                        break;
+                    case InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE:
+                        updateReferrerStatus(REFERRER_STATUS_API_FAIL);
+                        MLogs.d("Refer API SERVICE_UNAVAILABLE");
+                        // Connection could not be established
+                        break;
+                }
+            }
+
+            @Override
+            public void onInstallReferrerServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+            }
+        });
     }
 
     public static void generalClickEvent(Context context, String event) {

@@ -71,12 +71,7 @@ public class ReferrerReceiver extends BroadcastReceiver {
         }
 
         MLogs.d("Receive refer: " + referrer + " utm_source : " + utm_source);
-        if(!TextUtils.isEmpty(utm_source)) {
-            PreferencesUtils.setInstallChannel(utm_source);
-            CrashReport.setAppChannel(MApp.getApp(), utm_source);
-            EventReporter.setChannel(utm_source);
-            EventReporter.reportReferrer(MApp.getApp(), utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid);
-        }
-        new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
+        EventReporter.reportReferrer(EventReporter.REFERRER_TYPE_BROADCAST, referrer);
+//        new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
     }
 }
