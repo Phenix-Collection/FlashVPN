@@ -208,7 +208,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
         super.onCreate(savedInstanceState);
         initView();
         initData();
-        if(!PreferencesUtils.isAdFree()) {
+        if(!PreferencesUtils.isAdFree() && PreferencesUtils.hasCloned()) {
             loadAd();
         }
     }

@@ -241,7 +241,7 @@ public class PreferencesUtils {
     }
 
     public static boolean hasShownCloneGuide(Context c){
-        return getBoolean(c, AppConstants.PreferencesKey.SHOWN_CLONE_GUIDE, false);
+        return getBoolean(c, AppConstants.PreferencesKey.SHOWN_CLONE_GUIDE, true);
     }
 
     public static boolean hasShownLongClickGuide(Context c){
@@ -461,8 +461,7 @@ public class PreferencesUtils {
     }
 
     public static boolean hasCloned() {
-        return getBoolean(PolestarApp.getApp(), "spc_ever_cloned", false)
-                || hasShownLongClickGuide(PolestarApp.getApp());
+        return getBoolean(PolestarApp.getApp(), "spc_ever_cloned", false);
     }
 
     public static void setHasCloned() {

@@ -397,7 +397,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
             pendingStartModel = null;
             return;
         }
-        if (!PreferencesUtils.isAdFree()) {
+        if (!PreferencesUtils.isAdFree() && PreferencesUtils.hasCloned()) {
             long current = System.currentTimeMillis();
             if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
                 loadAd();
