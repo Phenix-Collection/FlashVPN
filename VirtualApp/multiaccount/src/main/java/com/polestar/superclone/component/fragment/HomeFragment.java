@@ -542,28 +542,32 @@ public class HomeFragment extends BaseFragment {
     public static final String SLOT_HOME_HEADER_NATIVE = "slot_home_header_native";
 
     private List<AppModel> getSortedCloneList(List<AppModel> AppModels) {
-        List<AppModel> ret = new ArrayList<>();
-        HashMap<String, ArrayList<AppModel>> sortMap = new HashMap<>();
-        ArrayList<String> sortedPackages = new ArrayList<>();
-        if (AppModels != null) {
-            for (AppModel model: AppModels) {
-                ArrayList list = sortMap.get(model.getPackageName());
-                if (list == null) {
-                    list = new ArrayList();
-                    sortedPackages.add(model.getPackageName());
+        if (RemoteConfig.getBoolean("conf_sort_home_icon")) {
+            List<AppModel> ret = new ArrayList<>();
+            HashMap<String, ArrayList<AppModel>> sortMap = new HashMap<>();
+            ArrayList<String> sortedPackages = new ArrayList<>();
+            if (AppModels != null) {
+                for (AppModel model : AppModels) {
+                    ArrayList list = sortMap.get(model.getPackageName());
+                    if (list == null) {
+                        list = new ArrayList();
+                        sortedPackages.add(model.getPackageName());
+                    }
+                    list.add(model);
+                    sortMap.put(model.getPackageName(), list);
+                    MLogs.d("sort " + model.getPackageName());
                 }
-                list.add(model);
-                sortMap.put(model.getPackageName(), list);
-                MLogs.d("sort " + model.getPackageName());
             }
-        }
-        for(String s: sortedPackages) {
-            ArrayList list = sortMap.get(s);
-            if (list != null) {
-                ret.addAll(list);
+            for (String s : sortedPackages) {
+                ArrayList list = sortMap.get(s);
+                if (list != null) {
+                    ret.addAll(list);
+                }
             }
+            return ret;
+        } else {
+            return AppModels;
         }
-        return  ret;
     }
 
     private void initData(){
