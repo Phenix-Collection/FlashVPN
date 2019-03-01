@@ -73,8 +73,8 @@ android {
             minSdkVersion 16
             targetSdkVersion 26
             multiDexEnabled = true
-            versionCode 9999
-            versionName '9999'
+            versionCode 99999
+            versionName '99999'
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "develop", CHANNEL_TID_VALUE: ""]
             dimension "channel"
         }
@@ -82,8 +82,8 @@ android {
             minSdkVersion 16
             targetSdkVersion 26
             multiDexEnabled = true
-            versionCode 21701
-            versionName "2.17.01.${releaseTime()}"
+            versionCode 21800
+            versionName "2.18.00.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             dimension "channel"
         }
@@ -133,6 +133,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.android.support:appcompat-v7:26.1.0'
+//    implementation 'com.android.support:percent:26.1.0'
+
     testImplementation 'junit:junit:4.12'
 
     implementation 'org.greenrobot:greendao:3.0.1'
@@ -143,7 +145,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-config:16.3.0'
     arm32Implementation 'com.google.firebase:firebase-ads:17.1.3'
-    api 'com.android.billingclient:billing:1.0'
+    compile 'com.android.installreferrer:installreferrer:1.0'
+    implementation 'com.android.billingclient:billing:dp-1'
     arm32Implementation 'com.facebook.android:audience-network-sdk:5.1.0'
 
     implementation 'com.android.support:multidex:1.0.1'
