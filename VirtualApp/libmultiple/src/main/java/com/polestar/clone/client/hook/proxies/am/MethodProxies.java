@@ -934,10 +934,12 @@ class MethodProxies {
         private static final String TAG = "BindService";
         static {
             BLOCK_ACTION_LIST.add("com.android.vending.contentfilters.IContentFiltersService.BIND");
+            BLOCK_ACTION_LIST.add("com.google.android.apps.gcs.NETWORK_STATUS_RECEIVER");
         }
 
         static {
             BLOCK_COMPONENT_LIST.add("com.google.android.finsky.contentfilter.impl.ContentFiltersService");
+            BLOCK_COMPONENT_LIST.add("com.google.android.gms.phenotype.service.sync.PackageUpdateTaskService");
         }
 
         @Override
@@ -966,12 +968,12 @@ class MethodProxies {
                 return method.invoke(who, args);
             }
             VLog.d(TAG, "for intent:  " + service);
-            if ("com.google.android.finsky.BIND_GET_INSTALL_REFERRER_SERVICE".equals(service.getAction())) {
-                service.setPackage(VirtualCore.get().getHostPkg());
-                service.setClassName(VirtualCore.get().getHostPkg(), "com.polestar.grey.GreyAttributeService");
-                service.setAction(VClientImpl.get().getCurrentPackage());
-                VLog.d(TAG, "redirect " + service);
-            }
+//            if ("com.google.android.finsky.BIND_GET_INSTALL_REFERRER_SERVICE".equals(service.getAction())) {
+//                service.setPackage(VirtualCore.get().getHostPkg());
+//                service.setClassName(VirtualCore.get().getHostPkg(), "com.polestar.grey.GreyAttributeService");
+//                service.setAction(VClientImpl.get().getCurrentPackage());
+//                VLog.d(TAG, "redirect " + service);
+//            }
             ServiceInfo serviceInfo = VirtualCore.get().resolveServiceInfo(service, userId);
             if (serviceInfo != null) {
                 if(BLOCK_COMPONENT_LIST.contains(serviceInfo.name)) {
@@ -1004,12 +1006,14 @@ class MethodProxies {
             BLOCK_ACTION_LIST.add("com.google.android.gms.chimera.container.LOG_LOAD_ATTEMPT");
             BLOCK_ACTION_LIST.add("com.android.vending.contentfilters.IContentFiltersService.BIND");
             BLOCK_ACTION_LIST.add("com.google.android.chimera.FileApkManager.DELETE_UNUSED_FILEAPKS");
+            BLOCK_ACTION_LIST.add("com.google.android.gms.update.INSTALL_UPDATE");
         }
 
         static {
             BLOCK_COMPONENT_LIST.add("com.google.android.finsky.contentfilter.impl.ContentFiltersService");
             BLOCK_COMPONENT_LIST.add("com.google.android.gsf.update.SystemUpdateService");
             BLOCK_COMPONENT_LIST.add("com.google.android.gms.clearcut.uploader.QosUploaderChimeraService");
+            BLOCK_COMPONENT_LIST.add("com.google.android.gms.phenotype.service.sync.PackageUpdateTaskService");
             //BLOCK_COMPONENT_LIST.add("com.google.android.finsky.wear.WearSupportService");
         }
 
@@ -1861,6 +1865,7 @@ class MethodProxies {
             ACTION_BLACK_LIST.add("com.google.android.gms.walletp2p.phenotype.ACTION_PHENOTYPE_REGISTER");
             ACTION_BLACK_LIST.add("com.facebook.zero.ACTION_ZERO_REFRESH_TOKEN");
             ACTION_BLACK_LIST.add("com.google.android.gms.magictether.SCANNED_DEVICE");
+            ACTION_BLACK_LIST.add("com.google.android.gms.update.INSTALL_UPDATE");
             ACTION_BLACK_LIST.add("com.google.android.chimera.MODULE_CONFIGURATION_CHANGED");
         }
 

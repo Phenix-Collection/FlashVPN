@@ -285,7 +285,11 @@ public class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             if (!isFakeLocationEnable()) {
-                return super.call(who, method, args);
+                try {
+                    return super.call(who, method, args);
+                }catch (Exception ex){
+                    return true;
+                }
             }
             Object transport = ArrayUtils.getFirst(args, mirror.android.location.LocationManager.GnssStatusListenerTransport.TYPE);
             if (transport != null) {

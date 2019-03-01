@@ -70,7 +70,11 @@ public class LocationManagerStub extends BinderInvocationProxy {
             if (isFakeLocationEnable()) {
                 return mDefValue;
             }
-            return super.call(who, method, args);
+            try {
+                return super.call(who, method, args);
+            }catch (Exception ex) {
+                return mDefValue;
+            }
         }
     }
 }
