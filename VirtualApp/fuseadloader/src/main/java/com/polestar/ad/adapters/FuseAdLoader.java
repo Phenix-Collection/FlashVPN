@@ -51,6 +51,7 @@ public class FuseAdLoader {
 
     private static HashMap<String, FuseAdLoader> sAdLoaderMap = new HashMap<>();
     public synchronized static FuseAdLoader get(String slot, Context context) {
+//        slot = "slot_test";
         FuseAdLoader adLoader = sAdLoaderMap.get(slot);
         if (adLoader == null) {
             adLoader = new FuseAdLoader(slot, context.getApplicationContext());

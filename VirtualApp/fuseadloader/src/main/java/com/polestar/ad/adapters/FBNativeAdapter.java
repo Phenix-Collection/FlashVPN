@@ -256,6 +256,25 @@ public class FBNativeAdapter extends AdAdapter {
             if (ctaView != null) {
                 clickableViews.add(ctaView);
             }
+            if (coverView instanceof  MediaView) {
+                ViewGroup parent = (ViewGroup)coverView.getParent();
+                parent.removeView(coverView);
+                MediaView ratioView = new MediaView(coverView.getContext()){
+                    @Override
+                    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+                        int width = MeasureSpec.getSize(widthMeasureSpec);
+                        float height = width *9/16;
+                        int newHeight = MeasureSpec.makeMeasureSpec((int) height, MeasureSpec.EXACTLY);
+
+                        super.onMeasure(widthMeasureSpec,
+                                mRawAd.getAdCreativeType() == NativeAd.AdCreativeType.CAROUSEL?
+                                heightMeasureSpec:newHeight);
+                    }
+                };
+                coverView = ratioView;
+                parent.addView(coverView);
+            }
             LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(viewBinder.privacyInformationId);
             if (adChoicesContainer != null) {
                 AdOptionsView adOptionsView = new AdOptionsView(context,mRawAd,adView);
