@@ -61,6 +61,11 @@
         <value>fb:302444040464257_303728453669149:0;adm:ca-app-pub-5490912237269284/8511554222:0</value>
     </entry>
     <entry>
+        <key>slot_test</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>fb:VID_HD_16_9_15S_APP_INSTALL#302444040464257_303728453669149:0</value>
+    </entry>
+    <entry>
         <key>add_clone_preload_gate</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>4</value>
@@ -102,10 +107,6 @@
     <entry>
         <key>slot_app_lock</key>
         <value>adm:ca-app-pub-5490912237269284/5544934945:0;ab_banner:ca-app-pub-5490912237269284/3861862775:0</value>
-    </entry>
-    <entry>
-        <key>slot_test</key>
-        <value>adm:ca-app-pub-5490912237269284/1203301424:0</value>
     </entry>
     <entry>
         <key>slot_app_start_filter</key>
@@ -204,7 +205,7 @@
     </entry>
     <entry>
         <key>conf_sort_home_icon</key>
-        <value>false</value>
+        <value>true</value>
     </entry>
     <entry>
         <key>conf_has_adfree</key>
