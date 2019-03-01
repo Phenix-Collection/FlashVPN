@@ -202,4 +202,12 @@
         <key>conf_adflag_for_icon</key>
         <value>true</value>
     </entry>
+    <entry>
+        <key>conf_sort_home_icon</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>conf_has_adfree</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>

@@ -64,6 +64,7 @@ import com.polestar.domultiple.widget.dragdrop.DragLayer;
 import com.polestar.domultiple.widget.dragdrop.DragSource;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -355,9 +356,36 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     }
 
 
+    private void callUpActivity() {
+        try {
+            Class activityClass = Activity.class;
+            Field callField = activityClass.getDeclaredField("mCalled");
+            callField.setAccessible(true);
+            callField.setBoolean(HomeActivity.this, true);
+//            MLogs.d("JJJJ", "callUpActivity");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onResume() {
-        super.onResume();
+        try {
+            super.onResume();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            callUpActivity();
+
+        }
+
+        LinearLayout lockSettingBar = findViewById(R.id.lock_setting_bar);
+        if (PreferencesUtils.isLockerEnabled(this)) {
+            lockSettingBar.setVisibility(View.GONE);
+        } else {
+            lockSettingBar.setVisibility(View.VISIBLE);
+        }
         if (pendingStartModel != null) {
             AppLoadingActivity.startAppStartActivity(HomeActivity.this, pendingStartModel);
             startingPkg = pendingStartModel.getPackageName();
@@ -672,28 +700,32 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     }
     
     private List<CloneModel> getSortedCloneList(List<CloneModel> CloneModels) {
-        List<CloneModel> ret = new ArrayList<>();
-        HashMap<String, ArrayList<CloneModel>> sortMap = new HashMap<>();
-        ArrayList<String> sortedPackages = new ArrayList<>();
-        if (CloneModels != null) {
-            for (CloneModel model: CloneModels) {
-                ArrayList list = sortMap.get(model.getPackageName());
-                if (list == null) {
-                    list = new ArrayList();
-                    sortedPackages.add(model.getPackageName());
+        if (RemoteConfig.getBoolean("conf_sort_home_icon")) {
+            List<CloneModel> ret = new ArrayList<>();
+            HashMap<String, ArrayList<CloneModel>> sortMap = new HashMap<>();
+            ArrayList<String> sortedPackages = new ArrayList<>();
+            if (CloneModels != null) {
+                for (CloneModel model: CloneModels) {
+                    ArrayList list = sortMap.get(model.getPackageName());
+                    if (list == null) {
+                        list = new ArrayList();
+                        sortedPackages.add(model.getPackageName());
+                    }
+                    list.add(model);
+                    sortMap.put(model.getPackageName(), list);
+                    MLogs.d("sort " + model.getPackageName());
                 }
-                list.add(model);
-                sortMap.put(model.getPackageName(), list);
-                MLogs.d("sort " + model.getPackageName());
             }
-        }
-        for(String s: sortedPackages) {
-            ArrayList list = sortMap.get(s);
-            if (list != null) {
-                ret.addAll(list);
+            for(String s: sortedPackages) {
+                ArrayList list = sortMap.get(s);
+                if (list != null) {
+                    ret.addAll(list);
+                }
             }
+            return  ret;
+        } else {
+            return CloneModels;
         }
-        return  ret;
     }
 
     @Override

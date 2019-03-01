@@ -41,14 +41,18 @@
 
                     <include layout="@layout/setting_wide_splitter" />
 
-                    <com.polestar.domultiple.widget.NarrowPromotionCard
-                        android:id="@+id/narrow_function_card"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    </com.polestar.domultiple.widget.NarrowPromotionCard>
-
-                    <include layout="@layout/setting_wide_splitter" />
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lock_setting_bar">
+                        <com.polestar.domultiple.widget.NarrowPromotionCard
+                            android:id="@+id/narrow_function_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        </com.polestar.domultiple.widget.NarrowPromotionCard>
+                        <include layout="@layout/setting_wide_splitter" />
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/ad_container"
                         android:layout_width="match_parent"

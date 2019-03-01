@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,12 @@ public class SettingsActivity extends BaseActivity {
 
     private void initView() {
         setTitle(getString(R.string.settings));
+        RelativeLayout adFreeLayout = findViewById(R.id.adfree_layout);
+        if (RemoteConfig.getBoolean("conf_has_adfree")) {
+            adFreeLayout.setVisibility(View.VISIBLE);
+        } else {
+            adFreeLayout.setVisibility(View.GONE);
+        }
         TextView rateUs = (TextView) findViewById(R.id.rate_us_txt);
         if(!RemoteConfig.getBoolean("show_rate_menu")) {
             rateUs.setVisibility(View.GONE);

@@ -82,34 +82,11 @@ public class BillingManager implements PurchasesUpdatedListener {
 
 //    public String PUB_KEY ="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvmuCaE7SGRpShOzw8zlZdQvDqDRyhOuWVHSKlWX5bJSSqYNmlZb3vKYDIp3SGXaZvnWbK3DY12rC6hMGrkgKmKcuERycgAyYOmRilbZOSIBRboo+tdssfTrSXprWaDAE51rbvb4zSJkgNeU1yS47n47sUSQd9qMZVLT70h/aJWteATq20TO9XFiqgsk6E1kQSjusSDWL98pPr6AJLSGa5SWtZwv3EMzrroiiRYQZTiRoD4UqJC5RP4rbKh7DmIWL4M9QtqR0TqeFGUxyPfgzh4j/EZMulN3jCEDrQ0oj8vmL4ObP3d3SMTQm2yqU2GYlhNj3MGMmZkjCs2RRXDwS4wIDAQAB"
 //    public static String PUB_KEY_dom = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvmuCaE7SGRpShOzw8zlZdQvDqDRyhOuWVHSKlWX5bJSSqYNmlZb3vKYDIp3SGXaZvnWbK3DY12rC6hMGrkgKmKcuERycgAyYOmRilbZOSIBRboo+tdssfTrSXprWaDAE51rbvb4zSJkgNeU1yS47n47sUSQd9qMZVLT70h/aJWteATq20TO9XFiqgsk6E1kQSjusSDWL98pPr6AJLSGa5SWtZwv3EMzrroiiRYQZTiRoD4UqJC5RP4rbKh7DmIWL4M9QtqR0TqeFGUxyPfgzh4j/EZMulN3jCEDrQ0oj8vmL4ObP3d3SMTQm2yqU2GYlhNj3MGMmZkjCs2RRXDwS4wIDAQAB";
-    private static final String KEY = "RgRDo~YcA@^E]zAN#t\\EEgOX{zLt%`]OR_f%EQNwL`xAt]%RO'$dU ~[Qd}q]{]ucSDo";
-    private static final String KEY2 = "gqe} S'}GE|ceERAZ/.fFd W\\ZEQw#EAbLa`%S[lddy\u007F\u007FDOGLB\u007FDyR\"Cg\\U#DF\"dt]~!R{_AZ\"[/GbgD&BgsPQCnoFpql~\"|9SL[czX%|USRdG&y|.`{Z\"YtF%r%E[BG{$ogC$QOz~X|%[Q[{L}|Ue$DDNRaE\"a_RWGWT";
-    private static String hash = null;
     private static String getKey() {
 //        if (!BuildConfig.DEBUG) {
 //            throw new NullPointerException();
 //        }
-        if (hash == null) {
-            StringBuffer str3 = new StringBuffer();  //存储解密后的字符串
-            for (int i = 0; i < BillingConstants.BILL_KEY.length(); i++) {
-                char c = (char) (BillingConstants.BILL_KEY.charAt(i) ^ 22);
-                str3.append(c);
-            }
-            for (int i = 0; i < KEY.length(); i++) {
-                char c = (char) (KEY.charAt(i) ^ 22);
-                str3.append(c);
-            }
-            for (int i = 0; i < BillingProvider.KEY.length(); i++) {
-                char c = (char) (BillingProvider.KEY.charAt(i) ^ 22);
-                str3.append(c);
-            }
-            for (int i = 0; i < KEY2.length(); i++) {
-                char c = (char) (KEY2.charAt(i) ^ 22);
-                str3.append(c);
-            }
-            hash = str3.toString();
-        }
-        return hash;
+        return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArX4qXtHn+WqJku5BWTuEfbVat9N8Vq2kGQsa7PpbUkwqWwVxxU7JqnQFBVjFgoqD0xOGDJP9ajGLeBHPqozgUgGSD5nIv1EAUFsP+Dp23E1UHHGefEkFfEIBq0UAkkqzLsmr5xna/5XEB3GNKlOXYg1NKBYSB85JJov5bHMHKwEOC//txfEdBIfoPuV6JsRjD8cCoRw4ke+/6RG9L6oj5lIS+lS1nq+TDtyRAMNYybyr0Z3xlz5wTg3w2Y3jyezsDEfzhIviH92WUHCBZ89KsEW2KU/vWyEzMYa/7j2Ypt3DRFCKa6D5FI+vsw4QQn4jRfnzzyYii/brqVBiVbqz3QIDAQAB";
     }
     /**
      * Listener for the Billing client state to become connected
