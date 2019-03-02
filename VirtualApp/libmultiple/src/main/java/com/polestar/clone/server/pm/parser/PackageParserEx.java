@@ -162,7 +162,11 @@ public class PackageParserEx {
             cache.activities.add(new VPackage.ActivityComponent(activity));
         }
         for (PackageParser.Service service : p.services) {
-            cache.services.add(new VPackage.ServiceComponent(service));
+            if (!service.getComponentName().getClassName().
+                    equals("com.google.android.gms.phenotype.service.sync.PackageUpdateTaskService")
+                    ) {
+                cache.services.add(new VPackage.ServiceComponent(service));
+            }
         }
         for (PackageParser.Activity receiver : p.receivers) {
             cache.receivers.add(new VPackage.ActivityComponent(receiver));
