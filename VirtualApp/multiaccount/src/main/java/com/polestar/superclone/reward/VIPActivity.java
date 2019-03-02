@@ -112,20 +112,22 @@ public class VIPActivity extends BaseActivity implements SkuDetailsResponseListe
     @Override
     public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
         MLogs.d("Billing Query SKU Response Code: " + responseCode);
-        Collections.sort(skuDetailsList, new Comparator<SkuDetails>() {
-            @Override
-            public int compare(SkuDetails skuDetails, SkuDetails t1) {
-                return (int) (skuDetails.getPriceAmountMicros() - t1.getPriceAmountMicros());
+        if (skuDetailsList != null) {
+            Collections.sort(skuDetailsList, new Comparator<SkuDetails>() {
+                @Override
+                public int compare(SkuDetails skuDetails, SkuDetails t1) {
+                    return (int) (skuDetails.getPriceAmountMicros() - t1.getPriceAmountMicros());
+                }
+            });
+            this.skuDetailsList = skuDetailsList;
+            for (SkuDetails item : this.skuDetailsList) {
+                MLogs.d(item.toString());
             }
-        });
-        this.skuDetailsList = skuDetailsList;
-        for(SkuDetails item: this.skuDetailsList) {
-            MLogs.d(item.toString());
-        }
-        if (skuDetailsList.size() > 0) {
-            basePrice = skuDetailsList.get(0).getPriceAmountMicros()
-                    / periodToDay(skuDetailsList.get(0).getSubscriptionPeriod());
-            cardAdapter.notifyDataSetChanged();
+            if (skuDetailsList.size() > 0) {
+                basePrice = skuDetailsList.get(0).getPriceAmountMicros()
+                        / periodToDay(skuDetailsList.get(0).getSubscriptionPeriod());
+                cardAdapter.notifyDataSetChanged();
+            }
         }
 
     }
