@@ -1115,7 +1115,11 @@ class MethodProxies {
         public Object call(Object who, Method method, Object... args) throws Throwable {
             IBinder token = (IBinder) args[0];
             if (!VActivityManager.get().isVAServiceToken(token)) {
-                return method.invoke(who, args);
+                try {
+                    return method.invoke(who, args);
+                }catch (Throwable ex) {
+                    ex.printStackTrace();
+                }
             }
             Intent intent = (Intent) args[1];
             IBinder service = (IBinder) args[2];
