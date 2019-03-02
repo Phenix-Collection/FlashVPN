@@ -327,43 +327,47 @@ public class EventReporter {
     private static void initReferFromApi() {
         InstallReferrerClient referrerClient;
         referrerClient = InstallReferrerClient.newBuilder(MApp.getApp()).build();
-        referrerClient.startConnection(new InstallReferrerStateListener() {
-            @Override
-            public void onInstallReferrerSetupFinished(int responseCode) {
-                switch (responseCode) {
-                    case InstallReferrerClient.InstallReferrerResponse.OK:
-                        // Connection established
-                        try {
-                            ReferrerDetails response = referrerClient.getInstallReferrer();
-                            long clickTime = response.getReferrerClickTimestampSeconds();
-                            long installStartTime = response.getInstallBeginTimestampSeconds();
-                            MLogs.d("Refer got: " + response);
-                            long now = System.currentTimeMillis()/1000;
-                            reportReferrer(REFERRER_TYPE_API, response.getInstallReferrer(), installStartTime-clickTime, now - clickTime);
-                        }catch (Exception ex) {
+        try {
+            referrerClient.startConnection(new InstallReferrerStateListener() {
+                @Override
+                public void onInstallReferrerSetupFinished(int responseCode) {
+                    switch (responseCode) {
+                        case InstallReferrerClient.InstallReferrerResponse.OK:
+                            // Connection established
+                            try {
+                                ReferrerDetails response = referrerClient.getInstallReferrer();
+                                long clickTime = response.getReferrerClickTimestampSeconds();
+                                long installStartTime = response.getInstallBeginTimestampSeconds();
+                                MLogs.d("Refer got: " + response);
+                                long now = System.currentTimeMillis() / 1000;
+                                reportReferrer(REFERRER_TYPE_API, response.getInstallReferrer(), installStartTime - clickTime, now - clickTime);
+                            } catch (Exception ex) {
 
-                        }
-                        referrerClient.endConnection();
-                        break;
-                    case InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
-                        // API not available on the current Play Store app
-                        MLogs.d("Refer API FEATURE_NOT_SUPPORTED");
-                        updateReferrerStatus(REFERRER_STATUS_API_FAIL);
-                        break;
-                    case InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE:
-                        updateReferrerStatus(REFERRER_STATUS_API_FAIL);
-                        MLogs.d("Refer API SERVICE_UNAVAILABLE");
-                        // Connection could not be established
-                        break;
+                            }
+                            referrerClient.endConnection();
+                            break;
+                        case InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
+                            // API not available on the current Play Store app
+                            MLogs.d("Refer API FEATURE_NOT_SUPPORTED");
+                            updateReferrerStatus(REFERRER_STATUS_API_FAIL);
+                            break;
+                        case InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE:
+                            updateReferrerStatus(REFERRER_STATUS_API_FAIL);
+                            MLogs.d("Refer API SERVICE_UNAVAILABLE");
+                            // Connection could not be established
+                            break;
+                    }
                 }
-            }
 
-            @Override
-            public void onInstallReferrerServiceDisconnected() {
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
-            }
-        });
+                @Override
+                public void onInstallReferrerServiceDisconnected() {
+                    // Try to restart the connection on the next request to
+                    // Google Play by calling the startConnection() method.
+                }
+            });
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public static void generalClickEvent(Context context, String event) {
