@@ -999,6 +999,7 @@ class MethodProxies {
             String pkg = (String) args[0];
             int flags = (int) args[1];
             if (getHostPkg().equals(pkg)) {
+                args[2] = VUserHandle.getHostUserId();
                 return method.invoke(who, args);
             }
             int userId = VUserHandle.myUserId();
