@@ -40,6 +40,8 @@ public final class SpecialComponentList {
     private static final HashSet<String> BROADCAST_START_WHITE_LIST = new HashSet<>();
 
     private static final HashSet<String> PRE_INSTALL_PACKAGE_LIST = new HashSet<>();
+
+    public static String APP_LOADING_ACTIVITY = null;
     static {
         PRE_INSTALL_PACKAGE_LIST.add("com.huawei.hwid");
         SYSTEM_BROADCAST_ACTION.add(DownloadManager.ACTION_DOWNLOAD_COMPLETE);

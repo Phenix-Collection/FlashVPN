@@ -646,4 +646,17 @@ public class Reflect {
         Class<Object[]> c = Object[].class;
         return parameterTypes.length > 0 && parameterTypes[0].isAssignableFrom(c);
     }
+
+    public Object opt(String arg2) {
+        Object v0_1;
+        try {
+            v0_1 = this.field(arg2).get();
+        }
+        catch(Exception v0) {
+            v0.printStackTrace();
+            v0_1 = null;
+        }
+
+        return v0_1;
+    }
 }
