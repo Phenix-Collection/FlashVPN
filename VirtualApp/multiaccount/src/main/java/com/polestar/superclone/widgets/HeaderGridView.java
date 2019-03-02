@@ -307,7 +307,8 @@ public class HeaderGridView extends GridView {
                     return mAdapter.getItem(adjPosition);
                 }
             }
-            throw new ArrayIndexOutOfBoundsException(position);
+            return null;
+//            throw new ArrayIndexOutOfBoundsException(position);
         }
         @Override
         public long getItemId(int position) {
@@ -357,7 +358,8 @@ public class HeaderGridView extends GridView {
                     return mAdapter.getView(adjPosition, convertView, parent);
                 }
             }
-            throw new ArrayIndexOutOfBoundsException(position);
+            return null;
+//            throw new ArrayIndexOutOfBoundsException(position);
         }
         @Override
         public int getItemViewType(int position) {
