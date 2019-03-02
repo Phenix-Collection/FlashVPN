@@ -20,6 +20,7 @@ import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.InstallStrategy;
 import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.remote.InstallResult;
 import com.polestar.clone.helper.utils.VLog;
@@ -29,6 +30,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import mochat.multiple.parallel.whatsclone.billing.BillingProvider;
 import mochat.multiple.parallel.whatsclone.component.LocalActivityLifecycleCallBacks;
 import mochat.multiple.parallel.whatsclone.component.MComponentDelegate;
+import mochat.multiple.parallel.whatsclone.component.activity.AppStartActivity;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.utils.CommonUtils;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
@@ -48,6 +50,10 @@ import java.util.List;
 public class MApp extends MultiDexApplication {
 
     private static MApp gDefault;
+
+    static {
+        SpecialComponentList.APP_LOADING_ACTIVITY = AppStartActivity.class.getName();
+    }
 
     public static MApp getApp() {
         return gDefault;

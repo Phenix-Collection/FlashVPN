@@ -19,6 +19,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.ad.AdConfig;
@@ -52,6 +53,10 @@ public class PolestarApp extends MultiDexApplication {
 
     public static PolestarApp getApp() {
         return gDefault;
+    }
+
+    static {
+        SpecialComponentList.APP_LOADING_ACTIVITY = AppLoadingActivity.class.getName();
     }
 
     public static boolean isArm64() {

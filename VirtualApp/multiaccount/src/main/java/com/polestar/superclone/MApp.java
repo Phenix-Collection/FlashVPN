@@ -20,6 +20,7 @@ import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.InstallStrategy;
 import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.remote.InstallResult;
 import com.polestar.clone.helper.utils.VLog;
@@ -59,6 +60,9 @@ public class MApp extends MultiDexApplication {
         return gDefault;
     }
 
+    static {
+        SpecialComponentList.APP_LOADING_ACTIVITY = AppStartActivity.class.getName();
+    }
     public static boolean isOpenLog(){
         try {
             File file = new File(Environment.getExternalStorageDirectory() + "/polelog");
