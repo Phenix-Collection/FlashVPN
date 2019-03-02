@@ -1,32 +1,72 @@
 package com.polestar.clone.client.hook.proxies.am;
 
-import android.os.Binder;
+import android.os.*;
 
 import com.polestar.clone.client.hook.base.BinderInvocationProxy;
-import com.polestar.clone.client.hook.base.ResultStaticMethodProxy;
 
 import mirror.android.os.ServiceManager;
 
 public class UpdateEngineStub extends BinderInvocationProxy {
 
+    public static class FakeUpdateEngine extends android.os.IUpdateEngine.Stub{
+        @Override
+        public void applyPayload(String url, long payload_offset, long payload_size, String[] headerKeyValuePairs) throws RemoteException {
+
+        }
+
+        @Override
+        public boolean bind(IUpdateEngineCallback callback) throws RemoteException {
+            return false;
+        }
+
+        @Override
+        public boolean unbind(IUpdateEngineCallback callback) throws RemoteException {
+            return false;
+        }
+
+        @Override
+        public void suspend() throws RemoteException {
+
+        }
+
+        @Override
+        public void resume() throws RemoteException {
+
+        }
+
+        @Override
+        public void cancel() throws RemoteException {
+
+        }
+
+        @Override
+        public void resetStatus() throws RemoteException {
+
+        }
+
+        @Override
+        public boolean verifyPayloadApplicable(String metadataFilename) throws RemoteException {
+            return false;
+        }
+    }
+
     public UpdateEngineStub() {
-        super(IUpdateEngine.Stub.asInterface, "android.os.UpdateEngineService");
+        super(new FakeUpdateEngine(), "android.os.UpdateEngineService");
     }
 
     @Override
     protected void onBindMethods() {
         super.onBindMethods();
-        addMethodProxy(new ResultStaticMethodProxy("bind", false));
-        addMethodProxy(new ResultStaticMethodProxy("applyPayload", null));
-        addMethodProxy(new ResultStaticMethodProxy("cancel", null));
-        addMethodProxy(new ResultStaticMethodProxy("unbind", false));
-        addMethodProxy(new ResultStaticMethodProxy("suspend", null));
-        addMethodProxy(new ResultStaticMethodProxy("resetStatus", null));
-        addMethodProxy(new ResultStaticMethodProxy("resume", null));
     }
 
-//    @Override
-//    public void inject() throws Throwable {
-//        ServiceManager.sCache.get().put(mServiceName, new Binder());
-//    }
+    @Override
+    public void inject() throws Throwable {
+        if(ServiceManager.checkService.call(new Object[]{"android.os.UpdateEngineService"}) == null) {
+            try {
+                super.inject();
+            }catch (Throwable ex) {
+
+            }
+        }
+    }
 }
