@@ -6,7 +6,7 @@ import com.polestar.clone.helper.utils.VLog;
 
 import java.lang.reflect.Method;
 
-import mirror.android.content.pm.ILauncherApps;
+import mirror.android.content.pm.IShortcutService;
 
 /**
  * @author Lody
@@ -16,7 +16,7 @@ public class ShortcutServiceStub extends BinderInvocationProxy {
 
     private final static String TAG = "shortcut";
     public ShortcutServiceStub() {
-        super(ILauncherApps.Stub.asInterface, "shortcut");
+        super(IShortcutService.Stub.asInterface, "shortcut");
     }
 
     @Override
