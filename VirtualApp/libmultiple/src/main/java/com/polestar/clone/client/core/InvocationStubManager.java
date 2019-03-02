@@ -16,6 +16,7 @@ import com.polestar.clone.client.hook.proxies.appops.AppOpsManagerStub;
 import com.polestar.clone.client.hook.proxies.appwidget.AppWidgetManagerStub;
 import com.polestar.clone.client.hook.proxies.audio.AudioManagerStub;
 import com.polestar.clone.client.hook.proxies.backup.BackupManagerStub;
+import com.polestar.clone.client.hook.proxies.battery.BatteryStatsStub;
 import com.polestar.clone.client.hook.proxies.bluetooth.BluetoothStub;
 import com.polestar.clone.client.hook.proxies.clipboard.ClipBoardStub;
 import com.polestar.clone.client.hook.proxies.connectivity.ConnectivityStub;
@@ -47,6 +48,7 @@ import com.polestar.clone.client.hook.proxies.restriction.RestrictionStub;
 import com.polestar.clone.client.hook.proxies.search.SearchManagerStub;
 import com.polestar.clone.client.hook.proxies.shortcut.ShortcutServiceStub;
 import com.polestar.clone.client.hook.proxies.statusbar.StatusBarManagerStub;
+import com.polestar.clone.client.hook.proxies.storage.StorageStatsStub;
 import com.polestar.clone.client.hook.proxies.system.LockSettingsStub;
 import com.polestar.clone.client.hook.proxies.system.SystemUpdateStub;
 import com.polestar.clone.client.hook.proxies.telephony.HwTelephonyStub;
@@ -196,9 +198,11 @@ public final class InvocationStubManager {
                 addInjector(new ShortcutServiceStub());
                 addInjector(new DevicePolicyManagerStub());
                 addInjector(new UpdateEngineStub());
+				addInjector(new BatteryStatsStub());
             }
             if (Build.VERSION.SDK_INT >= O){
 				addInjector(new AutoFillManagerStub());
+				addInjector(new StorageStatsStub());
 			}
 			if (Build.VERSION.SDK_INT >= 28) {
             	addInjector(new SystemUpdateStub());
