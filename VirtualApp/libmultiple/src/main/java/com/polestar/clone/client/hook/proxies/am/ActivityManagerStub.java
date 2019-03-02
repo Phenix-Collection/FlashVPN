@@ -86,7 +86,7 @@ public class ActivityManagerStub extends MethodInvocationProxy<MethodInvocationS
             //public static final int IMPORTANCE_GONE = 1000;
             addMethodProxy(new ResultStaticMethodProxy("getPackageProcessState", 1000));
             addMethodProxy(new ResultStaticMethodProxy("registerUidObserver", null));
-            addMethodProxy(new ReplaceLastUidMethodProxy("checkPermissionWithToken"));
+//            addMethodProxy(new ReplaceLastUidMethodProxy("checkPermissionWithToken"));
             addMethodProxy(new isUserRunning());
             addMethodProxy(new ResultStaticMethodProxy("updateConfiguration", 0));
             addMethodProxy(new ReplaceCallingPkgMethodProxy("setAppLockedVerifying"));

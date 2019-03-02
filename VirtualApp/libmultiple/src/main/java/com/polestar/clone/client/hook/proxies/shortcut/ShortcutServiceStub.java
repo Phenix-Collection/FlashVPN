@@ -41,7 +41,7 @@ public class ShortcutServiceStub extends BinderInvocationProxy {
 
     private final static String TAG = "shortcut";
     public ShortcutServiceStub() {
-        super(IShortcutService.Stub.asInterface, "shortcut");
+        super(IShortcutService.Stub.TYPE, "shortcut");
     }
 
     @Override
@@ -65,7 +65,6 @@ public class ShortcutServiceStub extends BinderInvocationProxy {
         addMethodProxy(new ReplaceCallingPkgMethodProxyNoException("removeAllDynamicShortcuts", 0));
 
         addMethodProxy(new UnWrapperShortcutInfo("getPinnedShortcuts"));
-        addMethodProxy(new ReplaceCallingPkgMethodProxy("updateShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("disableShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("enableShortcuts"));
         addMethodProxy(new ReplaceCallingPkgMethodProxy("getRemainingCallCount"));
@@ -281,6 +280,7 @@ public class ShortcutServiceStub extends BinderInvocationProxy {
         }
 
         public Object call(Object arg8, Method arg9, Object[] arg10) {
+            VLog.d("Shortcut",getMethodName() + " app " + getAppPkg() + " id; " + getAppUserId());
             try {
                 Object v0;
                 v0 = arg10[this.infoIndex];
