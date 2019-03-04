@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 public class ProxyConfig {
     public static final ProxyConfig Instance = new ProxyConfig();
-    public final static boolean IS_DEBUG = false;
+    public final static boolean IS_DEBUG = true;
     public static String AppInstallID;
     public static String AppVersion;
     public final static int FAKE_NETWORK_MASK = CommonMethods.ipStringToInt("255.255.0.0");
@@ -53,6 +53,41 @@ public class ProxyConfig {
     int m_mtu;
 
     Timer m_Timer;
+
+    public void dump() {
+        MLogs.d("ProxyConfig--  m_dns_ttl " + m_dns_ttl);
+        MLogs.d("ProxyConfig--  m_welcome_info " + m_welcome_info);
+        MLogs.d("ProxyConfig--  m_session_name " + m_session_name);
+        MLogs.d("ProxyConfig--  m_user_agent " + m_user_agent);
+        MLogs.d("ProxyConfig--  m_outside_china_use_proxy " + m_outside_china_use_proxy);
+        MLogs.d("ProxyConfig--  m_isolate_http_host_header " + m_isolate_http_host_header);
+        MLogs.d("ProxyConfig--  m_mtu " + m_mtu);
+
+        MLogs.d("ProxyConfig--  mIpList below: ");
+        for (IPAddress ipAddress: m_IpList) {
+            MLogs.d(ipAddress.toString());
+        }
+
+        MLogs.d("ProxyConfig--  m_DnsList below: ");
+        for (IPAddress ipAddress: m_DnsList) {
+            MLogs.d(ipAddress.toString());
+        }
+
+        MLogs.d("ProxyConfig--  m_RouteList below: ");
+        for (IPAddress ipAddress: m_RouteList) {
+            MLogs.d(ipAddress.toString());
+        }
+
+        MLogs.d("ProxyConfig-- m_ProxyList below: ");
+        for (Config config : m_ProxyList) {
+            MLogs.d(config.ServerAddress.toString());
+        }
+
+        MLogs.d("ProxyConfig-- mDomainMap below");
+        for (String key : m_DomainMap.keySet()) {
+            MLogs.d("ProxyConfig--  key " + key + " value " + m_DomainMap.get(key));
+        }
+    }
 
     public class IPAddress {
         public final String Address;
@@ -77,7 +112,7 @@ public class ProxyConfig {
         @SuppressLint("DefaultLocale")
         @Override
         public String toString() {
-            return String.format("%s/%d", Address, PrefixLength);
+            return String.format("ProxyConfig-- %s/%d", Address, PrefixLength);
         }
 
         @Override
@@ -105,6 +140,8 @@ public class ProxyConfig {
         @Override
         public void run() {
             refreshProxyServer();//定时更新dns缓存
+
+            dump();
         }
 
         //定时更新dns缓存
@@ -218,7 +255,7 @@ public class ProxyConfig {
         }
         if (host != null) {
             Boolean stateBoolean = getDomainState(host);
-            MLogs.d("getDomainState : " + host + " state : " + stateBoolean);
+            MLogs.d("ProxyConfig-- getDomainState : " + host + " state : " + stateBoolean);
             if (stateBoolean != null) {
                 return stateBoolean.booleanValue();
             }
@@ -228,7 +265,7 @@ public class ProxyConfig {
             return true;
         if (m_outside_china_use_proxy && ip != 0) {
             boolean need = true; //!ChinaIpMaskManager.isIPInChina(ip);
-            MLogs.d("need proxy for ip outside cn: " + need);
+            MLogs.d("ProxyConfig-- need proxy for ip outside cn: " + need);
             return need;
         }
         return false;

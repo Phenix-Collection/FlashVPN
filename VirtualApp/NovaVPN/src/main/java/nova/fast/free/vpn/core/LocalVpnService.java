@@ -30,6 +30,7 @@ import nova.fast.free.vpn.tcpip.CommonMethods;
 import nova.fast.free.vpn.tcpip.IPHeader;
 import nova.fast.free.vpn.tcpip.TCPHeader;
 import nova.fast.free.vpn.tcpip.UDPHeader;
+import nova.fast.free.vpn.tunnel.TunnelStatisticManager;
 import nova.fast.free.vpn.ui.HomeActivity;
 import nova.fast.free.vpn.utils.CommonUtils;
 import nova.fast.free.vpn.utils.EventReporter;
@@ -41,6 +42,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -112,12 +115,12 @@ public class LocalVpnService extends VpnService implements Runnable {
         m_DNSBuffer = ((ByteBuffer) ByteBuffer.wrap(m_Packet).position(28)).slice();
         Instance = this;
 
-        MLogs.d("New VPNService(%d)\n"+ ID);
+        MLogs.d("LocalVpnService-- New VPNService(%d)\n"+ ID);
     }
 
     @Override
     public void onCreate() {
-        MLogs.d("VPNService(%s) created.\n" + ID);
+        MLogs.d("LocalVpnService-- (%s) created.\n" + ID);
         // Start a new session by creating a new thread.
         m_VPNThread = new Thread(this, "VPNServiceThread");
         m_VPNThread.start();
@@ -190,6 +193,9 @@ public class LocalVpnService extends VpnService implements Runnable {
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }
+
+                NatSessionManager.dump();
+                TunnelStatisticManager.getInstance().dump();
             }
 //            }
         });
@@ -230,9 +236,16 @@ public class LocalVpnService extends VpnService implements Runnable {
 
     @Override
     public int onStartCommand(Intent cmd, int flags, int startId) {
+        MLogs.d("LocalVpnService-- onStartCommand");
         updateNotification();
         IsRunning = true;
         return super.onStartCommand(cmd, flags, startId);
+    }
+
+    @Override
+    public void onRevoke() {
+        super.onRevoke();
+        MLogs.d("LocalVpnService-- onRevoke");
     }
 
     public interface onStatusChangedListener {
@@ -282,6 +295,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
     public void sendUDPPacket(IPHeader ipHeader, UDPHeader udpHeader) {
         try {
+            MLogs.i("LocalVpnService-- sendUDPPacket ");
             CommonMethods.ComputeUDPChecksum(ipHeader, udpHeader);
             this.m_VPNOutputStream.write(ipHeader.m_Data, ipHeader.m_Offset, ipHeader.getTotalLength());
         } catch (IOException e) {
@@ -316,28 +330,28 @@ public class LocalVpnService extends VpnService implements Runnable {
     @Override
     public synchronized void run() {
         try {
-            MLogs.d("VPNService(%s) work thread is runing...\n"+ ID);
+            MLogs.d("LocalVpnService-- VPNService(%s) work thread is runing...\n"+ ID);
 
             ProxyConfig.AppInstallID = getAppInstallID();//获取安装ID
             ProxyConfig.AppVersion = getVersionName();//获取版本号
-            MLogs.d("AppInstallID: %s\n", ProxyConfig.AppInstallID);
-            MLogs.d("Android version: %s", Build.VERSION.RELEASE);
-            MLogs.d("App version: %s", ProxyConfig.AppVersion);
+            MLogs.d("LocalVpnService-- AppInstallID: %s\n", ProxyConfig.AppInstallID);
+            MLogs.d("LocalVpnService-- Android version: %s", Build.VERSION.RELEASE);
+            MLogs.d("LocalVpnService-- App version: %s", ProxyConfig.AppVersion);
 
 
             ChinaIpMaskManager.loadFromFile(getResources().openRawResource(R.raw.ipmask));//加载中国的IP段，用于IP分流。
             waitUntilPreapred();//检查是否准备完毕。
 
-            MLogs.d("Load config from file ...");
+            MLogs.d("LocalVpnService-- Load config from file ...");
             try {
                 ProxyConfig.Instance.loadFromFile(getResources().openRawResource(R.raw.config));
-                MLogs.d("Load done");
+                MLogs.d("LocalVpnService-- Load done");
             } catch (Exception e) {
                 String errString = e.getMessage();
                 if (errString == null || errString.isEmpty()) {
                     errString = e.toString();
                 }
-                MLogs.d("Load failed with error: %s", errString);
+                MLogs.d("LocalVpnService-- Load failed with error: %s", errString);
             }
             if (!getPackageName().contains("fast.free")){
                 System.exit(0);
@@ -345,17 +359,17 @@ public class LocalVpnService extends VpnService implements Runnable {
 
             m_TcpProxyServer = new TcpProxyServer(0);
             m_TcpProxyServer.start();
-            MLogs.d("LocalTcpServer started.");
+            MLogs.d("LocalVpnService-- LocalTcpServer started.");
 
             m_DnsProxy = new DnsProxy();
             m_DnsProxy.start();
-            MLogs.d("LocalDnsProxy started.");
+            MLogs.d("LocalVpnService-- LocalDnsProxy started.");
 
             while (true) {
                 if (IsRunning) {
                     //加载配置文件
 
-                    MLogs.d("set app_icon/(http proxy)");
+                    MLogs.d("LocalVpnService-- set app_icon/(http proxy)");
                     try {
                         ProxyConfig.Instance.m_ProxyList.clear();
                         int id = PreferenceUtils.getPreferServer();
@@ -365,12 +379,14 @@ public class LocalVpnService extends VpnService implements Runnable {
                         } else {
                             url = VPNServerManager.getInstance(LocalVpnService.this).getServerInfo(id).url;
                         }
-                        MLogs.d("Will use url " + url);
+                        MLogs.d("LocalVpnService-- Will use url " + url);
                         ProxyUrl = url;
                         ProxyConfig.Instance.addProxyToList(url);
-                        MLogs.d("Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
+                        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
+                        ProxyConfig.Instance.dump();
+
                     } catch (Exception e) {
-                        ;
+                        MLogs.e("LocalVpnService-- " + e.toString());
                         String errString = e.getMessage();
                         if (errString == null || errString.isEmpty()) {
                             errString = e.toString();
@@ -381,9 +397,9 @@ public class LocalVpnService extends VpnService implements Runnable {
                     }
                     String welcomeInfoString = ProxyConfig.Instance.getWelcomeInfo();
                     if (welcomeInfoString != null && !welcomeInfoString.isEmpty()) {
-                        MLogs.d("%s", ProxyConfig.Instance.getWelcomeInfo());
+                        MLogs.d("LocalVpnService-- %s", ProxyConfig.Instance.getWelcomeInfo());
                     }
-                    MLogs.d("Global mode is " + (ProxyConfig.Instance.globalMode ? "on" : "off"));
+                    MLogs.d("LocalVpnService-- Global mode is " + (ProxyConfig.Instance.globalMode ? "on" : "off"));
 
                     runVPN();
                 } else {
@@ -391,12 +407,12 @@ public class LocalVpnService extends VpnService implements Runnable {
                 }
             }
         } catch (InterruptedException e) {
-            System.out.println(e);
+            MLogs.e("LocalVpnService-- Interrupted " + e.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            MLogs.d("Fatal error: %s", e.toString());
+            MLogs.e("LocalVpnService-- Fatal error" + e.toString());
         } finally {
-            MLogs.d("App terminated.");
+            MLogs.d("LocalVpnService-- App terminated.");
             dispose();
         }
     }
@@ -412,6 +428,7 @@ public class LocalVpnService extends VpnService implements Runnable {
             while ((size = in.read(m_Packet)) > 0 && IsRunning) {
                 if (m_DnsProxy.Stopped || m_TcpProxyServer.Stopped) {
                     in.close();
+                    MLogs.e("LocalVpnService-- LocalServer Stopped");
                     throw new Exception("LocalServer stopped.");
                 }
                 onIPPacketReceived(m_IPHeader, size);
@@ -447,13 +464,43 @@ public class LocalVpnService extends VpnService implements Runnable {
         updateNotification();
     }
 
+    public static String ipIntToString(int ip) {
+        try {
+            return InetAddress.getByAddress(BigInteger.valueOf(ip).toByteArray()).toString();
+        } catch (Exception e) {
+            return e.toString();
+        }
+    }
+
+    /**
+     *
+     * 2019-03-02
+     * 凡是从TcpProxyServer写过来的，都是得转发给原始app
+     * 凡是从原始app写过来的，都是得转发给TcpProxyServer
+     * 判断数据从哪儿来是通过srcPort
+     * 转发的方法是通过改dstPort
+     *
+     * 原始app的数据进来后，把其真实的dstIp dstPort保存在NAT表，索引是srcPort
+     * 把srcIp改成原始的dstIp; 改dstIp和dstPort，从而转发给TcpProxyServer
+     *
+     * TcpProxyServer数据进来后，要把srcPort改成外部，srcIp也改成外部；转发给原始app
+     */
     void onIPPacketReceived(IPHeader ipHeader, int size) throws IOException {
         switch (ipHeader.getProtocol()) {
             case IPHeader.TCP:
                 TCPHeader tcpHeader = m_TCPHeader;
                 tcpHeader.m_Offset = ipHeader.getHeaderLength();
+
+//                MLogs.d("LocalVpnService-- ipHeader.getSourceIP " + ipIntToString(ipHeader.getSourceIP())
+//                        //+ " LOCALIP " + ipIntToString(LOCAL_IP)
+//                        + " tcpHeader.getSourcePort() " + (int)(tcpHeader.getSourcePort() & 0xFFFF)
+//                        + " ipHeader.getDestinationIP() " +  ipIntToString(ipHeader.getDestinationIP())
+//                        + " tcpHeader.getDestinationPort() " + (int)(tcpHeader.getDestinationPort() & 0xFFFF)
+//                + " mTcpProxyServer.port is " + (m_TcpProxyServer.Port&0xFFFF));
                 if (ipHeader.getSourceIP() == LOCAL_IP) {
                     if (tcpHeader.getSourcePort() == m_TcpProxyServer.Port) {// 收到本地TCP服务器数据
+//                        MLogs.i("LocalVpnService-- received data from ssserver ==>" +
+//                                ipIntToString(ipHeader.getDestinationIP()) + ":" + (tcpHeader.getDestinationPort() & 0xFFFF));
                         NatSession session = NatSessionManager.getSession(tcpHeader.getDestinationPort());
                         if (session != null) {
                             ipHeader.setSourceIP(ipHeader.getDestinationIP());
@@ -464,15 +511,21 @@ public class LocalVpnService extends VpnService implements Runnable {
                             m_VPNOutputStream.write(ipHeader.m_Data, ipHeader.m_Offset, size);
                             m_ReceivedBytes += size;
                         } else {
-                            MLogs.d("NoSession:  " + ipHeader.toString() + " " + tcpHeader.toString());
+                            MLogs.e("LocalVpnService-- NoSession for port:  " + (tcpHeader.getDestinationPort() &0xFFFF) + ipHeader.toString() + " " + tcpHeader.toString());
                         }
                     } else {
 
                         // 添加端口映射
                         int portKey = tcpHeader.getSourcePort();
+//                        MLogs.i("LocalVpnService--  received data from app " + (portKey&0xFFFF)
+//                                + "==>" + ipIntToString(ipHeader.getDestinationIP()) + ":" + (tcpHeader.getDestinationPort() & 0xFFFF));
                         NatSession session = NatSessionManager.getSession(portKey);
                         if (session == null || session.RemoteIP != ipHeader.getDestinationIP() || session.RemotePort != tcpHeader.getDestinationPort()) {
+
                             session = NatSessionManager.createSession(portKey, ipHeader.getDestinationIP(), tcpHeader.getDestinationPort());
+                            MLogs.i("LocalVpnService--  creating new natsession for " + " port " + (portKey&0xFFFF) +
+                                            " for remote ip "+ CommonMethods.ipIntToString(session.RemoteIP)
+                                           );
                         }
 
                         session.LastNanoTime = System.nanoTime();
@@ -480,6 +533,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
                         int tcpDataSize = ipHeader.getDataLength() - tcpHeader.getHeaderLength();
                         if (session.PacketSent == 2 && tcpDataSize == 0) {
+                            MLogs.i("LocalVpnService-- Drop ACK 2");
                             return;//丢弃tcp握手的第二个ACK报文。因为客户端发数据的时候也会带上ACK，这样可以在服务器Accept之前分析出HOST信息。
                         }
 
@@ -488,9 +542,12 @@ public class LocalVpnService extends VpnService implements Runnable {
                             int dataOffset = tcpHeader.m_Offset + tcpHeader.getHeaderLength();
                             String host = HttpHostHeaderParser.parseHost(tcpHeader.m_Data, dataOffset, tcpDataSize);
                             if (host != null) {
+                                MLogs.i("LocalVpnService-- changing remote host of " + (portKey&0xFFFF)
+                                        + " from " + session.RemoteHost
+                                        + " to " + host);
                                 session.RemoteHost = host;
                             } else {
-                                MLogs.d("No host name found: %s", session.RemoteHost);
+                                MLogs.e("LocalVpnService-- No host name found: %s", session.RemoteHost);
                             }
                         }
 
@@ -510,10 +567,12 @@ public class LocalVpnService extends VpnService implements Runnable {
                 // 转发DNS数据包：
                 UDPHeader udpHeader = m_UDPHeader;
                 udpHeader.m_Offset = ipHeader.getHeaderLength();
+                MLogs.d("LocalVpnService-- UDP ipHeader.getSourceIP " + ipIntToString(ipHeader.getSourceIP()) + " LOCALIP " + ipIntToString(LOCAL_IP));
                 if (ipHeader.getSourceIP() == LOCAL_IP && udpHeader.getDestinationPort() == 53) {
                     m_DNSBuffer.clear();
                     m_DNSBuffer.limit(ipHeader.getDataLength() - 8);
                     DnsPacket dnsPacket = DnsPacket.FromBytes(m_DNSBuffer);
+                    MLogs.d("LocalVpnService-- UDP destinationPort is 53");
                     if (dnsPacket != null && dnsPacket.Header.QuestionCount > 0) {
                         m_DnsProxy.onDnsRequestReceived(ipHeader, udpHeader, dnsPacket);
                     }
@@ -535,38 +594,39 @@ public class LocalVpnService extends VpnService implements Runnable {
     private ParcelFileDescriptor establishVPN() throws Exception {
         long start = Calendar.getInstance().getTimeInMillis();
         resetSpeeds();
+        TunnelStatisticManager.getInstance().clearEstablishTimes();
 
         Builder builder = new Builder();
         builder.setMtu(ProxyConfig.Instance.getMTU());
         if (ProxyConfig.IS_DEBUG)
-            MLogs.d("setMtu: "  + ProxyConfig.Instance.getMTU());
+            MLogs.d("LocalVpnService-- setMtu: "  + ProxyConfig.Instance.getMTU());
 
         IPAddress ipAddress = ProxyConfig.Instance.getDefaultLocalIP();
         LOCAL_IP = CommonMethods.ipStringToInt(ipAddress.Address);
         builder.addAddress(ipAddress.Address, ipAddress.PrefixLength);
         if (ProxyConfig.IS_DEBUG)
-            MLogs.d("addAddress: " + ipAddress.Address + "\\" + ipAddress.PrefixLength);
+            MLogs.d("LocalVpnService-- addAddress: " + ipAddress.Address + "\\" + ipAddress.PrefixLength);
 
         for (ProxyConfig.IPAddress dns : ProxyConfig.Instance.getDnsList()) {
             builder.addDnsServer(dns.Address);
             if (ProxyConfig.IS_DEBUG)
-                MLogs.d("addDnsServer:  "+dns.Address);
+                MLogs.d("LocalVpnService-- addDnsServer:  "+dns.Address);
         }
 
         if (ProxyConfig.Instance.getRouteList().size() > 0) {
             for (ProxyConfig.IPAddress routeAddress : ProxyConfig.Instance.getRouteList()) {
                 builder.addRoute(routeAddress.Address, routeAddress.PrefixLength);
                 if (ProxyConfig.IS_DEBUG)
-                    MLogs.d("addRoute: "+routeAddress.Address + "/" +routeAddress.PrefixLength);
+                    MLogs.d("LocalVpnService-- addRoute: "+routeAddress.Address + "/" +routeAddress.PrefixLength);
             }
             builder.addRoute(CommonMethods.ipIntToString(ProxyConfig.FAKE_NETWORK_IP), 16);
 
             if (ProxyConfig.IS_DEBUG)
-                MLogs.d("addRoute for FAKE_NETWORK: " + CommonMethods.ipIntToString(ProxyConfig.FAKE_NETWORK_IP) + "/" +16);
+                MLogs.d("LocalVpnService-- addRoute for FAKE_NETWORK: " + CommonMethods.ipIntToString(ProxyConfig.FAKE_NETWORK_IP) + "/" +16);
         } else {
             builder.addRoute("0.0.0.0", 0);
             if (ProxyConfig.IS_DEBUG)
-                MLogs.d("addDefaultRoute: 0.0.0.0/0\n");
+                MLogs.d("LocalVpnService-- addDefaultRoute: 0.0.0.0/0\n");
         }
 
 
@@ -575,6 +635,7 @@ public class LocalVpnService extends VpnService implements Runnable {
         ArrayList<String> servers = new ArrayList<String>();
         for (String name : new String[]{"net.dns1", "net.dns2", "net.dns3", "net.dns4",}) {
             String value = (String) method.invoke(null, name);
+            MLogs.d("LocalVpnService-- getProperty " + name + " is " + value);
             if (value != null && !"".equals(value) && !servers.contains(value)) {
                 servers.add(value);
                 if (value.replaceAll("\\d", "").length() == 3){//防止IPv6地址导致问题
@@ -602,7 +663,7 @@ public class LocalVpnService extends VpnService implements Runnable {
         if (AppProxyManager.isLollipopOrAbove){
             if (AppProxyManager.Instance.proxyAppInfo.size() == 0
                     || PreferenceUtils.isGlobalVPN()){
-                MLogs.d("Proxy All Apps");
+                MLogs.d("LocalVpnService-- Proxy All Apps");
                 //add disallow
                 final Set<String> blockedApp = CommonUtils.getBlockedApps();
                 for(String s: blockedApp) {
@@ -623,16 +684,16 @@ public class LocalVpnService extends VpnService implements Runnable {
                 for (AppInfo app : AppProxyManager.Instance.proxyAppInfo) {
                     try {
                         builder.addAllowedApplication(app.getPkgName());
-                        MLogs.d("Proxy App: " + app.getAppLabel());
+                        MLogs.d("LocalVpnService-- Proxy App: " + app.getAppLabel());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        MLogs.d("Proxy App Fail: " + app.getAppLabel());
+                        MLogs.d("LocalVpnService-- Proxy App Fail: " + app.getAppLabel());
                     }
                 }
                 //do not need add disallow as it already filtered
             }
         } else {
-            MLogs.d("No Pre-App proxy, due to low Android version.");
+            MLogs.d("LocalVpnService-- No Pre-App proxy, due to low Android version.");
         }
         Intent intent = new Intent(this, HomeActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -640,8 +701,8 @@ public class LocalVpnService extends VpnService implements Runnable {
 
         builder.setSession(ProxyConfig.Instance.getSessionName());
         ParcelFileDescriptor pfdDescriptor = builder.establish();
-        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true,
-                            mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
+//        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true,
+//                            mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
 
         long establishTime = Calendar.getInstance().getTimeInMillis() - start;
         EventReporter.reportEstablishTime(NovaApp.getApp(), establishTime);
@@ -670,14 +731,14 @@ public class LocalVpnService extends VpnService implements Runnable {
         if (m_TcpProxyServer != null) {
             m_TcpProxyServer.stop();
             m_TcpProxyServer = null;
-            MLogs.d("LocalTcpServer stopped.");
+            MLogs.d("LocalVpnService-- LocalTcpServer stopped.");
         }
 
         // 停止DNS解析器
         if (m_DnsProxy != null) {
             m_DnsProxy.stop();
             m_DnsProxy = null;
-            MLogs.d("LocalDnsProxy stopped.");
+            MLogs.d("LocalVpnService-- LocalDnsProxy stopped.");
         }
 
         stopSelf();
@@ -687,7 +748,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
     @Override
     public void onDestroy() {
-        MLogs.d("VPNService(%s) destoried.\n"+ ID);
+        MLogs.d("LocalVpnService-- VPNService(%s) destoried.\n"+ ID);
         if (m_VPNThread != null) {
             m_VPNThread.interrupt();
         }

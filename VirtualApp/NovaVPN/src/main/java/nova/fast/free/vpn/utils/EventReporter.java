@@ -74,6 +74,24 @@ public class EventReporter {
         }
     }
 
+    public static void reportNoPingBinary() {
+        Bundle bundle = new Bundle();
+        bundle.putString("event", "noping");
+        mFirebaseAnalytics.logEvent("ping", bundle);
+    }
+    public static void reportPingLevel(String locale, boolean isConnectted, String serv, String pingTime) {
+        Bundle bundle = new Bundle();
+        String value = "" + isConnectted + "_" + locale + "_" + serv + "_" + pingTime;
+        MLogs.d("EventReporter-- reportPingLevel:" + value);
+        bundle.putString("event", value);
+        mFirebaseAnalytics.logEvent("ping", bundle);
+    }
+    public static void reportPingFailed(int status) {
+        Bundle bundle = new Bundle();
+        bundle.putString("event", "pingfail_" + status);
+        mFirebaseAnalytics.logEvent("ping", bundle);
+    }
+
     public static void reportSpeed(Context context, String server, float avgDownload,
                                         float avgUpload, float maxDownload, float maxUpload) {
         Bundle bundle = new Bundle();
@@ -117,5 +135,18 @@ public class EventReporter {
         Bundle bundle = new Bundle();
         bundle.putLong("time", toreport);
         mFirebaseAnalytics.logEvent("establish_time", bundle);
+    }
+
+    public static void reportTunnelConnectTime(String locale, String address, long timeInMilli) {
+        long toreport = timeInMilli/100;
+        Bundle bundle = new Bundle();
+        bundle.putString("time", locale + "_" + address + "_" + toreport);
+        mFirebaseAnalytics.logEvent("tunnel_time", bundle);
+    }
+
+    public static void reportTunnelConnectFail(String locale, String address) {
+        Bundle bundle = new Bundle();
+        bundle.putString("fail", locale + "_" + address);
+        mFirebaseAnalytics.logEvent("tunnel_c_fail", bundle);
     }
 }

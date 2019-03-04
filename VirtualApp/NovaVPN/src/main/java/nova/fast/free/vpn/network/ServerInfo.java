@@ -41,7 +41,7 @@ public class ServerInfo implements Comparable<ServerInfo>{
         ServerInfo si = new ServerInfo();
         si.id = jsonObject.optInt("id", -1);
         si.isVIP = jsonObject.optBoolean("vip", false);
-        si.pingDelayMs = jsonObject.optInt("ping", LEVEL_4_PING);
+        si.pingDelayMs = jsonObject.optInt("ping", LEVEL_3_PING);
         si.country = jsonObject.optString("geo");
         si.city = jsonObject.optString("city");
         si.priority = jsonObject.optInt("pri", PRIORITY_DEFAULT);

@@ -14,6 +14,7 @@
         <include layout="@layout/select_server_title_bar_layout" />
 
         <LinearLayout
+            android:id="@+id/auto_checkbox_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

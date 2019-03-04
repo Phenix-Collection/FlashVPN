@@ -1,6 +1,7 @@
 package nova.fast.free.vpn.tunnel.shadowsocks;
 
 import nova.fast.free.vpn.tunnel.Tunnel;
+import nova.fast.free.vpn.utils.MLogs;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.Selector;
@@ -20,7 +21,7 @@ public class ShadowsocksTunnel extends Tunnel {
 
     @Override
     protected void onConnected(ByteBuffer buffer) throws Exception {
-
+        MLogs.d("ShadowsocksTunnel-- onConnected for " + m_DestAddress.toString());
         buffer.clear();
         // https://shadowsocks.org/en/spec/protocol.html
 

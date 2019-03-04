@@ -9,6 +9,7 @@ import nova.fast.free.vpn.dns.ResourcePointer;
 import nova.fast.free.vpn.tcpip.CommonMethods;
 import nova.fast.free.vpn.tcpip.IPHeader;
 import nova.fast.free.vpn.tcpip.UDPHeader;
+import nova.fast.free.vpn.utils.MLogs;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -90,21 +91,24 @@ public class DnsProxy implements Runnable {
                 } catch (Exception e) {
                     e.printStackTrace();
                     LocalVpnService.Instance.writeLog("Parse dns error: %s", e);
+                    MLogs.e("DnsProxy-- Parse dns error " + e.toString());
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            System.out.println("DnsResolver Thread Exited.");
+            MLogs.e("DnsProxy-- DnsResolver Thread Exited.");
             this.stop();
         }
     }
 
     private int getFirstIP(DnsPacket dnsPacket) {
+        MLogs.d("DnsProxy-- getFirstIP");
         for (int i = 0; i < dnsPacket.Header.ResourceCount; i++) {
             Resource resource = dnsPacket.Resources[i];
             if (resource.Type == 1) {
                 int ip = CommonMethods.readInt(resource.Data, 0);
+                MLogs.d("DnsProxy-- first ip is " + CommonMethods.ipIntToString(ip));
                 return ip;
             }
         }
@@ -112,6 +116,7 @@ public class DnsProxy implements Runnable {
     }
 
     private void tamperDnsResponse(byte[] rawPacket, DnsPacket dnsPacket, int newIP) {
+        MLogs.d("DnsProxy-- tamperDnsResponse newIP is " + CommonMethods.ipIntToString(newIP));
         Question question = dnsPacket.Questions[0];
 
         dnsPacket.Header.setResourceCount((short) 1);
@@ -130,6 +135,7 @@ public class DnsProxy implements Runnable {
     }
 
     private int getOrCreateFakeIP(String domainString) {
+        MLogs.d("DnsProxy-- getOrCreateFakeIP for " + domainString);
         Integer fakeIP = DomainIPMaps.get(domainString);
         if (fakeIP == null) {
             int hashIP = domainString.hashCode();
@@ -138,6 +144,8 @@ public class DnsProxy implements Runnable {
                 hashIP++;
             } while (IPDomainMaps.containsKey(fakeIP));
 
+            MLogs.d("DnsProxy-- getOrCreateFakeIP finallay domainString " + domainString
+                        + " fakeIP " + CommonMethods.ipIntToString(fakeIP));
             DomainIPMaps.put(domainString, fakeIP);
             IPDomainMaps.put(fakeIP, domainString);
         }
@@ -145,6 +153,7 @@ public class DnsProxy implements Runnable {
     }
 
     private boolean dnsPollution(byte[] rawPacket, DnsPacket dnsPacket) {
+        MLogs.d("DnsProxy-- dnsPollution ");
         if (dnsPacket.Header.QuestionCount > 0) {
             Question question = dnsPacket.Questions[0];
             if (question.Type == 1) {
@@ -153,7 +162,7 @@ public class DnsProxy implements Runnable {
                     int fakeIP = getOrCreateFakeIP(question.Domain);
                     tamperDnsResponse(rawPacket, dnsPacket, fakeIP);
                     if (ProxyConfig.IS_DEBUG)
-                        System.out.printf("FakeDns: %s=>%s(%s)\n", question.Domain, CommonMethods.ipIntToString(realIP), CommonMethods.ipIntToString(fakeIP));
+                        MLogs.d("DnsProxy-- FakeDns: %s=>%s(%s)\n", question.Domain, CommonMethods.ipIntToString(realIP), CommonMethods.ipIntToString(fakeIP));
                     return true;
                 }
             }
@@ -162,6 +171,7 @@ public class DnsProxy implements Runnable {
     }
 
     private void OnDnsResponseReceived(IPHeader ipHeader, UDPHeader udpHeader, DnsPacket dnsPacket) {
+        MLogs.d("DnsProxy-- OnDnsResponseReceived ");
         QueryState state = null;
         synchronized (m_QueryArray) {
             state = m_QueryArray.get(dnsPacket.Header.ID);
@@ -188,6 +198,7 @@ public class DnsProxy implements Runnable {
     }
 
     private int getIPFromCache(String domain) {
+        MLogs.d("DnsProxy-- getIPFromCache for " + domain);
         Integer ip = DomainIPMaps.get(domain);
         if (ip == null) {
             return 0;
@@ -197,15 +208,16 @@ public class DnsProxy implements Runnable {
     }
 
     private boolean interceptDns(IPHeader ipHeader, UDPHeader udpHeader, DnsPacket dnsPacket) {
+
         Question question = dnsPacket.Questions[0];
-        System.out.println("DNS Qeury " + question.Domain);
+        MLogs.d("DnsProxy-- interceptDns DNS Qeury " + question.Domain);
         if (question.Type == 1) {
             if (ProxyConfig.Instance.needProxy(question.Domain, getIPFromCache(question.Domain))) {
                 int fakeIP = getOrCreateFakeIP(question.Domain);
                 tamperDnsResponse(ipHeader.m_Data, dnsPacket, fakeIP);
 
                 if (ProxyConfig.IS_DEBUG)
-                    System.out.printf("interceptDns FakeDns: %s=>%s\n", question.Domain, CommonMethods.ipIntToString(fakeIP));
+                    MLogs.d("DnsProxy-- interceptDns FakeDns: %s=>%s\n", question.Domain, CommonMethods.ipIntToString(fakeIP));
 
                 int sourceIP = ipHeader.getSourceIP();
                 short sourcePort = udpHeader.getSourcePort();
@@ -233,6 +245,7 @@ public class DnsProxy implements Runnable {
     }
 
     public void onDnsRequestReceived(IPHeader ipHeader, UDPHeader udpHeader, DnsPacket dnsPacket) {
+        MLogs.d("DnsProxy-- onDnsRequestReceived");
         if (!interceptDns(ipHeader, udpHeader, dnsPacket)) {
             //转发DNS
             QueryState state = new QueryState();
@@ -260,11 +273,12 @@ public class DnsProxy implements Runnable {
                 if (LocalVpnService.Instance.protect(m_Client)) {
                     m_Client.send(packet);
                 } else {
-                    System.err.println("VPN protect udp socket failed.");
+                    MLogs.d("DnsProxy-- VPN protect udp socket failed.");
                 }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+                MLogs.e("DnsProxy-- " + e.toString());
             }
         }
     }

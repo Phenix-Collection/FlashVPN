@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -75,6 +76,14 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
         }
         View view = findViewById(R.id.content);
         setImmerseLayout(view);
+
+        LinearLayout linearLayout = findViewById(R.id.auto_checkbox_layout);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                autoCheckBox.setChecked(true);
+            }
+        });
     }
 
     private void updateSelected(CompoundButton compoundButton) {
@@ -159,8 +168,17 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
             ImageView flag = convertView.findViewById(R.id.img_flag);
             ImageView signal = convertView.findViewById(R.id.img_signal);
             TextView city = convertView.findViewById(R.id.txt_city);
-            RadioButton checkbox = convertView.findViewById(R.id.checkbox);
+            final RadioButton checkbox = convertView.findViewById(R.id.checkbox);
             checkbox.setOnCheckedChangeListener(SelectServerActivity.this);
+
+            convertView.setClickable(true);
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    checkbox.setChecked(true);
+                }
+            });
+
             ServerInfo si = (ServerInfo)getItem(i);
             checkbox.setTag(si);
             flag.setImageResource(si.getFlagResId());

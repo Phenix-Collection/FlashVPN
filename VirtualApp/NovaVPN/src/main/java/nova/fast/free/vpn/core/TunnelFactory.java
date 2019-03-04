@@ -7,6 +7,7 @@ import nova.fast.free.vpn.tunnel.httpconnect.HttpConnectConfig;
 import nova.fast.free.vpn.tunnel.httpconnect.HttpConnectTunnel;
 import nova.fast.free.vpn.tunnel.shadowsocks.ShadowsocksConfig;
 import nova.fast.free.vpn.tunnel.shadowsocks.ShadowsocksTunnel;
+import nova.fast.free.vpn.utils.MLogs;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.Selector;
@@ -22,12 +23,15 @@ public class TunnelFactory {
         if (destAddress.isUnresolved()) {
             Config config = ProxyConfig.Instance.getDefaultTunnelConfig(destAddress);
             if (config instanceof HttpConnectConfig) {
+                MLogs.d("create HttpConnectTunnel");
                 return new HttpConnectTunnel((HttpConnectConfig) config, selector);
             } else if (config instanceof ShadowsocksConfig) {
+                MLogs.d("create ShadowsocksTunnel");
                 return new ShadowsocksTunnel((ShadowsocksConfig) config, selector);
             }
             throw new Exception("The config is unknow.");
         } else {
+            MLogs.d("create RawTunnel");
             return new RawTunnel(destAddress, selector);
         }
     }

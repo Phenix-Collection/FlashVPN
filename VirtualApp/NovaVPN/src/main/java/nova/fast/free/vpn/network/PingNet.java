@@ -1,9 +1,15 @@
 package nova.fast.free.vpn.network;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
+import nova.fast.free.vpn.NovaApp;
+import nova.fast.free.vpn.core.LocalVpnService;
+import nova.fast.free.vpn.utils.EventReporter;
 import nova.fast.free.vpn.utils.MLogs;
 
 public class PingNet {
@@ -24,8 +30,10 @@ public class PingNet {
             if (process == null) {
                 MLogs.e(TAG, "ping fail:process is null.");
                 append(pingNetEntity.getResultBuffer(), "ping fail:process is null.");
+
                 pingNetEntity.setPingTime(null);
                 pingNetEntity.setResult(false);
+                EventReporter.reportNoPingBinary();
                 return pingNetEntity;
             }
             successReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -40,20 +48,25 @@ public class PingNet {
             int status = process.waitFor();
             if (status == 0) {
                 MLogs.i(TAG, "exec cmd success:" + command);
+                Locale locale = NovaApp.getApp().getResources().getConfiguration().locale;
+                EventReporter.reportPingLevel(locale.toString(), LocalVpnService.IsRunning, pingNetEntity.getIp(), pingNetEntity.getPingTime());
                 append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
                 pingNetEntity.setResult(true);
             } else {
-                MLogs.e(TAG, "exec cmd fail.");
+                MLogs.e(TAG, "exec cmd fail." + status);
+                EventReporter.reportPingFailed(status);
                 append(pingNetEntity.getResultBuffer(), "exec cmd fail.");
-                pingNetEntity.setPingTime(null);
-                pingNetEntity.setResult(false);
+                pingNetEntity.setPingTime(""+ServerInfo.LEVEL_1_PING);
+                pingNetEntity.setResult(true);
             }
             MLogs.i(TAG, "exec finished.");
             append(pingNetEntity.getResultBuffer(), "exec finished.");
         } catch (IOException e) {
             MLogs.e(TAG, String.valueOf(e));
+            EventReporter.reportPingFailed(-10);
         } catch (InterruptedException e) {
             MLogs.e(TAG, String.valueOf(e));
+            EventReporter.reportPingFailed(-11);
         } finally {
             MLogs.i(TAG, "ping exit.");
             if (process != null) {

@@ -3,6 +3,7 @@ package nova.fast.free.vpn.core;
 import android.util.SparseArray;
 
 import nova.fast.free.vpn.tcpip.CommonMethods;
+import nova.fast.free.vpn.utils.MLogs;
 
 public class NatSessionManager {
 
@@ -43,13 +44,25 @@ public class NatSessionManager {
         session.RemotePort = remotePort;
 
         if (ProxyConfig.isFakeIP(remoteIP)) {
+            MLogs.i("NatSession-- fake ip " + CommonMethods.ipIntToString(remoteIP));
             session.RemoteHost = DnsProxy.reverseLookup(remoteIP);
+
         }
 
         if (session.RemoteHost == null) {
             session.RemoteHost = CommonMethods.ipIntToString(remoteIP);
         }
+        MLogs.i("NatSession-- remote host is " + session.RemoteHost);
         Sessions.put(portKey, session);
         return session;
+    }
+
+    public static void dump() {
+        for(int i = 0; i < Sessions.size(); i++) {
+            int key = Sessions.keyAt(i);
+            // get the object by the key.
+            NatSession obj = Sessions.get(key);
+            obj.dump(key);
+        }
     }
 }

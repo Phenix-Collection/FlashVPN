@@ -46,6 +46,7 @@ import nova.fast.free.vpn.core.AppProxyManager;
 import nova.fast.free.vpn.core.LocalVpnService;
 import nova.fast.free.vpn.network.ServerInfo;
 import nova.fast.free.vpn.network.VPNServerManager;
+import nova.fast.free.vpn.tunnel.TunnelStatisticManager;
 import nova.fast.free.vpn.ui.widget.RateDialog;
 import nova.fast.free.vpn.ui.widget.UpDownDialog;
 import nova.fast.free.vpn.utils.CommonUtils;
@@ -712,6 +713,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             EventReporter.reportSpeed(this, getSIReportValue(mCurrentSI),
                     avgDownloadSpeed, avgUploadSpeed,
                     maxDownloadSpeed, maxUploadSpeed);
+            TunnelStatisticManager.getInstance().eventReport();
             connectingFailed = true;
         }
     }
