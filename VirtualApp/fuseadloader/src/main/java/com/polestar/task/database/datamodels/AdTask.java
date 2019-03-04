@@ -1,20 +1,29 @@
 package com.polestar.task.database.datamodels;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.text.TextUtils;
 
+import com.polestar.ad.AdUtils;
 import com.polestar.task.network.datamodels.Task;
 
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 /**
  * Created by guojia on 2019/1/17.
  */
 
 public class AdTask extends Task {
-    public static final String SLOT_ALL_AD_PLACEMENT = "slot_*";
-    public static final String SLOT_DIVIDER = ";";
-    public static final String SLOT_ALL_POP_PLACEMENT = "pop_*";
-    public static final String SLOT_ALL_TASK_PLACEMENT = "task_*";
+    private static final String SLOT_ALL_AD_PLACEMENT = "slot_*";
+    private static final String SLOT_DIVIDER = ";";
+    private static final String SLOT_ALL_POP_PLACEMENT = "pop_*";
+    private static final String SLOT_ALL_TASK_PLACEMENT = "task_*";
+    public static final String TASK_SLOT_PREFIX = "task_";
+    public static final String AD_TASK_PREF = "ad_task_pref";
 
     public String adid;
     /**
@@ -35,6 +44,7 @@ public class AdTask extends Task {
     public String videoUrl;
     public String ctaText; //MUST
     public String pkg;  //MUST
+    public String country;
     /**
      * include, exclude slots, divided by ";"
      * include default "slot_*;task_*"
@@ -74,11 +84,105 @@ public class AdTask extends Task {
         iconUrl = detail.optString("icon");
         videoUrl = detail.optString("video");
         ctaText = detail.optString("cta");
+        country = detail.optString("geo", "*");
         pkg = detail.optString("pkg");
         includeSlots = detail.optString("include",
                 SLOT_ALL_AD_PLACEMENT + SLOT_DIVIDER + SLOT_ALL_TASK_PLACEMENT);
-        excludeSlots = detail.optString("exclude");
+        excludeSlots = detail.optString("exclude","");
         priority = detail.optInt("priority", 0);
         return true;
+    }
+
+    private static boolean isValidSlotName(String slot) {
+        return slot!= null && (slot.startsWith("pop") || slot.startsWith("slot") || slot.startsWith("task"));
+    }
+
+    public boolean canFillToSlot(Context context, String slot) {
+        if (!isValidSlotName(slot)) {
+            return false;
+        }
+        if (!isValid()) {
+            return false;
+        }
+        if (!country.equals("*")) {
+            android.content.res.Configuration configuration = context.getResources().getConfiguration();
+            Locale locale;
+            if (Build.VERSION.SDK_INT >= 24) {
+                locale = configuration.getLocales().get(0);
+            } else {
+                locale = configuration.locale;
+            }
+            String geo = locale.getCountry();
+            if (!TextUtils.isEmpty(geo) && !country.toLowerCase().contains(geo.toLowerCase())){
+                return false;
+            }
+        }
+        if (slot.startsWith("slot")) {
+            if (includeSlots.contains(SLOT_ALL_AD_PLACEMENT)
+                    || includeSlots.contains(slot)) {
+                if (excludeSlots.contains(SLOT_ALL_AD_PLACEMENT)
+                        || excludeSlots.contains(slot)) {
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (slot.startsWith("pop")) {
+            if (includeSlots.contains(SLOT_ALL_POP_PLACEMENT)
+                    || includeSlots.contains(slot)) {
+                if (excludeSlots.contains(SLOT_ALL_POP_PLACEMENT)
+                        || excludeSlots.contains(slot)) {
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (slot.startsWith("task")) {
+            if (includeSlots.contains(SLOT_ALL_TASK_PLACEMENT)
+                    || includeSlots.contains(slot)) {
+                if (excludeSlots.contains(SLOT_ALL_TASK_PLACEMENT)
+                        || excludeSlots.contains(slot)) {
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (isIgnored(context, slot)) {
+            return false;
+        }
+        boolean isInstalled = false;
+        try{
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(pkg, 0);
+            isInstalled = (ai!= null);
+        }catch (Exception ex) {
+
+        }
+        return !isInstalled;
+    }
+
+    public void ignoreFor(Context context, String slot, long interval) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(AD_TASK_PREF, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putLong("ignore_" + slot + "_" + mId, System.currentTimeMillis() + interval).commit();
+    }
+
+    public boolean isIgnored(Context context, String slot) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(AD_TASK_PREF, Context.MODE_PRIVATE);
+        return System.currentTimeMillis() - sharedPreferences.getLong("ignore_" + slot + "_" + mId, 0) < 0;
+    }
+
+    public void updateShowTime(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(AD_TASK_PREF, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putLong("show_" + mId, System.currentTimeMillis()).commit();
+    }
+
+    public long getShowTime(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(AD_TASK_PREF, Context.MODE_PRIVATE);
+        return sharedPreferences.getLong("show_"  + mId, 0);
     }
 }

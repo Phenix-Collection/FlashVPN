@@ -20,6 +20,7 @@ import com.polestar.ad.AdLog;
 import com.polestar.ad.BuildConfig;
 import com.polestar.ad.SDKConfiguration;
 import com.polestar.imageloader.ImageLoader;
+import com.polestar.task.database.datamodels.AdTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -193,7 +194,8 @@ public class FuseAdLoader {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             throw new IllegalStateException("Load ad not from main thread");
         }
-        if (sConfigFetcher.isAdFree()) {
+        if (sConfigFetcher.isAdFree()
+                && !mSlot.startsWith(AdTask.TASK_SLOT_PREFIX)) {
             AdLog.d("FuseAdLoader : AD free version");
             if (listener != null) {
                 listener.onError("AD free version");
@@ -426,6 +428,35 @@ public class FuseAdLoader {
         }
 
     }
+
+    public void loadAdList(Context context, int maxSize, IAdLoadListener listener) {
+        if (maxSize == 1) {
+            loadAd(context, 1, listener);
+            return;
+        }
+        AdLog.d("FuseAdLoader :" + mSlot + " load ad list: " + maxSize + " listener: " + listener);
+        if (Looper.getMainLooper() != Looper.myLooper()) {
+            throw new IllegalStateException("Load ad not from main thread");
+        }
+        if ((sConfigFetcher.isAdFree()
+                && !mSlot.startsWith(AdTask.TASK_SLOT_PREFIX))
+                || mNativeAdConfigList.size() == 0
+                || !mNativeAdConfigList.get(0).source.equals(AdConstants.AdType.AD_SOURCE_POLE_NATIVE)){
+            if (listener != null) {
+                listener.onError("Ad Config Wrong");
+            }
+            return;
+        }
+        IAdAdapter adAdapter = getNativeAdAdapter(mNativeAdConfigList.get(0));
+        if (adAdapter != null) {
+            adAdapter.loadAd(context, maxSize, listener);
+        } else {
+            if (listener != null) {
+                listener.onError("Wrong config");
+            }
+        }
+    }
+
     private boolean loadNextNativeAd(Context context) {
         final int idx = nextLoadingIdx();
         if (idx < 0 || idx >= mNativeAdConfigList.size()) {
@@ -462,6 +493,9 @@ public class FuseAdLoader {
         if (!sConfiguration.hasSupport(config.source)) {
             return null;
         }
+        if (sConfigFetcher.isAdFree() && !config.source.equals(AdConstants.AdType.AD_SOURCE_POLE_NATIVE)) {
+            return null;
+        }
         try {
             switch (config.source) {
                 case AdConstants.AdType.AD_SOURCE_ADMOB:
@@ -491,6 +525,8 @@ public class FuseAdLoader {
                     return new IronSourceRewardVideoAdapter(mAppContext, config.key);
                 case AdConstants.AdType.AD_SOURCE_IRONSOURCE_INTERSTITIAL:
                     return new IronSourceInterstitialAdapter(mAppContext, config.key);
+                case AdConstants.AdType.AD_SOURCE_POLE_NATIVE:
+                    return new PoleNativeAdapter(mAppContext, config.key);
                 default:
                     AdLog.e("not suppported source " + config.source);
                     return null;
@@ -503,6 +539,7 @@ public class FuseAdLoader {
 
     static {
         SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_ADMOB);
+        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_POLE_NATIVE);
         SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_ADMOB_INTERSTITIAL);
 //        SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_BT_INTERSTITIAL);
         SUPPORTED_TYPES.add(AdConstants.AdType.AD_SOURCE_FACEBOOK);

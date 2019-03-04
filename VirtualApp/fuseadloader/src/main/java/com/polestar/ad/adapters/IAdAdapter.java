@@ -56,7 +56,7 @@ public interface IAdAdapter {
      * @param num number of Ads; if <= 0 , will use the default value 1s
      * @param listener
      */
-    void loadAd(Context context, int num, IAdLoadListener listener);
+    void loadAd(Context context, final int num, IAdLoadListener listener);
 
     boolean isInterstitialAd();
 
