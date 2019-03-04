@@ -350,8 +350,13 @@ public class RewardCenterFragment extends BaseFragment
             MLogs.d(taskId + " Task finish : "  + payment + " balance " + balance);
             updateUserInfo();
             Task task = (Task)mView.getTag();
-            updateTaskViewItem(mView, task, false);
-            RewardErrorCode.toastMessage(mActivity, RewardErrorCode.TASK_OK, payment);
+            try {
+                updateTaskViewItem(mView, task, false);
+                RewardErrorCode.toastMessage(mActivity, RewardErrorCode.TASK_OK, payment);
+                taskRunningProgressBar.setVisibility(View.GONE);
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
             if (task.mTaskType == Task.TASK_TYPE_CHECKIN_TASK) {
                 chechInAdLoader = FuseAdLoader.get(SLOT_CHECKIN_INTERSTITIAL, mActivity);
                 chechInAdLoader.loadAd(mActivity, 2, 100, new IAdLoadListener() {
@@ -386,7 +391,6 @@ public class RewardCenterFragment extends BaseFragment
                     }
                 });
             }
-            taskRunningProgressBar.setVisibility(View.GONE);
         }
 
         @Override
