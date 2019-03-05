@@ -10,10 +10,10 @@ import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
 import winterfell.flash.vpn.utils.RemoteConfig;
 
-public class NovaUser{
+public class FlashUser {
 
     private Context mContext;
-    private static NovaUser sInstance;
+    private static FlashUser sInstance;
     private Handler mHandler;
     private long freePremiumTime;
 
@@ -22,7 +22,7 @@ public class NovaUser{
     private final static String RC_USE_PREMIUM_SECONDS = "use_premium_seconds";
     private final static String RC_INIT_PREMIUM_SECONDS = "init_premium_seconds";
 
-    private NovaUser(Context context) {
+    private FlashUser(Context context) {
         mContext = context;
         mHandler = new Handler(Looper.getMainLooper()){
             @Override
@@ -37,9 +37,9 @@ public class NovaUser{
         freePremiumTime = PreferenceUtils.getLong(mContext, "premium_seconds", RemoteConfig.getLong(RC_INIT_PREMIUM_SECONDS));
     }
 
-    synchronized public static NovaUser  getInstance(Context context) {
+    synchronized public static FlashUser getInstance(Context context) {
         if (sInstance == null) {
-            sInstance = new NovaUser(context);
+            sInstance = new FlashUser(context);
         }
         return sInstance;
     }
@@ -73,7 +73,7 @@ public class NovaUser{
     }
 
     public boolean isVIP() {
-        return PreferenceUtils.getBoolean(NovaApp.getApp(), "is_vip", false);
+        return PreferenceUtils.getBoolean(FlashApp.getApp(), "is_vip", false);
     }
 
     public boolean usePremiumSeconds() {
@@ -81,6 +81,6 @@ public class NovaUser{
     }
 
     public void setVIP(boolean enable) {
-        PreferenceUtils.putBoolean(NovaApp.getApp(), "is_vip", enable);
+        PreferenceUtils.putBoolean(FlashApp.getApp(), "is_vip", enable);
     }
 }

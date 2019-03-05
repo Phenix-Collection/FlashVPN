@@ -38,8 +38,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import winterfell.flash.vpn.AppConstants;
-import winterfell.flash.vpn.NovaApp;
-import winterfell.flash.vpn.NovaUser;
+import winterfell.flash.vpn.FlashApp;
+import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.core.AppProxyManager;
 import winterfell.flash.vpn.core.LocalVpnService;
@@ -107,7 +107,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     public static void preloadAd(Context context) {
         FuseAdLoader.get(SLOT_HOME_BANNER, context).
                 setBannerAdSize(getBannerSize()).preloadAd(context);
-        if (NovaUser.getInstance(NovaApp.getApp()).usePremiumSeconds()) {
+        if (FlashUser.getInstance(FlashApp.getApp()).usePremiumSeconds()) {
             FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, context).
                     preloadAd(context);
         }
@@ -146,7 +146,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     private boolean isRewarded = false;
     private void loadRewardAd() {
-        if (NovaUser.getInstance(this).usePremiumSeconds()) {
+        if (FlashUser.getInstance(this).usePremiumSeconds()) {
             FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, this).loadAd(this, 2, 1000,
                     new IAdLoadListener() {
                         @Override
@@ -241,7 +241,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         int id = PreferenceUtils.getPreferServer();
         ServerInfo si = VPNServerManager.getInstance(this).getServerInfo(id);
         if (si == null) {
-            geoImage.setImageResource(R.drawable.flag_fast_servers);
+            geoImage.setImageResource(R.drawable.flash_black);
             cityText.setText(R.string.select_server_auto);
         } else {
             geoImage.setImageResource(si.getFlagResId());
@@ -250,7 +250,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         updateConnectState(LocalVpnService.IsRunning? STATE_CONNECTED:STATE_DISCONNECTED);
         updateRewardLayout();
         if (isRewarded) {
-            NovaUser.getInstance(HomeActivity.this).doRewardFreePremium();
+            FlashUser.getInstance(HomeActivity.this).doRewardFreePremium();
             Toast.makeText(HomeActivity.this, R.string.get_reward_premium_time, Toast.LENGTH_SHORT).show();
             isRewarded = false;
         }
@@ -272,7 +272,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             }, 1000);
         }
 
-        if (!NovaUser.getInstance(this).isVIP()) {
+        if (!FlashUser.getInstance(this).isVIP()) {
             long current = System.currentTimeMillis();
             if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
                 loadAds();
@@ -286,6 +286,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 MLogs.d("state connected");
                 btnCenter.setClickable(true);
                 connectTips.setVisibility(View.VISIBLE);
+                connectTips.setText(R.string.connecting_tip_success);
                 connectBtnTxt.setText(R.string.stop);
                 btnCenter.setImageResource(R.drawable.shape_stop_btn);
                 btnCenterBg.setImageResource(R.drawable.shape_stop_btn_bg);
@@ -366,15 +367,15 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     private void updateRewardLayout() {
-        if (NovaUser.getInstance(this).usePremiumSeconds()) {
+        if (FlashUser.getInstance(this).usePremiumSeconds()) {
             rewardLayout.setVisibility(View.VISIBLE);
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    long premiumTime = NovaUser.getInstance(HomeActivity.this).getFreePremiumSeconds();
+                    long premiumTime = FlashUser.getInstance(HomeActivity.this).getFreePremiumSeconds();
                     TextView text = findViewById(R.id.reward_text);
                     ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-                    if (NovaUser.getInstance(HomeActivity.this).isVIP()) {
+                    if (FlashUser.getInstance(HomeActivity.this).isVIP()) {
                         giftIcon.setImageResource(R.drawable.icon_trophy_award);
                         text.setText(R.string.reward_text_vip);
                     } else if (rewardAd != null) {
@@ -543,22 +544,30 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     public boolean onNavigationItemSelected(int position) {
         switch (position) {
             case 0:
-                UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_MENU);
+                AppProxySettingActivity.start(this);
                 break;
             case 1:
-                FaqActivity.start(this);
+                UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_MENU);
                 break;
             case 2:
-                FeedbackActivity.start(this, 0);
+                FaqActivity.start(this);
                 break;
             case 3:
-                showRateDialog(RATE_FROM_MENU);
+                FeedbackActivity.start(this, 0);
                 break;
             case 4:
-                CommonUtils.shareWithFriends(this);
+                showRateDialog(RATE_FROM_MENU);
                 break;
             case 5:
-                SettingsActivity.start(this);
+                CommonUtils.shareWithFriends(this);
+                break;
+            case 6:
+                try {
+                    Intent intent = new Intent(this, AboutActivity.class);
+                    startActivity(intent);
+                } catch (Exception localException1) {
+                    localException1.printStackTrace();
+                }
                 break;
         }
         return true;
@@ -594,7 +603,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         }
        // MLogs.d("best1: " + VPNServerManager.getInstance(HomeActivity.this).getBestServer().toString());
 
-        VPNServerManager.getInstance(HomeActivity.this).asyncUpdatePing(null, false);
+        VPNServerManager.getInstance(HomeActivity.this).asyncUpdatePing(new VPNServerManager.OnUpdatePingListener() {
+            @Override
+            public void onPingUpdated(boolean res, List<ServerInfo> serverInfos) {
+                //btnCenter.setClickable(true);
+            }
+        }, true);
+
         VPNServerManager.getInstance(this).fetchServerList(new VPNServerManager.FetchServerListener() {
             @Override
             public void onServerListFetched(boolean res, List<ServerInfo> list) {
@@ -651,7 +666,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     private void loadAds() {
-        if (!NovaUser.getInstance(this).isVIP()) {
+        if (!FlashUser.getInstance(this).isVIP()) {
             loadHomeNativeAd();
             loadRewardAd();
         }
@@ -683,7 +698,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             EventReporter.reportConnectted(this, getSIReportValue(mCurrentSI));
             connectingFailed = false;
             if (PreferenceUtils.hasShownRateDialog(this)
-                    && !NovaUser.getInstance(this).isVIP()) {
+                    && !FlashUser.getInstance(this).isVIP()) {
                 FuseAdLoader.get(SLOT_CONNECTED_AD, this).loadAd(this, 2, new IAdLoadListener() {
                     @Override
                     public void onAdLoaded(IAdAdapter ad) {

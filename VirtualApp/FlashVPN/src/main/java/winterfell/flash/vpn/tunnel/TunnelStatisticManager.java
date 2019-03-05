@@ -3,7 +3,7 @@ package winterfell.flash.vpn.tunnel;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 
-import winterfell.flash.vpn.NovaApp;
+import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.utils.EventReporter;
 import winterfell.flash.vpn.utils.MLogs;
 
@@ -18,7 +18,7 @@ public class TunnelStatisticManager {
     //private HashMap<String, HashMap<String, TunnelStatistic>> mStatistic = new HashMap();
     private HashMap<String, Long> mTunnelEstablishTime;
     private TunnelStatisticManager() {
-        mLocale = NovaApp.getApp().getResources().getConfiguration().locale.toString();
+        mLocale = FlashApp.getApp().getResources().getConfiguration().locale.toString();
         mTunnelEstablishTime = new HashMap<>();
     }
     private static TunnelStatisticManager sInstance = null;

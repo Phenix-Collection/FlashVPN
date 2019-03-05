@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="15dp" />
@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:gravity="center_vertical"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:singleLine="true"
         android:textSize="14sp" />
 </LinearLayout>

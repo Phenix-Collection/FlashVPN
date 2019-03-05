@@ -13,8 +13,8 @@ import com.android.billingclient.api.SkuDetailsResponseListener;
 
 import java.util.List;
 
-import winterfell.flash.vpn.NovaApp;
-import winterfell.flash.vpn.NovaUser;
+import winterfell.flash.vpn.FlashApp;
+import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.utils.MLogs;
 
 /**
@@ -28,7 +28,7 @@ public class BillingProvider {
     private OnStatusUpdatedListener statusUpdatedListener;
 
     private BillingProvider() {
-            manager = new BillingManager(NovaApp.getApp(), new BillingManager.BillingUpdatesListener() {
+            manager = new BillingManager(FlashApp.getApp(), new BillingManager.BillingUpdatesListener() {
                 @Override
                 public void onBillingClientSetupFinished() {
                     MLogs.d(TAG, "onBillingClientSetupFinished");
@@ -50,7 +50,7 @@ public class BillingProvider {
                             default:
                                 if(purchase.isAutoRenewing()) {
                                     MLogs.d(TAG, "Got a AD free version!!! ");
-                                    NovaUser.getInstance(NovaApp.getApp()).setVIP(true);
+                                    FlashUser.getInstance(FlashApp.getApp()).setVIP(true);
                                 }
                                 break;
                         }

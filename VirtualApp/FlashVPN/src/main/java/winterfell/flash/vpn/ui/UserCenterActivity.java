@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import winterfell.flash.vpn.NovaUser;
+import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.billing.BillingProvider;
 import winterfell.flash.vpn.utils.CommonUtils;
@@ -68,7 +68,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
         setTitle(getString(R.string.user_activity_title));
         rewardLayout = findViewById(R.id.reward_layout);
         rewardLayout.setVisibility(View.GONE);
-        if (!NovaUser.getInstance(this).isVIP()) {
+        if (!FlashUser.getInstance(this).isVIP()) {
             loadRewardAd();
         }
         cardListView = findViewById(R.id.card_list);
@@ -90,12 +90,12 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
     }
     
     private void updateRewardLayout () {
-        if (NovaUser.getInstance(this).isVIP()|| rewardAd == null) {
+        if (FlashUser.getInstance(this).isVIP()|| rewardAd == null) {
             rewardLayout.setVisibility(View.GONE);
         } else {
-            if (NovaUser.getInstance(this).usePremiumSeconds()) {
+            if (FlashUser.getInstance(this).usePremiumSeconds()) {
                 rewardLayout.setVisibility(View.VISIBLE);
-                long premiumTime = NovaUser.getInstance(this).getFreePremiumSeconds();
+                long premiumTime = FlashUser.getInstance(this).getFreePremiumSeconds();
                 TextView text = findViewById(R.id.reward_text);
                 ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
                 if (premiumTime <= 0) {
@@ -120,7 +120,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
     }
 
     private void loadRewardAd() {
-        if (NovaUser.getInstance(this).usePremiumSeconds()) {
+        if (FlashUser.getInstance(this).usePremiumSeconds()) {
 
             FuseAdLoader.get(SLOT_USER_CENTER_REWARD, this).loadAd(this, 2, 1000,
                     new IAdLoadListener() {
@@ -198,7 +198,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
         super.onResume();
         updateRewardLayout();
         if (isRewarded) {
-            NovaUser.getInstance(this).doRewardFreePremium();
+            FlashUser.getInstance(this).doRewardFreePremium();
             Toast.makeText(this, R.string.get_reward_premium_time, Toast.LENGTH_SHORT).show();
             isRewarded = false;
         }

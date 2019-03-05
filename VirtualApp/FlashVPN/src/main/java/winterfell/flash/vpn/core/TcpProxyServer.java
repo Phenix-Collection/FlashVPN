@@ -1,6 +1,6 @@
 package winterfell.flash.vpn.core;
 
-import winterfell.flash.vpn.NovaApp;
+import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.tcpip.CommonMethods;
 import winterfell.flash.vpn.tunnel.Tunnel;
 import winterfell.flash.vpn.utils.EventReporter;
@@ -163,7 +163,7 @@ public class TcpProxyServer implements Runnable {
             MLogs.d("TcpProxyServer-- Error: remote socket create failed: %s", e.toString());
             LocalVpnService.Instance.writeLog("Error: remote socket create failed: %s", e.toString());
             if (remoteTunnel != null) {
-                EventReporter.reportTunnelConnectFail(NovaApp.getApp().getResources().getConfiguration().locale.toString(),
+                EventReporter.reportTunnelConnectFail(FlashApp.getApp().getResources().getConfiguration().locale.toString(),
                         remoteTunnel.getServerEP().getAddress().toString());
             }
             if (localTunnel != null) {

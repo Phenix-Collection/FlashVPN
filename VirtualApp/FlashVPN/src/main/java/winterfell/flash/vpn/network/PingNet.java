@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
-import winterfell.flash.vpn.NovaApp;
+import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.core.LocalVpnService;
 import winterfell.flash.vpn.utils.EventReporter;
 import winterfell.flash.vpn.utils.MLogs;
@@ -46,7 +46,7 @@ public class PingNet {
             int status = process.waitFor();
             if (status == 0) {
                 MLogs.i(TAG, "exec cmd success:" + command);
-                Locale locale = NovaApp.getApp().getResources().getConfiguration().locale;
+                Locale locale = FlashApp.getApp().getResources().getConfiguration().locale;
                 EventReporter.reportPingLevel(locale.toString(), LocalVpnService.IsRunning, pingNetEntity.getIp(), pingNetEntity.getPingTime());
                 append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
                 pingNetEntity.setResult(true);

@@ -5,7 +5,7 @@
     android:id="@+id/title_bar_layout">
     <ImageView
         android:id="@+id/navigation_bar"
-        android:src="@mipmap/back"
+        android:src="@mipmap/back_black"
         android:background="@drawable/selector_title_button_bg"
         android:paddingLeft="10dp"
         android:paddingStart="10dp"

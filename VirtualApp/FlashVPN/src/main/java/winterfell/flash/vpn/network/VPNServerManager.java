@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import winterfell.flash.vpn.BuildConfig;
-import winterfell.flash.vpn.NovaApp;
+import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.core.LocalVpnService;
 import winterfell.flash.vpn.utils.Crypto;
@@ -43,7 +43,7 @@ public class VPNServerManager {
     private Handler workHandler;
 
     //String def = "{\"servers\": [{\"id\": 0,\"geo\": \"kr\",\"city\": \"Seoul\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 1,\"geo\": \"kr\",\"city\": \"Seoul-2\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 2,\"geo\": \"us\",\"city\": \"New York\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 3,\"geo\": \"sg\",\"city\": \"Singapore\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 4,\"geo\": \"us\",\"city\": \"Los Angles\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://chacha20:ss,2016.11.29@13.124.147.181:8488\"},{\"id\": 5,\"geo\": \"jp\",\"city\": \"Tokyo\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 6,\"geo\": \"de\",\"city\": \"Berlin\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"},{\"id\": 7,\"geo\": \"br\",\"city\": \"Sao Paulo\",\"vip\":\"false\",\"pri\": \"100\",\"url\": \"ss://aes-256-cfb:fuckgfw@13.125.143.115:18388\"}]}";
-    //String def = "{ \"servers\": [{ \"id\": 0, \"geo\": \"fr\", \"city\": \"Paris\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@51.15.118.154:28388\" }, { \"id\": 1, \"geo\": \"de\", \"city\": \"Frankfurt\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@51.15.252.169:28388\" }, { \"id\": 2, \"geo\": \"us\", \"city\": \"SantaClara\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.149.104:28388\" }, { \"id\": 3, \"geo\": \"us\", \"city\": \"Miami\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.132.133:28388\" }, { \"id\": 4, \"geo\": \"nl\", \"city\": \"Amsterdam\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.184.97:28388\" }, { \"id\": 5, \"geo\": \"jp\", \"city\": \"Tokyo\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.132.133:28388\" }, { \"id\": 6, \"geo\": \"lu\", \"city\": \"Luxembourg\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.223.105.86:28388\" }, { \"id\": 7, \"geo\": \"ru\", \"city\": \"Moscow\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.152.101:28388\" }, { \"id\": 8, \"geo\": \"us\", \"city\": \"Chicago\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.176.35:28388\" }, { \"id\": 9, \"geo\": \"gb\", \"city\": \"London\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@95.179.225.74:28388\" }] }";
+    String def = "{ \"servers\": [{ \"id\": 0, \"geo\": \"fr\", \"city\": \"Paris\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.152.101:28388\" }, { \"id\": 1, \"geo\": \"de\", \"city\": \"Frankfurt\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.152.101:28388\" }, { \"id\": 2, \"geo\": \"us\", \"city\": \"SantaClara\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.149.104:28388\" }, { \"id\": 3, \"geo\": \"us\", \"city\": \"Miami\", \"vip\": \"false\", \"pri\": \"100\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.132.133:28388\" }, { \"id\": 4, \"geo\": \"nl\", \"city\": \"Amsterdam\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.184.97:28388\" }, { \"id\": 5, \"geo\": \"jp\", \"city\": \"Tokyo\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.132.133:28388\" }, { \"id\": 6, \"geo\": \"lu\", \"city\": \"Luxembourg\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.223.105.86:28388\" }, { \"id\": 7, \"geo\": \"ru\", \"city\": \"Moscow\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.152.101:28388\" }, { \"id\": 8, \"geo\": \"us\", \"city\": \"Chicago\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@92.38.176.35:28388\" }, { \"id\": 9, \"geo\": \"gb\", \"city\": \"London\", \"vip\": \"false\", \"pri\": \"90\", \"url\": \"ss://aes-256-cfb:neversleep123@95.179.225.74:28388\" }] }";
     private VPNServerManager(Context appContext){
         mainHandler = new Handler(Looper.getMainLooper());
         HandlerThread thread = new HandlerThread("sync");
@@ -51,20 +51,20 @@ public class VPNServerManager {
         workHandler = new Handler(thread.getLooper());
         activeServers = getActiveServers();
 //        String res ;
-//        try{
-//            String crypted = FileUtils.readRawFile(appContext, R.raw.imgbin);
-//            if (crypted != null) {
-//                MLogs.d("decrypted：");
-//                MLogs.d(Crypto.d(appContext,crypted));
-//            } else{
-//                MLogs.d("error decrypt!!!");
-//            }
-//            crypted = Crypto.e(appContext,def);
-//            MLogs.d("result is ");
-//            MLogs.d(crypted);
-//        }catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
+        try{
+            String crypted = FileUtils.readRawFile(appContext, R.raw.imgbin);
+            if (crypted != null) {
+                MLogs.d("decrypted：");
+                MLogs.d(Crypto.d(appContext,crypted));
+            } else{
+                MLogs.d("error decrypt!!!");
+            }
+            crypted = Crypto.e(appContext,def);
+            MLogs.d("result is ");
+            MLogs.d(crypted);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public ServerInfo getServerInfo(int id) {
@@ -150,8 +150,8 @@ public class VPNServerManager {
                 list = getServerListFromConfig();
             }
             if(list == null || list.size() == 0) {
-                String crypted = FileUtils.readRawFile(NovaApp.getApp(), R.raw.imgbin);
-                list = parseFromString(Crypto.d(NovaApp.getApp(),crypted));
+                String crypted = FileUtils.readRawFile(FlashApp.getApp(), R.raw.imgbin);
+                list = parseFromString(Crypto.d(FlashApp.getApp(),crypted));
             }
             if(list == null || list.size() == 0) {
                 MLogs.d("ERROR： No CONFIG");
@@ -235,7 +235,7 @@ public class VPNServerManager {
         workHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (NetworkUtils.isNetConnected(NovaApp.getApp())) {
+                if (NetworkUtils.isNetConnected(FlashApp.getApp())) {
                     lastPingUpdateTime = System.currentTimeMillis();
                     if (LocalVpnService.IsRunning) {
                         MLogs.i("asyncUpdatePing do nothing since localVpnService is running");
@@ -274,7 +274,7 @@ public class VPNServerManager {
     //5 times in 60s
     public void fetchServerList(final FetchServerListener listener) {
         MLogs.d("fetchServerList " + listener);
-            if (!NetworkUtils.isNetConnected(NovaApp.getApp()) && listener != null) {
+            if (!NetworkUtils.isNetConnected(FlashApp.getApp()) && listener != null) {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {

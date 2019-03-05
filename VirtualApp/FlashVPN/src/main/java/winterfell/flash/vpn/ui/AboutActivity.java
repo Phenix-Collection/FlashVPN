@@ -41,11 +41,11 @@ public class AboutActivity extends BaseActivity {
         }
         googleUrl = RemoteConfig.getString("google_follow_page");
         MLogs.d("google_follow " + googleUrl);
-        if (TextUtils.isEmpty(googleUrl) || googleUrl.equals("off")) {
-            View view = findViewById(R.id.join_us);
-            view.setVisibility(View.INVISIBLE);
-            // followTv.setVisibility(View.INVISIBLE);
-        }
+//        if (TextUtils.isEmpty(googleUrl) || googleUrl.equals("off")) {
+//            View view = findViewById(R.id.join_us);
+//            view.setVisibility(View.INVISIBLE);
+//            // followTv.setVisibility(View.INVISIBLE);
+//        }
         termsTxt = (TextView) findViewById(R.id.terms_txt);
         versionTxt = (TextView) findViewById(R.id.version_info);
         versionTxt.setText("Version " + BuildConfig.VERSION_NAME);
@@ -90,17 +90,6 @@ public class AboutActivity extends BaseActivity {
             CommonUtils.jumpToUrl(this,forceUpdateUrl);
         } else {
             CommonUtils.jumpToMarket(this, getPackageName());
-        }
-    }
-
-    public void onJoinUsClick(View view) {
-        try {
-            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(googleUrl));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-            startActivity(intent);
-            EventReporter.generalEvent(this, "join_us_click");
-        } catch (Exception localException1) {
-            localException1.printStackTrace();
         }
     }
 

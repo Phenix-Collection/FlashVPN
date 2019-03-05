@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/content"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/flag_fast_servers" />
+                android:src="@drawable/flash_black" />
 
             <TextView
                 android:layout_width="wrap_content"

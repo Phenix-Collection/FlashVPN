@@ -1,13 +1,11 @@
 package winterfell.flash.vpn;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.SDKConfiguration;
@@ -16,7 +14,6 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import java.io.File;
 import java.util.List;
 
-import winterfell.flash.vpn.BuildConfig;
 import winterfell.flash.vpn.billing.BillingProvider;
 import winterfell.flash.vpn.utils.BugReporter;
 import winterfell.flash.vpn.utils.EventReporter;
@@ -24,11 +21,11 @@ import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
 import winterfell.flash.vpn.utils.RemoteConfig;
 
-public class NovaApp extends MultiDexApplication {
+public class FlashApp extends MultiDexApplication {
 
-    private static NovaApp gDefault;
+    private static FlashApp gDefault;
 
-    public static NovaApp getApp() {
+    public static FlashApp getApp() {
         return gDefault;
     }
 
@@ -64,7 +61,8 @@ public class NovaApp extends MultiDexApplication {
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
-                return NovaUser.getInstance(getApp()).isVIP();
+                //return true;
+                return FlashUser.getInstance(getApp()).isVIP();
             }
 
             @Override
@@ -80,7 +78,7 @@ public class NovaApp extends MultiDexApplication {
 
     public boolean needEnterAd(){
         long interval = RemoteConfig.getLong(CONF_ENTER_AD_INTERVAL_SEC);
-        return !NovaUser.getInstance(this).isVIP() && PreferenceUtils.hasShownRateDialog(this)
+        return !FlashUser.getInstance(this).isVIP() && PreferenceUtils.hasShownRateDialog(this)
                 && (System.currentTimeMillis() - PreferenceUtils.getEnterAdTime()) > interval*1000 ;
     }
 

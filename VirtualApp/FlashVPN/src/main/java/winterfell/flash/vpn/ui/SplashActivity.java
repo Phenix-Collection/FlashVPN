@@ -15,8 +15,8 @@ import com.polestar.ad.adapters.IAdLoadListener;
 import java.util.List;
 
 import winterfell.flash.vpn.AppConstants;
-import winterfell.flash.vpn.NovaApp;
-import winterfell.flash.vpn.NovaUser;
+import winterfell.flash.vpn.FlashApp;
+import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.utils.CommonUtils;
 import winterfell.flash.vpn.utils.EventReporter;
@@ -46,7 +46,7 @@ public class SplashActivity extends BaseActivity {
         long time = System.currentTimeMillis();
         setContentView(R.layout.splash_activity_layout);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
-        if (!NovaUser.getInstance(this).isVIP()) {
+        if (!FlashUser.getInstance(this).isVIP()) {
             HomeActivity.preloadAd(this);
 //            FuseAdLoader adLoader = FuseAdLoader.get(HomeActivity.SLOT_HOME_NATIVE, this.getApplicationContext());
 //            adLoader.setBannerAdSize(HomeActivity.getBannerAdSize());
@@ -65,9 +65,9 @@ public class SplashActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= 20) {
             stateOn = display.getState() == Display.STATE_ON;
         }
-        boolean needEnterAd = stateOn && NovaApp.getApp().needEnterAd();
+        boolean needEnterAd = stateOn && FlashApp.getApp().needEnterAd();
         if (needEnterAd) {
-            FuseAdLoader.get(NovaApp.SLOT_ENTER_AD, this).loadAd(this, 2, 2000, new IAdLoadListener() {
+            FuseAdLoader.get(FlashApp.SLOT_ENTER_AD, this).loadAd(this, 2, 2000, new IAdLoadListener() {
                 @Override
                 public void onAdLoaded(IAdAdapter ad) {
                     if (!loadTimeout) {

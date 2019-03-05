@@ -13,7 +13,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
         android:id="@+id/img_flag"
-        android:src="@drawable/flag_fast_servers" />
+        android:src="@drawable/flash_black" />
 
     <TextView
         android:layout_width="wrap_content"

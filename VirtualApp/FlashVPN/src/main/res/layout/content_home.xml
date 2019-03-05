@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@id/content_home"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/white"
     xmlns:ads="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/white">
         <RelativeLayout
             android:layout_width="48dp"
             android:layout_height="56dp"
@@ -28,7 +28,7 @@
                 android:id="@+id/image_navigation"
 
                 android:layout_centerInParent="true"
-                android:src="@drawable/menu_icon" />
+                android:src="@drawable/menu_icon_black" />
         </RelativeLayout>
         <TextView
             android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
             android:layout_marginLeft="16dp"
             android:text="@string/app_name"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="19sp" />
         <RelativeLayout
             android:layout_width="48dp"
@@ -49,7 +49,7 @@
             android:onClick="onVipClick">
             <ImageView
                 android:id="@+id/icon_vip"
-                android:src="@drawable/icon_vip"
+                android:src="@drawable/vip_black"
                 android:layout_width="23dp"
                 android:layout_marginTop="17dp"
                 android:layout_marginRight="10dp"

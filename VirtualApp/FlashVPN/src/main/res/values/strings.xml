@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Flash VPN</string>
     <string name="key_string" translatable="false">adccerd3indd2f</string>
-    <string name="app_slogan">Browse internet fast &amp; free </string>
+    <string name="app_slogan">Flash &amp; Secure VPN </string>
     <string name="menu_item_toggle_global">Toggle global mode</string>
     <string name="menu_item_switch">Proxy</string>
     <string name="menu_item_about">About</string>
@@ -87,12 +87,13 @@
     <string name="free_trial_text">+%d days free trial</string>
 
     <array name="navigationItem">
+        <item name="navigation_notifications">Apps Using VPN</item>
         <item name="navigation_notifications">User Center</item>
         <item name="navigation_FAQ">FAQ</item>
         <item name="navigation_feedback">Feedback</item>
         <item name="navigation_rate_us">Like it</item>
         <item name="navigation_share">Share with friends</item>
-        <item name="navigation_setting">Settings</item>
+        <item name="navigation_setting">About</item>
     </array>
 
     <array name="faqTitle">

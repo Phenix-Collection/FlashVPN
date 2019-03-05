@@ -2,7 +2,7 @@ package winterfell.flash.vpn.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import winterfell.flash.vpn.NovaApp;
+import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.network.ServerInfo;
 
 /**
@@ -230,19 +230,19 @@ public class PreferenceUtils {
 
 
     public static void setLoveApp(  boolean b) {
-        putInt(NovaApp.getApp(),"love_app", b? 1:-1);
+        putInt(FlashApp.getApp(),"love_app", b? 1:-1);
     }
 
     public static int getLoveApp() {
-        return getInt(NovaApp.getApp(),"love_app", 0);
+        return getInt(FlashApp.getApp(),"love_app", 0);
     }
 
     public static void setRated(boolean b) {
-        putBoolean(NovaApp.getApp(),"is_rated", b);
+        putBoolean(FlashApp.getApp(),"is_rated", b);
     }
 
     public static boolean isRated() {
-        return getBoolean(NovaApp.getApp(),"is_rated", false);
+        return getBoolean(FlashApp.getApp(),"is_rated", false);
     }
 
     public static void updateRateDialogTime(Context c) {
@@ -262,91 +262,91 @@ public class PreferenceUtils {
     }
 
     public static boolean isShortCutCreated() {
-        return getBoolean(NovaApp.getApp(),"super_clone_shortcut",false);
+        return getBoolean(FlashApp.getApp(),"super_clone_shortcut",false);
         //avoid create short cut for updated user
     }
 
     public static void setShortCutCreated() {
-        putBoolean(NovaApp.getApp(),"super_clone_shortcut",true);
+        putBoolean(FlashApp.getApp(),"super_clone_shortcut",true);
     }
 
     public static void ignoreVersion(long code) {
-        putLong(NovaApp.getApp(),"ignore_version", code);
+        putLong(FlashApp.getApp(),"ignore_version", code);
     }
 
     public static long getIgnoreVersion() {
-        return getLong(NovaApp.getApp(), "ignore_version", -1);
+        return getLong(FlashApp.getApp(), "ignore_version", -1);
     }
 
     public static boolean isGlobalVPN() {
-        return  getBoolean(NovaApp.getApp(), "global_vpn", true);
+        return  getBoolean(FlashApp.getApp(), "global_vpn", true);
     }
 
     public static void setGlobalVPN(boolean enable) {
-        putBoolean(NovaApp.getApp(), "global_vpn", enable);
+        putBoolean(FlashApp.getApp(), "global_vpn", enable);
     }
 
     public  static String getServerList(){
-        return getString(NovaApp.getApp(), "server_list", null);
+        return getString(FlashApp.getApp(), "server_list", null);
     }
 
     public static void setServerList(String list) {
-        putString(NovaApp.getApp(),"server_list", list);
+        putString(FlashApp.getApp(),"server_list", list);
     }
 
     public static int getPreferServer(){
-        return getInt(NovaApp.getApp(), "prefer_server", ServerInfo.SERVER_ID_AUTO);
+        return getInt(FlashApp.getApp(), "prefer_server", ServerInfo.SERVER_ID_AUTO);
     }
 
     public static void setPreferServer(int id) {
-        putInt(NovaApp.getApp(), "prefer_server", id);
+        putInt(FlashApp.getApp(), "prefer_server", id);
     }
 
     public static void updateLastVipDialogTime() {
-        putLong(NovaApp.getApp(),"vip_dialog_time", System.currentTimeMillis());
+        putLong(FlashApp.getApp(),"vip_dialog_time", System.currentTimeMillis());
     }
 
     public static void updateVipClickStatus(boolean b) {
-        putBoolean(NovaApp.getApp(),"vip_dialog_click", b);
+        putBoolean(FlashApp.getApp(),"vip_dialog_click", b);
     }
 
     public static boolean isStartOnBoot() {
-        return getBoolean(NovaApp.getApp(),"is_start_on_boot", false);
+        return getBoolean(FlashApp.getApp(),"is_start_on_boot", false);
     }
 
     public static void setStartOnBoot(boolean enable) {
-        putBoolean(NovaApp.getApp(), "is_start_on_boot", enable);
+        putBoolean(FlashApp.getApp(), "is_start_on_boot", enable);
     }
 
     public static void setEnterAdTime(){
-        putLong(NovaApp.getApp(),"enter_ad_time",System.currentTimeMillis());
+        putLong(FlashApp.getApp(),"enter_ad_time",System.currentTimeMillis());
     }
 
     public static long getEnterAdTime() {
-        return getLong(NovaApp.getApp(), "enter_ad_time", 0);
+        return getLong(FlashApp.getApp(), "enter_ad_time", 0);
     }
 
     public static void addReceiveBytes(long received) {
-        putLong(NovaApp.getApp(), "received_bytes", getLong(NovaApp.getApp(), "received_bytes") + received);
+        putLong(FlashApp.getApp(), "received_bytes", getLong(FlashApp.getApp(), "received_bytes") + received);
     }
 
     public static long getReceiveBytes() {
-        return getLong(NovaApp.getApp(), "received_bytes");
+        return getLong(FlashApp.getApp(), "received_bytes");
     }
 
     public static void addSentBytes(long sent) {
-        putLong(NovaApp.getApp(), "sent_bytes", getLong(NovaApp.getApp(), "sent_bytes") + sent);
+        putLong(FlashApp.getApp(), "sent_bytes", getLong(FlashApp.getApp(), "sent_bytes") + sent);
     }
 
     public static long getSentBytes() {
-        return getLong(NovaApp.getApp(), "sent_bytes");
+        return getLong(FlashApp.getApp(), "sent_bytes");
     }
 
     public static long getConnectedTimeSec() {
-        return getLong(NovaApp.getApp(), "connected_time_sec");
+        return getLong(FlashApp.getApp(), "connected_time_sec");
     }
 
     public static void addConnectedTimeSec(long sec) {
-        putLong(NovaApp.getApp(), "connected_time_sec", getLong(NovaApp.getApp(), "connected_time_sec") + sec);
+        putLong(FlashApp.getApp(), "connected_time_sec", getLong(FlashApp.getApp(), "connected_time_sec") + sec);
     }
 }

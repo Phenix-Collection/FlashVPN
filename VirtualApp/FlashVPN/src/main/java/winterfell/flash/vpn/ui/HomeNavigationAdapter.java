@@ -18,8 +18,8 @@ import winterfell.flash.vpn.R;
 public class HomeNavigationAdapter extends BaseAdapter {
 
     private Context mContext;
-    private int[] iconArray = new int[]{ R.drawable.icon_vip, R.mipmap.icon_faq,R.mipmap.feedback,
-            R.mipmap.icon_rate_us,R.mipmap.icon_share,R.mipmap.icon_setting};
+    private int[] iconArray = new int[]{R.drawable.apps, R.drawable.vip_black, R.drawable.faq,R.drawable.feedback,
+            R.drawable.like,R.drawable.share,R.drawable.about};
     private String[] itemArray;
     private Resources mResources;
     public HomeNavigationAdapter(Context context){

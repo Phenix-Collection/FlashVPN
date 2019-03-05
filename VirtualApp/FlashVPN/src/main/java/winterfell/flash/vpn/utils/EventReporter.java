@@ -10,7 +10,7 @@ import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import winterfell.flash.vpn.NovaApp;
+import winterfell.flash.vpn.FlashApp;
 
 /**
  * Created by hxx on 8/2/16.
@@ -20,7 +20,7 @@ public class EventReporter {
     private static FirebaseAnalytics mFirebaseAnalytics;
 
     public static void init(Context context) {
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(NovaApp.getApp());
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(FlashApp.getApp());
     }
 
 
