@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_gray"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:paddingLeft="22dp"
+            android:paddingStart="22dp"
+            android:visibility="gone"
+            >
+
+            <winterfell.flash.vpn.ui.widget.RoundSwitch
+                android:id="@+id/start_onboot_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                />
+
+            <TextView
+                android:id="@+id/start_onboot_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:layout_toLeftOf="@id/start_onboot_switch"
+                android:layout_toStartOf="@id/start_onboot_switch"
+                android:text="@string/settings_start_onboot_title"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/start_onboot_title"
+                android:layout_toLeftOf="@id/start_onboot_switch"
+                android:layout_toStartOf="@id/start_onboot_switch"
+                android:text="@string/settings_start_onboot_description"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/setting_line_splitter" android:visibility="gone"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:onClick="onAppProxyClick"
+            android:paddingLeft="22dp"
+            android:paddingStart="22dp"
+            >
+
+            <TextView
+                android:id="@+id/select_app_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/select_app"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/select_app_title"
+                android:text="@string/select_app_detail"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/setting_wide_splitter" />
+        <!--android:text="@string/settings_more"-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:onClick="onUserCenterClick"
+            android:paddingLeft="22dp"
+            android:paddingStart="22dp"
+            >
+
+            <TextView
+                android:id="@+id/user_center_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/user_center"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/user_center_title"
+                android:text="@string/user_center_detail"
+                android:textColor="@color/text_gray_light"
+                android:textSize="10sp" />
+        </RelativeLayout>
+        <include layout="@layout/setting_wide_splitter"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:onClick="onFeedbackClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/feedback"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+        <include layout="@layout/setting_line_splitter" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:onClick="onFaqClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/faq"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+        <include layout="@layout/setting_line_splitter" />
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:onClick="onAboutClick"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/about"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp"
+            android:layout_marginBottom="20dp"/>
+
+    </LinearLayout>
+</ScrollView>

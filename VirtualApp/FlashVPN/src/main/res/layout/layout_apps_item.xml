@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <ImageView
+        android:id="@+id/itemicon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"/>
+
+    <TextView
+        android:id="@+id/app_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:textSize="16sp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_toRightOf="@id/itemicon"
+        android:layout_toEndOf="@id/itemicon"
+        android:textColor="@color/text_gray_dark"/>
+
+    <winterfell.flash.vpn.ui.widget.RoundSwitch
+        android:id="@+id/itemcheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+    </winterfell.flash.vpn.ui.widget.RoundSwitch>
+    <View
+        android:id="@+id/item_divider"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:background="@color/light_gray"
+        android:layout_height="0.5dp"/>
+</RelativeLayout>

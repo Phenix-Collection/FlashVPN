@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/title_bar_bg" >
+
+    <ImageView
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:src="@drawable/app_icon"
+        android:id="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"/>
+
+    <TextView
+        android:id="@+id/line1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/logo"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/title_bar_text_color"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:text="@string/app_slogan"/>
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_below="@id/line1"-->
+        <!--android:layout_toEndOf="@id/line1"-->
+        <!--android:layout_toRightOf="@id/line1"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:textColor="@color/title_bar_text_color"-->
+        <!--android:textSize="25sp"-->
+        <!--android:textStyle="bold"-->
+        <!--android:text="@string/app_slogan_line2"/>-->
+
+</RelativeLayout>

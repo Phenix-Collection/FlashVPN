@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "925389443518",
+    "firebase_url": "https://flashvpn-f68d4.firebaseio.com",
+    "project_id": "flashvpn-f68d4",
+    "storage_bucket": "flashvpn-f68d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:925389443518:android:3330530d5ddbdc47",
+        "android_client_info": {
+          "package_name": "winterfell.flash.vpn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "925389443518-bs3agh4ha1ssrtlgr69hnhptjsrugm03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBauFBKCX2OcqpQD3vUd36iiEtjD2UHkVc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

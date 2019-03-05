@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reward_layout"
+            android:layout_marginTop="8dp"
+            android:onClick="onRewardClick">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/icon_reward"
+                android:id="@+id/reward_icon"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/reward_icon"
+                android:layout_toEndOf="@id/reward_icon"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/text_gray_dark"
+                android:textSize="14sp"
+                android:text="@string/reward_text_no_premium_time"
+                android:id="@+id/reward_text"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/connect_button_layout"
+            android:layout_below="@id/reward_layout">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/bg_worldmap"
+                android:src="@drawable/world_map"
+                android:tint="@color/color_home_map_bg"
+                android:scaleType="centerCrop" />
+
+
+            <RelativeLayout
+                android:id="@+id/layout_icon"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_centerInParent="true">
+                <ImageView
+                    android:id="@+id/connect_button_bg"
+                    android:layout_width="155dp"
+                    android:layout_height="155dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/shape_connect_btn_bg"/>
+                <ImageView
+                    android:id="@+id/connect_button"
+                    android:layout_width="145dp"
+                    android:layout_height="145dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/shape_connect_btn"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:layout_centerInParent="true"
+                    android:text="@string/connect"
+                    android:id="@+id/txt_connect_btn"
+                    android:textColor="@color/text_gray_dark"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txt_connect_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/connect_button_layout"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:textSize="14sp"
+            android:text="@string/connecting_tip1"
+            android:textColor="@color/text_gray_dark"/>
+
+        <LinearLayout
+            android:id="@+id/flag_layout"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/txt_connect_tips"
+            android:layout_marginTop="5dp"
+            android:padding="6dp"
+            android:background="@drawable/select_server_bg"
+            android:onClick="onCountryClick">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/flag_au"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:id="@+id/img_flag"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_city"
+                android:text = "Korea"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_down_arrow"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/ad_container"
+            android:layout_below="@id/flag_layout"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="@drawable/shadow"></LinearLayout>
+    </RelativeLayout>
+</ScrollView>
