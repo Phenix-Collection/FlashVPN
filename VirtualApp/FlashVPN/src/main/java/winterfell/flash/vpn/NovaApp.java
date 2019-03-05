@@ -61,17 +61,17 @@ public class NovaApp extends MultiDexApplication {
 //        builder.mopubAdUnit("8e77a1b50d5c4a9fb204d212e2bd530a")
 //                .admobAppId("ca-app-pub-5490912237269284~7387660650")
 //                .ironSourceAppKey("8a16ee3d");
-//        FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
-//            @Override
-//            public boolean isAdFree() {
-//                return NovaUser.getInstance(getApp()).isVIP();
-//            }
-//
-//            @Override
-//            public List<AdConfig> getAdConfigList(String slot) {
-//                return RemoteConfig.getAdConfigList(slot);
-//            }
-//        }, getApp(), builder.build());
+        FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
+            @Override
+            public boolean isAdFree() {
+                return NovaUser.getInstance(getApp()).isVIP();
+            }
+
+            @Override
+            public List<AdConfig> getAdConfigList(String slot) {
+                return RemoteConfig.getAdConfigList(slot);
+            }
+        }, getApp(), builder.build());
     }
 
 
@@ -93,7 +93,7 @@ public class NovaApp extends MultiDexApplication {
         BugReporter.init(gDefault);
        initAd();
         BillingProvider.get().updateStatus(null);
-        if (!getPackageName().contains("fast.free")){
+        if (!getPackageName().contains("flash")){
             System.exit(0);
         }
         if (isOpenLog() || BuildConfig.DEBUG ) {

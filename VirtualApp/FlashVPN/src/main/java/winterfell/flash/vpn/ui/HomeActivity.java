@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.ads.AdSize;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
@@ -76,6 +77,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private ServerInfo mCurrentSI;
 
     private static final String SLOT_HOME_NATIVE = "slot_home_native";
+    private static final String SLOT_HOME_BANNER = "slot_home_banner";
     private static final String SLOT_HOME_GIFT_REWARD = "slot_home_gift_reward";
     private static final int START_VPN_SERVICE_REQUEST_CODE = 100;
     private static final int SELECT_SERVER_REQUEST_CODE = 101;
@@ -103,11 +105,18 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     public static void preloadAd(Context context) {
-        FuseAdLoader.get(SLOT_HOME_NATIVE, context).preloadAd(context);
+        FuseAdLoader.get(SLOT_HOME_BANNER, context).
+                setBannerAdSize(getBannerSize()).preloadAd(context);
         if (NovaUser.getInstance(NovaApp.getApp()).usePremiumSeconds()) {
-            FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, context).preloadAd(context);
+            FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, context).
+                    preloadAd(context);
         }
     }
+
+    public static AdSize getBannerSize() {
+        return AdSize.MEDIUM_RECTANGLE;
+    }
+
 
     private void inflateHomeNativeAd(IAdAdapter ad) {
         if (ad == null) {
@@ -184,7 +193,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     private void loadHomeNativeAd() {
-        FuseAdLoader.get(SLOT_HOME_NATIVE, this).loadAd(this, 2, 2000, new IAdLoadListener() {
+        FuseAdLoader.get(SLOT_HOME_BANNER, this).setBannerAdSize(getBannerSize()).
+                loadAd(this, 2, 2000, new IAdLoadListener() {
             @Override
             public void onAdLoaded(IAdAdapter ad) {
                 inflateHomeNativeAd(ad);

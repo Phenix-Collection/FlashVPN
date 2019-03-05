@@ -348,7 +348,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                 }
                 MLogs.d("LocalVpnService-- Load failed with error: %s", errString);
             }
-            if (!getPackageName().contains("fast.free")){
+            if (!getPackageName().contains("flash")){
                 System.exit(0);
             }
 
