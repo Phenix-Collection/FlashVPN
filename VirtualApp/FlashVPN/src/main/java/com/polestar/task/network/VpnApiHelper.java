@@ -7,7 +7,7 @@ import com.polestar.task.network.datamodels.VpnRequirement;
 import com.polestar.task.network.responses.ServersResponse;
 import com.polestar.task.network.responses.SucceedResponse;
 import com.polestar.task.network.services.VpnApi;
-import com.twitter.msg.Sender;
+import com.witter.msg.Sender;
 
 import retrofit2.Call;
 import retrofit2.Callback;

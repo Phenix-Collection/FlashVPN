@@ -1,4 +1,4 @@
-package com.twitter.msg;
+package com.witter.msg;
 
 import org.junit.Test;
 

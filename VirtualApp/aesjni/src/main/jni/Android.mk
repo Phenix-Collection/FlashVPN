@@ -2,7 +2,7 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := twittermsg
+LOCAL_MODULE    := wittermsg
 LOCAL_SRC_FILES := JNIEncrypt.c	\
                     aes.c \
                     checksignature.c \

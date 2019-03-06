@@ -18,7 +18,7 @@ import com.polestar.task.network.responses.UserTaskResponse;
 import com.polestar.task.network.services.AuthApi;
 import com.polestar.task.network.services.ProductsApi;
 import com.polestar.task.network.services.TasksApi;
-import com.twitter.msg.Sender;
+import com.witter.msg.Sender;
 
 import java.io.IOException;
 import java.util.Calendar;

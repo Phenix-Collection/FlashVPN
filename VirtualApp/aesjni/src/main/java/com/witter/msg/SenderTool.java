@@ -1,4 +1,4 @@
-package com.twitter.msg;
+package com.witter.msg;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

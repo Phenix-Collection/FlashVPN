@@ -32,7 +32,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.grey.Fingerprint;
-import com.twitter.msg.Sender;
+import com.witter.msg.Sender;
 
 import java.util.List;
 import java.util.Timer;

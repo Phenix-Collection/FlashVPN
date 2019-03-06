@@ -6,16 +6,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.MobileAds;
 import com.polestar.ad.SDKConfiguration;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.InstallStrategy;
@@ -42,7 +39,6 @@ import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.task.network.Configuration;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.twitter.msg.Sender;
 
 import java.io.File;
 import java.io.FileOutputStream;

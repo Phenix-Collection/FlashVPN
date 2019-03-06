@@ -5,14 +5,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.RemoteConfig;
-import com.polestar.task.ADErrorCode;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.database.DatabaseApi;
@@ -26,16 +24,12 @@ import com.polestar.task.network.AdApiHelper;
 import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
 import com.polestar.task.network.datamodels.User;
-import com.twitter.msg.Sender;
+import com.witter.msg.Sender;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
-
-import static com.polestar.task.ADErrorCode.ERR_SERVER_DOWN_CODE;
 
 /**
  * Created by guojia on 2019/1/24.

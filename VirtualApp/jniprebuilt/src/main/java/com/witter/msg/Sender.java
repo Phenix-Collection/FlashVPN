@@ -1,9 +1,9 @@
-package com.twitter.msg;
+package com.witter.msg;
 
 public class Sender {
 
     static {
-        System.loadLibrary("twittermsg");
+        System.loadLibrary("wittermsg");
     }
 
     public static native String send(String str);
