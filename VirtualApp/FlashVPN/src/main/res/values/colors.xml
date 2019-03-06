@@ -12,7 +12,8 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#ff48d27f</color>
     <color name="title_bar_bg">#FFFFFF</color>
-    <color name="title_bar_button_pressed">#5b5b91</color>
+    <!--<color name="title_bar_button_pressed">#5b5b91</color>-->
+    <color name="title_bar_button_pressed">#cccccc</color>
     <color name="app_loading_bg">#FFFFFF</color>
     <color name="title_bar_text_color">#000000</color>
     <!--<color name="text_gray_dark">#FF333333</color>-->
