@@ -29,9 +29,9 @@ import java.io.IOException;
  */
 public class BitmapUtils {
 
-    public static final int APP_ICON_WIDTH = 50;//dp
-    public static final int APP_ICON_RADIUS = 12;//dp
-    public static final int APP_ICON_PADDING = 5;//dp
+    public static  int APP_ICON_WIDTH = 50;//dp
+    public static  int APP_ICON_RADIUS = 12;//dp
+    public static  int APP_ICON_PADDING = 5;//dp
     public static final float APP_BADGE_TEXT_SIZE = 5.5f;//dp
     public static final float APP_BADGE_TEXT_SIZE_SMALL = 4.5f;//dp
     public static final String ICON_FILE_PATH = "/icons";
