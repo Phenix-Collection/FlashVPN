@@ -32,7 +32,7 @@ public final class BillingConstants {
 
     private static String[] IN_APP_SUBS;
 
-    public static final String BILL_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsEcgyBJZFOYH3ZkpktIOEE9WlnmNFjf4mDK0zdt4GghOxdh6U1Z0sLNEJc/RjhaCl7XhCLVgiSRGZCwvoDEKqh790srBK7UWipJkR1ydrMpjPn8ouJBhqOslJAigiTB6Ib+2KD98q98YSC8QRhtDLfLHL1LTYY/sUjeMJEU6/OtayPs99MwwoSRxEHuO3NrAc1cFWh8N/wNK5i4uZmi4eubREBQZeqg6C+/2qYrAtXAiQnwZpBN8o84XxFjH2sA+5YFf56ZBIIrLxLUQV1lflaOI9NnKwy/33p+I43zGi3lJ74j4YA+pydQmBha7slvIZ14haee5uatLko0cvRWzBwIDAQAB";
+    public static final String BILL_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjNYxtmLDqe9bD9/tQOJa8K05X+Rcna8GjO7R7vtHvGKTU+FnbmOojCww9zczWIeL9rpguz2a/FHlBqeHHx+8r2tfn3oN9DcLyi5Q0b4apxBInVH+UwvAboP5GYzuF42mvWH4jEcsNhzRiUImBx6gjCOWZabaD+gAV4sKkNK2MbfUOMPOqrKD/IAgMkalkIRMcPD6lF5hf4wOpgiFtA+zWoHk9NRxw9Ak7U61ge0cnZUHId2dZ6zl2uiXy5iPwI5+IzKtETPzjoNZkQUKS5avDSu+UWyBgI9e0RgYlHQJJAB6n1/4BKba4ZXy41pYtpAZHgfnboX5ZAYC5rsenTCJOwIDAQAB";
 
     private BillingConstants(){}
 
