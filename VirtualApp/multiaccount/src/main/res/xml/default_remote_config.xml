@@ -311,4 +311,12 @@
         <key>conf_sort_home_icon</key>
         <value>true</value>
     </entry>
+    <entry>
+        <key>slot_app_icon</key>
+        <value>pl:slot_app_icon:0</value>
+    </entry>
+    <entry>
+        <key>conf_icon_ad</key>
+        <value>3:86400</value>
+    </entry>
 </defaultsMap>

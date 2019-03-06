@@ -1,37 +1,28 @@
 package com.polestar.superclone.component.fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
-import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
@@ -98,6 +89,15 @@ public class HomeFragment extends BaseFragment {
     private boolean showLucky;
     private boolean showBooster;
 
+    public static final String SLOT_APP_ICON_AD = "slot_app_icon";
+    public static final String CONF_ICON_AD = "conf_icon_ad";
+
+    private IAdAdapter iconAd;
+    private int iconAdThreshold;
+    private long iconAdIgnoreTime;
+
+    private List<HomeGridItem> gridItems;
+
 
     public void inflateNativeAd(IAdAdapter ad) {
 //        if (adShowed) {
@@ -136,6 +136,13 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String conf = RemoteConfig.getString(CONF_ICON_AD);
+        String arr[] = conf.split(":");
+        iconAdThreshold = Integer.valueOf(arr[0]);
+        iconAdIgnoreTime = Long.valueOf(arr[1]);
+        if (gridItems == null) {
+            gridItems = new ArrayList<>();
+        }
 
     }
 
@@ -167,34 +174,7 @@ public class HomeFragment extends BaseFragment {
             MLogs.d("onDragEnd + " + floatView.getSelectedState());
             int state = floatView.getSelectedState();
             floatView.animToIdel();
-            switch (state) {
-                case CustomFloatView.SELECT_BTN_LEFT:
-                    EventReporter.addShortCut(mActivity, ((AppModel) info).getPackageName());
-                    CommonUtils.createShortCut(mActivity,((AppModel) info));
-                    floatView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
-                            //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
-                        }
-                    },CustomFloatView.ANIM_DURATION / 2);
-                    break;
-                case CustomFloatView.SELECT_BTN_RIGHT:
-                    pkgGridAdapter.notifyDataSetChanged();
-                    floatView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!PreferencesUtils.hasShownDeleteDialog()) {
-                                showDeleteDialog((AppModel) info);
-                            } else {
-                                deleteAppWithAnim((AppModel) info);
-                            }
-                        }
-                    }, 330  );
-                    break;
-                default:
-                    break;
-            }
+            ((HomeGridItem)info).onDragDrop(state);
             mDragController.removeDropTarget(floatView);
         }
     };
@@ -207,7 +187,7 @@ public class HomeFragment extends BaseFragment {
                 for (AppModel m : appInfos) {
                     if (m.getPackageName().equals(appModel.getPackageName())
                             && m.getPkgUserId() == appModel.getPkgUserId()) {
-                        return ret;
+                        return iconAd == null ? ret : ret + 1;
                     }
                     ret++;
                 }
@@ -216,35 +196,14 @@ public class HomeFragment extends BaseFragment {
         }
         @Override
         public int getCount() {
-            int size = appInfos == null ? 0 : appInfos.size();
-            if (showBooster ) {
-                size ++;
-                //for booster icon
-            }
-            if (showLucky) {
-                size ++;
-            }
-            size = size + 3 ;
-//            if ( size < 15 ) {
-//                if (adShowed) {
-//                    size = 15;
-//                } else {
-//                    size = 18;
-//                }
-//
-//            } else {
-//                size = size + 3 - (size % 3);
-//            }
-            return size;
+            int size = gridItems.size();
+            return size + 3;
         }
 
         @Override
         public Object getItem(int position) {
-            if ( appInfos == null) {
-                return  null;
-            }
-            if (position < appInfos.size() && position >= 0) {
-                return  appInfos.get(position);
+            if (position < gridItems.size() && position >= 0) {
+                return  gridItems.get(position);
             }
             return null;
         }
@@ -256,39 +215,14 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = new GridAppCell(mActivity);
-
-            ImageView appIcon = (ImageView) view.findViewById(R.id.app_icon);
-            TextView appName = (TextView) view.findViewById(R.id.app_name);
-            TextView adFlag = (TextView) view.findViewById(R.id.ad_flag);
-            adFlag.setVisibility(View.INVISIBLE);
-
-            AppModel appModel = (AppModel) getItem(i);
-            if (appModel != null) {
-                CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(),
-                        appModel.getPkgUserId());
-                Bitmap bmp = data.getCustomIcon();
-                appIcon.setImageBitmap(bmp);
-                appModel.setCustomIcon(bmp);
-                appName.setText(data.customized? data.label: appModel.getName());
+            HomeGridItem item = (HomeGridItem) getItem(i);
+            if (item != null) {
+                return item.getView();
             } else {
-                int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
-                int boosterIdx = appInfos.size();
-                if (showLucky && i == luckIdx) {
-                    boolean showAdFlag = RemoteConfig.getBoolean("conf_adflag_for_icon");
-                    if (showAdFlag) {
-                        adFlag.setVisibility(View.VISIBLE);
-                    }
-                    appIcon.setImageResource(R.drawable.icon_feel_lucky);
-                    appName.setText(R.string.feel_lucky);
-                    appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-                    appName.setTextColor(getResources().getColor(R.color.lucky_red));
-                } else if(showBooster && i == boosterIdx) {
-//                    appIcon.setImageResource(R.drawable.boost_icon);
-//                    appName.setText(R.string.booster_title);
-                }
+                View itemView = new GridAppCell(mActivity);
+                itemView.setVisibility(View.INVISIBLE);
+                return itemView;
             }
-            return view;
         }
     }
 
@@ -323,8 +257,84 @@ public class HomeFragment extends BaseFragment {
                 //final int i = pkgGridAdapter.getNatureIndex(position);
                 int i =pos - pkgGridView.getGridItemStartOffset();
                 MLogs.d("onItemClick " + i);
-                if(i >= 0 && i < appInfos.size()){
-                    AppModel model = appInfos.get(i);
+                HomeGridItem item = (HomeGridItem) pkgGridAdapter.getItem(i);
+                if (item != null) {
+                    item.onClick(view);
+                }
+            }
+        });
+        pkgGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                int i = pos - pkgGridView.getGridItemStartOffset();
+                MLogs.d("onItemLongClick " + i);
+                HomeGridItem item = (HomeGridItem) pkgGridAdapter.getItem(i);
+                return item == null? false : item.onLongClick(view);
+
+            }
+        });
+    }
+
+    private class HomeGridItem{
+        public static final int TYPE_LUCKY = 0;
+        public static final int TYPE_CLONE = 1;
+        public static final int TYPE_ICON_AD = 2;
+        public static final int TYPE_BOOSTER = 3;
+        int type;
+        Object obj;
+
+        public HomeGridItem(int type, Object obj) {
+            this.type = type;
+            this.obj = obj;
+        }
+
+        public View getView() {
+            View inflateView = null;
+            switch (type) {
+                case TYPE_CLONE:
+                case TYPE_LUCKY:
+                    inflateView = new GridAppCell(mActivity);
+                    break;
+                case TYPE_ICON_AD:
+                    AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.item_app)
+                            .iconImageId(R.id.app_icon)
+                            .titleId(R.id.app_name).build();
+                    inflateView = ((IAdAdapter)obj).getAdView(mActivity, viewBinder);
+                    break;
+            }
+            ImageView appIcon = (ImageView) inflateView.findViewById(R.id.app_icon);
+            TextView appName = (TextView) inflateView.findViewById(R.id.app_name);
+            TextView adFlag = (TextView) inflateView.findViewById(R.id.ad_flag);
+            if (type == TYPE_ICON_AD || type == TYPE_LUCKY) {
+                adFlag.setVisibility(View.VISIBLE);
+            } else {
+                adFlag.setVisibility(View.INVISIBLE);
+            }
+            if (type == TYPE_CLONE) {
+                AppModel appModel = (AppModel)obj;
+                CustomizeAppData data = CustomizeAppData.loadFromPref(appModel.getPackageName(),
+                        appModel.getPkgUserId());
+                Bitmap bmp = data.getCustomIcon();
+                appIcon.setImageBitmap(bmp);
+                appModel.setCustomIcon(bmp);
+                appName.setText(data.customized? data.label: appModel.getName());
+            } else if (type == TYPE_LUCKY) {
+                boolean showAdFlag = RemoteConfig.getBoolean("conf_adflag_for_icon");
+                if (!showAdFlag) {
+                    adFlag.setVisibility(View.INVISIBLE);
+                }
+                appIcon.setImageResource(R.drawable.icon_feel_lucky);
+                appName.setText(R.string.feel_lucky);
+                appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                appName.setTextColor(getResources().getColor(R.color.lucky_red));
+            }
+            return inflateView;
+        }
+
+        public void onClick(View view) {
+            switch (type) {
+                case TYPE_CLONE:
+                    AppModel model = (AppModel) obj;
                     PermissionManager permissionManager = new PermissionManager(mActivity, HomeActivity.REQUEST_APPLY_PERMISSION);
                     if (permissionManager.applyPermissionIfNeeded()) {
                         mPendingStart = model;
@@ -342,47 +352,73 @@ public class HomeFragment extends BaseFragment {
                             }, 100);
                         }
                     }
-                }else{
-                    int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
-                    int boosterIdx = appInfos.size();
-                    if(showLucky && i == luckIdx){
-                        MLogs.d("Show lucky");
-                        Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
-                        startActivity(intent);
-                        EventReporter.homeGiftClick(mActivity, "lucky_item");
-                    } else if (showBooster && i==boosterIdx) {
-                        MLogs.d("Start booster");
-//                        BoosterSdk.startClean(mActivity, "home_item");
-                    }
-                }
+                    break;
+                case TYPE_LUCKY:
+                    MLogs.d("Show lucky");
+                    Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
+                    startActivity(intent);
+                    EventReporter.homeGiftClick(mActivity, "lucky_item");
+                    break;
+                case TYPE_ICON_AD:
+                    break;
             }
-        });
-        pkgGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                int i = pos - pkgGridView.getGridItemStartOffset();
-                MLogs.d("onItemLongClick " + i);
-                if (pkgGridAdapter.getItem(i) != null) {
-                    DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
-                    mDragController.startDrag(iv, iv, pkgGridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
-                    return true;
-                } else {
-                    int luckIdx = showBooster? appInfos.size() + 1: appInfos.size();
-                    int boosterIdx = appInfos.size();
-                    if(showLucky && i == luckIdx){
-                        MLogs.d("Show lucky");
-                        Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
-                        startActivity(intent);
-                        EventReporter.homeGiftClick(mActivity, "lucky_item_long");
-                    } else if (showBooster && i==boosterIdx) {
-                        MLogs.d("Start booster");
-//                        BoosterSdk.startClean(mActivity, "home_item_long");
-                    }
-                    return  false;
-                }
+        }
 
+        public boolean onLongClick(View view) {
+            DragImageView iv;
+            switch (type){
+                case TYPE_CLONE:
+                    iv = (DragImageView) view.findViewById(R.id.app_icon);
+                    mDragController.startDrag(iv, iv, this, DragController.DRAG_ACTION_COPY);
+                    return true;
+                case TYPE_ICON_AD:
+                    iv = (DragImageView) view.findViewById(R.id.app_icon);
+                    mDragController.startDrag(iv, iv, this, DragController.DRAG_ACTION_COPY);
+                    return true;
+                case TYPE_LUCKY:
+                    MLogs.d("Show lucky");
+                    Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
+                    startActivity(intent);
+                    EventReporter.homeGiftClick(mActivity, "lucky_item_long");
+                    return false;
             }
-        });
+            return false;
+        }
+
+        public void onDragDrop(int state) {
+            switch (state) {
+                case CustomFloatView.SELECT_BTN_LEFT:
+                    if (type == TYPE_CLONE) {
+                        EventReporter.addShortCut(mActivity, ((AppModel) obj).getPackageName());
+                        CommonUtils.createShortCut(mActivity, ((AppModel) obj));
+                        floatView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(mActivity, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
+                                //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+                            }
+                        }, CustomFloatView.ANIM_DURATION / 2);
+                    }
+                    break;
+                case CustomFloatView.SELECT_BTN_RIGHT:
+                    if (type == TYPE_CLONE) {
+                        pkgGridAdapter.notifyDataSetChanged();
+                        floatView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!PreferencesUtils.hasShownDeleteDialog()) {
+                                    showDeleteDialog((AppModel) obj);
+                                } else {
+                                    deleteAppWithAnim((AppModel) obj);
+                                }
+                            }
+                        }, 330);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public static AdSize getBannerSize() {
@@ -448,6 +484,40 @@ public class HomeFragment extends BaseFragment {
         if (longClickGuide !=null) longClickGuide.dismiss();
     }
 
+
+    private void loadAppIconAd() {
+        FuseAdLoader.get(SLOT_APP_ICON_AD, mActivity).loadAd(mActivity, 1, 0, new IAdLoadListener() {
+            @Override
+            public void onAdLoaded(IAdAdapter ad) {
+                iconAd = ad;
+            }
+
+            @Override
+            public void onAdClicked(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdClosed(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdListLoaded(List<IAdAdapter> ads) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+                MLogs.d("Load icon ad error: " + error);
+            }
+
+            @Override
+            public void onRewarded(IAdAdapter ad) {
+
+            }
+        });
+    }
     private void loadHeadNativeAd() {
         if (mNativeAdLoader == null) {
             mNativeAdLoader = FuseAdLoader.get(SLOT_HOME_HEADER_NATIVE, mActivity.getApplicationContext());
@@ -541,14 +611,21 @@ public class HomeFragment extends BaseFragment {
     private static final String KEY_HOME_SHOW_HEADER_AD = "home_show_header_ad";
     public static final String SLOT_HOME_HEADER_NATIVE = "slot_home_header_native";
 
-    private List<AppModel> getSortedCloneList(List<AppModel> AppModels) {
+    private void updateGridItemList(List<AppModel> appModels) {
+        gridItems.clear();
+        long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
+        showLucky = (!PreferencesUtils.isAdFree())
+                && PreferencesUtils.hasCloned()
+                && new Random().nextInt(100) < luckyRate ;
+        if (iconAd != null) {
+            gridItems.add(new HomeGridItem(HomeGridItem.TYPE_ICON_AD, iconAd));
+        }
         if (RemoteConfig.getBoolean("conf_sort_home_icon")) {
-            List<AppModel> ret = new ArrayList<>();
             HashMap<String, ArrayList<AppModel>> sortMap = new HashMap<>();
             ArrayList<String> sortedPackages = new ArrayList<>();
-            if (AppModels != null) {
-                for (AppModel model : AppModels) {
-                    ArrayList list = sortMap.get(model.getPackageName());
+            if (appModels != null) {
+                for (AppModel model : appModels) {
+                    ArrayList<AppModel> list = sortMap.get(model.getPackageName());
                     if (list == null) {
                         list = new ArrayList();
                         sortedPackages.add(model.getPackageName());
@@ -559,19 +636,29 @@ public class HomeFragment extends BaseFragment {
                 }
             }
             for (String s : sortedPackages) {
-                ArrayList list = sortMap.get(s);
+                ArrayList<AppModel> list = sortMap.get(s);
                 if (list != null) {
-                    ret.addAll(list);
+                    for(AppModel model:list) {
+                        gridItems.add(new HomeGridItem(HomeGridItem.TYPE_CLONE, model));
+                    }
                 }
             }
-            return ret;
         } else {
-            return AppModels;
+            if (appModels != null) {
+                for (AppModel model: appModels) {
+                    gridItems.add(new HomeGridItem(HomeGridItem.TYPE_CLONE, model));
+                }
+            }
+        }
+        if (showLucky) {
+            gridItems.add(new HomeGridItem(HomeGridItem.TYPE_LUCKY, null));
+        }
+
+        if(pkgGridAdapter != null && mExplosionField == null){
+            pkgGridAdapter.notifyDataSetChanged();
         }
     }
-
     private void initData(){
-        showBooster = RemoteConfig.getBoolean(CONFIG_SHOW_BOOSTER) && PreferencesUtils.hasCloned();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -579,41 +666,28 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void onInstalled(List<AppModel> clonedApp) {
                         PreferencesUtils.setHasCloned();
-                        appInfos = getSortedCloneList(CloneHelper.getInstance(mActivity).getClonedApps());
-                        if(pkgGridAdapter != null){
-                            pkgGridAdapter.notifyDataSetChanged();
-                        }
+                        appInfos = CloneHelper.getInstance(mActivity).getClonedApps();
+                        updateGridItemList(appInfos);
                     }
 
                     @Override
                     public void onUnstalled(List<AppModel> clonedApp) {
                         //TODO never been called
                         MLogs.d("onUninstalled");
-                        appInfos = getSortedCloneList(CloneHelper.getInstance(mActivity).getClonedApps());
-                        if(pkgGridAdapter != null && mExplosionField == null){
-                            pkgGridAdapter.notifyDataSetChanged();
-                        }
+                        appInfos = CloneHelper.getInstance(mActivity).getClonedApps();
+                        updateGridItemList(appInfos);
                         preloadAppListAd(false);
                     }
 
                     @Override
                     public void onLoaded(List<AppModel> clonedApp) {
-                        appInfos = getSortedCloneList(clonedApp);
-                        preloadAppListAd(false);
-                        MLogs.d("onLoaded applist");
-                        long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
-                        showLucky = (!PreferencesUtils.isAdFree())
-                                && PreferencesUtils.hasCloned()
-                                && new Random().nextInt(100) < luckyRate ;
-                        if (!showLucky) {
-                            MLogs.d("Not show lucky. Rate: " + luckyRate);
-                        }
+                        appInfos = CloneHelper.getInstance(mActivity).getClonedApps();
                         if (appInfos.size() >= 1 && !PreferencesUtils.hasCloned()) {
                             PreferencesUtils.setHasCloned();
                         }
-                        if(pkgGridAdapter != null){
-                            pkgGridAdapter.notifyDataSetChanged();
-                        }
+                        updateGridItemList(appInfos);
+                        preloadAppListAd(false);
+
                         if (!PreferencesUtils.hasShownCloneGuide(mActivity) && (clonedApp == null || clonedApp.size() == 0)) {
                             pkgGridView.postDelayed(new Runnable() {
                                 @Override
