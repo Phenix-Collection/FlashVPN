@@ -148,7 +148,6 @@ public class AppCloneActivity extends BaseActivity {
                     }
                     if (!installed) {
                         //AppManager.uninstallApp(mPkgName, mUserId);
-                        installed = false;
                         //EventReporter.keyLog(AppCloneActivity.this, EventReporter.KeyLogTag.AERROR, "doubleInstall:"+ mPkgName);
                         MLogs.d("To install app " + mPkgName);
 //                        isInstallSuccess = AppManager.installApp(AppCloneActivity.this, appModel, mUserId);
@@ -183,6 +182,7 @@ public class AppCloneActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 Toast.makeText(AppCloneActivity.this, getString(R.string.clone_error), Toast.LENGTH_LONG).show();
+                                EventReporter.applistClone(AppCloneActivity.this, "error_" + appModel.getPackageName());
                                 finish();
                             }
                         }, 2000);
@@ -278,7 +278,11 @@ public class AppCloneActivity extends BaseActivity {
         if (appModel != null && isDBUpdated) {
             appModel.setNotificationEnable(mNotificationSwitch.isChecked());
             appModel.setLockerState(mLockerSwitch.isChecked() ? AppConstants.AppLockState.ENABLED_FOR_CLONE : AppConstants.AppLockState.DISABLED);
-            DbManager.updateAppModel(this, appModel);
+            try {
+                DbManager.updateAppModel(this, appModel);
+            }catch (Exception ex) {
+                EventReporter.applistClone(AppCloneActivity.this, "error_setting_" + appModel.getPackageName());
+            }
             if (mShortcutSwitch.isChecked()) {
                 CommonUtils.createShortCut(this, appModel);
             }
