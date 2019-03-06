@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.polestar.ad.SDKConfiguration;
 import com.google.firebase.FirebaseApp;
+import com.polestar.clone.BitmapUtils;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.VirtualCore;
@@ -58,6 +59,8 @@ public class DualApp extends MultiDexApplication {
 
     static {
         SpecialComponentList.APP_LOADING_ACTIVITY = AppLoadingActivity.class.getName();
+        BitmapUtils.APP_ICON_RADIUS = 6;
+        BitmapUtils.APP_ICON_PADDING = 2;
     }
 
     public static boolean isArm64() {

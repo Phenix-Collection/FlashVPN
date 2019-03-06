@@ -76,6 +76,6 @@ public class ReferReceiver extends BroadcastReceiver {
             CrashReport.setAppChannel(DualApp.getApp(), utm_source);
             EventReporter.reportReferrer(utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid);
         }
-        new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
+//        new AppMeasurementInstallReferrerReceiver().onReceive(context, intent);
     }
 }

@@ -766,19 +766,20 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
 
         private void fillNewDotView(ImageView newdot) {
             newDot = newdot;
-            switch (type){
-                case TYPE_CLONE:
-                    if (clone.getLaunched() == 0) {
-                        newdot.setImageResource(R.drawable.shape_new_dot);
-                        newdot.setVisibility(View.VISIBLE);
-                    } else {
-                        newdot.setVisibility(View.INVISIBLE);
-                    }
-                    break;
-                default:
-                    newdot.setVisibility(View.INVISIBLE);
-                    break;
-            }
+            newdot.setVisibility(View.INVISIBLE);
+//            switch (type){
+//                case TYPE_CLONE:
+//                    if (clone.getLaunched() == 0) {
+//                        newdot.setImageResource(R.drawable.shape_new_dot);
+//                        newdot.setVisibility(View.VISIBLE);
+//                    } else {
+//                        newdot.setVisibility(View.INVISIBLE);
+//                    }
+//                    break;
+//                default:
+//                    newdot.setVisibility(View.INVISIBLE);
+//                    break;
+//            }
         }
 
         private void showItemMenu(View view) {
