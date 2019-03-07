@@ -255,7 +255,7 @@ public class Task extends TimeModel {
      * @return
      */
     protected boolean isValid(){
-        return mLimitPerDay > 0 && mLimitTotal > 0 && mLimitPerDay < mLimitTotal
+        return mLimitPerDay > 0 && mLimitTotal > 0 && mLimitPerDay <= mLimitTotal
                 && mPayout >= 0;
     }
 
