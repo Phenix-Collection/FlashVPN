@@ -100,6 +100,12 @@
 
             <include layout="@layout/reward_general_item" android:id="@+id/video_task_item" />
 
+            <com.polestar.superclone.widgets.FixedListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:dividerHeight="0dp"
+                android:divider="@null"
+                android:id="@+id/ad_task_list"></com.polestar.superclone.widgets.FixedListView>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.widgets.IconFontTextView;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.ITaskStatusListener;
+import com.polestar.task.database.datamodels.AdTask;
 import com.polestar.task.database.datamodels.RewardVideoTask;
 import com.polestar.task.network.datamodels.Task;
 
@@ -53,6 +56,8 @@ public class RewardCenterFragment extends BaseFragment
     private View checkinItemView;
     private View videoItemView;
     private View userInfoView;
+    private ListView adTaskListView;
+    private BaseAdapter adTaskAdapter;
     private AppUser appUser;
     private ProgressBar loadingProgressBar;
     private ProgressBar taskRunningProgressBar;
@@ -64,12 +69,14 @@ public class RewardCenterFragment extends BaseFragment
     private FuseAdLoader nativeAdLoader;
     private FuseAdLoader chechInAdLoader;
     private IAdAdapter nativeAd;
+    private List<IAdAdapter> taskAdList;
 
     private static final int MSG_LOAD_TIMEOUT = 100;
     private static final long LOAD_TIMEOUT = 10*1000;
 
     public static final String SLOT_REWARD_CENER_NATIVE = "slot_reward_center_native";
     public static final String SLOT_CHECKIN_INTERSTITIAL = "slot_checkin_interstitial";
+    public static final String SLOT_TASK_AD_LIST = "slot_reward_ad_list";
 
     public static AdSize getBannerSize() {
         int dpWidth = DisplayUtils.px2dip(MApp.getApp(), DisplayUtils.getScreenWidth(MApp.getApp()));
@@ -201,6 +208,7 @@ public class RewardCenterFragment extends BaseFragment
         loadedLayout = contentView.findViewById(R.id.loaded_layout);
         retryView = contentView.findViewById(R.id.retry);
         retryView.setOnClickListener(this);
+        adTaskListView = contentView.findViewById(R.id.ad_task_list);
     }
 
     private void initData() {
@@ -238,6 +246,73 @@ public class RewardCenterFragment extends BaseFragment
         updateTaskViewItem(inviteItemView, appUser.getInviteTask(), true);
         updateTaskViewItem(checkinItemView, appUser.getCheckInTask(), true);
         updateTaskViewItem(videoItemView, appUser.getVideoTask(), true);
+        adTaskAdapter = new BaseAdapter() {
+            @Override
+            public int getCount() {
+                int count = taskAdList == null ? 0: taskAdList.size();
+                MLogs.d("getCount: " + count);
+                return count;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return taskAdList == null ? null: taskAdList.get(position);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.adtask_item)
+                        .titleId(R.id.task_title)
+                        .iconImageId(R.id.task_icon).build();
+                IAdAdapter adAdapter = (IAdAdapter) getItem(position);
+                View adView = adAdapter.getAdView(mActivity,viewBinder);
+                TextView taskDesc = adView.findViewById(R.id.task_description);
+                AdTask adTask = ((AdTask)adAdapter.getAdObject());
+                taskDesc.setText(((AdTask)adAdapter.getAdObject()).mDescription);
+                TextView reward = adView.findViewById(R.id.task_reward);
+                reward.setText("+" + String.format("%.0f", adTask.mPayout));
+                reward.setTextColor(getResources().getColor(R.color.reward_collect_coin_color));
+                return adView;
+            }
+        };
+        adTaskListView.setAdapter(adTaskAdapter);
+        FuseAdLoader.get(SLOT_TASK_AD_LIST, mActivity).loadAdList(mActivity, 10, new IAdLoadListener() {
+            @Override
+            public void onAdLoaded(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdClicked(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdClosed(IAdAdapter ad) {
+
+            }
+
+            @Override
+            public void onAdListLoaded(List<IAdAdapter> ads) {
+                taskAdList = ads;
+                adTaskAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+
+            @Override
+            public void onRewarded(IAdAdapter ad) {
+
+            }
+        });
     }
 
     private void updateTaskViewItem(View view, Task task, boolean isInit){

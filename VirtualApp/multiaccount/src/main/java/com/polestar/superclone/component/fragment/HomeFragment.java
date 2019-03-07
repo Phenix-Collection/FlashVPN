@@ -84,10 +84,8 @@ public class HomeFragment extends BaseFragment {
     private static final String CONFIG_HOME_SHOW_LUCKY_RATE = "home_show_lucky_rate";
     private static final String CONFIG_HOME_PRELOAD_APPLIST_GATE= "home_preload_applist_gate";
 
-    private final static String CONFIG_SHOW_BOOSTER = "conf_show_booster_in_home";
 
     private boolean showLucky;
-    private boolean showBooster;
 
     public static final String SLOT_APP_ICON_AD = "slot_app_icon";
     public static final String CONF_ICON_AD = "conf_icon_ad";
@@ -279,7 +277,6 @@ public class HomeFragment extends BaseFragment {
         public static final int TYPE_LUCKY = 0;
         public static final int TYPE_CLONE = 1;
         public static final int TYPE_ICON_AD = 2;
-        public static final int TYPE_BOOSTER = 3;
         int type;
         Object obj;
 
@@ -360,6 +357,7 @@ public class HomeFragment extends BaseFragment {
                     EventReporter.homeGiftClick(mActivity, "lucky_item");
                     break;
                 case TYPE_ICON_AD:
+                    MLogs.d("TYPE_ICON_AD onClick");
                     break;
             }
         }
@@ -490,11 +488,12 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onAdLoaded(IAdAdapter ad) {
                 iconAd = ad;
+                insertIconAd();
             }
 
             @Override
             public void onAdClicked(IAdAdapter ad) {
-
+                MLogs.d("app_icon_ad on click");
             }
 
             @Override
@@ -658,6 +657,14 @@ public class HomeFragment extends BaseFragment {
             pkgGridAdapter.notifyDataSetChanged();
         }
     }
+
+    private void insertIconAd() {
+        gridItems.add(0, new HomeGridItem(HomeGridItem.TYPE_ICON_AD, iconAd));
+        if(pkgGridAdapter != null ){
+            pkgGridAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void initData(){
         new Thread(new Runnable() {
             @Override
@@ -686,6 +693,9 @@ public class HomeFragment extends BaseFragment {
                             PreferencesUtils.setHasCloned();
                         }
                         updateGridItemList(appInfos);
+                        if (appInfos.size() > iconAdThreshold && iconAd == null) {
+                            loadAppIconAd();
+                        }
                         preloadAppListAd(false);
 
                         if (!PreferencesUtils.hasShownCloneGuide(mActivity) && (clonedApp == null || clonedApp.size() == 0)) {
