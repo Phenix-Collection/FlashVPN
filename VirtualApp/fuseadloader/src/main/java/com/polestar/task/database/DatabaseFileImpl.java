@@ -45,7 +45,7 @@ public class DatabaseFileImpl implements DatabaseApi {
                 && mUser != null;
     }
 
-    public static DatabaseApi getDatabaseFileImpl(Context context) {
+    public synchronized static DatabaseApi getDatabaseFileImpl(Context context) {
         if (sInstance == null) {
             sInstance = new DatabaseFileImpl(context);
         }

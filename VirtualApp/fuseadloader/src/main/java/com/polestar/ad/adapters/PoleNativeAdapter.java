@@ -45,10 +45,16 @@ public class PoleNativeAdapter extends AdAdapter {
     private static final String AD_ID = "{adid}";
     private Context appContext;
     private String TAG = PoleNativeAdapter.class.getSimpleName();
+    private static String gpid;
 
     public PoleNativeAdapter(Context context, String adUnit) {
+       init(context, adUnit);
+    }
+
+    private void init(Context context, String adUnit) {
         this.adUnit = adUnit;
         databaseApi = DatabaseImplFactory.getDatabaseApi(context);
+        AdLog.d("databaseApi: " + databaseApi);
         if (sWorkHandler == null) {
             HandlerThread thread = new HandlerThread("pole_ad_loader");
             thread.start();
@@ -59,8 +65,7 @@ public class PoleNativeAdapter extends AdAdapter {
     }
 
     private PoleNativeAdapter(Context context, String adUnit, AdTask task) {
-        appContext = context.getApplicationContext();
-        this.adUnit = adUnit;
+        init(context, adUnit);
         adTask = task;
     }
 
@@ -145,25 +150,24 @@ public class PoleNativeAdapter extends AdAdapter {
     }
 
     private void goUrl(Context context, String url, boolean userInteraction) {
+        AdLog.d("usr: " + userInteraction + " goUrl: " + url);
         UrlHandler.Builder builder = new UrlHandler.Builder();
 
         builder.withSupportedUrlActions(
                 UrlAction.OPEN_NATIVE_BROWSER,
+                UrlAction.OPEN_IN_APP_BROWSER,
                 UrlAction.OPEN_APP_MARKET)
                 .withResultActions(new UrlHandler.ResultActions() {
                     @Override
                     public void urlHandlingSucceeded(@NonNull String url,
                                                      @NonNull UrlAction urlAction) {
-
+                        AdLog.d("urlHandlingSucceeded " + urlAction.name());
                     }
 
                     @Override
                     public void urlHandlingFailed(@NonNull String url,
                                                   @NonNull UrlAction lastFailedUrlAction) {
-
-                    }
-
-                    private void removeSpinningProgressView() {
+                        AdLog.d("urlHandlingFailed " + lastFailedUrlAction.name());
 
                     }
                 })
@@ -177,7 +181,10 @@ public class PoleNativeAdapter extends AdAdapter {
 
     private String replaceMacro(String input) {
         String ret = new String(input.toCharArray());
-        ret.replace(GPID_MACRO, AdUtils.getGoogleAdvertisingId(appContext));
+        ret.replace(GPID_MACRO, gpid == null? "":gpid);
+        if (databaseApi == null) {
+            AdLog.d("null database api");
+        }
         ret.replace(USERID_MACRO, databaseApi.getMyUserInfo().mDeviceId);
         ret.replace(TASK_ID, ""+adTask.mId);
         ret.replace(AD_ID, adTask.adid);
@@ -191,12 +198,9 @@ public class PoleNativeAdapter extends AdAdapter {
         }
         int i = 0;
         for (Task adTask: taskList) {
-            AdTask ad = (AdTask) adTask;
+            AdTask ad = adTask.getAdTask();
             if (ad.canFillToSlot(appContext, adUnit)) {
                 retList.add(ad);
-                if (++i >= num) {
-                    break;
-                }
             }
         }
 
@@ -233,6 +237,9 @@ public class PoleNativeAdapter extends AdAdapter {
         sWorkHandler.post(new Runnable() {
             @Override
             public void run() {
+                if (TextUtils.isEmpty(gpid)) {
+                    gpid = AdUtils.getGoogleAdvertisingId(appContext);
+                }
                 List<Task> taskList = databaseApi.getActiveTasksByType(Task.TASK_TYPE_AD_TASK);
                 if (taskList == null || taskList.size() == 0 ){
                     if (adListener != null) {
@@ -254,10 +261,11 @@ public class PoleNativeAdapter extends AdAdapter {
                     mainHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            mLoadedTime = System.currentTimeMillis();
                             if (adListener != null) {
                                 if (num <= 1) {
                                     adListener.onAdLoaded(PoleNativeAdapter.this);
-                                } else if (num > 1) {
+                                } else  {
                                     ArrayList<IAdAdapter> list = new ArrayList<>(Math.min(num, adTaskList.size()));
                                     list.add(PoleNativeAdapter.this);
                                     for (int i = 1; i < num && i < adTaskList.size(); i ++) {
@@ -300,7 +308,7 @@ public class PoleNativeAdapter extends AdAdapter {
         }
 
         TextView body = inflateView.findViewById(viewBinder.textId);
-        if (title != null) {
+        if (body != null) {
             body.setText(getBody());
         }
 
