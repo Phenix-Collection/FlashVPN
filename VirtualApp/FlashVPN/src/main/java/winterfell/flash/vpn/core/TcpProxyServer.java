@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 public class TcpProxyServer implements Runnable {
 
-    public boolean Stopped;
+    public boolean Stopped = true;
     public short Port;
 
     Selector m_Selector;
@@ -34,9 +34,12 @@ public class TcpProxyServer implements Runnable {
     }
 
     public void start() {
-        m_ServerThread = new Thread(this);
-        m_ServerThread.setName("TcpProxyServer-- TcpProxyServerThread");
-        m_ServerThread.start();
+        if (this.Stopped) {
+            m_ServerThread = new Thread(this);
+            m_ServerThread.setName("TcpProxyServer-- TcpProxyServerThread");
+            m_ServerThread.start();
+            this.Stopped = false;
+        }
     }
 
     public void stop() {
@@ -64,9 +67,9 @@ public class TcpProxyServer implements Runnable {
     public void run() {
         try {
             while (true) {
-                //MLogs.d("TcpProxyServer--  before select");
+                //MLogs.d("TcpProxyServer--  whoer before select " + Thread.currentThread().getId());
                 m_Selector.select();
-                //MLogs.d("TcpProxyServer--  after select, keys size " + m_Selector.selectedKeys().size());
+                //MLogs.d("TcpProxyServer--  whoer after select, keys size " + m_Selector.selectedKeys().size() + " " + + Thread.currentThread().getId());
                 Iterator<SelectionKey> keyIterator = m_Selector.selectedKeys().iterator();
                 while (keyIterator.hasNext()) {
                     SelectionKey key = keyIterator.next();
@@ -99,7 +102,7 @@ public class TcpProxyServer implements Runnable {
             e.printStackTrace();
         } finally {
             this.stop();
-            System.out.println("TcpProxyServer--  thread exited.");
+            System.out.println("TcpProxyServer--  whoer thread exited!!!!!!!!!!!!!!!!!!!!!!!!");
         }
     }
 

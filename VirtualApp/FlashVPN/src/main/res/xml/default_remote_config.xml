@@ -74,7 +74,7 @@
     </entry>
     <entry>
         <key>active_sub_sku_items</key>
-        <value>premium_service_one_month;premium_service_3_month;premium_service_1_year</value>
+        <value>premium_service_1_month;premium_service_3_months;premium_service_1_year</value>
     </entry>
     <entry>
         <key>block_app</key>

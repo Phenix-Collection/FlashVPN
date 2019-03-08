@@ -28,12 +28,12 @@ public abstract class Tunnel {
 
     protected abstract void onDispose();
 
-    private SocketChannel m_InnerChannel;
+    protected SocketChannel m_InnerChannel;
     private ByteBuffer m_SendRemainBuffer;
     private Selector m_Selector;
     private Tunnel m_BrotherTunnel;
     private boolean m_Disposed;
-    private InetSocketAddress m_ServerEP;
+    protected InetSocketAddress m_ServerEP;
     protected InetSocketAddress m_DestAddress;
     private long mStartConnectTime;
 
@@ -41,9 +41,17 @@ public abstract class Tunnel {
         return m_ServerEP;
     }
 
+    protected String getDestAddressString() {
+        if (m_DestAddress != null) {
+            return m_DestAddress.toString();
+        } else {
+            return "NoDestAddress";
+        }
+    }
+
     public void dump() {
         if (m_DestAddress != null) {
-            MLogs.d("Tunnel-- destAddress " + m_DestAddress.toString());
+            MLogs.d("Tunnel-- destAddress " + getDestAddressString());
         }
         if (m_ServerEP != null) {
             MLogs.d( "Tunnel-- proxy server " + m_ServerEP.toString());
@@ -76,11 +84,11 @@ public abstract class Tunnel {
 
     public void connect(InetSocketAddress destAddress) throws Exception {
         MLogs.d("Tunnel-- connect " + destAddress.toString() + " proxy is " + m_ServerEP.toString()
-                + " " + m_InnerChannel.toString());
+                + " " + m_InnerChannel.toString() + " Threadid " + Thread.currentThread().getId());
         if (LocalVpnService.Instance.protect(m_InnerChannel.socket())) {//保护socket不走vpn
             m_DestAddress = destAddress;
-            m_InnerChannel.register(m_Selector, SelectionKey.OP_CONNECT, this);//注册连接事件
-            MLogs.d("Tunnel-- before connect " + m_ServerEP  + m_InnerChannel.toString());
+            SelectionKey selectionKey = m_InnerChannel.register(m_Selector, SelectionKey.OP_CONNECT, this);//注册连接事件
+            MLogs.d("Tunnel-- before connect " + m_ServerEP  + m_InnerChannel.toString() + " " + destAddress.toString() + " " + selectionKey.toString());
             mStartConnectTime = Calendar.getInstance().getTimeInMillis();
             m_InnerChannel.connect(m_ServerEP);//连接目标
         } else {
@@ -89,7 +97,7 @@ public abstract class Tunnel {
     }
 
     protected void beginReceive() throws Exception {
-//        MLogs.d("Tunnel-- beginReceive " + m_InnerChannel.toString());
+        MLogs.d("Tunnel-- beginReceive " + m_InnerChannel.toString()+ " " + getDestAddressString());
         if (m_InnerChannel.isBlocking()) {
             m_InnerChannel.configureBlocking(false);
         }
@@ -98,11 +106,29 @@ public abstract class Tunnel {
 
 
     protected boolean write(ByteBuffer buffer, boolean copyRemainData) throws Exception {
-//        MLogs.d("Tunnel-- write "  + m_InnerChannel.toString());
+        MLogs.d("Tunnel-- write " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
         int bytesSent;
         while (buffer.hasRemaining()) {
             bytesSent = m_InnerChannel.write(buffer);
+            MLogs.d("Tunnel-- wrote bytes " + bytesSent + " " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
             if (bytesSent == 0) {
+
+                /*
+                这里很有意思；write有时确实是会返回0，毕竟是async的，这可能是因为server没准备好，或者其他原因；
+                当ShadowsocksPingTunnel(没有什么localtunnel)去连ssserver时；onConnnected在ssserver被connect上后会被调到
+                然后进行一个握手过程，握手过程中只有write成功了，才会回调onTunnelEstablished
+                但是，到了这里write有时确实会返回0，结果导致onTunnelEstablished没被调用。
+                但我如果加了下面的sleep 300毫秒不停重试的话，大概1秒以后，就可以把握手数据发送过去了
+
+                奇怪的是什么呢，基本上只有没有brothertunnel的tunnel才会有这种write不过去的情况；
+                还有就是，如果不重试，写不过去后，下面的register OP_WRITE 照理说过会儿应该能通知我可以写了，从而我可以把刚刚没写成功的
+                再写一遍；但onWritable从来没被调用到。
+                */
+                /*try {
+                    Thread.sleep(300);
+                } catch (Exception e) {
+
+                }*/
                 break;//不能再发送了，终止循环
             }
         }
@@ -116,7 +142,12 @@ public abstract class Tunnel {
                 m_SendRemainBuffer.clear();
                 m_SendRemainBuffer.put(buffer);
                 m_SendRemainBuffer.flip();
-                m_InnerChannel.register(m_Selector, SelectionKey.OP_WRITE, this);//注册写事件
+                SelectionKey s = m_InnerChannel.register(m_Selector, SelectionKey.OP_WRITE, this);//注册写事件
+                if (s == null) {
+                    MLogs.d("Tunnel-- register OP_WRITE FAILED " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
+                } else {
+                    MLogs.d("Tunnel-- register OP_WRITE SUUCEED " + s.toString()+ buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
+                }
             }
             return false;
         } else {//发送完毕了
@@ -127,15 +158,18 @@ public abstract class Tunnel {
     protected void onTunnelEstablished() throws Exception {
         long establishTime = Calendar.getInstance().getTimeInMillis() - mStartConnectTime;
         TunnelStatisticManager.getInstance().setEstablishTime(m_ServerEP, establishTime);
-        MLogs.d("Tunnel-- onTunnelEstablished time is " + establishTime  + m_InnerChannel.toString());
+        MLogs.d("Tunnel-- onTunnelEstablished time is " + establishTime  + m_InnerChannel.toString() + " " + getDestAddressString());
         this.beginReceive();//开始接收数据
-        m_BrotherTunnel.beginReceive();//兄弟也开始收数据吧
+        if (m_BrotherTunnel != null) {
+            m_BrotherTunnel.beginReceive();//兄弟也开始收数据吧
+        }
     }
 
     @SuppressLint("DefaultLocale")
     public void onConnectable() {
         try {
-            MLogs.d("Tunnel-- onConnectable " + m_InnerChannel.toString());
+            MLogs.d("Tunnel-- onConnectable " + m_InnerChannel.toString() + " " + getDestAddressString());
+
             if (m_InnerChannel.finishConnect()) {//连接成功
                 MLogs.d("Tunnel-- finishConnect succeed "  + m_InnerChannel.toString());
                 onConnected(GL_BUFFER);//通知子类TCP已连接，子类可以根据协议实现握手等。
@@ -144,15 +178,16 @@ public abstract class Tunnel {
                 this.dispose();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             //2019-03-02 当shadowsokcs服务器挂了的时候，会进入这里
             //Tunnel-- Error: connect to 95.179.225.74/95.179.225.74:28388 failed: java.net.ConnectException: Connection refused
-            MLogs.e("Tunnel-- Error: connect to " + m_ServerEP.toString() + " failed:"  + e.toString());
+            MLogs.e("Tunnel-- Error: connect to " + m_ServerEP.toString() + " failed:"  + e.toString() + getDestAddressString());
             this.dispose();
         }
     }
 
     public void onReadable(SelectionKey key) {
-//        MLogs.d("Tunnel-- onReadable "  + m_InnerChannel.toString());
+        MLogs.d("Tunnel-- onReadable "  + m_InnerChannel.toString() + " " + getDestAddressString());
         try {
             ByteBuffer buffer = GL_BUFFER;
             buffer.clear();
@@ -161,32 +196,38 @@ public abstract class Tunnel {
                 buffer.flip();
                 afterReceived(buffer);//先让子类处理，例如解密数据。
                 if (isTunnelEstablished() && buffer.hasRemaining()) {//将读到的数据，转发给兄弟。
-                    m_BrotherTunnel.beforeSend(buffer);//发送之前，先让子类处理，例如做加密等。
-                    if (!m_BrotherTunnel.write(buffer, true)) {
-                        key.cancel();//兄弟吃不消，就取消读取事件。
-                        MLogs.e("Tunnel-- " + m_ServerEP.toString() + "can not read more.");
+                    if (m_BrotherTunnel != null) {
+                        m_BrotherTunnel.beforeSend(buffer);//发送之前，先让子类处理，例如做加密等。
+                        if (!m_BrotherTunnel.write(buffer, true)) {
+                            key.cancel();//兄弟吃不消，就取消读取事件。
+                            MLogs.e("Tunnel-- " + m_ServerEP.toString() + "can not read more.");
+                        }
                     }
                 }
+                MLogs.d("Tunnel-- onReadable readed " + bytesRead  + m_InnerChannel.toString() + " " + getDestAddressString());
             } else if (bytesRead < 0) {
                 //2019-03-02 当Tun关闭时，这里会被调用；从而关闭tunnel pair
+                MLogs.d("Tunnel-- onReadable readed failed "  + m_InnerChannel.toString() + " " + getDestAddressString());
                 this.dispose();//连接已关闭，释放资源。
             }
         } catch (Exception e) {
             e.printStackTrace();
             MLogs.e("Tunnel-- Error: onReadable exception " + e.toString()
-                + m_InnerChannel.toString());
+                + m_InnerChannel.toString() + getDestAddressString());
             this.dispose();
         }
     }
 
     public void onWritable(SelectionKey key) {
         try {
-//            MLogs.d("Tunnel-- onWritable "  + m_InnerChannel.toString());
+            MLogs.d("Tunnel-- onWritable "  + m_InnerChannel.toString() + " " + getDestAddressString());
             this.beforeSend(m_SendRemainBuffer);//发送之前，先让子类处理，例如做加密等。
             if (this.write(m_SendRemainBuffer, false)) {//如果剩余数据已经发送完毕
                 key.cancel();//取消写事件。
                 if (isTunnelEstablished()) {
-                    m_BrotherTunnel.beginReceive();//这边数据发送完毕，通知兄弟可以收数据了。
+                    if (m_BrotherTunnel != null) {
+                        m_BrotherTunnel.beginReceive();//这边数据发送完毕，通知兄弟可以收数据了。
+                    }
                 } else {
                     this.beginReceive();//开始接收代理服务器响应数据
                 }
@@ -206,7 +247,7 @@ public abstract class Tunnel {
     }
 
     void disposeInternal(boolean disposeBrother) {
-        MLogs.d("Tunnel-- disposeInternal " + disposeBrother + m_InnerChannel.toString());
+        MLogs.d("Tunnel-- disposeInternal " + disposeBrother + m_InnerChannel.toString() + " " + getDestAddressString());
         if (m_Disposed) {
             return;
         } else {

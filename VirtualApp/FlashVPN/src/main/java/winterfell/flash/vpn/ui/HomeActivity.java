@@ -33,6 +33,8 @@ import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.grey.Fingerprint;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,6 +45,9 @@ import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.core.AppProxyManager;
 import winterfell.flash.vpn.core.LocalVpnService;
+import winterfell.flash.vpn.core.ProxyConfig;
+import winterfell.flash.vpn.core.ShadowsocksPingManager;
+import winterfell.flash.vpn.core.TcpProxyServer;
 import winterfell.flash.vpn.network.ServerInfo;
 import winterfell.flash.vpn.network.VPNServerManager;
 import winterfell.flash.vpn.tunnel.TunnelStatisticManager;
@@ -117,6 +122,69 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         return AdSize.MEDIUM_RECTANGLE;
     }
 
+    private void retrieveBestProxy() throws Exception {
+        ProxyConfig.Instance.m_ProxyList.clear();
+        int id = PreferenceUtils.getPreferServer();
+        String url;
+        if (id == ServerInfo.SERVER_ID_AUTO) {
+            url = VPNServerManager.getInstance(this).getBestServer().url;
+        } else {
+            url = VPNServerManager.getInstance(this).getServerInfo(id).url;
+        }
+        MLogs.d("LocalVpnService-- Will use url " + url);
+       // ProxyUrl = url;
+        ProxyConfig.Instance.addProxyToList(url);
+        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
+        ProxyConfig.Instance.dump();
+    }
+
+    ShadowsocksPingManager proxyServer = null;
+
+    private void ping() {
+        /**/
+
+        final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    retrieveBestProxy();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (proxyServer == null) {
+                    try {
+                        proxyServer = new ShadowsocksPingManager();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                proxyServer.start();
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+
+                }
+
+                //super.run();
+                //LocalVpnService.Instance.m_TcpProxyServer.mShadowsocksPingManager.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
+                //proxyServer.mShadowsocksPingManager.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
+                proxyServer.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
+                    @Override
+                    public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
+                        MLogs.i("ShadowsocksPingManager-- pingsucceeded");
+                    }
+
+                    @Override
+                    public void onPingFailed(InetSocketAddress socketAddress) {
+                        MLogs.i("ShadowsocksPingManager-- pingfailed");
+                    }
+                });
+            }
+        };
+        t.start();
+    }
 
     private void inflateHomeNativeAd(IAdAdapter ad) {
         if (ad == null) {
@@ -449,6 +517,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         btnCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //ping();
+
                 MLogs.d("IsRunning " + LocalVpnService.IsRunning);
                 int id = PreferenceUtils.getPreferServer();
                 ServerInfo si = VPNServerManager.getInstance(HomeActivity.this).getServerInfo(id);

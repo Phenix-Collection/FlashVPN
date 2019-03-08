@@ -6,6 +6,7 @@ import winterfell.flash.vpn.tunnel.Tunnel;
 import winterfell.flash.vpn.tunnel.httpconnect.HttpConnectConfig;
 import winterfell.flash.vpn.tunnel.httpconnect.HttpConnectTunnel;
 import winterfell.flash.vpn.tunnel.shadowsocks.ShadowsocksConfig;
+import winterfell.flash.vpn.tunnel.shadowsocks.ShadowsocksPingTunnel;
 import winterfell.flash.vpn.tunnel.shadowsocks.ShadowsocksTunnel;
 import winterfell.flash.vpn.utils.MLogs;
 
@@ -33,6 +34,27 @@ public class TunnelFactory {
         } else {
             MLogs.d("create RawTunnel");
             return new RawTunnel(destAddress, selector);
+        }
+    }
+
+    public static Tunnel createShadowSocksPingTunnelByConfig(InetSocketAddress destAddress, Selector selector,
+                                                             ShadowsocksPingManager pingManager,
+                                                             ShadowsocksPingTunnel.ShadowsocksPingTunnelListenser listenser) throws Exception {
+        MLogs.d("create ShadowsocksPingTunnel");
+        return new ShadowsocksPingTunnel(getShadowSocksPingConfig(destAddress), selector, pingManager, listenser);
+    }
+
+    public static ShadowsocksConfig getShadowSocksPingConfig(InetSocketAddress destAddress) throws Exception {
+        if (destAddress.isUnresolved()) {
+            Config config = ProxyConfig.Instance.getDefaultTunnelConfig(destAddress);
+            if (config instanceof HttpConnectConfig) {
+                throw new Exception("The config is not shadowsocks.");
+            } else if (config instanceof ShadowsocksConfig) {
+                return (ShadowsocksConfig) config;
+            }
+            throw new Exception("The config is unknow.");
+        } else {
+            throw new Exception("The config is not shadowsocks.");
         }
     }
 

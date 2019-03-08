@@ -3,6 +3,8 @@ package winterfell.flash.vpn.tunnel.shadowsocks;
 import winterfell.flash.vpn.tunnel.Tunnel;
 import winterfell.flash.vpn.utils.MLogs;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.Selector;
 
@@ -16,12 +18,11 @@ public class ShadowsocksTunnel extends Tunnel {
         super(config.ServerAddress, selector);
         m_Config = config;
         m_Encryptor = CryptFactory.get(m_Config.EncryptMethod, m_Config.Password);
-
     }
 
     @Override
     protected void onConnected(ByteBuffer buffer) throws Exception {
-        MLogs.d("ShadowsocksTunnel-- onConnected for " + m_DestAddress.toString());
+        MLogs.d("ShadowsocksTunnel-- onConnected for " + getDestAddressString() + " server is " + m_ServerEP.toString());
         buffer.clear();
         // https://shadowsocks.org/en/spec/protocol.html
 
@@ -39,9 +40,11 @@ public class ShadowsocksTunnel extends Tunnel {
         buffer.flip();
 
         if (write(buffer, true)) {
+            //MLogs.d("ShadowsocksTunnel-- handshake write succeed");
             m_TunnelEstablished = true;
             onTunnelEstablished();
         } else {
+            //MLogs.d("ShadowsocksTunnel-- handshake write fail");
             m_TunnelEstablished = true;
             this.beginReceive();
         }

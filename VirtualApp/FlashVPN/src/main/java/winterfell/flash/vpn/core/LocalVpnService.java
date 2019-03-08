@@ -322,6 +322,22 @@ public class LocalVpnService extends VpnService implements Runnable {
         }
     }
 
+    private void retrieveBestProxy() throws Exception {
+        ProxyConfig.Instance.m_ProxyList.clear();
+        int id = PreferenceUtils.getPreferServer();
+        String url;
+        if (id == ServerInfo.SERVER_ID_AUTO) {
+            url = VPNServerManager.getInstance(LocalVpnService.this).getBestServer().url;
+        } else {
+            url = VPNServerManager.getInstance(LocalVpnService.this).getServerInfo(id).url;
+        }
+        MLogs.d("LocalVpnService-- Will use url " + url);
+        ProxyUrl = url;
+        ProxyConfig.Instance.addProxyToList(url);
+        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
+        ProxyConfig.Instance.dump();
+    }
+
     @Override
     public synchronized void run() {
         try {
@@ -366,20 +382,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
                     MLogs.d("LocalVpnService-- set app_icon/(http proxy)");
                     try {
-                        ProxyConfig.Instance.m_ProxyList.clear();
-                        int id = PreferenceUtils.getPreferServer();
-                        String url;
-                        if (id == ServerInfo.SERVER_ID_AUTO) {
-                            url = VPNServerManager.getInstance(LocalVpnService.this).getBestServer().url;
-                        } else {
-                            url = VPNServerManager.getInstance(LocalVpnService.this).getServerInfo(id).url;
-                        }
-                        MLogs.d("LocalVpnService-- Will use url " + url);
-                        ProxyUrl = url;
-                        ProxyConfig.Instance.addProxyToList(url);
-                        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
-                        ProxyConfig.Instance.dump();
-
+                        retrieveBestProxy();
                     } catch (Exception e) {
                         MLogs.e("LocalVpnService-- " + e.toString());
                         String errString = e.getMessage();
@@ -387,7 +390,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                             errString = e.toString();
                         }
                         IsRunning = false;
-                        onStatusChanged(errString, false, mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
+                        //onStatusChanged(errString, false, mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
                         continue;
                     }
                     String welcomeInfoString = ProxyConfig.Instance.getWelcomeInfo();
