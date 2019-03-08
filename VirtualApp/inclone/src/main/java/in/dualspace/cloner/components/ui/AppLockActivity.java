@@ -299,7 +299,9 @@ public class AppLockActivity extends BaseActivity {
         MLogs.d("AppLockWindow initialized");
 
         mBlurBackground.init();
-        mBlurBackground.reloadWithTheme(mPkgName, icon);
+        if (! mPkgName.equals(getPackageName())) {
+            mBlurBackground.reloadWithTheme(mPkgName, icon);
+        }
         mAppLockPasswordLogic.onShow();
     }
 

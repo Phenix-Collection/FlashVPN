@@ -222,7 +222,7 @@ public class LockerView extends LinearLayout implements View.OnClickListener {
         }
         mLockPatternView.setVisibility(View.VISIBLE);
         mLockPatternView.setInArrowMode(false);
-        mLockPatternView.setInCircleMode(true);
+        mLockPatternView.setInCircleMode(false);
         updatePatternPointColor();
     }
 

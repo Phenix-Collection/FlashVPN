@@ -103,7 +103,7 @@ public class LockPatternView extends View {
     private boolean mInStealthMode = false;
     private boolean mInArrowMode = true;
     private boolean mPatternInProgress = false;
-    private boolean mInCircleMode = true;
+    private boolean mInCircleMode = false;
 
     /**
      * TODO: move to attrs
