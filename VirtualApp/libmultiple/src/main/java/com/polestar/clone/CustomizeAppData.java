@@ -94,7 +94,13 @@ public class CustomizeAppData implements Parcelable{
         if (TextUtils.isEmpty(data.label)) {
             try {
                 ApplicationInfo ai = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(pkg, 0);
-                data.label =  ai.loadLabel(VirtualCore.get().getUnHookPackageManager()) + "+";
+                int id =VirtualCore.get().getContext().getResources().getIdentifier("clone_label_tag",
+                        "mipmap", VirtualCore.get().getHostPkg());
+                if (id != 0) {
+                    data.label = VirtualCore.get().getContext().getResources().getString(id, ai.loadLabel(VirtualCore.get().getUnHookPackageManager()));
+                } else {
+                    data.label =  ai.loadLabel(VirtualCore.get().getUnHookPackageManager()) + "+";
+                }
             } catch (Exception ex){
 
             }
