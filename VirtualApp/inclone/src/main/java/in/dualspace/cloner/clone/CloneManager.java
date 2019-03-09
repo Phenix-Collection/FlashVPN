@@ -681,4 +681,8 @@ public class CloneManager {
         SharedPreferences settings = DualApp.getApp().getSharedPreferences(PACKAGE_INDEX_PREFERENCE, Context.MODE_PRIVATE);
         settings.edit().putInt(pkg, next).commit();
     }
-}
+
+    public static String getCompatibleName(String name, int userId) {
+        return name;
+//        return (userId != 0) ? name + " " + (userId + 1): name + " +" ;
+    }}

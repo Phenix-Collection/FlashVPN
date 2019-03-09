@@ -295,7 +295,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 try {
                     ApplicationInfo ai = pm.getApplicationInfo(item.pkg, 0);
                     CharSequence label = pm.getApplicationLabel(ai);
-                    model.setName(VirtualCore.getCompatibleName(""+label, userId));
+                    model.setName(CloneManager.getCompatibleName(""+label, userId));
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -314,7 +314,7 @@ public class AddCloneActivity extends BaseActivity implements AdapterView.OnItem
                 try {
                     ApplicationInfo ai = pm.getApplicationInfo(item.pkg, 0);
                     CharSequence label = pm.getApplicationLabel(ai);
-                    model.setName(VirtualCore.getCompatibleName(""+label, userId));
+                    model.setName(CloneManager.getCompatibleName(""+label, userId));
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
