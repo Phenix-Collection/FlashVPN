@@ -10,10 +10,6 @@ import android.text.TextUtils;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
 
 /**
  * Created by guojia on 2016/12/11.
@@ -42,6 +38,17 @@ public class AdUtils {
 //        // package value");
 //        sdk.init(map, context);
 //    }
+    private static IAdEventLogger sLogger;
+
+    public static void setEventLogger(IAdEventLogger logger) {
+        sLogger = logger;
+    }
+
+    public static void trackAdEvent(String slot,  String event) {
+        if (sLogger != null) {
+            sLogger.trackEvent(slot,  event);
+        }
+    }
 
     public static String MD5(String md5) {
         try {

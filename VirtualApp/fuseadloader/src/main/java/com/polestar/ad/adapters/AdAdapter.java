@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 
+import com.polestar.ad.AdUtils;
 import com.polestar.ad.AdViewBinder;
 
 import java.util.Timer;
@@ -157,5 +158,13 @@ public abstract class AdAdapter implements IAdAdapter {
 
     @Override
     public void onActivityPause(Activity activity){
+    }
+
+    protected void trackImpression() {
+        AdUtils.trackAdEvent(mKey, "imp");
+    }
+
+    protected void trackClick() {
+        AdUtils.trackAdEvent(mKey, "clk");
     }
 }

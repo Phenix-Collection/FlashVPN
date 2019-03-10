@@ -122,6 +122,7 @@ public class PoleNativeAdapter extends AdAdapter {
                 if (!TextUtils.isEmpty(adTask.clickUrl)){
                     goUrl(appContext, replaceMacro(adTask.clickUrl), true);
                 }
+                trackClick();
             }
         });
         if (!TextUtils.isEmpty(adTask.impUrl)) {
@@ -138,6 +139,7 @@ public class PoleNativeAdapter extends AdAdapter {
 //                }
 //            });
         }
+        trackImpression();
         adTask.updateShowTime(appContext);
     }
 
@@ -149,7 +151,7 @@ public class PoleNativeAdapter extends AdAdapter {
         }
     }
 
-    private void goUrl(Context context, String url, boolean userInteraction) {
+    public static void goUrl(Context context, String url, boolean userInteraction) {
         AdLog.d("usr: " + userInteraction + " goUrl: " + url);
         UrlHandler.Builder builder = new UrlHandler.Builder();
 
