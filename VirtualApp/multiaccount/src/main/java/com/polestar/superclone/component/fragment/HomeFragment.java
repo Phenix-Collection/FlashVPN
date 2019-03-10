@@ -537,7 +537,6 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onAdClicked(IAdAdapter ad) {
                 MLogs.d("app_icon_ad on click");
-                new TaskExecutor(mActivity).clickAdTask((AdTask)ad.getAdObject(), null);
             }
 
             @Override

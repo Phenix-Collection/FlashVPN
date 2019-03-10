@@ -94,6 +94,7 @@ public class TaskExecutor {
             case Task.TASK_TYPE_AD_TASK:
                 int state = (int) args[0];
                 AdTask adTask = task.getAdTask();
+                MLogs.d("TASK_TYPE_AD_TASK + state: " + state);
                 if (state == AD_TASK_ON_CLICK) {
                     if (adTask.isCpc()) {
                         mAppUser.finishTask(task, listener);
@@ -143,6 +144,7 @@ public class TaskExecutor {
         if (listener == null) {
             listener = new DefaultAdTaskListener();
         }
+        MLogs.d("installAdTask " + task.pkg);
         execute(task, listener, AD_TASK_ON_INSTALL);
     }
 

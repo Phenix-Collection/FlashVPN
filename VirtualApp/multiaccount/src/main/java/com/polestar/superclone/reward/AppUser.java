@@ -13,6 +13,7 @@ import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.RemoteConfig;
+import com.polestar.task.IAdTaskStateObserver;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.database.DatabaseApi;
@@ -38,7 +39,7 @@ import java.util.UUID;
  * Created by guojia on 2019/1/24.
  */
 
-public class AppUser {
+public class AppUser implements IAdTaskStateObserver{
 
     private String mInviteCode;
     private float mBalance;
@@ -73,6 +74,7 @@ public class AppUser {
             }
         });
         RewardInfoFetcher.get(MApp.getApp()).preloadRewardInfo();
+        FuseAdLoader.registerAdTaskStateObserver(this);
 //        preloadRewardVideoTask();
     }
 
@@ -341,8 +343,9 @@ public class AppUser {
 
     public void updatePendingAdTask(Context context, String pkg) {
         AdTask task = getAdTaskByPkg(pkg);
+        MLogs.d("get task for pkg " + pkg + " task:" +task);
         if (task != null && TaskPreference.isPendingTask(task.mId)) {
-            new TaskExecutor(context).installAdTask(task, null);
+            FuseAdLoader.notifyAdTaskInstalled(task);
         }
     }
 
@@ -352,14 +355,20 @@ public class AppUser {
             public void run() {
                 List<AdTask> adTaskList = getPendingAdTask();
                 for(AdTask task: adTaskList) {
-                    try{
-                        PackageManager pm = context.getPackageManager();
-                        ApplicationInfo ai = pm.getApplicationInfo(task.pkg, 0);
-                        if (ai != null) {
-                            new TaskExecutor(context).installAdTask(task, null);
-                        }
-                    }catch (Exception ex) {
+                    long createTime = TaskPreference.getPendingTaskCreateTime(task.mId);
+                    //1 week tracking window
+                    if (System.currentTimeMillis() - createTime > 7*24*3600*1000) {
+                        TaskPreference.clearPendingTask(task.mId);
+                    } else {
+                        try {
+                            PackageManager pm = context.getPackageManager();
+                            ApplicationInfo ai = pm.getApplicationInfo(task.pkg, 0);
+                            if (ai != null) {
+                                FuseAdLoader.notifyAdTaskInstalled(task);
+                            }
+                        } catch (Exception ex) {
 
+                        }
                     }
                 }
             }
@@ -378,5 +387,15 @@ public class AppUser {
             }
         }
         return null;
+    }
+
+    @Override
+    public void onAdTaskClicked(AdTask task) {
+        new TaskExecutor(MApp.getApp()).clickAdTask(task, null);
+    }
+
+    @Override
+    public void onAdTaskInstalled(AdTask task) {
+        new TaskExecutor(MApp.getApp()).installAdTask(task, null);
     }
 }
