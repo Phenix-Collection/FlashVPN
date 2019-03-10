@@ -267,7 +267,7 @@ public static *** e(...);
  -dontwarn com.moat.**
  -keep class com.moat.** { public protected private *; }
 
- -keep class com.twitter.msg.**  {* ;}
+ -keep class com.witter.msg.**  {* ;}
  ##---------------Begin: proguard configuration for Gson  ----------
  # Gson uses generic type information stored in a class file when working with fields. Proguard
  # removes such information by default, so configure it to keep all of it.

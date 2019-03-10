@@ -30,7 +30,7 @@ public class DatabaseFileImpl implements DatabaseApi {
     User mUser;
 
     private Context mContext;
-    private static DatabaseFileImpl sInstance = null;
+    protected static DatabaseFileImpl sInstance = null;
     private Gson mGson = new Gson();
 
     private static final String DIR = "ad";
@@ -52,7 +52,7 @@ public class DatabaseFileImpl implements DatabaseApi {
         return sInstance;
     }
 
-    private DatabaseFileImpl(Context context) {
+    protected DatabaseFileImpl(Context context) {
         mContext = context;
 
         loadTasks(TASK_FILE);

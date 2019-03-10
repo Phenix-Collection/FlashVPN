@@ -118,6 +118,12 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("general_event", bundle);
     }
 
+    public static void rewardEvent(String event) {
+        Bundle prop = new Bundle();
+        prop.putString("name", event);
+        mFirebaseAnalytics.logEvent("reward_event", prop);
+    }
+
     private static String sWakeSrc;
     public static void reportWake(Context context, String src){
         if (sWakeSrc == null && !TextUtils.isEmpty(src)) {

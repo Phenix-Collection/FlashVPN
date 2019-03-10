@@ -21,4 +21,15 @@ public class VpnServer  {
 
     @SerializedName("is_online")
     public int mIsOnline;
+
+
+    //本地的性能数据如下
+    @SerializedName("ping")
+    public int mPingDelayMilli;
+    @SerializedName("connect")
+    public int mConnectDelayMilli;
+    @SerializedName("downloadSpeed")
+    public int mByteDownPs;
+    @SerializedName("downloadSpeed")
+    public int mByteUpPs;
 }

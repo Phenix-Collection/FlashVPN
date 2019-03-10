@@ -10,6 +10,7 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.SDKConfiguration;
 import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.task.network.AppUser;
 
 import java.io.File;
 import java.util.List;
@@ -24,6 +25,7 @@ import winterfell.flash.vpn.utils.RemoteConfig;
 public class FlashApp extends MultiDexApplication {
 
     private static FlashApp gDefault;
+    private AppUser mAppUser;
 
     public static FlashApp getApp() {
         return gDefault;
@@ -104,5 +106,7 @@ public class FlashApp extends MultiDexApplication {
         if(needEnterAd()) {
             FuseAdLoader.get(SLOT_ENTER_AD, getApp()).preloadAd(getApp());
         }
+
+        mAppUser = AppUser.getInstance();
     }
 }

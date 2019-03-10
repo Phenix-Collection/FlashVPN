@@ -32,6 +32,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.grey.Fingerprint;
+import com.polestar.task.network.AppUser;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -80,6 +81,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private Timer timer;
     private TimerTask timeCountTask;
     private ServerInfo mCurrentSI;
+    private AppUser mAppUser;
 
     private static final String SLOT_HOME_NATIVE = "slot_home_native";
     private static final String SLOT_HOME_BANNER = "slot_home_banner";

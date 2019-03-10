@@ -41,7 +41,7 @@ public class VpnApiHelper extends AdApiHelper {
                         ServersResponse ur = response.body();
                         AdLog.i(Configuration.HTTP_TAG, "onResponse vpnServers count "+ ur.mVpnServers.size());
                         if (listener != null) {
-                            listener.onGetAllServers(ur.mVpnServers);
+                            listener.onGetAllServers(ur);
                         }
                         break;
                     default:
@@ -68,18 +68,22 @@ public class VpnApiHelper extends AdApiHelper {
         return REQUEST_SUCCEED;
     }
 
-    public static int acquireVpnServer(String deviceId, final String publicIp, final IVpnStatusListener listener) {
-        return acquireVpnServer(deviceId, publicIp, listener, false);
+    public static int acquireVpnServer(String deviceId, final String publicIp,
+                                       final String geo, final String city,
+                                       final IVpnStatusListener listener) {
+        return acquireVpnServer(deviceId, publicIp, geo, city, listener, false);
     }
 
-    public static int acquireVpnServer(String deviceId, final String publicIp, final IVpnStatusListener listener, boolean force) {
+    public static int acquireVpnServer(String deviceId, final String publicIp,
+                                       final String geo, final String city,
+                                       final IVpnStatusListener listener, boolean force) {
         if (checkRequestTooFrequent(KEY_ACQUIRE, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
 
         VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
         Call<VpnRequirement> call = service.acquire(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, publicIp, Sender.send(getSecret(deviceId)));
+                Configuration.PKG_NAME, publicIp, geo, city, Sender.send(getSecret(deviceId)));
         call.enqueue(new Callback<VpnRequirement>() {
             @Override
             public void onResponse(Call<VpnRequirement> call, Response<VpnRequirement> response) {

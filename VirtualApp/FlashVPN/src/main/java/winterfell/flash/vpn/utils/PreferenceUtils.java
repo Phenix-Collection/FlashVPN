@@ -349,4 +349,21 @@ public class PreferenceUtils {
     public static void addConnectedTimeSec(long sec) {
         putLong(FlashApp.getApp(), "connected_time_sec", getLong(FlashApp.getApp(), "connected_time_sec") + sec);
     }
+
+
+    public static String getMyId() {
+        return getString(FlashApp.getApp(),"my_user_id", null);
+    }
+
+    public static void setMyId(String id) {
+        putString(FlashApp.getApp(),"my_user_id", id);
+    }
+
+    public static void updateLastUpdateTime() {
+        putLong(FlashApp.getApp(),"last_udpate_time", System.currentTimeMillis());
+    }
+
+    public static long getLastUpdateTime() {
+        return  getLong(FlashApp.getApp(),"last_update_time", 0);
+    }
 }

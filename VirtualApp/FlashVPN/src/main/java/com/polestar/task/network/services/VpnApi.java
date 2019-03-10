@@ -20,11 +20,13 @@ public interface VpnApi {
                                             @Query("secret") String secret);
 
     @Headers("Accept: application/json")
-    @POST("api/vpn/v1/acquire")
+    @POST("api/vpn/v1/acquireBestForGeoCityIp")
     @FormUrlEncoded
     Call<VpnRequirement> acquire(@Field("version_code") int versionCode,
                                  @Field("app") String pkgName,
                                  @Field("public_ip") String publicIp,
+                                 @Field("geo") String geo,
+                                 @Field("city") String city,
                                  @Field("secret") String secret);
 
     @Headers("Accept: application/json")
