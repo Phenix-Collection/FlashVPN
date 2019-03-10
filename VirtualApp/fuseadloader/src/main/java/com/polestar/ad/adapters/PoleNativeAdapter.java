@@ -122,6 +122,7 @@ public class PoleNativeAdapter extends AdAdapter {
                 if (!TextUtils.isEmpty(adTask.clickUrl)){
                     goUrl(appContext, replaceMacro(adTask.clickUrl), true);
                 }
+                FuseAdLoader.notifyAdTaskClicked(adTask);
                 trackClick();
             }
         });
@@ -198,10 +199,9 @@ public class PoleNativeAdapter extends AdAdapter {
         if (taskList == null || taskList.size() == 0) {
             return retList;
         }
-        int i = 0;
         for (Task adTask: taskList) {
             AdTask ad = adTask.getAdTask();
-            if (ad.canFillToSlot(appContext, adUnit)) {
+            if (ad != null && ad.canFillToSlot(appContext, adUnit)) {
                 retList.add(ad);
             }
         }

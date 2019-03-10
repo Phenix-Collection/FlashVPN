@@ -161,10 +161,10 @@ public abstract class AdAdapter implements IAdAdapter {
     }
 
     protected void trackImpression() {
-        AdUtils.trackAdEvent(mKey, "imp");
+        AdUtils.trackAdEvent(mKey, "imp_" + getId());
     }
 
     protected void trackClick() {
-        AdUtils.trackAdEvent(mKey, "clk");
+        AdUtils.trackAdEvent(mKey, "clk_" + getId());
     }
 }

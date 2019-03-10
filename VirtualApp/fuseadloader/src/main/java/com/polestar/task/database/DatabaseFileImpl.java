@@ -94,16 +94,6 @@ public class DatabaseFileImpl implements DatabaseApi {
 //                mTasks = tasksResponse.mTasks;
 //            }
 //        }
-        if (mTasks != null) {
-            AdLog.i(TAG, "Loaded " + mTasks.size() + " tasks from disk");
-            for (Task task : mTasks) {
-                if (task.isAdTask()) {
-                    task.getAdTask();
-                }
-            }
-        } else {
-            AdLog.i(TAG, "Loaded 0 tasks from disk");
-        }
     }
 
     // called with lock held outside

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.ArraySet;
 
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
@@ -20,6 +21,7 @@ import com.polestar.ad.AdLog;
 import com.polestar.ad.BuildConfig;
 import com.polestar.ad.SDKConfiguration;
 import com.polestar.imageloader.ImageLoader;
+import com.polestar.task.IAdTaskStateObserver;
 import com.polestar.task.database.datamodels.AdTask;
 
 import java.util.ArrayList;
@@ -49,6 +51,8 @@ public class FuseAdLoader {
     private static String sUserId;
     //Some SDK e.g. Mopub, IronSource needs to be initialized with Activity context
     private static boolean sInitializedWithActivity;
+
+    private static HashSet<IAdTaskStateObserver> sAdTaskObserver;
 
     private static HashMap<String, FuseAdLoader> sAdLoaderMap = new HashMap<>();
     public synchronized static FuseAdLoader get(String slot, Context context) {
@@ -534,6 +538,33 @@ public class FuseAdLoader {
         }catch (Throwable ex) {
             AdLog.e("Error to get loader for " +config);
             return null;
+        }
+    }
+
+    public synchronized static void registerAdTaskStateObserver(IAdTaskStateObserver observer) {
+        if (sAdTaskObserver == null) {
+            sAdTaskObserver = new HashSet<>();
+        }
+        sAdTaskObserver.add(observer);
+    }
+
+    public synchronized static void unregisterAdTaskStateObserver(IAdTaskStateObserver observer) {
+        sAdTaskObserver.remove(observer);
+    }
+
+    public static void notifyAdTaskClicked(AdTask task) {
+        if (sAdTaskObserver != null) {
+            for (IAdTaskStateObserver observer : sAdTaskObserver) {
+                observer.onAdTaskClicked(task);
+            }
+        }
+    }
+
+    public static void notifyAdTaskInstalled(AdTask task) {
+        if (sAdTaskObserver != null) {
+            for (IAdTaskStateObserver observer : sAdTaskObserver) {
+                observer.onAdTaskInstalled(task);
+            }
         }
     }
 
