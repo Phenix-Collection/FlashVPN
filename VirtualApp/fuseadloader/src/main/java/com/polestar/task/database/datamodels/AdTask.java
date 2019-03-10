@@ -60,9 +60,6 @@ public class AdTask extends Task {
      */
     public int priority;
 
-    public AdTask() {
-        super();
-    }
     public AdTask(Task task) {
         super(task);
     }
