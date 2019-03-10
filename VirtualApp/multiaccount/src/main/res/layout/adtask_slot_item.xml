@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_margin="8dp"
+        android:id="@+id/icon_layout">
+        <com.polestar.imageloader.widget.BasicLazyLoadImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/ad_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="AD"
+            android:textColor="@color/white"
+            android:background="@color/native_ad_transparent_black"
+            android:layout_gravity="top|left|start"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:textSize="8sp" />
+    </FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/icon_layout"
+        android:id="@+id/title"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_gray_light"
+        android:textSize="12sp"
+        android:singleLine="true"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="end"
+        android:visibility="gone"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:id="@+id/payout"
+        android:textColor="@color/reward_collect_coin_color"
+        android:textSize="12sp"
+        android:layout_centerHorizontal="true"
+        android:singleLine="true"
+        android:ellipsize="end"/>
+</RelativeLayout>

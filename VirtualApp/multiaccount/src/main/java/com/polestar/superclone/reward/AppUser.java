@@ -138,11 +138,11 @@ public class AppUser implements IAdTaskStateObserver{
     }
 
     public void listenOnUserUpdate(IUserUpdateListener listener) {
-        mObservers.remove(listener);
+        mObservers.add(listener);
     }
 
     public void stopListenOnUserUpdate(IUserUpdateListener listener) {
-        mObservers.add(listener);
+        mObservers.remove(listener);
     }
 
     public static boolean isRewardEnabled() {
