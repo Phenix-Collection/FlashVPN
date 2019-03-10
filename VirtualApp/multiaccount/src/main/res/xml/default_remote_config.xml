@@ -16,7 +16,7 @@
     <entry>
         <key>slot_home_lucky_new</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>pl:slot_home_lucky_new:0</value>
+        <value>ab_interstitial:ca-app-pub-5490912237269284/8079037865:0</value>
     </entry>
     <entry>
         <key>slot_app_lock</key>
@@ -319,9 +319,13 @@
         <key>slot_reward_ad_list</key>
         <value>pl:task_reward_ad_list:0</value>
     </entry>
+    <entry>
+        <key>slot_hot_dialog</key>
+        <value>pl:task_hot_dialog:0</value>
+    </entry>
     <!--clone_num:ignore_interval:install_time-->
     <entry>
         <key>conf_icon_ad</key>
-        <value>0:30:0</value>
+        <value>4:432000:345600</value>
     </entry>
 </defaultsMap>
