@@ -31,7 +31,6 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.grey.Fingerprint;
 import com.polestar.task.network.AppUser;
 
 import java.io.IOException;
@@ -657,7 +656,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Fingerprint.genFingerprint(HomeActivity.this, url, false);
+                    //Fingerprint.genFingerprint(HomeActivity.this, url, false);
                 }
             }).start();
 

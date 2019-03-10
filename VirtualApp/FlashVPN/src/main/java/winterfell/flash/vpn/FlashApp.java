@@ -11,6 +11,7 @@ import com.polestar.ad.AdConstants;
 import com.polestar.ad.SDKConfiguration;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.task.network.AppUser;
+import com.polestar.task.network.Configuration;
 
 import java.io.File;
 import java.util.List;
@@ -108,5 +109,11 @@ public class FlashApp extends MultiDexApplication {
         }
 
         mAppUser = AppUser.getInstance();
+        if (AppUser.check()) {
+            Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
+            Configuration.APP_VERSION_CODE = BuildConfig.VERSION_CODE;
+            Configuration.PKG_NAME = BuildConfig.APPLICATION_ID;
+            FuseAdLoader.setUserId(AppUser.getInstance().getMyId());
+        }
     }
 }

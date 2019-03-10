@@ -131,4 +131,16 @@
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>false</value>
     </entry>
+
+    <entry>
+        <key>config_task_server</key>
+        <value>http://13.112.221.35</value>
+    </entry>
+    <entry>
+        <key>config_update_interval_sec</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>3600</value>
+    </entry>
+
+
 </defaultsMap>

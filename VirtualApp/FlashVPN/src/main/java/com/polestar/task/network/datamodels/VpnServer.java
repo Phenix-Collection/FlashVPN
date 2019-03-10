@@ -21,7 +21,7 @@ public class VpnServer  {
 
     @SerializedName("is_online")
     public int mIsOnline;
-
+//ss://aes-256-cfb:passwd@95.179.225.74:28388
 
     //本地的性能数据如下
     @SerializedName("ping")
@@ -30,6 +30,6 @@ public class VpnServer  {
     public int mConnectDelayMilli;
     @SerializedName("downloadSpeed")
     public int mByteDownPs;
-    @SerializedName("downloadSpeed")
+    @SerializedName("uploadSpeed")
     public int mByteUpPs;
 }
