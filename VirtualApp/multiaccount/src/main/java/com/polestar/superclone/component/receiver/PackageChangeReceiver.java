@@ -7,9 +7,13 @@ import android.content.Intent;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.superclone.db.DbManager;
+import com.polestar.superclone.reward.AppUser;
+import com.polestar.superclone.reward.TaskExecutor;
+import com.polestar.superclone.reward.TaskPreference;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.MLogs;
+import com.polestar.task.database.datamodels.AdTask;
 
 /**
  * Created by yxx on 2016/9/7.
@@ -51,8 +55,10 @@ public class PackageChangeReceiver extends BroadcastReceiver{
                     }
                 }).start();
             }
-            if (!replacing && !installed) {
-                MLogs.d("call booster onInstall");
+            if (!replacing) {
+                if (AppUser.isRewardEnabled() && AppUser.getInstance().isRewardAvailable() ){
+                    AppUser.getInstance().updatePendingAdTask(context, packageName);
+                }
 //                BoostMgr.getInstance(context).onInstall(pkg);
             }
         }

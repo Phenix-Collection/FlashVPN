@@ -75,6 +75,8 @@ public class CustomFloatView extends View implements DropTarget{
     private int selectedBtn = SELECT_BTN_NONE;
     private int roteDegree;
     private boolean cancleAnim;
+    private int leftBtnRes = R.mipmap.icon_add;
+    private int rightBtnRes = R.mipmap.icon_delete;
 
     public CustomFloatView(Context context) {
         super(context);
@@ -108,6 +110,25 @@ public class CustomFloatView extends View implements DropTarget{
         invalidate();
     }
 
+    public void setLeftBtnRes(int resId) {
+        if (resId != leftBtnRes) {
+            leftBtnRes = resId;
+            if (leftBtnBitmap != null) {
+                leftBtnBitmap.recycle();
+                leftBtnBitmap = null;
+            }
+        }
+    }
+
+    public void setRightBtnRes(int resId) {
+        if (rightBtnRes != resId) {
+            rightBtnRes = resId;
+            if (rightBtnBitmap != null) {
+                rightBtnBitmap.recycle();
+                rightBtnBitmap = null;
+            }
+        }
+    }
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setAntiAlias(true);
@@ -456,12 +477,12 @@ public class CustomFloatView extends View implements DropTarget{
             }
 
             if (leftBtnBitmap == null) {
-                leftBtnBitmap = ((BitmapDrawable) getResources().getDrawable(R.mipmap.icon_add)).getBitmap();
+                leftBtnBitmap = ((BitmapDrawable) getResources().getDrawable(leftBtnRes)).getBitmap();
             }
             canvas.drawBitmap(leftBtnBitmap, leftBtnRect.centerX() - leftBtnBitmap.getWidth() / 2, leftBtnRect.centerY() - leftBtnBitmap.getHeight() / 2, mPaint);
 
             if (rightBtnBitmap == null) {
-                rightBtnBitmap = ((BitmapDrawable) getResources().getDrawable(R.mipmap.icon_delete)).getBitmap();
+                rightBtnBitmap = ((BitmapDrawable) getResources().getDrawable(rightBtnRes)).getBitmap();
             }
             canvas.drawBitmap(rightBtnBitmap, rightBtnRect.centerX() - rightBtnBitmap.getWidth() / 2, rightBtnRect.centerY() - rightBtnBitmap.getHeight() / 2, mPaint);
 

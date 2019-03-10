@@ -11,6 +11,8 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.polestar.ad.AdUtils;
+import com.polestar.ad.IAdEventLogger;
 import com.polestar.ad.SDKConfiguration;
 import com.google.firebase.FirebaseApp;
 import com.polestar.clone.client.VClientImpl;
@@ -139,6 +141,12 @@ public class MApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         }, getApp(), builder.build());
+        AdUtils.setEventLogger(new IAdEventLogger() {
+            @Override
+            public void trackEvent(String slot, String event) {
+                EventReporter.generalEvent("ad_"+ slot+ "_" + event);
+            }
+        });
 //        BatmobiLib.init(gDefault, "8W4OBQJHMXNI1TM9TGZAK4HF");
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.AdType.AD_SOURCE_FACEBOOK);
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);

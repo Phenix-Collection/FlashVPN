@@ -136,6 +136,9 @@ public class HomeActivity extends BaseActivity {
         else if(!PreferencesUtils.hasCloned() && RemoteConfig.getBoolean("go_clone_first_start")) {
             startAppListActivity();
         }
+        if (AppUser.isRewardEnabled() && AppUser.getInstance().isRewardAvailable()) {
+            AppUser.getInstance().updatePendingAdTask(this);
+        }
     }
 
     private void showUpdateDialog() {

@@ -154,4 +154,18 @@ public class TaskPreference {
         return  sp.getString("referred_by_hint", null);
     }
 
+    public static void setPendingTask(long taskId) {
+        SharedPreferences sp = getSharedPreference();
+        sp.edit().putLong("pending_task_" + taskId, System.currentTimeMillis()).commit();
+    }
+
+    public static boolean isPendingTask(long taskId) {
+        SharedPreferences sp = getSharedPreference();
+        return sp.getLong("pending_task_" + taskId, 0) != 0;
+    }
+
+    public static void clearPendingTask(long taskId) {
+        SharedPreferences sp = getSharedPreference();
+        sp.edit().remove("pending_task_" + taskId);
+    }
 }

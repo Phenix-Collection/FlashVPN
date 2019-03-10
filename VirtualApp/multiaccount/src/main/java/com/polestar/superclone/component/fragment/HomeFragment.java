@@ -22,7 +22,6 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseFragment;
@@ -34,6 +33,8 @@ import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.clone.CustomizeAppData;
+import com.polestar.superclone.reward.IconAdConfig;
+import com.polestar.superclone.reward.TaskExecutor;
 import com.polestar.superclone.utils.AnimatorHelper;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
@@ -53,6 +54,7 @@ import com.polestar.superclone.widgets.dragdrop.DragController;
 import com.polestar.superclone.widgets.dragdrop.DragImageView;
 import com.polestar.superclone.widgets.dragdrop.DragLayer;
 import com.polestar.superclone.widgets.dragdrop.DragSource;
+import com.polestar.task.database.datamodels.AdTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,11 +90,9 @@ public class HomeFragment extends BaseFragment {
     private boolean showLucky;
 
     public static final String SLOT_APP_ICON_AD = "slot_app_icon";
-    public static final String CONF_ICON_AD = "conf_icon_ad";
 
     private IAdAdapter iconAd;
-    private int iconAdThreshold;
-    private long iconAdIgnoreTime;
+    private IconAdConfig iconAdConfig;
 
     private List<HomeGridItem> gridItems;
 
@@ -134,10 +134,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String conf = RemoteConfig.getString(CONF_ICON_AD);
-        String arr[] = conf.split(":");
-        iconAdThreshold = Integer.valueOf(arr[0]);
-        iconAdIgnoreTime = Long.valueOf(arr[1]);
+        iconAdConfig = new IconAdConfig();
         if (gridItems == null) {
             gridItems = new ArrayList<>();
         }
@@ -279,6 +276,7 @@ public class HomeFragment extends BaseFragment {
         public static final int TYPE_ICON_AD = 2;
         int type;
         Object obj;
+        private View inflateView;
 
         public HomeGridItem(int type, Object obj) {
             this.type = type;
@@ -324,7 +322,15 @@ public class HomeFragment extends BaseFragment {
                 appName.setText(R.string.feel_lucky);
                 appName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 appName.setTextColor(getResources().getColor(R.color.lucky_red));
+            } else if (type == TYPE_ICON_AD) {
+                inflateView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return HomeGridItem.this.onLongClick(v);
+                    }
+                });
             }
+            this.inflateView = inflateView;
             return inflateView;
         }
 
@@ -351,13 +357,15 @@ public class HomeFragment extends BaseFragment {
                     }
                     break;
                 case TYPE_LUCKY:
+//                    PoleNativeAdapter.goUrl(mActivity, "https://play.google.com/store/apps/details?id=com.polestar.super.clone", true);
+//                    PoleNativeAdapter.goUrl(mActivity, "market://details?id=com.polestar.minesweeper&referrer?UTM_SOURCE=spc_update", true);
                     MLogs.d("Show lucky");
                     Intent intent = new Intent(mActivity, NativeInterstitialActivity.class);
                     startActivity(intent);
                     EventReporter.homeGiftClick(mActivity, "lucky_item");
                     break;
                 case TYPE_ICON_AD:
-                    MLogs.d("TYPE_ICON_AD onClick");
+                    MLogs.d("TYPE_ICON_AD onClick should not be here!");
                     break;
             }
         }
@@ -367,10 +375,14 @@ public class HomeFragment extends BaseFragment {
             switch (type){
                 case TYPE_CLONE:
                     iv = (DragImageView) view.findViewById(R.id.app_icon);
+                    floatView.setLeftBtnRes(R.mipmap.icon_add);
+                    floatView.setRightBtnRes(R.mipmap.icon_delete);
                     mDragController.startDrag(iv, iv, this, DragController.DRAG_ACTION_COPY);
                     return true;
                 case TYPE_ICON_AD:
                     iv = (DragImageView) view.findViewById(R.id.app_icon);
+                    floatView.setLeftBtnRes(R.mipmap.icon_download);
+                    floatView.setRightBtnRes(R.mipmap.icon_delete);
                     mDragController.startDrag(iv, iv, this, DragController.DRAG_ACTION_COPY);
                     return true;
                 case TYPE_LUCKY:
@@ -396,6 +408,10 @@ public class HomeFragment extends BaseFragment {
                                 //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
                             }
                         }, CustomFloatView.ANIM_DURATION / 2);
+                    } else if (type == TYPE_ICON_AD) {
+                        if (inflateView != null) {
+                            inflateView.performClick();
+                        }
                     }
                     break;
                 case CustomFloatView.SELECT_BTN_RIGHT:
@@ -411,6 +427,33 @@ public class HomeFragment extends BaseFragment {
                                 }
                             }
                         }, 330);
+                    } else if (type == TYPE_ICON_AD) {
+                        AdTask task = (AdTask)((IAdAdapter)obj).getAdObject();
+                        task.ignoreFor(mActivity, SLOT_APP_ICON_AD, iconAdConfig.ignoreInterval);
+                        iconAd = null;
+                        mExplosionField = ExplosionField.attachToWindow(mActivity);
+                        if (inflateView != null) {
+                            inflateView.setVisibility(View.INVISIBLE);
+                            View view = inflateView.findViewById(R.id.app_icon);
+                            mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
+                                @Override
+                                public void onExplodeFinish(View v) {
+                                    ExplosionField.detachFromWindow(mActivity, mExplosionField);
+                                    mExplosionField = null;
+//                                    gridItems.remove(HomeGridItem.this);
+//                                    pkgGridAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                        floatView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                gridItems.remove(HomeGridItem.this);
+                                pkgGridAdapter.notifyDataSetChanged();
+                            }
+                        }, 1000);
+
+
                     }
                     break;
                 default:
@@ -494,6 +537,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onAdClicked(IAdAdapter ad) {
                 MLogs.d("app_icon_ad on click");
+                new TaskExecutor(mActivity).clickAdTask((AdTask)ad.getAdObject(), null);
             }
 
             @Override
@@ -693,8 +737,11 @@ public class HomeFragment extends BaseFragment {
                             PreferencesUtils.setHasCloned();
                         }
                         updateGridItemList(appInfos);
-                        if (appInfos.size() > iconAdThreshold && iconAd == null) {
-                            loadAppIconAd();
+                        if (appInfos.size() > iconAdConfig.cloneThreshold  && iconAd == null) {
+                            long installTime = CommonUtils.getInstallTime(mActivity, mActivity.getPackageName());
+                            if (System.currentTimeMillis() - installTime > iconAdConfig.showAfterInstall) {
+                                loadAppIconAd();
+                            }
                         }
                         preloadAppListAd(false);
 

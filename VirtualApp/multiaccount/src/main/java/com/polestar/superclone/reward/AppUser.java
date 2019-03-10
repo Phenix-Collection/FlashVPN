@@ -1,5 +1,7 @@
 package com.polestar.superclone.reward;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +17,7 @@ import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.DatabaseImplFactory;
+import com.polestar.task.database.datamodels.AdTask;
 import com.polestar.task.database.datamodels.CheckInTask;
 import com.polestar.task.database.datamodels.RandomAwardTask;
 import com.polestar.task.database.datamodels.ReferTask;
@@ -323,4 +326,57 @@ public class AppUser {
         return ProductManager.getInstance().checkAndConsumeClone(num);
     }
 
+    public List<AdTask> getPendingAdTask() {
+        List<AdTask> ret = new ArrayList<>();
+        List<Task> tasks = databaseApi.getActiveTasksByType(Task.TASK_TYPE_AD_TASK);
+        if (tasks != null && tasks.size() > 0) {
+            for (Task task:tasks) {
+                if (TaskPreference.isPendingTask(task.mId)) {
+                    ret.add(task.getAdTask());
+                }
+            }
+        }
+        return ret;
+    }
+
+    public void updatePendingAdTask(Context context, String pkg) {
+        AdTask task = getAdTaskByPkg(pkg);
+        if (task != null && TaskPreference.isPendingTask(task.mId)) {
+            new TaskExecutor(context).installAdTask(task, null);
+        }
+    }
+
+    public void updatePendingAdTask(Context context) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<AdTask> adTaskList = getPendingAdTask();
+                for(AdTask task: adTaskList) {
+                    try{
+                        PackageManager pm = context.getPackageManager();
+                        ApplicationInfo ai = pm.getApplicationInfo(task.pkg, 0);
+                        if (ai != null) {
+                            new TaskExecutor(context).installAdTask(task, null);
+                        }
+                    }catch (Exception ex) {
+
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public AdTask getAdTaskByPkg(String pkg) {
+        List<Task> tasks = databaseApi.getActiveTasksByType(Task.TASK_TYPE_AD_TASK);
+        if (tasks != null && tasks.size() > 0) {
+            for (Task task:tasks) {
+                AdTask adTask = task.getAdTask();
+                if (pkg.equals(adTask.pkg)) {
+                    return  adTask;
+                }
+
+            }
+        }
+        return null;
+    }
 }

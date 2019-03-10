@@ -7,13 +7,15 @@ import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.ITaskStatusListener;
+import com.polestar.task.database.datamodels.AdTask;
 import com.polestar.task.database.datamodels.ReferTask;
 import com.polestar.task.database.datamodels.RewardVideoTask;
-import com.polestar.task.database.datamodels.ShareTask;
-import com.polestar.task.network.AdApiHelper;
 import com.polestar.task.network.datamodels.Task;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,9 +23,8 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
-import static com.polestar.task.ADErrorCode.ERR_SERVER_DOWN_CODE;
+
 
 /**
  * Created by guojia on 2019/1/31.
@@ -31,13 +32,17 @@ import static com.polestar.task.ADErrorCode.ERR_SERVER_DOWN_CODE;
 
 public class TaskExecutor {
 
-    private Activity mActivity;
+    private Context mContext;
     private AppUser mAppUser;
+    public static final int AD_TASK_ON_CLICK = 0;
+    public static final int AD_TASK_ON_INSTALL = 1;
     private static final long TASK_EXECUTING_TIMEOUT = 3*1000;
+    private Handler mainHandler;
 
-    public TaskExecutor(Activity activity) {
-        mActivity = activity;
+    public TaskExecutor(Context context) {
+        mContext = context;
         mAppUser = AppUser.getInstance();
+        mainHandler = new Handler(Looper.getMainLooper());
     }
 
     /**
@@ -49,7 +54,7 @@ public class TaskExecutor {
         int status = checkTask(task);
         ITaskStatusListener listener = new WrapTaskStatusListener(ll);
         if (status != RewardErrorCode.TASK_OK) {
-            mActivity.runOnUiThread(new Runnable() {
+            mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     listener.onTaskFail(task.mId, new ADErrorCode(status, ""));
@@ -59,11 +64,13 @@ public class TaskExecutor {
         }
         switch (task.mTaskType) {
             case Task.TASK_TYPE_SHARE_TASK:
-                if (mActivity instanceof  InviteActivity) {
+                if (mContext instanceof  InviteActivity) {
                     MLogs.d("Already in invite activity");
                     return;
                 } else {
-                    InviteActivity.start(mActivity);
+                    if (mContext instanceof  Activity) {
+                        InviteActivity.start((Activity)mContext);
+                    }
                 }
                 break;
             case Task.TASK_TYPE_CHECKIN_TASK:
@@ -84,7 +91,59 @@ public class TaskExecutor {
                 }
                 mAppUser.submitInviteCode(task, (String)args[0], listener);
                 break;
+            case Task.TASK_TYPE_AD_TASK:
+                int state = (int) args[0];
+                AdTask adTask = task.getAdTask();
+                if (state == AD_TASK_ON_CLICK) {
+                    if (adTask.isCpc()) {
+                        mAppUser.finishTask(task, listener);
+                    } else if (adTask.isCpi()) {
+                        TaskPreference.setPendingTask(adTask.mId);
+                    }
+                } else if (state == AD_TASK_ON_INSTALL) {
+                    if (adTask.isCpi()) {
+                        mAppUser.finishTask(task, listener);
+                        TaskPreference.clearPendingTask(adTask.mId);
+                    }
+                }
+                break;
         }
+    }
+
+    public class DefaultAdTaskListener implements ITaskStatusListener {
+        @Override
+        public void onGeneralError(ADErrorCode code) {
+
+        }
+
+        @Override
+        public void onTaskSuccess(long taskId, float payment, float balance) {
+            RewardErrorCode.toastMessage(mContext, RewardErrorCode.TASK_OK, payment);
+        }
+
+        @Override
+        public void onTaskFail(long taskId, ADErrorCode code) {
+
+        }
+
+        @Override
+        public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+
+        }
+    }
+
+    public void clickAdTask(AdTask task, @Nullable  ITaskStatusListener listener) {
+        if (listener == null) {
+            listener = new DefaultAdTaskListener();
+        }
+        execute(task, listener, AD_TASK_ON_CLICK);
+    }
+
+    public void installAdTask(AdTask task,@Nullable  ITaskStatusListener listener) {
+        if (listener == null) {
+            listener = new DefaultAdTaskListener();
+        }
+        execute(task, listener, AD_TASK_ON_INSTALL);
     }
 
     public void submitInviteCode(Task task, String code, ITaskStatusListener listener) {
@@ -123,7 +182,7 @@ public class TaskExecutor {
                 EventReporter.setUserProperty(EventReporter.PROP_REWARDED, EventReporter.REWARD_ACTIVE);
             }
             EventReporter.taskEvent(taskId, 0);
-            mActivity.runOnUiThread(new Runnable() {
+            mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     if (mListener != null) {
@@ -135,8 +194,9 @@ public class TaskExecutor {
 
         @Override
         public void onTaskFail(long taskId, ADErrorCode code) {
+            MLogs.d("onTaskFail " + taskId + " code: " + code);
             EventReporter.taskEvent(taskId, code.getErrCode());
-            mActivity.runOnUiThread(new Runnable() {
+            mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     if (mListener != null) {
@@ -149,7 +209,7 @@ public class TaskExecutor {
         @Override
         public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
             MLogs.d("onGetAllAvailableTasks should not be here!!");
-            mActivity.runOnUiThread(new Runnable() {
+            mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     mListener.onGetAllAvailableTasks(tasks);
@@ -160,7 +220,7 @@ public class TaskExecutor {
         @Override
         public void onGeneralError(ADErrorCode code) {
             EventReporter.taskEvent(-1, code.getErrCode());
-            mActivity.runOnUiThread(new Runnable() {
+            mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     if (mListener != null) {
@@ -172,10 +232,10 @@ public class TaskExecutor {
     }
 
     private void executeVideoTask(RewardVideoTask task, ITaskStatusListener listener) {
-        FuseAdLoader loader = FuseAdLoader.get(task.adSlot, mActivity);
+        FuseAdLoader loader = FuseAdLoader.get(task.adSlot, mContext);
         if (loader == null) {
             MLogs.d("Wrong adSlot config in task " + task.toString());
-            mActivity.runOnUiThread(new Runnable() {
+            mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     listener.onTaskFail(task.mId, new ADErrorCode(RewardErrorCode.TASK_UNEXPECTED_ERROR, ""));
@@ -183,7 +243,7 @@ public class TaskExecutor {
             });
             return;
         }
-        loader.loadAd(mActivity, 2, new IAdLoadListener() {
+        loader.loadAd(mContext, 2, new IAdLoadListener() {
             @Override
             public void onAdLoaded(IAdAdapter ad) {
                 ad.show();
@@ -196,7 +256,7 @@ public class TaskExecutor {
 
             @Override
             public void onAdClosed(IAdAdapter ad) {
-                loader.preloadAd(mActivity);
+                loader.preloadAd(mContext);
             }
 
             @Override

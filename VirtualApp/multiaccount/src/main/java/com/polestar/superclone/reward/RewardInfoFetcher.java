@@ -19,6 +19,7 @@ import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.IUserStatusListener;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.DatabaseImplFactory;
+import com.polestar.task.database.datamodels.AdTask;
 import com.polestar.task.network.AdApiHelper;
 import com.polestar.task.network.datamodels.Product;
 import com.polestar.task.network.datamodels.Task;
@@ -109,6 +110,47 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
                     @Override
                     public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+//                        AdTask adTask1 = new AdTask();
+//                        adTask1.mId = 101;
+//                        adTask1.mDescription = "Install the app to get additional bonus";
+//                        adTask1.mTitle = "Mine Sweeper Classic";
+//                        adTask1.mLimitPerDay = 1;
+//                        adTask1.mLimitTotal = 1;
+//                        adTask1.mPayout = 105;
+//                        adTask1.mTaskType = Task.TASK_TYPE_AD_TASK;
+//
+//                        adTask1.includeSlots = "slot_*;pop_*;task_*";
+//                        adTask1.excludeSlots = "";
+//                        adTask1.clickUrl = "market://details?id=com.polestar.minesweeper&referrer?UTM_SOURCE=spc_update";
+//                        adTask1.iconUrl = "https://googleads.g.doubleclick.net/pagead/imgad?id=CICAgKDb-7HatwEQkAMYkAMyCC6zU1eF3o0Y";
+//                        adTask1.imageUrl = "https://googleads.g.doubleclick.net/pagead/imgad?id=CICAgKC7p4CmaxCoChiyBTIINW9N25lE9Ig";
+//                        adTask1.priority = 1;
+//                        adTask1.flow="cpc";
+//                        adTask1.adDesc="Play this funny game and get 100 coins reward!";
+//                        adTask1.adid="1000";
+//                        adTask1.ctaText="Install";
+//                        adTask1.country="*";
+//                        adTask1.pkg="com.polestar.minesweeper";
+//                        adTask1.mAdTask = adTask1;
+//
+//                        AdTask adTask2 = new AdTask(adTask1);
+//                        adTask2.mId=1001;
+//                        adTask2.includeSlots = "slot_*;task_*";
+//                        adTask2.excludeSlots = "";
+//                        adTask2.clickUrl = "market://details?id=com.polestar.super.clone&referrer?UTM_SOURCE=spc_update";
+//                        adTask2.iconUrl = "https://googleads.g.doubleclick.net/pagead/imgad?id=CICAgKDb-7HatwEQkAMYkAMyCC6zU1eF3o0Y";
+//                        adTask2.imageUrl = "https://googleads.g.doubleclick.net/pagead/imgad?id=CICAgKC7p4CmaxCoChiyBTIINW9N25lE9Ig";
+//                        adTask2.priority = 10;
+//                        adTask2.flow="cpc";
+//                        adTask2.adDesc="Play this funny game and get 200 coins reward!";
+//                        adTask2.adid="1001";
+//                        adTask2.ctaText="Download";
+//                        adTask2.country="*";
+//                        adTask2.pkg="do.multiple.cloner";
+//                        adTask2.mAdTask = adTask2;
+//
+//                        tasks.add(adTask1);
+//                        tasks.add(adTask2);
                         databaseApi.setActiveTasks(tasks);
                         MLogs.d(TAG, "onGetAllAvailableTasks success ");
                         AdApiHelper.getAvailableProducts(AppUser.getInstance().getMyId(), new IProductStatusListener() {
