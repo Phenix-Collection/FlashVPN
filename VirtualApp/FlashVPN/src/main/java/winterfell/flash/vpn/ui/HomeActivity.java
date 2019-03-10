@@ -681,19 +681,19 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             }
         }, true);
 
-        VPNServerManager.getInstance(this).fetchServerList(new VPNServerManager.FetchServerListener() {
-            @Override
-            public void onServerListFetched(boolean res, List<ServerInfo> list) {
-                MLogs.d("res : " + res);
-                VPNServerManager.getInstance(HomeActivity.this).asyncUpdatePing(new VPNServerManager.OnUpdatePingListener() {
-                    @Override
-                    public void onPingUpdated(boolean res, List<ServerInfo> serverInfos) {
-                        MLogs.d("res2 : " + res);
-                        MLogs.d("best2 : " + VPNServerManager.getInstance(HomeActivity.this).getBestServer().toString());
-                    }
-                }, false);
-            }
-        });
+//        VPNServerManager.getInstance(this).fetchServerList(new VPNServerManager.FetchServerListener() {
+//            @Override
+//            public void onServerListFetched(boolean res, List<ServerInfo> list) {
+//                MLogs.d("res : " + res);
+//                VPNServerManager.getInstance(HomeActivity.this).asyncUpdatePing(new VPNServerManager.OnUpdatePingListener() {
+//                    @Override
+//                    public void onPingUpdated(boolean res, List<ServerInfo> serverInfos) {
+//                        MLogs.d("res2 : " + res);
+//                        MLogs.d("best2 : " + VPNServerManager.getInstance(HomeActivity.this).getBestServer().toString());
+//                    }
+//                }, false);
+//            }
+//        });
 
         timer = new Timer();
         loadAds();

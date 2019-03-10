@@ -11,6 +11,11 @@ public class RegionServers {
     @SerializedName("servers")
     public ArrayList<VpnServer> mServers;
 
+    public VpnServer getFirstServer() {
+        //应该总是不空的
+        return mServers.get(0);
+    }
+
     public int getId() {
         if (mRegion != null) {
             return mRegion.getId();

@@ -1,12 +1,13 @@
 package winterfell.flash.vpn.network;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.polestar.ad.AdLog;
-import com.polestar.task.network.datamodels.Region;
 import com.polestar.task.network.datamodels.RegionServers;
 import com.polestar.task.network.datamodels.VpnServer;
 import com.polestar.task.network.responses.ServersResponse;
@@ -16,8 +17,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import winterfell.flash.vpn.FlashApp;
+import winterfell.flash.vpn.core.LocalVpnService;
 import winterfell.flash.vpn.utils.MLogs;
 
 import static com.polestar.task.database.DatabaseFileImpl.readOnelineFromFile;
@@ -49,6 +53,10 @@ public class VPNServerIntermediaManager {
     private Gson mGson;
     private RegionServersComparator mRegionComparator = new RegionServersComparator();
     private VpnServerComparator mServerComparator = new VpnServerComparator();
+    private GetBestRegionServersComparator mBestServerComparator = new GetBestRegionServersComparator();
+
+    private Handler mainHandler;
+    private Handler workHandler;
 
     private VPNServerIntermediaManager(Context context) {
         mContext = context;
@@ -56,6 +64,11 @@ public class VPNServerIntermediaManager {
 
         loadRawServerInfo();
         loadInterServerInfo();
+
+        mainHandler = new Handler(Looper.getMainLooper());
+        HandlerThread thread = new HandlerThread("sync");
+        thread.start();
+        workHandler = new Handler(thread.getLooper());
     }
 
     public static VPNServerIntermediaManager getInstance(Context context) {
@@ -120,6 +133,12 @@ public class VPNServerIntermediaManager {
         return storeServerInfoSynced(mInterServers, sInterFileName);
     }
 
+    private boolean storeInterServerInfo() {
+        synchronized (this) {
+            return storeInterServerInfoSynced();
+        }
+    }
+
     public boolean updateRawServerInfo(ServersResponse serversResponse) {
         if (serversResponse == null) {
             MLogs.e("incoming raw server response is null, this should not happend, do nothing");
@@ -132,9 +151,8 @@ public class VPNServerIntermediaManager {
             ret &= storeRawServerInfoSynced();
 
             syncWithInterServerInfoSynced();
-            ret &= storeInterServerInfoSynced();
+            ret &= sortInterServersAndSave();
 
-            sortInterServers();
         }
         return ret;
     }
@@ -233,12 +251,13 @@ public class VPNServerIntermediaManager {
         }
     }
 
-    public void sortInterServers() {
+    public boolean sortInterServersAndSave() {
         synchronized (this) {
             Collections.sort(mInterServers.mVpnServers, mRegionComparator);
             for (RegionServers regionServers : mInterServers.mVpnServers) {
                 Collections.sort(regionServers.mServers, mServerComparator);
             }
+            return storeInterServerInfoSynced();
         }
     }
 
@@ -261,6 +280,149 @@ public class VPNServerIntermediaManager {
             } else {
                 return 1;
             }
+        }
+    }
+
+    public static class GetBestRegionServersComparator implements Comparator<RegionServers> {
+        @Override
+        public int compare(RegionServers regionServers, RegionServers t1) {
+            if (regionServers.getFirstServer().mPingDelayMilli < t1.getFirstServer().mPingDelayMilli) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    }
+
+
+    //可能是null哦
+    public VpnServer getBestServer() {
+        synchronized (this) {
+            Collections.sort(mInterServers.mVpnServers, mBestServerComparator);
+            if (mInterServers.mVpnServers.size() > 0) {
+                return mInterServers.mVpnServers.get(0).getFirstServer();
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public ArrayList<RegionServers> getDupInterRegionServers() {
+        synchronized (this) {
+            return new ArrayList<>(mInterServers.mVpnServers);
+        }
+    }
+
+
+
+    private void updatePing(ServersResponse servers){
+        ArrayList<Thread> pingThreads = new ArrayList<>();
+        for (RegionServers rs: servers.mVpnServers) {
+            String ip = rs.getFirstServer().mPublicIp;
+            PingNetEntity pingNetEntity=new PingNetEntity(ip,
+                    3,5,new StringBuffer());
+            PingThread pingThread = new PingThread(pingNetEntity, rs.getFirstServer());
+            pingThreads.add(pingThread);
+            pingThread.start();
+        }
+
+        for(int i = 0; i < pingThreads.size(); i++) {
+            try {
+                pingThreads.get(i).join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        MLogs.d("Ping threads all finished");
+    }
+
+    private class PingThread extends Thread {
+        private PingNetEntity mPingNetEntity;
+        private VpnServer mServerInfo;
+        public PingThread(PingNetEntity pingNetEntity, VpnServer serverInfo) {
+            mPingNetEntity = pingNetEntity;
+            mServerInfo = serverInfo;
+        }
+
+        @Override
+        public void run() {
+            mPingNetEntity=PingNet.ping(mPingNetEntity);
+
+            if (mPingNetEntity.isResult()) {
+                try {
+                    Pattern p = Pattern.compile("\\d+");
+                    Matcher m = p.matcher(mPingNetEntity.getPingTime());
+                    m.find();
+                    mServerInfo.mPingDelayMilli = Integer.valueOf(m.group());
+                }catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            MLogs.d("Thread " + Thread.currentThread().getId() + " Ping " + mPingNetEntity.getIp() + " res: " + mServerInfo.mPingDelayMilli);
+        }
+    }
+
+    public interface OnUpdatePingListener{
+        void onPingUpdated(boolean res);
+    }
+
+    private static long lastPingUpdateTime = 0;
+    private static final long PING_UPDATE_INTERVAL_MS = 100*1000;
+
+    public void asyncUpdatePing(final VPNServerIntermediaManager.OnUpdatePingListener listener, boolean force) {
+//        long now = System.currentTimeMillis();
+//        if (!force && (now - lastPingUpdateTime) > PING_UPDATE_INTERVAL_MS) {
+//            if (listener != null) {
+//                mainHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        listener.onPingUpdated(true);
+//                    }
+//                });
+//
+//            }
+//        }
+
+
+        long now = System.currentTimeMillis();
+        if (force || (now - lastPingUpdateTime) > PING_UPDATE_INTERVAL_MS) {
+            workHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (NetworkUtils.isNetConnected(FlashApp.getApp())) {
+                        lastPingUpdateTime = System.currentTimeMillis();
+                        if (LocalVpnService.IsRunning) {
+                            MLogs.i("asyncUpdatePing do nothing since localVpnService is running");
+                            //updatePing(activeServers);
+                        } else {
+                            updatePing(mInterServers);
+                        }
+
+                        sortInterServersAndSave();
+
+                        if (listener != null) {
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onPingUpdated(true);
+                                }
+                            });
+
+                        }
+                    } else {
+                        if (listener != null) {
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onPingUpdated(false);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        } else {
+            MLogs.i("No update ping too frequent");
         }
     }
 }

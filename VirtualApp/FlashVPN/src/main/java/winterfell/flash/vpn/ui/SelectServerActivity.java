@@ -16,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.polestar.task.network.datamodels.RegionServers;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,6 +25,7 @@ import java.util.List;
 
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.network.ServerInfo;
+import winterfell.flash.vpn.network.VPNServerIntermediaManager;
 import winterfell.flash.vpn.network.VPNServerManager;
 import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
@@ -32,7 +35,7 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
     private ListView serverListView;
     private CompoundButton currentSelected;
     private ImageView autoSignalImg;
-    private VPNServerManager vpnServerManager;
+    private VPNServerIntermediaManager vpnServerIntermediaManagerManager;
     private ServerListAdapter listAdapter;
     private ProgressBar refreshProgress;
     private ImageView refreshIcon;
@@ -51,7 +54,7 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vpnServerManager = VPNServerManager.getInstance(this);
+        vpnServerIntermediaManagerManager = VPNServerIntermediaManager.getInstance(this);
         initView();
     }
 
@@ -67,7 +70,7 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
         listAdapter.updateServers();
         serverListView.setAdapter(listAdapter);
         autoSignalImg = findViewById(R.id.best_server_signal);
-        autoSignalImg.setImageResource(vpnServerManager.getBestServer().getSignalResId());
+        autoSignalImg.setImageResource(vpnServerIntermediaManagerManager.getBestServer().getSignalResId());
         int prefered = PreferenceUtils.getPreferServer();
         if (prefered == ServerInfo.SERVER_ID_AUTO) {
             currentSelected = autoCheckBox;
@@ -90,14 +93,13 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
         if (compoundButton.getId() == R.id.auto_checkbox) {
             PreferenceUtils.setPreferServer(ServerInfo.SERVER_ID_AUTO);
         } else {
-            ServerInfo si = (ServerInfo)compoundButton.getTag();
+            RegionServers si = (RegionServers)compoundButton.getTag();
             if (si != null) {
-                PreferenceUtils.setPreferServer(si.id);
+                PreferenceUtils.setPreferServer(si.getId());
             }
             autoCheckBox.setChecked(false);
         }
         listAdapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -111,20 +113,20 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
         refreshIcon.setClickable(false);
         refreshProgress.setVisibility(View.VISIBLE);
         refreshProgress.setIndeterminate(true);
-        vpnServerManager.asyncUpdatePing(new VPNServerManager.OnUpdatePingListener() {
+        vpnServerIntermediaManagerManager.asyncUpdatePing(new VPNServerIntermediaManager.OnUpdatePingListener() {
             @Override
-            public void onPingUpdated(boolean res, List<ServerInfo> serverInfos) {
+            public void onPingUpdated(boolean res) {
                 listAdapter.updateServers();
                 listAdapter.notifyDataSetChanged();
                 refreshProgress.setVisibility(View.INVISIBLE);
-                autoSignalImg.setImageResource(vpnServerManager.getBestServer().getSignalResId());
+                autoSignalImg.setImageResource(vpnServerIntermediaManagerManager.getBestServer().getSignalResId());
                 refreshIcon.setClickable(true);
             }
         }, true);
     }
 
     private class ServerListAdapter extends BaseAdapter {
-        private List<ServerInfo> servers;
+        private List<RegionServers> servers;
         public ServerListAdapter() {
            updateServers();
         }
@@ -133,14 +135,8 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
             if (servers != null) {
                 servers.clear();
             }
-            servers = new ArrayList<>( VPNServerManager.getInstance(SelectServerActivity.this).getActiveServers());
-            Collections.sort(servers, new Comparator<ServerInfo>() {
-                @Override
-                public int compare(ServerInfo serverInfo, ServerInfo t1) {
-                    int country = serverInfo.country.compareToIgnoreCase(t1.country);
-                    return  country == 0?serverInfo.id - t1.id: country;
-                }
-            });
+            servers = VPNServerIntermediaManager.getInstance(SelectServerActivity.this).getDupInterRegionServers();
+
             MLogs.d("Get Servers num: " + servers.size());
         }
 
@@ -178,12 +174,12 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
                 }
             });
 
-            ServerInfo si = (ServerInfo)getItem(i);
+            RegionServers si = (RegionServers)getItem(i);
             checkbox.setTag(si);
-            flag.setImageResource(si.getFlagResId());
-            city.setText(si.city);
-            signal.setImageResource(si.getSignalResId());
-            checkbox.setChecked(si.id == PreferenceUtils.getPreferServer());
+            flag.setImageResource(si.getFirstServer().getFlagResId());
+            city.setText(si.getFirstServer().mCity);
+            signal.setImageResource(si.getFirstServer().getSignalResId());
+            checkbox.setChecked(si.getId() == PreferenceUtils.getPreferServer());
             return convertView;
         }
     }
