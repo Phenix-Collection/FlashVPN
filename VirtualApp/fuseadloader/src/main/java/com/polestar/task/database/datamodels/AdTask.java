@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.polestar.ad.AdLog;
 import com.polestar.ad.AdUtils;
 import com.polestar.task.network.datamodels.Task;
 
@@ -25,6 +26,9 @@ public class AdTask extends Task {
     public static final String TASK_SLOT_PREFIX = "task_";
     public static final String AD_TASK_PREF = "ad_task_pref";
 
+    private static final String FLOW_CPC = "cpc";
+    private static final String FLOW_CPI = "cpi";
+
     public String adid;
     /**
      * the description of the offer, e.g. most popular game in xxx
@@ -38,7 +42,7 @@ public class AdTask extends Task {
     public String impUrl;
     public String clickUrl;  //MUST
 //    public String title; //MUST move to base task
-    public String flow; //cpi
+    public String flow; //cpi/cpc //MUST
     public String imageUrl;
     public String iconUrl;  //MUST
     public String videoUrl;
@@ -56,6 +60,9 @@ public class AdTask extends Task {
      */
     public int priority;
 
+    public AdTask() {
+        super();
+    }
     public AdTask(Task task) {
         super(task);
     }
@@ -77,6 +84,9 @@ public class AdTask extends Task {
         adDesc = detail.optString("adDesc");
 //        flowDesc = detail.optString("flowDesc");
         flow = detail.optString("flow");
+        if (!FLOW_CPC.equals(flow) && !FLOW_CPI.equals(flow)) {
+            return false;
+        }
         impUrl = detail.optString("impUrl");
         clickUrl = detail.optString("clkUrl");
 //        title = detail.optString("title");
@@ -124,7 +134,6 @@ public class AdTask extends Task {
                         || excludeSlots.contains(slot)) {
                     return false;
                 }
-                return true;
             } else {
                 return false;
             }
@@ -136,7 +145,6 @@ public class AdTask extends Task {
                         || excludeSlots.contains(slot)) {
                     return false;
                 }
-                return true;
             } else {
                 return false;
             }
@@ -148,7 +156,6 @@ public class AdTask extends Task {
                         || excludeSlots.contains(slot)) {
                     return false;
                 }
-                return true;
             } else {
                 return false;
             }
@@ -184,5 +191,13 @@ public class AdTask extends Task {
     public long getShowTime(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(AD_TASK_PREF, Context.MODE_PRIVATE);
         return sharedPreferences.getLong("show_"  + mId, 0);
+    }
+
+    public boolean isCpc() {
+        return FLOW_CPC.equals(flow);
+    }
+
+    public boolean isCpi() {
+        return FLOW_CPI.equals(flow);
     }
 }
