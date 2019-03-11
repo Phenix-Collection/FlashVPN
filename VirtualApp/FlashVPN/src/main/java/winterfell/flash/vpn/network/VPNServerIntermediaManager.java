@@ -294,17 +294,37 @@ public class VPNServerIntermediaManager {
         }
     }
 
+    public boolean hasValidServers() {
+        synchronized (this) {
+            return mInterServers.mVpnServers.size() > 0;
+        }
+    }
 
     //可能是null哦
     public VpnServer getBestServer() {
         synchronized (this) {
-            Collections.sort(mInterServers.mVpnServers, mBestServerComparator);
-            if (mInterServers.mVpnServers.size() > 0) {
-                return mInterServers.mVpnServers.get(0).getFirstServer();
+            ArrayList<RegionServers> toSort = new ArrayList<>(mInterServers.mVpnServers);
+            Collections.sort(toSort, mBestServerComparator);
+            if (toSort.size() > 0) {
+                return toSort.get(0).getFirstServer();
             } else {
                 return null;
             }
         }
+    }
+
+    public VpnServer getServerInfo(int id) {
+        if (id == VpnServer.SERVER_ID_AUTO) {
+            return getBestServer();
+        }
+        synchronized (this) {
+            for (RegionServers server : mInterServers.mVpnServers) {
+                if (server.getId() == id) {
+                    return server.getFirstServer();
+                }
+            }
+        }
+        return null;
     }
 
     public ArrayList<RegionServers> getDupInterRegionServers() {

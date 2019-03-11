@@ -322,21 +322,21 @@ public class LocalVpnService extends VpnService implements Runnable {
         }
     }
 
-    private void retrieveBestProxy() throws Exception {
-        ProxyConfig.Instance.m_ProxyList.clear();
-        int id = PreferenceUtils.getPreferServer();
-        String url;
-        if (id == ServerInfo.SERVER_ID_AUTO) {
-            url = VPNServerManager.getInstance(LocalVpnService.this).getBestServer().url;
-        } else {
-            url = VPNServerManager.getInstance(LocalVpnService.this).getServerInfo(id).url;
-        }
-        MLogs.d("LocalVpnService-- Will use url " + url);
-        ProxyUrl = url;
-        ProxyConfig.Instance.addProxyToList(url);
-        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
-        ProxyConfig.Instance.dump();
-    }
+//    private void retrieveBestProxy() throws Exception {
+//        ProxyConfig.Instance.m_ProxyList.clear();
+//        int id = PreferenceUtils.getPreferServer();
+//        String url;
+//        if (id == ServerInfo.SERVER_ID_AUTO) {
+//            url = VPNServerManager.getInstance(LocalVpnService.this).getBestServer().url;
+//        } else {
+//            url = VPNServerManager.getInstance(LocalVpnService.this).getServerInfo(id).url;
+//        }
+//        MLogs.d("LocalVpnService-- Will use url " + url);
+//        ProxyUrl = url;
+//        ProxyConfig.Instance.addProxyToList(url);
+//        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
+//        ProxyConfig.Instance.dump();
+//    }
 
     @Override
     public synchronized void run() {
@@ -380,19 +380,19 @@ public class LocalVpnService extends VpnService implements Runnable {
                 if (IsRunning) {
                     //加载配置文件
 
-                    MLogs.d("LocalVpnService-- set app_icon/(http proxy)");
-                    try {
-                        retrieveBestProxy();
-                    } catch (Exception e) {
-                        MLogs.e("LocalVpnService-- " + e.toString());
-                        String errString = e.getMessage();
-                        if (errString == null || errString.isEmpty()) {
-                            errString = e.toString();
-                        }
-                        IsRunning = false;
-                        //onStatusChanged(errString, false, mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
-                        continue;
-                    }
+//                    MLogs.d("LocalVpnService-- set app_icon/(http proxy)");
+//                    try {
+//                        retrieveBestProxy();
+//                    } catch (Exception e) {
+//                        MLogs.e("LocalVpnService-- " + e.toString());
+//                        String errString = e.getMessage();
+//                        if (errString == null || errString.isEmpty()) {
+//                            errString = e.toString();
+//                        }
+//                        IsRunning = false;
+//                        //onStatusChanged(errString, false, mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
+//                        continue;
+//                    }
                     String welcomeInfoString = ProxyConfig.Instance.getWelcomeInfo();
                     if (welcomeInfoString != null && !welcomeInfoString.isEmpty()) {
                         MLogs.d("LocalVpnService-- %s", ProxyConfig.Instance.getWelcomeInfo());

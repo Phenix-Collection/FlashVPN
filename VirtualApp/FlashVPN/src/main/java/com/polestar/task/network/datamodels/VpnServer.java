@@ -48,6 +48,8 @@ public class VpnServer  {
     public static int LEVEL_4_PING = 200;
     public int priority = PRIORITY_DEFAULT;
 
+    public static final int SERVER_ID_AUTO = -1;
+
     private static HashMap<String, Integer> sFlagResMap = new HashMap<>();
     static {
         sFlagResMap.put("ae", R.drawable.flag_ae);

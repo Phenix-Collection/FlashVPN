@@ -32,6 +32,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.task.network.AppUser;
+import com.polestar.task.network.datamodels.VpnServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -45,11 +46,8 @@ import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.core.AppProxyManager;
 import winterfell.flash.vpn.core.LocalVpnService;
-import winterfell.flash.vpn.core.ProxyConfig;
 import winterfell.flash.vpn.core.ShadowsocksPingManager;
-import winterfell.flash.vpn.core.TcpProxyServer;
-import winterfell.flash.vpn.network.ServerInfo;
-import winterfell.flash.vpn.network.VPNServerManager;
+import winterfell.flash.vpn.network.VPNServerIntermediaManager;
 import winterfell.flash.vpn.tunnel.TunnelStatisticManager;
 import winterfell.flash.vpn.ui.widget.RateDialog;
 import winterfell.flash.vpn.ui.widget.UpDownDialog;
@@ -79,7 +77,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     private Timer timer;
     private TimerTask timeCountTask;
-    private ServerInfo mCurrentSI;
+    private VpnServer mCurrentVpnServer;
     private AppUser mAppUser;
 
     private static final String SLOT_HOME_NATIVE = "slot_home_native";
@@ -123,21 +121,21 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         return AdSize.MEDIUM_RECTANGLE;
     }
 
-    private void retrieveBestProxy() throws Exception {
-        ProxyConfig.Instance.m_ProxyList.clear();
-        int id = PreferenceUtils.getPreferServer();
-        String url;
-        if (id == ServerInfo.SERVER_ID_AUTO) {
-            url = VPNServerManager.getInstance(this).getBestServer().url;
-        } else {
-            url = VPNServerManager.getInstance(this).getServerInfo(id).url;
-        }
-        MLogs.d("LocalVpnService-- Will use url " + url);
-       // ProxyUrl = url;
-        ProxyConfig.Instance.addProxyToList(url);
-        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
-        ProxyConfig.Instance.dump();
-    }
+//    private void retrieveBestProxy() throws Exception {
+//        ProxyConfig.Instance.m_ProxyList.clear();
+//        int id = PreferenceUtils.getPreferServer();
+//        String url;
+//        if (id == ServerInfo.SERVER_ID_AUTO) {
+//            url = VPNServerManager.getInstance(this).getBestServer().url;
+//        } else {
+//            url = VPNServerManager.getInstance(this).getServerInfo(id).url;
+//        }
+//        MLogs.d("LocalVpnService-- Will use url " + url);
+//       // ProxyUrl = url;
+//        ProxyConfig.Instance.addProxyToList(url);
+//        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
+//        ProxyConfig.Instance.dump();
+//    }
 
     ShadowsocksPingManager proxyServer = null;
 
@@ -149,11 +147,11 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         Thread t = new Thread() {
             @Override
             public void run() {
-                try {
-                    retrieveBestProxy();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    retrieveBestProxy();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
                 if (proxyServer == null) {
                     try {
                         proxyServer = new ShadowsocksPingManager();
@@ -308,13 +306,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     protected void onResume() {
         super.onResume();
         int id = PreferenceUtils.getPreferServer();
-        ServerInfo si = VPNServerManager.getInstance(this).getServerInfo(id);
-        if (si == null) {
+        VpnServer si = VPNServerIntermediaManager.getInstance(this).getServerInfo(id);
+        if (id == VpnServer.SERVER_ID_AUTO) {
             geoImage.setImageResource(R.drawable.flash_black);
             cityText.setText(R.string.select_server_auto);
         } else {
             geoImage.setImageResource(si.getFlagResId());
-            cityText.setText(si.city);
+            cityText.setText(si.mCity);
         }
         updateConnectState(LocalVpnService.IsRunning? STATE_CONNECTED:STATE_DISCONNECTED);
         updateRewardLayout();
@@ -522,10 +520,10 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
                 MLogs.d("IsRunning " + LocalVpnService.IsRunning);
                 int id = PreferenceUtils.getPreferServer();
-                ServerInfo si = VPNServerManager.getInstance(HomeActivity.this).getServerInfo(id);
-                mCurrentSI = si;
+                VpnServer si = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
+                mCurrentVpnServer = si;
                 if (!LocalVpnService.IsRunning) {
-                    EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentSI));
+                    EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
                     Intent intent = LocalVpnService.prepare(HomeActivity.this);
                     if (intent == null) {
                         startVPNService();
@@ -533,7 +531,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                         startActivityForResult(intent, START_VPN_SERVICE_REQUEST_CODE);
                     }
                 } else {
-                    EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentSI));
+                    EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
                     LocalVpnService.IsRunning = false;
                     updateConnectState(STATE_DISCONNECTED);
                 }
@@ -541,8 +539,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         });
     }
 
-    private String getSIReportValue(ServerInfo si) {
-        return si == null?"auto":si.country+"_"+si.city;
+    private String getSIReportValue(VpnServer si) {
+        return si == null ? "null" : si.mPublicIp;
     }
 
     @Override
@@ -650,17 +648,17 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         initView();
         mainHandler = new Handler();
 
-        final String url = RemoteConfig.getString("fingerprint_url");
-        if(!TextUtils.isEmpty(url) &&  !url.equals("off")
-                && CommonUtils.isNetworkAvailable(this)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //Fingerprint.genFingerprint(HomeActivity.this, url, false);
-                }
-            }).start();
-
-        }
+//        final String url = RemoteConfig.getString("fingerprint_url");
+//        if(!TextUtils.isEmpty(url) &&  !url.equals("off")
+//                && CommonUtils.isNetworkAvailable(this)) {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    //Fingerprint.genFingerprint(HomeActivity.this, url, false);
+//                }
+//            }).start();
+//
+//        }
 
         boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
         if (needUpdate) {
@@ -674,9 +672,9 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         }
        // MLogs.d("best1: " + VPNServerManager.getInstance(HomeActivity.this).getBestServer().toString());
 
-        VPNServerManager.getInstance(HomeActivity.this).asyncUpdatePing(new VPNServerManager.OnUpdatePingListener() {
+        VPNServerIntermediaManager.getInstance(HomeActivity.this).asyncUpdatePing(new VPNServerIntermediaManager.OnUpdatePingListener() {
             @Override
-            public void onPingUpdated(boolean res, List<ServerInfo> serverInfos) {
+            public void onPingUpdated(boolean res) {
                 //btnCenter.setClickable(true);
             }
         }, true);
@@ -766,7 +764,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     public void onStatusChanged(String status, Boolean isRunning, float avgDownloadSpeed, float avgUploadSpeed,
                                 float maxDownloadSpeed, float maxUploadSpeed) {
         if (isRunning) {
-            EventReporter.reportConnectted(this, getSIReportValue(mCurrentSI));
+            EventReporter.reportConnectted(this, getSIReportValue(mCurrentVpnServer));
             connectingFailed = false;
             if (PreferenceUtils.hasShownRateDialog(this)
                     && !FlashUser.getInstance(this).isVIP()) {
@@ -803,8 +801,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 });
             }
         } else {
-            EventReporter.reportDisConnectted(this, getSIReportValue(mCurrentSI));
-            EventReporter.reportSpeed(this, getSIReportValue(mCurrentSI),
+            EventReporter.reportDisConnectted(this, getSIReportValue(mCurrentVpnServer));
+            EventReporter.reportSpeed(this, getSIReportValue(mCurrentVpnServer),
                     avgDownloadSpeed, avgUploadSpeed,
                     maxDownloadSpeed, maxUploadSpeed);
             TunnelStatisticManager.getInstance().eventReport();
