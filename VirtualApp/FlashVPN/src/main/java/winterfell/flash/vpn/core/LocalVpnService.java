@@ -18,13 +18,13 @@ import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.app.NotificationCompat;
 
+import com.polestar.task.network.datamodels.VpnServer;
+
 import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.core.ProxyConfig.IPAddress;
 import winterfell.flash.vpn.dns.DnsPacket;
-//import winterfell.flash.vpn.network.ServerInfo;
-//import winterfell.flash.vpn.network.VPNServerManager;
 import winterfell.flash.vpn.tcpip.CommonMethods;
 import winterfell.flash.vpn.tcpip.IPHeader;
 import winterfell.flash.vpn.tcpip.TCPHeader;
@@ -166,9 +166,6 @@ public class LocalVpnService extends VpnService implements Runnable {
                 }
                 NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(Instance, channel_id);
                 String title = IsRunning ? getString(R.string.notification_connected):getString(R.string.notification_to_connect);
-                int id = PreferenceUtils.getPreferServer();
-//                ServerInfo si = id == ServerInfo.SERVER_ID_AUTO ? VPNServerManager.getInstance(LocalVpnService.this).getBestServer():
-//                        VPNServerManager.getInstance(LocalVpnService.this).getServerInfo((int)id);
                 float[] speed = getNetworkSpeed();
                 DecimalFormat format = new DecimalFormat("0.0");
                 String downSpeed = format.format((speed[0] > 1000)? speed[0]/1000:speed[0]);
@@ -178,7 +175,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
                 mBuilder.setContentTitle(title)
                         .setContentText("Down " + downSpeed + " Up " + upSpeed)
-                        //.setSmallIcon(si.getFlagResId())
+                        .setSmallIcon(ProxyConfig.Instance.getCurrentVpnServer().getFlagResId())
                         .setContentIntent(pendingIntent);
                 notification = mBuilder.build();
                 notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
@@ -189,12 +186,11 @@ public class LocalVpnService extends VpnService implements Runnable {
                     ex.printStackTrace();
                 }
 
-                NatSessionManager.dump();
+                //NatSessionManager.dump();
                 TunnelStatisticManager.getInstance().dump();
             }
 //            }
         });
-
     }
 
     private float[] getRealNetworkSpeed() {

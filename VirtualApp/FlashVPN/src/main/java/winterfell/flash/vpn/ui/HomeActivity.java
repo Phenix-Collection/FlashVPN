@@ -566,6 +566,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
                 if (!LocalVpnService.IsRunning) {
                     EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
+                    ProxyConfig.Instance.setCurrentVpnServer(mCurrentVpnServer);
                     acquirePort(mCurrentVpnServer);
                 } else {
                     EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));

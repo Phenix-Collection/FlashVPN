@@ -3,6 +3,8 @@ package winterfell.flash.vpn.core;
 import android.annotation.SuppressLint;
 import android.os.Build;
 
+import com.polestar.task.network.datamodels.VpnServer;
+
 import winterfell.flash.vpn.tcpip.CommonMethods;
 import winterfell.flash.vpn.tunnel.Config;
 import winterfell.flash.vpn.tunnel.httpconnect.HttpConnectConfig;
@@ -53,6 +55,15 @@ public class ProxyConfig {
     int m_mtu;
 
     Timer m_Timer;
+
+
+    private VpnServer mCurrentVpnServer;
+    public void setCurrentVpnServer(VpnServer server) {
+        mCurrentVpnServer = server;
+    }
+    public VpnServer getCurrentVpnServer() {
+        return mCurrentVpnServer;
+    }
 
     public void dump() {
         MLogs.d("ProxyConfig--  m_dns_ttl " + m_dns_ttl);
