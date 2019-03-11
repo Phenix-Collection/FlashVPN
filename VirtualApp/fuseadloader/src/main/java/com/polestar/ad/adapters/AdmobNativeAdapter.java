@@ -215,6 +215,23 @@ public class AdmobNativeAdapter extends AdAdapter {
                 AdLog.d("Wrong ad layout " + viewBinder.layoutId);
                 return null;
             }
+            if (mediaView instanceof MediaView) {
+                ViewGroup parent = (ViewGroup)mediaView.getParent();
+                parent.removeView(mediaView);
+                MediaView ratioView = new MediaView(mediaView.getContext()){
+                    @Override
+                    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+                        int width = MeasureSpec.getSize(widthMeasureSpec);
+                        float height = width *9/16;
+                        int newHeight = MeasureSpec.makeMeasureSpec((int) height, MeasureSpec.EXACTLY);
+
+                        super.onMeasure(widthMeasureSpec,newHeight);
+                    }
+                };
+                mediaView = ratioView;
+                parent.addView(mediaView);
+            }
             if (mediaView != null) {
                 mediaView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
                     @Override
