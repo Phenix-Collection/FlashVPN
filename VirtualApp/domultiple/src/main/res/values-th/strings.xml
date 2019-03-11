@@ -22,7 +22,7 @@
     <string name="app_lock_reset_password">รีเซ็ตรหัสผ่าน</string>
     <string name="app_lock_safe_answer_hint">ป้อนคำตอบ (ไม่เกิน 20 ตัวอักษร)</string>
     <string name="app_lock_safe_answer_reset_hint">โปรดป้อนคำตอบ</string>
-    <string name="app_lock_safe_info_hint">ในการยืนยันตัวตนของคุณเมื่อตั้งรหัสผ่านใหม่</string>
+    <string name="app_lock_safe_info_hint">เพื่อยืนยันตัวตนของคุณเมื่อรีเซ็ตรหัสผ่าน มันจะถูกเข้ารหัสและเก็บไว้ในอุปกรณ์ของคุณเท่านั้น</string>
     <string name="app_lock_safe_question_hint">ตั้งคำถามที่ปลอดภัย</string>
     <string name="app_lock_safe_question_toast_ask_Answer">คุณยังไม่ได้ป้อนคำตอบ</string>
     <string name="app_lock_safe_question_toast_ask_Question">คุณไม่ได้ตั้งคำถามที่ปลอดภัย</string>
@@ -116,4 +116,16 @@
     <string name="arm64_support">การสนับสนุน 64 บิต</string>
     <string name="dialog_permission_title">ให้สิทธิ์</string>
     <string name="dialog_permission_content">โปรดอนุญาตให้มีการขออนุญาตจาก Super Clone Pro มิฉะนั้นแอปพลิเคชันโคลนและบริการ Google Play บางอย่างจะทำงานได้ไม่ถูกต้อง</string>
+
+    <string-array name = "secure_questions">
+                 <item> วันโชคดีของคุณคืออะไร </item>
+                 <item> อาหารโปรดของคุณคืออะไร </item>
+                 <item> กีฬาโปรดของคุณคืออะไร </item>
+                 <item> ไอดอลของคุณคือใคร </item>
+                 <item> คุณไปโรงเรียนมัธยมที่ไหน </item>
+                 <item> คุณไปโรงเรียนมัธยมที่ไหน </item>
+                 <item> ภาพยนตร์เรื่องโปรดของคุณคืออะไร </item>
+                 <item> ปรับแต่งคำถาม </item>
+             </string-array>
+
 </resources>

@@ -22,7 +22,7 @@
     <string name="app_lock_reset_password">Setel ulang kata sandi</string>
     <string name="app_lock_safe_answer_hint">ป้อนคำตอบ (ไม่เกิน 20 ตัวอักษร)</string>
     <string name="app_lock_safe_answer_reset_hint">Silakan masukkan jawabannya</string>
-    <string name="app_lock_safe_info_hint">Untuk memverifikasi identitas Anda saat mereset kata sandi</string>
+    <string name="app_lock_safe_info_hint">Untuk memverifikasi identitas Anda saat mengatur ulang kata sandi. Itu akan dienkripsi dan hanya disimpan di perangkat Anda.</string>
     <string name="app_lock_safe_question_hint">Tetapkan Pertanyaan yang Aman</string>
     <string name="app_lock_safe_question_toast_ask_Answer">Anda belum masuk jawaban.</string>
     <string name="app_lock_safe_question_toast_ask_Question">Anda tidak menetapkan Pertanyaan Aman</string>
@@ -117,4 +117,16 @@
     <string name="arm64_support">Dukungan 64bit</string>
     <string name="dialog_permission_title">Memberikan ijin</string>
     <string name="dialog_permission_content">Izinkan permintaan izin dari DO Multiple Space, jika tidak, beberapa aplikasi kloning dan Layanan Google Play tidak akan berfungsi dengan baik.</string>
+
+    <string-array name = "secure_questions">
+                 <item> Apa tanggal keberuntungan Anda? </item>
+                 <item> Apa makanan favorit Anda? </item>
+                 <item> Apa olahraga favorit Anda? </item>
+                 <item> Siapa idola Anda? </item>
+                 <item> Kemana kamu pergi ke SMP? </item>
+                 <item> Kemana kamu pergi ke sekolah menengah? </item>
+                 <item> Apa film favorit Anda? </item>
+                 <item> Kustomisasi pertanyaan </item>
+             </string-array>
+
 </resources>

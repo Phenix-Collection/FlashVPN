@@ -4,7 +4,7 @@
     <color name="colorPrimary">#668184</color>
     <color name="colorPrimaryDark">#394647</color>
     <color name="colorAccent">#ff48d27f</color>
-    <color name="title_bar_bg">#4b6163</color>
+    <color name="title_bar_bg">#394647</color>
     <color name="title_bar_button_pressed">#44585a</color>
     <color name="app_loading_bg">#FFFFFF</color>
     <color name="title_bar_text_color">#FFFFFF</color>
@@ -38,6 +38,7 @@
     <color name="applock_scanresult_item_title">#7f7f7f</color>
 
     <color name="button_enabled_color">#005cd5</color>
+    <color name="button_pressed_color">#0054c2</color>
     <color name="button_disabled_color">#c1c1c1</color>
 
     <color name="native_ad_transparent_black">#64000000</color>

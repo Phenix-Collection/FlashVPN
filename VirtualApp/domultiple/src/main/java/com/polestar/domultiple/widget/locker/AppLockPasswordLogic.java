@@ -51,7 +51,7 @@ public class AppLockPasswordLogic {
         mLockPatternView = (LockPatternView) mView.findViewById(R.id.applock_pattern_layout);
         mLockPatternView.setOnPatternListener(mPatternListener);
         mLockPatternView.setInArrowMode(false);
-        mLockPatternView.setInCircleMode(true);
+        mLockPatternView.setInCircleMode(false);
 //        mLockPatternView.setBitmapBtnDefault(R.drawable.applock_lockpattern_indicator_code_lock_backgorund_holo);
 //        mLockPatternView.setBitmapBtnTouched(R.drawable.applock_lockpattern_indicator_code_lock_point_area_green_holo);
 //        mLockPatternView.setGreenPathPaintColor(TITLE_COLOR_WHITE);

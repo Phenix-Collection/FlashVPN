@@ -123,7 +123,6 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/add_success_selector"
-            android:clickable="false"
             android:focusable="false"
             android:gravity="center"
             android:text="@string/al_btn_finish"

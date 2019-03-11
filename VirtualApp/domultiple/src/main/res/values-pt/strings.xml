@@ -22,7 +22,7 @@
     <string name="app_lock_reset_password">Repor senhas</string>
     <string name="app_lock_safe_answer_hint">Digite a resposta (até 20 caracteres)</string>
     <string name="app_lock_safe_answer_reset_hint">Digite a resposta</string>
-    <string name="app_lock_safe_info_hint">Para verificar a sua identidade ao reiniciar a senha</string>
+    <string name="app_lock_safe_info_hint">Para verificar sua identidade ao redefinir a senha. Ele será criptografado e armazenado apenas no seu dispositivo.</string>
     <string name="app_lock_safe_question_hint">Configure uma pergunta segura</string>
     <string name="app_lock_safe_question_toast_ask_Answer">Você ainda não digitou a resposta.</string>
     <string name="app_lock_safe_question_toast_ask_Question">Você não definiu uma pergunta segura</string>
@@ -116,4 +116,15 @@
     <string name="arm64_support">Suporte 64bit</string>
     <string name="dialog_permission_title">Conceder permissão</string>
     <string name="dialog_permission_content">Por favor, permita o pedido de permissão do DO Multiple Space, caso contrário, alguns aplicativos clonados e o Google Play Service não funcionarão corretamente.</string>
+
+    <string-array name = "secure_questions">
+                 <item> Qual é o seu encontro de sorte? </item>
+                 <item> Qual é a sua comida favorita? </item>
+                 <item> Qual é o seu esporte favorito? </item>
+                 <item> Quem é seu ídolo? </item>
+                 <item> Onde você foi para o ensino fundamental? </item>
+                 <item> Onde você foi para o ensino médio? </item>
+                 <item> Qual é o seu filme favorito? </item>
+                 <item> Personalize perguntas </item>
+             </string-array>
 </resources>

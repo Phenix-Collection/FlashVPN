@@ -21,7 +21,6 @@
         android:layout_marginTop="32dp"
         android:textColor="@color/title_bar_text_color"
         android:textSize="25sp"
-        android:textStyle="bold"
         android:text="@string/app_slogan"/>
 
     <!--<TextView-->

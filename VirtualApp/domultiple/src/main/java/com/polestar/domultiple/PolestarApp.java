@@ -12,6 +12,8 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.google.android.gms.ads.MobileAds;
+import com.polestar.ad.AdUtils;
+import com.polestar.ad.IAdEventLogger;
 import com.polestar.ad.SDKConfiguration;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
@@ -154,6 +156,12 @@ public class PolestarApp extends MultiDexApplication {
                 return RemoteConfig.getAdConfigList(slot);
             }
         }, getApp(), builder.build());
+        AdUtils.setEventLogger(new IAdEventLogger() {
+            @Override
+            public void trackEvent(String slot, String event) {
+                EventReporter.generalEvent("ad_"+ slot+ "_" + event);
+            }
+        });
     }
     @Override
     public void onCreate() {
