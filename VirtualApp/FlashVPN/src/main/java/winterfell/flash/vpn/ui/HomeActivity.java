@@ -41,6 +41,7 @@ import com.polestar.task.network.responses.ServersResponse;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -86,6 +87,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private VpnServer mCurrentVpnServer;
     private AppUser mAppUser;
     private VpnRequirement mCurrentVpnRequirement;
+    private long mGetVpnRequirementTime;
     private String mErrInfo;
     private int mCheckPortFailedCount;
 
@@ -113,6 +115,14 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private final static String SLOT_CONNECTED_AD = "slot_connected_ad";
     private final static String CONF_RATE_DIALOG_GATE = "rate_vpn_time_sec";
 
+    private boolean needToRequestNewVpnRequirement() {
+        if (Calendar.getInstance().getTimeInMillis() - mGetVpnRequirementTime >
+                RemoteConfig.getLong("config_request_newport_interval")) {
+            return true;
+        }
+        return false;
+    }
+
     private void setVpnRequirementIntoProxyList(VpnRequirement vpnRequirement) throws Exception {
         ProxyConfig.Instance.m_ProxyList.clear();
         String config = vpnRequirement.toSSConfig(this);
@@ -128,49 +138,55 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         }
         updateConnectState(STATE_ACQUIRING_PORT, "");
 
-        VpnApiHelper.acquireVpnServer(AppUser.getInstance().getMyId(), vpnServer.mPublicIp,
-                vpnServer.mGeo, vpnServer.mCity, new IVpnStatusListener() {
-                    @Override
-                    public void onAcquireSucceed(VpnRequirement requirement) {
-                        mCurrentVpnRequirement = requirement;
-                        //需要开始检查服务器状态了
-                        try {
-                            setVpnRequirementIntoProxyList(mCurrentVpnRequirement);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            MLogs.e("Failed to add to proxylist " + e.toString());
-                            EventReporter.reportFailedToAddProxy();
-                            //基本上不应该进入这里的，不然是有问题的
-                            return;
+        if (needToRequestNewVpnRequirement()) {
+            VpnApiHelper.acquireVpnServer(AppUser.getInstance().getMyId(), vpnServer.mPublicIp,
+                    vpnServer.mGeo, vpnServer.mCity, new IVpnStatusListener() {
+                        @Override
+                        public void onAcquireSucceed(VpnRequirement requirement) {
+                            mCurrentVpnRequirement = requirement;
+                            mGetVpnRequirementTime = Calendar.getInstance().getTimeInMillis();
+                            //需要开始检查服务器状态了
+                            try {
+                                setVpnRequirementIntoProxyList(mCurrentVpnRequirement);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                MLogs.e("Failed to add to proxylist " + e.toString());
+                                EventReporter.reportFailedToAddProxy();
+                                //基本上不应该进入这里的，不然是有问题的
+                                return;
+                            }
+                            //试着去ping
+                            updateStateOnMainThread(STATE_CHECKING_PORT, "");
                         }
-                        //试着去ping
-                        updateStateOnMainThread(STATE_CHECKING_PORT, "");
-                    }
 
-                    @Override
-                    public void onAcquireFailed(String publicIp, ADErrorCode code) {
-                        EventReporter.reportGetPortFailed(publicIp + "_" + code.getErrCode());
-                        updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
-                    }
+                        @Override
+                        public void onAcquireFailed(String publicIp, ADErrorCode code) {
+                            EventReporter.reportGetPortFailed(publicIp + "_" + code.getErrCode());
+                            updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
+                        }
 
-                    @Override
-                    public void onReleaseSucceed(String publicIp) {
-                    }
+                        @Override
+                        public void onReleaseSucceed(String publicIp) {
+                        }
 
-                    @Override
-                    public void onReleaseFailed(String publicIp, ADErrorCode code) {
-                    }
+                        @Override
+                        public void onReleaseFailed(String publicIp, ADErrorCode code) {
+                        }
 
-                    @Override
-                    public void onGetAllServers(ServersResponse servers) {
-                    }
+                        @Override
+                        public void onGetAllServers(ServersResponse servers) {
+                        }
 
-                    @Override
-                    public void onGeneralError(ADErrorCode code) {
-                        EventReporter.reportAderror(code);
-                        updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
-                    }
-                });
+                        @Override
+                        public void onGeneralError(ADErrorCode code) {
+                            EventReporter.reportAderror(code);
+                            updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
+                        }
+                    });
+        } else {
+            //已经有比较新鲜的vpnrequirement了，直接去check
+            updateStateOnMainThread(STATE_CHECKING_PORT, "");
+        }
     }
 
     ShadowsocksPingManager proxyServer = null;

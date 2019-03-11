@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.core.LocalVpnService;
 import winterfell.flash.vpn.utils.MLogs;
+import winterfell.flash.vpn.utils.PreferenceUtils;
 
 import static com.polestar.task.database.DatabaseFileImpl.readOnelineFromFile;
 import static com.polestar.task.database.DatabaseFileImpl.writeOneLineToFile;
@@ -65,6 +66,7 @@ public class VPNServerIntermediaManager {
 
         loadRawServerInfo();
         loadInterServerInfo();
+        checkSelected();
 
         mainHandler = new Handler(Looper.getMainLooper());
         HandlerThread thread = new HandlerThread("sync");
@@ -154,8 +156,23 @@ public class VPNServerIntermediaManager {
             syncWithInterServerInfoSynced();
             ret &= sortInterServersAndSave();
 
+            checkSelected();
         }
         return ret;
+    }
+
+    private void checkSelected() {
+        synchronized (this) {
+            int currentId = PreferenceUtils.getPreferServer();
+            if (currentId == VpnServer.SERVER_ID_AUTO) {
+                return;
+            }
+            VpnServer vpnServer = getServerInfo(currentId);
+            if (vpnServer == null) {
+                //之前选择的已经被删除了
+                PreferenceUtils.setPreferServer(VpnServer.SERVER_ID_AUTO);
+            }
+        }
     }
 
     private void syncWithInterServerInfoSynced() {
