@@ -37,7 +37,9 @@ public class RemoteConfig {
             public void onSuccess(Void aVoid) {
                 MLogs.logBug(TAG, "Fetch Succeeded");
                 mFirebaseRemoteConfig.activateFetched();
-                PreferencesUtils.putString(MApp.getApp(), "conf_intercept_class", RemoteConfig.getString("conf_intercept_class"));
+                PreferencesUtils.putInt(MApp.getApp(), SuperConfig.KEY_ADS_LAUNCH_CTRL, (int)RemoteConfig.getLong("ads_launch_ctrl"));
+                PreferencesUtils.putString(MApp.getApp(), SuperConfig.KEY_INTERCEPT_CLASS, RemoteConfig.getString("conf_intercept_class"));
+                SuperConfig.get().initData();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

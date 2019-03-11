@@ -39,6 +39,7 @@ import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
+import com.polestar.superclone.utils.SuperConfig;
 import com.polestar.task.network.Configuration;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -167,6 +168,7 @@ public class MApp extends MultiDexApplication {
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
+                SuperConfig.get();
                 if (!isSupportPkg()) {
                     BillingProvider.get().updateStatus(null);
                 }
@@ -192,12 +194,8 @@ public class MApp extends MultiDexApplication {
             @Override
             public void onVirtualProcess() {
                 MLogs.d("Virtual process create");
+                SuperConfig.get();
                 MComponentDelegate delegate = new MComponentDelegate();
-                String conf = PreferencesUtils.getString(getApp(), "conf_intercept_class", null);
-                if (conf != null) {
-                    String[] arr = conf.split(";");
-                    delegate.addClasses(arr);
-                }
                 delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
 
@@ -238,12 +236,8 @@ public class MApp extends MultiDexApplication {
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 MLogs.d("Server process app onCreate 0");
+                SuperConfig.get();
                 MComponentDelegate delegate = new MComponentDelegate();
-                String conf = PreferencesUtils.getString(getApp(), "conf_intercept_class", null);
-                if (conf != null) {
-                    String[] arr = conf.split(";");
-                    delegate.addClasses(arr);
-                }
                 delegate.asyncInit();
                 MLogs.d("Server process app onCreate 1");
                 VirtualCore.get().setComponentDelegate(delegate);

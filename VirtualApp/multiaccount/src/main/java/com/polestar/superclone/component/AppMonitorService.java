@@ -26,6 +26,7 @@ import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.superclone.IAppMonitor;
+import com.polestar.superclone.utils.SuperConfig;
 
 import java.util.HashSet;
 import java.util.List;
@@ -196,25 +197,22 @@ public class AppMonitorService extends Service {
     public IBinder onBind(Intent intent) {
         return appMonitor;
     }
-    private static final int ADS_BLOCK = 0;
-    private static final int ADS_TO_COVER = 1;
-    private static final int ADS_FORCE_REPLACE = 2;
     private class AppMonitor extends IAppMonitor.Stub {
         public void onAdsLaunch(String pkg, int userId, String name) {
             EventReporter.reportsAdsLaunch(AppMonitorService.this, name);
-            int ctrl = (int) RemoteConfig.getLong("ads_launch_ctrl");
+            int ctrl = SuperConfig.get().getInterstitialAdsCtl();
             switch (ctrl) {
-                case ADS_TO_COVER:
+                case SuperConfig.ADS_TO_COVER:
                     MLogs.d("Ads cover");
                     if (needLoadCoverAd(false, pkg)) {
                         loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
                     }
                     break;
-                case ADS_FORCE_REPLACE:
+                case SuperConfig.ADS_FORCE_REPLACE:
                     MLogs.d("Ads replace");
                     loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
                     break;
-                case ADS_BLOCK:
+                case SuperConfig.ADS_BLOCK:
                 default:
                     MLogs.d("Ads blocked");
                     return;

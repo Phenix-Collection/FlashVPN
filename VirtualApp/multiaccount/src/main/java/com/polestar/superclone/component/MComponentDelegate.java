@@ -10,7 +10,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.os.Looper;
-import android.text.TextUtils;
 
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.VirtualCore;
@@ -25,6 +24,7 @@ import com.polestar.superclone.model.AppModel;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
+import com.polestar.superclone.utils.SuperConfig;
 
 import java.util.HashSet;
 import java.util.List;
@@ -39,29 +39,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class MComponentDelegate implements ComponentDelegate {
 
-    private HashSet<String> pkgs = new HashSet<>();
-    private static HashSet<String> mInterstitialActivitySet = new HashSet<>();
-    static {
-        mInterstitialActivitySet.add("com.google.android.gms.ads.AdActivity");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MoPubActivity");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MraidActivity");
-        mInterstitialActivitySet.add("com.mopub.common.MoPubBrowser");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MraidVideoPlayerActivity");
-        mInterstitialActivitySet.add("com.facebook.ads.AudienceNetworkActivity");
-        mInterstitialActivitySet.add("com.facebook.ads.InterstitialAdActivity");
-        mInterstitialActivitySet.add("com.ironsource.sdk.controller.InterstitialActivity");
-        mInterstitialActivitySet.add("com.applovin.adview.AppLovinInterstitialActivity");
-    }
+    private HashSet<String> notificationPkgs = new HashSet<>();
 
-    public void addClasses(String[] arr) {
-        if (arr != null) {
-            for (String s:arr) {
-                if (!TextUtils.isEmpty(s)) {
-                    mInterstitialActivitySet.add(s);
-                }
-            }
-        }
-    }
     private IAppMonitor uiAgent;
     public void asyncInit() {
         new Thread(new Runnable() {
@@ -71,7 +50,7 @@ public class MComponentDelegate implements ComponentDelegate {
                     List<AppModel> list = DbManager.queryAppList(MApp.getApp());
                     for (AppModel app : list) {
                         if (app.getNotificationEnable()) {
-                            pkgs.add(AppManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
+                            notificationPkgs.add(AppManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
                         }
                     }
                 }
@@ -154,13 +133,13 @@ public class MComponentDelegate implements ComponentDelegate {
     @Override
     public boolean isNotificationEnabled(String pkg, int userId) {
         String key = AppManager.getMapKey(pkg, userId);
-        MLogs.d("isNotificationEnabled pkg: " + key + " " + pkgs.contains(key));
-        if ( pkgs.contains(key) ) {
+        MLogs.d("isNotificationEnabled pkg: " + key + " " + notificationPkgs.contains(key));
+        if ( notificationPkgs.contains(key) ) {
             return  true;
         } else if(MApp.isSupportPkg()) {
             CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
             if (data.isNotificationEnable) {
-                pkgs.add(key);
+                notificationPkgs.add(key);
                 return true;
             }
         }
@@ -176,8 +155,7 @@ public class MComponentDelegate implements ComponentDelegate {
 
     @Override
     public boolean handleStartActivity(String name) {
-        if (mInterstitialActivitySet.contains(name)) {
-            MLogs.d("AppInstrumentation","Starting activity: " + name);
+        if (SuperConfig.get().isHandleInterstitial(name)  ) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -188,7 +166,7 @@ public class MComponentDelegate implements ComponentDelegate {
                     }
                 }
             }).start();
-            return true;
+            return SuperConfig.get().isPolicyInterstitialBlock();
         }
         return false;
     }
