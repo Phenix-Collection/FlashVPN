@@ -66,7 +66,9 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
         listAdapter.updateServers();
         serverListView.setAdapter(listAdapter);
         autoSignalImg = findViewById(R.id.best_server_signal);
-        autoSignalImg.setImageResource(vpnServerIntermediaManagerManager.getBestServer().getSignalResId());
+        if (vpnServerIntermediaManagerManager.getBestServer() != null) {//如果网络不好，可能什么数据都没拿到呢
+            autoSignalImg.setImageResource(vpnServerIntermediaManagerManager.getBestServer().getSignalResId());
+        }
         int prefered = PreferenceUtils.getPreferServer();
         if (prefered == VpnServer.SERVER_ID_AUTO) {
             currentSelected = autoCheckBox;
@@ -115,7 +117,9 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
                 listAdapter.updateServers();
                 listAdapter.notifyDataSetChanged();
                 refreshProgress.setVisibility(View.INVISIBLE);
-                autoSignalImg.setImageResource(vpnServerIntermediaManagerManager.getBestServer().getSignalResId());
+                if (vpnServerIntermediaManagerManager.getBestServer() != null) {
+                    autoSignalImg.setImageResource(vpnServerIntermediaManagerManager.getBestServer().getSignalResId());
+                }
                 refreshIcon.setClickable(true);
             }
         }, true);
