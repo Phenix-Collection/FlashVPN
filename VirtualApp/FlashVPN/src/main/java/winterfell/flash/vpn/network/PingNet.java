@@ -1,5 +1,7 @@
 package winterfell.flash.vpn.network;
 
+import com.polestar.task.network.datamodels.VpnServer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -54,7 +56,7 @@ public class PingNet {
                 MLogs.e(TAG, "exec cmd fail." + status);
                 EventReporter.reportPingFailed(status);
                 append(pingNetEntity.getResultBuffer(), "exec cmd fail.");
-                pingNetEntity.setPingTime(""+ServerInfo.LEVEL_1_PING);
+                pingNetEntity.setPingTime(""+ VpnServer.LEVEL_1_PING);
                 pingNetEntity.setResult(true);
             }
             MLogs.i(TAG, "exec finished.");

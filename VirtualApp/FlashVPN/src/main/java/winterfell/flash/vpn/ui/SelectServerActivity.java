@@ -22,7 +22,6 @@ import com.polestar.task.network.datamodels.VpnServer;
 import java.util.List;
 
 import winterfell.flash.vpn.R;
-import winterfell.flash.vpn.network.ServerInfo;
 import winterfell.flash.vpn.network.VPNServerIntermediaManager;
 import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
@@ -88,7 +87,7 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
     private void updateSelected(CompoundButton compoundButton) {
         MLogs.d("updateSelected : " + PreferenceUtils.getPreferServer());
         if (compoundButton.getId() == R.id.auto_checkbox) {
-            PreferenceUtils.setPreferServer(ServerInfo.SERVER_ID_AUTO);
+            PreferenceUtils.setPreferServer(VpnServer.SERVER_ID_AUTO);
         } else {
             RegionServers si = (RegionServers)compoundButton.getTag();
             if (si != null) {

@@ -2,8 +2,10 @@ package winterfell.flash.vpn.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.polestar.task.network.datamodels.VpnServer;
+
 import winterfell.flash.vpn.FlashApp;
-import winterfell.flash.vpn.network.ServerInfo;
 
 /**
  * Created by doriscoco on 2017/4/4.
@@ -295,7 +297,7 @@ public class PreferenceUtils {
     }
 
     public static int getPreferServer(){
-        return getInt(FlashApp.getApp(), "prefer_server", ServerInfo.SERVER_ID_AUTO);
+        return getInt(FlashApp.getApp(), "prefer_server", VpnServer.SERVER_ID_AUTO);
     }
 
     public static void setPreferServer(int id) {
