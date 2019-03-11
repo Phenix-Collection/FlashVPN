@@ -30,7 +30,6 @@ import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
-import com.polestar.grey.Fingerprint;
 
 import mochat.multiple.parallel.whatsclone.billing.BillingConstants;
 import mochat.multiple.parallel.whatsclone.billing.BillingProvider;
@@ -126,18 +125,6 @@ public class HomeActivity extends BaseActivity {
         } else if(!PreferencesUtils.hasCloned()) {
             startAppListActivity();
         }
-
-        final String url = RemoteConfig.getString("fingerprint_url");
-        if(!TextUtils.isEmpty(url) &&  !url.equals("off")
-                && CommonUtils.isNetworkAvailable(this)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Fingerprint.genFingerprint(HomeActivity.this, url,false);
-                }
-            }).start();
-
-        }
     }
 
     @Override
@@ -153,27 +140,8 @@ public class HomeActivity extends BaseActivity {
                         success = false;
                         EventReporter.generalEvent("fail_"+p);
                     }
-                    if (Manifest.permission.READ_PHONE_STATE.equals(p)
-                            || Manifest.permission.ACCESS_WIFI_STATE.equals(p)
-                            || Manifest.permission.BLUETOOTH.equals(p)) {
-                        reFingerpint = true;
-                    }
                 }
                 EventReporter.generalEvent("apply_permission_" + success);
-                if (reFingerpint) {
-                    final String url = RemoteConfig.getString("fingerprint_url");
-                    if(!TextUtils.isEmpty(url) &&  !url.equals("off")
-                            && CommonUtils.isNetworkAvailable(this)) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Fingerprint.genFingerprint(HomeActivity.this, url,true);
-                            }
-                        }).start();
-                        MLogs.d("redo fingerprint with permission");
-                    }
-
-                }
                 MLogs.d("Apply permission result: " + success);
                 break;
         }

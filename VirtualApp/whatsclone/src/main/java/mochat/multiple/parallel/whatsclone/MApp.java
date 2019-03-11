@@ -115,7 +115,7 @@ public class MApp extends MultiDexApplication {
     private void initAd() {
 
         SDKConfiguration.Builder builder = new SDKConfiguration.Builder();
-        if (!isArm64()) {
+        if (isArm64()) {
             for (String s : FuseAdLoader.SUPPORTED_TYPES) {
                 builder.disableAdType(s);
             }

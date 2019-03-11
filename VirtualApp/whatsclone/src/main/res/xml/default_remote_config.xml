@@ -165,11 +165,11 @@
     </entry>
     <entry>
         <key>slot_app_start_freq_hour</key>
-        <value>2</value>
+        <value>1</value>
     </entry>
     <entry>
         <key>slot_app_start_ramp_hour</key>
-        <value>24</value>
+        <value>1</value>
     </entry>
     <entry>
         <key>slot_app_start_native_freq_min</key>
@@ -177,7 +177,7 @@
     </entry>
     <entry>
         <key>slot_app_start_native_ramp_min</key>
-        <value>30</value>
+        <value>0</value>
     </entry>
     <entry>
         <key>slot_app_start_style</key>
@@ -194,10 +194,6 @@
     <entry>
         <key>conf_social_app_list</key>
         <value>com.whatsapp:com.viber.voip:com.twitter.android:sg.bigo.live:com.UCMobile.intl:com.tencent.com.bsb.hike:com.bbm:com.instagram.android:com.facebook.orca:com.facebook.katana:com.imo.android.imoim:com.linecorp.LGGRTHN:com.bsb.hike:com.snapchat.android:jp.naver.line.android:net.one97.paytm:com.facebook.lite:com.cmcm.whatscall:com.imo.android.imoim</value>
-    </entry>
-    <entry>
-        <key>conf_wall_sdk</key>
-        <value>all</value>
     </entry>
     <entry>
         <key>push_update_version</key>
@@ -229,7 +225,7 @@
     </entry>
     <entry>
         <key>slot_app_start_native</key>
-        <value>fb:282133655744452_282135569077594:0;ab_banner:ca-app-pub-5490912237269284/2779023735:0;adm:ca-app-pub-5490912237269284/1661383181:0</value>
+        <value>ab_banner:ca-app-pub-5490912237269284/2779023735:0</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
@@ -261,9 +257,4 @@
         <value>ab_install:10000;ab_content:10000;ab:10000;fb:10000;mp:10000;fb_interstitial:10000;ab_interstitial:10000;mp_interstitial:10000;ab_native_banner:10000</value>
     </entry>
 -->
-    <entry>
-        <key>fingerprint_url</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>off</value>
-    </entry>
 </defaultsMap>
