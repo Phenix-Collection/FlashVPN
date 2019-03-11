@@ -1,8 +1,6 @@
 <resources>
-    <string name="appwall_title">Descobrir</string>
 
     <string name="action_settings">Configura</string>
-    <string name="most_popular_apps">Mais Popular</string>
     <string name="more_apps">Suportado</string>
     <string name="sponsor_text">Recomendar Apps</string>
     <string name="btn_clone">Clone</string>
@@ -36,7 +34,6 @@
     <string name="star_rating">Classificação de 5 estrelas</string>
     <string name="yes">Sim</string>
     <string name="ok">OK</string>
-    <string name="installFailure">Desculpe, este app ainda não é suportado, e estamos chegando com ele em breve.</string>
     <string name="start_tips">Comecemos por clonar seu primeiro aplicativo aqui!</string>
     <string name="long_press_tips">Imprensa longa &amp; arraste-o para adicionar um atalho na tela inicial ou remova-o.</string>
 
@@ -79,8 +76,6 @@
     <!-- titles -->
     <string name="clone_apps_title">Clone Apps</string>
 
-    <string name="crash_hint">Lamentamos, mas ocorreu algum erro e vamos corrigi-lo em breve.</string>
-
     <string name="text_Q1_title">Q1: Por que não consigo receber notificações de mensagens de aplicativos habilitados para Superb Cloner?</string>
     <string name="text_Q1_content_2">A1:Certifique-se de que o Superb Cloner tenha acesso à rede</string>
     <string name="text_Q2_title">Q2: O Superb Cloner coletará e usará minhas informações privadas??</string>
@@ -120,19 +115,16 @@
     <string name="al_btn_reset">Restabelecer</string>
     <string name="al_lockpattern_release_hint">Solte o dedo quando terminar</string>
     <string name="al_lockpattern_try_again">Padrão errado. Por favor, tente novamente.</string>
-    <string name="applock_permission_contacts_toast">Isso ajuda você a recuperar sua senha.</string>
     <string name="al_lockpattern_create_unlock_pattern">Definir um novo padrão</string>
     <string name="al_lockpattern_number_no_correct">Ligue pelo menos 4 pontos</string>
-    <string name="al_lockpattern_create_new_password_outofbound">A senha deve ter menos de 10 dígitos</string>
     <string name="al_btn_finish">Confirmar</string>
     <string name="al_btn_next">Próximo</string>
     <string name="al_lockpattern_error">Padrão errado, tente novamente.</string>
     <string name="al_changepassword">Mudar senha</string>
     <string name="al_unlcok_pattern">Desbloquear Padrão</string>
     <string name="al_passcode">Senha</string>
-    <string name="al_invisable_patterns">Ocultar padrão</string>
     <string name="al_change_security_question">Alterar a pergunta segura</string>
-    <string name="app_lock_safe_info_hint">Para verificar sua identidade ao redefinir a senha</string>
+    <string name="app_lock_safe_info_hint">Para verificar sua identidade ao redefinir a senha. Ele será criptografado e armazenado apenas no seu dispositivo.</string>
     <string name="app_lock_safe_question_hint">Definir uma pergunta segura</string>
     <string name="app_lock_safe_answer_hint">Digite a resposta (até 20 caracteres)</string>
     <string name="app_lock_verifier_tile">Definir uma pergunta segura</string>
@@ -143,20 +135,19 @@
     <string name="app_lock_safe_question_toast_ask_Question">Você não definiu uma pergunta segura</string>
     <string name="app_lock_safe_question_toast_ask_Answer">Você ainda não respondeu.</string>
     <string name="app_lock_safe_question_toast_error">Falha na autenticação, insira novamente</string>
-    <string name="applock_window_title">Clonado %s</string>
     <string name="applock_forgot_password"><u>Esqueceu a senha?</u></string>
     <string name="need_set_secure_answer">Defina a resposta para uma pergunta segura e pressione o botão confirmar.</string>
 
-    <string-array name="secure_questions">
-        <item>Quando é seu aniversário?</item>
-        <item>Qual o nome do seu pai?</item>
-        <item>Qual o nome da sua mãe?</item>
-        <item>Quando você é casado?</item>
-        <item>Onde você foi para a escola?</item>
-        <item>Qual o time de futebol você torce?</item>
-        <item>Qual sua comida favorita?</item>
-        <item>Personalizar perguntas</item>
-    </string-array>
+    <string-array name ="secure_questions">
+                 <item> Quando é seu aniversário?</item>
+                 <item> Qual é a sua comida favorita?</item>
+                 <item> Qual esporte você mais gosta?</item>
+                 <item> Quem é seu ídolo?</item>
+                 <item> Onde você foi para o ensino fundamental?</item>
+                 <item> Onde você foi para o ensino médio?</item>
+                 <item> Qual é o seu filme favorito?</item>
+                 <item> Personalize perguntas</item>
+             </string-array>
     <string name="congratulations">Parabéns!</string>
     <string name="notification_detail_setting">Ativar notificação para a aplicação</string>
     <string name="create_shortcut">Criar Atalho</string>
@@ -171,15 +162,12 @@
     <string name="clone_success">%s está pronto. Aproveite agora!</string>
     <string name="settings_adfree_title">Remover propagandas</string>
     <string name="settings_adfree_content">Desativar anúncios no aplicativo</string>
-    <string name="adfree_dialog_title">Remover propagandas</string>
-    <string name="adfree_dialog_content">Seja um usuário premium do Superb Cloner e desative todos os ADs neste aplicativo. Você quer comprar agora?</string>
     <string name="text_Q6_content">A6: Verifique se você ativou o armário para este aplicativo e concede permissão ao Superb Cloner para mostrar a janela flutuante. Por exemplo, no dispositivo Xiaomi, Configurações->Gerenciamento de aplicativos->Superb Cloner->Controle de permissão->Janela flutuante.</string>
     <string name="text_Q6_title">Q6: Por que o armário de privacidade não aparece quando o lançamento do aplicativo?</string>
     <string name="text_Q7_content">A7: Verifique se você concedeu essas permissões ao Superb Cloner na configuração do seu sistema.</string>
     <string name="text_Q7_title">Q7: Por que o atalho não pode ser criado ou a câmera, o local não funciona?</string>
     <string name="lock_interval_settings_content">O intervalo para bloquear o aplicativo novamente depois de deixá-lo</string>
     <string name="lock_interval_settings_title">Intervalo de bloqueio</string>
-    <string name="settings_join_us">Junte-se a nossa comunidade</string>
     <string name="customize_title">Personalização</string>
     <string name="customize_setting_desc">Clique para personalizar o ícone e o rótulo para clones</string>
     <string name="hue">Matiz</string>
@@ -221,8 +209,9 @@
          <string name = "coin_unit" traduzível = "false">coin</string>
          <string name = "reward_center">Centro de Recompensas</string>
          <string name = "input_code_hint">Envie o código e receba bônus ao terminar 1 oferta ao vivo</string>
-         <string name = "resgatar">Resgatar</string>
-         <string name = "purchase">Compra</string>
+        
+        
+    <string name = "purchase">Compra</string>
          <string name = "more_offer">Mais ofertas de recompensas estão chegando em breve ...</string>
          <string name = "live_offer">Ofertas ao vivo</string>
 

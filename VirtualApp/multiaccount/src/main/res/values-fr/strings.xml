@@ -8,12 +8,10 @@
     <string name="al_change_security_question">Changer la question sécurisée</string>
     <string name="al_changepassword">Changer le mot de passe</string>
     <string name="al_enter_passcode">Entrer le mot de passe</string>
-    <string name="al_invisable_patterns">Masquer le motif</string>
     <string name="al_lockpattern_confirm_password">Confirmer le mot de passe</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Confirmer le modèle</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">Dessinez à nouveau</string>
     <string name="al_lockpattern_create_new_password">Définir un nouveau mot de passe</string>
-    <string name="al_lockpattern_create_new_password_outofbound">Le code d\'accès doit comporter moins de 10 chiffres</string>
     <string name="al_lockpattern_create_new_password_subtitle">Le code d\'accès sera utilisé pour protéger les applications</string>
     <string name="al_lockpattern_create_unlock_pattern">Définir un nouveau motif</string>
     <string name="al_lockpattern_draw_unlock_pattern">Dessiner le motif pour débloquer</string>
@@ -45,7 +43,7 @@
     <string name="text_Q2_title">Q2: Superb Cloner va-t-il collecter et utiliser mes informations privées?</string>
     <string name="text_Q1_content_2">A1: assurez-vous que Superb Cloner a un accès réseau</string>
     <string name="text_Q1_title">Q1: Pourquoi je ne peux pas recevoir de notifications de messages des applications activées par Superb Cloner?</string>
-    <string name="text_Q2_content">A2: Non, Superb Cloner ne recueillera que de petites quantités de vos \"données publiques\" (par exemple Avatar, surnom, etc.), et cela ne sera utilisé que dans votre appareil pour créer une meilleure expérience utilisateur pour vous. Superb Cloner promet qu\'aucune de vos données privées ne sera collectée ou utilisée.</string>
+    <string name="text_Q2_content">A2: Super Clone ne collectera que des informations générales pour l\'analyse des collisions et des statistiques de base. Celles-ci ne seront utilisées dans cette application que pour améliorer l\'expérience utilisateur. Super Clone promet qu\'aucune de vos données privées ne sera collectée ou utilisée.</string>
     <string name="submit_success">Merci d\'avoir répondu!</string>
     <string name="start">Début</string>
     <string name="star_rating">Go 5 étoiles maintenant</string>
@@ -71,16 +69,13 @@
     <string name="app_lock_reset_password">Réinitialiser les mots de passe</string>
     <string name="app_lock_safe_answer_hint">Entrez la réponse (Jusqu\'à 20 caractères)</string>
     <string name="app_lock_safe_answer_reset_hint">Entrez la réponse</string>
-    <string name="app_lock_safe_info_hint">Pour vérifier votre identité lors de la réinitialisation du mot de passe</string>
+    <string name="app_lock_safe_info_hint">Pour vérifier votre identité lors de la réinitialisation du mot de passe. Il sera crypté et uniquement stocké dans votre appareil.</string>
     <string name="app_lock_safe_question_hint">Définir une question sécurisée</string>
     <string name="app_lock_safe_question_toast_ask_Answer">Vous n\'avez pas encore saisi de réponse.</string>
     <string name="app_lock_safe_question_toast_ask_Question">Vous n\'avez pas défini une question sécurisée</string>
     <string name="app_lock_safe_question_toast_error">L\'authentification a échoué, veuillez entrer à nouveau</string>
     <string name="app_lock_verifier_tile">Définir une question sécurisée</string>
     <string name="applock_forgot_password"><u>Mot de passe oublié?</u></string>
-    <string name="applock_permission_contacts_toast">Cela vous aide à récupérer votre mot de passe.</string>
-    <string name="applock_window_title">%s +</string>
-    <string name="appwall_title">Découvrir</string>
     <string name="app_starting_tips">%s commence</string>
     <string name="btn_clone">Cloner</string>
     <string name="button_submit">Soumettre</string>
@@ -99,12 +94,10 @@
     <string name="no_thanks">Non merci</string>
     <string name="no_password_set">Veuillez d\'abord définir un mot de passe pour le casier.</string>
     <string name="need_set_secure_answer">Configurez la réponse pour une question sécurisée, puis appuyez sur le bouton confirmer.</string>
-    <string name="most_popular_apps">Le plus populaire</string>
     <string name="more_apps">Plus pris en charge</string>
     <string name="long_press_tips">Appuyez longuement et faites-le glisser pour ajouter un raccourci sur l\'écran d\'accueil ou l\'enlever.</string>
     <string name="lock_settings_title">Paramètres du casier</string>
     <string name="lock_settings_for_apps">Activer le casier de confidentialité pour les applications clonées</string>
-    <string name="installFailure">Désolé, cette application n\'est pas encore prise en charge, et nous la proposons bientôt.</string>
     <string name="forgot_password">Mot de passe oublié</string>
     <string name="first_start_tips">Cela peut prendre un peu plus de temps pour le premier démarrage.</string>
     <string name="feedback_no_description">La description ne peut pas être vide!</string>
@@ -132,7 +125,6 @@
     <string name="clone_success">%s est prêt. Profitez-en maintenant!</string>
     <string name="lock_interval_settings_content">L\'intervalle pour verrouiller l\'application à nouveau après l\'avoir quitté</string>
     <string name="lock_interval_settings_title">Intervalle de verrouillage</string>
-    <string name="settings_join_us">Rejoignez notre communauté</string>
     <string name="customize_title">Personnalisation</string>
     <string name="customize_setting_desc">Cliquez pour personnaliser l\'icône et l\'étiquette pour les clones</string>
     <string name="hue">Teinte</string>
@@ -142,7 +134,6 @@
     <string name="update_dialog_right">Mettre à jour</string>
     <string name="update_dialog_left">Ignorer</string>
     <string name="update_dialog_content">Une nouvelle version arrive! Nous avons beaucoup amélioré la dernière version %s. Voulez-vous mettre à jour votre Superb Cloner maintenant?</string>
-    <string name="crash_hint">Désolé, des erreurs se produisent, et nous allons le réparer dans la prochaine version.</string>
     <string name="clone_error">Désolé, une erreur est survenue pendant le clone. Veuillez redémarrer Superb Cloner et réessayer.</string>
     <string name="check_update"><u>Vérifier la mise à jour</u></string>
     <string name="saturation">Saturation</string>
@@ -164,21 +155,34 @@
         <string name = "product_ok">Achetez le produit avec succès!</string>
         <string name = "no_enough_coin">Vous n’avez pas assez de pièces maintenant!</string>
         <string name = "you_have_coins">Vous avez maintenant %.0f %s</string>
-        <string name = "récompense_center">Centre de récompenses</string>
-        <string name = "input_code_hint">Soumettez le code et obtenez un bonus à la fin de la première offre en direct</string>
-        <string name = "racheter">racheter</string>
-        <string name = "purchase">Achat</string>
+        
+        
+    <string name = "input_code_hint">Soumettez le code et obtenez un bonus à la fin de la première offre en direct</string>
+        
+        
+    <string name = "purchase">Achat</string>
         <string name = "more_offer">Une autre offre de récompense arrive bientôt ...</string>
         <string name = "live_offer">Offres en direct</string>
-        <string name = "récompense_load_failed">Echec du chargement. Veuillez vérifier ci-dessous et réessayer: \n - Le service Google Play est installé \n - Superb Cloner ne s'exécute dans aucune application de clonage \n - Connexion au réseau</string>
-        <string name = "need_coin_for_clone">Obtenir les pièces pour terminer le clonage</string>
+        
+        
+    <string name = "need_coin_for_clone">Obtenir les pièces pour terminer le clonage</string>
         <string name = "user_activity_title">Service Premium</string>
-        <string name = "devenir_vip_tips1">Supprimer toutes les annonces</string>
-        <string name = "devenir_vip_tips2">Profitez de clones illimités</string>
-        <string name = "devenir_vip_tips3">Plusieurs comptes pour les applications de jeux et les applications sociales</string>
-        <string name = "devenir_vip_tips4">Prise en charge ponctuelle des rapports de problème</string>
-        <string name = "devenir_vip">Devenir utilisateur VIP de Superb Cloner</string>
-        <string name = "free_trial_text">+ %d essai gratuit</string>
+        
+        
+        <string-array name = "secure_questions">
+             <item> Quand est votre anniversaire?</item>
+             <item> Quel est votre plat préféré?</item>
+             <item> Quel sport aimez-vous le plus?</item>
+             <item> Qui est votre idole?</item>
+             <item> Où êtes-vous allé au collège?</item>
+             <item> Où êtes-vous allé au lycée?</item>
+             <item> Quel est votre film préféré?</item>
+             <item> Personnaliser les questions</item>
+         </string-array>
+        
+        
+        
+    <string name = "free_trial_text">+ %d essai gratuit</string>
         <string name = "cash_rewards">Récompenses en espèces</string>
         <string name = "earn_coin_remove_ads">Gagnez des pièces et sélectionnez un produit pour supprimer les annonces</string>
 </resources>

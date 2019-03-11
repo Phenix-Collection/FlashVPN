@@ -1,8 +1,6 @@
 <resources>
-    <string name="appwall_title">ค้นพบ</string>
 
     <string name="action_settings">การตั้งค่า</string>
-    <string name="most_popular_apps">ที่นิยมมากที่สุด</string>
     <string name="more_apps">ใช้งานมากขึ้น</string>
     <string name="sponsor_text">แนะนำ</string>
     <string name="btn_clone">โคลน</string>
@@ -36,7 +34,6 @@
     <string name="star_rating">ไปประเมินระดับ 5 ดาวในขณะนี้</string>
     <string name="yes">ใช่</string>
     <string name="ok">ตกลง</string>
-    <string name="installFailure">ขออภัยโปรแกรมนี้ยังไม่สนับสนุนและเราจะมากับมันเร็ว ๆ นี้้</string>
     <string name="start_tips">โคลนโปรแกรมแรกของคุณจากที่นี่แล้ว!</string>
     <string name="long_press_tips">ลองกดและลากไปยังเพิ่มทางลัดบนหน้าจอหลักหรือลบ</string>
 
@@ -78,13 +75,11 @@
 
     <!-- titles -->
     <string name="clone_apps_title">โคลนปพลิเคชัน</string>
-	
-    <string name="crash_hint">ขออภัยข้อผิดพลาดบางอย่างเกิดขึ้นและเราจะแก้ไขได้ในรุ่นถัดไป</string>
 
     <string name="text_Q1_title">Q1: ทำไมฉันไม่สามารถได้รับการแจ้งเตือนข้อความจากแอปเปิดการใช้งาน?</string>
     <string name="text_Q1_content_2">A1: โปรดตรวจสอบว่าเรามีการเข้าถึงเครือข่าย</string>
     <string name="text_Q2_title">Q2: โปรแกรมนี้จะรวบรวมและใช้ข้อมูลส่วนตัวของฉัน?</string>
-    <string name="text_Q2_content">A2: ไม่มีโปรแกรมนี้จะรวบรวมจำนวนเงินขนาดเล็กของ "ข้อมูลสาธารณะ" ของคุณ (เช่น Avatar ชื่อเล่น ฯลฯ ) และเหล่านี้จะถูกนำมาใช้เฉพาะในอุปกรณ์ของคุณเพื่อสร้างประสบการณ์การใช้งานที่ดีสำหรับคุณ เราสัญญาว่าไม่มีข้อมูลส่วนตัวของคุณจะถูกเรียกเก็บหรือนำไปใช้</string>
+    <string name="text_Q2_content">A2: Super Clone จะรวบรวมเฉพาะข้อมูลทั่วไปสำหรับการวิเคราะห์การชนและสถิติพื้นฐานและจะใช้ภายในแอพนี้เพื่อสร้างประสบการณ์การใช้งานที่ดีขึ้นสำหรับคุณ Super Clone สัญญาว่าจะไม่มีการรวบรวมหรือใช้ข้อมูลส่วนตัวของคุณ</string>
     <string name="text_Q3_title">Q3: นี่คือเหตุผลที่ใช้พื้นที่เก็บข้อมูลแอพลิเคชันที่เพิ่มขึ้น?</string>
     <string name="text_Q3_content">A3: ทุกบัญชีย่อยเพิ่มบนอุปกรณ์ของคุณจะเริ่มต้นโดยอยู่ภายใต้การตรวจสอบนี้โดยระบบปฏิบัติการ Android ตัวอย่างเช่นเมื่อคุณเพิ่ม Facebook บัญชีย่อยไปยังอุปกรณ์ของคุณทั้งหมดของการจัดเก็บข้อมูลที่ใช้สำหรับบัญชีผู้ใช้ Facebook ที่สองของคุณ (app) อยู่ภายใต้โปรแกรมนี้ ดังนั้นการบริโภคการจัดเก็บข้อมูลที่ระบุไว้จะปรากฏขึ้นเพื่อเพิ่มอย่างมีนัยสำคัญเมื่อคุณเพิ่มมากขึ้นบัญชีย่อย เรามั่นใจว่าการจัดเก็บข้อมูลการใช้งานของโปรแกรมนี้ตัวเองไม่ได้จริงเพิ่มขึ้นมาก</string>
     <string name="text_Q4_title">Q4: ทำไมโปรแกรมนี้ใช้พื้นที่จัดเก็บมาก?</string>
@@ -120,19 +115,16 @@
     <string name="al_btn_reset">รีเซ็ต</string>
     <string name="al_lockpattern_release_hint">ปล่อยนิ้วเมื่อดำเนินการเสร็จ</string>
     <string name="al_lockpattern_try_again">รูปแบบไม่ตรงกันโปรดลองอีกครั้ง</string>
-    <string name="applock_permission_contacts_toast">นี้จะช่วยให้คุณสามารถเรียกรหัสผ่านของคุณ</string>
     <string name="al_lockpattern_create_unlock_pattern">การตั้งค่ารูปแบบใหม่</string>
     <string name="al_lockpattern_number_no_correct">โปรดเชื่อมต่ออย่างน้อย 4 จุด</string>
-    <string name="al_lockpattern_create_new_password_outofbound">รหัสผ่านจะต้องน้อยกว่า 10 หลัก</string>
     <string name="al_btn_finish">ยืนยัน</string>
     <string name="al_btn_next">ต่อไป</string>
     <string name="al_lockpattern_error">รูปแบบที่ไม่ถูกต้องโปรดลองอีกครั้ง</string>
     <string name="al_changepassword">เปลี่ยนรหัสผ่าน</string>
     <string name="al_unlcok_pattern">ปลดล็อครูปแบบ</string>
     <string name="al_passcode">รหัสผ่าน</string>
-    <string name="al_invisable_patterns">ซ่อนรูปแบบ</string>
     <string name="al_change_security_question">เปลี่ยนคำถามการรักษาความปลอดภัย</string>
-    <string name="app_lock_safe_info_hint">เพื่อยืนยันตัวตนของคุณเมื่อการรีเซ็ตรหัสผ่าน</string>
+    <string name="app_lock_safe_info_hint">เพื่อยืนยันตัวตนของคุณเมื่อรีเซ็ตรหัสผ่าน มันจะถูกเข้ารหัสและเก็บไว้ในอุปกรณ์ของคุณเท่านั้น</string>
     <string name="app_lock_safe_question_hint">ตั้งคำถามการรักษาความปลอดภัย</string>
     <string name="app_lock_safe_answer_hint">ป้อนคำตอบ (ไม่เกิน 20 ตัวอักษร)</string>
     <string name="app_lock_verifier_tile">ตั้งคำถามการรักษาความปลอดภัย</string>
@@ -143,19 +135,18 @@
     <string name="app_lock_safe_question_toast_ask_Question">คุณไม่ได้ตั้งคำถามการรักษาความปลอดภัย</string>
     <string name="app_lock_safe_question_toast_ask_Answer">คุณไม่ได้ป้อนคำตอบเลย</string>
     <string name="app_lock_safe_question_toast_error">รับรองความถูกต้องล้มเหลวโปรดใส่อีกครั้ง</string>
-    <string name="applock_window_title">โคลน %s</string>
     <string name="applock_forgot_password"><u>ลืมรหัสผ่าน?</u></string>
     <string name="need_set_secure_answer">กรุณาตั้งค่าคำตอบสำหรับคำถามของความปลอดภัยและจากนั้นกดปุ่มยืนยัน</string>
 
-    <string-array name="secure_questions">
-        <item>วัดเกิดคุณเมื่อไร?</item>
-        <item>พ่อของคุณชื่ออะไร?</item>
-        <item>อะไรของคุณแม่ชื่อ?</item>
-        <item>เมื่อคุณแต่งงานแล้ว?</item>
-        <item>คุณไม่ได้ไปที่ไหนไปโรงเรียนจูเนียร์?</item>
-        <item>คุณไม่ได้ไปที่ไหนที่โรงเรียนมัธยม?</item>
-        <item>อะไรภาพยนตร์ที่คุณชื่นชอบที่สุด?</item>
-        <item>ปรับแต่งคำถาม</item>
+    <string-array name = "secure_questions">
+                 <item> วันเกิดของคุณคือวันใด </item>
+                 <item> อาหารโปรดของคุณคืออะไร </item>
+                 <item> กีฬาใดที่คุณชอบมากที่สุด </item>
+                 <item> ไอดอลของคุณคือใคร </item>
+                 <item> คุณไปโรงเรียนมัธยมที่ไหน </item>
+                 <item> คุณไปโรงเรียนมัธยมที่ไหน </item>
+                 <item> ภาพยนตร์เรื่องโปรดของคุณคืออะไร </item>
+                 <item> ปรับแต่งคำถาม </item>
     </string-array>
     <string name="congratulations">ยินดีด้วยครับ</string>
     <string name="notification_detail_setting">เปิดใช้งานการแจ้งเตือนสำหรับแอป</string>
@@ -171,15 +162,12 @@
     <string name="clone_success">%s พร้อมแล้ว สนุกกับมันในขณะนี้!</string>
     <string name="settings_adfree_title">ลบโฆษณา</string>
     <string name="settings_adfree_content">ปิดโฆษณาในแอป</string>
-    <string name="adfree_dialog_title">ลบโฆษณา</string>
-    <string name="adfree_dialog_content">กลายเป็นผู้ใช้พรีเมียมของ Superb Cloner และปิดโฆษณาทั้งหมดในแอปนี้ คุณต้องการซื้อตอนนี้หรือไม่?</string>
     <string name="text_Q6_content">A6: โปรดตรวจสอบว่าคุณได้เปิดใช้งานตู้เก็บของแอปพลิเคชันนี้และอนุญาตให้ Superb Cloner แสดงหน้าต่างลอยหรือไม่ ตัวอย่างเช่นในอุปกรณ์ Xiaomi, Settings-> App Management-> Superb Cloner-> Permission Control-> Floating Window</string>
     <string name="text_Q6_title">Q6: ทำไมตู้เก็บข้อมูลส่วนบุคคลไม่ปรากฏขึ้นเมื่อแอปเปิดตัว?</string>
     <string name="text_Q7_content">A7: โปรดตรวจสอบว่าคุณได้รับสิทธิ์เหล่านี้กับ Superb Cloner ในการตั้งค่าระบบของคุณหรือไม่</string>
     <string name="text_Q7_title">Q7: เหตุใดจึงไม่สามารถสร้างทางลัดหรือกล้องถ่ายรูปได้ตำแหน่งไม่ทำงาน</string>
     <string name="lock_interval_settings_content">ช่วงเวลาที่จะล็อคแอพพลิเคอีกครั้งหลังจากที่คุณทิ้งไว้</string>
     <string name="lock_interval_settings_title">ช่วงล็อก</string>
-    <string name="settings_join_us">เข้าร่วมชุมชนของเรา</string>
     <string name="customize_title">การปรับแต่ง</string>
     <string name="customize_setting_desc">คลิกเพื่อปรับแต่งไอคอนและป้ายกำกับสำหรับโคลน</string>
     <string name="hue">สี</string>
@@ -210,8 +198,9 @@
         <string name = "submit_code_ok">ส่งรหัสเชิญแล้ว!</string>
         <string name = "submit_code_fail">รหัสคำเชิญผิดหรือถูกส่งไปแล้ว!</string>
         <string name = "product_ok">ซื้อความสำเร็จของผลิตภัณฑ์!</string>
-        <string name = "consum_coins">ใช้เหรียญ %.0f แล้ว!</string>
-        <string name = "no_enough_coin">คุณไม่มีเงินมากพอ!</string>
+        
+        
+    <string name = "no_enough_coin">คุณไม่มีเงินมากพอ!</string>
         <string name = "product_not_exist">ผลิตภัณฑ์ไม่สามารถใช้งานได้ในขณะนี้!</string>
         <string name = "product_unexcpected_error">ผลิตภัณฑ์ไม่สามารถใช้งานได้ในขณะนี้!</string>
         <string name = "you_have_coins">คุณมี %.0f %s ตอนนี้</string>
@@ -221,15 +210,17 @@
         <string name = "purchase">การซื้อ</string>
         <string name = "more_offer">ข้อเสนอพิเศษอื่น ๆ กำลังจะมาเร็ว ๆ นี้ ...</string>
         <string name = "live_offer">ข้อเสนอสด</string>
-        <string name = "invitation_copied">รหัสคำเชิญของคุณถูกคัดลอกไปยังบอร์ดคลิป</string>
-        <string name = "reward_load_failed">การโหลดล้มเหลว โปรดตรวจสอบด้านล่างและลองอีกครั้ง: \n - ติดตั้งบริการ Google Play \n - สุดยอด Cloner ไม่ได้ทำงานในแอปโคลน \n - เชื่อมต่อเครือข่าย</string>
+        
+        
+    <string name = "reward_load_failed">การโหลดล้มเหลว โปรดตรวจสอบด้านล่างและลองอีกครั้ง: \n - ติดตั้งบริการ Google Play \n - สุดยอด Cloner ไม่ได้ทำงานในแอปโคลน \n - เชื่อมต่อเครือข่าย</string>
         <string name = "need_coin_for_clone">รับเหรียญเพื่อทำการโคลน</string>
         <string name = "user_activity_title">บริการพรีเมียม</string>
-        <string name = "Become_vip_tips1">ลบโฆษณาทั้งหมด</string>
-        <string name = "Become_vip_tips2">เพลิดเพลินไปกับการโคลนนิ่งแบบไม่ จำกัด</string>
-        <string name = "Become_vip_tips3">หลายบัญชีสำหรับแอปเกมและโซเชียล</string>
-        <string name = "Bec_vip">เป็นผู้ใช้ VIP ของ Superb Cloner</string>
-        <string name = "free_trial_text">+ %d วันทดลองใช้ฟรี</string>
+        
+        
+        
+        
+        
+    <string name = "free_trial_text">+ %d วันทดลองใช้ฟรี</string>
         <string name = "price_change_hint">ซื้อผลิตภัณฑ์ด้วยเหรียญของคุณทันที ราคาสามารถเปลี่ยนแปลงได้ตามความประหยัดของแอป</string>
         <string name = "cash_rewards">รางวัลเงินสด</string>
         <string name = "earn_coin_remove_ads">รับเหรียญและเลือกผลิตภัณฑ์เพื่อลบโฆษณา</string>

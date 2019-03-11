@@ -1,9 +1,6 @@
 <resources>
 
-    <string name="appwall_title">اكتشف</string>
-
     <string name="action_settings">إعدادات</string>
-    <string name="most_popular_apps">إعدادات</string>
     <string name="more_apps">أكثر المدعومة</string>
     <string name="sponsor_text">توصية</string>
     <string name="btn_clone">استنساخ</string>
@@ -37,7 +34,6 @@
     <string name="star_rating">الذهاب تصنيف 5 نجوم الآن</string>
     <string name="yes">نعم فعلا</string>
     <string name="ok">حسنا</string>
-    <string name="installFailure">عذرا، لا يتم اعتماد هذا التطبيق حتى الآن، ونحن قادمون مع ذلك قريبا.</string>
     <string name="start_tips">دعونا نبدأ عن طريق الاستنساخ تطبيقك الأول هنا!</string>
     <string name="long_press_tips">الضغط لفترة طويلة واسحبه لإضافة اختصار على الشاشة الرئيسية أو إزالته.</string>
 
@@ -80,12 +76,10 @@
     <!-- titles -->
     <string name="clone_apps_title">استنساخ التطبيقات</string>
 
-    <string name="crash_hint">عذرا، يحدث بعض الخطأ، ونحن سوف إصلاحه في النسخة المقبلة.</string>
-
     <string name="text_Q1_title">لماذا لا يمكنني استلام إشعارات رسالة من التطبيقات المستنسخة؟</string>
     <string name="text_Q1_content_2">الرجاء التأكد من سوبر استنساخ ديه حق الوصول إلى الشبكة</string>
     <string name="text_Q2_title">فإنه جمع واستخدام المعلومات الخاصة بي؟</string>
-    <string name="text_Q2_content">لا، فإنه سيتم جمع كميات صغيرة فقط من بك "البيانات العامة" (على سبيل المثال الرمزية، لقب الخ)، وسوف تستخدم هذه فقط داخل الجهاز لخلق تجربة أفضل للمستخدم بالنسبة لك. وهي تعد بأن أيا من البيانات الخاصة بك وسيتم جمع أو استخدامها.</string>
+    <string name="text_Q2_content">سيقوم Super Clone بتجميع بعض المعلومات العامة فقط لتحليل الأعطال والإحصاء الأساسي ، وسيتم استخدام هذه فقط داخل هذا التطبيق لخلق تجربة مستخدم أفضل لك. نحن نعد بعدم جمع أي من بياناتك الخاصة أو استخدامها.</string>
     <string name="text_Q3_title">لماذا استهلاك التخزين لديها ازدياد؟</string>
     <string name="text_Q3_content">جميع الحسابات الفرعية تضاف على الجهاز الخاص بك افتراضيا المدرجة تحته من قبل نظام التشغيل أندرويد. على سبيل المثال، عند إضافة الفيسبوك دون حساب لجهازك، كل من التخزين المستخدمة لبلدكم الثاني حساب الفيسبوك (التطبيق) والمدرجة تحت هذا التطبيق. ولذلك، فإن استهلاك التخزين المدرجة لهذا التطبيق تظهر زيادة كبيرة عند إضافة المزيد من الحسابات الفرعية. تطمئن إلى أن استهلاك تخزين هذا التطبيق نفسه لا يتزايد فعلا من ذلك بكثير.</string>
     <string name="text_Q4_title">لماذا هذا التطبيق استخدام ما يصل الكثير من مساحة التخزين؟</string>
@@ -121,17 +115,14 @@
     <string name="al_btn_reset">إعادة تعيين</string>
     <string name="al_lockpattern_release_hint">الافراج عن الإصبع عند القيام به</string>
     <string name="al_lockpattern_try_again">أنماط لا تتطابق، يرجى المحاولة مرة أخرى.</string>
-    <string name="applock_permission_contacts_toast">هذا يساعدك على استرجاع كلمة المرور الخاصة بك.</string>
     <string name="al_lockpattern_create_unlock_pattern">تعيين نمط جديد</string>
     <string name="al_lockpattern_number_no_correct">الرجاء الاتصال لا يقل عن 4 نقاط</string>
-    <string name="al_lockpattern_create_new_password_outofbound">يجب أن يكون رمز المرور أقل من 10 أرقام</string>
     <string name="al_btn_finish">تؤكد</string>
     <string name="al_btn_next">التالى</string>
     <string name="al_lockpattern_error">نمط خاطئ، من فضلك حاول مرة أخرى.</string>
     <string name="al_changepassword">تغيير كلمة السر</string>
     <string name="al_unlcok_pattern">فتح نمط</string>
     <string name="al_passcode">رمز عبور</string>
-    <string name="al_invisable_patterns">إخفاء نمط</string>
     <string name="al_change_security_question">تغيير السؤال آمن</string>
     <string name="app_lock_safe_info_hint">للتحقق من هويتك عند إعادة ضبط كلمة المرور</string>
     <string name="app_lock_safe_question_hint">تعيين سؤال آمن</string>
@@ -144,15 +135,14 @@
     <string name="app_lock_safe_question_toast_ask_Question">لم تقم بتعيين سؤال آمن</string>
     <string name="app_lock_safe_question_toast_ask_Answer">أنك لم تدخل اجابه بعد.</string>
     <string name="app_lock_safe_question_toast_error">المصادقة الفاشلة، يرجى الدخول مرة أخرى</string>
-    <string name="applock_window_title">+ %s</string>
     <string name="applock_forgot_password"><u>هل نسيت كلمة المرور</u></string>
     <string name="need_set_secure_answer">يرجى تحديد الإجابة عن السؤال آمن ثم اضغط زر تأكيد.</string>
 
     <string-array name="secure_questions">
         <item>متى يحين عيد ميلادك</item>
-        <item>ما هو اسم والدك؟</item>
-        <item>ما هو اسم والدتك؟</item>
-        <item>عندما أنت متزوج؟</item>
+        <item>ما هو طعامك المفضل؟</item>
+        <item>ما هي الرياضة التي تحبها أكثر؟</item>
+        <item>من هو قدوتك؟</item>
         <item>ما هو طعامك المفضل؟</item>
         <item>أين ذهبت إلى المدرسة؟</item>
         <item>ما هو فيلمك المفضل؟</item>
@@ -165,7 +155,6 @@
     <string name="settings_gms">تمكين خدمة غوغل بلاي للتطبيقات المستنسخة</string>
     <string name="settings_gms_disable_toast">تم تعطيل خدمة غوغل بلاي</string>
     <string name="settings_gms_enable_toast">تم تمكين خدمة غوغل بلاي</string>
-    <string name="settings_gms_title">خدمة جوجل بلاي</string>
     <string name="settings_gms_disable_notice">تعطيل خدمة جوجل بلاي نقصان الذاكرة و استهلاك الطاقة، وتحسين سرعة إطلاق التطبيق المستنسخة.ولكن بعض التطبيقات لا تعمل بشكل صحيح إذا تعطيله.هل أنت متأكد من أن تعطيل خدمة جوجل بلاي؟</string>
     <string name="settings_gms_enable_notice">تمكن خدمة جوجل بلاي قد تستهلك المزيد من الذاكرة و وحدة المعالجة المركزية.هل تريد تمكين خدمة جوجل بلاي؟</string>
     <string name="toast_no_lucky">آسف، لا يوجد محتوى هذه المرة.يرجى المحاولة مرة أخرى في وقت لاحق.</string>
@@ -178,7 +167,6 @@
     <string name="text_Q7_title">لماذا لا يمكن إنشاء اختصار أو الكاميرا، والموقع لا يعمل؟</string>
     <string name="lock_interval_settings_content">الفاصل الزمني لقفل التطبيق مرة أخرى بعد أن تركت ذلك</string>
     <string name="lock_interval_settings_title">قفل الفاصل الزمني</string>
-    <string name="settings_join_us">الانضمام إلى مجتمعنا</string>
     <string name="customize_title">التخصيص</string>
     <string name="customize_setting_desc">انقر لتخصيص رمز والتسمية للاستنساخ</string>
     <string name="hue">مسحة</string>

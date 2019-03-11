@@ -5,12 +5,9 @@
 
     <string name="app_icon" translatable="false">app_icon</string>
 
-    <string name="appwall_title">Discover</string>
     <string name="feel_lucky" translatable="false">Feel Lucky</string>
-    <string name="booster_title" translatable="false">Super Boost</string>
 
     <string name="action_settings">Settings</string>
-    <string name="most_popular_apps">Most Popular</string>
     <string name="more_apps">More Supported</string>
     <string name="sponsor_text">Sponsored</string>
     <string name="btn_clone">Clone</string>
@@ -59,7 +56,6 @@
     <string name="star_rating">Go 5-star rating now</string>
     <string name="yes">Yes</string>
     <string name="ok">OK</string>
-    <string name="installFailure">Sorry, this app is not supported yet, and we are coming up with it soon.</string>
     <string name="start_tips">Let\'s get started by cloning\n your first app here!</string>
     <string name="long_press_tips">Long press &amp; drag it to add shortcut on home screen or remove it.</string>
     <string name="arm64_dialog_title">Note</string>
@@ -92,7 +88,7 @@
     <string name="create_shortcut">Create Shortcut</string>
     <string name="settings_shortcut_content">Enable to auto-add shortcut when cloning apps</string>
     <string name="settings_gms">Enable Google Play service for clones</string>
-    <string name="settings_gms_title">Google Play Service</string>
+    <string name="settings_gms_title" translatable="false">Google Play Service</string>
     <string name="settings_adfree_title">Join VIP</string>
     <string name="settings_adfree_content">Become premium user of Super Clone</string>
     <string name="settings_gms_enable_toast">Google Play Service is enabled</string>
@@ -103,9 +99,8 @@
     <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
     <string name="settings_privacy_policy">Privacy Policy</string>
     <string name="settings_terms_of_service">Terms of Service</string>
-    <string name="settings_terms_text">Terms of Service and Privacy Policy</string>
+    <string name="settings_terms_text" translatable="false">Terms of Service and Privacy Policy</string>
     <string name="settings_follow_us">Follow us on Facebook Page</string>
-    <string name="settings_join_us">Join Our Community</string>
     <string name="settings_right" translatable="false">Polestar Applab All rights reserved</string>
     <string name="toast_arm64_package">Detected 64bit library in this clone. Please install 64bit support library if error happen.</string>
 
@@ -123,12 +118,10 @@
     <!-- titles -->
     <string name="clone_apps_title">Clone Apps</string>
 
-    <string name="crash_hint">Sorry, some error happen, and we will fix it in next version.</string>
-
     <string name="text_Q1_title">Q1: Why cannot I receive message notifications from Super Clone enabled apps?</string>
     <string name="text_Q1_content_2">A1: Please ensure that Super Clone has network access</string>
     <string name="text_Q2_title">Q2: Will Super Clone collect and use my private information?</string>
-    <string name="text_Q2_content">A2: No, Super Clone will only collect small amounts of your “public data” (e.g. Avatar, nickname etc), and these will only be used within your device to create a better user experience for you. Super Clone promises that none of your private data will be collected or used.</string>
+    <string name="text_Q2_content">A2: Super Clone will only collect some general info for crash analysis and basic statistic, and these will only be used within this app to create a better user experience for you. Super Clone promises that none of your private data will be collected or used.</string>
     <string name="text_Q3_title">Q3: Why is Super Clone’s storage consumption increasing?</string>
     <string name="text_Q3_content">A3: All sub-accounts added on your device are by default listed under Super Clone by the Android operating system. For example, when you add a Facebook sub-account to your device, all of the storage used for your second Facebook account (app) is listed under Super Clone. Therefore, the storage consumption listed for Super Clone will appear to increase significantly when you add more sub-accounts. Rest assured that the storage consumption of Super Clone itself is not actually increasing by much.</string>
     <string name="text_Q4_title">Q4: Why has Super Clone used up so much storage space?</string>
@@ -145,6 +138,7 @@
     <string name="clone_label_tag">%s+</string>
 
     <string name="powered_by_app" translatable="false">Powered by Super Clone</string>
+    <string name="powered_by_applab" translatable="false">Powered by Polestar Applab</string>
 
     <!-- lock settings -->
     <string name="lock_settings_title">Locker Settings</string>
@@ -174,19 +168,16 @@
     <string name="al_btn_reset">Reset</string>
     <string name="al_lockpattern_release_hint">Release finger when done</string>
     <string name="al_lockpattern_try_again">Patterns Do Not Match, Please Try Again.</string>
-    <string name="applock_permission_contacts_toast">This helps you to retrieve your password.</string>
     <string name="al_lockpattern_create_unlock_pattern">Set a New Pattern</string>
     <string name="al_lockpattern_number_no_correct">Please Connect at Least 4 Dots</string>
-    <string name="al_lockpattern_create_new_password_outofbound">Passcode must be less than 10 digits</string>
     <string name="al_btn_finish">Confirm</string>
     <string name="al_btn_next">Next</string>
     <string name="al_lockpattern_error">Wrong Pattern, Please Try Again.</string>
     <string name="al_changepassword">Change Password</string>
     <string name="al_unlcok_pattern">Unlock Pattern</string>
     <string name="al_passcode">Passcode</string>
-    <string name="al_invisable_patterns">Hide Pattern</string>
     <string name="al_change_security_question">Change Secure Question</string>
-    <string name="app_lock_safe_info_hint">To verify your identity when resetting password</string>
+    <string name="app_lock_safe_info_hint">To verify your identity when resetting password. It will be encrypted and only stored in your device.</string>
     <string name="app_lock_safe_question_hint">Set a Secure Question</string>
     <string name="app_lock_safe_answer_hint">Enter the answer (Up to 20 characters)</string>
     <string name="app_lock_verifier_tile">Set a Secure Question</string>
@@ -197,7 +188,6 @@
     <string name="app_lock_safe_question_toast_ask_Question">You didn\'t set a Secure Question</string>
     <string name="app_lock_safe_question_toast_ask_Answer">You didn\'t enter answer yet.</string>
     <string name="app_lock_safe_question_toast_error">Authentication failed, please enter again</string>
-    <string name="applock_window_title">Cloned %s</string>
     <string name="applock_forgot_password"><u>Forgot Password?</u></string>
     <string name="need_set_secure_answer">Please set answer for secure question and then press confirm button.</string>
 
@@ -218,9 +208,9 @@
 
     <string-array name="secure_questions">
         <item>When\'s your birthday?</item>
-        <item>What\'s your father\'s name?</item>
-        <item>What\'s your mother\'s name?</item>
-        <item>When are you married?</item>
+        <item>What\'s your favorite food?</item>
+        <item>Which sport you like the most?</item>
+        <item>Who is your idol?</item>
         <item>Where did you go to junior school?</item>
         <item>Where did you go to high school?</item>
         <item>What\'s your favorite movie?</item>
@@ -276,16 +266,16 @@
     <string name="product_not_exist">Product is not available this moment!</string>
     <string name="product_unexcpected_error">Product is not available this moment!</string>
     <string name="you_have_coins">You have %.0f %s now.</string>
-    <string name="coin_unit" translatable="false">coin</string>
+    <string name="coin_unit">coin</string>
     <string name="reward_center">Reward Center</string>
     <string name="input_code_hint">Submit code and get bonus when finish 1 live offer</string>
     <string name="redeem">Redeem</string>
     <string name="purchase">Purchase</string>
     <string name="more_offer">More reward offer is coming soon ...</string>
     <string name="live_offer">Live Offers</string>
-    <string name="invite_friends_tip" translatable="false">Win your coins with this wonderful app %s.\nRemember to submit refer code %s to get bonus!\nDownload it here: %s</string>
+    <string name="invite_friends_tip">Win your coins with this wonderful app %s.\nRemember to submit refer code %s to get bonus!\nDownload it here: %s</string>
     <string name="invite_copied">Your invitation code is copied to clip board.</string>
-    <string name="invite_friends_mail_title" translatable="false">Win your coins with %s.</string>
+    <string name="invite_friends_mail_title">Win your coins with %s.</string>
     <string name="reward_load_failed">Load fail. Please check below and retry: \n - Google Play Service is installed \n - Super Clone is not running in any clone apps \n - Connect network</string>
     <string name="need_coin_for_clone">Get coins to finish clone</string>
     <string name="user_activity_title">Premium Service</string>

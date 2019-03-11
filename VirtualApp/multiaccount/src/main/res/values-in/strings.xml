@@ -1,8 +1,6 @@
 <resources>
-    <string name="appwall_title">Menemukan</string>
 
     <string name="action_settings">Pengaturan</string>
-    <string name="most_popular_apps">Paling populer</string>
     <string name="more_apps">Lebih didukung</string>
     <string name="sponsor_text">Direkomendasikan</string>
     <string name="btn_clone">Klon</string>
@@ -36,7 +34,6 @@
     <string name="star_rating">Segera kasih 5 bintang</string>
     <string name="yes">Ya</string>
     <string name="ok">OK</string>
-    <string name="installFailure">Maaf, aplikasi ini belum didukung, dan kami datang dengan segera.</string>
     <string name="start_tips">Mari kita mulai dengan kloning aplikasi pertama Anda di sini!</string>
     <string name="long_press_tips">Tekan lama dan tarik untuk menambahkan shortcut pada layar rumah atau menghapusnya.</string>
 
@@ -79,12 +76,10 @@
     <!-- titles -->
     <string name="clone_apps_title">Klon Apps</string>
 
-    <string name="crash_hint">Maaf, beberapa kesalahan yang terjadi, dan kami akan memperbaikinya di versi berikutnya.</string>
-
     <string name="text_Q1_title">Q1: Mengapa saya tidak dapat menerima notifikasi pesan dari Superb Cloner diaktifkan apps?</string>
     <string name="text_Q1_content_2">A1: Pastikan bahwa Superb Cloner memiliki akses jaringan</string>
     <string name="text_Q2_title">Q2: Akan Superb Cloner mengumpulkan dan menggunakan informasi pribadi saya?</string>
-    <string name="text_Q2_content">A2: Tidak, Superb Cloner hanya akan mengumpulkan sejumlah kecil "data publik" Anda (mis Avatar, julukan dll), dan ini hanya akan digunakan dalam perangkat Anda untuk menciptakan pengalaman pengguna yang lebih baik untuk Anda. Superb Cloner menjanjikan bahwa tidak ada data pribadi Anda akan dikumpulkan atau digunakan.</string>
+    <string name="text_Q2_content">A2: Super Clone hanya akan mengumpulkan beberapa info umum untuk analisis kerusakan dan statistik dasar, dan ini hanya akan digunakan dalam aplikasi ini untuk menciptakan pengalaman pengguna yang lebih baik untuk Anda. Super Clone berjanji bahwa data pribadi Anda tidak akan dikumpulkan atau digunakan.</string>
     <string name="text_Q3_title">Q3:Mengapa konsumsi storage Superb Cloner ini meningkat?</string>
     <string name="text_Q3_content">A3: Semua sub-rekening ditambahkan pada perangkat Anda secara default terdaftar di bawah Superb Cloner oleh sistem operasi Android. Misalnya, ketika Anda menambahkan sub-akun Facebook untuk perangkat Anda, semua penyimpanan yang digunakan untuk akun Facebook kedua (app) yang terdaftar di bawah Superb Cloner. Oleh karena itu, konsumsi penyimpanan terdaftar untuk Superb Cloner akan muncul untuk meningkatkan secara signifikan ketika Anda menambahkan lebih banyak sub-rekening. Yakinlah bahwa konsumsi penyimpanan Superb Cloner itu sendiri sebenarnya tidak meningkat banyak.</string>
     <string name="text_Q4_title">Q4: Mengapa Superb Cloner digunakan ruang penyimpanan begitu banyak?</string>
@@ -120,19 +115,16 @@
     <string name="al_btn_reset">Ulang</string>
     <string name="al_lockpattern_release_hint">Lepaskan jari bila dilakukan</string>
     <string name="al_lockpattern_try_again">Pola tidak cocok, silahkan coba lagi.</string>
-    <string name="applock_permission_contacts_toast">Hal ini membantu Anda untuk mengambil kata sandi Anda.</string>
     <string name="al_lockpattern_create_unlock_pattern">Mengatur pola baru</string>
     <string name="al_lockpattern_number_no_correct">Sambungkan setidaknya 4 titik</string>
-    <string name="al_lockpattern_create_new_password_outofbound">Passcode harus kurang dari 10 digit</string>
     <string name="al_btn_finish">Memastikan</string>
     <string name="al_btn_next">Berikutnya</string>
     <string name="al_lockpattern_error">Pola yang salah, silahkan coba lagi.</string>
     <string name="al_changepassword">Ganti kata sandi</string>
     <string name="al_unlcok_pattern">Membuka Pola</string>
     <string name="al_passcode">Passcode</string>
-    <string name="al_invisable_patterns">Sembunyikan Pola</string>
     <string name="al_change_security_question">Ubah Pertanyaan Aman</string>
-    <string name="app_lock_safe_info_hint">Untuk memverifikasi identitas Anda ketika ulang kata sandi</string>
+    <string name="app_lock_safe_info_hint">Untuk memverifikasi identitas Anda saat mengatur ulang kata sandi. Itu akan dienkripsi dan hanya disimpan di perangkat Anda.</string>
     <string name="app_lock_safe_question_hint">Set Pertanyaan Aman</string>
     <string name="app_lock_safe_answer_hint">Masukkan jawaban (Hingga 20 karakter)</string>
     <string name="app_lock_verifier_tile">Set Pertanyaan Aman</string>
@@ -143,20 +135,19 @@
     <string name="app_lock_safe_question_toast_ask_Question">Anda tidak mengatur pertanyaan aman</string>
     <string name="app_lock_safe_question_toast_ask_Answer">Anda tidak masukkan menjawab belum.</string>
     <string name="app_lock_safe_question_toast_error">Otentikasi gagal, masukkan lagi</string>
-    <string name="applock_window_title">Klon %s</string>
     <string name="applock_forgot_password"><u>Lupa kata sandi?</u></string>
     <string name="need_set_secure_answer">Silahkan mengatur jawaban untuk pertanyaan aman dan kemudian tekan tombol konfirmasi.</string>
 
-    <string-array name="secure_questions">
-        <item>Ketika ulang tahun Anda</item>
-        <item>Siapa nama ayahmu?</item>
-        <item>Siapa nama ibumu?</item>
-        <item>Kapan Anda menikah?</item>
-        <item>Di mana Anda pergi ke sekolah SMP?</item>
-        <item>Di mana Anda pergi ke sekolah tinggi?</item>
-        <item>Apa film favorit Anda?</item>
-        <item>Menyesuaikan pertanyaan</item>
-    </string-array>
+    <string-array name = "secure_questions">
+                 <item> Kapan ulang tahunmu? </item>
+                 <item> Apa makanan favorit Anda? </item>
+                 <item> Olahraga apa yang paling kamu sukai? </item>
+                 <item> Siapa idola Anda? </item>
+                 <item> Kemana kamu pergi ke SMP? </item>
+                 <item> Kemana kamu pergi ke sekolah menengah? </item>
+                 <item> Apa film favorit Anda? </item>
+                 <item> Kustomisasi pertanyaan </item>
+             </string-array>
     <string name="congratulations">Selamat!</string>
     <string name="notification_detail_setting">Aktifkan notifikasi untuk aplikasi</string>
     <string name="create_shortcut">Buat Pintasan</string>
@@ -177,7 +168,6 @@
     <string name="upgrade_start_tips">Cela peut prendre un peu plus longtemps car cette application vient d\'être améliorée.</string>
     <string name="lock_interval_settings_content">Interval untuk mengunci aplikasi lagi setelah Anda meninggalkannya</string>
     <string name="lock_interval_settings_title">Kunci Interval</string>
-    <string name="settings_join_us">Bergabunglah dengan Komunitas Kita</string>
     <string name="customize_title">Kustomisasi</string>
     <string name="customize_setting_desc">Klik untuk menyesuaikan ikon dan label untuk kloning</string>
     <string name="hue">Warna</string>
@@ -219,8 +209,9 @@
         <string name = "you_have_coins">Você tem %.0f %s agora.</string>
         <string name = "reward_center">Centro de Recompensas</string>
         <string name = "input_code_hint">Envie o código e receba bônus ao terminar 1 oferta ao vivo</string>
-        <string name = "resgatar">Resgatar</string>
-        <string name = "purchase">Compra</string>
+        
+        
+    <string name = "purchase">Compra</string>
         <string name = "more_offer">Mais ofertas de recompensas estão chegando em breve ...</string>
         <string name = "live_offer">Ofertas ao vivo</string>
         <string name = "invite_copied">Seu código de convite é copiado para o quadro de recados.</string>

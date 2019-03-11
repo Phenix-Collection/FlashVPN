@@ -1,0 +1,281 @@
+<resources>
+    <string name="app_name" translatable="false">超级多开</string>
+    <string name="app_alias_name" translatable="false">超级多开</string>
+    <string name="enter_super_clone" translatable="false">启动</string>
+
+    <string name="feel_lucky" translatable="false">试试运气</string>
+
+    <string name="action_settings">设置</string>
+    <string name="more_apps">更多</string>
+    <string name="sponsor_text">赞助内容</string>
+    <string name="btn_clone">分身</string>
+    <string name="start">启动</string>
+    <string name="about">关于</string>
+    <string name="cancel">取消</string>
+    <string name="cloning">正在分身...</string>
+    <string name="cloning_tips">正在克隆%s...</string>
+    <string name="clone_error">对不起，有些错误发生。请重试</string>
+    <string name="app_starting_tips">%s 正在启动</string>
+    <string name="first_start_tips">第一次启动会花更多时间，请稍等</string>
+    <string name="start_with_arm64">通过超级多开64bit支持库启动...</string>
+    <string name="upgrade_start_tips">分身刚升级过，请稍候</string>
+    <string name="clone_success">%s分身已准备好，可立即使用!</string>
+
+    <!-- nav menu -->
+    <string name="notifications">通知</string>
+    <string name="faq">常见问题</string>
+    <string name="feedback">反馈</string>
+    <string name="rate_us">给好评</string>
+    <string name="congratulations">恭喜!</string>
+    <string name="share_with_friends">邀请朋友</string>
+    <string name="settings">设置</string>
+    <string name="content_popular">热门多开</string>
+    <string name="content_recommend">推荐</string>
+    <string name="install">安装</string>
+
+    <!-- home -->
+    <string name="delete_dialog_title">注意</string>
+    <string name="delete_dialog_content">删除分身的同时也会删除分身产生的数据，确实删除吗？</string>
+    <string name="delete_dialog_left">取消</string>
+    <string name="delete_dialog_right">删除</string>
+    <string name="update_dialog_title">更新</string>
+    <string name="update_dialog_content">新版本已经准备好！新版本%s有很大提升，建议立即升级。现在更新超级多开吗?</string>
+    <string name="update_dialog_left">忽略</string>
+    <string name="update_dialog_right">更新</string>
+    <string name="dialog_rating_us_content">超级分身使用愉快吗?</string>
+    <string name="dialog_feedback_content">可以给一些反馈帮助我们提高吗?</string>
+    <string name="not_really">一般</string>
+    <string name="no_thanks">不用了，谢谢</string>
+    <string name="dialog_love_title">喜欢超级分身</string>
+    <string name="dialog_permission_title">获取授权</string>
+    <string name="dialog_permission_content">请授予超级分身相应权限，否则有些应用包括Google Play Service可能运行不正常</string>
+    <string name="dialog_love_content">可以给我们5星好评吗? 感谢您的支持以及对我们的鼓励!</string>
+    <string name="remind_me_later">稍后提醒</string>
+    <string name="star_rating">去评价</string>
+    <string name="yes">是</string>
+    <string name="ok">好的</string>
+    <string name="start_tips">点此创建分身!</string>
+    <string name="long_press_tips">长按拖动可删除或创建桌面快捷方式</string>
+    <string name="arm64_dialog_title">注意</string>
+    <string name="arm64_dialog_content">在%s中检测到64位执行文件，建议安装64位支持包。现在安装?</string>
+
+    <!-- notification -->
+
+    <string name="notification_decription">开启或关闭来自分身应用的通知</string>
+    <string name="notification_detail_setting">设置分身通知</string>
+    <string name="enable_notification">开启通知</string>
+
+    <string name="share_with_friends_tip">发现一个超级好用的app %s. 快来下载吧:</string>
+
+    <!-- feedback -->
+    <string name="feedback_hint">请告诉我们您遇到的问题或者建议。最好能提供截图以及详细步骤，谢谢！</string>
+    <string name="button_submit">提交</string>
+    <string name="submit_success">谢谢提交反馈!</string>
+    <string name="feedback_no_description">描述不能为空!</string>
+    <string name="feedback_go_faq">常见问题</string>
+    <string name="extra_feedback_decription">我们将尽快解决问题，感谢您的宝贵建议与支持!</string>
+
+    <!-- toast -->
+    <string name="toast_shortcut_added">快捷方式已创建</string>
+    <string name="toast_shortcut_invalid">应用不存在</string>
+    <string name="toast_no_lucky">对不起，请稍后再试</string>
+
+    <!-- settings -->
+    <string name="settings_shortcut_title">快捷方式</string>
+    <string name="check_update"><u>检查更新</u></string>
+    <string name="create_shortcut">创建快捷方式</string>
+    <string name="settings_shortcut_content">为分身自动创建桌面快捷方式</string>
+    <string name="settings_gms">为分身提供Google Play Service</string>
+    <string name="settings_adfree_title">加入会员</string>
+    <string name="settings_adfree_content">成为超级分身的VIP用户</string>
+    <string name="settings_gms_enable_toast">Google Play Service 打开</string>
+    <string name="settings_gms_disable_toast">Google Play Service 关闭</string>
+    <string name="settings_gms_disable_notice">关闭 Google play service 可以减少电池使用，优化启动速度。可能会导致分身有些功能异常。确定关闭Google play service?</string>
+    <string name="settings_gms_enable_notice">打开 Google play service 可能消耗更多电量. 打开Google play service?</string>
+    <string name="settings_privacy_locker_content">点击设置隐私锁</string>
+    <string name="settings_notification_content">点击开启或关闭分身的消息通知</string>
+    <string name="settings_privacy_policy">隐私政策</string>
+    <string name="settings_terms_of_service">服务条款</string>
+    <string name="settings_follow_us">关注Facebook主页</string>
+    <string name="toast_arm64_package">检测到分身中含有64位执行文件。如有错误发生，请按照64位支持库！</string>
+
+
+    <array name="navigationItem">
+        <item name="navigation_notifications">隐私锁</item>
+        <item name="navigation_notifications">通知</item>
+        <item name="navigation_FAQ">常见问题</item>
+        <item name="navigation_feedback">反馈</item>
+        <item name="navigation_rate_us">评论</item>
+        <item name="navigation_share">分享</item>
+        <item name="navigation_setting">设置</item>
+    </array>
+
+    <!-- titles -->
+    <string name="clone_apps_title">创建分身</string>
+
+    <string name="text_Q1_title">Q1：为什么我不能从启用超级分身的应用程序接收消息通知？</string>
+    <string name="text_Q1_content_2">A1：请确保超级分身具有网络访问权限，并授予后台运行的权限</string>
+    <string name="text_Q2_title">Q2：超级分身会收集并使用我的私人信息吗？</string>
+    <string name="text_Q2_content">A2：超级分身只收集少量的公共数据以进行崩溃信息收集，这些只会在您的设备中使用，以便为您创造更好的用户体验。 超级分身承诺不会收集或使用任何私人数据。</string>
+    <string name="text_Q3_title">Q3：为什么超级分身的存储消耗会增加?</string>
+    <string name="text_Q3_content">A3：Android设备上添加的所有子帐户默认列在Android操作系统的超级分身下。例如，当您将Facebook子帐户添加到设备时，用于第二个Facebook帐户（应用程序）的所有存储都列在超级分身下。因此，当您添加更多子帐户时，为超级分身列出的存储消耗将显着增加。请放心，超级分身本身的存储消耗实际上并没有增加太多。</string>
+    <string name="text_Q4_title">Q4：为什么超级分身占用了这么多存储空间？</string>
+    <string name="text_Q4_content">A4：Android设备上添加的所有子帐户默认列?在Android操作系统的超级分身下。 超级分身下列出的大量存储消耗是您添加的所有子帐户的总存储量。超级分身本身使用很少的存储空间。</string>
+    <string name="text_Q5_title">Q5：超级分身的隐私锁功能如何保护我的隐私？</string>
+    <string name="text_Q5_content">A5：每次唤醒分身时都需要密码才能访问隐私分身。此外，所有分身应用都安装在超级分身上，因此任何外部程序都无法访问所有私有应用程序的数据。</string>
+    <string name="text_Q6_title">Q6：为什么启动应用程序时隐私锁不显示？</string>
+    <string name="text_Q6_content">A6：请检查您是否为此应用启用了隐私锁，并授予超级分身后台运行的权限。</string>
+    <string name="text_Q7_title">Q7：为什么无法创建快捷方式或摄像头，位置不起作用？</string>
+    <string name="text_Q7_content">A7：请检查您是否在系统设置中将这些权限授予了超级分身。</string>
+    <string name="text_Q8_title">Q8：为什么有些克隆无法正常工作并且在启动时缺少32位库？</string>
+    <string name="text_Q8_content">A8：从Google Play下载应用时，它会根据您的设备型号动态重新打包，并在某些情况下优化32位库。为了兼容性，超级分身仅包含32位克隆引擎以支持大多数应用程序。但是如果在打开克隆应用程序时发生错误，建议您尝试安装64位支持包。</string>
+
+    <!--锁定设置 -->
+    <string name="lock_settings_title">隐私锁设置</string>
+    <string name="enable_lock_settings_title">隐私锁</string>
+    <string name="lock_interval_settings_title">重新锁定间隔</string>
+    <string name="lock_interval_settings_content">离开后重新锁定应用程序的时间间隔</string>
+    <string name="enable_lock_settings_content">切换以启用或禁用隐私锁功能</string>
+    <string name="password_setting_title">密码设置</string>
+    <string name="password_set_no_question">没有设置安全问题</string>
+    <string name="password_set_complete">已设置密码。</string>
+    <string name="no_password_set">请首先为隐私锁设置密码。</string>
+    <string name="password_setting_content">单击以设置密码和安全问题</string>
+    <string name="forgot_password">忘记密码</string>
+    <string name="lock_settings_for_apps">为分身应用启用隐私锁定器</string>
+
+    <string name="al_enter_passcode">输入密码</string>
+        <string name="al_lockpattern_unlock_to_continue">确认您的身份</string>
+        <string name="al_lockpattern_draw_unlock_pattern">绘制图案以解锁</string>
+        <string name="al_use_passcode">更改为PIN码</string>
+        <string name="al_use_unlock_pattern">更改为图案锁</string>
+        <string name="al_lockpattern_create_new_password_subtitle">密码将用于保护分身</string>
+        <string name="al_lockpattern_create_new_password">设置新密码</string>
+        <string name="al_lockpattern_confirm_password">确认密码</string>
+        <string name="al_change_enter_again">再次输入</string>
+        <string name="al_lockpattern_confirm_unlock_pattern">请确认图案</string>
+        <string name="al_lockpattern_confirm_unlock_pattern_hint">再次绘制</string>
+        <string name="al_btn_reset">重置</string>
+        <string name="al_lockpattern_release_hint">完成后释放手指</string>
+        <string name="al_lockpattern_try_again">图案不匹配，请再试一次。</string>
+        <string name="al_lockpattern_create_unlock_pattern">设置新图案</string>
+        <string name="al_lockpattern_number_no_correct">请连接至少4个点</string>
+        <string name="al_btn_finish">确认</string>
+        <string name="al_btn_next">下一步</string>
+        <string name="al_lockpattern_error">错误，请再试一次。</string>
+        <string name="al_changepassword">更改密码</string>
+        <string name="al_passcode">密码</string>
+        <string name="al_change_security_question">更改安全问题</string>
+        <string name="app_lock_safe_info_hint">重置密码时验证您的身份，该信息仅加密后存储在本设备。</string>
+        <string name="app_lock_safe_question_hint">设置安全问题</string>
+        <string name="app_lock_safe_answer_hint">输入答案（最多20个字符）</string>
+        <string name="app_lock_verifier_tile">设置安全问题</string>
+        <string name="app_lock_reset_password">重置密码</string>
+
+        <string name="app_lock_safe_answer_reset_hint">请输入答案</string>
+        <string name="app_lock_date_picker_month">月</string>
+        <string name="app_lock_safe_question_toast_ask_Question">您没有设置安全问题</string>
+        <string name="app_lock_safe_question_toast_ask_Answer">您还没有输入答案。</string>
+        <string name="app_lock_safe_question_toast_error">验证失败，请再次输入</string>
+        <string name="applock_forgot_password"><u>忘记密码？</u></string>
+        <string name="need_set_secure_answer">请为安全问题设置答案，然后按确认按钮。</string>
+
+    <string-array name="month">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
+
+    <string-array name="secure_questions">
+        <item>您生日什么时候？</item>
+        <item>最喜爱的食物?</item>
+        <item>最喜欢的动物?</item>
+        <item>最想去的地方?</item>
+        <item>你小学的名字?</item>
+        <item>高中的名字?</item>
+        <item>最喜欢的电影?</item>
+        <item>自定义问题</item>
+    </string-array>
+
+    <string-array name="arr_lock_interval">
+        <item>5s</item>
+        <item>15s</item>
+        <item>30s</item>
+        <item>1min</item>
+        <item>15min</item>
+        <item>30min</item>
+        <item>1hour</item>
+    </string-array>
+
+    <string-array name="secure_question_by_day_config">
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+    </string-array>
+
+<!--定制-->
+        <string name="customize_title">自定义</string>
+        <string name="customize_setting_desc">单击自定义克隆的图标和标签</string>
+        <string name="saturation">饱和度</string>
+        <string name="light">亮度</string>
+        <string name="hue">色度</string>
+        <string name="badge">标签</string>
+
+        <string name="install_64bit_library">安装64位支持... </string>
+        <string name="arm64_installed_toast">已安装64位库。请从主应用启动克隆。</string>
+
+        <!--奖励-->
+        <string name="clones">应用分身</string>
+        <string name="finish_task_get_reward">现在完成收集金币的任务！</string>
+        <string name="btn_products_store">兑换</string>
+        <string name="error_unexpected">请稍后再试。</string>
+        <string name="error_ad_no_fill">视频还没有准备好。请检查网络，稍后再试。</string>
+        <string name="error_day_limit">任务今天完成。请明天再试。</string>
+        <string name="task_ok">任务完成!</string>
+        <string name="task_ok_with_coin">获得%.0f金币！</string>
+        <string name="submit_code_ok">提交邀请码！</string>
+        <string name="submit_code_fail">邀请代码错误或已提交！</string>
+        <string name="product_ok">兑换成功！</string>
+        <string name="consume_coins">使用%.0f金币！</string>
+        <string name="no_enough_coin">您现在没有足够的金币！</string>
+        <string name="product_not_exist">暂时无法使用！</string>
+        <string name="product_unexcpected_error">暂时无法使用！</string>
+        <string name="you_have_coins">您现在有%.0f%s</string>
+        <string name="coin_unit">金币</string>
+        <string name="reward_center">发现</string>
+        <string name="input_code_hint">提交代码并在完成1次即时任务时获得奖励</string>
+        <string name="redeem">兑换</string>
+        <string name="purchase">兑换</string>
+        <string name="more_offer">更多奖励优惠即将推出...... </string>
+        <string name="live_offer">即时任务</string>
+        <string name="invite_friends_tip">用这个精彩的应用程序%s赢取您的金币。\n请记住提交推荐码%s以获得奖励！\n在此处下载：%s</string>
+        <string name="invite_copied">您的邀请代码将复制到剪贴板。</string>
+        <string name="invite_friends_mail_title">邀请使用%s并赢取金币。</string>
+        <string name="reward_load_failed">加载失败。请在下面查看并重试：\n - 已安装Google Play服务\n - 超级克隆未在任何克隆应用中运行\n - 连接网络</string>
+        <string name="need_coin_for_clone">获取金币以完成克隆</string>
+        <string name="user_activity_title">高级服务</string>
+        <string name="become_vip_tips1">删除所有广告</string>
+        <string name="become_vip_tips2">享受无限克隆</string>
+        <string name="become_vip_tips3">游戏和社交应用的多个帐户</string>
+        <string name="become_vip_tips4">及时响应问题报告</string>
+        <string name="become_vip">成为超级分身的VIP用户</string>
+        <string name="free_trial_text"> +%d天免费试用</string>
+        <string name="price_change_hint">现在用您的金币兑换产品。价格可能会根据应用情况动态变化。</string>
+        <string name="cash_rewards">现金奖励</string>
+        <string name="earn_coin_remove_ads">赚取金币并选择产品以移除广告</string>
+        <string name="toast_no_lucky_award">哈，运气不太好，请明天再试。</string>
+</resources>
