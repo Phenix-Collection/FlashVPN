@@ -27,7 +27,6 @@ import in.dualspace.cloner.utils.RemoteConfig;
  */
 
 public class AboutActivity extends BaseActivity {
-    private String fbUrl;
     private TextView termsTxt;
     private TextView versionTxt;
     @Override
@@ -35,12 +34,6 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         setTitle(getString(R.string.about));
-        fbUrl = RemoteConfig.getString("fb_follow_page");
-        if (fbUrl == null || fbUrl.equals("off")) {
-            View view = findViewById(R.id.follow_us);
-            view.setVisibility(View.INVISIBLE);
-           // followTv.setVisibility(View.INVISIBLE);
-        }
         termsTxt = (TextView) findViewById(R.id.terms_txt);
         versionTxt = (TextView) findViewById(R.id.version_info);
         versionTxt.setText("Version " + BuildConfig.VERSION_NAME);
@@ -85,28 +78,6 @@ public class AboutActivity extends BaseActivity {
             CommonUtils.jumpToUrl(this,forceUpdateUrl);
         } else {
             CommonUtils.jumpToMarket(this, getPackageName());
-        }
-    }
-
-    public void onFollowUsClick(View view) {
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo("com.facebook.katana", 0);
-            if (packageInfo != null && packageInfo.versionCode >= 3002850) {
-                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("fb://facewebmodal/f?href=" + fbUrl));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-                startActivity(intent);
-            }else{
-                Intent intent = new Intent("android.intent.action.VIEW",Uri.parse(fbUrl));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-                startActivity(intent);
-            }
-        } catch (Exception localException1) {
-            try {
-                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(fbUrl));
-//                intent.putExtra("START_OUTTER_APP_FLAG",true);
-                startActivity(intent);
-            } catch (Exception localException2) {
-            }
         }
     }
 
