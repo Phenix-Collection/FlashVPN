@@ -28,7 +28,6 @@
         <activity android:name="in.dualspace.cloner.components.ui.AddCloneActivity" android:screenOrientation="portrait" android:exported="false"/>
         <activity android:name="in.dualspace.cloner.components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="in.dualspace.cloner.components.ui.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name="in.dualspace.cloner.components.ui.LockSecureQuestionActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="in.dualspace.cloner.components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="in.dualspace.cloner.components.ui.LockSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="in.dualspace.cloner.components.ui.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />

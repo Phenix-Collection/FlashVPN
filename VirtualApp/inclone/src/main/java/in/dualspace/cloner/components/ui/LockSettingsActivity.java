@@ -144,14 +144,14 @@ public class LockSettingsActivity extends BaseActivity {
     }
 
     private void doInitLocker() {
-        if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+        if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext))) {
             LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
             Toast.makeText(this,getString(R.string.no_password_set), Toast.LENGTH_SHORT).show();
         }
     }
     private void onLockerEnabled(boolean enabled, boolean report) {
         if (enabled) {
-            if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+            if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) ) {
                 LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
                 Toast.makeText(this,getString(R.string.no_password_set), Toast.LENGTH_SHORT).show();
             } else {
@@ -167,8 +167,7 @@ public class LockSettingsActivity extends BaseActivity {
 
     private void passwordSetDone(boolean success) {
         if (success
-                || (!TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))
-                        && !TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this)))) {
+                || (!TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this)))) {
             detailedSettingLayout.setVisibility(View.VISIBLE);
             PreferencesUtils.setLockerEnabled(this, true);
         } else {

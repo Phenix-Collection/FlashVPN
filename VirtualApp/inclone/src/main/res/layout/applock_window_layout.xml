@@ -15,10 +15,10 @@
         android:id="@+id/layout_appinfo_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="25dp"
                 android:text="@string/app_name"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -71,15 +71,4 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/forgot_password_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="20dp"
-        android:autoLink="all"
-        android:text="@string/applock_forgot_password"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
 </in.dualspace.cloner.widget.locker.BlurBackground>

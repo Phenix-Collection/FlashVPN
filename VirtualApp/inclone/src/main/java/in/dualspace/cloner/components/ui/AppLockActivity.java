@@ -52,7 +52,6 @@ public class AppLockActivity extends BaseActivity {
     private String mPkgName;
     private int mUserId;
     private Handler mHandler;
-    private TextView mForgotPasswordTv;
     private LockIconImageView mCenterIcon;
     private LinearLayout mAdInfoContainer;
     private ImageView mToolbarIcon;
@@ -276,7 +275,7 @@ public class AppLockActivity extends BaseActivity {
 
         mToolbarIcon = (ImageView) findViewById(R.id.lock_bar_icon);
         mToolbarText = (TextView) findViewById(R.id.lock_bar_text);
-        mToolbarText.setText(title);
+        mToolbarText.setText(getString(R.string.powered_by_app));
         if (mPkgName.equals(getPackageName())) {
             mToolbarIcon.setVisibility(View.INVISIBLE);
             mToolbarText.setVisibility(View.INVISIBLE);
@@ -289,30 +288,14 @@ public class AppLockActivity extends BaseActivity {
         mCenterAppText.setText(title);
         mCenterIcon.setImageDrawable(icon);
 
-        mForgotPasswordTv = (TextView)findViewById(R.id.forgot_password_tv);
-        mForgotPasswordTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgotPassword();
-            }
-        });
-        MLogs.d("AppLockWindow initialized");
 
         mBlurBackground.init();
-        if (! mPkgName.equals(getPackageName())) {
-            mBlurBackground.reloadWithTheme(mPkgName, icon);
-        }
+//        if (! mPkgName.equals(getPackageName())) {
+//            mBlurBackground.reloadWithTheme(mPkgName, icon);
+//        }
         mAppLockPasswordLogic.onShow();
     }
 
-    private void forgotPassword() {
-        if (PreferencesUtils.isSafeQuestionSet(VirtualCore.get().getContext())) {
-            Intent intent = new Intent(VirtualCore.get().getContext(), LockSecureQuestionActivity.class);
-            intent.putExtra(LockSecureQuestionActivity.EXTRA_IS_SETTING, false);
-            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-            DualApp.getApp().getApplicationContext().startActivity(intent);
-        }
-    }
 
     @Override
     public void onNewIntent(Intent intent) {

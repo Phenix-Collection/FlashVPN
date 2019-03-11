@@ -41,30 +41,9 @@
         android:text="@string/check_update"
         android:textColor="@color/about_text_light"/>
 
-    <LinearLayout
-        android:layout_marginTop="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:onClick="onFollowUsClick"
-        android:id="@+id/follow_us">
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/fb_follow_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:text="@string/follow_us"/>
-    </LinearLayout>
+
     <TextView
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="120dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

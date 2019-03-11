@@ -18,11 +18,8 @@ import in.dualspace.cloner.widget.locker.LockerView;
 public class LockPasswordSettingActivity extends BaseActivity implements View.OnClickListener {
     public static final String EXTRA_MODE_RESET_PASSWORD = "launch_mode";
     public static final String EXTRA_PASSWORD_BACKGROUND_WHITE = "password_background";
-    public static final int REQUEST_SET_QUESTION = 0;
-    public static final int REQUEST_CHECK_ANSWER = 1;
     private static final String EXTRA_TITLE = "extra_title";
 
-    private TextView mForgetPasswordBtn;
     private LockerView mAppLockScreenView;
 
     private boolean mIsReset = false;
@@ -56,19 +53,14 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
     }
 
     protected void initView() {
-        mForgetPasswordBtn = (TextView) findViewById(R.id.forgot_password_tv);
-        mForgetPasswordBtn.setOnClickListener(this);
 
         mAppLockScreenView = (LockerView) findViewById(R.id.appLockScreenView);
         mAppLockScreenView.setOnUnlockListener(mOnUnlockListener);
 
         mAppLockScreenView.onAfterShow();
-        if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))
-                || !PreferencesUtils.isSafeQuestionSet(this)) {
-            mForgetPasswordBtn.setVisibility(View.GONE);
+        if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))) {
             mAppLockScreenView.setResetStatus(true);
         } else {
-            mForgetPasswordBtn.setVisibility(View.VISIBLE);
             mAppLockScreenView.setIsWhiteBackground(true);
             mAppLockScreenView.setResetStatus(false);
         }
@@ -80,7 +72,7 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
         public void onCorrectPassword() {
             MLogs.d("Password correct");
             if (mIsReset) {
-                LockSecureQuestionActivity.start(LockPasswordSettingActivity.this, REQUEST_SET_QUESTION, true);
+                Toast.makeText(LockPasswordSettingActivity.this, R.string.password_set_complete, Toast.LENGTH_SHORT).show();
             }
             setResult(Activity.RESULT_OK);
             finish();
@@ -105,7 +97,7 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
                 mIsReset = intent.getBooleanExtra(EXTRA_MODE_RESET_PASSWORD, false);
                 mAppLockScreenView.setResetStatus(mIsReset);
                 if (mIsReset){
-                    mForgetPasswordBtn.setVisibility(View.GONE);
+//                    mForgetPasswordBtn.setVisibility(View.GONE);
 //                    PreferencesUtils.setSafeAnswer(this, "");
                 }
             }
@@ -128,35 +120,12 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.forgot_password_tv:
-                LockSecureQuestionActivity.start(this, REQUEST_CHECK_ANSWER, false );
-                break;
-        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         MLogs.d("password onActivityResult:　" + requestCode + ":" + resultCode);
-        switch (requestCode){
-            case REQUEST_SET_QUESTION:
-                switch (resultCode) {
-                    case Activity.RESULT_CANCELED:
-                        Toast.makeText(this, R.string.password_set_no_question, Toast.LENGTH_SHORT).show();
-                        break;
-                    case Activity.RESULT_OK:
-                        Toast.makeText(this, R.string.password_set_complete, Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                setResult(Activity.RESULT_OK);
-                finish();
-                break;
-            case REQUEST_CHECK_ANSWER:
-//                setResult(resultCode);
-//                finish();
-                break;
-        }
     }
 
     @Override
