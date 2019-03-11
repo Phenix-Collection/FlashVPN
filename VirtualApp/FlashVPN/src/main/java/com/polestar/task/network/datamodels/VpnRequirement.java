@@ -1,6 +1,9 @@
 package com.polestar.task.network.datamodels;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
+import com.witter.msg.Sender;
 
 public class VpnRequirement extends TimeModel {
     /**
@@ -20,9 +23,15 @@ public class VpnRequirement extends TimeModel {
     @SerializedName("port")
     public int mPort;
     @SerializedName("password")
-    public int mPassword;
+    public String mPassword;
     @SerializedName("limit_speed_normal")
     public int mLimitSpeedNormal;
     @SerializedName("limit_speed_vip")
     public int mLimitSpeedVip;
+
+    //ss://aes-256-cfb:passwd@95.179.225.74:28388
+    public String toSSConfig(Context context) {
+        return "ss://aes-256-cfb:"+ Sender.rreceive(context, mPassword) + "@" + mPublicIp
+                + ":" + mPort;
+    }
 }

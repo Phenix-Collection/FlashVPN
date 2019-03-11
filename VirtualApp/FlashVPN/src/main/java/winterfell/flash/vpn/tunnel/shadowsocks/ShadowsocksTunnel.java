@@ -22,7 +22,7 @@ public class ShadowsocksTunnel extends Tunnel {
 
     @Override
     protected void onConnected(ByteBuffer buffer) throws Exception {
-        MLogs.d("ShadowsocksTunnel-- onConnected for " + getDestAddressString() + " server is " + m_ServerEP.toString());
+//        MLogs.d("ShadowsocksTunnel-- onConnected for " + getDestAddressString() + " server is " + m_ServerEP.toString());
         buffer.clear();
         // https://shadowsocks.org/en/spec/protocol.html
 

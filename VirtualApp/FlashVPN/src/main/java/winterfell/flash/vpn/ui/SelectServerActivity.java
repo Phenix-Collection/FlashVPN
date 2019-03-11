@@ -17,16 +17,13 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.polestar.task.network.datamodels.RegionServers;
+import com.polestar.task.network.datamodels.VpnServer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.network.ServerInfo;
 import winterfell.flash.vpn.network.VPNServerIntermediaManager;
-import winterfell.flash.vpn.network.VPNServerManager;
 import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
 
@@ -72,7 +69,7 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
         autoSignalImg = findViewById(R.id.best_server_signal);
         autoSignalImg.setImageResource(vpnServerIntermediaManagerManager.getBestServer().getSignalResId());
         int prefered = PreferenceUtils.getPreferServer();
-        if (prefered == ServerInfo.SERVER_ID_AUTO) {
+        if (prefered == VpnServer.SERVER_ID_AUTO) {
             currentSelected = autoCheckBox;
             currentSelected.setChecked(true);
         }

@@ -63,8 +63,8 @@ public abstract class Tunnel {
         this.m_InnerChannel = innerChannel;
         this.m_Selector = selector;
         SessionCount++;
-        MLogs.d("Tunnel-- new " + innerChannel.toString() + " SessionCount " + SessionCount
-             + m_InnerChannel.toString());
+//        MLogs.d("Tunnel-- new " + innerChannel.toString() + " SessionCount " + SessionCount
+//             + m_InnerChannel.toString());
     }
 
     public Tunnel(InetSocketAddress serverAddress, Selector selector) throws IOException {
@@ -74,8 +74,8 @@ public abstract class Tunnel {
         this.m_Selector = selector;
         this.m_ServerEP = serverAddress;
         SessionCount++;
-        MLogs.d("Tunnel-- new " + serverAddress.toString() + " SessionCount " + SessionCount
-                + m_InnerChannel.toString());
+//        MLogs.d("Tunnel-- new " + serverAddress.toString() + " SessionCount " + SessionCount
+//                + m_InnerChannel.toString());
     }
 
     public void setBrotherTunnel(Tunnel brotherTunnel) {
@@ -83,12 +83,12 @@ public abstract class Tunnel {
     }
 
     public void connect(InetSocketAddress destAddress) throws Exception {
-        MLogs.d("Tunnel-- connect " + destAddress.toString() + " proxy is " + m_ServerEP.toString()
-                + " " + m_InnerChannel.toString() + " Threadid " + Thread.currentThread().getId());
+//        MLogs.d("Tunnel-- connect " + destAddress.toString() + " proxy is " + m_ServerEP.toString()
+//                + " " + m_InnerChannel.toString() + " Threadid " + Thread.currentThread().getId());
         if (LocalVpnService.Instance.protect(m_InnerChannel.socket())) {//保护socket不走vpn
             m_DestAddress = destAddress;
             SelectionKey selectionKey = m_InnerChannel.register(m_Selector, SelectionKey.OP_CONNECT, this);//注册连接事件
-            MLogs.d("Tunnel-- before connect " + m_ServerEP  + m_InnerChannel.toString() + " " + destAddress.toString() + " " + selectionKey.toString());
+//            MLogs.d("Tunnel-- before connect " + m_ServerEP  + m_InnerChannel.toString() + " " + destAddress.toString() + " " + selectionKey.toString());
             mStartConnectTime = Calendar.getInstance().getTimeInMillis();
             m_InnerChannel.connect(m_ServerEP);//连接目标
         } else {
@@ -97,7 +97,7 @@ public abstract class Tunnel {
     }
 
     protected void beginReceive() throws Exception {
-        MLogs.d("Tunnel-- beginReceive " + m_InnerChannel.toString()+ " " + getDestAddressString());
+//        MLogs.d("Tunnel-- beginReceive " + m_InnerChannel.toString()+ " " + getDestAddressString());
         if (m_InnerChannel.isBlocking()) {
             m_InnerChannel.configureBlocking(false);
         }
@@ -106,11 +106,11 @@ public abstract class Tunnel {
 
 
     protected boolean write(ByteBuffer buffer, boolean copyRemainData) throws Exception {
-        MLogs.d("Tunnel-- write " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
+//        MLogs.d("Tunnel-- write " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
         int bytesSent;
         while (buffer.hasRemaining()) {
             bytesSent = m_InnerChannel.write(buffer);
-            MLogs.d("Tunnel-- wrote bytes " + bytesSent + " " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
+//            MLogs.d("Tunnel-- wrote bytes " + bytesSent + " " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
             if (bytesSent == 0) {
 
                 /*
@@ -143,11 +143,11 @@ public abstract class Tunnel {
                 m_SendRemainBuffer.put(buffer);
                 m_SendRemainBuffer.flip();
                 SelectionKey s = m_InnerChannel.register(m_Selector, SelectionKey.OP_WRITE, this);//注册写事件
-                if (s == null) {
-                    MLogs.d("Tunnel-- register OP_WRITE FAILED " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
-                } else {
-                    MLogs.d("Tunnel-- register OP_WRITE SUUCEED " + s.toString()+ buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
-                }
+//                if (s == null) {
+//                    MLogs.d("Tunnel-- register OP_WRITE FAILED " + buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
+//                } else {
+//                    MLogs.d("Tunnel-- register OP_WRITE SUUCEED " + s.toString()+ buffer.toString() + " " + buffer.limit()  + m_InnerChannel.toString() + " " + getDestAddressString());
+//                }
             }
             return false;
         } else {//发送完毕了
@@ -158,7 +158,7 @@ public abstract class Tunnel {
     protected void onTunnelEstablished() throws Exception {
         long establishTime = Calendar.getInstance().getTimeInMillis() - mStartConnectTime;
         TunnelStatisticManager.getInstance().setEstablishTime(m_ServerEP, establishTime);
-        MLogs.d("Tunnel-- onTunnelEstablished time is " + establishTime  + m_InnerChannel.toString() + " " + getDestAddressString());
+//        MLogs.d("Tunnel-- onTunnelEstablished time is " + establishTime  + m_InnerChannel.toString() + " " + getDestAddressString());
         this.beginReceive();//开始接收数据
         if (m_BrotherTunnel != null) {
             m_BrotherTunnel.beginReceive();//兄弟也开始收数据吧
@@ -168,10 +168,10 @@ public abstract class Tunnel {
     @SuppressLint("DefaultLocale")
     public void onConnectable() {
         try {
-            MLogs.d("Tunnel-- onConnectable " + m_InnerChannel.toString() + " " + getDestAddressString());
+//            MLogs.d("Tunnel-- onConnectable " + m_InnerChannel.toString() + " " + getDestAddressString());
 
             if (m_InnerChannel.finishConnect()) {//连接成功
-                MLogs.d("Tunnel-- finishConnect succeed "  + m_InnerChannel.toString());
+//                MLogs.d("Tunnel-- finishConnect succeed "  + m_InnerChannel.toString());
                 onConnected(GL_BUFFER);//通知子类TCP已连接，子类可以根据协议实现握手等。
             } else {//连接失败
                 MLogs.d(String.format("Error: connect to %s failed.", m_ServerEP));
@@ -187,7 +187,7 @@ public abstract class Tunnel {
     }
 
     public void onReadable(SelectionKey key) {
-        MLogs.d("Tunnel-- onReadable "  + m_InnerChannel.toString() + " " + getDestAddressString());
+//        MLogs.d("Tunnel-- onReadable "  + m_InnerChannel.toString() + " " + getDestAddressString());
         try {
             ByteBuffer buffer = GL_BUFFER;
             buffer.clear();
@@ -204,10 +204,10 @@ public abstract class Tunnel {
                         }
                     }
                 }
-                MLogs.d("Tunnel-- onReadable readed " + bytesRead  + m_InnerChannel.toString() + " " + getDestAddressString());
+//                MLogs.d("Tunnel-- onReadable readed " + bytesRead  + m_InnerChannel.toString() + " " + getDestAddressString());
             } else if (bytesRead < 0) {
                 //2019-03-02 当Tun关闭时，这里会被调用；从而关闭tunnel pair
-                MLogs.d("Tunnel-- onReadable readed failed "  + m_InnerChannel.toString() + " " + getDestAddressString());
+//                MLogs.d("Tunnel-- onReadable readed failed "  + m_InnerChannel.toString() + " " + getDestAddressString());
                 this.dispose();//连接已关闭，释放资源。
             }
         } catch (Exception e) {
@@ -220,7 +220,7 @@ public abstract class Tunnel {
 
     public void onWritable(SelectionKey key) {
         try {
-            MLogs.d("Tunnel-- onWritable "  + m_InnerChannel.toString() + " " + getDestAddressString());
+//            MLogs.d("Tunnel-- onWritable "  + m_InnerChannel.toString() + " " + getDestAddressString());
             this.beforeSend(m_SendRemainBuffer);//发送之前，先让子类处理，例如做加密等。
             if (this.write(m_SendRemainBuffer, false)) {//如果剩余数据已经发送完毕
                 key.cancel();//取消写事件。
@@ -247,7 +247,7 @@ public abstract class Tunnel {
     }
 
     void disposeInternal(boolean disposeBrother) {
-        MLogs.d("Tunnel-- disposeInternal " + disposeBrother + m_InnerChannel.toString() + " " + getDestAddressString());
+//        MLogs.d("Tunnel-- disposeInternal " + disposeBrother + m_InnerChannel.toString() + " " + getDestAddressString());
         if (m_Disposed) {
             return;
         } else {

@@ -424,7 +424,9 @@ public class ProxyConfig {
         }
         if (!m_ProxyList.contains(config)) {
             m_ProxyList.add(config);
-            m_DomainMap.put(config.ServerAddress.getHostName(), false);
+            // TODO 2019-0311 将m_DomainMap去掉了，以后需要再说吧；因为这一行，
+            // 会导致运行在mainthread里头会android.os.NetworkOnMainThreadException
+            // m_DomainMap.put(config.ServerAddress.getHostName(), false);
         }
     }
 

@@ -89,9 +89,9 @@ public class ShadowsocksPingManager implements Runnable {
         mPipe = null;
     }
 
-    private long mTimeoutThresholder = 30000; //30秒超时
+    //private long mTimeoutThresholder = 30000; //30秒超时
 
-    public boolean ping(InetSocketAddress pingTarget, final ShadowsocksPingListenser listener) {
+    public boolean ping(InetSocketAddress pingTarget, final ShadowsocksPingListenser listener, final long timeout) {
         start();
 
         Config config = null;
@@ -105,7 +105,7 @@ public class ShadowsocksPingManager implements Runnable {
         ScheduledExecutorService scheduler
                 = Executors.newSingleThreadScheduledExecutor();
         Runnable task = new PingTimeoutRunnable(config.ServerAddress, listener);
-        final Future f = scheduler.schedule(task, mTimeoutThresholder, TimeUnit.MILLISECONDS);
+        final Future f = scheduler.schedule(task, timeout, TimeUnit.MILLISECONDS);
         scheduler.shutdown();
 
 

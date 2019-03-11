@@ -8,6 +8,7 @@ import android.os.Looper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.polestar.ad.AdLog;
+import com.polestar.task.network.datamodels.Region;
 import com.polestar.task.network.datamodels.RegionServers;
 import com.polestar.task.network.datamodels.VpnServer;
 import com.polestar.task.network.responses.ServersResponse;
@@ -300,11 +301,18 @@ public class VPNServerIntermediaManager {
         }
     }
 
+    private void dump(ArrayList<RegionServers> servers) {
+        for (RegionServers regionServers : servers) {
+            regionServers.dump();
+        }
+    }
+
     //可能是null哦
     public VpnServer getBestServer() {
         synchronized (this) {
             ArrayList<RegionServers> toSort = new ArrayList<>(mInterServers.mVpnServers);
             Collections.sort(toSort, mBestServerComparator);
+
             if (toSort.size() > 0) {
                 return toSort.get(0).getFirstServer();
             } else {

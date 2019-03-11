@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 
 import winterfell.flash.vpn.billing.BillingProvider;
+import winterfell.flash.vpn.core.ProxyConfig;
 import winterfell.flash.vpn.utils.BugReporter;
 import winterfell.flash.vpn.utils.EventReporter;
 import winterfell.flash.vpn.utils.MLogs;
@@ -115,5 +116,25 @@ public class FlashApp extends MultiDexApplication {
             Configuration.PKG_NAME = BuildConfig.APPLICATION_ID;
             FuseAdLoader.setUserId(AppUser.getInstance().getMyId());
         }
+
+        //只load一次
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                MLogs.d("LocalVpnService-- Load config from file ...");
+                try {
+                    ProxyConfig.Instance.loadFromFile(getResources().openRawResource(R.raw.config));
+                    MLogs.d("LocalVpnService-- Load done");
+                } catch (Exception e) {
+                    String errString = e.getMessage();
+                    if (errString == null || errString.isEmpty()) {
+                        errString = e.toString();
+                    }
+                    MLogs.d("LocalVpnService-- Load failed with error: %s", errString);
+                }
+            }
+        };
+
+        t.start();
     }
 }

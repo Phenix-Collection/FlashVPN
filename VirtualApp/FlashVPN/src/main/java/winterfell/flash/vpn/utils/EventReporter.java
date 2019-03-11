@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.polestar.task.ADErrorCode;
 
 import winterfell.flash.vpn.FlashApp;
 
@@ -153,5 +154,31 @@ public class EventReporter {
         Bundle bundle = new Bundle();
         bundle.putString("fail", locale + "_" + address);
         mFirebaseAnalytics.logEvent("tunnel_c_fail", bundle);
+    }
+
+    private static void reportAwsEvent(String event) {
+        Bundle bundle = new Bundle();
+        bundle.putString("event", event);
+        mFirebaseAnalytics.logEvent("aws", bundle);
+    }
+
+    public static void reportNoServer() {
+        reportAwsEvent("no_server");
+    }
+
+    public static void reportGetPortFailed(String ip) {
+        reportAwsEvent(ip + "get_port_failed");
+    }
+
+    public static void reportCheckServerFailed(String ip) {
+        reportAwsEvent(ip + "check_port_failed");
+    }
+
+    public static void reportAderror(ADErrorCode adErrorCode) {
+        reportAwsEvent("api_error_" + adErrorCode.getErrCode());
+    }
+
+    public static void reportFailedToAddProxy() {
+        reportAwsEvent("add_port_failed");
     }
 }

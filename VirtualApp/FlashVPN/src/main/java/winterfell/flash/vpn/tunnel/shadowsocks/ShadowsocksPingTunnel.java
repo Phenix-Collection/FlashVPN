@@ -29,7 +29,7 @@ public class ShadowsocksPingTunnel extends ShadowsocksTunnel {
 
     @Override
     protected void onConnected(ByteBuffer buffer) throws Exception {
-        MLogs.i("ShadowsocksPingTunnel-- onConnected succeeded " + getDestAddressString());
+//        MLogs.i("ShadowsocksPingTunnel-- onConnected succeeded " + getDestAddressString());
 
         mFinishConnectTime = Calendar.getInstance().getTimeInMillis();
         if (mListener != null) {
@@ -43,8 +43,8 @@ public class ShadowsocksPingTunnel extends ShadowsocksTunnel {
     public void connect(InetSocketAddress destAddress) {
         mStartConnectTime = Calendar.getInstance().getTimeInMillis();
         try {
-            MLogs.d("Tunnel-- connect " + destAddress.toString() + " proxy is " + m_ServerEP.toString()
-                    + " " + m_InnerChannel.toString() + " Threadid " + Thread.currentThread().getId());
+//            MLogs.d("Tunnel-- connect " + destAddress.toString() + " proxy is " + m_ServerEP.toString()
+//                    + " " + m_InnerChannel.toString() + " Threadid " + Thread.currentThread().getId());
             if (LocalVpnService.Instance != null && LocalVpnService.IsRunning) {
                 if (!LocalVpnService.Instance.protect(m_InnerChannel.socket())) {
                     throw new Exception("Tunnel-- VPN protect socket failed." + m_InnerChannel.toString());
@@ -52,7 +52,7 @@ public class ShadowsocksPingTunnel extends ShadowsocksTunnel {
             }
             m_DestAddress = destAddress;
             mShadowsocksPingManger.register(m_InnerChannel, SelectionKey.OP_CONNECT, this);
-            MLogs.d("Tunnel-- before connect " + m_ServerEP  + m_InnerChannel.toString() + " " + destAddress.toString() );
+//            MLogs.d("Tunnel-- before connect " + m_ServerEP  + m_InnerChannel.toString() + " " + destAddress.toString() );
 
             m_InnerChannel.connect(m_ServerEP);//连接目标
         } catch (Exception e) {

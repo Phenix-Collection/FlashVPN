@@ -31,8 +31,13 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.task.ADErrorCode;
+import com.polestar.task.IVpnStatusListener;
 import com.polestar.task.network.AppUser;
+import com.polestar.task.network.VpnApiHelper;
+import com.polestar.task.network.datamodels.VpnRequirement;
 import com.polestar.task.network.datamodels.VpnServer;
+import com.polestar.task.network.responses.ServersResponse;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -46,6 +51,7 @@ import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.core.AppProxyManager;
 import winterfell.flash.vpn.core.LocalVpnService;
+import winterfell.flash.vpn.core.ProxyConfig;
 import winterfell.flash.vpn.core.ShadowsocksPingManager;
 import winterfell.flash.vpn.network.VPNServerIntermediaManager;
 import winterfell.flash.vpn.tunnel.TunnelStatisticManager;
@@ -79,12 +85,23 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private TimerTask timeCountTask;
     private VpnServer mCurrentVpnServer;
     private AppUser mAppUser;
+    private VpnRequirement mCurrentVpnRequirement;
+    private String mErrInfo;
+    private int mCheckPortFailedCount;
+
+    private static int CHECK_PORT_FAILED_THRESHOLDER = 2;
 
     private static final String SLOT_HOME_NATIVE = "slot_home_native";
     private static final String SLOT_HOME_BANNER = "slot_home_banner";
     private static final String SLOT_HOME_GIFT_REWARD = "slot_home_gift_reward";
     private static final int START_VPN_SERVICE_REQUEST_CODE = 100;
     private static final int SELECT_SERVER_REQUEST_CODE = 101;
+
+    private final static int STATE_ACQUIRING_PORT = 4;
+    //private final static int STATE_ACQIRE_FAILED = 5;
+    private final static int STATE_CHECKING_PORT = 6;
+    private final static int STATE_CHECK_PORT_FAILED = 7;
+    private final static int STATE_CHECK_PORT_SUCCEED = 8;
 
     private final static int STATE_CONNECTED = 0;
     private final static int STATE_DISCONNECTED = 1;
@@ -95,6 +112,453 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private final static String RATE_FROM_DIALOG = "rate_from_dialog";
     private final static String SLOT_CONNECTED_AD = "slot_connected_ad";
     private final static String CONF_RATE_DIALOG_GATE = "rate_vpn_time_sec";
+
+    private void setVpnRequirementIntoProxyList(VpnRequirement vpnRequirement) throws Exception {
+        ProxyConfig.Instance.m_ProxyList.clear();
+        String config = vpnRequirement.toSSConfig(this);
+        MLogs.i("vpnRequirement is " + config);
+        ProxyConfig.Instance.addProxyToList(config);
+    }
+
+    private void acquirePort(VpnServer vpnServer) {
+        if (vpnServer == null) {
+            MLogs.e("no vpnserver found");
+            EventReporter.reportNoServer();
+            return;
+        }
+        updateConnectState(STATE_ACQUIRING_PORT, "");
+
+        VpnApiHelper.acquireVpnServer(AppUser.getInstance().getMyId(), vpnServer.mPublicIp,
+                vpnServer.mGeo, vpnServer.mCity, new IVpnStatusListener() {
+                    @Override
+                    public void onAcquireSucceed(VpnRequirement requirement) {
+                        mCurrentVpnRequirement = requirement;
+                        //需要开始检查服务器状态了
+                        try {
+                            setVpnRequirementIntoProxyList(mCurrentVpnRequirement);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            MLogs.e("Failed to add to proxylist " + e.toString());
+                            EventReporter.reportFailedToAddProxy();
+                            //基本上不应该进入这里的，不然是有问题的
+                            return;
+                        }
+                        //试着去ping
+                        updateStateOnMainThread(STATE_CHECKING_PORT, "");
+                    }
+
+                    @Override
+                    public void onAcquireFailed(String publicIp, ADErrorCode code) {
+                        EventReporter.reportGetPortFailed(publicIp + "_" + code.getErrCode());
+                        updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
+                    }
+
+                    @Override
+                    public void onReleaseSucceed(String publicIp) {
+                    }
+
+                    @Override
+                    public void onReleaseFailed(String publicIp, ADErrorCode code) {
+                    }
+
+                    @Override
+                    public void onGetAllServers(ServersResponse servers) {
+                    }
+
+                    @Override
+                    public void onGeneralError(ADErrorCode code) {
+                        EventReporter.reportAderror(code);
+                        updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
+                    }
+                });
+    }
+
+    ShadowsocksPingManager proxyServer = null;
+    private void ping() {
+        final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                if (proxyServer == null) {
+                    try {
+                        proxyServer = new ShadowsocksPingManager();
+                        proxyServer.start();
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                proxyServer.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
+                    @Override
+                    public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
+                        MLogs.i("ShadowsocksPingManager-- pingsucceeded");
+                        updateStateOnMainThread(STATE_CHECK_PORT_SUCCEED, "");
+                    }
+
+                    @Override
+                    public void onPingFailed(InetSocketAddress socketAddress) {
+                        MLogs.i("ShadowsocksPingManager-- pingfailed");
+                        updateStateOnMainThread(STATE_CHECK_PORT_FAILED, "");
+                    }
+                }, RemoteConfig.getLong("config_check_port_timeout"));
+            }
+        };
+        t.start();
+    }
+
+    private void updateStateOnMainThread(final int state, final String errMsg) {
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                updateConnectState(state, errMsg);
+            }
+        });
+    }
+
+    private void updateConnectState(int state, String errMsg) {
+        switch (state) {
+            case STATE_ACQUIRING_PORT:
+                btnCenter.setClickable(false);
+                connectBtnTxt.setText(R.string.connecting);
+                connectTips.setVisibility(View.VISIBLE);
+                connectTips.setText(R.string.acquiring_port);
+                break;
+            case STATE_CHECKING_PORT:
+                mCheckPortFailedCount = 0;
+                btnCenter.setClickable(false);
+                connectBtnTxt.setText(R.string.connecting);
+                connectTips.setVisibility(View.VISIBLE);
+                connectTips.setText(R.string.checking_port);
+                ping();
+                break;
+            case STATE_CHECK_PORT_SUCCEED:
+                mCheckPortFailedCount = 0;
+                startConnect();
+                break;
+            case STATE_CHECK_PORT_FAILED:
+                mCheckPortFailedCount++;
+                if (mCheckPortFailedCount >= CHECK_PORT_FAILED_THRESHOLDER) {
+                    updateStateOnMainThread(STATE_CONNECT_FAILED, "");
+                    return;
+                }
+                //ping不同一次，再来一次，有可能服务器还没准备好
+                ping();
+                break;
+            case STATE_CONNECTED:
+                MLogs.d("state connected");
+                btnCenter.setClickable(true);
+                connectTips.setVisibility(View.VISIBLE);
+                connectTips.setText(R.string.connecting_tip_success);
+                connectBtnTxt.setText(R.string.stop);
+                btnCenter.setImageResource(R.drawable.shape_stop_btn);
+                btnCenterBg.setImageResource(R.drawable.shape_stop_btn_bg);
+                btnCenterBg.setAnimation(connectBgAnimation);
+                connectBgAnimation.start();
+                break;
+            case STATE_DISCONNECTED:
+                MLogs.d("state disconnected");
+                btnCenter.setClickable(true);
+                if (errMsg != null && !errMsg.isEmpty()) {
+                    connectTips.setText(errMsg);
+                } else {
+                    connectTips.setVisibility(View.INVISIBLE);
+                }
+                connectBtnTxt.setText(R.string.connect);
+                btnCenter.setImageResource(R.drawable.shape_connect_btn);
+                btnCenterBg.setImageResource(R.drawable.shape_connect_btn_bg);
+                btnCenterBg.setAnimation(connectBgAnimation);
+                connectBgAnimation.start();
+                break;
+            case STATE_START_CONNECTING:
+                btnCenter.setClickable(false);
+                connectBtnTxt.setText(R.string.connecting);
+//                Runnable connectingRunnable = new Runnable() {
+//                    int step = 0;
+//                    @Override
+//                    public void run() {
+//                        if (connectingFailed) {
+//                            updateConnectState(STATE_CONNECT_FAILED, "");
+//                            return;
+//                        }
+//                        if (step <= 2) {
+//                            switch (step) {
+//                                case 0:
+//                                    connectTips.setVisibility(View.VISIBLE);
+//                                    connectTips.setText(R.string.connecting_tip1);
+//                                    mainHandler.postDelayed(this, 2000);
+//                                    break;
+//                                case 1:
+//                                    connectTips.setText(R.string.connecting_tip2);
+//                                    mainHandler.postDelayed(this, 2000);
+//                                    break;
+//                                case 2:
+//                                    updateConnectState(STATE_CONNECTED, "");
+//                                    connectTips.setText(R.string.connecting_tip_success);
+//                                    break;
+//                            }
+//                            step ++;
+//                        }
+//                    }
+//                };
+//                mainHandler.post(connectingRunnable);
+                break;
+            case STATE_CONNECT_FAILED:
+                btnCenter.setClickable(true);
+                connectTips.setVisibility(View.VISIBLE);
+                connectBtnTxt.setText(R.string.connect);
+                btnCenter.setImageResource(R.drawable.shape_connect_btn);
+                btnCenterBg.setImageResource(R.drawable.shape_connect_btn_bg);
+                btnCenterBg.setAnimation(connectBgAnimation);
+                connectBgAnimation.start();
+                connectTips.setText(R.string.retry_tips);
+                break;
+        }
+    }
+
+    public void onVipClick(View view){
+        UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_TITLE_ICON);
+        EventReporter.generalEvent(this, "home_vip_click");
+    }
+
+    public void onRewardClick(View view) {
+        if (rewardAd != null) {
+            rewardAd.show();
+            rewardAd = null;
+            EventReporter.generalEvent(this, "home_reward_click_ad");
+        } else {
+            UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_GIFT_ICON);
+            EventReporter.generalEvent(this, "home_reward_click_user_center");
+        }
+    }
+
+    private String getSIReportValue(VpnServer si) {
+        return si == null ? "null" : si.mPublicIp;
+    }
+
+    private void startConnect() {
+        Intent intent = LocalVpnService.prepare(HomeActivity.this);
+        if (intent == null) {
+            startVPNService();
+        } else {
+            startActivityForResult(intent, START_VPN_SERVICE_REQUEST_CODE);
+        }
+    }
+
+    private void startVPNService() {
+        onLogReceived("starting...");
+        MLogs.d("starting vpn service...");
+        connectingFailed = false;
+        updateConnectState(STATE_START_CONNECTING, "");
+        if (Build.VERSION.SDK_INT >= 26) {
+            startForegroundService(new Intent(this, LocalVpnService.class));
+        } else {
+            startService(new Intent(this, LocalVpnService.class));
+        }
+        LocalVpnService.addOnStatusChangedListener(this);
+    }
+
+    @Override
+    public void onStatusChanged(String status, Boolean isRunning, float avgDownloadSpeed, float avgUploadSpeed,
+                                float maxDownloadSpeed, float maxUploadSpeed) {
+        if (isRunning) {
+            EventReporter.reportConnectted(this, getSIReportValue(mCurrentVpnServer));
+            connectingFailed = false;
+
+            updateStateOnMainThread(STATE_CONNECTED, "");
+
+            if (PreferenceUtils.hasShownRateDialog(this)
+                    && !FlashUser.getInstance(this).isVIP()) {
+                FuseAdLoader.get(SLOT_CONNECTED_AD, this).loadAd(this, 2, new IAdLoadListener() {
+                    @Override
+                    public void onAdLoaded(IAdAdapter ad) {
+                        ad.show();
+                    }
+
+                    @Override
+                    public void onAdClicked(IAdAdapter ad) {
+
+                    }
+
+                    @Override
+                    public void onAdClosed(IAdAdapter ad) {
+
+                    }
+
+                    @Override
+                    public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+
+                    @Override
+                    public void onRewarded(IAdAdapter ad) {
+
+                    }
+                });
+            }
+        } else {
+            EventReporter.reportDisConnectted(this, getSIReportValue(mCurrentVpnServer));
+            EventReporter.reportSpeed(this, getSIReportValue(mCurrentVpnServer),
+                    avgDownloadSpeed, avgUploadSpeed,
+                    maxDownloadSpeed, maxUploadSpeed);
+            TunnelStatisticManager.getInstance().eventReport();
+            connectingFailed = true;
+
+            //2019-03-11 如果是localVpnService内部错误导致的，我们是不是应该将其状态设为false，免得他一直跑着呢
+            LocalVpnService.IsRunning = false;
+        }
+    }
+
+    @Override
+    public void onLogReceived(String logString) {
+
+    }
+
+
+    public void onCountryClick(View view){
+        SelectServerActivity.start(this, SELECT_SERVER_REQUEST_CODE);
+        EventReporter.generalEvent(this, "home_country_click");
+    }
+
+    public boolean onNavigationItemSelected(int position) {
+        switch (position) {
+            case 0:
+                AppProxySettingActivity.start(this);
+                break;
+            case 1:
+                UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_MENU);
+                break;
+            case 2:
+                FaqActivity.start(this);
+                break;
+            case 3:
+                FeedbackActivity.start(this, 0);
+                break;
+            case 4:
+                showRateDialog(RATE_FROM_MENU);
+                break;
+            case 5:
+                CommonUtils.shareWithFriends(this);
+                break;
+            case 6:
+                try {
+                    Intent intent = new Intent(this, AboutActivity.class);
+                    startActivity(intent);
+                } catch (Exception localException1) {
+                    localException1.printStackTrace();
+                }
+                break;
+        }
+        return true;
+    }
+
+    private void updateRewardLayout() {
+        if (FlashUser.getInstance(this).usePremiumSeconds()) {
+            rewardLayout.setVisibility(View.VISIBLE);
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    long premiumTime = FlashUser.getInstance(HomeActivity.this).getFreePremiumSeconds();
+                    TextView text = findViewById(R.id.reward_text);
+                    ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
+                    if (FlashUser.getInstance(HomeActivity.this).isVIP()) {
+                        giftIcon.setImageResource(R.drawable.icon_trophy_award);
+                        text.setText(R.string.reward_text_vip);
+                    } else if (rewardAd != null) {
+                        if (premiumTime <= 0) {
+                            text.setText(R.string.reward_text_no_premium_time_watch_ad);
+                        } else {
+                            String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
+                            text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
+                        }
+                        giftIcon.setImageResource(R.drawable.icon_reward);
+                    } else {
+                        if (premiumTime <= 0) {
+                            text.setText(R.string.reward_text_no_premium_time);
+                        } else {
+                            String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
+                            text.setText(getString(R.string.reward_text_has_premium_time, s));
+                        }
+                        giftIcon.setImageResource(R.drawable.icon_trophy_award);
+                    }
+                }
+            });
+        } else {
+            rewardLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void initView() {
+        setContentView(R.layout.activity_home);
+        rewardLayout = findViewById(R.id.reward_layout);
+        btnCenter = findViewById(R.id.connect_button);
+        btnCenterBg = findViewById(R.id.connect_button_bg);
+        connectTips = findViewById(R.id.txt_connect_tips);
+        connectBtnTxt = findViewById(R.id.txt_connect_btn);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setScrimColor(Color.TRANSPARENT);
+        navigationList = (ListView) findViewById(R.id.navigation_list);
+        navigationList.setAdapter(new HomeNavigationAdapter(this));
+        geoImage = findViewById(R.id.img_flag);
+        cityText = findViewById(R.id.txt_city);
+
+        connectBgAnimation = AnimationUtils.loadAnimation(this, R.anim.connect_bg);
+        connectBgMapAnimation = AnimationUtils.loadAnimation(this, R.anim.connect_bg_map);
+        ImageView bgMap = findViewById(R.id.bg_worldmap);
+        bgMap.setAnimation(connectBgMapAnimation);
+        connectBgMapAnimation.start();
+
+        //        int width = DisplayUtils.getScreenWidth(this);
+
+//        int listWidth = DisplayUtils.px2dip(this, width*2/3);
+//        MLogs.d("width set to " + listWidth);
+//        navigationList.setLayoutParams(new LinearLayout.LayoutParams(listWidth, ViewGroup.LayoutParams.MATCH_PARENT));
+        navigationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                onNavigationItemSelected(i);
+                drawer.closeDrawer(GravityCompat.START);
+//                int drawerLockMode = drawer.getDrawerLockMode(GravityCompat.START);
+//                if (drawer.isDrawerVisible(GravityCompat.START)
+//                        && (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_OPEN)) {
+//                    drawer.closeDrawer(GravityCompat.START);
+//                }
+            }
+        });
+        View view = findViewById(R.id.content_home);
+        setImmerseLayout(view);
+        if (AppProxyManager.isLollipopOrAbove){
+            new AppProxyManager(this);
+            //   textViewProxyApp = (TextView) findViewById(R.id.textViewAppSelectDetail);
+        }
+        btnCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MLogs.d("IsRunning " + LocalVpnService.IsRunning);
+                int id = PreferenceUtils.getPreferServer();
+                mCurrentVpnServer = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
+
+                if (!LocalVpnService.IsRunning) {
+                    EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
+                    acquirePort(mCurrentVpnServer);
+                } else {
+                    EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
+                    LocalVpnService.IsRunning = false;
+                    updateConnectState(STATE_DISCONNECTED, "");
+                }
+            }
+        });
+    }
 
     public static void enter(Activity activity, boolean needUpdate) {
         MLogs.d("Enter home: update: " + needUpdate);
@@ -108,81 +572,123 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         return false;
     }
 
-    public static void preloadAd(Context context) {
-        FuseAdLoader.get(SLOT_HOME_BANNER, context).
-                setBannerAdSize(getBannerSize()).preloadAd(context);
-        if (FlashUser.getInstance(FlashApp.getApp()).usePremiumSeconds()) {
-            FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, context).
-                    preloadAd(context);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == START_VPN_SERVICE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                startVPNService();
+            } else{
+                updateConnectState(STATE_CONNECT_FAILED, "");
+            }
+            return;
+        } else if (requestCode == SELECT_SERVER_REQUEST_CODE) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (timeCountTask != null) {
+            timeCountTask.cancel();
         }
     }
 
-    public static AdSize getBannerSize() {
-        return AdSize.MEDIUM_RECTANGLE;
-    }
-
-//    private void retrieveBestProxy() throws Exception {
-//        ProxyConfig.Instance.m_ProxyList.clear();
-//        int id = PreferenceUtils.getPreferServer();
-//        String url;
-//        if (id == ServerInfo.SERVER_ID_AUTO) {
-//            url = VPNServerManager.getInstance(this).getBestServer().url;
-//        } else {
-//            url = VPNServerManager.getInstance(this).getServerInfo(id).url;
-//        }
-//        MLogs.d("LocalVpnService-- Will use url " + url);
-//       // ProxyUrl = url;
-//        ProxyConfig.Instance.addProxyToList(url);
-//        MLogs.d("LocalVpnService-- Proxy is:  " + ProxyConfig.Instance.getDefaultProxy());
-//        ProxyConfig.Instance.dump();
-//    }
-
-    ShadowsocksPingManager proxyServer = null;
-
-    private void ping() {
-        /**/
-
-        final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
-
-        Thread t = new Thread() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int id = PreferenceUtils.getPreferServer();
+        VpnServer si = VPNServerIntermediaManager.getInstance(this).getServerInfo(id);
+        if (id == VpnServer.SERVER_ID_AUTO) {
+            geoImage.setImageResource(R.drawable.flash_black);
+            cityText.setText(R.string.select_server_auto);
+        } else {
+            geoImage.setImageResource(si.getFlagResId());
+            cityText.setText(si.mCity);
+        }
+        updateConnectState(LocalVpnService.IsRunning? STATE_CONNECTED:STATE_DISCONNECTED, "");
+        updateRewardLayout();
+        if (isRewarded) {
+            FlashUser.getInstance(HomeActivity.this).doRewardFreePremium();
+            Toast.makeText(HomeActivity.this, R.string.get_reward_premium_time, Toast.LENGTH_SHORT).show();
+            isRewarded = false;
+        }
+        timeCountTask = new TimerTask() {
             @Override
             public void run() {
-//                try {
-//                    retrieveBestProxy();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-                if (proxyServer == null) {
-                    try {
-                        proxyServer = new ShadowsocksPingManager();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                proxyServer.start();
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-
-                }
-
-                //super.run();
-                //LocalVpnService.Instance.m_TcpProxyServer.mShadowsocksPingManager.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
-                //proxyServer.mShadowsocksPingManager.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
-                proxyServer.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
-                    @Override
-                    public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
-                        MLogs.i("ShadowsocksPingManager-- pingsucceeded");
-                    }
-
-                    @Override
-                    public void onPingFailed(InetSocketAddress socketAddress) {
-                        MLogs.i("ShadowsocksPingManager-- pingfailed");
-                    }
-                });
+                updateRewardLayout();
             }
         };
-        t.start();
+        timer.scheduleAtFixedRate(timeCountTask, 1000, 1000);
+
+        if (!PreferenceUtils.hasShownRateDialog(this)
+                && PreferenceUtils.getConnectedTimeSec() > RemoteConfig.getLong(CONF_RATE_DIALOG_GATE)) {
+            mainHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showRateDialog(RATE_FROM_DIALOG);
+                }
+            }, 1000);
+        }
+
+        if (!FlashUser.getInstance(this).isVIP()) {
+            long current = System.currentTimeMillis();
+            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
+                loadAds();
+            }
+        }
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        mainHandler = new Handler();
+
+        boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
+        if (needUpdate) {
+            MLogs.d("need update");
+            mainHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showUpdateDialog();
+                }
+            }, 1000);
+        }
+        VPNServerIntermediaManager.getInstance(HomeActivity.this).asyncUpdatePing(new VPNServerIntermediaManager.OnUpdatePingListener() {
+            @Override
+            public void onPingUpdated(boolean res) {
+                //btnCenter.setClickable(true);
+            }
+        }, true);
+
+        timer = new Timer();
+        loadAds();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    public void onNavigationClick(View view) {
+        int drawerLockMode = drawer.getDrawerLockMode(GravityCompat.START);
+        if (drawer.isDrawerVisible(GravityCompat.START)
+                && (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_OPEN)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {
+            drawer.openDrawer(GravityCompat.START);
+        }
+    }
+
+////////ADs start
+    public static AdSize getBannerSize() {
+        return AdSize.MEDIUM_RECTANGLE;
     }
 
     private void inflateHomeNativeAd(IAdAdapter ad) {
@@ -208,6 +714,22 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             adContainer.removeAllViews();
             adContainer.addView(adView);
             adContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void preloadAd(Context context) {
+        FuseAdLoader.get(SLOT_HOME_BANNER, context).
+                setBannerAdSize(getBannerSize()).preloadAd(context);
+        if (FlashUser.getInstance(FlashApp.getApp()).usePremiumSeconds()) {
+            FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, context).
+                    preloadAd(context);
+        }
+    }
+
+    private void loadAds() {
+        if (!FlashUser.getInstance(this).isVIP()) {
+            loadHomeNativeAd();
+            loadRewardAd();
         }
     }
 
@@ -262,334 +784,40 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private void loadHomeNativeAd() {
         FuseAdLoader.get(SLOT_HOME_BANNER, this).setBannerAdSize(getBannerSize()).
                 loadAd(this, 2, 2000, new IAdLoadListener() {
-            @Override
-            public void onAdLoaded(IAdAdapter ad) {
-                inflateHomeNativeAd(ad);
-            }
-
-            @Override
-            public void onAdClicked(IAdAdapter ad) {
-
-            }
-
-            @Override
-            public void onAdClosed(IAdAdapter ad) {
-
-            }
-
-            @Override
-            public void onAdListLoaded(List<IAdAdapter> ads) {
-
-            }
-
-            @Override
-            public void onError(String error) {
-
-            }
-
-            @Override
-            public void onRewarded(IAdAdapter ad) {
-
-            }
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (timeCountTask != null) {
-            timeCountTask.cancel();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int id = PreferenceUtils.getPreferServer();
-        VpnServer si = VPNServerIntermediaManager.getInstance(this).getServerInfo(id);
-        if (id == VpnServer.SERVER_ID_AUTO) {
-            geoImage.setImageResource(R.drawable.flash_black);
-            cityText.setText(R.string.select_server_auto);
-        } else {
-            geoImage.setImageResource(si.getFlagResId());
-            cityText.setText(si.mCity);
-        }
-        updateConnectState(LocalVpnService.IsRunning? STATE_CONNECTED:STATE_DISCONNECTED);
-        updateRewardLayout();
-        if (isRewarded) {
-            FlashUser.getInstance(HomeActivity.this).doRewardFreePremium();
-            Toast.makeText(HomeActivity.this, R.string.get_reward_premium_time, Toast.LENGTH_SHORT).show();
-            isRewarded = false;
-        }
-        timeCountTask = new TimerTask() {
-            @Override
-            public void run() {
-                updateRewardLayout();
-            }
-        };
-        timer.scheduleAtFixedRate(timeCountTask, 1000, 1000);
-
-        if (!PreferenceUtils.hasShownRateDialog(this)
-                && PreferenceUtils.getConnectedTimeSec() > RemoteConfig.getLong(CONF_RATE_DIALOG_GATE)) {
-            mainHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showRateDialog(RATE_FROM_DIALOG);
-                }
-            }, 1000);
-        }
-
-        if (!FlashUser.getInstance(this).isVIP()) {
-            long current = System.currentTimeMillis();
-            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
-                loadAds();
-            }
-        }
-    }
-
-    private void updateConnectState(int state) {
-        switch (state) {
-            case STATE_CONNECTED:
-                MLogs.d("state connected");
-                btnCenter.setClickable(true);
-                connectTips.setVisibility(View.VISIBLE);
-                connectTips.setText(R.string.connecting_tip_success);
-                connectBtnTxt.setText(R.string.stop);
-                btnCenter.setImageResource(R.drawable.shape_stop_btn);
-                btnCenterBg.setImageResource(R.drawable.shape_stop_btn_bg);
-                btnCenterBg.setAnimation(connectBgAnimation);
-                connectBgAnimation.start();
-                break;
-            case STATE_DISCONNECTED:
-                MLogs.d("state disconnected");
-                btnCenter.setClickable(true);
-                connectTips.setVisibility(View.INVISIBLE);
-                connectBtnTxt.setText(R.string.connect);
-                btnCenter.setImageResource(R.drawable.shape_connect_btn);
-                btnCenterBg.setImageResource(R.drawable.shape_connect_btn_bg);
-                btnCenterBg.setAnimation(connectBgAnimation);
-                connectBgAnimation.start();
-                break;
-            case STATE_START_CONNECTING:
-                btnCenter.setClickable(false);
-                connectBtnTxt.setText(R.string.connecting);
-                Runnable connectingRunnable = new Runnable() {
-                    int step = 0;
                     @Override
-                    public void run() {
-                        if (connectingFailed) {
-                            updateConnectState(STATE_CONNECT_FAILED);
-                            return;
-                        }
-                        if (step <= 2) {
-                            switch (step) {
-                                case 0:
-                                    connectTips.setVisibility(View.VISIBLE);
-                                    connectTips.setText(R.string.connecting_tip1);
-                                    mainHandler.postDelayed(this, 2000);
-                                    break;
-                                case 1:
-                                    connectTips.setText(R.string.connecting_tip2);
-                                    mainHandler.postDelayed(this, 2000);
-                                    break;
-                                case 2:
-                                    updateConnectState(STATE_CONNECTED);
-                                    connectTips.setText(R.string.connecting_tip_success);
-                                    break;
-                            }
-                            step ++;
-                        }
+                    public void onAdLoaded(IAdAdapter ad) {
+                        inflateHomeNativeAd(ad);
                     }
-                };
-                mainHandler.post(connectingRunnable);
-                break;
-            case STATE_CONNECT_FAILED:
-                btnCenter.setClickable(true);
-                connectTips.setVisibility(View.VISIBLE);
-                connectBtnTxt.setText(R.string.connect);
-                btnCenter.setImageResource(R.drawable.shape_connect_btn);
-                btnCenterBg.setImageResource(R.drawable.shape_connect_btn_bg);
-                btnCenterBg.setAnimation(connectBgAnimation);
-                connectBgAnimation.start();
-                connectTips.setText(R.string.retry_tips);
-                break;
-        }
-    }
 
-    public void onVipClick(View view){
-        UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_TITLE_ICON);
-        EventReporter.generalEvent(this, "home_vip_click");
-    }
+                    @Override
+                    public void onAdClicked(IAdAdapter ad) {
 
-    public void onRewardClick(View view) {
-        if (rewardAd != null) {
-            rewardAd.show();
-            rewardAd = null;
-            EventReporter.generalEvent(this,"home_reward_click_ad");
-        } else {
-            UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_GIFT_ICON);
-            EventReporter.generalEvent(this,"home_reward_click_user_center");
-        }
-
-    }
-
-    private void updateRewardLayout() {
-        if (FlashUser.getInstance(this).usePremiumSeconds()) {
-            rewardLayout.setVisibility(View.VISIBLE);
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    long premiumTime = FlashUser.getInstance(HomeActivity.this).getFreePremiumSeconds();
-                    TextView text = findViewById(R.id.reward_text);
-                    ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-                    if (FlashUser.getInstance(HomeActivity.this).isVIP()) {
-                        giftIcon.setImageResource(R.drawable.icon_trophy_award);
-                        text.setText(R.string.reward_text_vip);
-                    } else if (rewardAd != null) {
-                        if (premiumTime <= 0) {
-                            text.setText(R.string.reward_text_no_premium_time_watch_ad);
-                        } else {
-                            String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
-                            text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
-                        }
-                        giftIcon.setImageResource(R.drawable.icon_reward);
-                    } else {
-                        if (premiumTime <= 0) {
-                            text.setText(R.string.reward_text_no_premium_time);
-                        } else {
-                            String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
-                            text.setText(getString(R.string.reward_text_has_premium_time, s));
-                        }
-                        giftIcon.setImageResource(R.drawable.icon_trophy_award);
                     }
-                }
-            });
-        } else {
-            rewardLayout.setVisibility(View.GONE);
-        }
-    }
 
+                    @Override
+                    public void onAdClosed(IAdAdapter ad) {
 
-    private void initView() {
-        setContentView(R.layout.activity_home);
-        rewardLayout = findViewById(R.id.reward_layout);
-        btnCenter = findViewById(R.id.connect_button);
-        btnCenterBg = findViewById(R.id.connect_button_bg);
-        connectTips = findViewById(R.id.txt_connect_tips);
-        connectBtnTxt = findViewById(R.id.txt_connect_btn);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.setScrimColor(Color.TRANSPARENT);
-        navigationList = (ListView) findViewById(R.id.navigation_list);
-        navigationList.setAdapter(new HomeNavigationAdapter(this));
-        geoImage = findViewById(R.id.img_flag);
-        cityText = findViewById(R.id.txt_city);
-
-        connectBgAnimation = AnimationUtils.loadAnimation(this, R.anim.connect_bg);
-        connectBgMapAnimation = AnimationUtils.loadAnimation(this, R.anim.connect_bg_map);
-        ImageView bgMap = findViewById(R.id.bg_worldmap);
-        bgMap.setAnimation(connectBgMapAnimation);
-        connectBgMapAnimation.start();
-
-        //        int width = DisplayUtils.getScreenWidth(this);
-
-//        int listWidth = DisplayUtils.px2dip(this, width*2/3);
-//        MLogs.d("width set to " + listWidth);
-//        navigationList.setLayoutParams(new LinearLayout.LayoutParams(listWidth, ViewGroup.LayoutParams.MATCH_PARENT));
-        navigationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                onNavigationItemSelected(i);
-                drawer.closeDrawer(GravityCompat.START);
-//                int drawerLockMode = drawer.getDrawerLockMode(GravityCompat.START);
-//                if (drawer.isDrawerVisible(GravityCompat.START)
-//                        && (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_OPEN)) {
-//                    drawer.closeDrawer(GravityCompat.START);
-//                }
-            }
-        });
-        View view = findViewById(R.id.content_home);
-        setImmerseLayout(view);
-        if (AppProxyManager.isLollipopOrAbove){
-            new AppProxyManager(this);
-         //   textViewProxyApp = (TextView) findViewById(R.id.textViewAppSelectDetail);
-        }
-        btnCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //ping();
-
-                MLogs.d("IsRunning " + LocalVpnService.IsRunning);
-                int id = PreferenceUtils.getPreferServer();
-                VpnServer si = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
-                mCurrentVpnServer = si;
-                if (!LocalVpnService.IsRunning) {
-                    EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
-                    Intent intent = LocalVpnService.prepare(HomeActivity.this);
-                    if (intent == null) {
-                        startVPNService();
-                    } else {
-                        startActivityForResult(intent, START_VPN_SERVICE_REQUEST_CODE);
                     }
-                } else {
-                    EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
-                    LocalVpnService.IsRunning = false;
-                    updateConnectState(STATE_DISCONNECTED);
-                }
-            }
-        });
+
+                    @Override
+                    public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+
+                    @Override
+                    public void onRewarded(IAdAdapter ad) {
+
+                    }
+                });
     }
+////////ADs end
 
-    private String getSIReportValue(VpnServer si) {
-        return si == null ? "null" : si.mPublicIp;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == START_VPN_SERVICE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                startVPNService();
-            } else{
-                updateConnectState(STATE_CONNECT_FAILED);
-            }
-            return;
-        } else if (requestCode == SELECT_SERVER_REQUEST_CODE) {
-            return;
-        }
-
-//        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-//        if (scanResult != null) {
-//            String ProxyUrl = scanResult.getContents();
-//            if (isValidUrl(ProxyUrl)) {
-//                setProxyUrl(ProxyUrl);
-//                textViewProxyUrl.setText(ProxyUrl);
-//            } else {
-//                Toast.makeText(MainActivity.this, R.string.err_invalid_url, Toast.LENGTH_SHORT).show();
-//            }
-//            return;
-//        }
-
-        super.onActivityResult(requestCode, resultCode, intent);
-    }
-
-    public void onCountryClick(View view){
-        SelectServerActivity.start(this, SELECT_SERVER_REQUEST_CODE);
-        EventReporter.generalEvent(this, "home_country_click");
-    }
-
-    private void startVPNService() {
-        onLogReceived("starting...");
-        MLogs.d("starting vpn service...");
-        connectingFailed = false;
-        updateConnectState(STATE_START_CONNECTING);
-        if (Build.VERSION.SDK_INT >= 26) {
-            startForegroundService(new Intent(this, LocalVpnService.class));
-        } else {
-            startService(new Intent(this, LocalVpnService.class));
-        }
-        LocalVpnService.addOnStatusChangedListener(this);
-    }
-
-
+////Misc below
     private boolean rateDialogShowed = false;
     private void showRateDialog(final String from){
         if (rateDialogShowed ) {
@@ -608,95 +836,6 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 rateDialogShowed = false;
             }
         });
-    }
-
-    public boolean onNavigationItemSelected(int position) {
-        switch (position) {
-            case 0:
-                AppProxySettingActivity.start(this);
-                break;
-            case 1:
-                UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_MENU);
-                break;
-            case 2:
-                FaqActivity.start(this);
-                break;
-            case 3:
-                FeedbackActivity.start(this, 0);
-                break;
-            case 4:
-                showRateDialog(RATE_FROM_MENU);
-                break;
-            case 5:
-                CommonUtils.shareWithFriends(this);
-                break;
-            case 6:
-                try {
-                    Intent intent = new Intent(this, AboutActivity.class);
-                    startActivity(intent);
-                } catch (Exception localException1) {
-                    localException1.printStackTrace();
-                }
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initView();
-        mainHandler = new Handler();
-
-//        final String url = RemoteConfig.getString("fingerprint_url");
-//        if(!TextUtils.isEmpty(url) &&  !url.equals("off")
-//                && CommonUtils.isNetworkAvailable(this)) {
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    //Fingerprint.genFingerprint(HomeActivity.this, url, false);
-//                }
-//            }).start();
-//
-//        }
-
-        boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
-        if (needUpdate) {
-            MLogs.d("need update");
-            mainHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showUpdateDialog();
-                }
-            }, 1000);
-        }
-       // MLogs.d("best1: " + VPNServerManager.getInstance(HomeActivity.this).getBestServer().toString());
-
-        VPNServerIntermediaManager.getInstance(HomeActivity.this).asyncUpdatePing(new VPNServerIntermediaManager.OnUpdatePingListener() {
-            @Override
-            public void onPingUpdated(boolean res) {
-                //btnCenter.setClickable(true);
-            }
-        }, true);
-
-//        VPNServerManager.getInstance(this).fetchServerList(new VPNServerManager.FetchServerListener() {
-//            @Override
-//            public void onServerListFetched(boolean res, List<ServerInfo> list) {
-//                MLogs.d("res : " + res);
-//                VPNServerManager.getInstance(HomeActivity.this).asyncUpdatePing(new VPNServerManager.OnUpdatePingListener() {
-//                    @Override
-//                    public void onPingUpdated(boolean res, List<ServerInfo> serverInfos) {
-//                        MLogs.d("res2 : " + res);
-//                        MLogs.d("best2 : " + VPNServerManager.getInstance(HomeActivity.this).getBestServer().toString());
-//                    }
-//                }, false);
-//            }
-//        });
-
-        timer = new Timer();
-        loadAds();
-//        startActivity(new Intent().setClass(this, MainActivity.class));
-//        finish();
     }
 
     private void showUpdateDialog() {
@@ -732,86 +871,5 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 PreferenceUtils.ignoreVersion(RemoteConfig.getLong(AppConstants.CONF_LATEST_VERSION));
             }
         });
-    }
-
-    private void loadAds() {
-        if (!FlashUser.getInstance(this).isVIP()) {
-            loadHomeNativeAd();
-            loadRewardAd();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }else{
-            super.onBackPressed();
-        }
-    }
-
-    public void onNavigationClick(View view) {
-        int drawerLockMode = drawer.getDrawerLockMode(GravityCompat.START);
-        if (drawer.isDrawerVisible(GravityCompat.START)
-                && (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_OPEN)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {
-            drawer.openDrawer(GravityCompat.START);
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String status, Boolean isRunning, float avgDownloadSpeed, float avgUploadSpeed,
-                                float maxDownloadSpeed, float maxUploadSpeed) {
-        if (isRunning) {
-            EventReporter.reportConnectted(this, getSIReportValue(mCurrentVpnServer));
-            connectingFailed = false;
-            if (PreferenceUtils.hasShownRateDialog(this)
-                    && !FlashUser.getInstance(this).isVIP()) {
-                FuseAdLoader.get(SLOT_CONNECTED_AD, this).loadAd(this, 2, new IAdLoadListener() {
-                    @Override
-                    public void onAdLoaded(IAdAdapter ad) {
-                        ad.show();
-                    }
-
-                    @Override
-                    public void onAdClicked(IAdAdapter ad) {
-
-                    }
-
-                    @Override
-                    public void onAdClosed(IAdAdapter ad) {
-
-                    }
-
-                    @Override
-                    public void onAdListLoaded(List<IAdAdapter> ads) {
-
-                    }
-
-                    @Override
-                    public void onError(String error) {
-
-                    }
-
-                    @Override
-                    public void onRewarded(IAdAdapter ad) {
-
-                    }
-                });
-            }
-        } else {
-            EventReporter.reportDisConnectted(this, getSIReportValue(mCurrentVpnServer));
-            EventReporter.reportSpeed(this, getSIReportValue(mCurrentVpnServer),
-                    avgDownloadSpeed, avgUploadSpeed,
-                    maxDownloadSpeed, maxUploadSpeed);
-            TunnelStatisticManager.getInstance().eventReport();
-            connectingFailed = true;
-        }
-    }
-
-    @Override
-    public void onLogReceived(String logString) {
-
     }
 }

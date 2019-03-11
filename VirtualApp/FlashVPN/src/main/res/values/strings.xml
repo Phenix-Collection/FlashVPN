@@ -30,6 +30,8 @@
     <string name="connect">Connect</string>
     <string name="stop">Stop</string>
     <string name="connecting">Connecting</string>
+    <string name="acquiring_port">Allocating resources</string>
+    <string name="checking_port">Checking server</string>
     <string name="reward_text_no_premium_time">Click to get premium proxy and bandwidth!</string>
     <string name="reward_text_no_premium_time_watch_ad">Watch reward video to get free premium server reward!</string>
     <string name="get_reward_premium_time">You are rewarded premium server time!</string>

@@ -84,11 +84,11 @@ public class TcpProxyServer implements Runnable {
 //                                ((Tunnel) key.attachment()).dump();
                                 ((Tunnel) key.attachment()).onWritable(key);
                             } else if (key.isConnectable()) {
-                                MLogs.d("TcpProxyServer-- isConnectable");
-                                ((Tunnel) key.attachment()).dump();
+//                                MLogs.d("TcpProxyServer-- isConnectable");
+//                                ((Tunnel) key.attachment()).dump();
                                 ((Tunnel) key.attachment()).onConnectable();
                             } else if (key.isAcceptable()) {
-                                MLogs.d("TcpProxyServer-- isAcceptable");
+//                                MLogs.d("TcpProxyServer-- isAcceptable");
                                 onAccepted(key);
                             }
                         } catch (Exception e) {
@@ -110,10 +110,10 @@ public class TcpProxyServer implements Runnable {
         short portKey = (short) localChannel.socket().getPort();
         NatSession session = NatSessionManager.getSession(portKey);
         if (session != null) {
-            MLogs.i("TcpProxyServer-- getDestAddress for port " + (int)(portKey&0xFFFF)
-                        + " session.RemoteHost " + session.RemoteHost+ " session.RemoteIP " + CommonMethods.ipIntToString(session.RemoteIP)
-                    + " localChannel.socket().getInetAddress() " + localChannel.socket().getInetAddress().toString()
-            + " " + localChannel.toString());
+//            MLogs.i("TcpProxyServer-- getDestAddress for port " + (int)(portKey&0xFFFF)
+//                        + " session.RemoteHost " + session.RemoteHost+ " session.RemoteIP " + CommonMethods.ipIntToString(session.RemoteIP)
+//                    + " localChannel.socket().getInetAddress() " + localChannel.socket().getInetAddress().toString()
+//            + " " + localChannel.toString());
             if (ProxyConfig.Instance.needProxy(session.RemoteHost, session.RemoteIP)) {
                 if (ProxyConfig.IS_DEBUG) {
                     MLogs.d("TcpProxyServer-- %d/%d:[PROXY] %s=>%s:%d\n", NatSessionManager.getSessionCount(), Tunnel.SessionCount, session.RemoteHost, CommonMethods.ipIntToString(session.RemoteIP), session.RemotePort & 0xFFFF);
@@ -150,14 +150,14 @@ public class TcpProxyServer implements Runnable {
              * 不然就是RawTunnel直连
              */
             if (destAddress != null) {
-                MLogs.d("TcpProxyServer-- destAddress " + destAddress.toString());
+//                MLogs.d("TcpProxyServer-- destAddress " + destAddress.toString());
                 remoteTunnel = TunnelFactory.createTunnelByConfig(destAddress, m_Selector);
                 remoteTunnel.setBrotherTunnel(localTunnel);//关联兄弟
                 localTunnel.setBrotherTunnel(remoteTunnel);//关联兄弟
                 remoteTunnel.connect(destAddress);//开始连接
                 //MLogs.d("TcpProxyServer-- After remoteTunnel connect");
             } else {
-                MLogs.d("TcpProxyServer-- Error: socket(%s:%d) target host is null.", localChannel.socket().getInetAddress().toString(), localChannel.socket().getPort());
+//                MLogs.d("TcpProxyServer-- Error: socket(%s:%d) target host is null.", localChannel.socket().getInetAddress().toString(), localChannel.socket().getPort());
                 LocalVpnService.Instance.writeLog("Error: socket(%s:%d) target host is null.", localChannel.socket().getInetAddress().toString(), localChannel.socket().getPort());
                 localTunnel.dispose();
             }

@@ -2,6 +2,8 @@ package com.polestar.task.network.datamodels;
 
 import com.google.gson.annotations.SerializedName;
 
+import winterfell.flash.vpn.utils.MLogs;
+
 public class Region {
     @SerializedName("geo")
     public String mGeo;
@@ -17,6 +19,10 @@ public class Region {
     public Region(String geo, String city) {
         mGeo = geo;
         mCity = city;
+    }
+
+    public void dump() {
+        MLogs.i(mGeo + " " + mCity + " Id " + getId());
     }
 
     public Region dup() {

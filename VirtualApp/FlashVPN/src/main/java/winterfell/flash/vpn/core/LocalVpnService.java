@@ -23,8 +23,8 @@ import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.core.ProxyConfig.IPAddress;
 import winterfell.flash.vpn.dns.DnsPacket;
-import winterfell.flash.vpn.network.ServerInfo;
-import winterfell.flash.vpn.network.VPNServerManager;
+//import winterfell.flash.vpn.network.ServerInfo;
+//import winterfell.flash.vpn.network.VPNServerManager;
 import winterfell.flash.vpn.tcpip.CommonMethods;
 import winterfell.flash.vpn.tcpip.IPHeader;
 import winterfell.flash.vpn.tcpip.TCPHeader;
@@ -167,8 +167,8 @@ public class LocalVpnService extends VpnService implements Runnable {
                 NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(Instance, channel_id);
                 String title = IsRunning ? getString(R.string.notification_connected):getString(R.string.notification_to_connect);
                 int id = PreferenceUtils.getPreferServer();
-                ServerInfo si = id == ServerInfo.SERVER_ID_AUTO ? VPNServerManager.getInstance(LocalVpnService.this).getBestServer():
-                        VPNServerManager.getInstance(LocalVpnService.this).getServerInfo(id);
+//                ServerInfo si = id == ServerInfo.SERVER_ID_AUTO ? VPNServerManager.getInstance(LocalVpnService.this).getBestServer():
+//                        VPNServerManager.getInstance(LocalVpnService.this).getServerInfo((int)id);
                 float[] speed = getNetworkSpeed();
                 DecimalFormat format = new DecimalFormat("0.0");
                 String downSpeed = format.format((speed[0] > 1000)? speed[0]/1000:speed[0]);
@@ -178,7 +178,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
                 mBuilder.setContentTitle(title)
                         .setContentText("Down " + downSpeed + " Up " + upSpeed)
-                        .setSmallIcon(si.getFlagResId())
+                        //.setSmallIcon(si.getFlagResId())
                         .setContentIntent(pendingIntent);
                 notification = mBuilder.build();
                 notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
@@ -239,6 +239,8 @@ public class LocalVpnService extends VpnService implements Runnable {
 
     @Override
     public void onRevoke() {
+        // 2019-0311 当从系统的vpndialog去disconnect时，这个onRevoke会被调用到
+        // onRevoke -> onDestroy
         super.onRevoke();
         MLogs.d("LocalVpnService-- onRevoke");
     }
@@ -353,21 +355,6 @@ public class LocalVpnService extends VpnService implements Runnable {
             ChinaIpMaskManager.loadFromFile(getResources().openRawResource(R.raw.ipmask));//加载中国的IP段，用于IP分流。
             waitUntilPreapred();//检查是否准备完毕。
 
-            MLogs.d("LocalVpnService-- Load config from file ...");
-            try {
-                ProxyConfig.Instance.loadFromFile(getResources().openRawResource(R.raw.config));
-                MLogs.d("LocalVpnService-- Load done");
-            } catch (Exception e) {
-                String errString = e.getMessage();
-                if (errString == null || errString.isEmpty()) {
-                    errString = e.toString();
-                }
-                MLogs.d("LocalVpnService-- Load failed with error: %s", errString);
-            }
-            if (!getPackageName().contains("flash")){
-                System.exit(0);
-            }
-
             m_TcpProxyServer = new TcpProxyServer(0);
             m_TcpProxyServer.start();
             MLogs.d("LocalVpnService-- LocalTcpServer started.");
@@ -379,20 +366,6 @@ public class LocalVpnService extends VpnService implements Runnable {
             while (true) {
                 if (IsRunning) {
                     //加载配置文件
-
-//                    MLogs.d("LocalVpnService-- set app_icon/(http proxy)");
-//                    try {
-//                        retrieveBestProxy();
-//                    } catch (Exception e) {
-//                        MLogs.e("LocalVpnService-- " + e.toString());
-//                        String errString = e.getMessage();
-//                        if (errString == null || errString.isEmpty()) {
-//                            errString = e.toString();
-//                        }
-//                        IsRunning = false;
-//                        //onStatusChanged(errString, false, mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
-//                        continue;
-//                    }
                     String welcomeInfoString = ProxyConfig.Instance.getWelcomeInfo();
                     if (welcomeInfoString != null && !welcomeInfoString.isEmpty()) {
                         MLogs.d("LocalVpnService-- %s", ProxyConfig.Instance.getWelcomeInfo());
@@ -531,7 +504,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
                         int tcpDataSize = ipHeader.getDataLength() - tcpHeader.getHeaderLength();
                         if (session.PacketSent == 2 && tcpDataSize == 0) {
-                            MLogs.i("LocalVpnService-- Drop ACK 2");
+//                            MLogs.i("LocalVpnService-- Drop ACK 2");
                             return;//丢弃tcp握手的第二个ACK报文。因为客户端发数据的时候也会带上ACK，这样可以在服务器Accept之前分析出HOST信息。
                         }
 
@@ -540,9 +513,9 @@ public class LocalVpnService extends VpnService implements Runnable {
                             int dataOffset = tcpHeader.m_Offset + tcpHeader.getHeaderLength();
                             String host = HttpHostHeaderParser.parseHost(tcpHeader.m_Data, dataOffset, tcpDataSize);
                             if (host != null) {
-                                MLogs.i("LocalVpnService-- changing remote host of " + (portKey&0xFFFF)
-                                        + " from " + session.RemoteHost
-                                        + " to " + host);
+//                                MLogs.i("LocalVpnService-- changing remote host of " + (portKey&0xFFFF)
+//                                        + " from " + session.RemoteHost
+//                                        + " to " + host);
                                 session.RemoteHost = host;
                             } else {
                                 MLogs.e("LocalVpnService-- No host name found: %s", session.RemoteHost);
@@ -699,8 +672,8 @@ public class LocalVpnService extends VpnService implements Runnable {
 
         builder.setSession(ProxyConfig.Instance.getSessionName());
         ParcelFileDescriptor pfdDescriptor = builder.establish();
-//        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true,
-//                            mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
+        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true,
+                            mAvgDownloadSpeed, mAvgUploadSpeed, mMaxDownloadSpeed, mMaxUploadSpeed);
 
         long establishTime = Calendar.getInstance().getTimeInMillis() - start;
         EventReporter.reportEstablishTime(FlashApp.getApp(), establishTime);
@@ -741,15 +714,16 @@ public class LocalVpnService extends VpnService implements Runnable {
 
         stopSelf();
         IsRunning = false;
-        System.exit(0);
+        //2019-03-11 先去掉，为啥一定要结束进程呢？
+        // System.exit(0);
     }
 
     @Override
     public void onDestroy() {
+        //2019-03-11 onDestroy -> interrupt ->java.lang.InterruptedException -> dispose
         MLogs.d("LocalVpnService-- VPNService(%s) destoried.\n"+ ID);
         if (m_VPNThread != null) {
             m_VPNThread.interrupt();
         }
     }
-
 }

@@ -23,6 +23,13 @@ public class RegionServers {
         return NONE_ID;
     }
 
+    public void dump() {
+        mRegion.dump();
+        for (VpnServer vpnServer : mServers) {
+            vpnServer.dump();
+        }
+    }
+
     public boolean hasValidId() {
         return mRegion != null;
     }

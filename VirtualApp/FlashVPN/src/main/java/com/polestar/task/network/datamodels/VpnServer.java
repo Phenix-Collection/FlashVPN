@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 
 import winterfell.flash.vpn.R;
+import winterfell.flash.vpn.utils.MLogs;
 
 public class VpnServer  {
 
@@ -49,6 +50,10 @@ public class VpnServer  {
     public int priority = PRIORITY_DEFAULT;
 
     public static final int SERVER_ID_AUTO = -1;
+
+    public void dump() {
+        MLogs.i(mPublicIp + " " + mPingDelayMilli);
+    }
 
     private static HashMap<String, Integer> sFlagResMap = new HashMap<>();
     static {

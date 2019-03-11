@@ -141,6 +141,11 @@
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>3600</value>
     </entry>
+    <entry>
+        <key>config_check_port_timeout</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>3000</value>
+    </entry>
 
 
 </defaultsMap>
