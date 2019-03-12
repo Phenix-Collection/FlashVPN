@@ -95,6 +95,9 @@ public class HomeFragment extends BaseFragment {
 //        if (adShowed) {
 //            return;
 //        }
+        if (ad == null || mActivity == null) {
+            return;
+        }
         adShowTime = System.currentTimeMillis();
         adShowed = true;
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.front_page_native_ad)
@@ -107,7 +110,7 @@ public class HomeFragment extends BaseFragment {
                 .callToActionId(R.id.ad_cta_text)
                 .privacyInformationId(R.id.ad_choices_image)
                 .build();
-        View adView = ad.getAdView(getActivity(),viewBinder);
+        View adView = ad.getAdView(mActivity,viewBinder);
         nativeAdContainer.removeAllViews();
         nativeAdContainer.addView(adView);
         pkgGridAdapter.notifyDataSetChanged();
