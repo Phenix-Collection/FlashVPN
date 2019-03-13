@@ -144,12 +144,17 @@
     <entry>
         <key>config_check_port_timeout</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>5000</value>
+        <value>3000</value>
     </entry>
     <entry>
         <key>config_request_newport_interval</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>60000</value>
+    </entry>
+    <entry>
+        <key>config_retry_times</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>5</value>
     </entry>
 
 

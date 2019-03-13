@@ -121,6 +121,7 @@ public class ShadowsocksPingManager implements Runnable {
             @Override
             public void onPingFailed(InetSocketAddress socketAddress) {
                 if (listener != null) {
+                    f.cancel(true);
                     listener.onPingFailed(socketAddress);
                 }
             }
@@ -134,6 +135,7 @@ public class ShadowsocksPingManager implements Runnable {
             e.printStackTrace();
             MLogs.e("ShadowsocksPingManager-- connect or create tunnel failed " + e.toString());
             if (listener != null && tunnel != null) {
+                f.cancel(true);
                 listener.onPingFailed(tunnel.getServerEP());
             }
         }
@@ -185,9 +187,14 @@ public class ShadowsocksPingManager implements Runnable {
                             ByteBuffer junk = ByteBuffer.allocateDirect(1);
                             while (mPipe.source().read(junk) > 0) {
                                 //有多少个1 就有多少个pending的
-                                RegisterRequest registerRequest = mPendingRegisters.remove();
-                                registerInternal(registerRequest.channel, registerRequest.ops, registerRequest.object);
+                                try {
+                                    RegisterRequest registerRequest = mPendingRegisters.remove(); //可能会crash
+                                    registerInternal(registerRequest.channel, registerRequest.ops, registerRequest.object);
+                                } catch (Exception e) {
+                                    MLogs.e("Get pending requests failed " + e.toString());
+                                }
                                 junk.clear();
+
                             }
                         } else {
                             if (selectionKey.isConnectable()) {

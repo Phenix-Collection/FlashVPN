@@ -107,6 +107,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private long mGetVpnRequirementTime;
     private String mErrInfo;
     private int mCheckPortFailedCount;
+    private int mState;
 
     private static int CHECK_PORT_FAILED_THRESHOLDER = 2;
 
@@ -117,6 +118,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private static final int SELECT_SERVER_REQUEST_CODE = 101;
 
     private final static int STATE_ACQUIRING_PORT = 4;
+    private final static int STATE_ACQUIRING_CONTROLFLOW_ERR = 5;
     //private final static int STATE_ACQIRE_FAILED = 5;
     private final static int STATE_CHECKING_PORT = 6;
     private final static int STATE_CHECK_PORT_FAILED = 7;
@@ -143,17 +145,17 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private void setVpnRequirementIntoProxyList(VpnRequirement vpnRequirement) throws Exception {
         ProxyConfig.Instance.m_ProxyList.clear();
         String config = vpnRequirement.toSSConfig(this);
-        MLogs.i("vpnRequirement is " + config);
+        MLogs.i("HomeActivity-- vpnRequirement is " + config);
         ProxyConfig.Instance.addProxyToList(config);
     }
 
     private void acquirePort(VpnServer vpnServer) {
         if (vpnServer == null) {
-            MLogs.e("no vpnserver found");
+            MLogs.e("HomeActivity-- no vpnserver found");
             EventReporter.reportNoServer();
             return;
         }
-        updateConnectState(STATE_ACQUIRING_PORT, "");
+        updateConnectState(STATE_ACQUIRING_PORT, "", false);
 
         if (needToRequestNewVpnRequirement()) {
             VpnApiHelper.acquireVpnServer(AppUser.getInstance().getMyId(), vpnServer.mPublicIp,
@@ -167,7 +169,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                                 setVpnRequirementIntoProxyList(mCurrentVpnRequirement);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                MLogs.e("Failed to add to proxylist " + e.toString());
+                                MLogs.e("HomeActivity-- Failed to add to proxylist " + e.toString());
                                 EventReporter.reportFailedToAddProxy();
                                 //基本上不应该进入这里的，不然是有问题的
                                 return;
@@ -178,7 +180,9 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
                         @Override
                         public void onAcquireFailed(String publicIp, ADErrorCode code) {
+                            MLogs.e("onAcquireFailed " + code.toString());
                             EventReporter.reportGetPortFailed(publicIp + "_" + code.getErrCode());
+
                             updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
                         }
 
@@ -196,8 +200,19 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
                         @Override
                         public void onGeneralError(ADErrorCode code) {
+                            MLogs.e("onGeneralError " + code.toString());
                             EventReporter.reportAderror(code);
-                            updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
+                            if (code.getErrCode() == ADErrorCode.FLOW_CONTROL_ERR_CODE) {
+                                //自动重试
+                                try {
+                                    Thread.sleep(200);
+                                } catch (Exception e) {
+
+                                }
+                                updateStateOnMainThread(STATE_ACQUIRING_CONTROLFLOW_ERR, "");
+                            } else {
+                                updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
+                            }
                         }
                     });
         } else {
@@ -208,6 +223,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     ShadowsocksPingManager proxyServer = null;
     private void ping() {
+        MLogs.i("HomeActivity-- PINGPINGPINGPINGPINGPINGPINGPING");
         final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
 
         Thread t = new Thread() {
@@ -230,13 +246,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 proxyServer.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
                     @Override
                     public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
-                        MLogs.i("ShadowsocksPingManager-- pingsucceeded");
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingsucceeded");
                         updateStateOnMainThread(STATE_CHECK_PORT_SUCCEED, "");
                     }
 
                     @Override
                     public void onPingFailed(InetSocketAddress socketAddress) {
-                        MLogs.i("ShadowsocksPingManager-- pingfailed");
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingfailed");
                         updateStateOnMainThread(STATE_CHECK_PORT_FAILED, "");
                     }
                 }, RemoteConfig.getLong("config_check_port_timeout"));
@@ -249,42 +265,59 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         mainHandler.post(new Runnable() {
             @Override
             public void run() {
-                updateConnectState(state, errMsg);
+                updateConnectState(state, errMsg, true);
             }
         });
     }
 
-    private void updateConnectState(int state, String errMsg) {
+    private void updateConnectState(int state, String errMsg, boolean doAction) {
+        mState = state;
         switch (state) {
             case STATE_ACQUIRING_PORT:
+                MLogs.d("HomeActivity-- state STATE_ACQUIRING_PORT");
                 btnCenter.setClickable(false);
                 connectBtnTxt.setText(R.string.connecting);
                 connectTips.setVisibility(View.VISIBLE);
                 connectTips.setText(R.string.acquiring_port);
                 break;
+            case STATE_ACQUIRING_CONTROLFLOW_ERR:
+                MLogs.d("HomeActivity-- state STATE_ACQUIRING_CONTROLFLOW_ERR");
+                if (doAction) {
+                    acquirePort(mCurrentVpnServer);
+                }
+                break;
             case STATE_CHECKING_PORT:
+                MLogs.d("HomeActivity-- state STATE_CHECKING_PORT");
                 mCheckPortFailedCount = 0;
                 btnCenter.setClickable(false);
                 connectBtnTxt.setText(R.string.connecting);
                 connectTips.setVisibility(View.VISIBLE);
                 connectTips.setText(R.string.checking_port);
-                ping();
+                if (doAction) {
+                    ping();
+                }
                 break;
             case STATE_CHECK_PORT_SUCCEED:
-                mCheckPortFailedCount = 0;
-                startConnect();
+                MLogs.d("HomeActivity-- state STATE_CHECK_PORT_SUCCEED");
+                if (doAction) {
+                    mCheckPortFailedCount = 0;
+                    startConnect();
+                }
                 break;
             case STATE_CHECK_PORT_FAILED:
-                mCheckPortFailedCount++;
-                if (mCheckPortFailedCount >= CHECK_PORT_FAILED_THRESHOLDER) {
-                    updateStateOnMainThread(STATE_CONNECT_FAILED, "");
-                    return;
+                MLogs.d("HomeActivity-- state STATE_CHECK_PORT_FAILED");
+                if (doAction) {
+                    mCheckPortFailedCount++;
+                    if (mCheckPortFailedCount >= RemoteConfig.getLong("config_retry_times")) {
+                        updateStateOnMainThread(STATE_CONNECT_FAILED, "");
+                        return;
+                    }
+                    //ping不同一次，再来一次，有可能服务器还没准备好
+                    ping();
                 }
-                //ping不同一次，再来一次，有可能服务器还没准备好
-                ping();
                 break;
             case STATE_CONNECTED:
-                MLogs.d("state connected");
+                MLogs.d("HomeActivity-- state STATE_CONNECTED");
                 btnCenter.setClickable(true);
                 connectTips.setVisibility(View.VISIBLE);
                 connectTips.setText(R.string.connecting_tip_success);
@@ -295,8 +328,9 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 connectBgAnimation.start();
                 break;
             case STATE_DISCONNECTED:
-                MLogs.d("state disconnected");
+                MLogs.d("HomeActivity-- state STATE_DISCONNECTED");
                 btnCenter.setClickable(true);
+                mGetVpnRequirementTime = 0;
                 if (errMsg != null && !errMsg.isEmpty()) {
                     connectTips.setText(errMsg);
                 } else {
@@ -309,6 +343,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 connectBgAnimation.start();
                 break;
             case STATE_START_CONNECTING:
+                MLogs.d("HomeActivity-- state STATE_START_CONNECTING");
                 btnCenter.setClickable(false);
                 connectBtnTxt.setText(R.string.connecting);
 //                Runnable connectingRunnable = new Runnable() {
@@ -387,7 +422,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         onLogReceived("starting...");
         MLogs.d("starting vpn service...");
         connectingFailed = false;
-        updateConnectState(STATE_START_CONNECTING, "");
+        updateConnectState(STATE_START_CONNECTING, "", false);
         if (Build.VERSION.SDK_INT >= 26) {
             startForegroundService(new Intent(this, LocalVpnService.class));
         } else {
@@ -449,6 +484,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
             //2019-03-11 如果是localVpnService内部错误导致的，我们是不是应该将其状态设为false，免得他一直跑着呢
             LocalVpnService.IsRunning = false;
+            updateStateOnMainThread(STATE_DISCONNECTED, "");
         }
     }
 
@@ -588,7 +624,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 } else {
                     EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
                     LocalVpnService.IsRunning = false;
-                    updateConnectState(STATE_DISCONNECTED, "");
+                    updateConnectState(STATE_DISCONNECTED, "", false);
                 }
             }
         });
@@ -612,7 +648,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             if (resultCode == RESULT_OK) {
                 startVPNService();
             } else{
-                updateConnectState(STATE_CONNECT_FAILED, "");
+                updateConnectState(STATE_CONNECT_FAILED, "", false);
             }
             return;
         } else if (requestCode == SELECT_SERVER_REQUEST_CODE) {
@@ -641,7 +677,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             geoImage.setImageResource(si.getFlagResId());
             cityText.setText(si.mCity);
         }
-        updateConnectState(LocalVpnService.IsRunning? STATE_CONNECTED:STATE_DISCONNECTED, "");
+        updateConnectState(mState, "", false);
         updateRewardLayout();
         if (isRewarded) {
             FlashUser.getInstance(HomeActivity.this).doRewardFreePremium();
@@ -677,7 +713,14 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!LocalVpnService.IsRunning) {
+            mState = STATE_DISCONNECTED;
+        } else {
+            mState = STATE_CONNECTED;
+        }
+
         initView();
+
         mainHandler = new Handler();
 
         boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);

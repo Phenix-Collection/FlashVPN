@@ -74,8 +74,8 @@ public abstract class Tunnel {
         this.m_Selector = selector;
         this.m_ServerEP = serverAddress;
         SessionCount++;
-//        MLogs.d("Tunnel-- new " + serverAddress.toString() + " SessionCount " + SessionCount
-//                + m_InnerChannel.toString());
+        MLogs.d("Tunnel-- new " + serverAddress.toString() + " SessionCount " + SessionCount
+                + m_InnerChannel.toString());
     }
 
     public void setBrotherTunnel(Tunnel brotherTunnel) {
