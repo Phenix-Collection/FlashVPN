@@ -280,9 +280,58 @@ Java_com_lulu_encodedemo_Codec_hexDecode(JNIEnv *env, jclass type, jstring str) 
    "7F964242C609B5857BD1B4665CC62B1D7C3FB009", //polestar-team.jks
    "2CA149BC1AB9F433959B38EB02433EA751059BCE", //domultipe-new.jks
    "5FF4F71BCC7C0B79AC0F5C882EE0628AAC28521C", //super at google console
+   "A0F603477820F56526C1163D4D05E46071ECD778", //flashvpn at google console
  *
  *
  */
+
+static char flashgoogle[50];
+static void fillFlashGoogle() {
+    int n = 0;
+
+    flashgoogle[n++] = 'A';
+    flashgoogle[n++] = '0';
+    flashgoogle[n++] = 'F';
+    flashgoogle[n++] = '6';
+    flashgoogle[n++] = '0';
+    flashgoogle[n++] = '3';
+    flashgoogle[n++] = '4';
+    flashgoogle[n++] = '7';
+    flashgoogle[n++] = '7';
+    flashgoogle[n++] = '8';
+    flashgoogle[n++] = '2';
+    flashgoogle[n++] = '0';
+    flashgoogle[n++] = 'F';
+    flashgoogle[n++] = '5';
+    flashgoogle[n++] = '6';
+    flashgoogle[n++] = '5';
+    flashgoogle[n++] = '2';
+    flashgoogle[n++] = '6';
+    flashgoogle[n++] = 'C';
+    flashgoogle[n++] = '1';
+    flashgoogle[n++] = '1';
+    flashgoogle[n++] = '6';
+    flashgoogle[n++] = '3';
+    flashgoogle[n++] = 'D';
+    flashgoogle[n++] = '4';
+    flashgoogle[n++] = 'D';
+    flashgoogle[n++] = '0';
+    flashgoogle[n++] = '5';
+    flashgoogle[n++] = 'E';
+    flashgoogle[n++] = '4';
+    flashgoogle[n++] = '6';
+    flashgoogle[n++] = '0';
+    flashgoogle[n++] = '7';
+    flashgoogle[n++] = '1';
+    flashgoogle[n++] = 'E';
+    flashgoogle[n++] = 'C';
+    flashgoogle[n++] = 'D';
+    flashgoogle[n++] = '7';
+    flashgoogle[n++] = '7';
+    flashgoogle[n++] = '8';
+    flashgoogle[n++] = 0;
+}
+
 
 static char dev[50];
 static void fillFlashVpn() {
@@ -838,6 +887,7 @@ static void filleSignatures() {
     //LOGE("filleSignatures %d\n", signature_filled);
     if (signature_filled == 0) {
         fillFlashVpn();
+        fillFlashGoogle();
         fillSuperB();
         fillWhatsClone();
         fillWhatsClone64();
@@ -851,6 +901,7 @@ static void filleSignatures() {
 
         int n = 0;
         signature_sha1_codes[n++] = dev;
+        signature_sha1_codes[n++] = flashgoogle;
         signature_sha1_codes[n++] = superb;
         signature_sha1_codes[n++] = whatsclone;
         signature_sha1_codes[n++] = whatsclone64;
