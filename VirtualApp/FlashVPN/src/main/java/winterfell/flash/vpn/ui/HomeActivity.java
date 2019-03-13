@@ -145,7 +145,6 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private void setVpnRequirementIntoProxyList(VpnRequirement vpnRequirement) throws Exception {
         ProxyConfig.Instance.m_ProxyList.clear();
         String config = vpnRequirement.toSSConfig(this);
-        MLogs.i("HomeActivity-- vpnRequirement is " + config);
         ProxyConfig.Instance.addProxyToList(config);
     }
 

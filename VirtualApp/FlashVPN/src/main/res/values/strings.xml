@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Flash VPN</string>
     <string name="key_string" translatable="false">adccerd3indd2f</string>
-    <string name="app_slogan">Flash &amp; Secure VPN </string>
+    <string name="app_slogan">Fast &amp; Secure VPN </string>
     <string name="menu_item_toggle_global">Toggle global mode</string>
     <string name="menu_item_switch">Proxy</string>
     <string name="menu_item_about">About</string>
