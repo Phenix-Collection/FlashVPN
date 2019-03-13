@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Do Multiple 64bit</string>
+    <string name="app_name" translatable="false">Power Parallel 64bit</string>
     <string name="app_slogan" translatable="false">Installing 64bit support...</string>
     <string name="install" translatable="false">Install</string>
 </resources>

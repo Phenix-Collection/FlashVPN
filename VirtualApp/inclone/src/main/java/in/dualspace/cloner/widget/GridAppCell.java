@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import in.dualspace.cloner.R;
-import in.dualspace.cloner.widget.dragdrop.DragController;
-import in.dualspace.cloner.widget.dragdrop.DragSource;
 
 /**
  * Created by DualApp on 2017/7/16.

@@ -120,9 +120,11 @@ public class BottomProgressPopup {
             if (root != null) {
                 popupTime = System.currentTimeMillis();
                 if (minDuration > 0 ) {
+                    mainHandler.removeMessages(MSG_MIN_DURATION_PASS);
                     mainHandler.sendEmptyMessageDelayed(MSG_MIN_DURATION_PASS, minDuration);
                 }
                 if (autoDismissDuration > 0) {
+                    mainHandler.removeMessages(MSG_AUTO_DISSMISS_DURATION_PASS);
                     mainHandler.sendEmptyMessageDelayed(MSG_AUTO_DISSMISS_DURATION_PASS, autoDismissDuration);
                 }
                 popupWindow.showAtLocation(root, Gravity.BOTTOM, DisplayUtils.dip2px(activity, 10), DisplayUtils.dip2px(activity, 10));

@@ -236,22 +236,6 @@ public class PreferencesUtils {
         return settings.getBoolean(key, defaultValue);
     }
 
-    public static void setCloneGuideShowed(Context c){
-        putBoolean(c, AppConstants.PreferencesKey.SHOWN_CLONE_GUIDE, true);
-    }
-
-    public static boolean hasShownCloneGuide(Context c){
-        return getBoolean(c, AppConstants.PreferencesKey.SHOWN_CLONE_GUIDE, false);
-    }
-
-    public static boolean hasShownLongClickGuide(Context c){
-        return getBoolean(c, AppConstants.PreferencesKey.SHOWN_LONG_CLICK_GUIDE, false);
-    }
-
-    public static void setLongClickGuideShowed(Context c){
-        putBoolean(c, AppConstants.PreferencesKey.SHOWN_LONG_CLICK_GUIDE, true);
-    }
-
     public static String getEncodedPatternPassword(Context c) {
         return getString(c, AppConstants.PreferencesKey.ENCODED_PATTERN_PWD);
     }
@@ -357,17 +341,8 @@ public class PreferencesUtils {
         putBoolean(DualApp.getApp(),"super_clone_shortcut",true);
     }
 
-    public static void setAbleToDetectShortcut(boolean able) {
-        putBoolean(DualApp.getApp(),"able_detect_shortcut",able);
-    }
-
-    public static boolean isAbleToDetectShortcut() {
-        return getBoolean(DualApp.getApp(), "able_detect_shortcut", false);
-    }
-
     public static boolean isShortCutCreated() {
-        return getBoolean(DualApp.getApp(),"super_clone_shortcut",false)
-                || hasShownCloneGuide(DualApp.getApp());
+        return getBoolean(DualApp.getApp(),"super_clone_shortcut",false);
         //avoid create short cut for updated user
     }
 
@@ -426,11 +401,6 @@ public class PreferencesUtils {
 
     public static boolean getAdFreeClickStatus() {
         return getBoolean(DualApp.getApp(), "ad_free_dialog_click", true);
-    }
-
-    public static boolean hasCloned() {
-        return getBoolean(DualApp.getApp(), "spc_ever_cloned", false)
-                || hasShownLongClickGuide(DualApp.getApp());
     }
 
     public static void setHasCloned() {

@@ -8,7 +8,7 @@
     <color name="title_bar_button_pressed">#44585a</color>
     <color name="app_loading_bg">#FFFFFF</color>
     <color name="title_bar_text_color">#FFFFFF</color>
-    <color name="lucky_red">#fff171</color>
+    <color name="lucky_red">#F4C04A</color>
     <color name="theme_text_color">#FF4A4A4A</color>
     <color name="grid_line">#d3d3d3</color>
     <color name="line_split">#d7d7d7</color>

@@ -1,16 +1,12 @@
 <resources>
-    <string name="app_name" translatable="false">Power Cloner</string>
+    <string name="app_name" translatable="false">Power Parallel</string>
     <string name="clone_label_tag" translatable="false">%s</string>
     <string name="share_with_friends">Share With Friends</string>
     <string name="share_with_friends_tip">I am glad to invite you to use this wonderful application %s. You can download it here:</string>
     <string name="feel_lucky" translatable="false">Feel Lucky</string>
     <string name="add_clone_title">Create Clone</string>
     <string name="creating_clones">Creating Clones ...</string>
-    <string name="hot_clone_title">Hot Cloned</string>
-    <string name="hot_clone_detail">Enjoy double fun with double accounts online meanwhile!</string>
-    <string name="other_clone_title">More Supported</string>
-    <string name="other_clone_detail">Create clone in another space and enjoy more fun!</string>
-    <string name="clone_action_txt" translatable="false">Clone with Power Cloner %s</string>
+    <string name="clone_action_txt" translatable="false">Clone with Power Parallel %s</string>
     <string name="app_slogan" translatable="false">DO Multiple, DO More Fun!</string>
     <string name="no_selection_for_clone">Please click and select items to clone.</string>
     <string name="create_shortcut">Shortcut</string>
@@ -30,40 +26,40 @@
     <string name="disable_notification">Disable Notification</string>
     <string name="enable_notification">Enable Notification</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="agree" translatable="false">Yes, I agree</string>
+    <string name="disagree" translatable="false">No</string>
     <string name="congratulations">Congratulations</string>
-    <string name="dialog_rating_us_content">Enjoy using Power Cloner app?</string>
+    <string name="dialog_rating_us_content">Enjoy using Power Parallel app?</string>
     <string name="dialog_feedback_content">Would you kindly give us some feedback to help improve it?</string>
     <string name="not_really">Not Really</string>
     <string name="no_thanks">No, thanks</string>
-    <string name="dialog_love_title" translatable="false">Love Power Cloner</string>
-    <string name="dialog_love_content">Would you mind give us a 5-star rating on the Play Store? It will inspire us and we appreciate your support!</string>
+    <string name="dialog_love_title" translatable="false">Love Power Parallel</string>
+    <string name="dialog_love_content">Could you give a 5-star rating on play store or give feedback to improve product? Thank you for great support!</string>
     <string name="remind_me_later">Remind me later</string>
     <string name="star_rating">Go 5-star rating</string>
     <string name="feedback">Feedback</string>
     <string name="ad_free">Remove Ads</string>
     <string name="share">Share</string>
-    <string name="like_it" translatable="false">Love Power Cloner</string>
+    <string name="like_it" translatable="false">Love Power Parallel</string>
     <string name="rate_us">Rate Us</string>
-    <string name="join_us">Join Community</string>
-    <string name="follow_us" translatable="false">Follow Us</string>
     <string name="settings">Settings</string>
     <string name="arm64_support">64bit Support</string>
     <string name="install_arm64_support">If you meet crash or hang while opening cloned apps, it could due to the missing of 64bit support libraries. Please try install the 64bit support package to solve the issues.</string>
     <string name="installed_arm64_support">The 64bit support package is already installed.</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="settings_right" translatable="false">2019 Power Cloner Team. All rights reserved</string>
-    <string name="toast_no_lucky">Sorry, no lucky content this time. Please try again later.</string>
+    <string name="settings_right" translatable="false">2019 Power Parallel Team. All rights reserved</string>
+    <string name="toast_no_lucky">Sorry, content not ready. Please try again later.</string>
     <string translatable="false" name="boost_title">Power Booster</string>
     <!-- app loading -->
     <string name="app_starting_tips">%s is starting ...</string>
-    <string name="start_with_arm64">Starting with Power Cloner 64bit support library...</string>
+    <string name="start_with_arm64">Starting with Power Parallel 64bit support library...</string>
     <string name="first_start_tips">It may take a little longer for the first start.</string>
     <string name="upgrade_start_tips">It may take a little longer as this app was just upgraded.</string>
 
     <!-- locker -->
     <string name="lock_settings_title">Locker Settings</string>
-    <string name="enable_lock_settings_title">Lock Power Cloner</string>
+    <string name="enable_lock_settings_title">Lock Power Parallel</string>
     <string name="been_locked">Privacy locker will protect %s.</string>
     <string name="unlock_main_app">Privacy Locker Is Protecting</string>
     <string name="unlock_before_disable">Privacy Locker Is Protecting</string>
@@ -71,38 +67,25 @@
     <string name="notification_enabled">Notification of %s is enabled.</string>
     <string name="notification_disabled">Notification of %s is disabled.</string>
     <string name="lock_interval_settings_title" translatable="false">Re-Lock Interval</string>
-    <string name="lock_interval_settings_content">The interval to relock the app after you left it</string>
-    <string name="enable_lock_settings_content">Unlock before enter into main application of Power Cloner</string>
+    <string name="lock_interval_settings_content">The interval to re-lock the app after you leave</string>
+    <string name="enable_lock_settings_content">Unlock before enter into main application of Power Parallel</string>
     <string name="password_setting_title">Password Setting</string>
-    <string name="password_set_no_question">No secure question set.</string>
     <string name="password_set_complete">Password was set.</string>
     <string name="no_password_set">Please set a password for locker at first.</string>
-    <string name="password_setting_content">Click to set password and security question</string>
+    <string name="password_setting_content">Click to reset password</string>
     <string name="lock_settings_for_apps">Enable privacy locker for cloned applications</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Please Confirm Pattern</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">Draw again</string>
     <string name="al_btn_reset">Reset</string>
-    <string name="al_lockpattern_try_again">Patterns Do Not Match, Please Try Again.</string>
-    <string name="applock_permission_contacts_toast">This helps you to retrieve your password.</string>
+    <string name="al_lockpattern_try_again">Patterns does not match. Please try again.</string>
     <string name="al_lockpattern_create_unlock_pattern">Set a New Pattern</string>
     <string name="al_lockpattern_number_no_correct">Please Connect at Least 4 Dots</string>
     <string name="al_lockpattern_error">Wrong Pattern, Please Try Again.</string>
     <string name="al_changepassword">Change Password</string>
     <string name="al_unlcok_pattern">Unlock Pattern</string>
-    <string name="al_change_security_question">Change Secure Question</string>
-    <string name="app_lock_safe_info_hint">To verify your identity when reset password</string>
-    <string name="app_lock_safe_question_hint">Set a Secure Question</string>
-    <string name="app_lock_safe_answer_hint">Enter the answer (Up to 20 characters)</string>
-    <string name="app_lock_verifier_tile">Set Secure Question</string>
-    <string name="app_lock_reset_password">Reset passwords</string>
 
-    <string name="app_lock_safe_answer_reset_hint">Please enter the answer</string>
     <string name="app_lock_date_picker_month">month</string>
-    <string name="app_lock_safe_question_toast_ask_Question">You didn\'t set a Secure Question</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">You didn\'t enter answer yet.</string>
-    <string name="app_lock_safe_question_toast_error">Authentication failed, please enter again</string>
     <string name="applock_window_title">Cloned %s</string>
-    <string name="need_set_secure_answer">Please set answer for secure question and then press confirm button.</string>
     <string name="al_lockpattern_draw_unlock_pattern">Draw Pattern to Unlock</string>
 
     <string name="al_btn_finish">Confirm</string>
@@ -116,9 +99,9 @@
     <!--quick switch-->
     <string name="quick_switch_title" translatable="false">Quick Switch</string>
     <string name="quick_switch_desc">Enable quick switch to cloned apps from notification bar</string>
-    <string name="quick_switch_dialog_content">Quick switch will let you easily switch between cloned apps from notification bar. Would you like to enable it now?</string>
+    <string name="quick_switch_dialog_content">Quick switch will let you easily switch between cloned apps from notification bar. Do you want to enable it?</string>
     <!--gms-->
-    <string name="settings_lite_mode">Enable lite mode for fewer memory and power usage</string>
+    <string name="settings_lite_mode">Enable lite mode for less memory and power usage</string>
     <string name="settings_lite_mode_title" translatable="false">Lite Mode</string>
     <string name="settings_lite_disable_toast">Lite mode is disabled.</string>
     <string name="settings_lite_enable_toast">Switched to lite mode</string>
@@ -129,7 +112,7 @@
     <string name="settings_adfree_title" translatable="false">Remove Ads</string>
     <string name="adfree_dialog_title">Become VIP user</string>
     <string name="settings_adfree_content">Enable VIP service and remove Ads</string>
-    <string name="adfree_dialog_content">Donate to developer and become premium user of Power Cloner and turn off all ADs in this app. Do you want to buy now?</string>
+    <string name="adfree_dialog_content">Donate to developer and become premium user of Power Parallel and turn off all ADs in this app. Do you want to buy now?</string>
 
     <!-- notification -->
     <string name="notification_decription">Enable or disable notifications from cloned application</string>
@@ -138,7 +121,7 @@
     <!-- update & about -->
     <string name="check_update"><u>Check Update</u></string>
     <string name="update_dialog_title">Update</string>
-    <string name="update_dialog_content">New version is coming! We improved a lot on version %s. Would you like to update Power Cloner now?</string>
+    <string name="update_dialog_content">New version is coming! We improved a lot on version %s. Would you like to update Power Parallel now?</string>
     <string name="update_dialog_left">Ignore this version</string>
     <string name="update_dialog_right">Update</string>
     <string name="about">About</string>
@@ -152,9 +135,9 @@
     <string name="extra_feedback_decription">We will resolve the issue for you ASAP and appreciate your help to improve the product!</string>
 
 
-    <string name="powered_by_app" translatable="false">Protected by Power Cloner</string>
-    <string name="dialog_permission_title">Grant Permission</string>
-    <string name="dialog_permission_content">Please allow permission request from Power Cloner, otherwise some cloned apps and Google Play Service will not work properly.</string>
+    <string name="powered_by_app" translatable="false">Protected by Power Parallel</string>
+    <string name="dialog_permission_title">Permission &amp; Data</string>
+    <string name="dialog_permission_content">Power Parallel will apply permissions on behalf of clones. Please check and grant permissions to make them work properly. We will NOT collect any personal info, but may collect general app usage including device model only for crash analysis and improvement.</string>
 
     <string-array name="arr_lock_interval">
         <item>5s</item>

@@ -121,7 +121,7 @@ public class CloneManager {
             public void run() {
                 boolean success = false;
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(600);
                     appModel.setClonedTime(System.currentTimeMillis());
                     appModel.formatIndex(mClonedApps.size(), userId);
                     InstalledAppInfo info = VirtualCore.get().getInstalledAppInfo(appModel.getPackageName(), 0);

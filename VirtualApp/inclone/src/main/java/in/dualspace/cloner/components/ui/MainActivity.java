@@ -389,6 +389,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         public ImageView icon = null;
         public ImageView newdot = null;
         public ImageView lockIcon = null;
+        public TextView adFlag = null;
 
         public MyHolder(View itemView) {
             super(itemView);
@@ -396,6 +397,7 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             icon = (ImageView) itemView.findViewById(R.id.app_icon);
             newdot = (ImageView) itemView.findViewById(R.id.new_dot);
             lockIcon = (ImageView) itemView.findViewById(R.id.lock_icon_badge);
+            adFlag = (TextView) itemView.findViewById(R.id.ad_flag);
 
         }
     }
@@ -443,20 +445,29 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
     @TargetApi(23)
     private void showPermissionGuideDialog(String[] perms) {
         EventReporter.generalEvent("show_permission_guide");
-        PreferencesUtils.setShownPermissionGuide(true);
         UpDownDialog.show(this, getString(R.string.dialog_permission_title),
-                getString(R.string.dialog_permission_content), null, getString(R.string.ok),
-                R.drawable.dialog_tag_comment, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
+                getString(R.string.dialog_permission_content), getString(R.string.disagree), getString(R.string.agree),
+                -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        EventReporter.generalEvent("ok_permission_guide");
-                        requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+                        switch (which){
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                EventReporter.generalEvent("ok_permission_guide");
+                                PreferencesUtils.setShownPermissionGuide(true);
+                                requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+                                break;
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                EventReporter.generalEvent("disagree_permission_guide");
+                                break;
+
+                        }
+
                     }
                 }).setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 EventReporter.generalEvent("cancel_permission_guide");
-                requestPermissions(perms, REQUEST_APPLY_PERMISSION);
+//                requestPermissions(perms, REQUEST_APPLY_PERMISSION);
             }
         });
     }
@@ -486,12 +497,16 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             addCloneItem(clonedApp);
             bottomProgress.setIconBitmap(clonedApp.getCustomIcon());
             bottomProgress.setTips(getString(R.string.clone_success_tips, clonedApp.getName()));
+
         }
         if (!CloneManager.getInstance(this).hasPendingClones()) {
             pageRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     bottomProgress.dismiss();
+                    MLogs.d("nofity on no pending delayed");
+                    listAdapter.notifyDataSetChanged();
+                    listAdapter.updatePage();
                 }
             }, 500);
 
@@ -510,7 +525,6 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             }
             deleteCloneItem(clonedApp);
         }
-
     }
 
     @Override
@@ -518,8 +532,8 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         initItemList(cm.getClonedApps());
         if (clonedApp.size() <= RemoteConfig.getLong("add_clone_preload_gate")
                 && !PreferencesUtils.isAdFree()) {
-            FuseAdLoader.get(AddCloneActivity.SLOT_ADD_CLONE_AD, DualApp.getApp())
-                    .setBannerAdSize(AddCloneActivity.getBannerAdSize()).preloadAd(this);
+//            FuseAdLoader.get(AddCloneActivity.SLOT_ADD_CLONE_AD, DualApp.getApp())
+//                    .setBannerAdSize(AddCloneActivity.getBannerAdSize()).preloadAd(this);
         }
     }
 
@@ -558,9 +572,9 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
         }
         if (idx != -1) {
             mItemList.remove(idx);
-            listAdapter.notifyDataSetChanged();
-            listAdapter.updatePage();
         }
+        listAdapter.notifyDataSetChanged();
+        listAdapter.updatePage();
 
     }
     private void initItemList(List<CloneModel> cloneModels) {
@@ -584,7 +598,9 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             }
         }
         int pos = luckyPos > mItemList.size() ? mItemList.size(): luckyPos;
-        mItemList.add(pos, new CustomizedCloneItem(CustomizedCloneItem.TYPE_LUCKY));
+        if (cloneModels !=null && cloneModels.size() > RemoteConfig.getLong("conf_home_lucky_gate")) {
+            mItemList.add(pos, new CustomizedCloneItem(CustomizedCloneItem.TYPE_LUCKY));
+        }
         mItemList.add(new CustomizedCloneItem(CustomizedCloneItem.TYPE_ADD));
         listAdapter.notifyDataSetChanged();
         listAdapter.updatePage();
@@ -648,12 +664,13 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
                                 bottomProgress.setTips(null);
                                 bottomProgress.setIconRes(R.mipmap.ic_launcher);
                                 bottomProgress.setMinDuration(2000);
-                                bottomProgress.setAutoDismissDuration(10*1000);
+                                bottomProgress.setAutoDismissDuration(80*1000);
                                 bottomProgress.setOnDismissListener(new PopupWindow.OnDismissListener() {
                                     @Override
                                     public void onDismiss() {
                                         listAdapter.notifyDataSetChanged();
                                         listAdapter.updatePage();
+                                        MLogs.d("notify on dismiss");
                                         if (lastCloneIdx > 0 && lastCloneIdx < mItemList.size()) {
                                             listAdapter.scrollToPage((lastCloneIdx) / (PAGE_ITEM_SIZE));
                                             CustomizedCloneItem item = mItemList.get(lastCloneIdx);
@@ -717,7 +734,11 @@ public class MainActivity extends Activity implements CloneManager.OnClonedAppCh
             } else {
                 holder.lockIcon.setVisibility(View.INVISIBLE);
             }
-
+            if(type == TYPE_ICON_ADTASK || type == TYPE_LUCKY)  {
+                holder.adFlag.setVisibility(View.VISIBLE);
+            } else {
+                holder.adFlag.setVisibility(View.INVISIBLE);
+            }
         }
 
         private void fillTitleView(TextView textView) {

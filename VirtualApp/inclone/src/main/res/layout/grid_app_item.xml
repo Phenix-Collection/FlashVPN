@@ -11,7 +11,7 @@
             android:layout_marginTop = "15dp"
             android:layout_centerHorizontal="true"
             android:id="@+id/app_icon_layout">
-                <in.dualspace.cloner.widget.dragdrop.DragImageView
+                <ImageView
                     android:id="@+id/app_icon"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
@@ -25,6 +25,20 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
+                    android:visibility="invisible"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/shape_round_corner_line"
+                    android:id="@+id/ad_flag"
+                    android:text="AD"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:textColor="@color/white"
+                    android:textSize="8sp"
                     android:visibility="invisible"/>
         </RelativeLayout>
 
@@ -49,4 +63,5 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:visibility="invisible"/>
+
 </RelativeLayout>

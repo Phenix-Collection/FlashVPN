@@ -159,6 +159,7 @@ public class DualApp extends MultiDexApplication {
             }
         }, getApp(), builder.build());
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -174,6 +175,29 @@ public class DualApp extends MultiDexApplication {
                 MLogs.logBug(tag, log);
             }
         });
+
+        try {
+            // asyncInit exception handler and bugly before attatchBaseContext and appOnCreate
+            final MAppCrashHandler ch = new MAppCrashHandler(this, Thread.getDefaultUncaughtExceptionHandler());
+            Thread.setDefaultUncaughtExceptionHandler(ch);
+            VirtualCore.get().setCrashHandler(new CrashHandler() {
+                @Override
+                public void handleUncaughtException(Thread t, Throwable e) {
+                    ch.uncaughtException(t, e);
+                }
+            });
+            initBugly(gDefault);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION  || BuildConfig.DEBUG) {
+            VLog.openLog();
+            VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
+            MLogs.DEBUG = true;
+            AdConstants.DEBUG = true;
+//            BoosterSdk.DEBUG = true;
+        }
+
         VirtualCore virtualCore = VirtualCore.get();
         virtualCore.initialize(new VirtualCore.VirtualInitializer() {
             @Override
@@ -289,28 +313,6 @@ public class DualApp extends MultiDexApplication {
             }
         });
 
-        try {
-            // asyncInit exception handler and bugly before attatchBaseContext and appOnCreate
-            final MAppCrashHandler ch = new MAppCrashHandler(this, Thread.getDefaultUncaughtExceptionHandler());
-            Thread.setDefaultUncaughtExceptionHandler(ch);
-            VirtualCore.get().setCrashHandler(new CrashHandler() {
-                @Override
-                public void handleUncaughtException(Thread t, Throwable e) {
-                    ch.uncaughtException(t, e);
-                }
-            });
-            initBugly(gDefault);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        if (isOpenLog() || !AppConstants.IS_RELEASE_VERSION  || BuildConfig.DEBUG) {
-            VLog.openLog();
-            VLog.d(MLogs.DEFAULT_TAG, "VLOG is opened");
-            MLogs.DEBUG = true;
-            AdConstants.DEBUG = true;
-//            BoosterSdk.DEBUG = true;
-        }
-
     }
 
     private class MAppCrashHandler implements Thread.UncaughtExceptionHandler {
@@ -398,7 +400,7 @@ public class DualApp extends MultiDexApplication {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
         String referChannel = PreferencesUtils.getInstallChannel();
         strategy.setAppChannel(referChannel == null? channel : referChannel);
-        CrashReport.initCrashReport(context, "12a06457f1", !AppConstants.IS_RELEASE_VERSION, strategy);
+        CrashReport.initCrashReport(context, "d00d26c8b8", !AppConstants.IS_RELEASE_VERSION, strategy);
         // close auto report, manual control
         MLogs.e("bugly channel: " + channel + " referrer: "+ referChannel);
         CrashReport.closeCrashReport();
