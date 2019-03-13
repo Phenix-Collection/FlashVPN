@@ -7,6 +7,4 @@
     <string name="choose_empty">Chooser is Empty</string>
     <string name="noApplications">No find applications</string>
     <string name="add_account_button_label">Add account</string>
-    <string name="daemon_notification_text">Receiving messages for clones</string>
-    <string name="daemon_notification_detail">Keep running in background to receive messages</string>
 </resources>

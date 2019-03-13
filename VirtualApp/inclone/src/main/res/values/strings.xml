@@ -7,7 +7,7 @@
     <string name="add_clone_title">Create Clone</string>
     <string name="creating_clones">Creating Clones ...</string>
     <string name="clone_action_txt" translatable="false">Clone with Power Parallel %s</string>
-    <string name="app_slogan" translatable="false">DO Multiple, DO More Fun!</string>
+    <string name="app_slogan" translatable="false">Enjoy Unlimited Clones!</string>
     <string name="no_selection_for_clone">Please click and select items to clone.</string>
     <string name="create_shortcut">Shortcut</string>
     <string name="delete">Delete</string>
@@ -160,4 +160,9 @@
     <string name="install">Install</string>
 
     <string name="clone_success_tips">%s has been cloned!</string>
+
+    <string name="daemon_notification_channel_name">Service for clone notifications</string>
+    <string name="daemon_notification_channel_description">Service for clone notifications</string>
+    <string name="daemon_notification_title">Receiving notifications for clones</string>
+    <string name="daemon_notification_description">Keep running to receive message from clones</string>
 </resources>

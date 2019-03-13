@@ -236,7 +236,7 @@ public class AppMonitorService extends Service {
                     }
                 }
             } else {
-                if (PreferencesUtils.isMainAppLocked() && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
+                if (PreferencesUtils.isMainAppLocked() && getPackageName().equals(pkg) && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
                     if (!key.equals(lastUnlockKey)) {
                         AppLockActivity.start(AppMonitorService.this, pkg, userId);
                         locked = true;

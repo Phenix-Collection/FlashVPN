@@ -15,16 +15,6 @@
             <!--<category android:name="android.intent.category.LAUNCHER"/>-->
         <!--</intent-filter>-->
       <!--</activity>-->
-        <activity
-            android:name="in.dualspace.cloner.components.ui.MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
         <activity android:name="in.dualspace.cloner.components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="in.dualspace.cloner.components.ui.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="in.dualspace.cloner.components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />

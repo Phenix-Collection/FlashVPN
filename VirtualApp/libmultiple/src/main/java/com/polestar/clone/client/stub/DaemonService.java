@@ -23,10 +23,16 @@ import static android.os.Build.VERSION_CODES.O;
  */
 public class DaemonService extends Service {
 
-    private static final int NOTIFY_ID = 1001;
+    public static final int NOTIFY_ID = 1001;
 	private static final String WAKE_ACTION = "com.polestar.messaging.wake";
     private final static int ALARM_INTERVAL = 30 * 60 * 1000;
     private final static int FIRST_WAKE_DELAY = 2000;
+
+    public static boolean NEED_NOTIFICATION = true;
+    public static String NOTIFICATION_CHANNEL_NAME = "Clone App Messaging";
+    public static String NOTIFICATION_CHANNEL_DESCRIPTION = "Clone App Messaging & Notification";
+    public static String NOTIFICATION_TITLE = "Receiving messages for clones";
+    public static String NOTIFICATION_DETAIL = "Keep running in background to receive messages";
 
     public static void startup(Context context) {
 		try {
@@ -84,7 +90,8 @@ public class DaemonService extends Service {
             //  remoteViews = new RemoteViews(this.getPackageName(), R.layout.quick_switch_notification);
             Notification notification;
             String pkg = VirtualCore.get().getHostPkg();
-            if (Build.VERSION.SDK_INT >= O && !pkg.endsWith(".arm64")) {
+            if (Build.VERSION.SDK_INT >= O && !pkg.endsWith(".arm64")
+                    && NEED_NOTIFICATION) {
                 Intent start = getPackageManager().getLaunchIntentForPackage(pkg);
                 start.addCategory(Intent.CATEGORY_LAUNCHER);
                 start.setAction(Intent.ACTION_MAIN);
@@ -96,19 +103,19 @@ public class DaemonService extends Service {
                 String channel_id = "_id_service_";
                 if (notificationManager.getNotificationChannel(channel_id) == null) {
                     int importance = NotificationManager.IMPORTANCE_HIGH;
-                    NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Clone App Messaging", importance);
+                    NotificationChannel notificationChannel = new NotificationChannel(channel_id, NOTIFICATION_CHANNEL_NAME, importance);
 //                notificationChannel.enableVibration(false);
                     notificationChannel.enableLights(false);
 //                notificationChannel.setVibrationPattern(new long[]{0});
                     notificationChannel.setSound(null, null);
-                    notificationChannel.setDescription("Clone App Messaging & Notification");
+                    notificationChannel.setDescription(NOTIFICATION_CHANNEL_DESCRIPTION);
                     notificationChannel.setShowBadge(false);
                     //notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                     notificationManager.createNotificationChannel(notificationChannel);
                 }
                 Notification.Builder mBuilder =  new Notification.Builder(this, channel_id);
-                mBuilder.setContentTitle(getString(R.string.daemon_notification_text))
-                        .setContentText(getString(R.string.daemon_notification_detail))
+                mBuilder.setContentTitle(NOTIFICATION_TITLE)
+                        .setContentText(NOTIFICATION_DETAIL)
                         .setSmallIcon(this.getResources().getIdentifier("ic_launcher", "mipmap", this.getPackageName()))
                         .setContentIntent(PendingIntent.getActivity(this,0, start, 0));
                 notification = mBuilder.build();

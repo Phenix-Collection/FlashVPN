@@ -19,6 +19,7 @@ import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.env.SpecialComponentList;
+import com.polestar.clone.client.stub.DaemonService;
 import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.ad.AdConfig;
@@ -307,8 +308,18 @@ public class DualApp extends MultiDexApplication {
                 }
                 VirtualCore.get().setComponentDelegate(delegate);
                 initAd();
+//                if (QuickSwitchNotification.getInstance(gDefault).isEnable()) {
+//                    QuickSwitchNotification.getInstance(gDefault).init();
+//                }
                 if (QuickSwitchNotification.getInstance(gDefault).isEnable()) {
                     QuickSwitchNotification.getInstance(gDefault).init();
+                    DaemonService.NEED_NOTIFICATION = false;
+                } else {
+                    DaemonService.NEED_NOTIFICATION = true;
+                    DaemonService.NOTIFICATION_CHANNEL_NAME = getString(R.string.daemon_notification_channel_name);
+                    DaemonService.NOTIFICATION_CHANNEL_DESCRIPTION = getString(R.string.daemon_notification_channel_description);
+                    DaemonService.NOTIFICATION_TITLE = getString(R.string.daemon_notification_title);
+                    DaemonService.NOTIFICATION_DETAIL = getString(R.string.daemon_notification_description);
                 }
             }
         });
