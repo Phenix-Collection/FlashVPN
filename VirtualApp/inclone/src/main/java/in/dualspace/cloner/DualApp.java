@@ -145,7 +145,7 @@ public class DualApp extends MultiDexApplication {
             }
         } else {
             builder.mopubAdUnit("41988cc0fe194791a6b5cf6bb82290ca")
-                    .admobAppId("ca-app-pub-5490912237269284~2442960626")
+                    .admobAppId("ca-app-pub-5071370571275273~2378923936")
                     .ironSourceAppKey("8671d87d");
         }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {

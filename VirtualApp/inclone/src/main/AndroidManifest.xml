@@ -101,7 +101,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7413370106066330~5810831707"/>
+            android:value="ca-app-pub-5071370571275273~2378923936"/>
 
         <!--<service android:exported="true" android:name="com.polestar.welive.SyncService">-->
             <!--<intent-filter>-->
