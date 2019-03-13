@@ -89,6 +89,7 @@ public class FlashApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        
         FirebaseApp.initializeApp(gDefault);
         RemoteConfig.init();
         EventReporter.init(gDefault);

@@ -64,6 +64,23 @@ import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
 import winterfell.flash.vpn.utils.RemoteConfig;
 
+/**
+ * TODO
+ * dowsocksPingManager-- onConnectable
+ * 03-11 21:04:39.195 24454 24881 E FlashVPN: Tunnel-- Error: connect to /172.105.232.229:26108 failed:java.net.ConnectException: Connection timed outwhoer.net:443
+ * 03-11 21:04:39.195 24454 24881 I FlashVPN: ShadowsocksPingManager-- before select
+ * 03-11 21:04:44.184 24454 24881 I FlashVPN: ShadowsocksPingManager-- after select 1
+ * 03-11 21:04:44.184 24454 24881 I FlashVPN: ShadowsocksPingManager-- onConnectable
+ * 03-11 21:04:44.185 24454 24881 E FlashVPN: Tunnel-- Error: connect to /172.105.232.229:26108 failed:java.net.ConnectException: Connection timed outwhoer.net:443
+ * 03-11 21:04:44.185 24454 24881 I FlashVPN: ShadowsocksPingManager-- before select
+ * 03-11 21:04:50.463 24454 24881 I FlashVPN: ShadowsocksPingManager-- after select
+ *
+ * 有些服务器可以ping的非常好，但是connect不上，那么会导致auto时一直选择它；但是一直连不上，草
+ * 得解决下
+ *
+ *
+ */
+
 public class HomeActivity extends BaseActivity implements LocalVpnService.onStatusChangedListener {
     private final static String EXTRA_NEED_UPDATE = "extra_need_update";
     private Handler mainHandler;

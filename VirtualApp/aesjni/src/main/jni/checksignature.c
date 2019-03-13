@@ -270,7 +270,7 @@ Java_com_lulu_encodedemo_Codec_hexDecode(JNIEnv *env, jclass type, jstring str) 
 
 /**
  *
-   "C074A141F112791F44D948B30D4364E736DA542A",
+   "9B6091A2C1ACB04710F892BABBECF74141C3AD15", //flash-vpn.jks
    "55B1DF321918B74E75683E9CD92C155476E74D5C", //superb
    "1EB8328D065270ECF1C47AB3789C8821451BFE4B", //what's clone
    "E9B1C446DB550C27B09C5ED28F37F5DF2CDCF4DC", //what's clone 64
@@ -279,118 +279,61 @@ Java_com_lulu_encodedemo_Codec_hexDecode(JNIEnv *env, jclass type, jstring str) 
    "CD10F93C52888A9200BF577CBF48C82FB18B1617", //polestar.jks
    "7F964242C609B5857BD1B4665CC62B1D7C3FB009", //polestar-team.jks
    "2CA149BC1AB9F433959B38EB02433EA751059BCE", //domultipe-new.jks
-   "308E8326F5FAC9A48B14E0E0FFAF08A1DF4E5AB8", //nova-vpn.jks
    "5FF4F71BCC7C0B79AC0F5C882EE0628AAC28521C", //super at google console
-   "2D21244DBBBE1D8357DB8DB894FC40CE6FBB1EF6"
  *
  *
  */
 
 static char dev[50];
-static void fillDev() {
-//    char *tocheck = "C074A141F112791F44D948B30D4364E736DA542A";
+static void fillFlashVpn() {
+//    char *tocheck = "9B6091A2C1ACB04710F892BABBECF74141C3AD15";
     int n = 0;
-    dev[n++] = 'C';
-    dev[n++] = '0';
-    dev[n++] = '7';
-    dev[n++] = '4';
-    dev[n++] = 'A';
-    dev[n++] = '1';
-    dev[n++] = '4';
-    dev[n++] = '1';
-    dev[n++] = 'F';
-    dev[n++] = '1';
-    dev[n++] = '1';
-    dev[n++] = '2';
-    dev[n++] = '7';
     dev[n++] = '9';
-    dev[n++] = '1';
-    dev[n++] = 'F';
-    dev[n++] = '4';
-    dev[n++] = '4';
-    dev[n++] = 'D';
-    dev[n++] = '9';
-    dev[n++] = '4';
-    dev[n++] = '8';
     dev[n++] = 'B';
-    dev[n++] = '3';
+    dev[n++] = '6';
     dev[n++] = '0';
-    dev[n++] = 'D';
-    dev[n++] = '4';
-    dev[n++] = '3';
-    dev[n++] = '6';
-    dev[n++] = '4';
-    dev[n++] = 'E';
-    dev[n++] = '7';
-    dev[n++] = '3';
-    dev[n++] = '6';
-    dev[n++] = 'D';
+    dev[n++] = '9';
+    dev[n++] = '1';
     dev[n++] = 'A';
-    dev[n++] = '5';
-    dev[n++] = '4';
     dev[n++] = '2';
+    dev[n++] = 'C';
+    dev[n++] = '1';
     dev[n++] = 'A';
+    dev[n++] = 'C';
+    dev[n++] = 'B';
+    dev[n++] = '0';
+    dev[n++] = '4';
+    dev[n++] = '7';
+    dev[n++] = '1';
+    dev[n++] = '0';
+    dev[n++] = 'F';
+    dev[n++] = '8';
+    dev[n++] = '9';
+    dev[n++] = '2';
+    dev[n++] = 'B';
+    dev[n++] = 'A';
+    dev[n++] = 'B';
+    dev[n++] = 'B';
+    dev[n++] = 'E';
+    dev[n++] = 'C';
+    dev[n++] = 'F';
+    dev[n++] = '7';
+    dev[n++] = '4';
+    dev[n++] = '1';
+    dev[n++] = '4';
+    dev[n++] = '1';
+    dev[n++] = 'C';
+    dev[n++] = '3';
+    dev[n++] = 'A';
+    dev[n++] = 'D';
+    dev[n++] = '1';
+    dev[n++] = '5';
     dev[n++] = 0;
 
 //    if (strcmp(dev, tocheck) == 0) {
 //        LOGE("dev %s ok\n", dev);
 //    } else {
 //        LOGE("dev %s BAD\n", dev);
-//    }
-}
-
-static char dev1[50];
-static void fillDev1() {
-    //2D21244DBBBE1D8357DB8DB894FC40CE6FBB1EF6
-//    char *tocheck = "2D21244DBBBE1D8357DB8DB894FC40CE6FBB1EF6";
-
-    int n = 0;
-    dev1[n++] = '2';
-    dev1[n++] = 'D';
-    dev1[n++] = '2';
-    dev1[n++] = '1';
-    dev1[n++] = '2';
-    dev1[n++] = '4';
-    dev1[n++] = '4';
-    dev1[n++] = 'D';
-    dev1[n++] = 'B';
-    dev1[n++] = 'B';
-    dev1[n++] = 'B';
-    dev1[n++] = 'E';
-    dev1[n++] = '1';
-    dev1[n++] = 'D';
-    dev1[n++] = '8';
-    dev1[n++] = '3';
-    dev1[n++] = '5';
-    dev1[n++] = '7';
-    dev1[n++] = 'D';
-    dev1[n++] = 'B';
-    dev1[n++] = '8';
-    dev1[n++] = 'D';
-    dev1[n++] = 'B';
-    dev1[n++] = '8';
-    dev1[n++] = '9';
-    dev1[n++] = '4';
-    dev1[n++] = 'F';
-    dev1[n++] = 'C';
-    dev1[n++] = '4';
-    dev1[n++] = '0';
-    dev1[n++] = 'C';
-    dev1[n++] = 'E';
-    dev1[n++] = '6';
-    dev1[n++] = 'F';
-    dev1[n++] = 'B';
-    dev1[n++] = 'B';
-    dev1[n++] = '1';
-    dev1[n++] = 'E';
-    dev1[n++] = 'F';
-    dev1[n++] = '6';
-    dev1[n++] = 0;
-
-//    if (strcmp(dev1, tocheck) == 0) {
-//        LOGE("dev1 %s ok\n", dev1);
-//    } else {
-//        LOGE("dev1 %s BAD\n", dev1);
 //    }
 }
 
@@ -836,62 +779,6 @@ static void fillDomultipleNew() {
 //    }
 }
 
-//"308E8326F5FAC9A48B14E0E0FFAF08A1DF4E5AB8", //nova-vpn.jks
-static char novavpn[50];
-static void fillNovavpn() {
-    int n = 0;
-//    char *tocheck = "308E8326F5FAC9A48B14E0E0FFAF08A1DF4E5AB8";
-//      char *tocheck = "A0F603477820F56526C1163D4D05E46071ECD778"; //flash-vpn
-
-    novavpn[n++] = 'A';
-    novavpn[n++] = '0';
-    novavpn[n++] = 'F';
-    novavpn[n++] = '6';
-    novavpn[n++] = '0';
-    novavpn[n++] = '3';
-    novavpn[n++] = '4';
-    novavpn[n++] = '7';
-    novavpn[n++] = '7';
-    novavpn[n++] = '8';
-    novavpn[n++] = '2';
-    novavpn[n++] = '0';
-    novavpn[n++] = 'F';
-    novavpn[n++] = '5';
-    novavpn[n++] = '6';
-    novavpn[n++] = '5';
-    novavpn[n++] = '2';
-    novavpn[n++] = '6';
-    novavpn[n++] = 'C';
-    novavpn[n++] = '1';
-    novavpn[n++] = '1';
-    novavpn[n++] = '6';
-    novavpn[n++] = '3';
-    novavpn[n++] = 'D';
-    novavpn[n++] = '4';
-    novavpn[n++] = 'D';
-    novavpn[n++] = '0';
-    novavpn[n++] = '5';
-    novavpn[n++] = 'E';
-    novavpn[n++] = '4';
-    novavpn[n++] = '6';
-    novavpn[n++] = '0';
-    novavpn[n++] = '7';
-    novavpn[n++] = '1';
-    novavpn[n++] = 'E';
-    novavpn[n++] = 'C';
-    novavpn[n++] = 'D';
-    novavpn[n++] = '7';
-    novavpn[n++] = '7';
-    novavpn[n++] = '8';
-    novavpn[n++] = 0;
-
-//    if (strcmp(novavpn, tocheck) == 0) {
-//        LOGE("novavpn %s ok\n", novavpn);
-//    } else {
-//        LOGE("novavpn %s BAD\n", novavpn);
-//    }
-}
-
 //"5FF4F71BCC7C0B79AC0F5C882EE0628AAC28521C", //super at google console
 static char super[50];
 static void fillSuper() {
@@ -950,8 +837,7 @@ static void fillSuper() {
 static void filleSignatures() {
     //LOGE("filleSignatures %d\n", signature_filled);
     if (signature_filled == 0) {
-        fillDev();
-        fillDev1();
+        fillFlashVpn();
         fillSuperB();
         fillWhatsClone();
         fillWhatsClone64();
@@ -961,12 +847,10 @@ static void filleSignatures() {
         fillPoleStar();
         fillPolestarteam();
         fillDomultipleNew();
-        fillNovavpn();
         fillSuper();
 
         int n = 0;
         signature_sha1_codes[n++] = dev;
-        signature_sha1_codes[n++] = dev1;
         signature_sha1_codes[n++] = superb;
         signature_sha1_codes[n++] = whatsclone;
         signature_sha1_codes[n++] = whatsclone64;
@@ -975,7 +859,6 @@ static void filleSignatures() {
         signature_sha1_codes[n++] = polestar;
         signature_sha1_codes[n++] = polestarteam;
         signature_sha1_codes[n++] = domultiplenew;
-        signature_sha1_codes[n++] = novavpn;
         signature_sha1_codes[n++] = super;
 
         signature_filled = 1;

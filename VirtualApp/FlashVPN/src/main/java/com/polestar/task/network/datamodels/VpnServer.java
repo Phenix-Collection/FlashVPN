@@ -110,7 +110,7 @@ public class VpnServer  {
 
     public int getSignalResId() {
         if (mPingDelayMilli == 0) { //刚刚从服务器拿到，还没ping过 TODO
-          mPingDelayMilli = LEVEL_2_PING;
+          mPingDelayMilli = LEVEL_3_PING;
         }
 
         if (mPingDelayMilli >= LEVEL_0_PING) {
