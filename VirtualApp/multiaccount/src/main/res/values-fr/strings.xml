@@ -5,14 +5,9 @@
     <string name="al_btn_next">Prochain</string>
     <string name="al_btn_reset">Réinitialiser</string>
     <string name="al_change_enter_again">Entrez encore</string>
-    <string name="al_change_security_question">Changer la question sécurisée</string>
     <string name="al_changepassword">Changer le mot de passe</string>
-    <string name="al_enter_passcode">Entrer le mot de passe</string>
-    <string name="al_lockpattern_confirm_password">Confirmer le mot de passe</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Confirmer le modèle</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">Dessinez à nouveau</string>
-    <string name="al_lockpattern_create_new_password">Définir un nouveau mot de passe</string>
-    <string name="al_lockpattern_create_new_password_subtitle">Le code d\'accès sera utilisé pour protéger les applications</string>
     <string name="al_lockpattern_create_unlock_pattern">Définir un nouveau motif</string>
     <string name="al_lockpattern_draw_unlock_pattern">Dessiner le motif pour débloquer</string>
     <string name="al_lockpattern_error">Modèle erroné, réessayez.</string>
@@ -20,11 +15,8 @@
     <string name="al_lockpattern_release_hint">Libérez le doigt lorsque vous avez terminé</string>
     <string name="al_lockpattern_try_again">Les modèles ne correspondent pas, essayez à nouveau.</string>
     <string name="al_lockpattern_unlock_to_continue">Confirme ton identité</string>
-    <string name="al_passcode">Mot de passe</string>
     <string name="al_unlcok_pattern">Débloquer le motif</string>
-    <string name="al_use_passcode">Changer le code PIN</string>
     <string name="al_use_unlock_pattern">Changement de modèle</string>
-    <string name="app_lock_date_picker_month">mois</string>
     <string name="yes">Oui</string>
     <string name="upgrade_start_tips">Cela peut prendre un peu plus longtemps car cette application vient d\'être améliorée.</string>
     <string name="toast_shortcut_invalid">Le raccourci n\'est pas valide.</string>
@@ -67,15 +59,6 @@
     <string name="settings_follow_us">Suivez-nous sur la page Facebook</string>
     <string name="remind_me_later">Rappelle-moi plus tard</string>
     <string name="app_lock_reset_password">Réinitialiser les mots de passe</string>
-    <string name="app_lock_safe_answer_hint">Entrez la réponse (Jusqu\'à 20 caractères)</string>
-    <string name="app_lock_safe_answer_reset_hint">Entrez la réponse</string>
-    <string name="app_lock_safe_info_hint">Pour vérifier votre identité lors de la réinitialisation du mot de passe. Il sera crypté et uniquement stocké dans votre appareil.</string>
-    <string name="app_lock_safe_question_hint">Définir une question sécurisée</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">Vous n\'avez pas encore saisi de réponse.</string>
-    <string name="app_lock_safe_question_toast_ask_Question">Vous n\'avez pas défini une question sécurisée</string>
-    <string name="app_lock_safe_question_toast_error">L\'authentification a échoué, veuillez entrer à nouveau</string>
-    <string name="app_lock_verifier_tile">Définir une question sécurisée</string>
-    <string name="applock_forgot_password"><u>Mot de passe oublié?</u></string>
     <string name="app_starting_tips">%s commence</string>
     <string name="btn_clone">Cloner</string>
     <string name="button_submit">Soumettre</string>
@@ -84,7 +67,6 @@
     <string name="rate_us">Évaluez nous</string>
     <string name="password_setting_title">Réglage du mot de passe</string>
     <string name="password_setting_content">Cliquez pour définir le mot de passe et la question de sécurité</string>
-    <string name="password_set_no_question">Pas de question sécurisée.</string>
     <string name="password_set_complete">Le mot de passe a été défini.</string>
     <string name="ok">D\'accord</string>
     <string name="notifications">Notifications</string>
@@ -93,7 +75,6 @@
     <string name="not_really">Pas vraiment</string>
     <string name="no_thanks">Non merci</string>
     <string name="no_password_set">Veuillez d\'abord définir un mot de passe pour le casier.</string>
-    <string name="need_set_secure_answer">Configurez la réponse pour une question sécurisée, puis appuyez sur le bouton confirmer.</string>
     <string name="more_apps">Plus pris en charge</string>
     <string name="long_press_tips">Appuyez longuement et faites-le glisser pour ajouter un raccourci sur l\'écran d\'accueil ou l\'enlever.</string>
     <string name="lock_settings_title">Paramètres du casier</string>
@@ -167,20 +148,6 @@
         
     <string name = "need_coin_for_clone">Obtenir les pièces pour terminer le clonage</string>
         <string name = "user_activity_title">Service Premium</string>
-        
-        
-        <string-array name = "secure_questions">
-             <item> Quand est votre anniversaire?</item>
-             <item> Quel est votre plat préféré?</item>
-             <item> Quel sport aimez-vous le plus?</item>
-             <item> Qui est votre idole?</item>
-             <item> Où êtes-vous allé au collège?</item>
-             <item> Où êtes-vous allé au lycée?</item>
-             <item> Quel est votre film préféré?</item>
-             <item> Personnaliser les questions</item>
-         </string-array>
-        
-        
         
     <string name = "free_trial_text">+ %d essai gratuit</string>
         <string name = "cash_rewards">Récompenses en espèces</string>

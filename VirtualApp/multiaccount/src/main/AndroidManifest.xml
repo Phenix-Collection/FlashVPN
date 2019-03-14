@@ -62,9 +62,6 @@
             android:name="com.polestar.superclone.component.activity.LockPasswordSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.polestar.superclone.component.activity.LockSecureQuestionActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name="com.polestar.superclone.component.activity.FaqActivity"
             android:screenOrientation="portrait"/>
         <activity

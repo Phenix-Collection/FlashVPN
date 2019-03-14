@@ -17,42 +17,28 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold|italic"
         android:textColor="@color/white"
         android:text="@string/powered_by_app"
         android:textSize="14sp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <!--<com.cmcm.multiaccount.ui.widget.FeedbackLinearLayout-->
-            <!--android:id="@+id/cmx_toolbar_applock_menu"-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_gravity="right">-->
-            <!--<ImageView-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:background="@drawable/menu_dot_window"-->
-                <!--android:clickable="false"/>-->
-        <!--</com.cmcm.multiaccount.ui.widget.FeedbackLinearLayout> -->
-        <LinearLayout
-            android:id="@+id/cmx_toolbar_applock_menu"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_gravity="right">
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:background="@drawable/menu_dot"
-                android:clickable="false"/>
-        </LinearLayout>
-    </LinearLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="right|bottom|end"-->
+        <!--&gt;-->
+        <!--<TextView-->
+            <!--android:id="@+id/forgot_password_tv"-->
+            <!--android:textSize="14sp"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:text="@string/applock_forgot_password"-->
+            <!--android:autoLink="all"-->
+            <!--android:layout_marginBottom="6dp"-->
+            <!--android:gravity="right|end|bottom"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
+    <!--</LinearLayout>-->
+
 </LinearLayout>

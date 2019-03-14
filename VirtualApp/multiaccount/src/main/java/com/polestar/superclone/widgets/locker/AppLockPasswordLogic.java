@@ -104,7 +104,6 @@ public class AppLockPasswordLogic {
         @Override
         public void onPatternDetected(List<LockPatternView.Cell> pattern) {
             if (LockPatternUtils.isPatternMatched(pattern)) {
-                PreferencesUtils.setLockScreen(MApp.getApp(),false);
                 mEventListener.onCorrectPassword();
             } else {
                 mHandler.sendEmptyMessageDelayed(MSG_CLEAR_PATTERN, CLEAR_PATTERN_INTERVAL);

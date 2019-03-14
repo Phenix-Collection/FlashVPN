@@ -23,36 +23,6 @@
         <value>ab_banner:ca-app-pub-5490912237269284/2749268685:0</value>
     </entry>
     <entry>
-        <key>slot_install_ad</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>null</value>
-    </entry>
-    <entry>
-        <key>slot_unlock_ad</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>null</value>
-    </entry>
-    <entry>
-        <key>auto_ad_first_interval</key>
-        <value>432000</value>
-    </entry>
-    <entry>
-        <key>auto_ad_interval</key>
-        <value>86400</value>
-    </entry>
-    <entry>
-        <key>allow_install_ad</key>
-        <value>true</value>
-    </entry>
-    <entry>
-        <key>allow_unlock_ad</key>
-        <value>true</value>
-    </entry>
-    <entry>
-        <key>avoid_ad_if_history</key>
-        <value>true</value>
-    </entry>
-    <entry>
         <key>slot_home_gift_interstitial</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>ab_interstitial:ca-app-pub-5490912237269284/8079037865:0</value>
@@ -83,10 +53,6 @@
     <entry>
         <key>applist_native_prior_time</key>
         <value>1000</value>
-    </entry>
-    <entry>
-        <key>home_burst_load</key>
-        <value>true</value>
     </entry>
     <entry>
         <key>home_native_prior_time</key>
@@ -122,10 +88,6 @@
     </entry>
     <entry>
         <key>default_lock_enable</key>
-        <value>true</value>
-    </entry>
-    <entry>
-        <key>conf_using_activity_lock</key>
         <value>true</value>
     </entry>
     <entry>
@@ -186,10 +148,6 @@
         <value>com.whatsapp:com.viber.voip:com.witter.android:sg.bigo.live:com.UCMobile.intl:com.tencent.com.bsb.hike:com.bbm:com.instagram.android:com.facebook.orca:com.facebook.katana:com.imo.android.imoim:com.linecorp.LGGRTHN:com.bsb.hike:com.snapchat.android:jp.naver.line.android:net.one97.paytm:com.facebook.lite:com.cmcm.whatscall:com.imo.android.imoim</value>
     </entry>
     <entry>
-        <key>conf_wall_sdk</key>
-        <value>all</value>
-    </entry>
-    <entry>
         <key>push_update_version</key>
         <value>0</value>
     </entry>
@@ -228,10 +186,6 @@
     <entry>
         <key>pkg_config</key>
         <value>5</value>
-    </entry>
-    <entry>
-        <key>conf_pkg_clean_hour</key>
-        <value>168</value>
     </entry>
     <entry>
         <key>ads_launch_ctrl</key>
@@ -327,5 +281,9 @@
     <entry>
         <key>conf_icon_ad</key>
         <value>4:432000:345600</value>
+    </entry>
+    <entry>
+        <key>conf_need_secure_question</key>
+        <value>false</value>
     </entry>
 </defaultsMap>

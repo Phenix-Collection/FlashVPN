@@ -1,32 +1,38 @@
 package com.polestar.superclone.component.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
+import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.superclone.utils.ToastUtils;
 import com.polestar.superclone.widgets.locker.LockerView;
 
 public class LockPasswordSettingActivity extends BaseActivity implements View.OnClickListener {
     public static final String EXTRA_MODE_RESET_PASSWORD = "launch_mode";
     public static final String EXTRA_PASSWORD_BACKGROUND_WHITE = "password_background";
-    public static final int REQUEST_SET_QUESTION = 0;
-    public static final int REQUEST_CHECK_ANSWER = 1;
     private static final String EXTRA_TITLE = "extra_title";
 
-    private TextView mForgetPasswordBtn;
     private LockerView mAppLockScreenView;
 
     private boolean mIsReset = false;
     private boolean mIsWhiteBackground = false;
+    private ImageView mFingerprint;
+    private CancellationSignal cancellationSignal;
 
     public static void start(Activity activity, boolean resetPwd, String title, int requestCode) {
         Intent intent = new Intent(activity, LockPasswordSettingActivity.class);
@@ -56,23 +62,20 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
     }
 
     protected void initView() {
-        mForgetPasswordBtn = (TextView) findViewById(R.id.forgot_password_tv);
-        mForgetPasswordBtn.setOnClickListener(this);
 
         mAppLockScreenView = (LockerView) findViewById(R.id.appLockScreenView);
         mAppLockScreenView.setOnUnlockListener(mOnUnlockListener);
 
         mAppLockScreenView.onAfterShow();
-        if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))
-                || !PreferencesUtils.isSafeQuestionSet(this)) {
-            mForgetPasswordBtn.setVisibility(View.GONE);
+        if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))) {
             mAppLockScreenView.setResetStatus(true);
         } else {
-            mForgetPasswordBtn.setVisibility(View.VISIBLE);
             mAppLockScreenView.setIsWhiteBackground(true);
             mAppLockScreenView.setResetStatus(false);
         }
         mAppLockScreenView.init();
+
+        mFingerprint = (ImageView) findViewById(R.id.fingerprint_icon);
     }
 
     private LockerView.OnUnlockListener mOnUnlockListener = new LockerView.OnUnlockListener() {
@@ -80,7 +83,7 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
         public void onCorrectPassword() {
             MLogs.d("Password correct");
             if (mIsReset) {
-                LockSecureQuestionActivity.start(LockPasswordSettingActivity.this, REQUEST_SET_QUESTION, true);
+                Toast.makeText(LockPasswordSettingActivity.this, R.string.password_set_complete, Toast.LENGTH_SHORT).show();
             }
             setResult(Activity.RESULT_OK);
             finish();
@@ -105,8 +108,8 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
                 mIsReset = intent.getBooleanExtra(EXTRA_MODE_RESET_PASSWORD, false);
                 mAppLockScreenView.setResetStatus(mIsReset);
                 if (mIsReset){
-                    mForgetPasswordBtn.setVisibility(View.GONE);
 //                    PreferencesUtils.setSafeAnswer(this, "");
+                    mFingerprint.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -116,6 +119,41 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
             }
             mAppLockScreenView.init();
         }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                || !PreferencesUtils.isFingerprintEnable()) {
+            mFingerprint.setVisibility(View.INVISIBLE);
+        } else {
+            FingerprintManager fm = (FingerprintManager)getSystemService(Context.FINGERPRINT_SERVICE);
+            if (fm == null || !fm.isHardwareDetected() || !fm.hasEnrolledFingerprints()) {
+                mFingerprint.setVisibility(View.INVISIBLE);
+            } else {
+                cancellationSignal = new CancellationSignal();
+                fm.authenticate(null, cancellationSignal, 0, new FingerprintManager.AuthenticationCallback() {
+                    @Override
+                    public void onAuthenticationError(int errorCode, CharSequence errString) {
+                        if (errorCode != FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
+                            ToastUtils.ToastDefult(LockPasswordSettingActivity.this, "" + errString);
+                        }
+                    }
+
+                    @Override
+                    public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                        ToastUtils.ToastDefult(LockPasswordSettingActivity.this, "" + helpString);
+                    }
+
+                    @Override
+                    public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                    }
+
+                    @Override
+                    public void onAuthenticationFailed() {
+                        super.onAuthenticationFailed();
+                    }
+                }, null);
+            }
+        }
     }
 
 
@@ -123,40 +161,20 @@ public class LockPasswordSettingActivity extends BaseActivity implements View.On
     public void onPause() {
         super.onPause();
         mAppLockScreenView.onBeforeHide();
+        if (cancellationSignal != null) {
+            cancellationSignal.cancel();
+        }
     }
 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.forgot_password_tv:
-                LockSecureQuestionActivity.start(this, REQUEST_CHECK_ANSWER, false );
-                break;
-        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         MLogs.d("password onActivityResult:　" + requestCode + ":" + resultCode);
-        switch (requestCode){
-            case REQUEST_SET_QUESTION:
-                switch (resultCode) {
-                    case Activity.RESULT_CANCELED:
-                        ToastUtils.ToastDefult(this, getResources().getString(R.string.password_set_no_question));
-                        break;
-                    case Activity.RESULT_OK:
-                        ToastUtils.ToastDefult(this, getResources().getString(R.string.password_set_complete));
-                        break;
-                }
-                setResult(Activity.RESULT_OK);
-                finish();
-                break;
-            case REQUEST_CHECK_ANSWER:
-//                setResult(resultCode);
-//                finish();
-                break;
-        }
     }
 
     @Override

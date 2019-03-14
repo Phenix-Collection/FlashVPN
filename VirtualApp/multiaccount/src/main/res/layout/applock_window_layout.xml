@@ -60,16 +60,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true" />
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="12dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/icon_fingerprint"
+            android:id="@+id/fingerprint_icon"
+            />
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/forgot_password_tv"
-        android:textSize="12sp"
-        android:textColor="@color/white"
-        android:text="@string/applock_forgot_password"
-        android:autoLink="all"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="bottom|center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 </com.polestar.superclone.widgets.locker.BlurBackground>

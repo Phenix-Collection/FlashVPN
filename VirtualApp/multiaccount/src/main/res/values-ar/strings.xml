@@ -94,21 +94,15 @@
     <string name="enable_lock_settings_title">الخزانة الخصوصية</string>
     <string name="enable_lock_settings_content">تبديل لتمكين أو ميزة خزانة الخصوصية تعطيل</string>
     <string name="password_setting_title">إعداد كلمة المرور</string>
-    <string name="password_set_no_question">تعيين شك آمن.</string>
     <string name="password_set_complete">تم تعيين كلمة المرور.</string>
     <string name="no_password_set">يرجى وضع كلمة سر للخزانة في البداية.</string>
     <string name="password_setting_content">انقر لتعيين كلمة المرور والأمن مسألة</string>
     <string name="forgot_password">هل نسيت كلمة المرور</string>
     <string name="lock_settings_for_apps">تمكين خزانة الخصوصية لتطبيقات المستنسخة</string>
 
-    <string name="al_enter_passcode">أدخل رمز المرور</string>
     <string name="al_lockpattern_unlock_to_continue">اكد هويتك</string>
     <string name="al_lockpattern_draw_unlock_pattern">ارسم أنموذجا لتلغي الاقفال</string>
-    <string name="al_use_passcode">تغيير الرقم السري</string>
     <string name="al_use_unlock_pattern">تغيير نمط</string>
-    <string name="al_lockpattern_create_new_password_subtitle">وسيتم استخدام رمز مرور لحماية التطبيقات</string>
-    <string name="al_lockpattern_create_new_password">تعيين رمز المرور الجديد</string>
-    <string name="al_lockpattern_confirm_password">تأكيد رمز المرور</string>
     <string name="al_change_enter_again">أدخل مرة أخرى</string>
     <string name="al_lockpattern_confirm_unlock_pattern">يرجى تأكيد نمط</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">رسم مرة أخرى</string>
@@ -122,32 +116,8 @@
     <string name="al_lockpattern_error">نمط خاطئ، من فضلك حاول مرة أخرى.</string>
     <string name="al_changepassword">تغيير كلمة السر</string>
     <string name="al_unlcok_pattern">فتح نمط</string>
-    <string name="al_passcode">رمز عبور</string>
-    <string name="al_change_security_question">تغيير السؤال آمن</string>
-    <string name="app_lock_safe_info_hint">للتحقق من هويتك عند إعادة ضبط كلمة المرور</string>
-    <string name="app_lock_safe_question_hint">تعيين سؤال آمن</string>
-    <string name="app_lock_safe_answer_hint">أدخل الإجابة (ما يصل إلى 20 حرفا)</string>
-    <string name="app_lock_verifier_tile">تعيين سؤال آمن</string>
     <string name="app_lock_reset_password">إعادة تعيين كلمات مرور</string>
 
-    <string name="app_lock_safe_answer_reset_hint">الرجاء إدخال الجواب</string>
-    <string name="app_lock_date_picker_month">شهر</string>
-    <string name="app_lock_safe_question_toast_ask_Question">لم تقم بتعيين سؤال آمن</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">أنك لم تدخل اجابه بعد.</string>
-    <string name="app_lock_safe_question_toast_error">المصادقة الفاشلة، يرجى الدخول مرة أخرى</string>
-    <string name="applock_forgot_password"><u>هل نسيت كلمة المرور</u></string>
-    <string name="need_set_secure_answer">يرجى تحديد الإجابة عن السؤال آمن ثم اضغط زر تأكيد.</string>
-
-    <string-array name="secure_questions">
-        <item>متى يحين عيد ميلادك</item>
-        <item>ما هو طعامك المفضل؟</item>
-        <item>ما هي الرياضة التي تحبها أكثر؟</item>
-        <item>من هو قدوتك؟</item>
-        <item>ما هو طعامك المفضل؟</item>
-        <item>أين ذهبت إلى المدرسة؟</item>
-        <item>ما هو فيلمك المفضل؟</item>
-        <item>تخصيص الأسئلة</item>
-    </string-array>
     <string name="congratulations">مبروك</string>
     <string name="notification_detail_setting">تفعيل التبليغ عن التطبيق</string>
     <string name="create_shortcut">انشاء اختصار</string>

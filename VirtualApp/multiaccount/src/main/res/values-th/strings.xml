@@ -94,21 +94,15 @@
     <string name="enable_lock_settings_title">ตู้เก็บความเป็นส่วนตัว</string>
     <string name="enable_lock_settings_content">สลับการเปิดหรือปิดใช้งานคุณลักษณะความเป็นส่วนตัวล็อกเกอร์</string>
     <string name="password_setting_title">ตั้งค่ารหัสผ่าน</string>
-    <string name="password_set_no_question">ไม่มีชุดคำถามที่เชื่อถือได้</string>
     <string name="password_set_complete">รหัสผ่านที่ถูกกำหนด</string>
     <string name="no_password_set">กรุณาตั้งค่ารหัสผ่านสำหรับล็อกเกอร์ในตอนแรก</string>
     <string name="password_setting_content">คลิกเพื่อตั้งค่ารหัสผ่านและคำถามรักษาความปลอดภัย</string>
     <string name="forgot_password">ลืมรหัสผ่าน</string>
     <string name="lock_settings_for_apps">เปิดใช้งานการล็อกเกอร์เป็นส่วนตัวสำหรับการใช้งานโคลน</string>
 
-    <string name="al_enter_passcode">ป้อนรหัสผ่าน</string>
     <string name="al_lockpattern_unlock_to_continue">ยืนยันตัวตนของคุณ</string>
     <string name="al_lockpattern_draw_unlock_pattern">วาดรูปแบบการปลดล็อค</string>
-    <string name="al_use_passcode">เปลี่ยนรหัส PIN</string>
     <string name="al_use_unlock_pattern">เปลี่ยนรูปแบบ</string>
-    <string name="al_lockpattern_create_new_password_subtitle">รหัสผ่านจะถูกนำมาใช้เพื่อป้องกันการปพลิเคชัน</string>
-    <string name="al_lockpattern_create_new_password">ตั้งค่ารหัสผ่านใหม่</string>
-    <string name="al_lockpattern_confirm_password">ยืนยันรหัสผ่าน</string>
     <string name="al_change_enter_again">ลองอีกครั้ง</string>
     <string name="al_lockpattern_confirm_unlock_pattern">โปรดยืนยันรูปแบบ</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">วาดอีกครั้ง</string>
@@ -122,32 +116,8 @@
     <string name="al_lockpattern_error">รูปแบบที่ไม่ถูกต้องโปรดลองอีกครั้ง</string>
     <string name="al_changepassword">เปลี่ยนรหัสผ่าน</string>
     <string name="al_unlcok_pattern">ปลดล็อครูปแบบ</string>
-    <string name="al_passcode">รหัสผ่าน</string>
-    <string name="al_change_security_question">เปลี่ยนคำถามการรักษาความปลอดภัย</string>
-    <string name="app_lock_safe_info_hint">เพื่อยืนยันตัวตนของคุณเมื่อรีเซ็ตรหัสผ่าน มันจะถูกเข้ารหัสและเก็บไว้ในอุปกรณ์ของคุณเท่านั้น</string>
-    <string name="app_lock_safe_question_hint">ตั้งคำถามการรักษาความปลอดภัย</string>
-    <string name="app_lock_safe_answer_hint">ป้อนคำตอบ (ไม่เกิน 20 ตัวอักษร)</string>
-    <string name="app_lock_verifier_tile">ตั้งคำถามการรักษาความปลอดภัย</string>
     <string name="app_lock_reset_password">รีเซ็ตรหัสผ่าน</string>
 
-    <string name="app_lock_safe_answer_reset_hint">กรุณากรอกคำตอบ</string>
-    <string name="app_lock_date_picker_month">เดือน</string>
-    <string name="app_lock_safe_question_toast_ask_Question">คุณไม่ได้ตั้งคำถามการรักษาความปลอดภัย</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">คุณไม่ได้ป้อนคำตอบเลย</string>
-    <string name="app_lock_safe_question_toast_error">รับรองความถูกต้องล้มเหลวโปรดใส่อีกครั้ง</string>
-    <string name="applock_forgot_password"><u>ลืมรหัสผ่าน?</u></string>
-    <string name="need_set_secure_answer">กรุณาตั้งค่าคำตอบสำหรับคำถามของความปลอดภัยและจากนั้นกดปุ่มยืนยัน</string>
-
-    <string-array name = "secure_questions">
-                 <item> วันเกิดของคุณคือวันใด </item>
-                 <item> อาหารโปรดของคุณคืออะไร </item>
-                 <item> กีฬาใดที่คุณชอบมากที่สุด </item>
-                 <item> ไอดอลของคุณคือใคร </item>
-                 <item> คุณไปโรงเรียนมัธยมที่ไหน </item>
-                 <item> คุณไปโรงเรียนมัธยมที่ไหน </item>
-                 <item> ภาพยนตร์เรื่องโปรดของคุณคืออะไร </item>
-                 <item> ปรับแต่งคำถาม </item>
-    </string-array>
     <string name="congratulations">ยินดีด้วยครับ</string>
     <string name="notification_detail_setting">เปิดใช้งานการแจ้งเตือนสำหรับแอป</string>
     <string name="create_shortcut">สร้างทางลัด</string>

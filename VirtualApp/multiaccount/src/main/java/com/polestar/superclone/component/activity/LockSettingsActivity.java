@@ -20,6 +20,7 @@ import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.PreferencesUtils;
+import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.superclone.utils.ToastUtils;
 import com.polestar.superclone.widgets.BlueSwitch;
 
@@ -201,7 +202,7 @@ public class LockSettingsActivity extends BaseActivity {
 
     private void onLockerEnabled(boolean enabled, boolean report) {
         if (enabled) {
-            if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+            if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext))) {
                 LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
                 ToastUtils.ToastDefult(this, getString(R.string.no_password_set));
                 if(report) {
@@ -242,8 +243,7 @@ public class LockSettingsActivity extends BaseActivity {
                         break;
                     case Activity.RESULT_CANCELED:
                         if (!PreferencesUtils.isLockerEnabled(this)
-                                || TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))
-                                || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+                                || TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))) {
                             onLockerEnabled(false, true);
                             lockerEnableSwitch.setChecked(false);
                         }

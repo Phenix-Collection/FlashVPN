@@ -56,7 +56,6 @@ public class AppLockActivity extends BaseActivity {
     private String mPkgName;
     private int mUserId;
     private Handler mHandler;
-    private TextView mForgotPasswordTv;
     private LinearLayout mAdInfoContainer;
     private ImageView mToolbarIcon;
     private TextView mToolbarText;
@@ -283,26 +282,10 @@ public class AppLockActivity extends BaseActivity {
         if (data.label != null) {
             mCenterAppText.setText(data.label);
         }
-        mForgotPasswordTv = (TextView)findViewById(R.id.forgot_password_tv);
-        mForgotPasswordTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgotPassword();
-            }
-        });
 
         mBlurBackground.init();
         mBlurBackground.reloadWithTheme(mPkgName, mUserId);
         mAppLockPasswordLogic.onShow();
-    }
-
-    private void forgotPassword() {
-        if (PreferencesUtils.isSafeQuestionSet(VirtualCore.get().getContext())) {
-            Intent intent = new Intent(VirtualCore.get().getContext(), LockSecureQuestionActivity.class);
-            intent.putExtra(LockSecureQuestionActivity.EXTRA_IS_SETTING, false);
-            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-            MApp.getApp().getApplicationContext().startActivity(intent);
-        }
     }
 
     @Override

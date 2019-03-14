@@ -94,21 +94,15 @@
     <string name="enable_lock_settings_title">Locker Privasi</string>
     <string name="enable_lock_settings_content">Beralih untuk mengaktifkan atau menonaktifkan fitur loker privasi</string>
     <string name="password_setting_title">Pengaturan Kata Sandi</string>
-    <string name="password_set_no_question">Tidak ada pertanyaan aman ditetapkan.</string>
     <string name="password_set_complete">Sandi ditetapkan.</string>
     <string name="no_password_set">Silahkan mengatur sandi untuk loker pada awalnya.</string>
     <string name="password_setting_content">Klik untuk mengatur password dan keamanan pertanyaan</string>
     <string name="forgot_password">Lupa kata sandi</string>
     <string name="lock_settings_for_apps">Aktifkan loker privasi untuk aplikasi dikloning</string>
 
-    <string name="al_enter_passcode">Masukkan passcode</string>
     <string name="al_lockpattern_unlock_to_continue">Mengkonfirmasi identitas Anda</string>
     <string name="al_lockpattern_draw_unlock_pattern">Menggambar Pola untuk Aktifkan</string>
-    <string name="al_use_passcode">Perubahan kode PIN</string>
     <string name="al_use_unlock_pattern">Perubahan pola</string>
-    <string name="al_lockpattern_create_new_password_subtitle">Passcode akan digunakan untuk melindungi aplikasi</string>
-    <string name="al_lockpattern_create_new_password">Mengatur passcode baru</string>
-    <string name="al_lockpattern_confirm_password">Konfirmasi passcode</string>
     <string name="al_change_enter_again">Masukkan lagi</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Harap Konfirmasi Pola</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">Menarik lagi</string>
@@ -122,32 +116,8 @@
     <string name="al_lockpattern_error">Pola yang salah, silahkan coba lagi.</string>
     <string name="al_changepassword">Ganti kata sandi</string>
     <string name="al_unlcok_pattern">Membuka Pola</string>
-    <string name="al_passcode">Passcode</string>
-    <string name="al_change_security_question">Ubah Pertanyaan Aman</string>
-    <string name="app_lock_safe_info_hint">Untuk memverifikasi identitas Anda saat mengatur ulang kata sandi. Itu akan dienkripsi dan hanya disimpan di perangkat Anda.</string>
-    <string name="app_lock_safe_question_hint">Set Pertanyaan Aman</string>
-    <string name="app_lock_safe_answer_hint">Masukkan jawaban (Hingga 20 karakter)</string>
-    <string name="app_lock_verifier_tile">Set Pertanyaan Aman</string>
     <string name="app_lock_reset_password">Ulang kata sandi</string>
 
-    <string name="app_lock_safe_answer_reset_hint">Masukkan jawabannya</string>
-    <string name="app_lock_date_picker_month">bulan</string>
-    <string name="app_lock_safe_question_toast_ask_Question">Anda tidak mengatur pertanyaan aman</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">Anda tidak masukkan menjawab belum.</string>
-    <string name="app_lock_safe_question_toast_error">Otentikasi gagal, masukkan lagi</string>
-    <string name="applock_forgot_password"><u>Lupa kata sandi?</u></string>
-    <string name="need_set_secure_answer">Silahkan mengatur jawaban untuk pertanyaan aman dan kemudian tekan tombol konfirmasi.</string>
-
-    <string-array name = "secure_questions">
-                 <item> Kapan ulang tahunmu? </item>
-                 <item> Apa makanan favorit Anda? </item>
-                 <item> Olahraga apa yang paling kamu sukai? </item>
-                 <item> Siapa idola Anda? </item>
-                 <item> Kemana kamu pergi ke SMP? </item>
-                 <item> Kemana kamu pergi ke sekolah menengah? </item>
-                 <item> Apa film favorit Anda? </item>
-                 <item> Kustomisasi pertanyaan </item>
-             </string-array>
     <string name="congratulations">Selamat!</string>
     <string name="notification_detail_setting">Aktifkan notifikasi untuk aplikasi</string>
     <string name="create_shortcut">Buat Pintasan</string>

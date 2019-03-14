@@ -248,8 +248,8 @@
         
     <string name="password_setting_title">密碼設置</string>
         
-    <string name="password_set_no_question">沒有設置安全問題</string>
         
+
     <string name="password_set_complete">已設置密碼。</string>
         
     <string name="no_password_set">請首先為隱私鎖設置密碼。</string>
@@ -261,22 +261,22 @@
     <string name="lock_settings_for_apps">為分身應用啟用隱私鎖</string>
 
         
-    <string name="al_enter_passcode">輸入密碼</string>
             
+
     <string name="al_lockpattern_unlock_to_continue">確認您的身份</string>
             
     <string name="al_lockpattern_draw_unlock_pattern">繪製圖案以解鎖</string>
             
-    <string name="al_use_passcode">更改為PIN碼</string>
             
+
     <string name="al_use_unlock_pattern">更改為圖案鎖</string>
             
-    <string name="al_lockpattern_create_new_password_subtitle">密碼將用於保護分身</string>
             
-    <string name="al_lockpattern_create_new_password">設置新密碼</string>
+
             
-    <string name="al_lockpattern_confirm_password">確認密碼</string>
+
             
+
     <string name="al_change_enter_again">再次輸入</string>
             
     <string name="al_lockpattern_confirm_unlock_pattern">請確認圖案</string>
@@ -300,91 +300,7 @@
     <string name="al_lockpattern_error">錯誤，請再試一次。</string>
             
     <string name="al_changepassword">更改密碼</string>
-            
-    <string name="al_passcode">密碼</string>
-            
-    <string name="al_change_security_question">更改安全問題</string>
-            
-    <string name="app_lock_safe_info_hint">重置密碼時驗證您的身份，該信息僅加密後存儲在本設備。</string>
-            
-    <string name="app_lock_safe_question_hint">設置安全問題</string>
-            
-    <string name="app_lock_safe_answer_hint">輸入答案（最多20個字符）</string>
-            
-    <string name="app_lock_verifier_tile">設置安全問題</string>
-            
     <string name="app_lock_reset_password">重置密碼</string>
-
-            
-    <string name="app_lock_safe_answer_reset_hint">請輸入答案</string>
-            
-    <string name="app_lock_date_picker_month">月</string>
-            
-    <string name="app_lock_safe_question_toast_ask_Question">您沒有設置安全問題</string>
-            
-    <string name="app_lock_safe_question_toast_ask_Answer">您還沒有輸入答案。</string>
-            
-    <string name="app_lock_safe_question_toast_error">驗證失敗，請再次輸入</string>
-            
-    <string name="applock_forgot_password"><u>忘記密碼？ </u></string>
-            
-    <string name="need_set_secure_answer">請為安全問題設置答案，然後按確認按鈕。</string>
-
-    <string-array name="month">
-        <item>Jan</item>
-        <item>Feb</item>
-        <item>Mar</item>
-        <item>Apr</item>
-        <item>May</item>
-        <item>Jun</item>
-        <item>Jul</item>
-        <item>Aug</item>
-        <item>Sep</item>
-        <item>Oct</item>
-        <item>Nov</item>
-        <item>Dec</item>
-    </string-array>
-
-    <string-array name="secure_questions">
-                
-        <item>您生日什麼時候？ </item>
-                
-        <item>最喜愛的食物?</item>
-                
-        <item>最喜歡的動物?</item>
-                
-        <item>最想去的地方?</item>
-                
-        <item>你小學的名字?</item>
-                
-        <item>高中的名字?</item>
-                
-        <item>最喜歡的電影?</item>
-                
-        <item>自定義問題</item>
-            
-    </string-array>
-
-    <string-array name="arr_lock_interval">
-        <item>5s</item>
-        <item>15s</item>
-        <item>30s</item>
-        <item>1min</item>
-        <item>15min</item>
-        <item>30min</item>
-        <item>1hour</item>
-    </string-array>
-
-    <string-array name="secure_question_by_day_config">
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-    </string-array>
 
     <!--定制-->
        

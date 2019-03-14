@@ -94,21 +94,15 @@
     <string name="enable_lock_settings_title">Armário de privacidade</string>
     <string name="enable_lock_settings_content">Alternar para ativar ou desativar o recurso de armário de privacidade</string>
     <string name="password_setting_title">Configurações de senha</string>
-    <string name="password_set_no_question">Nenhuma pergunta segura.</string>
     <string name="password_set_complete">A palavra-passe foi definida.</string>
     <string name="no_password_set">Por favor, defina uma senha para locker em primeiro lugar.</string>
     <string name="password_setting_content">Clique para definir a senha ea pergunta de segurança</string>
     <string name="forgot_password">Esqueceu a senha</string>
     <string name="lock_settings_for_apps">Ativar armário de privacidade para aplicativos clonados</string>
 
-    <string name="al_enter_passcode">Digite a senha</string>
     <string name="al_lockpattern_unlock_to_continue">Confirme sua identidade</string>
     <string name="al_lockpattern_draw_unlock_pattern">Desenhar padrão para desbloquear</string>
-    <string name="al_use_passcode">Alterar para o código PIN</string>
     <string name="al_use_unlock_pattern">Alterar para padrão</string>
-    <string name="al_lockpattern_create_new_password_subtitle">A senha será usada para proteger aplicativos</string>
-    <string name="al_lockpattern_create_new_password">Definir nova senha</string>
-    <string name="al_lockpattern_confirm_password">Confirmar senha</string>
     <string name="al_change_enter_again">Entrar novamente</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Confirme o padrão</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">Desenhar novamente</string>
@@ -122,32 +116,8 @@
     <string name="al_lockpattern_error">Padrão errado, tente novamente.</string>
     <string name="al_changepassword">Mudar senha</string>
     <string name="al_unlcok_pattern">Desbloquear Padrão</string>
-    <string name="al_passcode">Senha</string>
-    <string name="al_change_security_question">Alterar a pergunta segura</string>
-    <string name="app_lock_safe_info_hint">Para verificar sua identidade ao redefinir a senha. Ele será criptografado e armazenado apenas no seu dispositivo.</string>
-    <string name="app_lock_safe_question_hint">Definir uma pergunta segura</string>
-    <string name="app_lock_safe_answer_hint">Digite a resposta (até 20 caracteres)</string>
-    <string name="app_lock_verifier_tile">Definir uma pergunta segura</string>
     <string name="app_lock_reset_password">Redefinir senha</string>
 
-    <string name="app_lock_safe_answer_reset_hint">Introduza a resposta</string>
-    <string name="app_lock_date_picker_month">month</string>
-    <string name="app_lock_safe_question_toast_ask_Question">Você não definiu uma pergunta segura</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">Você ainda não respondeu.</string>
-    <string name="app_lock_safe_question_toast_error">Falha na autenticação, insira novamente</string>
-    <string name="applock_forgot_password"><u>Esqueceu a senha?</u></string>
-    <string name="need_set_secure_answer">Defina a resposta para uma pergunta segura e pressione o botão confirmar.</string>
-
-    <string-array name ="secure_questions">
-                 <item> Quando é seu aniversário?</item>
-                 <item> Qual é a sua comida favorita?</item>
-                 <item> Qual esporte você mais gosta?</item>
-                 <item> Quem é seu ídolo?</item>
-                 <item> Onde você foi para o ensino fundamental?</item>
-                 <item> Onde você foi para o ensino médio?</item>
-                 <item> Qual é o seu filme favorito?</item>
-                 <item> Personalize perguntas</item>
-             </string-array>
     <string name="congratulations">Parabéns!</string>
     <string name="notification_detail_setting">Ativar notificação para a aplicação</string>
     <string name="create_shortcut">Criar Atalho</string>

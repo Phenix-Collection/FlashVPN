@@ -261,34 +261,6 @@ public class PreferencesUtils {
         putString(c, AppConstants.PreferencesKey.ENCODED_PATTERN_PWD, pwd );
     }
 
-    public static void setLockScreen(Context c, boolean b) {
-        putBoolean(c,AppConstants.PreferencesKey.IS_LOCKER_SCREEN, b);
-    }
-
-    public static boolean isLockScreen(Context c ) {
-        return getBoolean(c,AppConstants.PreferencesKey.IS_LOCKER_SCREEN, false);
-    }
-
-    public static boolean isSafeQuestionSet(Context c ) {
-        return !TextUtils.isEmpty(getSafeAnswer(c));
-    }
-
-    public static String getSafeAnswer(Context c) {
-        return getString(c, AppConstants.PreferencesKey.SAFE_QUESTION_ANSWER, null);
-    }
-
-    public static void setSafeAnswer(Context c, String answer) {
-        putString(c, AppConstants.PreferencesKey.SAFE_QUESTION_ANSWER, answer);
-    }
-
-    public static int getSafeQuestionId(Context c) {
-        return getInt(c, AppConstants.PreferencesKey.SAFE_QUESTION_ID, 0);
-    }
-
-    public static void setSafeQuestionId(Context c, int id) {
-        putInt(c, AppConstants.PreferencesKey.SAFE_QUESTION_ID, id);
-    }
-
     public static void setCustomizedQuestion(Context c, String strQuestion) {
         putString(c, AppConstants.PreferencesKey.CUSTOMIZED_SAFE_QUESTION, strQuestion);
     }
@@ -405,15 +377,6 @@ public class PreferencesUtils {
     public static boolean isGMSEnable() {
         File stateFile = new File(MApp.getApp().getFilesDir(), "gms_disable");
         return !stateFile.exists();
-    }
-
-    public static void setStartPageStatus(boolean shown) {
-        putBoolean(MApp.getApp(), "start_page_status", shown);
-    }
-
-    public static boolean hasShownStartPage() {
-        //return false;
-        return getBoolean(MApp.getApp(), "start_page_status");
     }
 
     public static boolean isAdFree() {

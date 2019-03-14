@@ -145,23 +145,26 @@
         <string name = "lock_interval_settings_content">Интервал для блокировки приложения после того, как вы его оставили</string>
         <string name = "enable_lock_settings_content">Переключите, чтобы включить или отключить функцию блокировки конфиденциальности</string>
         <string name = "password_setting_title">Настройка пароля</string>
-        <string name = "password_set_no_question">Безопасный вопрос не задан.</string>
-        <string name = "password_set_complete">Пароль был установлен.</string>
+        
+        
+    <string name = "password_set_complete">Пароль был установлен.</string>
         <string name = "no_password_set">Сначала установите пароль для шкафчика.</string>
         <string name = "password_setting_content">Нажмите, чтобы установить пароль и контрольный вопрос</string>
         
         
  <string name = "lock_settings_for_apps">Включить блокировку конфиденциальности для клонированных приложений</string>
 
-   <string name = "al_enter_passcode">Введите код доступа</string>
-        <string name = "al_lockpattern_unlock_to_continue">Подтвердите свою личность</string>
+       
+    <string name = "al_lockpattern_unlock_to_continue">Подтвердите свою личность</string>
         <string name = "al_lockpattern_draw_unlock_pattern">Рисование шаблона для разблокировки</string>
-        <string name = "al_use_passcode">Изменить на PIN-код</string>
-        <string name = "al_use_unlock_pattern">Изменить на шаблон</string>
-        <string name = "al_lockpattern_create_new_password_subtitle">Пароль будет использоваться для защиты приложений</string>
-        <string name = "al_lockpattern_create_new_password">Установить новый пароль</string>
-        <string name = "al_lockpattern_confirm_password">Подтвердите пароль</string>
-        <string name = "al_change_enter_again">Введите еще раз</string>
+        
+        
+    <string name = "al_use_unlock_pattern">Изменить на шаблон</string>
+        
+        
+        
+        
+    <string name = "al_change_enter_again">Введите еще раз</string>
         <string name = "al_lockpattern_confirm_unlock_pattern">Пожалуйста, подтвердите шаблон</string>
         <string name = "al_lockpattern_confirm_unlock_pattern_hint">Рисовать снова</string>
         <string name = "al_btn_reset">Сброс</string>
@@ -178,27 +181,29 @@
         <string name = "al_lockpattern_error">Неправильный шаблон, повторите попытку.</string>
         <string name = "al_changepassword">Изменить пароль</string>
         <string name = "al_unlcok_pattern">Шаблон разблокировки</string>
-        <string name = "al_passcode">Код доступа</string>
         
         
- <string name = "al_change_security_question">Изменить секретный вопрос</string>
-        <string name = "app_lock_safe_info_hint">Чтобы подтвердить свою личность при сбросе пароля. Он будет зашифрован и хранится только на вашем устройстве.</string>
-        <string name = "app_lock_safe_question_hint">Задать секретный вопрос</string>
-        <string name = "app_lock_safe_answer_hint">Введите ответ (до 20 символов)</string>
-        <string name = "app_lock_verifier_tile">Задать защищенный вопрос</string>
+        
+
+
+        
+        
+        
+        
         <string name = "app_lock_reset_password">Сброс паролей</string>
 
-        <string name = "app_lock_safe_answer_reset_hint">Пожалуйста, введите ответ</string>
-        <string name = "app_lock_date_picker_month">месяц</string>
-        <string name = "app_lock_safe_question_toast_ask_Question">Вы не задали защищенный вопрос</string>
-        <string name = "app_lock_safe_question_toast_ask_Answer">Вы еще не ввели ответ.</string>
-        <string name = "app_lock_safe_question_toast_error">Ошибка аутентификации, пожалуйста, введите снова</string>
         
         
- <string name = "applock_forgot_password"><u>Забыли пароль?</u></string>
-        <string name = "need_set_secure_answer">Пожалуйста, задайте ответ для безопасного вопроса, а затем нажмите кнопку подтверждения.</string>
+        
+        
+        
+        
+        
+     
 
-   <string name = "customize_title">Настройка</string>
+
+
+    <string name = "customize_title">Настройка</string>
         <string name = "customize_setting_desc">Нажмите, чтобы настроить значок и метку для клонов</string>
         <string name = "saturation">Насыщенность</string>
         <string name = "light">Lightness</string>
@@ -238,17 +243,7 @@
  <string name = "reward_load_failed">Ошибка загрузки. Пожалуйста, проверьте ниже и повторите попытку: \n - Служба Google Play установлена ​​\n - Превосходный Cloner не работает ни в каких приложениях клонирования \n - Подключите сеть</string>
         <string name = "need_coin_for_clone">Получить монеты, чтобы закончить клон</string>
         <string name = "user_activity_title">Премиум-сервис</string>
-        
-      <string-array name = "secure_questions">
-             <item> Когда у тебя день рождения?</item>
-             <item> Какая твоя любимая еда?</item>
-             <item> Какой вид спорта тебе больше всего нравится?</item>
-             <item> Кто твой кумир?</item>
-             <item> Куда ты ходил в младшую школу?</item>
-             <item> Куда ты ходил в старшую школу?</item>
-             <item> Какой ваш любимый фильм?</item>
-             <item> Настройте вопросы</item>
-         </string-array>
+       
      
  <string name = "free_trial_text">+ %d дней бесплатной пробной версии</string>
         <string name = "price_change_hint">Покупайте товары сейчас за свои монеты. Цена может меняться в зависимости от экономики приложения.</string>

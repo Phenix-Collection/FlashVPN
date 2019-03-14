@@ -137,22 +137,23 @@
     <string name="lock_interval_settings_content">离开后重新锁定应用程序的时间间隔</string>
     <string name="enable_lock_settings_content">切换以启用或禁用隐私锁功能</string>
     <string name="password_setting_title">密码设置</string>
-    <string name="password_set_no_question">没有设置安全问题</string>
-    <string name="password_set_complete">已设置密码。</string>
+    
+    
+    <string name="password_set_complete">已设置密码。</string>
     <string name="no_password_set">请首先为隐私锁设置密码。</string>
     <string name="password_setting_content">单击以设置密码和安全问题</string>
     <string name="forgot_password">忘记密码</string>
     <string name="lock_settings_for_apps">为分身应用启用隐私锁</string>
-
-    <string name="al_enter_passcode">输入密码</string>
-        <string name="al_lockpattern_unlock_to_continue">确认您的身份</string>
+    <string name="al_lockpattern_unlock_to_continue">确认您的身份</string>
         <string name="al_lockpattern_draw_unlock_pattern">绘制图案以解锁</string>
-        <string name="al_use_passcode">更改为PIN码</string>
-        <string name="al_use_unlock_pattern">更改为图案锁</string>
-        <string name="al_lockpattern_create_new_password_subtitle">密码将用于保护分身</string>
-        <string name="al_lockpattern_create_new_password">设置新密码</string>
-        <string name="al_lockpattern_confirm_password">确认密码</string>
-        <string name="al_change_enter_again">再次输入</string>
+        
+        
+    <string name="al_use_unlock_pattern">更改为图案锁</string>
+        
+        
+        
+        
+    <string name="al_change_enter_again">再次输入</string>
         <string name="al_lockpattern_confirm_unlock_pattern">请确认图案</string>
         <string name="al_lockpattern_confirm_unlock_pattern_hint">再次绘制</string>
         <string name="al_btn_reset">重置</string>
@@ -164,68 +165,7 @@
         <string name="al_btn_next">下一步</string>
         <string name="al_lockpattern_error">错误，请再试一次。</string>
         <string name="al_changepassword">更改密码</string>
-        <string name="al_passcode">密码</string>
-        <string name="al_change_security_question">更改安全问题</string>
-        <string name="app_lock_safe_info_hint">重置密码时验证您的身份，该信息仅加密后存储在本设备。</string>
-        <string name="app_lock_safe_question_hint">设置安全问题</string>
-        <string name="app_lock_safe_answer_hint">输入答案（最多20个字符）</string>
-        <string name="app_lock_verifier_tile">设置安全问题</string>
-        <string name="app_lock_reset_password">重置密码</string>
-
-        <string name="app_lock_safe_answer_reset_hint">请输入答案</string>
-        <string name="app_lock_date_picker_month">月</string>
-        <string name="app_lock_safe_question_toast_ask_Question">您没有设置安全问题</string>
-        <string name="app_lock_safe_question_toast_ask_Answer">您还没有输入答案。</string>
-        <string name="app_lock_safe_question_toast_error">验证失败，请再次输入</string>
-        <string name="applock_forgot_password"><u>忘记密码？</u></string>
-        <string name="need_set_secure_answer">请为安全问题设置答案，然后按确认按钮。</string>
-
-    <string-array name="month">
-        <item>Jan</item>
-        <item>Feb</item>
-        <item>Mar</item>
-        <item>Apr</item>
-        <item>May</item>
-        <item>Jun</item>
-        <item>Jul</item>
-        <item>Aug</item>
-        <item>Sep</item>
-        <item>Oct</item>
-        <item>Nov</item>
-        <item>Dec</item>
-    </string-array>
-
-    <string-array name="secure_questions">
-        <item>您生日什么时候？</item>
-        <item>最喜爱的食物?</item>
-        <item>最喜欢的动物?</item>
-        <item>最想去的地方?</item>
-        <item>你小学的名字?</item>
-        <item>高中的名字?</item>
-        <item>最喜欢的电影?</item>
-        <item>自定义问题</item>
-    </string-array>
-
-    <string-array name="arr_lock_interval">
-        <item>5s</item>
-        <item>15s</item>
-        <item>30s</item>
-        <item>1min</item>
-        <item>15min</item>
-        <item>30min</item>
-        <item>1hour</item>
-    </string-array>
-
-    <string-array name="secure_question_by_day_config">
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-    </string-array>
+       <string name="app_lock_reset_password">重置密码</string>
 
 <!--定制-->
         <string name="customize_title">自定义</string>
