@@ -185,4 +185,7 @@
     <string name = "free_trial_text">+ %d essai gratuit</string>
         <string name = "cash_rewards">Récompenses en espèces</string>
         <string name = "earn_coin_remove_ads">Gagnez des pièces et sélectionnez un produit pour supprimer les annonces</string>
+
+    <string name = "enable_fingerprint_title">Utiliser l\'empreinte digitale</string>
+    <string name = "enable_fingerprint_content">Utilisez une empreinte digitale pour déverrouiller. Les empreintes digitales sont identiques à celles que vous avez inscrites dans les paramètres système.</string>
 </resources>

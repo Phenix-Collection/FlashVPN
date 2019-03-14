@@ -229,4 +229,6 @@
         <string name = "cash_rewards">Recompensas em dinheiro</string>
         <string name = "earn_coin_remove_ads">Ganhe moedas e selecione o produto para remover anúncios</string>
 
+    <string name = "enable_fingerprint_title">Usar impressão digital</string>
+    <string name = "enable_fingerprint_content">Use a impressão digital para desbloquear. As impressões digitais são iguais às que você registrou nas configurações do sistema.</string>
 </resources>

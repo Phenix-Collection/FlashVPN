@@ -228,4 +228,6 @@
         <string name = "cash_rewards">Recompensas em dinheiro</string>
         <string name = "earn_coin_remove_ads">Ganhe moedas e selecione o produto para remover anúncios</string>
 
+    <string name = "enable_fingerprint_title">Gunakan Sidik Jari</string>
+    <string name = "enable_fingerprint_content">Gunakan sidik jari untuk membuka kunci. Sidik jari sama dengan apa yang Anda daftarkan dalam pengaturan sistem.</string>
 </resources>

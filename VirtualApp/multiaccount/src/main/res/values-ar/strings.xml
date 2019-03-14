@@ -219,4 +219,7 @@
     <string name="earn_coin_remove_ads">كسب النقود وتحديد المنتج لإزالة الإعلانات</string>
     <string name="error_day_limit">المهمة تتم اليوم. يرجى المحاولة غدا.</string>
     <string name="reward_center">مركز المكافآت</string>
+
+    <string name = "enable_fingerprint_title">استخدام بصمة</string>
+    <string name = "enable_fingerprint_content"> استخدام بصمة لفتح. البصمات هي نفسها مع ما قمت بالتسجيل في إعدادات النظام. </string>
 </resources>

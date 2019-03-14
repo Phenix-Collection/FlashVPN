@@ -2,6 +2,8 @@ package com.polestar.superclone.component.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -48,6 +50,8 @@ public class LockSettingsActivity extends BaseActivity {
     private boolean isSettingChanged = false;
     private String from;
     private Spinner lockIntervalSpinner;
+    private View fingerprintLine;
+    private View fingerprintLayout;
 
     private final long ARR_INTERVAL[] = {5*1000, 15*1000, 30*1000, 60*1000, 15*60*1000, 30*60*1000, 60*60*1000};
 
@@ -166,6 +170,31 @@ public class LockSettingsActivity extends BaseActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        fingerprintLayout = findViewById(R.id.fingerprint_settings);
+        fingerprintLine = findViewById(R.id.fingerprint_line);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            fingerprintLine.setVisibility(View.GONE);
+            fingerprintLayout.setVisibility(View.GONE);
+        } else {
+            FingerprintManager fingerprintManager = (FingerprintManager)getSystemService(Context.FINGERPRINT_SERVICE);
+            if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
+                fingerprintLine.setVisibility(View.GONE);
+                fingerprintLayout.setVisibility(View.GONE);
+            }
+        }
+        BlueSwitch fingerSwith = fingerprintLayout.findViewById(R.id.enable_fingerprint_switch);
+        fingerSwith.setChecked(PreferencesUtils.isFingerprintEnable());
+        fingerSwith.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isSettingChanged = true;
+                boolean checked = fingerSwith.isChecked();
+                fingerSwith.setChecked(checked);
+                PreferencesUtils.setFingerprint(checked);
+                EventReporter.generalClickEvent(LockSettingsActivity.this, "set_fingerprint_" + checked);
             }
         });
     }

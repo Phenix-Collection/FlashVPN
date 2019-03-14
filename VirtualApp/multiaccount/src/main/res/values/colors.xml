@@ -38,6 +38,7 @@
     <color name="clone_activity_start_btn_pressed">#2542b4</color>
     <color name="launch_page_color">#5183e6</color>
     <color name="theme_text_color">#FF4A4A4A</color>
+    <color name="lock_default_dot">#b72b2b2b</color>
     <color name="grid_line">#d3d3d3</color>
     <color name="grid_pressed">#b7b7b7</color>
     <color name="grid_bg">#e8e8e8</color>

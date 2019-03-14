@@ -254,4 +254,6 @@
         <string name = "price_change_hint">Покупайте товары сейчас за свои монеты. Цена может меняться в зависимости от экономики приложения.</string>
         <string name = "cash_rewards">денежные вознаграждения</string>
         <string name = "earn_coin_remove_ads">Зарабатывайте монеты и выберите продукт, чтобы удалить рекламу</string>
+    <string name = "enable_fingerprint_title">Использовать отпечаток пальца </string>
+    <string name = "enable_fingerprint_content">Используйте отпечаток пальца для разблокировки. Отпечатки пальцев совпадают с тем, что вы зарегистрировали в настройках системы.</string>
 </resources>

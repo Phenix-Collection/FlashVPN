@@ -96,6 +96,8 @@
     <string name="settings_gms_disable_notice">Disable Google play service will decrease memory and power usage, and optimize the launch speed for cloned application. But some application may not work properly if disable it. Are you sure to disable Google play service?</string>
     <string name="settings_gms_enable_notice">Enable Google play service may consume more memory and CPU. Do you want to enable Google play service?</string>
     <string name="settings_privacy_locker_content">Click to set privacy locker for cloned apps</string>
+    <string name="enable_fingerprint_title">Use Fingerprint</string>
+    <string name="enable_fingerprint_content">Use fingerprint to unlock. The fingerprints are same with what you enrolled in system settings.</string>
     <string name="settings_notification_content">Click to enable/disable notification from cloned apps</string>
     <string name="settings_privacy_policy">Privacy Policy</string>
     <string name="settings_terms_of_service">Terms of Service</string>

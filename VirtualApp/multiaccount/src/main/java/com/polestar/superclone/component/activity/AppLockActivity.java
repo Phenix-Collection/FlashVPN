@@ -3,7 +3,10 @@ package com.polestar.superclone.component.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -30,11 +33,13 @@ import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
+import com.polestar.superclone.utils.ToastUtils;
 import com.polestar.superclone.widgets.FeedbackImageView;
 import com.polestar.superclone.widgets.locker.AppLockPasswordLogic;
 import com.polestar.superclone.widgets.locker.BlurBackground;
 
 import java.util.List;
+
 
 import static android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -66,6 +71,9 @@ public class AppLockActivity extends BaseActivity {
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
     public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
 
+    private FingerprintManager fingerprintManager;
+    private CancellationSignal cancellationSignal;
+
     public static final void start(Context context, String pkg, int userId) {
         MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
         if (pkg == null) {
@@ -79,9 +87,7 @@ public class AppLockActivity extends BaseActivity {
         context.startActivity(intent);
     }
     public static AdSize getBannerSize() {
-        int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
-        dpWidth = Math.max(280, dpWidth*9/10);
-        return  new AdSize(dpWidth, 280);
+        return AdSize.MEDIUM_RECTANGLE;
     }
     private void inflatNativeAd(IAdAdapter ad) {
         final AdViewBinder viewBinder =  new AdViewBinder.Builder(R.layout.lock_window_native_ad)
@@ -167,6 +173,8 @@ public class AppLockActivity extends BaseActivity {
 
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -174,6 +182,44 @@ public class AppLockActivity extends BaseActivity {
         initView();
         if (!PreferencesUtils.isAdFree()) {
             loadNative();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
+            cancellationSignal = new CancellationSignal();
+            if (PreferencesUtils.isFingerprintEnable()
+                    && fingerprintManager!= null &&
+                    fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
+                fingerprintManager.authenticate(null, cancellationSignal, 0,
+                        new FingerprintManager.AuthenticationCallback() {
+                            @Override
+                            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                                if (errorCode != FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
+                                    ToastUtils.ToastDefult(AppLockActivity.this, "" + errString);
+                                }
+                            }
+
+                            @Override
+                            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                                ToastUtils.ToastDefult(AppLockActivity.this, ""+helpString);
+                            }
+
+                            @Override
+                            public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        finish();
+                                    }
+                                }, 200);
+                                AppMonitorService.unlocked(mPkgName, mUserId);
+                            }
+
+                            @Override
+                            public void onAuthenticationFailed() {
+                                mBlurBackground.onIncorrectPassword(mAdInfoContainer);
+                            }
+                        }, null);
+            }
         }
     }
 
@@ -269,6 +315,10 @@ public class AppLockActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && cancellationSignal != null && fingerprintManager != null) {
+            cancellationSignal.cancel();
+        }
         finish();
     }
 

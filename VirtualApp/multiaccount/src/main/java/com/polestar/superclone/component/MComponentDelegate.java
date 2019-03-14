@@ -228,7 +228,7 @@ public class MComponentDelegate implements ComponentDelegate {
         return uiAgent;
     }
 
-    private final BlockingQueue<Integer> syncQueue = new LinkedBlockingQueue<Integer>(1);
+    private final BlockingQueue<Integer> syncQueue = new LinkedBlockingQueue<Integer>(2);
     ServiceConnection agentServiceConnection = new ServiceConnection() {
         @Override public void onServiceConnected(ComponentName name, IBinder service) {
             try {

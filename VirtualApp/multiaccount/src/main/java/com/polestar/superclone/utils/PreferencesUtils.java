@@ -495,4 +495,12 @@ public class PreferencesUtils {
     public static boolean hasShownDeleteDialog() {
         return getBoolean(MApp.getApp(), "shown_delete_dialog", false);
     }
+
+    public static void setFingerprint(boolean enable) {
+        putBoolean(MApp.getApp(), "use_fingerprint", enable);
+    }
+
+    public static boolean isFingerprintEnable() {
+        return getBoolean(MApp.getApp(), "use_fingerprint", true);
+    }
 }

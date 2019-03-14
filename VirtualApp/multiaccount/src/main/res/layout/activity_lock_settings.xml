@@ -53,6 +53,51 @@
             android:textColor="@color/text_gray_light"
             android:textSize="10sp" />
     </RelativeLayout>
+    <include layout="@layout/setting_line_splitter" android:id="@+id/fingerprint_line"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@android:color/white"
+        android:paddingLeft="22dp"
+        android:paddingStart="22dp"
+        android:id="@+id/fingerprint_settings"
+        >
+
+        <com.polestar.superclone.widgets.BlueSwitch
+            android:id="@+id/enable_fingerprint_switch"
+            android:layout_width="82.5dp"
+            android:layout_height="70dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="28dp"
+            android:gravity="center_horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+
+        <TextView
+            android:id="@+id/enable_fingerprint_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_toLeftOf="@id/enable_fingerprint_switch"
+            android:layout_toStartOf="@id/enable_fingerprint_switch"
+            android:text="@string/enable_fingerprint_title"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/enable_fingerprint_title"
+            android:layout_toLeftOf="@id/enable_fingerprint_switch"
+            android:layout_toStartOf="@id/enable_fingerprint_switch"
+            android:text="@string/enable_fingerprint_content"
+            android:textColor="@color/text_gray_light"
+            android:textSize="10sp" />
+    </RelativeLayout>
     <include layout="@layout/setting_line_splitter"/>
     <RelativeLayout
         android:layout_width="match_parent"

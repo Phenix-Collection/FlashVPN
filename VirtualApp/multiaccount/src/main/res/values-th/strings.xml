@@ -224,4 +224,8 @@
         <string name = "price_change_hint">ซื้อผลิตภัณฑ์ด้วยเหรียญของคุณทันที ราคาสามารถเปลี่ยนแปลงได้ตามความประหยัดของแอป</string>
         <string name = "cash_rewards">รางวัลเงินสด</string>
         <string name = "earn_coin_remove_ads">รับเหรียญและเลือกผลิตภัณฑ์เพื่อลบโฆษณา</string>
+
+
+    <string name = "enable_fingerprint_title">ใช้ลายนิ้วมือ</string>
+    <string name = "enable_fingerprint_content">ใช้ลายนิ้วมือเพื่อปลดล็อก ลายนิ้วมือเหมือนกันกับสิ่งที่คุณลงทะเบียนในการตั้งค่าระบบ</string>
 </resources>

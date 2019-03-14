@@ -142,7 +142,7 @@
     <string name="no_password_set">请首先为隐私锁设置密码。</string>
     <string name="password_setting_content">单击以设置密码和安全问题</string>
     <string name="forgot_password">忘记密码</string>
-    <string name="lock_settings_for_apps">为分身应用启用隐私锁定器</string>
+    <string name="lock_settings_for_apps">为分身应用启用隐私锁</string>
 
     <string name="al_enter_passcode">输入密码</string>
         <string name="al_lockpattern_unlock_to_continue">确认您的身份</string>
@@ -278,4 +278,7 @@
         <string name="cash_rewards">现金奖励</string>
         <string name="earn_coin_remove_ads">赚取金币并选择产品以移除广告</string>
         <string name="toast_no_lucky_award">哈，运气不太好，请明天再试。</string>
+
+    <string name = "enable_fingerprint_title">使用指纹</string>
+    <string name = "enable_fingerprint_content">使用指纹解锁。使用的指纹为系统设置中所录入。</string>
 </resources>
