@@ -285,7 +285,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
 
     public static AdSize getBannerAdSize() {
         int dpWidth = DisplayUtils.px2dip(PolestarApp.getApp(), DisplayUtils.getScreenWidth(PolestarApp.getApp()));
-        return new AdSize(dpWidth, 320);
+        return new AdSize(dpWidth, dpWidth*250/300);
+//        return  AdSize.MEDIUM_RECTANGLE;
     }
     private void inflateNativeAdView(IAdAdapter ad) {
         if (ad == null) {

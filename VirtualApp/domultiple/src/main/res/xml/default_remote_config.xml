@@ -53,7 +53,7 @@
     <entry>
         <key>slot_home_native</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb:302444040464257_307953753246619:0;adm:ca-app-pub-5490912237269284/8894697605:0</value>
+        <value>ab_banner:ca-app-pub-5490912237269284/9469412678:0;fb:302444040464257_307953753246619:0;adm:ca-app-pub-5490912237269284/8894697605:0</value>
     </entry>
     <entry>
         <key>slot_add_clone_native</key>
