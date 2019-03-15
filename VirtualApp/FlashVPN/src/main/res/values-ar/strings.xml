@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name ="select_app">حدد Apps for VPN </string>
+        <string name="app_slogan">VPN سريع وآمن</string>
+        <string name ="select_app_detail">تمكين VPN فقط للتطبيقات المحددة </string>
+        <string name ="proxied_apps">وكيل التطبيق - </string>
+        <string name ="vpn_connected_status">متصل </string>
+        <string name ="vpn_disconnected_status">غير متصل </string>
+        <string name ="faq">الأسئلة الشائعة</string>
+        <string name ="notification_connected">متصل</string>
+        <string name ="notification_to_connect">انقر للاتصال</string>
+        <string name ="connect">الاتصال</string>
+        <string name ="stop">توقف</string>
+        <string name ="connecting">هو الاتصال</string>
+        <string name ="acquiring_port">تخصيص الموارد</string>
+        <string name ="checking_port">فحص الخادم</string>
+        <string name ="reward_text_no_premium_time">انقر للحصول على وكيل ممتاز وعرض النطاق الترددي!</string>
+        <string name ="reward_text_no_premium_time_watch_ad">شاهد فيديو المكافآت للحصول على مكافأة مجانية للخادم المتميز!</string>
+        <string name ="get_reward_premium_time">أنت تكافأ بوقت خادم ممتاز!</string>
+        <string name ="reward_text_vip">أنت المستخدم المميز الآن! استمتع بأفضل سرعة وكيل!</string>
+        <string name ="connecting_tip1">تحسين اتصال الخادم ... </string>
+        <string name ="connecting_tip_success">متصل بالفعل بالخادم.</string>
+        <string name ="retry_tips">يرجى التحقق من إعداد الشبكة والمحاولة مرة أخرى!</string>
+        <string name ="feedback">الملاحظات</string>
+        <string name ="button_submit">إرسال</string>
+        <string name ="submit_success">شكرًا على تقديم ملاحظات!</string>
+        <string name ="text_proxy_allapp">تمكين وكيل VPN لجميع التطبيقات</string>
+        <string name ="text_proxy_allapp_description">التبديل لتشغيل / إيقاف تشغيل VPN العالمية لجميع التطبيقات</string>
+        <string name ="text_proxy_app">حدد التطبيق الذي تريده الوكيل</string>
+        <string name ="settings">الإعدادات</string>
+        <string name ="about">حول</string>
+        <string name ="user_activity_title">مركز VIP</string>
+        <string name ="user_center">مركز المستخدم</string>
+        <string name ="user_center_detail">انقر للتحقق من امتيازات المستخدم</string>
+        <string name ="check_update"><u> التحقق من التحديث</u> </string>
+        <string name ="become_vip_tips1">إزالة جميع الإعلانات</string>
+        <string name ="become_vip_tips2">حركة مرور غير محدودة للنطاق الترددي وعرض النطاق الترددي</string>
+        <string name ="become_vip_tips3">الخادم الوكيل المتميز في جميع أنحاء العالم</string>
+        <string name ="become_vip_tips4">الاتصالات المشفرة للأمان</string>
+        <string name ="become_vip">كن مستخدم VIP لـ Flash VPN</string>
+        <string name ="settings_follow_us">تابعنا</string>
+        <string name ="settings_privacy_policy">سياسة الخصوصية</string>
+        <string name ="settings_terms_of_service">شروط الخدمة</string>
+        <string name ="settings_terms_text">شروط الخدمة وسياسة الخصوصية</string>
+        <string name ="settings_right" translatable ="false">WinterFell Tech جميع الحقوق محفوظة </string>
+        <string name ="yes">نعم</string>
+        <string name ="no_thanks">لا ، شكرًا!</string>
+        <string name ="settings_start_onboot_title">بدء VPN تلقائيًا في تمهيد النظام</string>
+        <string name ="settings_vip_title">خدمة VPN الممتازة</string>
+        <string name ="settings_vip_description">كن مستخدمًا لكبار الشخصيات للاستمتاع بعرض نطاق شبكة غير محدود</string>
+        <string name ="settings_start_onboot_description">ابدأ تشغيل خدمة VPN تلقائيًا عند بدء تشغيل android</string>
+
+        <string name ="feedback_hint">يرجى إخبارنا بالتفاصيل حول المشكلة التي قابلتها ، ويرجى إخبارنا بالخطوات اللازمة لإعادة إنتاجها وأفضل باستخدام لقطة شاشة.</string>
+        <string name ="star_rating">اذهب الآن إلى تصنيف 5 نجوم</string>
+        <string name ="dialog_love_title">Love Flash VPN </string>
+        <string name ="dialog_love_content">هل تمانع في منحنا تصنيف 5 نجوم في متجر Play؟ سيكون مصدر إلهام لنا ونحن نقدر دعمكم!</string>
+        <string name ="feedback_no_description">لا يمكن أن يكون الوصف فارغًا!</string>
+        <string name ="feedback_go_faq">انقر هنا للتحقق من الأسئلة الشائعة المفيدة.</string>
+        <string name ="extra_feedback_decription">سنقوم بحل المشكلة لك في أسرع وقت ممكن ونقدر مساعدتك في تحسين المنتج!</string>
+        <string name ="share_with_friends">المشاركة مع الأصدقاء</string>
+        <string name ="select_server_title">حدد خادم</string>
+        <string name ="select_server_auto">تلقائي</string>
+        <string name ="contact_dev_team"><u> الاتصال بفريق مطور البرامج</u> </string>
+        <string name ="free_trial_text">+%d أيام تجريبية مجانية</string>
+
+    <array name = "navigationItem">
+                <item name = "navigation_notifications"> التطبيقات التي تستخدم VPN </item>
+                <item name = "navigation_notifications"> مركز المستخدم </item>
+                <item name = "navigation_FAQ"> الأسئلة الشائعة </item>
+                <item name = "navigation_feedback"> تعليقات </item>
+                <item name = "navigation_rate_us"> يعجبك </item>
+                <item name = "navigation_share"> المشاركة مع الأصدقاء </item>
+                <item name = "navigation_setting"> حول </item>
+            </array>
+
+        <array name = "faqTitle">
+            <item name = "faq_t1"> لماذا أحتاج إلى VPN؟ </item>
+            <item name = "faq_t2"> كيفية استخدام Flash VPN؟ </item>
+            <item name = "faq_t3"> لماذا فشل اتصال VPN VPN؟ </item>
+            <item name = "faq_t4"> كيف يمكن لـ Flash VPN حماية بياناتي؟ </item>
+            <item name = "faq_t5"> كيف يمكنني الاستفادة إذا اشتركت في خدمة مميزة؟ </item>
+        </array>
+
+        <array name = "faqAnswer">
+            <item name = "faq_t1"> VPN هي الشبكة الافتراضية الخاصة. باستخدام VPN ، يمكنك استخدام Wi-Fi العام
+                بشكل آمن. علاوة على ذلك ، يمكن أن تساعدك VPN في الوصول إلى موقع الويب الذي تم حظره بواسطة
+                بائع شبكة.
+            </item>
+            <item name = "faq_t2"> فقط اضغط على زر الاتصال في الشاشة الرئيسية. سوف فلاش VPN تلقائيا
+                الاتصال بأفضل خادم وتشفير نقل البيانات الخاصة بك. يمكنك أيضا اختيار
+                الخادم إذا كنت تفضل موقع الخادم.
+            </item>
+            <item name = "faq_t3"> 1) يرجى التحقق من اتصالك بالإنترنت 2) تحديث الخوادم للتحقق منها
+                إشارة 3) إعادة محاولة الاتصال والتحقق من الخوادم الأخرى 4) إذا لم تنجح جميع الطرق ، من فضلك
+                إرسال بريد إلكتروني ردود الفعل لنا. مهندس لدينا سوف يحل المشكلة في الوقت المناسب.
+            </item>
+            <item name = "faq_t4"> يختلف تطبيق VPN VPN عن معظم تطبيقات VPN في السوق
+                جميع نقل البيانات تلقائيا. لا يمكن اعتراض رسالتك من قبل أي شخص آخر
+                الجاسوس.
+            </item>
+            <item name = "faq_t5"> مع الخدمة المتميزة ، سنقوم بإزالة جميع الإعلانات من هذا التطبيق.
+                وفي الوقت نفسه ، فإن العديد من الخوادم المتميزة مفتوحة فقط للمستخدمين المميزين في جميع أنحاء العالم وسوف نقوم بذلك
+                تخصيص تخصيص النطاق الترددي عند الاتصال.
+            </item>
+        </array>
+
+        <string name = "update_dialog_title">تحديث</string>
+        <string name = "update_dialog_left">تجاهل هذا الإصدار</string>
+        <string name = "update_dialog_right">التحديث</string>
+
+        <string name = "title_activity_ad_test">AdTestActivity</string>
+
+        <string name = "share_with_friends_tip">يسعدني أن أدعوك لاستخدام وكيل VPN الرائع %s. يمكنك تنزيله من هنا:</string>
+        <string name = "update_dialog_content">نسخة جديدة قادمة! لقد قمنا بتحسين الكثير في الإصدار %s. هل ترغب في تحديث FlashVPN الآن؟</string>
+        <string name = "reward_text_has_premium_time_watch_ad">لديك %s قسط الوقت. مشاهدة فيديو مكافأة للحصول على المزيد!</string>
+        <string name = "reward_text_has_premium_time">لديك %s قسط الوقت. مشاهدة فيديو مكافأة للحصول على المزيد!</string>
+    
+</resources>

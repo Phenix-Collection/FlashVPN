@@ -12,15 +12,19 @@ public class RegionServers {
     public ArrayList<VpnServer> mServers;
 
     public VpnServer getFirstServer() {
-        //应该总是不空的
-        return mServers.get(0);
+        synchronized (this) {
+            //应该总是不空的
+            return mServers.get(0);
+        }
     }
 
     public int getId() {
-        if (mRegion != null) {
-            return mRegion.getId();
+        synchronized (this) {
+            if (mRegion != null) {
+                return mRegion.getId();
+            }
+            return NONE_ID;
         }
-        return NONE_ID;
     }
 
     public void dump() {
@@ -31,6 +35,8 @@ public class RegionServers {
     }
 
     public boolean hasValidId() {
-        return mRegion != null;
+        synchronized (this) {
+            return mRegion != null;
+        }
     }
 }

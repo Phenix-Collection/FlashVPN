@@ -8,7 +8,6 @@ import android.os.Looper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.polestar.ad.AdLog;
-import com.polestar.task.network.datamodels.Region;
 import com.polestar.task.network.datamodels.RegionServers;
 import com.polestar.task.network.datamodels.VpnServer;
 import com.polestar.task.network.responses.ServersResponse;
@@ -362,7 +361,12 @@ public class VPNServerIntermediaManager {
 
     private void updatePing(ServersResponse servers){
         ArrayList<Thread> pingThreads = new ArrayList<>();
-        for (RegionServers rs: servers.mVpnServers) {
+        ArrayList<RegionServers> dup = null;
+        synchronized (this) {
+            dup = new ArrayList<>(servers.mVpnServers);
+        }
+
+        for (RegionServers rs: dup) {
             String ip = rs.getFirstServer().mPublicIp;
             PingNetEntity pingNetEntity=new PingNetEntity(ip,
                     3,5,new StringBuffer());

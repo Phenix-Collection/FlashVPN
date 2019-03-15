@@ -55,7 +55,7 @@ public class ShadowsocksPingTunnel extends ShadowsocksTunnel {
 //            MLogs.d("Tunnel-- before connect " + m_ServerEP  + m_InnerChannel.toString() + " " + destAddress.toString() );
 
             m_InnerChannel.connect(m_ServerEP);//连接目标
-        } catch (Exception e) {
+        } catch (Throwable e) {
             MLogs.e("ShadowsocksPingTunnel-- connect exception " + e.toString());
             if (mListener != null) {
                 mListener.onPingFailed(m_ServerEP);

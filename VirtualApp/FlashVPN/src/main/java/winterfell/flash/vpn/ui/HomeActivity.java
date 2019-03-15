@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -709,6 +710,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         }
     }
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -743,12 +745,39 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         loadAds();
     }
 
+    private final static String QUIT_RATE_RANDOM = "quit_rating_random";
+    private final static String QUIT_RATE_INTERVAL = "quit_rating_interval";
+    private static final String RATE_FROM_QUIT = "quit";
+
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }else{
-            super.onBackPressed();
+            boolean showRate = false;
+            if (!PreferenceUtils.isRated()
+                    && PreferenceUtils.getConnectedTimeSec() > RemoteConfig.getLong(CONF_RATE_DIALOG_GATE)) {
+                MLogs.d("Quit Rate config:" +  RemoteConfig.getLong(QUIT_RATE_INTERVAL)+" , "
+                        + RemoteConfig.getLong(QUIT_RATE_RANDOM));
+                long interval = RemoteConfig.getLong(QUIT_RATE_INTERVAL) * 60 * 60 * 1000;
+                long lastTime = PreferenceUtils.getRateDialogTime(this);
+                if (PreferenceUtils.getLoveApp() != -1) {
+                    //Don't love app
+                    int random = new Random().nextInt(100);
+                    //int clonedCnt = CloneHelper.getInstance(this).getClonedApps().size();
+                    boolean isShowRateDialog = PreferenceUtils.getLoveApp() == 1 ||
+                            ((random < RemoteConfig.getLong(QUIT_RATE_RANDOM)));
+                    if (isShowRateDialog && (System.currentTimeMillis() - lastTime) > interval) {
+                        showRate = true;
+                        showRateDialog(RATE_FROM_QUIT);
+                    }
+                }
+                if (!showRate) {
+                    super.onBackPressed();
+                }
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 

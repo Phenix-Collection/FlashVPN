@@ -1,4 +1,4 @@
-session_name Nova-VPN
+session_name Flash-VPN
     welcome_info "Welcome to use Flash VPN!"
     ip 172.25.0.1
     dns 223.5.5.5

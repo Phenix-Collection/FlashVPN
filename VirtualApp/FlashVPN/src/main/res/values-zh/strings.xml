@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+            <string name ="app_name"> Flash VPN </string>
+        <string name ="key_string" translatable ="false"> adccerd3indd2f </string>
+        <string name ="app_slogan">快速安全的VPN </string>
+        <string name ="select_app">选择VPN应用</string>
+        <string name ="select_app_detail">仅为选定的应用启用VPN </string>
+        <string name ="proxied_apps">每个应用程序代理</string>
+        <string name ="vpn_connected_status">已连接</string>
+        <string name ="vpn_disconnected_status">已断开连接</string>
+        <string name ="faq">常见问题</string>
+        <string name ="notification_connected">已连接</string>
+        <string name ="notification_to_connect">点击连接</string>
+        <string name ="connect">连接</string>
+        <string name ="stop">停止</string>
+        <string name ="connecting">连接</string>
+        <string name ="acquiring_port">分配资源</string>
+        <string name ="checking_port">检查服务器</string>
+        <string name ="reward_text_no_premium_time">点击获取高级代理和带宽！</string>
+        <string name ="reward_text_no_premium_time_watch_ad">观看奖励视频以获得免费的高级服务器奖励！</string>
+        <string name ="get_reward_premium_time">您将获得高级服务器奖励时间！</string>
+        <string name ="reward_text_vip">您现在是高级用户！享受最佳代理速度！</string>
+        <string name ="connecting_tip1">优化服务器连接... </string>
+        <string name ="connecting_tip_success">已连接到服务器。</string>
+        <string name ="retry_tips">请检查您的网络设置，然后重试！</string>
+        <string name ="feedback">反馈</string>
+        <string name ="button_submit">提交</string>
+        <string name ="submit_success">感谢您提供反馈！</string>
+        <string name ="text_proxy_allapp">为所有应用启用VPN代理</string>
+        <string name ="text_proxy_allapp_description">切换为所有应用打开/关闭全局VPN </string>
+        <string name ="text_proxy_app">选择要代理的应用</string>
+        <string name ="settings">设置</string>
+        <string name ="about">关于</string>
+        <string name ="user_activity_title"> VIP中心</string>
+        <string name ="user_center">用户中心</string>
+        <string name ="user_center_detail">单击以检查用户权限</string>
+        <string name ="check_update"> <u>检查更新</u> </string>
+        <string name ="become_vip_tips1">删除所有广告</string>
+        <string name ="become_vip_tips2">无限的网络流量和带宽</string>
+        <string name ="become_vip_tips3">全球高级代理服务器</string>
+        <string name ="become_vip_tips4">安全加密通信</string>
+        <string name ="become_vip">成为Flash VPN的VIP用户</string>
+        <string name ="settings_follow_us">关注我们</string>
+        <string name ="settings_privacy_policy">隐私政策</string>
+        <string name ="settings_terms_of_service">服务条款</string>
+        <string name ="settings_terms_text">服务条款和隐私政策</string>
+        <string name ="settings_right" translatable ="false"> WinterFell Tech保留所有权利</string>
+        <string name ="yes">是</string>
+        <string name ="no_thanks">不，谢谢！</string>
+        <string name ="settings_start_onboot_title">在系统启动时自动启动VPN </string>
+        <string name ="settings_vip_title">高级VPN服务</string>
+        <string name ="settings_vip_description">成为VIP用户享受无限的网络带宽</string>
+        <string name ="settings_start_onboot_description">当android启动时自动启动VPN服务</string>
+
+        <string name ="feedback_hint">请告诉我们您遇到的问题的详细信息，请告诉我们重现它的步骤以及更好的截图。</string>
+        <string name ="star_rating">现在去五星评级</string>
+        <string name ="dialog_love_title">爱Flash VPN </string>
+        <string name ="dialog_love_content">你介意在Play商店给我们一个5星评级吗？它会激励我们，我们感谢您的支持！</string>
+        <string name ="feedback_no_description">描述不能为空！</string>
+        <string name ="feedback_go_faq">点击此处查看我们方便的常见问题解答。</string>
+        <string name ="extra_feedback_decription">我们会尽快为您解决问题，感谢您帮助改进产品！</string>
+        <string name ="share_with_friends">与朋友分享</string>
+        <string name ="select_server_title">选择服务器</string>
+        <string name ="select_server_auto">自动</string>
+        <string name ="contact_dev_team"> <u>联系开发人员团队</u> </string>
+        <string name ="free_trial_text"> +%d天免费试用</string>
+
+    <array name ="navigationItem">
+            <item name ="navigation_notifications">使用VPN的应用</item>
+            <item name ="navigation_notifications">用户中心</item>
+            <item name ="navigation_FAQ">常见问题解答</item>
+            <item name ="navigation_feedback">反馈</item>
+            <item name ="navigation_rate_us">喜欢它</item>
+            <item name ="navigation_share">与朋友分享</item>
+            <item name ="navigation_setting">关于</item>
+        </array>
+
+        <array name ="faqTitle">
+            <item name ="faq_t1">为什么我需要VPN？</item>
+            <item name ="faq_t2">如何使用Flash VPN？</item>
+            <item name ="faq_t3">为什么Flash VPN无法连接？</item>
+            <item name ="faq_t4">Flash VPN如何保护我的数据？</item>
+            <item name ="faq_t5">如果我订购高级服务，我该如何受益？</item>
+        </array>
+
+        <array name ="faqAnswer">
+            <item name ="faq_t1"> VPN是虚拟专用网。通过使用VPN，您可以使用公共Wi-Fi
+                牢固。更重要的是，VPN可以帮助您访问被您阻止的网站
+                网络供应商。
+            </item>
+            <item name ="faq_t2">只需点击主屏幕中的连接按钮即可。 Flash VPN会自动进行
+                连接到最好的服务器并加密您的数据传输。你也可以选择
+                服务器，如果您有首选的服务器位置
+            </item>
+            <item name ="faq_t3"> 1）请检查您的互联网连接2）刷新服务器以进行检查
+                信号3）重试连接并检查其他服务器4）如果所有方法都不起作用，请
+                发送反馈电子邮件给我们。我们的工程师将及时解决问题。
+            </item>
+            <item name ="faq_t4">与市场上大多数VPN应用程序不同，Flash VPN将加密
+                所有数据自动传输。您的邮件将不能被任何其他人拦截。
+            </item>
+            <item name ="faq_t5">使用优质服务，我们会从此应用中删除所有广告。
+                与此同时，许多高级服务器仅向全球高端用户开放，我们也会这样做
+                连接时分配专用带宽。
+            </item>
+        </array>
+
+        <string name ="update_dialog_title">更新</string>
+        <string name ="update_dialog_left">忽略此版本</string>
+        <string name ="update_dialog_right">更新</string>
+
+        <string name ="title_activity_ad_test"> AdTestActivity </string>
+
+        <string name ="share_with_friends_tip">我很高兴邀请您使用这个精彩的VPN代理%s。你可以在这里下载：</string>
+        <string name ="update_dialog_content">新版本即将推出！我们在版本%s上进行了很多改进。你想现在更新FlashVPN吗？</string>
+        <string name ="reward_text_has_premium_time_watch_ad">您有%s的免费时间。观看奖励视频以获得更多信息！</string>
+        <string name ="reward_text_has_premium_time">您有%s的免费时间。单击以获得更高的代理速度！</string>
+</resources>

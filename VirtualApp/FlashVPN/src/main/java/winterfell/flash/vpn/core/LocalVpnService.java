@@ -175,8 +175,12 @@ public class LocalVpnService extends VpnService implements Runnable {
 
                 mBuilder.setContentTitle(title)
                         .setContentText("Down " + downSpeed + " Up " + upSpeed)
-                        .setSmallIcon(ProxyConfig.Instance.getCurrentVpnServer().getFlagResId())
                         .setContentIntent(pendingIntent);
+                VpnServer vpnServer = ProxyConfig.Instance.getCurrentVpnServer();
+                if (vpnServer != null) {
+                    mBuilder.setSmallIcon(ProxyConfig.Instance.getCurrentVpnServer().getFlagResId());
+                }
+
                 notification = mBuilder.build();
                 notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
                 try {
