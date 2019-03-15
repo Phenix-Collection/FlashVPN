@@ -54,8 +54,8 @@ android {
         }
         play {
             dimension "channel"
-            versionCode 2060
-            versionName "2.0.60.${releaseTime()}"
+            versionCode 2061
+            versionName "2.0.61.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
         }
     }
@@ -110,6 +110,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
     implementation 'com.facebook.android:audience-network-sdk:5.1.0'
     implementation 'com.android.support:appcompat-v7:25.4.0'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
 
     implementation 'com.ironsource.sdk:mediationsdk:6.8.1@jar'
     //Admob
