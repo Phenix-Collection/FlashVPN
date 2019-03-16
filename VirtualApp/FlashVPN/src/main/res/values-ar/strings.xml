@@ -41,7 +41,6 @@
         <string name ="settings_follow_us">تابعنا</string>
         <string name ="settings_privacy_policy">سياسة الخصوصية</string>
         <string name ="settings_terms_of_service">شروط الخدمة</string>
-        <string name ="settings_terms_text">شروط الخدمة وسياسة الخصوصية</string>
         <string name ="settings_right" translatable ="false">WinterFell Tech جميع الحقوق محفوظة </string>
         <string name ="yes">نعم</string>
         <string name ="no_thanks">لا ، شكرًا!</string>
@@ -70,7 +69,9 @@
                 <item name = "navigation_feedback"> تعليقات </item>
                 <item name = "navigation_rate_us"> يعجبك </item>
                 <item name = "navigation_share"> المشاركة مع الأصدقاء </item>
-                <item name = "navigation_setting"> حول </item>
+                <item name = "navigation_termof_service"> شروط الخدمة </item>
+                <item name = "navigation_privacy_policy"> سياسة الخصوصية </item>
+                <item name = "navigation_setting"> حول </item>
             </array>
 
         <array name = "faqTitle">

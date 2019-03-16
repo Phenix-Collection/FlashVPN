@@ -19,7 +19,7 @@ public class HomeNavigationAdapter extends BaseAdapter {
 
     private Context mContext;
     private int[] iconArray = new int[]{R.drawable.apps, R.drawable.vip_black, R.drawable.faq,R.drawable.feedback,
-            R.drawable.like,R.drawable.share,R.drawable.about};
+            R.drawable.like,R.drawable.share,R.drawable.termsofservice, R.drawable.privacypolicy,R.drawable.about};
     private String[] itemArray;
     private Resources mResources;
     public HomeNavigationAdapter(Context context){

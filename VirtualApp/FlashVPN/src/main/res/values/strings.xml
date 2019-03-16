@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Flash VPN</string>
+    <string name="app_name" translatable="false">Flash VPN</string>
     <string name="key_string" translatable="false">adccerd3indd2f</string>
     <string name="app_slogan">Fast &amp; Secure VPN </string>
     <string name="select_app">Select Apps for VPN</string>
@@ -43,7 +43,7 @@
     <string name="settings_follow_us">Follow us</string>
     <string name="settings_privacy_policy">Privacy Policy</string>
     <string name="settings_terms_of_service">Terms of Service</string>
-    <string name="settings_terms_text">Terms of Service and Privacy Policy</string>
+    <string name="settings_terms_text" translatable="false">Terms of Service and Privacy Policy</string>
     <string name="settings_right" translatable="false">WinterFell Tech All rights reserved</string>
     <string name="yes">Yes</string>
     <string name="no_thanks">No, thanks!</string>
@@ -72,6 +72,8 @@
         <item name="navigation_feedback">Feedback</item>
         <item name="navigation_rate_us">Like it</item>
         <item name="navigation_share">Share with friends</item>
+        <item name="navigation_termof_service">Terms Of Service</item>
+        <item name="navigation_privacy_policy">Privacy Policy</item>
         <item name="navigation_setting">About</item>
     </array>
 

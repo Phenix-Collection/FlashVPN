@@ -520,6 +520,12 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 CommonUtils.shareWithFriends(this);
                 break;
             case 6:
+                onTermsClick();
+                break;
+            case 7:
+                onPrivacyPolicyClick();
+                break;
+            case 8:
                 try {
                     Intent intent = new Intent(this, AboutActivity.class);
                     startActivity(intent);
@@ -529,6 +535,20 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 break;
         }
         return true;
+    }
+
+    public void onPrivacyPolicyClick() {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.settings_privacy_policy));
+        intent.putExtra(WebViewActivity.EXTRA_URL, "file:///android_asset/privacy_policy.html");
+        startActivity(intent);
+    }
+
+    public void onTermsClick() {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.settings_terms_of_service));
+        intent.putExtra(WebViewActivity.EXTRA_URL, "file:///android_asset/term_of_service.html");
+        startActivity(intent);
     }
 
     private void updateRewardLayout() {
