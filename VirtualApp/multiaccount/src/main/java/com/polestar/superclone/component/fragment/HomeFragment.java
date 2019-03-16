@@ -102,7 +102,9 @@ public class HomeFragment extends BaseFragment {
 //            return;
 //        }
         if (mActivity != null && ad != null) {
-            final AdViewBinder viewBinder = new AdViewBinder.Builder(R.layout.front_page_native_ad)
+            int layout = RemoteConfig.getBoolean("conf_new_home_adlayout") ?
+                    R.layout.new_front_page_native_ad:R.layout.front_page_native_ad;
+            final AdViewBinder viewBinder = new AdViewBinder.Builder(layout)
                     .titleId(R.id.ad_title)
                     .textId(R.id.ad_subtitle_text)
                     .mainMediaId(R.id.ad_cover_image)
@@ -159,36 +161,25 @@ public class HomeFragment extends BaseFragment {
     DragController.DragListener mDragListener = new DragController.DragListener() {
         @Override
         public void onDragStart(DragSource source, Object info, int dragAction) {
-            MLogs.d("onDragStart");
+            AppModel model = (AppModel)((HomeGridItem)info).obj;
+            MLogs.d("onDragStart " + model.getName() + " ");
             floatView.animToExpand();
             mDragController.addDropTarget(floatView);
         }
 
         @Override
         public void onDragEnd(DragSource source, Object info, int action) {
-            MLogs.d("onDragEnd + " + floatView.getSelectedState());
+            AppModel model = (AppModel)((HomeGridItem)info).obj;
+            MLogs.d("onDragEnd "+ model.getName() + " " + floatView.getSelectedState());
             int state = floatView.getSelectedState();
             floatView.animToIdel();
-            ((HomeGridItem)info).onDragDrop(state);
+            ((HomeGridItem)info).onDragDrop((View) source, state);
             mDragController.removeDropTarget(floatView);
         }
     };
 
     private class PackageGridAdapter extends BaseAdapter {
 
-        public int getPosition(AppModel appModel) {
-            int ret = 0;
-            if (appModel != null ) {
-                for (AppModel m : appInfos) {
-                    if (m.getPackageName().equals(appModel.getPackageName())
-                            && m.getPkgUserId() == appModel.getPkgUserId()) {
-                        return iconAd == null ? ret : ret + 1;
-                    }
-                    ret++;
-                }
-            }
-            return  -1;
-        }
         @Override
         public int getCount() {
             int size = gridItems.size();
@@ -395,7 +386,7 @@ public class HomeFragment extends BaseFragment {
             return false;
         }
 
-        public void onDragDrop(int state) {
+        public void onDragDrop(View dropView, int state) {
             switch (state) {
                 case CustomFloatView.SELECT_BTN_LEFT:
                     if (type == TYPE_CLONE) {
@@ -416,14 +407,15 @@ public class HomeFragment extends BaseFragment {
                     break;
                 case CustomFloatView.SELECT_BTN_RIGHT:
                     if (type == TYPE_CLONE) {
-                        pkgGridAdapter.notifyDataSetChanged();
+                       // pkgGridAdapter.notifyDataSetChanged();
+                        final View drop = inflateView == null ? null :inflateView.findViewById(R.id.app_icon);
                         floatView.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 if (!PreferencesUtils.hasShownDeleteDialog()) {
-                                    showDeleteDialog((AppModel) obj);
+                                    showDeleteDialog(drop, (AppModel) obj);
                                 } else {
-                                    deleteAppWithAnim((AppModel) obj);
+                                    deleteAppWithAnim(drop, (AppModel) obj);
                                 }
                             }
                         }, 330);
@@ -760,7 +752,7 @@ public class HomeFragment extends BaseFragment {
         }).start();
     }
 
-    private void showDeleteDialog(AppModel appModel){
+    private void showDeleteDialog(View view, AppModel appModel){
         LeftRightDialog.show(mActivity,mActivity.getResources().getString(R.string.delete_dialog_title),
                 mActivity.getResources().getString(R.string.delete_dialog_content),
                 mActivity.getResources().getString(R.string.delete_dialog_left),mActivity.getResources().getString(R.string.delete_dialog_right),
@@ -774,7 +766,7 @@ public class HomeFragment extends BaseFragment {
                                 break;
                             case LeftRightDialog.RIGHT_BUTTON:
                                 dialogInterface.dismiss();
-                                deleteAppWithAnim(appModel);
+                                deleteAppWithAnim(view, appModel);
                                 break;
                         }
                     }
@@ -782,12 +774,12 @@ public class HomeFragment extends BaseFragment {
         PreferencesUtils.setShownDeleteDialog();
     }
 
-    private void deleteAppWithAnim(AppModel appModel){
+    private void deleteAppWithAnim(View view, AppModel appModel){
         if (appModel == null) return;
         MLogs.d("deleteApp " + appModel.getPackageName());
         appModel.setUnEnable(true);
 //        pkgGridAdapter.notifyDataSetChanged();
-        View view = pkgGridView.getChildAt(pkgGridAdapter.getPosition(appModel) + pkgGridView.getGridItemStartOffset());
+//        View view = pkgGridView.getChildAt(pkgGridAdapter.getPosition(appModel) + pkgGridView.getGridItemStartOffset());
         if(view != null) {
             mExplosionField = ExplosionField.attachToWindow(mActivity);
             mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
