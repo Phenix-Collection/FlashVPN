@@ -28,8 +28,8 @@ public class DaemonService extends Service {
     private final static int ALARM_INTERVAL = 30 * 60 * 1000;
     private final static int FIRST_WAKE_DELAY = 2000;
 
-    public static boolean NEED_NOTIFICATION = true;
     public static String NOTIFICATION_CHANNEL_NAME = "Clone App Messaging";
+    public static String NOTIFICATION_CHANNEL_ID = "_id_service_";
     public static String NOTIFICATION_CHANNEL_DESCRIPTION = "Clone App Messaging & Notification";
     public static String NOTIFICATION_TITLE = "Receiving messages for clones";
     public static String NOTIFICATION_DETAIL = "Keep running in background to receive messages";
@@ -40,6 +40,14 @@ public class DaemonService extends Service {
 		}catch (Exception ex) {
 			VLog.e("DaemonService",  ex.toString());
 		}
+    }
+
+    public static void updateNotification(Context context) {
+        try {
+            context.startService(new Intent(context, InnerService.class));
+        }catch (Exception ex) {
+            VLog.e("DaemonService",  ex.toString());
+        }
     }
 
     @Override
@@ -90,8 +98,7 @@ public class DaemonService extends Service {
             //  remoteViews = new RemoteViews(this.getPackageName(), R.layout.quick_switch_notification);
             Notification notification;
             String pkg = VirtualCore.get().getHostPkg();
-            if (Build.VERSION.SDK_INT >= O && !pkg.endsWith(".arm64")
-                    && NEED_NOTIFICATION) {
+            if (Build.VERSION.SDK_INT >= O && !pkg.endsWith(".arm64")) {
                 Intent start = getPackageManager().getLaunchIntentForPackage(pkg);
                 start.addCategory(Intent.CATEGORY_LAUNCHER);
                 start.setAction(Intent.ACTION_MAIN);
@@ -100,7 +107,7 @@ public class DaemonService extends Service {
 
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                String channel_id = "_id_service_";
+                String channel_id = NOTIFICATION_CHANNEL_ID;
                 if (notificationManager.getNotificationChannel(channel_id) == null) {
                     int importance = NotificationManager.IMPORTANCE_HIGH;
                     NotificationChannel notificationChannel = new NotificationChannel(channel_id, NOTIFICATION_CHANNEL_NAME, importance);
