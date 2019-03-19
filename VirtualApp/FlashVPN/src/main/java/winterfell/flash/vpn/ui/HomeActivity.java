@@ -120,6 +120,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     private final static int STATE_ACQUIRING_PORT = 4;
     private final static int STATE_ACQUIRING_CONTROLFLOW_ERR = 5;
+    private final static int STATE_IS_RELEASING = 9;
     //private final static int STATE_ACQIRE_FAILED = 5;
     private final static int STATE_CHECKING_PORT = 6;
     private final static int STATE_CHECK_PORT_FAILED = 7;
@@ -157,6 +158,26 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         }
         updateConnectState(STATE_ACQUIRING_PORT, "", false);
 
+        if (mIsReleasing) {
+            MLogs.i("HomeActivity-- Still releasing the port, do nothing");
+            mIsReleasingCount++;
+            if (mIsReleasingCount > 50) {
+                //等待isReleasing太久了，不管了
+                EventReporter.reportReleasing();
+                mIsReleasing = false;
+                mIsReleasingCount = 0;
+            } else {
+                //自动重试
+                try {
+                    Thread.sleep(200);
+                } catch (Exception e) {
+
+                }
+                updateStateOnMainThread(STATE_ACQUIRING_CONTROLFLOW_ERR, "");
+                return;
+            }
+        }
+
         if (needToRequestNewVpnRequirement()) {
             VpnApiHelper.acquireVpnServer(AppUser.getInstance().getMyId(), vpnServer.mPublicIp,
                     vpnServer.mGeo, vpnServer.mCity, new IVpnStatusListener() {
@@ -180,7 +201,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
                         @Override
                         public void onAcquireFailed(String publicIp, ADErrorCode code) {
-                            MLogs.e("onAcquireFailed " + code.toString());
+                            MLogs.e("HomeActivity-- onAcquireFailed " + code.toString());
                             EventReporter.reportGetPortFailed(publicIp + "_" + code.getErrCode());
 
                             updateStateOnMainThread(STATE_CONNECT_FAILED, code.getErrMsg());
@@ -200,7 +221,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
                         @Override
                         public void onGeneralError(ADErrorCode code) {
-                            MLogs.e("onGeneralError " + code.toString());
+                            MLogs.e("HomeActivity-- onGeneralError " + code.toString());
                             EventReporter.reportAderror(code);
                             if (code.getErrCode() == ADErrorCode.FLOW_CONTROL_ERR_CODE) {
                                 //自动重试
@@ -219,6 +240,55 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             //已经有比较新鲜的vpnrequirement了，直接去check
             updateStateOnMainThread(STATE_CHECKING_PORT, "");
         }
+    }
+
+    private boolean mIsReleasing;
+    private int mIsReleasingCount;
+    private void releasePort(VpnServer vpnServer) {
+        if (vpnServer == null) {
+            MLogs.e("HomeActivity-- no vpnserver found");
+            EventReporter.reportNoServer();
+            return;
+        }
+
+        mIsReleasing = true;
+        mIsReleasingCount = 0;
+        VpnApiHelper.releaseVpnServer(AppUser.getInstance().getMyId(), vpnServer.mPublicIp,
+                new IVpnStatusListener() {
+                    @Override
+                    public void onAcquireSucceed(VpnRequirement requirement) {
+
+                    }
+
+                    @Override
+                    public void onAcquireFailed(String publicIp, ADErrorCode code) {
+                    }
+
+                    @Override
+                    public void onReleaseSucceed(String publicIp) {
+                        MLogs.e("HomeActivity-- onReleaseSucceed ");
+                        EventReporter.reportRleasePortSucceed(publicIp);
+                        mIsReleasing = false;
+                    }
+
+                    @Override
+                    public void onReleaseFailed(String publicIp, ADErrorCode code) {
+                        MLogs.e("HomeActivity-- onReleaseFailed " + code.toString());
+                        EventReporter.reportRleasePortFailed(publicIp + "_" + code.getErrCode());
+                        mIsReleasing = false;
+                    }
+
+                    @Override
+                    public void onGetAllServers(ServersResponse servers) {
+                    }
+
+                    @Override
+                    public void onGeneralError(ADErrorCode code) {
+                        MLogs.e("HomeActivity-- onGeneralError " + code.toString());
+                        EventReporter.reportAderror(code);
+                        mIsReleasing = false;
+                    }
+                }, true);
     }
 
     ShadowsocksPingManager proxyServer = null;
@@ -246,13 +316,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 proxyServer.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
                     @Override
                     public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
-                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingsucceeded");
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingsucceeded " + this);
                         updateStateOnMainThread(STATE_CHECK_PORT_SUCCEED, "");
                     }
 
                     @Override
                     public void onPingFailed(InetSocketAddress socketAddress) {
-                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingfailed");
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingfailed " + this);
                         updateStateOnMainThread(STATE_CHECK_PORT_FAILED, "");
                     }
                 }, RemoteConfig.getLong("config_check_port_timeout"));
@@ -419,8 +489,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     private void startVPNService() {
-        onLogReceived("starting...");
-        MLogs.d("starting vpn service...");
+        onLogReceived("HomeActivity-- starting...");
+        MLogs.d("HomeActivity-- starting vpn service...");
         connectingFailed = false;
         updateConnectState(STATE_START_CONNECTING, "", false);
         if (Build.VERSION.SDK_INT >= 26) {
@@ -434,6 +504,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     @Override
     public void onStatusChanged(String status, Boolean isRunning, float avgDownloadSpeed, float avgUploadSpeed,
                                 float maxDownloadSpeed, float maxUploadSpeed) {
+        MLogs.i("HomeActivity-- onStatusChanged " + isRunning);
         if (isRunning) {
             EventReporter.reportConnectted(this, getSIReportValue(mCurrentVpnServer));
             connectingFailed = false;
@@ -644,6 +715,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 } else {
                     EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
                     LocalVpnService.IsRunning = false;
+                    releasePort(mCurrentVpnServer);
                     updateConnectState(STATE_DISCONNECTED, "", false);
                 }
             }

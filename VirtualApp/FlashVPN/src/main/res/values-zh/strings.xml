@@ -13,7 +13,7 @@
         <string name ="notification_to_connect">点击连接</string>
         <string name ="connect">连接</string>
         <string name ="stop">停止</string>
-        <string name ="connecting">连接</string>
+        <string name ="connecting">连接中</string>
         <string name ="acquiring_port">分配资源</string>
         <string name ="checking_port">检查服务器</string>
         <string name ="reward_text_no_premium_time">点击获取高级代理和带宽！</string>

@@ -170,12 +170,24 @@ public class EventReporter {
         reportAwsEvent(ip + "get_port_failed");
     }
 
+    public static void reportRleasePortFailed(String ip) {
+        reportAwsEvent(ip + "release_port_failed");
+    }
+
+    public static void reportRleasePortSucceed(String ip) {
+        reportAwsEvent(ip + "release_port_succeeded");
+    }
+
     public static void reportCheckServerFailed(String ip) {
         reportAwsEvent(ip + "check_port_failed");
     }
 
     public static void reportAderror(ADErrorCode adErrorCode) {
         reportAwsEvent("api_error_" + adErrorCode.getErrCode());
+    }
+
+    public static void reportReleasing() {
+        reportAwsEvent("releasing");
     }
 
     public static void reportFailedToAddProxy() {
