@@ -34,6 +34,7 @@ import com.polestar.clone.helper.compat.ParceledListSliceCompat;
 import com.polestar.clone.helper.compat.PermissionCompat;
 import com.polestar.clone.helper.utils.ArrayUtils;
 import com.polestar.clone.helper.utils.EncodeUtils;
+import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.os.VUserHandle;
 import com.polestar.clone.server.IPackageInstaller;
 import com.polestar.clone.server.pm.installer.SessionInfo;
@@ -906,6 +907,33 @@ class MethodProxies {
             int uid2 = (int) args[1];
             // TODO: verify the signatures by uid.
             return PackageManager.SIGNATURE_MATCH;
+
+//            Integer v0_1;
+//            int v3 = -4;
+//            int v1 = args[0].intValue();
+//            int v0 = args[1].intValue();
+//            if(v1 == v0) {
+//                v0_1 = Integer.valueOf(0);
+//            }
+//            else {
+//                String[] v1_1 = VirtualCore.getPM().getPackagesForUid(v1);
+//                String[] v0_2 = VirtualCore.getPM().getPackagesForUid(v0);
+//                if(v1_1 != null && v1_1.length != 0) {
+//                    if(v0_2 != null && v0_2.length != 0) {
+//                        if((Arrays.asList(((Object[])v1_1)).contains("com.facebook.katana")) && (Arrays.asList(((Object[])v0_2)).contains("com.instagram.android"))) {
+//                            return Integer.valueOf(0);
+//                        }
+//
+//                        return Integer.valueOf(VPackageManager.get().checkSignatures(v1_1[0], v0_2[0]));
+//                    }
+//
+//                    return Integer.valueOf(v3);
+//                }
+//
+//                v0_1 = Integer.valueOf(v3);
+//            }
+//
+//            return v0_1;
         }
     }
 

@@ -88,7 +88,10 @@ public final class SpecialComponentList {
         IO_REDIRECT_BLACK_LIST.add("com.snapchat.android");
 
         ACTION_BLACK_LIST.add("android.appwidget.action.APPWIDGET_UPDATE");
+        ACTION_BLACK_LIST.add("android.appwidget.action.APPWIDGET_CONFIGURE");
         ACTION_BLACK_LIST.add("android.provider.Telephony.SMS_RECEIVED");
+
+//        ACTION_BLACK_LIST.add("com.facebook.GET_PHONE_ID");
 
         WHITE_PERMISSION.add("com.google.android.gms.settings.SECURITY_SETTINGS");
         WHITE_PERMISSION.add("com.google.android.apps.plus.PRIVACY_SETTINGS");
@@ -99,6 +102,7 @@ public final class SpecialComponentList {
         PROTECTED_ACTION_MAP.put(Intent.ACTION_PACKAGE_CHANGED, Constants.ACTION_PACKAGE_CHANGED);
         PROTECTED_ACTION_MAP.put("android.intent.action.USER_ADDED", Constants.ACTION_USER_ADDED);
         PROTECTED_ACTION_MAP.put("android.intent.action.USER_REMOVED", Constants.ACTION_USER_REMOVED);
+//        PROTECTED_ACTION_MAP.put("android.intent.action.MEDIA_SCANNER_SCAN_FILE", "android.intent.action.MEDIA_SCANNER_SCAN_FILE");
 
         INSTRUMENTATION_CONFLICTING.add("com.qihoo.magic");
         INSTRUMENTATION_CONFLICTING.add("com.qihoo.magic_mutiple");

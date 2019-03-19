@@ -16,12 +16,14 @@ import android.util.SparseArray;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.env.VirtualRuntime;
 import com.polestar.clone.client.stub.VASettings;
+import com.polestar.clone.helper.compat.PackageParserCompat;
 import com.polestar.clone.helper.utils.ArrayUtils;
 import com.polestar.clone.helper.utils.ClassUtils;
 import com.polestar.clone.helper.utils.ComponentUtils;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.remote.AppTaskInfo;
 import com.polestar.clone.remote.StubActivityRecord;
+import com.polestar.clone.server.pm.parser.PackageParserEx;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -284,6 +286,10 @@ import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_TOP;
         if (intent.getComponent() == null) {
             intent.setComponent(new ComponentName(info.packageName, info.name));
         }
+//        if (info.packageName.equals("com.facebook.katana")
+//                && info.name.contains("gdp.ProxyAuthDialog")) {
+//            PackageParserEx.hackCallingPackage = "com.moonactive.coinmaster";
+//        }
         if (sourceRecord != null && sourceRecord.launchMode == LAUNCH_SINGLE_INSTANCE) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }

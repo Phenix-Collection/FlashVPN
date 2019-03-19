@@ -33,6 +33,7 @@ import android.os.IInterface;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.StringBuilderPrinter;
 import android.util.TypedValue;
 
 import com.polestar.clone.client.VClientImpl;
@@ -405,6 +406,7 @@ class MethodProxies {
     static class StartActivity extends MethodProxy {
 
         private static final String SCHEME_FILE = "file";
+        private static final String SCHEME_CONTENT = "content";
         private static final String SCHEME_PACKAGE = "package";
         private static final String TAG = "StartActivity";
         @Override
@@ -451,6 +453,17 @@ class MethodProxies {
                         return method.invoke(who,args);
                     }
                 }
+//            }
+//            if ("NATIVE_WITH_FALLBACK".equals(intent.getAction())) {
+//                if (intent != null) {
+//                    Bundle bundle = intent.getBundleExtra("com.facebook.LoginFragment:Request");
+//                    if (bundle != null) {
+//                        Object request = bundle.getParcelable("request");
+//                        String applicationId = Reflect.on(request).call("getApplicationId").get();
+//                        String authId = Reflect.on(request).call("getAuthId").get();
+//                        VLog.d("JJJJ", "ApplicationID: " + applicationId + " authId: " + authId);
+//                    }
+//                }
 //            }
             if (intent.getComponent() != null) {
                     String name = intent.getComponent().getClassName();

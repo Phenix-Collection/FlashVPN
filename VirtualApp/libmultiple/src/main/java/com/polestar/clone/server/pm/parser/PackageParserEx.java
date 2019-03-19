@@ -16,6 +16,7 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Parcel;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.clone.client.core.VirtualCore;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,6 +54,7 @@ public class PackageParserEx {
     private static final String TAG = PackageParserEx.class.getSimpleName();
 
     private static final ArrayMap<String, String[]> sSharedLibCache = new ArrayMap<>();
+//    public static String hackCallingPackage = null;
 
     public static VPackage parsePackage(File packageFile) throws Throwable {
         PackageParser parser = PackageParserCompat.createParser(packageFile);
@@ -312,6 +315,19 @@ public class PackageParserEx {
         if (p.mSignatures == null) {
             readSignature(p);
         }
+//        if (p.mSignatures != null) {
+//            for (Signature a:p.mSignatures) {
+//                VLog.d(TAG, p.packageName + ": " + a.toCharsString());
+//                try {
+//                    MessageDigest md = MessageDigest.getInstance("SHA");
+//                    md.update(a.toByteArray());
+//                    VLog.d(TAG, "KeyHash:"+ Base64.encodeToString(md.digest(), Base64.DEFAULT));
+//                }catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//
+//            }
+//        }
         PackageInfo pi = new PackageInfo();
         pi.packageName = p.packageName;
         pi.versionCode = p.mVersionCode;
