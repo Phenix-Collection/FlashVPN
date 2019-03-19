@@ -3,6 +3,7 @@ package com.polestar.superclone.component.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -60,25 +61,8 @@ public class FeedbackActivity extends BaseActivity {
         mGoFAQ = (TextView) findViewById(R.id.tv_go_faq);
         mBtSubmit.setEnabled(false);
 
-        SpannableString spanText=new SpannableString(getString(R.string.feedback_go_faq));
-        spanText.setSpan(new ClickableSpan() {
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setColor(Color.BLUE);       //设置文件颜色
-                ds.setUnderlineText(true);      //设置下划线
-            }
-
-            @Override
-            public void onClick(View view) {
-                Intent intentToFAQ = new Intent(FeedbackActivity.this, FaqActivity.class);
-                startActivity(intentToFAQ);
-            }
-        }, spanText.length() - 4, spanText.length()-1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mGoFAQ.setText(spanText);
-        mGoFAQ.setHighlightColor(Color.TRANSPARENT);
-        mGoFAQ.setMovementMethod(LinkMovementMethod.getInstance());
+        mGoFAQ.setText(getString(R.string.feedback_go_faq));
+        mGoFAQ.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG );
 
         mEtFeedback.addTextChangedListener(new TextWatcher() {
             @Override

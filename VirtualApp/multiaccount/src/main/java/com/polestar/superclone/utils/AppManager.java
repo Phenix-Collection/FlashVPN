@@ -25,6 +25,7 @@ import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.model.PackageConfig;
+import com.polestar.superclone.notification.FastSwitch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,6 +88,9 @@ public class AppManager {
         List<AppModel> list = new ArrayList<>();
         list.add(model);
         deleteApp(context, list);
+        if (FastSwitch.isEnable()) {
+            FastSwitch.getInstance(context).removeLruPackages(AppManager.getMapKey(model.getPackageName(), model.getPkgUserId()));
+        }
     }
 
     public static boolean needUpgrade(String packageName) {
@@ -160,17 +164,6 @@ public class AppManager {
 
     public static boolean isAppInstalled(String packageName, int userId) {
         return VirtualCore.get().isAppInstalledAsUser(userId, packageName);
-    }
-
-    @Deprecated
-    public static boolean installApp(Context context, AppModel appModel) {
-        MLogs.d(TAG, "apkPath = " + appModel.getApkPath());
-        InstallResult result = VirtualCore.get().installPackage(appModel.getPackageName(), appModel.getApkPath(),
-                InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
-        if (result.isSuccess && PreferencesUtils.getBoolean(context, AppConstants.KEY_AUTO_CREATE_SHORTCUT, false)) {
-            CommonUtils.createShortCut(context, appModel);
-        }
-        return result.isSuccess;
     }
 
     public static boolean installApp(Context context, AppModel appModel, int userId) {

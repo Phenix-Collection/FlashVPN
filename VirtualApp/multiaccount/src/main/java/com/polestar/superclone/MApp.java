@@ -20,6 +20,7 @@ import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.InstallStrategy;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.env.SpecialComponentList;
+import com.polestar.clone.client.stub.DaemonService;
 import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.remote.InstallResult;
 import com.polestar.clone.helper.utils.VLog;
@@ -33,6 +34,7 @@ import com.polestar.superclone.component.MComponentDelegate;
 import com.polestar.superclone.component.activity.AppStartActivity;
 import com.polestar.superclone.component.receiver.PackageChangeReceiver;
 import com.polestar.superclone.constant.AppConstants;
+import com.polestar.superclone.notification.FastSwitch;
 import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.utils.CommonUtils;
 import com.polestar.superclone.utils.MLogs;
@@ -189,6 +191,9 @@ public class MApp extends MultiDexApplication {
                     }
                 }
                 initReceiver();
+                if (FastSwitch.isEnable()) {
+                    FastSwitch.getInstance(gDefault).init();
+                }
             }
 
             @Override
@@ -235,22 +240,10 @@ public class MApp extends MultiDexApplication {
                 });
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
-                MLogs.d("Server process app onCreate 0");
                 SuperConfig.get();
                 MComponentDelegate delegate = new MComponentDelegate();
                 delegate.asyncInit();
-                MLogs.d("Server process app onCreate 1");
                 VirtualCore.get().setComponentDelegate(delegate);
-                MLogs.d("Server process app onCreate 2");
-//                virtualCore.addVisibleOutsidePackage("com.tencent.mobileqq");
-//                virtualCore.addVisibleOutsidePackage("com.tencent.mobileqqi");
-//                virtualCore.addVisibleOutsidePackage("com.tencent.minihd.qq");
-//                virtualCore.addVisibleOutsidePackage("com.tencent.qqlite");
-//                virtualCore.addVisibleOutsidePackage("com.facebook.katana");
-//                virtualCore.addVisibleOutsidePackage("com.whatsapp");
-//                virtualCore.addVisibleOutsidePackage("com.tencent.mm");
-//                virtualCore.addVisibleOutsidePackage("com.immomo.momo");
-                MLogs.d("Server process app onCreate done");
                 initAd();
             }
         });

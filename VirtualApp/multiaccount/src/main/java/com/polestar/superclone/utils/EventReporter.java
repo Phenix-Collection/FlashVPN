@@ -35,6 +35,7 @@ public class EventReporter {
     public static final String PROP_REFERRED = "referred";
     public static final String PROP_REWARDED = "rewarded";
     public static final String REWARD_OPEN = "open";
+    public static final String PROP_FAST_SWITCH = "fast_switch";
     public static final String REWARD_ACTIVE = "active";
 
     public static void init(Context context) {

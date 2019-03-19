@@ -10,6 +10,7 @@ import com.polestar.superclone.MApp;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
 import com.polestar.superclone.model.AppModel;
+import com.polestar.superclone.notification.FastSwitch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,10 @@ public class CloneHelper {
             }
             DbManager.insertAppModel(context, appModel);
             AppManager.incPackageIndex(appModel.getPackageName());
+            if (mClonedApps.size() < FastSwitch.LRU_PACKAGE_CNT
+                    && FastSwitch.isEnable()) {
+                FastSwitch.getInstance(context).updateLruPackages(AppManager.getMapKey(appModel.getPackageName(), appModel.getPkgUserId()));
+            }
             synchronized (mClonedApps) {
                 mClonedApps.add(appModel);
             }
@@ -213,5 +218,10 @@ public class CloneHelper {
             }
         }
         return DbManager.queryAppModelByPackageName(MApp.getApp(), packageName, userId);
+    }
+
+
+    public int getCloneNumber() {
+        return mClonedApps == null? 0: mClonedApps.size();
     }
 }

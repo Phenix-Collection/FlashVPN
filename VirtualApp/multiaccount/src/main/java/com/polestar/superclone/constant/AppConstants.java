@@ -20,6 +20,7 @@ public class AppConstants {
     public static final String EXTRA_IS_INSTALL_SUCCESS = "is install success";
     public static final String VALUE_FROM_SHORTCUT = "From shortcut";
     public static final String VALUE_FROM_HOME = "From home";
+    public static final String VALUE_FROM_NOFITIFCATION = "Notification";
     public static final String EXTRA_CLONED_APP_USERID = "app_userid";
 
     public static final int APP_ICON_WIDTH = 50;//dp

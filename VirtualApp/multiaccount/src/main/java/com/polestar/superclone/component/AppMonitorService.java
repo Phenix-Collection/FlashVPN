@@ -18,6 +18,7 @@ import com.polestar.superclone.component.activity.AppLockActivity;
 import com.polestar.superclone.component.activity.WrapCoverAdActivity;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
+import com.polestar.superclone.notification.FastSwitch;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.CloneHelper;
 import com.polestar.superclone.utils.CommonUtils;
@@ -60,6 +61,7 @@ public class AppMonitorService extends Service {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case MSG_DELAY_LOCK_APP:
+                    String mapKey = (String)msg.obj;
                     //QuickSwitchNotification.getInstance(VirtualCore.get().getContext()).updateLruPackages((String)msg.obj);
                     lastUnlockKey = null;
                     MLogs.d("relock lastUnlockKey " + lastUnlockKey);
@@ -246,6 +248,7 @@ public class AppMonitorService extends Service {
             MLogs.d(TAG, "onActivityPause " + pkg + " delay relock: " + relockDelay);
             mainHandler.sendMessageDelayed(mainHandler.obtainMessage(MSG_DELAY_LOCK_APP, key),
                     relockDelay);
+            FastSwitch.getInstance(VirtualCore.get().getContext()).updateLruPackages(AppManager.getMapKey(pkg, userId));
         }
 
         public void onAppLock(String pkg, int userId){

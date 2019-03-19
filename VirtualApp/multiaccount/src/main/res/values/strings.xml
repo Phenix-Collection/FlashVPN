@@ -47,7 +47,7 @@
     <string name="dialog_rating_us_content">Enjoy using Super Clone app?</string>
     <string name="dialog_feedback_content">Would you kindly give us some feedback to help improve it?</string>
     <string name="not_really">Not Really</string>
-    <string name="no_thanks">No, thanks</string>
+    <string name="no_thanks">Not now, thanks</string>
     <string name="dialog_love_title">Love Super Clone</string>
     <string name="dialog_permission_title">Grant Permission</string>
     <string name="dialog_permission_content">Please allow permission request from Super Clone, otherwise some cloned apps and Google Play Service will not work properly.</string>
@@ -235,4 +235,9 @@
     <string name="cash_rewards">Cash Rewards</string>
     <string name="earn_coin_remove_ads">Earn coins and select product to remove ads</string>
     <string name="toast_no_lucky_award">Aha, no luck this time, please try tomorrow.</string>
+
+    <string name="settings_fastswitch_title">Fast Switch</string>
+    <string name="settings_fastswitch_description">Fast switch between multiple accounts in notification bar.</string>
+    <string name="fast_switch_dialog_content">Enable Fast Switch now? It can help you quickly switch between your recent accounts in notification bar.</string>
+
 </resources>

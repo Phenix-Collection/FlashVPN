@@ -37,6 +37,7 @@ import com.polestar.superclone.component.adapter.NavigationAdapter;
 import com.polestar.superclone.component.fragment.HomeFragment;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.model.AppModel;
+import com.polestar.superclone.notification.FastSwitch;
 import com.polestar.superclone.reward.AppUser;
 import com.polestar.superclone.reward.InviteActivity;
 import com.polestar.superclone.reward.RewardCenterFragment;
@@ -481,6 +482,9 @@ public class HomeActivity extends BaseActivity {
             return;
         }
         boolean needShowRate = guideRateIfNeeded();
+        if (!needShowRate) {
+            guideQuickSwitchIfNeeded();
+        }
         boolean showAdFree = false;
         if (!showAdFree && !isAutoInterstitialShown && autoShowInterstitial) {
             if (interstitialAd != null && !PreferencesUtils.isAdFree()) {
@@ -709,6 +713,72 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected boolean useCustomTitleBar() {
         return false;
+    }
+
+
+    private static final String CONFIG_QUICK_SWITCH_INTERVAL = "guide_quick_switch_interval_s";
+    private static final String CONFIG_QUICK_SWITCH_TIMES = "guide_quick_switch_times";
+    private boolean guideQuickSwitchIfNeeded() {
+        if (FastSwitch.isEnable()) {
+            MLogs.d("Already enabled quick switch");
+            return false;
+        }
+        if (CloneHelper.getInstance(this).getCloneNumber() < RemoteConfig.getLong("guide_quick_clone_threshold")) {
+            return false;
+        }
+        long allowCnt = RemoteConfig.getLong(CONFIG_QUICK_SWITCH_TIMES);
+        int times = PreferencesUtils.getGuideQuickSwitchTimes();
+        if (times >= allowCnt) {
+            MLogs.d("Guide quick switch hit cnt");
+            return false;
+        }
+        if( System.currentTimeMillis() - PreferencesUtils.getLastGuideQuickSwitchTime()
+                < times*1000*RemoteConfig.getLong(CONFIG_QUICK_SWITCH_INTERVAL)) {
+            MLogs.d("not guide quick switch too frequent");
+            return false;
+        } else {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PreferencesUtils.updateLastGuideQuickSwitchTime();
+                    PreferencesUtils.incGuideQuickSwitchTimes();
+                    showQuickSwitchDialog( );
+                }
+            }, 800);
+
+        }
+        return true;
+    }
+
+    private void showQuickSwitchDialog() {
+        EventReporter.generalEvent("quick_switch_dialog_show");
+        MLogs.d("showQuickSwitchDialog");
+        UpDownDialog.show(this, this.getResources().getString(R.string.settings_fastswitch_title),
+                this.getResources().getString(R.string.fast_switch_dialog_content),
+                this.getResources().getString(R.string.no_thanks), this.getResources().getString(R.string.ok),
+                R.drawable.dialog_tag_congratulations, R.layout.dialog_up_down,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                EventReporter.generalEvent("quick_switch_dialog_cancel");
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                dialogInterface.dismiss();
+                                FastSwitch.enable();
+                                EventReporter.generalEvent("quick_switch_dialog_go");
+                                break;
+                        }
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
     }
 
 

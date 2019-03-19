@@ -221,4 +221,9 @@
 
     <string name = "enable_fingerprint_title">使用指纹</string>
     <string name = "enable_fingerprint_content">使用指纹解锁。使用的指纹为系统设置中所录入。</string>
+
+    <string name="settings_fastswitch_title">快速切换</string>
+    <string name="settings_fastswitch_description">从通知栏快速切换到应用分身</string>
+    <string name="fast_switch_dialog_content">开启快速切换？它能帮您通过通知栏快速切换到最近使用的多开应用</string>
+
 </resources>

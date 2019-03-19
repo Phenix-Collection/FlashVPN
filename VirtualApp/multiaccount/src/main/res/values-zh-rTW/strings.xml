@@ -403,4 +403,8 @@
 
     <string name ="enable_fingerprint_title">使用指紋</string>
     <string name ="enable_fingerprint_content">使用指紋解鎖。使用的指紋為系統設置中所錄入。</string>
+
+    <string name="settings_fastswitch_title">快速切換</string>
+    <string name="settings_fastswitch_description">從通知欄快速切換到應用分身</string>
+    <string name="fast_switch_dialog_content">開啟快速切換？它能幫您通過通知欄快速切換到最近使用的多開應用</string>
 </resources>

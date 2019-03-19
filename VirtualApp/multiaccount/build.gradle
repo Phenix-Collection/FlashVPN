@@ -195,7 +195,7 @@ dependencies {
             def requested = details.requested
             if (requested.group == 'com.android.support') {
                 if (!requested.name.startsWith("multidex")) {
-                    details.useVersion '25.4.0'
+                    details.useVersion '26.1.0'
                 }
             }
         }

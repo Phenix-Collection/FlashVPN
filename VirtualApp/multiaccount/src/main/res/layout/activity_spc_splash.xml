@@ -27,11 +27,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:layout_centerHorizontal="true"
         android:text="@string/powered_by_applab"
         android:textColor="@color/white"
-        android:textSize="12sp"
+        android:textSize="14sp"
         />
 
     <TextView

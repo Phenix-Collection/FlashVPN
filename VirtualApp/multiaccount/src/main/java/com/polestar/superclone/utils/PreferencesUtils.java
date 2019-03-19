@@ -466,4 +466,20 @@ public class PreferencesUtils {
     public static boolean isFingerprintEnable() {
         return getBoolean(MApp.getApp(), "use_fingerprint", true);
     }
+
+    public static long getLastGuideQuickSwitchTime() {
+        return getLong(MApp.getApp(), "guide_fast_switch_last", 0);
+    }
+
+    public static void updateLastGuideQuickSwitchTime() {
+        putLong(MApp.getApp(), "guide_fast_switch_last", System.currentTimeMillis());
+    }
+
+    public static void incGuideQuickSwitchTimes() {
+        putInt(MApp.getApp(), "guide_fast_switch_cnt", 1 + getGuideQuickSwitchTimes());
+    }
+
+    public static int getGuideQuickSwitchTimes( ) {
+        return getInt(MApp.getApp(), "guide_fast_switch_cnt", 0);
+    }
 }

@@ -14,6 +14,7 @@ import com.polestar.billing.BillingProvider;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.constant.AppConstants;
+import com.polestar.superclone.notification.FastSwitch;
 import com.polestar.superclone.reward.VIPActivity;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
@@ -26,6 +27,7 @@ import com.polestar.superclone.widgets.UpDownDialog;
  */
 public class SettingsActivity extends BaseActivity {
     private BlueSwitch shortCutSwich;
+    private BlueSwitch fastSwitch;
     private BlueSwitch gmsSwitch;
     private View vipItem;
 
@@ -41,6 +43,19 @@ public class SettingsActivity extends BaseActivity {
     private void initView() {
         setTitle(getString(R.string.settings));
 
+        fastSwitch = (BlueSwitch)  findViewById(R.id.fastswitch_switch);
+        fastSwitch.setChecked(FastSwitch.isEnable());
+        fastSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (FastSwitch.isEnable()) {
+                    FastSwitch.disable();
+                }else {
+                    FastSwitch.enable();
+                };
+                fastSwitch.setChecked(FastSwitch.isEnable());
+            }
+        });
         shortCutSwich = (BlueSwitch) findViewById(R.id.shortcut_swichbtn);
         shortCutSwich.setChecked(PreferencesUtils.getBoolean(this, AppConstants.KEY_AUTO_CREATE_SHORTCUT,false));
         shortCutSwich.setOnClickListener(new View.OnClickListener() {

@@ -290,4 +290,17 @@
         <key>conf_new_home_adlayout</key>
         <value>true</value>
     </entry>
+
+    <entry>
+        <key>guide_quick_switch_interval_s</key>
+        <value>129600</value>
+    </entry>
+    <entry>
+        <key>guide_quick_switch_times</key>
+        <value>5</value>
+    </entry>
+    <entry>
+        <key>guide_quick_clone_threshold</key>
+        <value>2</value>
+    </entry>
 </defaultsMap>
