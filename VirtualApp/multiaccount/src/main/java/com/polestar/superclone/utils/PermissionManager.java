@@ -73,18 +73,25 @@ public class PermissionManager {
         EventReporter.generalEvent("show_permission_guide");
         PreferencesUtils.setShownPermissionGuide(true);
         UpDownDialog.show(mActivity, mActivity.getString(R.string.dialog_permission_title),
-                mActivity.getString(R.string.dialog_permission_content), null, mActivity.getString(R.string.ok),
+                mActivity.getString(R.string.dialog_permission_content), mActivity.getString(R.string.cancel), mActivity.getString(R.string.ok),
                 R.drawable.dialog_tag_comment, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        EventReporter.generalEvent("ok_permission_guide");
-                        mActivity.requestPermissions(perms, mRequestCode);
-                    }
+                        switch (which){
+                            case UpDownDialog.NEGATIVE_BUTTON:
+                                EventReporter.generalEvent("deny_permission_guide");
+                                break;
+                            case UpDownDialog.POSITIVE_BUTTON:
+                                EventReporter.generalEvent("ok_permission_guide");
+                                mActivity.requestPermissions(perms, mRequestCode);
+                                break;
+                        }
+                                            }
                 }).setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 EventReporter.generalEvent("cancel_permission_guide");
-                mActivity.requestPermissions(perms, mRequestCode);
+//                mActivity.requestPermissions(perms, mRequestCode);
             }
         });
     }

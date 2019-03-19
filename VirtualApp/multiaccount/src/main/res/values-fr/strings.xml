@@ -25,7 +25,7 @@
     <string name="text_Q7_title">Q7: Pourquoi le raccourci ne peut pas être créé ou la caméra, l\'emplacement ne fonctionne-t-il pas?</string>
     <string name="text_Q7_content">A7: Vérifiez si vous avez accordé ces autorisations à Superb Cloner dans votre configuration système.</string>
     <string name="text_Q6_title">Q6: Pourquoi le casier de confidentialité ne s\'affiche pas lors du lancement de l\'application?</string>
-    <string name="text_Q6_content">A6: vérifiez si vous avez activé le casier pour cette application et autorisez Superb Cloner à afficher la fenêtre flottante. Par exemple, sur le périphérique Xiaomi, Paramètres-> Gestion des applications-> Superb Cloner-> Contrôle des autorisations-> Fenêtre flottante.</string>
+    <string name="text_Q6_content">A6: vérifiez si vous avez activé le casier pour cette application et autorisez Superb Cloner à afficher la fenêtre flottante. Par exemple, sur le périphérique Xiaomi, Paramètres->Gestion des applications->Superb Cloner->Contrôle des autorisations->Fenêtre flottante.</string>
     <string name="text_Q5_title">Q5: Comment la fonction privée de Superb Cloner fonctionne-t-elle protégeant ma vie privée?</string>
     <string name="text_Q5_content">A5: un mot de passe est nécessaire pour accéder aux applications privées chaque fois que vous réveillez votre appareil. En outre, toutes les applications privées sont installées sur Superb Cloner et, par conséquent, toutes les données des applications privées ne sont accessibles par aucun programme externe.</string>
     <string name="text_Q4_title">Q4: Pourquoi Superb Cloner a-t-il utilisé autant d\'espace de stockage?</string>
@@ -121,8 +121,6 @@
     <string name="about">Sur</string>
     <string name="content_popular">Cloné à chaud</string>
     <string name="content_recommend">Choix de l\'éditeur</string>
-    <string name="dialog_permission_title">Donner la permission</string>
-    <string name="dialog_permission_content">Veuillez autoriser la demande d\'autorisation de Superb Cloner, sinon certaines applications clonées et le service Google Play ne fonctionneront pas correctement.</string>
     <string name="toast_arm64_package">Bibliothèque 64 bits détectée dans ce clone. Veuillez installer la bibliothèque de support 64 bits si une erreur survient.</string>
     <string name="start_with_arm64">À partir de la bibliothèque de support Superb Cloner 64bit ...</string>
     <string name="install">Installer</string>
@@ -155,4 +153,12 @@
 
     <string name = "enable_fingerprint_title">Utiliser l\'empreinte digitale</string>
     <string name = "enable_fingerprint_content">Utilisez une empreinte digitale pour déverrouiller. Les empreintes digitales sont identiques à celles que vous avez inscrites dans les paramètres système.</string>
+
+    <string name = "settings_fastswitch_title">Commutation rapide</string>
+         <string name = "settings_fastswitch_description">Basculement rapide entre plusieurs comptes dans la barre de notification.</string>
+         <string name = "fast_switch_dialog_content">Activer le changement rapide maintenant? Cela peut vous aider à basculer rapidement entre vos comptes récents dans la barre de notification.</string>
+
+         <string name = "dialog_permission_title">Permission &amp; Données</string>
+         <string name = "dialog_permission_content">Super Clone appliquera des autorisations au nom des applications clonées. Veuillez vérifier et accorder des autorisations pour les faire fonctionner correctement. Nous ne collecterons aucune donnée de confidentialité ni ne transmettrons aucune information personnelle à des tiers.</string>
+
 </resources>

@@ -132,7 +132,7 @@
     <string name="clone_success">%s พร้อมแล้ว สนุกกับมันในขณะนี้!</string>
     <string name="settings_adfree_title">ลบโฆษณา</string>
     <string name="settings_adfree_content">ปิดโฆษณาในแอป</string>
-    <string name="text_Q6_content">A6: โปรดตรวจสอบว่าคุณได้เปิดใช้งานตู้เก็บของแอปพลิเคชันนี้และอนุญาตให้ Superb Cloner แสดงหน้าต่างลอยหรือไม่ ตัวอย่างเช่นในอุปกรณ์ Xiaomi, Settings-> App Management-> Superb Cloner-> Permission Control-> Floating Window</string>
+    <string name="text_Q6_content">A6: โปรดตรวจสอบว่าคุณได้เปิดใช้งานตู้เก็บของแอปพลิเคชันนี้และอนุญาตให้ Superb Cloner แสดงหน้าต่างลอยหรือไม่ ตัวอย่างเช่นในอุปกรณ์ Xiaomi, Settings->App Management->Superb Cloner->Permission Control->Floating Window</string>
     <string name="text_Q6_title">Q6: ทำไมตู้เก็บข้อมูลส่วนบุคคลไม่ปรากฏขึ้นเมื่อแอปเปิดตัว?</string>
     <string name="text_Q7_content">A7: โปรดตรวจสอบว่าคุณได้รับสิทธิ์เหล่านี้กับ Superb Cloner ในการตั้งค่าระบบของคุณหรือไม่</string>
     <string name="text_Q7_title">Q7: เหตุใดจึงไม่สามารถสร้างทางลัดหรือกล้องถ่ายรูปได้ตำแหน่งไม่ทำงาน</string>
@@ -150,8 +150,6 @@
     <string name="check_update"><u>ตรวจสอบการอัปเดต</u></string>
     <string name="saturation">ความอิ่มตัว</string>
     <string name="about">เกี่ยวกับ</string>
-    <string name="dialog_permission_title">ให้สิทธิ์</string>
-    <string name="dialog_permission_content">โปรดอนุญาตให้มีการขออนุญาตจาก Superb Cloner มิฉะนั้นแอปพลิเคชันโคลนและบริการ Google Play บางอย่างจะทำงานได้ไม่ถูกต้อง</string>
     <string name="toast_arm64_package">ตรวจพบไลบรารี 64 บิตในโคลนนี้ โปรดติดตั้งไลบรารีการสนับสนุน 64 บิตหากเกิดข้อผิดพลาด</string>
     <string name="clone_error">ขออภัยเกิดข้อผิดพลาดบางอย่างในระหว่างการโคลน โปรดรีสตาร์ท Superb Cloner แล้วลองอีกครั้ง</string>
     <string name="start_with_arm64">เริ่มต้นด้วยห้องสมุดสนับสนุน Superb Cloner 64 บิต ...</string>
@@ -161,7 +159,7 @@
 
         <string name = "finish_task_get_reward">เสร็จงานเพื่อเก็บเหรียญทันที!</string>
         <string name = "error_unexpected">โปรดลองอีกครั้งในภายหลัง</string>
-        <string name = "error_ad_no_fill"> ิดีโอยังไม่พร้อม โปรดตรวจสอบเครือข่ายแล้วลองอีกครั้งในภายหลัง</string>
+        <string name = "error_ad_no_fill">ิดีโอยังไม่พร้อม โปรดตรวจสอบเครือข่ายแล้วลองอีกครั้งในภายหลัง</string>
         <string name = "error_day_limit">งานเสร็จแล้ววันนี้ โปรดลองในวันพรุ่งนี้</string>
         <string name = "task_ok">งานเสร็จแล้ว!</string>
         <string name = "task_ok_with_coin">ได้รับ %.0f เหรียญ!</string>
@@ -198,4 +196,11 @@
 
     <string name = "enable_fingerprint_title">ใช้ลายนิ้วมือ</string>
     <string name = "enable_fingerprint_content">ใช้ลายนิ้วมือเพื่อปลดล็อก ลายนิ้วมือเหมือนกันกับสิ่งที่คุณลงทะเบียนในการตั้งค่าระบบ</string>
+
+    <string name = "settings_fastswitch_title">เปลี่ยนอย่างรวดเร็ว</string>
+         <string name = "settings_fastswitch_description">สลับระหว่างบัญชีหลายบัญชีอย่างรวดเร็วในแถบการแจ้งเตือน</string>
+         <string name = "fast_switch_dialog_content">ปิดใช้งานสวิตช์เร็วหรือไม่ มันสามารถช่วยให้คุณสลับระหว่างบัญชีล่าสุดของคุณในแถบการแจ้งเตือนได้อย่างรวดเร็ว</string>
+
+         <string name = "dialog_permission_title">การอนุญาต &amp; ข้อมูล</string>
+         <string name = "dialog_permission_content">Super Clone จะใช้การอนุญาตในนามของแอปพลิเคชันที่ถูกโคลน โปรดตรวจสอบและให้สิทธิ์เพื่อให้ทำงานได้อย่างถูกต้อง เราจะไม่รวบรวมข้อมูลความเป็นส่วนตัวหรือส่งต่อข้อมูลส่วนตัวใด ๆ ไปยังผู้อื่น</string>
 </resources>

@@ -128,7 +128,7 @@
     <string name="clone_success">%s siap. Nikmati sekarang juga!</string>
     <string name="settings_adfree_title">Hilangkan iklan</string>
     <string name="settings_adfree_content">Matikan Iklan di aplikasi</string>
-    <string name="text_Q6_content">A6: Harap periksa apakah Anda mengaktifkan loker untuk aplikasi ini dan memberikan izin kepada Superb Cloner untuk menampilkan jendela apung. Misalnya, pada perangkat Xiaomi, Settings-> App Management-> Superb Cloner-> Permission Control-> Floating Window.</string>
+    <string name="text_Q6_content">A6: Harap periksa apakah Anda mengaktifkan loker untuk aplikasi ini dan memberikan izin kepada Superb Cloner untuk menampilkan jendela apung. Misalnya, pada perangkat Xiaomi, Settings->App Management->Superb Cloner->Permission Control->Floating Window.</string>
     <string name="text_Q6_title">Q6: Mengapa loker privasi tidak muncul saat peluncuran aplikasi?</string>
     <string name="text_Q7_content">A7: Mohon periksa apakah Anda memberikan izin ini ke Superb Cloner di setelan sistem Anda.</string>
     <string name="text_Q7_title">Q7: Mengapa jalan pintas tidak bisa dibuat atau kamera, lokasi tidak berfungsi?</string>
@@ -151,8 +151,6 @@
     <string name="saturation">Kejenuhan</string>
     <string name="about">Tentang</string>
     <string name="content_recommend">Pilihan Editor</string>
-    <string name="dialog_permission_title">Memberikan ijin</string>
-    <string name="dialog_permission_content">Izinkan permintaan izin dari Superb Cloner, jika tidak, beberapa aplikasi kloning dan Layanan Google Play tidak akan berfungsi dengan baik.</string>
     <string name="toast_arm64_package">Perpustakaan 64bit yang terdeteksi di klon ini. Silakan instal pustaka dukungan 64bit jika terjadi kesalahan.</string>
     <string name="clone_error">Maaf, beberapa kesalahan terjadi selama klon. Silakan mulai ulang Superb Cloner dan coba lagi.</string>
     <string name="start_with_arm64">Dimulai dengan perpustakaan dukungan Superb Cloner 64bit ...</string>
@@ -200,4 +198,11 @@
 
     <string name = "enable_fingerprint_title">Gunakan Sidik Jari</string>
     <string name = "enable_fingerprint_content">Gunakan sidik jari untuk membuka kunci. Sidik jari sama dengan apa yang Anda daftarkan dalam pengaturan sistem.</string>
+
+    <string name = "settings_fastswitch_title">Pengalihan Cepat</string>
+         <string name = "settings_fastswitch_description">Beralih cepat antara beberapa akun di bilah notifikasi.</string>
+         <string name = "fast_switch_dialog_content">Aktifkan Fast Switch sekarang? Ini dapat membantu Anda dengan cepat beralih di antara akun baru-baru ini di bilah notifikasi.</string>
+
+         <string name = "dialog_permission_title">Izin &amp; Data</string>
+         <string name = "dialog_permission_content">Super Clone akan menerapkan izin atas nama aplikasi yang dikloning. Silakan periksa dan berikan izin untuk membuatnya berfungsi dengan baik. Kami tidak akan mengumpulkan data privasi apa pun atau memberikan informasi pribadi apa pun kepada orang lain.</string>
 </resources>

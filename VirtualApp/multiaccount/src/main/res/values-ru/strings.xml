@@ -45,8 +45,6 @@
         <string name = "not_really">Not Really</string>
         <string name = "no_thanks">Нет, спасибо</string>
         <string name = "dialog_love_title">Love Superb Cloner</string>
-        <string name = "dialog_permission_title">Предоставить разрешение</string>
-        <string name = "dialog_permission_content">Пожалуйста, разрешите запрос разрешения от Superb Cloner, в противном случае некоторые клонированные приложения и служба Google Play будут работать неправильно.</string>
         <string name = "dialog_love_content">Не могли бы вы дать нам 5-звездочный рейтинг в Play Store? Это вдохновит нас, и мы ценим вашу поддержку!</string>
         <string name = "remind_me_later">Напомнить мне позже</string>
         <string name = "star_rating">Пройдите 5-звездочный рейтинг сейчас</string>
@@ -249,6 +247,13 @@
         <string name = "price_change_hint">Покупайте товары сейчас за свои монеты. Цена может меняться в зависимости от экономики приложения.</string>
         <string name = "cash_rewards">денежные вознаграждения</string>
         <string name = "earn_coin_remove_ads">Зарабатывайте монеты и выберите продукт, чтобы удалить рекламу</string>
-    <string name = "enable_fingerprint_title">Использовать отпечаток пальца </string>
+    <string name = "enable_fingerprint_title">Использовать отпечаток пальца</string>
     <string name = "enable_fingerprint_content">Используйте отпечаток пальца для разблокировки. Отпечатки пальцев совпадают с тем, что вы зарегистрировали в настройках системы.</string>
+
+    <string name = "settings_fastswitch_title">Быстрое переключение</string>
+         <string name = "settings_fastswitch_description">Быстрое переключение между несколькими учетными записями в панели уведомлений.</string>
+         <string name = "fast_switch_dialog_content">Включить быстрое переключение сейчас? Это может помочь вам быстро переключаться между недавними учетными записями в панели уведомлений.</string>
+
+         <string name = "dialog_permission_title">Разрешение &amp; Данные</string>
+         <string name = "dialog_permission_content">Super Clone будет применять разрешения от имени клонированных приложений. Пожалуйста, проверьте и предоставьте разрешения, чтобы заставить их работать должным образом. Мы не будем собирать какие-либо конфиденциальные данные или передавать какую-либо личную информацию другим. </string>
 </resources>

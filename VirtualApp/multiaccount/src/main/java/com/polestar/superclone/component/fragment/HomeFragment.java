@@ -822,7 +822,6 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void run() {
                 floatView.startRote();
-                MLogs.d("go for bounce");
                 if (mLastClone == null) {
                     return;
                 }
@@ -832,7 +831,6 @@ public class HomeFragment extends BaseFragment {
                         if (model.getPkgUserId() == mLastClone.getPkgUserId()
                                 && model.getPackageName().equals(mLastClone.getPackageName())) {
                             if (item.inflateView != null) {
-                                MLogs.d("found bounce");
                                 View icon = item.inflateView.findViewById(R.id.app_icon);
                                 ObjectAnimator scaleX = ObjectAnimator.ofFloat(icon, "scaleX", 0.7f, 1.2f, 1.0f);
                                 ObjectAnimator scaleY = ObjectAnimator.ofFloat(icon, "scaleY", 0.7f, 1.2f, 1.0f);

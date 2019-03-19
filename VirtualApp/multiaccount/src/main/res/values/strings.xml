@@ -47,10 +47,8 @@
     <string name="dialog_rating_us_content">Enjoy using Super Clone app?</string>
     <string name="dialog_feedback_content">Would you kindly give us some feedback to help improve it?</string>
     <string name="not_really">Not Really</string>
-    <string name="no_thanks">Not now, thanks</string>
+    <string name="no_thanks">No,thanks</string>
     <string name="dialog_love_title">Love Super Clone</string>
-    <string name="dialog_permission_title">Grant Permission</string>
-    <string name="dialog_permission_content">Please allow permission request from Super Clone, otherwise some cloned apps and Google Play Service will not work properly.</string>
     <string name="dialog_love_content">Would you mind give us a 5-star rating on the Play Store? It will inspire us and we appreciate your support!</string>
     <string name="remind_me_later">Remind me later</string>
     <string name="star_rating">Go 5-star rating now</string>
@@ -182,7 +180,7 @@
         <item>15min</item>
         <item>30min</item>
         <item>1hour</item>
-    </string-array>
+   </string-array>
 
     <!-- customize -->
     <string name="customize_title">Customization</string>
@@ -193,7 +191,7 @@
     <string name="badge">Tag</string>
 
     <string name="install_64bit_library">Installing 64bit support ...</string>
-    <string name="arm64_installed_toast">Installed 64bit library. Please launch clones from Super Clone. </string>
+    <string name="arm64_installed_toast">Installed 64bit library. Please launch clones from Super Clone.</string>
 
     <!--reward -->
     <string name="clones">App Clones</string>
@@ -237,7 +235,9 @@
     <string name="toast_no_lucky_award">Aha, no luck this time, please try tomorrow.</string>
 
     <string name="settings_fastswitch_title">Fast Switch</string>
-    <string name="settings_fastswitch_description">Fast switch between multiple accounts in notification bar.</string>
+    <string name="settings_fastswitch_description">Fast switch between multiple accounts from notification bar.</string>
     <string name="fast_switch_dialog_content">Enable Fast Switch now? It can help you quickly switch between your recent accounts in notification bar.</string>
 
+    <string name="dialog_permission_title">Permission &amp; Data</string>
+    <string name="dialog_permission_content">Super Clone will apply permissions on behalf of cloned applications. Please check and grant permissions to make them work properly. We will not collect any privacy data or pass any personal info to others.</string>
 </resources>

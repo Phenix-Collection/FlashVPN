@@ -151,8 +151,6 @@
     <string name="saturation">Saturação</string>
     <string name="about">Sobre</string>
     <string name="content_recommend">Sugestões do Editor</string>
-    <string name="dialog_permission_title">Conceder permissão</string>
-    <string name="dialog_permission_content">Por favor, permita o pedido de permissão do Superb Cloner, caso contrário, alguns aplicativos clonados e o Google Play Service não funcionarão corretamente.</string>
     <string name="toast_arm64_package">Detectada biblioteca de 64 bits neste clone. Por favor, instale a biblioteca de suporte de 64 bits se ocorrer erro.</string>
     <string name="clone_error">Desculpe, algum erro aconteceu durante o clone. Por favor, reinicie o Superb Cloner e tente novamente.</string>
     <string name="start_with_arm64">Começando com a biblioteca de suporte Superb Cloner 64bit ...</string>
@@ -201,4 +199,11 @@
 
     <string name = "enable_fingerprint_title">Usar impressão digital</string>
     <string name = "enable_fingerprint_content">Use a impressão digital para desbloquear. As impressões digitais são iguais às que você registrou nas configurações do sistema.</string>
+
+    <string name = "settings_fastswitch_title">Troca Rápida</string>
+    <string name = "settings_fastswitch_description">Alternar rapidamente entre várias contas na barra de notificação.</string>
+    <string name = "fast_switch_dialog_content">Ativar o Fast Switch agora? Ele pode ajudá-lo a alternar rapidamente entre suas contas recentes na barra de notificação.</string>
+    <string name = "dialog_permission_title">Permissão &amp; Dados</string>
+    <string name = "dialog_permission_content">O Super Clone aplicará as permissões em nome dos aplicativos clonados. Por favor, verifique e conceda permissões para que funcionem corretamente. Não coletaremos nenhum dado de privacidade ou passaremos informações pessoais para outras pessoas.</string>
+
 </resources>

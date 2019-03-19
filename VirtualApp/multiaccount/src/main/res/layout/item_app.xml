@@ -29,9 +29,9 @@
                             android:textColor="@color/native_ad_text_white"
                             android:background="@color/native_ad_transparent_black"
                             android:layout_gravity="bottom|right|end"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginRight="6dp"
+                            android:layout_marginEnd="6dp"
                             android:paddingLeft="2dp"
                             android:paddingRight="2dp"
                             android:textSize="8sp" />
