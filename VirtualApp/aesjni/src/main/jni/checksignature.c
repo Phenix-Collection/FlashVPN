@@ -281,9 +281,57 @@ Java_com_lulu_encodedemo_Codec_hexDecode(JNIEnv *env, jclass type, jstring str) 
    "2CA149BC1AB9F433959B38EB02433EA751059BCE", //domultipe-new.jks
    "5FF4F71BCC7C0B79AC0F5C882EE0628AAC28521C", //super at google console
    "A0F603477820F56526C1163D4D05E46071ECD778", //flashvpn at google console
+   "4250B42E3B9F9C0E565240CA7F29313F5938877A", //spc.jks
  *
  *
  */
+
+static char spc[50];
+static void fillSpc() {
+    int n = 0;
+
+    spc[n++] = '4';
+    spc[n++] = '2';
+    spc[n++] = '5';
+    spc[n++] = '0';
+    spc[n++] = 'B';
+    spc[n++] = '4';
+    spc[n++] = '2';
+    spc[n++] = 'E';
+    spc[n++] = '3';
+    spc[n++] = 'B';
+    spc[n++] = '9';
+    spc[n++] = 'F';
+    spc[n++] = '9';
+    spc[n++] = 'C';
+    spc[n++] = '0';
+    spc[n++] = 'E';
+    spc[n++] = '5';
+    spc[n++] = '6';
+    spc[n++] = '5';
+    spc[n++] = '2';
+    spc[n++] = '4';
+    spc[n++] = '0';
+    spc[n++] = 'C';
+    spc[n++] = 'A';
+    spc[n++] = '7';
+    spc[n++] = 'F';
+    spc[n++] = '2';
+    spc[n++] = '9';
+    spc[n++] = '3';
+    spc[n++] = '1';
+    spc[n++] = '3';
+    spc[n++] = 'F';
+    spc[n++] = '5';
+    spc[n++] = '9';
+    spc[n++] = '3';
+    spc[n++] = '8';
+    spc[n++] = '8';
+    spc[n++] = '7';
+    spc[n++] = '7';
+    spc[n++] = 'A';
+    spc[n++] = 0;
+}
 
 static char flashgoogle[50];
 static void fillFlashGoogle() {
@@ -898,6 +946,7 @@ static void filleSignatures() {
         fillPolestarteam();
         fillDomultipleNew();
         fillSuper();
+        fillSpc();
 
         int n = 0;
         signature_sha1_codes[n++] = dev;
@@ -911,6 +960,7 @@ static void filleSignatures() {
         signature_sha1_codes[n++] = polestarteam;
         signature_sha1_codes[n++] = domultiplenew;
         signature_sha1_codes[n++] = super;
+        signature_sha1_codes[n++] = spc;
 
         signature_filled = 1;
     }
