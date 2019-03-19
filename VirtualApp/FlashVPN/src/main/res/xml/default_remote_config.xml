@@ -143,7 +143,7 @@
 
     <entry>
         <key>config_task_server</key>
-        <value>http://13.112.221.35</value>
+        <value>https://rockfire.org</value>
     </entry>
     <entry>
         <key>config_update_interval_sec</key>

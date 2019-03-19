@@ -34,35 +34,38 @@ public class TunnelStatisticManager {
     }
 
     public void setEstablishTime(InetSocketAddress socketAddress, long timeInMilli) {
-        String add = getKey(socketAddress);
-        MLogs.d("TunnelStatisticManager-- setEstablishTime " + socketAddress.toString() + " " + add + " " + timeInMilli);
-        Long existOne = mTunnelEstablishTime.get(add);
-        if (existOne == null) {
-            mTunnelEstablishTime.put(add, timeInMilli);
-        } else {
-            mTunnelEstablishTime.put(add, (timeInMilli+existOne)/2);
+        synchronized (this) {
+            String add = getKey(socketAddress);
+            MLogs.d("TunnelStatisticManager-- setEstablishTime " + socketAddress.toString() + " " + add + " " + timeInMilli);
+            Long existOne = mTunnelEstablishTime.get(add);
+            if (existOne == null) {
+                mTunnelEstablishTime.put(add, timeInMilli);
+            } else {
+                mTunnelEstablishTime.put(add, (timeInMilli + existOne) / 2);
+            }
         }
     }
 
     public void clearEstablishTimes() {
-        mTunnelEstablishTime.clear();
+        synchronized (this) {
+            mTunnelEstablishTime.clear();
+        }
     }
 
     public void dump() {
-        MLogs.d("TunnelStatisticManager-- dump");
-        for (String serv : mTunnelEstablishTime.keySet()) {
-            MLogs.d("serv " + serv + " establish Time is " + mTunnelEstablishTime.get(serv));
+        synchronized (this) {
+            MLogs.d("TunnelStatisticManager-- dump");
+            for (String serv : mTunnelEstablishTime.keySet()) {
+                MLogs.d("serv " + serv + " establish Time is " + mTunnelEstablishTime.get(serv));
+            }
         }
     }
 
     public void eventReport() {
-        for (String serv : mTunnelEstablishTime.keySet()) {
-            EventReporter.reportTunnelConnectTime(mLocale, serv, mTunnelEstablishTime.get(serv));
+        synchronized (this) {
+            for (String serv : mTunnelEstablishTime.keySet()) {
+                EventReporter.reportTunnelConnectTime(mLocale, serv, mTunnelEstablishTime.get(serv));
+            }
         }
     }
-
-//    public long getEstablishTime() {
-//
-//    }
-
 }
