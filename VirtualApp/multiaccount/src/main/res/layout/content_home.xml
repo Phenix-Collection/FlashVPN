@@ -127,7 +127,7 @@
                 android:id="@+id/frag_navigate_bar"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/selector_setting_theme2">
                 <LinearLayout

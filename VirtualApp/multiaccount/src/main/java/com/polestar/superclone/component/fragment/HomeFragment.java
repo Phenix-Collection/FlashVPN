@@ -1,5 +1,8 @@
 package com.polestar.superclone.component.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -76,6 +80,7 @@ public class HomeFragment extends BaseFragment {
     private DragLayer mDragLayer;
     private FrameLayout nativeAdContainer;
     private AppModel mPendingStart;
+    private AppModel mLastClone;
 
     private IAdAdapter nativeAd;
     private long adShowTime = 0;
@@ -707,6 +712,7 @@ public class HomeFragment extends BaseFragment {
                 CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
                     @Override
                     public void onInstalled(List<AppModel> clonedApp) {
+                        mLastClone = clonedApp.get(0);
                         PreferencesUtils.setHasCloned();
                         appInfos = CloneHelper.getInstance(mActivity).getClonedApps();
                         updateGridItemList(appInfos);
@@ -816,21 +822,35 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void run() {
                 floatView.startRote();
+                MLogs.d("go for bounce");
+                if (mLastClone == null) {
+                    return;
+                }
+                for (HomeGridItem item: gridItems) {
+                    if (item.type == HomeGridItem.TYPE_CLONE) {
+                        AppModel model = (AppModel) item.obj;
+                        if (model.getPkgUserId() == mLastClone.getPkgUserId()
+                                && model.getPackageName().equals(mLastClone.getPackageName())) {
+                            if (item.inflateView != null) {
+                                MLogs.d("found bounce");
+                                View icon = item.inflateView.findViewById(R.id.app_icon);
+                                ObjectAnimator scaleX = ObjectAnimator.ofFloat(icon, "scaleX", 0.7f, 1.2f, 1.0f);
+                                ObjectAnimator scaleY = ObjectAnimator.ofFloat(icon, "scaleY", 0.7f, 1.2f, 1.0f);
+                                AnimatorSet animSet = new AnimatorSet();
+                                animSet.play(scaleX).with(scaleY);
+                                animSet.setInterpolator(new BounceInterpolator());
+                                animSet.setDuration(800).start();
+                            }
+                        }
+                    }
+                }
+                mLastClone = null;
             }
         },AnimatorHelper.DURATION_NORMAL);
     }
 
     public void hideToBottom(){
         AnimatorHelper.hideToBottom(contentView);
-    }
-
-    private synchronized void update(ArrayList<AppModel> updateList){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DbManager.updateAppModelList(mActivity,updateList);
-            }
-        }).start();
     }
 
     /**
