@@ -104,7 +104,7 @@ public class AppMonitorService extends Service {
         if (!("interstitial".equals(style) || "all".equals(style))) {
             return false;
         }
-        long interval = BuildConfig.DEBUG? 30*1000: RemoteConfig.getLong(CONFIG_APP_START_AD_FREQ)*60*60*1000;
+        long interval = BuildConfig.DEBUG? 300*1000: RemoteConfig.getLong(CONFIG_APP_START_AD_FREQ)*60*60*1000;
         long ramp = BuildConfig.DEBUG? 0: RemoteConfig.getLong(CONFIG_APP_START_AD_RAMP)*60*60*1000;
         long last = getLastShowTime();
         if (last == 0 && TextUtils.isEmpty(pkg)) {
