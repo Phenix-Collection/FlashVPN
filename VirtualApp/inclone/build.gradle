@@ -148,6 +148,8 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.1'
     implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.5'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
 
 
 

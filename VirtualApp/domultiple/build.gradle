@@ -150,6 +150,8 @@ dependencies {
     compile 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.android.billingclient:billing:dp-1'
     arm32Implementation 'com.facebook.android:audience-network-sdk:5.1.0'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.5'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
 
     implementation 'com.android.support:multidex:1.0.1'
 
