@@ -87,10 +87,6 @@
         
     <string name="dialog_love_title">喜歡超級多開</string>
         
-    <string name="dialog_permission_title">獲取授權</string>
-        
-    <string name="dialog_permission_content">請授予超級多開相應權限，否則有些應用包括Google Play Service可能運行不正常</string>
-        
     <string name="dialog_love_content">可以給我們5星好評嗎? 感謝您的支持以及對我們的鼓勵!</string>
         
     <string name="remind_me_later">稍後提醒</string>
@@ -407,4 +403,7 @@
     <string name="settings_fastswitch_title">快速切換</string>
     <string name="settings_fastswitch_description">從通知欄快速切換到應用分身</string>
     <string name="fast_switch_dialog_content">開啟快速切換？它能幫您通過通知欄快速切換到最近使用的多開應用</string>
+
+    <string name="dialog_permission_title">隱私與權限</string>
+    <string name="dialog_permission_content">超級多開會替克隆應用申請權限。請查看並授予權限以保證正常運營。我們不會收集任何隱私數據，也不會將數據給任何第三方。</string>
 </resources>
