@@ -347,7 +347,12 @@ public class CloneManager {
                         }
                         agent.launchApp(packageName, userId);
                         if(dialogContext != null) {
-                            Toast.makeText(dialogContext, dialogContext.getString(R.string.start_with_arm64), Toast.LENGTH_SHORT).show();
+                            dialogContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(dialogContext, dialogContext.getString(R.string.start_with_arm64), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     } else{
                         //Guide download support package
