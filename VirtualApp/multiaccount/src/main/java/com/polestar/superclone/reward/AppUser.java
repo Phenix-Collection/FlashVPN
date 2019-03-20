@@ -11,6 +11,7 @@ import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.superclone.MApp;
 import com.polestar.superclone.utils.EventReporter;
+import com.polestar.superclone.utils.MD5Utils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.task.IAdTaskStateObserver;
@@ -190,12 +191,14 @@ public class AppUser implements IAdTaskStateObserver{
         //2. device id
         //3. android id
         //4. Random UUID
+        if (!TextUtils.isEmpty(mId)) {
+            return mId;
+        }
         String id = TaskPreference.getMyId();
         if (!TextUtils.isEmpty(id)) {
             return id;
-        } else {
-            id = AdUtils.getGoogleAdvertisingId(MApp.getApp());
         }
+
         if (TextUtils.isEmpty(id)) {
             id = AdUtils.getDeviceID(MApp.getApp());
         }
@@ -205,6 +208,7 @@ public class AppUser implements IAdTaskStateObserver{
         if (TextUtils.isEmpty(id)) {
             id = UUID.randomUUID().toString();
         }
+        id = MD5Utils.getStringMd5(id);
         TaskPreference.setMyId(id);
         return id;
     }

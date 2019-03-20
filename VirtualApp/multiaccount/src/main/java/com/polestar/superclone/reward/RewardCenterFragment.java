@@ -276,7 +276,7 @@ public class RewardCenterFragment extends BaseFragment
                 taskDesc.setText(((AdTask)adAdapter.getAdObject()).mDescription);
                 TextView reward = adView.findViewById(R.id.task_reward);
                 reward.setText("+" + String.format("%.0f", adTask.mPayout));
-                reward.setTextColor(getResources().getColor(R.color.reward_collect_coin_color));
+                reward.setTextColor(mActivity.getResources().getColor(R.color.reward_collect_coin_color));
                 return adView;
             }
         };
@@ -330,15 +330,15 @@ public class RewardCenterFragment extends BaseFragment
         switch (task.mTaskType) {
             case Task.TASK_TYPE_CHECKIN_TASK:
                 icon.setText((R.string.iconfont_checkin));
-                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, getResources().getColor(R.color.checkin_task_btn));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, mActivity.getResources().getColor(R.color.checkin_task_btn));
                 break;
             case Task.TASK_TYPE_SHARE_TASK:
                 icon.setText((R.string.iconfont_invite));
-                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, getResources().getColor(R.color.share_task_btn));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, mActivity.getResources().getColor(R.color.share_task_btn));
                 break;
             case Task.TASK_TYPE_REWARDVIDEO_TASK:
                 icon.setText((R.string.iconfont_video));
-                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, getResources().getColor(R.color.checkin_task_btn));
+                icon.setBackgroundShapeDrawable(IconFontTextView.BG_SHAPE_OVAL, mActivity.getResources().getColor(R.color.checkin_task_btn));
                 break;
         }
         int status = TaskExecutor.checkTask(task);
@@ -348,17 +348,17 @@ public class RewardCenterFragment extends BaseFragment
 //            reward.setTextColor(getResources().getColor(R.color.reward_wait));
 //        } else if (status == RewardErrorCode.TASK_EXCEED_DAY_LIMIT && !isInit) {
             reward.setText(R.string.iconfont_done);
-            reward.setTextColor(getResources().getColor(R.color.reward_done));
+            reward.setTextColor(mActivity.getResources().getColor(R.color.reward_done));
         }  else {
             reward.setText("+" + String.format("%.0f", task.mPayout));
             if (status != RewardErrorCode.TASK_OK) {
-                reward.setTextColor(getResources().getColor(R.color.text_gray_light));
+                reward.setTextColor(mActivity.getResources().getColor(R.color.text_gray_light));
             } else {
                 if (task.mTaskType == Task.TASK_TYPE_CHECKIN_TASK) {
                     chechInAdLoader = FuseAdLoader.get(SLOT_CHECKIN_INTERSTITIAL, mActivity);
                     chechInAdLoader.loadAd(mActivity, 2, 1000, null);
                 }
-                reward.setTextColor(getResources().getColor(R.color.reward_collect_coin_color));
+                reward.setTextColor(mActivity.getResources().getColor(R.color.reward_collect_coin_color));
             }
         }
     }
