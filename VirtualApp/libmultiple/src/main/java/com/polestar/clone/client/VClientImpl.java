@@ -502,6 +502,9 @@ public final class VClientImpl extends IVClient.Stub {
         NativeEngine.redirectDirectory("/sys/class/net/wlan0/address", wifiMacAddressFile);
         NativeEngine.redirectDirectory("/sys/class/net/eth0/address", wifiMacAddressFile);
         NativeEngine.redirectDirectory("/sys/class/net/wifi/address", wifiMacAddressFile);
+        NativeEngine.redirectDirectory("/tmp/",
+                new File(VEnvironment.getDataUserPackageDirectory(userId,info.packageName), "cache").getAbsolutePath());
+
 
         NativeEngine.redirectDirectory("/data/data/" + info.packageName, info.dataDir);
         NativeEngine.redirectDirectory("/data/user/0/" + info.packageName, info.dataDir);

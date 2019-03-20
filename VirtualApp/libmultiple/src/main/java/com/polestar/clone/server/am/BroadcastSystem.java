@@ -48,7 +48,7 @@ public class BroadcastSystem {
     /**
      * MUST < 10000.
      */
-    private static final int BROADCAST_TIME_OUT = 8500;
+    private static final int BROADCAST_TIME_OUT = 7000;
     private static BroadcastSystem gDefault;
 
     private final ArrayMap<String, List<BroadcastReceiver>> mReceivers = new ArrayMap<>();
