@@ -7,6 +7,7 @@ import mirror.RefObject;
 
 public class ContextImplKitkat {
     public static Class<?> TYPE = RefClass.load(ContextImplKitkat.class, "android.app.ContextImpl");
+    public static RefObject mDisplayAdjustments;
     public static RefObject<File[]> mExternalCacheDirs;
     public static RefObject<File[]> mExternalFilesDirs;
     public static RefObject<String> mOpPackageName;

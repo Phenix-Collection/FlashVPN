@@ -13,6 +13,7 @@ import android.content.pm.ApplicationInfo;
 import android.os.Handler;
 import android.os.IInterface;
 
+import mirror.RefBoolean;
 import mirror.RefClass;
 import mirror.RefObject;
 import mirror.RefMethod;
@@ -22,6 +23,9 @@ public class LoadedApk {
     public static Class Class = RefClass.load(LoadedApk.class, "android.app.LoadedApk");
     public static RefObject<ApplicationInfo> mApplicationInfo;
     public static RefObject<ClassLoader> mClassLoader;
+    public static RefBoolean mSecurityViolation;
+    public static RefObject mDisplayAdjustments;
+
     @MethodParams({boolean.class, Instrumentation.class})
     public static RefMethod<Application> makeApplication;
     @MethodParams({ServiceConnection.class, Context.class, Handler.class, int.class})

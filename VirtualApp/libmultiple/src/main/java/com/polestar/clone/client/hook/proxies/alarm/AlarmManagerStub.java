@@ -18,6 +18,18 @@ import mirror.android.app.IAlarmManager;
  *
  * @see android.app.AlarmManager
  */
+
+//interface IAlarmManager {
+//31	/** windowLength == 0 means exact; windowLength < 0 means the let the OS decide */
+//		32    void set(String callingPackage, int type, long triggerAtTime, long windowLength,
+//33            long interval, int flags, in PendingIntent operation, in IAlarmListener listener,
+//34            String listenerTag, in WorkSource workSource, in AlarmManager.AlarmClockInfo alarmClock);
+//35    boolean setTime(long millis);
+//36    void setTimeZone(String zone);
+//37    void remove(in PendingIntent operation, in IAlarmListener listener);
+//38    long getNextWakeFromIdleTime();
+//39    AlarmManager.AlarmClockInfo getNextAlarmClock(int userId);
+//40}
 public class AlarmManagerStub extends BinderInvocationProxy {
 
 	public AlarmManagerStub() {
@@ -30,6 +42,23 @@ public class AlarmManagerStub extends BinderInvocationProxy {
 		addMethodProxy(new Set());
 		addMethodProxy(new SetTime());
 		addMethodProxy(new SetTimeZone());
+		addMethodProxy(new Remove());
+	}
+
+	private static class Remove extends MethodProxy {
+		@Override
+		public String getMethodName() {
+			return "remove";
+		}
+
+		@Override
+		public Object call(Object who, Method method, Object... args) throws Throwable {
+			try{
+				super.call(who, method, args);
+			}catch (Throwable ex) {
+			}
+			return null;
+		}
 	}
 
 	private static class SetTimeZone extends MethodProxy {
@@ -83,8 +112,6 @@ public class AlarmManagerStub extends BinderInvocationProxy {
 			try {
 				return super.call(who, method, args);
 			} catch (Exception e) {
-				VLog.logbug("AlarmManager", "Set alarm failed");
-				VLog.logbug("AlarmManager", VLog.getStackTraceString(e));
 				return null;
 			}
 		}

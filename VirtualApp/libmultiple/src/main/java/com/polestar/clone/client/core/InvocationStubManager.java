@@ -143,7 +143,7 @@ public final class InvocationStubManager {
 			addInjector(new MountServiceStub());
 			addInjector(new BackupManagerStub());
 			addInjector(new TelephonyStub());
-			if (Build.VERSION.SDK_INT >= O && IHwTelephony.TYPE != null){
+			if (Build.VERSION.SDK_INT >= M && IHwTelephony.TYPE != null){
 				addInjector(new HwTelephonyStub());
 			}
 			addInjector(new AccessibilityManagerStub());

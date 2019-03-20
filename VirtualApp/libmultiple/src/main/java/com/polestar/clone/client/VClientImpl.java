@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
+import android.content.res.Configuration;
 import android.os.Binder;
 import android.os.Build;
 import android.os.ConditionVariable;
@@ -42,6 +43,7 @@ import com.polestar.clone.client.ipc.VirtualStorageManager;
 import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.helper.compat.BuildCompat;
 import com.polestar.clone.helper.compat.StorageManagerCompat;
+import com.polestar.clone.helper.compat.StrictModeCompat;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.os.VEnvironment;
 import com.polestar.clone.os.VUserHandle;
@@ -59,13 +61,16 @@ import java.util.Map;
 
 import mirror.android.app.ActivityThread;
 import mirror.android.app.ActivityThreadNMR1;
+import mirror.android.app.AlarmManager;
 import mirror.android.app.ContextImpl;
+import mirror.android.app.ContextImplKitkat;
 import mirror.android.app.IActivityManager;
 import mirror.android.app.LoadedApk;
 import mirror.android.content.ContentProviderHolderOreo;
 import mirror.android.content.res.CompatibilityInfo;
 import mirror.android.providers.Settings;
 import mirror.android.renderscript.RenderScriptCacheDir;
+import mirror.android.view.DisplayAdjustments;
 import mirror.android.view.HardwareRenderer;
 import mirror.android.view.RenderScript;
 import mirror.android.view.ThreadedRenderer;
@@ -220,6 +225,7 @@ public final class VClientImpl extends IVClient.Stub {
         }
     }
 
+
     private void bindApplicationNoCheck(String packageName, String processName, ConditionVariable lock) {
         VLog.d(TAG, "bindApplicationNoCheck " + packageName + " proc: " + processName);
         VDeviceInfo deviceInfo = getDeviceInfo();
@@ -267,6 +273,21 @@ public final class VClientImpl extends IVClient.Stub {
         VLog.d(TAG, "bindApplicationNoCheck step 1" + packageName + " proc: " + processName);
         VirtualRuntime.setupRuntime(data.processName, data.appInfo);
         int targetSdkVersion = data.appInfo.targetSdkVersion;
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && targetSdkVersion < Build.VERSION_CODES.N) {
+            StrictModeCompat.disableDeathOnFileUriExposure();
+        }
+
+        Object v0_2 = VirtualCore.get().getContext().getSystemService(Context.ALARM_SERVICE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && AlarmManager.mTargetSdkVersion != null) {
+            try {
+                AlarmManager.mTargetSdkVersion.set(v0_2, targetSdkVersion);
+            }
+            catch(Exception v0_3) {
+                v0_3.printStackTrace();
+            }
+        }
+
         if (targetSdkVersion < Build.VERSION_CODES.GINGERBREAD) {
             StrictMode.ThreadPolicy newPolicy = new StrictMode.ThreadPolicy.Builder(StrictMode.getThreadPolicy()).permitNetwork().build();
             StrictMode.setThreadPolicy(newPolicy);
@@ -294,7 +315,7 @@ public final class VClientImpl extends IVClient.Stub {
             // we can make direct call... use reflect to bypass.
             // System.setProperty("java.io.tmpdir", context.getCacheDir().getAbsolutePath());
             System.class.getDeclaredMethod("setProperty", String.class, String.class)
-                    .invoke(null, "java.io.tmpdir", context.getCacheDir().getAbsolutePath());
+                    .invoke(null, "java.io.tmpdir", new File(VEnvironment.getDataUserPackageDirectory(getUserId(vuid), packageName), "cache").getAbsolutePath());
         } catch (Throwable ignored) {
             VLog.e(TAG, "set tmp dir error:", ignored);
         }
@@ -334,6 +355,28 @@ public final class VClientImpl extends IVClient.Stub {
         mirror.android.app.ActivityThread.AppBindData.info.set(boundApp, data.info);
         VMRuntime.setTargetSdkVersion.call(VMRuntime.getRuntime.call(), data.appInfo.targetSdkVersion);
 
+        if(LoadedApk.mSecurityViolation != null) {
+            LoadedApk.mSecurityViolation.set(this.mBoundApplication.info, false);
+        }
+        Configuration v6 = context.getResources().getConfiguration();
+        v0_2 = null;
+        if(CompatibilityInfo.ctor != null) {
+            v0_2 = CompatibilityInfo.ctor.newInstance(new Object[]{data.appInfo, Integer.valueOf(v6.screenLayout), Integer.valueOf(v6.smallestScreenWidthDp), Boolean.valueOf(false)});
+        }
+
+        if(CompatibilityInfo.ctorLG != null) {
+            v0_2 = CompatibilityInfo.ctorLG.newInstance(new Object[]{data.appInfo, Integer.valueOf(v6.screenLayout), Integer.valueOf(v6.smallestScreenWidthDp), Boolean.valueOf(false), Integer.valueOf(0)});
+        }
+
+        if(v0_2 != null) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                    DisplayAdjustments.setCompatibilityInfo.call(ContextImplKitkat.mDisplayAdjustments.get(context), new Object[]{v0_2});
+                }
+                DisplayAdjustments.setCompatibilityInfo.call(LoadedApk.mDisplayAdjustments.get(this.mBoundApplication.info), new Object[]{v0_2});
+            }
+        }
+
         boolean conflict = SpecialComponentList.isConflictingInstrumentation(packageName);
         if (!conflict) {
             InvocationStubManager.getInstance().checkEnv(AppInstrumentation.class);
@@ -356,6 +399,16 @@ public final class VClientImpl extends IVClient.Stub {
         ContextFixer.fixContext(mInitialApplication);
         if (Build.VERSION.SDK_INT >= 24 && "com.tencent.mm:recovery".equals(processName)) {
             fixWeChatRecovery(mInitialApplication);
+        }
+
+        if("com.android.vending".equals("packageName")) {
+            try {
+                context.getSharedPreferences("vending_preferences", 0).edit().putBoolean("notify_updates", false).putBoolean("notify_updates_completion", false).apply();
+                context.getSharedPreferences("finsky", 0).edit().putBoolean("auto_update_enabled", false).apply();
+            }
+            catch(Throwable v0) {
+                v0.printStackTrace();
+            }
         }
         if (data.providers != null) {
             installContentProviders(mInitialApplication, data.providers);

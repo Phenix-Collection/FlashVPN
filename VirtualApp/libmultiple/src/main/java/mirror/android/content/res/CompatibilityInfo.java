@@ -10,5 +10,6 @@ public class CompatibilityInfo {
     public static Class<?> TYPE = RefClass.load(CompatibilityInfo.class, "android.content.res.CompatibilityInfo");
     @MethodParams({ApplicationInfo.class, int.class, int.class, boolean.class})
     public static RefConstructor ctor;
+    public static RefConstructor ctorLG;
     public static RefStaticObject<Object> DEFAULT_COMPATIBILITY_INFO;
 }

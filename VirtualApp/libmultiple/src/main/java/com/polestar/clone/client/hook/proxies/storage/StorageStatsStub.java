@@ -3,10 +3,14 @@ package com.polestar.clone.client.hook.proxies.storage;
 import android.annotation.TargetApi;
 import android.app.usage.StorageStats;
 
+import com.polestar.clone.client.VClientImpl;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.hook.base.BinderInvocationProxy;
 import com.polestar.clone.client.hook.base.ReplaceLastPkgMethodProxy;
 import com.polestar.clone.client.hook.base.StaticMethodProxy;
+import com.polestar.clone.client.hook.utils.MethodParameterUtils;
 import com.polestar.clone.helper.utils.ArrayUtils;
+import com.polestar.clone.os.VUserHandle;
 
 import java.lang.reflect.Method;
 
@@ -23,13 +27,62 @@ import mirror.android.app.usage.IStorageStatsManager;
 
     protected void onBindMethods() {
         super.onBindMethods();
-        this.addMethodProxy(new ReplaceLastPkgMethodProxy("getTotalBytes"));
-        this.addMethodProxy(new ReplaceLastPkgMethodProxy("getCacheBytes"));
-        this.addMethodProxy(new ReplaceLastPkgMethodProxy("getCacheQuotaBytes"));
-        this.addMethodProxy(new ReplaceLastPkgMethodProxy("queryStatsForUser"));
-        this.addMethodProxy(new ReplaceLastPkgMethodProxy("queryExternalStatsForUser"));
-        this.addMethodProxy(new ReplaceLastPkgMethodProxy("queryStatsForUid"));
-        this.addMethodProxy(new QueryStatsForPackage("queryStatsForPackage"));
+        addMethodProxy(new ReplaceLastPkgMethodProxy("getTotalBytes"));
+        addMethodProxy(new ReplaceLastPkgMethodProxy("isQuotaSupported"));
+        addMethodProxy(new ReplaceLastPkgMethodProxy("getCacheBytes"));
+        addMethodProxy(new ReplaceLastPkgMethodProxy("getCacheQuotaBytes") {
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    if (args.length == 3 && args[args.length - 2] instanceof Integer) {
+                        args[args.length - 2] = VirtualCore.get().myUid();
+                    }
+                    return super.call(who, method, args);
+                } catch (Throwable ex) {
+                    return 0;
+                }
+            }
+        });
+        addMethodProxy(new QueryStatsForPackage("queryStatsForPackage"));
+        addMethodProxy(new ReplaceLastPkgMethodProxy("queryStatsForUid"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    if (args.length == 3 && args[args.length - 2] instanceof Integer) {
+                        args[args.length - 2] = VirtualCore.get().myUid();
+                    }
+                    return super.call(who, method, args);
+                } catch (Throwable ex) {
+                    return 0;
+                }
+            }
+        });
+        addMethodProxy(new ReplaceLastPkgMethodProxy("queryStatsForUser"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    if (args.length == 3 && args[args.length - 2] instanceof Integer) {
+                        args[args.length - 2] = VUserHandle.getHostUserId();
+                    }
+                    return super.call(who, method, args);
+                } catch (Throwable ex) {
+                    return 0;
+                }
+            }
+        });
+        addMethodProxy(new ReplaceLastPkgMethodProxy("queryExternalStatsForUser"){
+            @Override
+            public Object call(Object who, Method method, Object... args) throws Throwable {
+                try {
+                    if (args.length == 3 && args[args.length - 2] instanceof Integer) {
+                        args[args.length - 2] = VUserHandle.getHostUserId();
+                    }
+                    return super.call(who, method, args);
+                } catch (Throwable ex) {
+                    return 0;
+                }
+            }
+        });
     }
 
     private StorageStats queryStatsForPackage(String arg5, int arg6) {
@@ -47,14 +100,17 @@ import mirror.android.app.usage.IStorageStatsManager;
         }
 
 
-
         @Override
         public Object call(Object arg4, Method arg5, Object[] arg6) throws Throwable {
             StorageStats v0_1;
             int v0 = ArrayUtils.indexOfFirst(arg6, String.class);
             int v1 = ArrayUtils.indexOfLast(arg6, Integer.class);
             if(v0 == -1 || v1 == -1) {
-                return super.call(arg4, arg5, arg6);
+                try {
+                    return super.call(arg4, arg5, arg6);
+                } catch (Throwable ex) {
+                    return queryStatsForPackage((String)arg6[v0], (int)arg6[v1]);
+                }
             }
             else {
                 return queryStatsForPackage((String)arg6[v0], (int)arg6[v1]);
