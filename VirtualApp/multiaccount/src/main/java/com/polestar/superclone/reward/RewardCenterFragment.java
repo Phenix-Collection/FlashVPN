@@ -236,7 +236,7 @@ public class RewardCenterFragment extends BaseFragment
         float balance = appUser.getMyBalance();
         TextView points = userInfoView.findViewById(R.id.user_balance_txt);
         if(balance == 0) {
-            points.setText(getText(R.string.finish_task_get_reward));
+            points.setText(mActivity.getText(R.string.finish_task_get_reward));
         } else {
             points.setText(String.format(mActivity.getString(R.string.you_have_coins), balance , mActivity.getString(R.string.coin_unit)));
         }
