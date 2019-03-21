@@ -32,12 +32,11 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.task.ADErrorCode;
-import com.polestar.task.IVpnStatusListener;
-import com.polestar.task.network.AppUser;
-import com.polestar.task.network.VpnApiHelper;
-import com.polestar.task.network.datamodels.VpnRequirement;
-import com.polestar.task.network.datamodels.VpnServer;
-import com.polestar.task.network.responses.ServersResponse;
+import winterfell.flash.vpn.reward.IVpnStatusListener;
+import winterfell.flash.vpn.reward.network.VpnApiHelper;
+import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
+import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
+import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -104,7 +103,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private Timer timer;
     private TimerTask timeCountTask;
     private VpnServer mCurrentVpnServer;
-    private AppUser mAppUser;
+    private FlashUser mFlashUser;
     private VpnRequirement mCurrentVpnRequirement;
     private long mGetVpnRequirementTime;
     private String mErrInfo;
@@ -180,7 +179,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         }
 
         if (needToRequestNewVpnRequirement()) {
-            VpnApiHelper.acquireVpnServer(AppUser.getInstance().getMyId(), vpnServer.mPublicIp,
+            VpnApiHelper.acquireVpnServer(FlashUser.getInstance().getMyId(), vpnServer.mPublicIp,
                     vpnServer.mGeo, vpnServer.mCity, new IVpnStatusListener() {
                         @Override
                         public void onAcquireSucceed(VpnRequirement requirement) {
@@ -254,7 +253,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
         mIsReleasing = true;
         mIsReleasingCount = 0;
-        VpnApiHelper.releaseVpnServer(AppUser.getInstance().getMyId(), vpnServer.mPublicIp,
+        VpnApiHelper.releaseVpnServer(FlashUser.getInstance().getMyId(), vpnServer.mPublicIp,
                 new IVpnStatusListener() {
                     @Override
                     public void onAcquireSucceed(VpnRequirement requirement) {
@@ -422,6 +421,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 MLogs.d("HomeActivity-- state STATE_CHECK_PORT_FAILED");
                 if (doAction) {
                     mCheckPortFailedCount++;
+                    int retryTimes = (int) RemoteConfig.getLong("config_retry_times");
                     if (mCheckPortFailedCount >= RemoteConfig.getLong("config_retry_times")) {
                         updateStateOnMainThread(STATE_CONNECT_FAILED, "");
                         return;
@@ -556,7 +556,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             updateStateOnMainThread(STATE_CONNECTED, "");
 
             if (PreferenceUtils.hasShownRateDialog(this)
-                    && !FlashUser.getInstance(this).isVIP()) {
+                    && !FlashUser.getInstance().isVIP()) {
                 FuseAdLoader.get(SLOT_CONNECTED_AD, this).loadAd(this, 2, new IAdLoadListener() {
                     @Override
                     public void onAdLoaded(IAdAdapter ad) {
@@ -667,15 +667,15 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     private void updateRewardLayout() {
-        if (FlashUser.getInstance(this).usePremiumSeconds()) {
+        if (FlashUser.getInstance().usePremiumSeconds()) {
             rewardLayout.setVisibility(View.VISIBLE);
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    long premiumTime = FlashUser.getInstance(HomeActivity.this).getFreePremiumSeconds();
+                    long premiumTime = FlashUser.getInstance().getFreePremiumSeconds();
                     TextView text = findViewById(R.id.reward_text);
                     ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-                    if (FlashUser.getInstance(HomeActivity.this).isVIP()) {
+                    if (FlashUser.getInstance().isVIP()) {
                         giftIcon.setImageResource(R.drawable.icon_trophy_award);
                         text.setText(R.string.reward_text_vip);
                     } else if (rewardAd != null) {
@@ -816,7 +816,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         updateConnectState(mState, "", false);
         updateRewardLayout();
         if (isRewarded) {
-            FlashUser.getInstance(HomeActivity.this).doRewardFreePremium();
+            FlashUser.getInstance().doRewardFreePremium();
             Toast.makeText(HomeActivity.this, R.string.get_reward_premium_time, Toast.LENGTH_SHORT).show();
             isRewarded = false;
         }
@@ -838,7 +838,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             }, 1000);
         }
 
-        if (!FlashUser.getInstance(this).isVIP()) {
+        if (!FlashUser.getInstance().isVIP()) {
             long current = System.currentTimeMillis();
             if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
                 loadAds();
@@ -961,14 +961,14 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     public static void preloadAd(Context context) {
         FuseAdLoader.get(SLOT_HOME_BANNER, context).
                 setBannerAdSize(getBannerSize()).preloadAd(context);
-        if (FlashUser.getInstance(FlashApp.getApp()).usePremiumSeconds()) {
+        if (FlashUser.getInstance().usePremiumSeconds()) {
             FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, context).
                     preloadAd(context);
         }
     }
 
     private void loadAds() {
-        if (!FlashUser.getInstance(this).isVIP()) {
+        if (!FlashUser.getInstance().isVIP()) {
             loadHomeNativeAd();
             loadRewardAd();
         }
@@ -976,7 +976,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     private boolean isRewarded = false;
     private void loadRewardAd() {
-        if (FlashUser.getInstance(this).usePremiumSeconds()) {
+        if (FlashUser.getInstance().usePremiumSeconds()) {
             FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, this).loadAd(this, 2, 1000,
                     new IAdLoadListener() {
                         @Override

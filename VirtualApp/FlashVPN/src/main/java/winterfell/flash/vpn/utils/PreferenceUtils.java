@@ -3,7 +3,7 @@ package winterfell.flash.vpn.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.polestar.task.network.datamodels.VpnServer;
+import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
 
 import winterfell.flash.vpn.FlashApp;
 
@@ -350,15 +350,6 @@ public class PreferenceUtils {
 
     public static void addConnectedTimeSec(long sec) {
         putLong(FlashApp.getApp(), "connected_time_sec", getLong(FlashApp.getApp(), "connected_time_sec") + sec);
-    }
-
-
-    public static String getMyId() {
-        return getString(FlashApp.getApp(),"my_user_id", null);
-    }
-
-    public static void setMyId(String id) {
-        putString(FlashApp.getApp(),"my_user_id", id);
     }
 
     public static void updateLastUpdateTime() {

@@ -10,8 +10,7 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.SDKConfiguration;
 import com.polestar.ad.adapters.FuseAdLoader;
-import com.polestar.task.network.AppUser;
-import com.polestar.task.network.Configuration;
+import winterfell.flash.vpn.reward.AppUser;
 
 import java.io.File;
 import java.util.List;
@@ -27,7 +26,6 @@ import winterfell.flash.vpn.utils.RemoteConfig;
 public class FlashApp extends MultiDexApplication {
 
     private static FlashApp gDefault;
-    private AppUser mAppUser;
 
     public static FlashApp getApp() {
         return gDefault;
@@ -36,7 +34,7 @@ public class FlashApp extends MultiDexApplication {
     public static boolean isOpenLog(){
         boolean ret = false;
         try {
-            File file = new File(Environment.getExternalStorageDirectory() + "/polelog");
+            File file = new File(Environment.getExternalStorageDirectory() + "/flashlog");
             ret = file.exists();
             if (ret) {
                 Log.d(MLogs.DEFAULT_TAG, "log opened by file");
@@ -66,7 +64,7 @@ public class FlashApp extends MultiDexApplication {
             @Override
             public boolean isAdFree() {
                 //return true;
-                return FlashUser.getInstance(getApp()).isVIP();
+                return FlashUser.getInstance().isVIP();
             }
 
             @Override
@@ -82,14 +80,14 @@ public class FlashApp extends MultiDexApplication {
 
     public boolean needEnterAd(){
         long interval = RemoteConfig.getLong(CONF_ENTER_AD_INTERVAL_SEC);
-        return !FlashUser.getInstance(this).isVIP() && PreferenceUtils.hasShownRateDialog(this)
+        return !FlashUser.getInstance().isVIP() && PreferenceUtils.hasShownRateDialog(this)
                 && (System.currentTimeMillis() - PreferenceUtils.getEnterAdTime()) > interval*1000 ;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        
+
         FirebaseApp.initializeApp(gDefault);
         RemoteConfig.init();
         EventReporter.init(gDefault);
@@ -109,33 +107,5 @@ public class FlashApp extends MultiDexApplication {
         if(needEnterAd()) {
             FuseAdLoader.get(SLOT_ENTER_AD, getApp()).preloadAd(getApp());
         }
-
-        mAppUser = AppUser.getInstance();
-        if (AppUser.check()) {
-            Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
-            Configuration.APP_VERSION_CODE = BuildConfig.VERSION_CODE;
-            Configuration.PKG_NAME = BuildConfig.APPLICATION_ID;
-            FuseAdLoader.setUserId(AppUser.getInstance().getMyId());
-        }
-
-        //只load一次
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                MLogs.d("LocalVpnService-- Load config from file ...");
-                try {
-                    ProxyConfig.Instance.loadFromFile(getResources().openRawResource(R.raw.config));
-                    MLogs.d("LocalVpnService-- Load done");
-                } catch (Exception e) {
-                    String errString = e.getMessage();
-                    if (errString == null || errString.isEmpty()) {
-                        errString = e.toString();
-                    }
-                    MLogs.d("LocalVpnService-- Load failed with error: %s", errString);
-                }
-            }
-        };
-
-        t.start();
     }
 }

@@ -1,6 +1,6 @@
 package winterfell.flash.vpn.network;
 
-import com.polestar.task.network.datamodels.VpnServer;
+import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;

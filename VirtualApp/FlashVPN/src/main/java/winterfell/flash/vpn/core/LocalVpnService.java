@@ -18,7 +18,7 @@ import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.app.NotificationCompat;
 
-import com.polestar.task.network.datamodels.VpnServer;
+import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
 
 import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.FlashUser;
@@ -208,7 +208,7 @@ public class LocalVpnService extends VpnService implements Runnable {
     private float[] getNetworkSpeedInternal(boolean tryBoost) {
         float boost = 1.0f;
         if (IsRunning) {
-            boost = (tryBoost && (FlashUser.getInstance(this).isVIP() || FlashUser.getInstance(this).getFreePremiumSeconds() > 0))
+            boost = (tryBoost && (FlashUser.getInstance().isVIP() || FlashUser.getInstance().getFreePremiumSeconds() > 0))
                     ? ((float) RemoteConfig.getLong(CONF_VIP_SPEED_BOOST)) / 100
                     : ((float) RemoteConfig.getLong(CONF_NORMAL_SPEED_BOOST)) / 100;
         }
@@ -407,7 +407,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                 long current = System.currentTimeMillis();
                 if (current - last > 1000) {
                     deduct = (current - last) / 1000;
-                    FlashUser.getInstance(LocalVpnService.this).costFreePremiumSec(deduct);
+                    FlashUser.getInstance().costFreePremiumSec(deduct);
                 }
                 if (deduct > 0) {
                     last = current - (current - last - deduct*1000);
@@ -418,7 +418,7 @@ public class LocalVpnService extends VpnService implements Runnable {
             long current = System.currentTimeMillis();
             if (current - last > 1000) {
                 deduct = (current - last) / 1000;
-                FlashUser.getInstance(LocalVpnService.this).costFreePremiumSec(deduct);
+                FlashUser.getInstance().costFreePremiumSec(deduct);
             }
             if (deduct > 0) {
                 last = current - (current - last - deduct*1000);

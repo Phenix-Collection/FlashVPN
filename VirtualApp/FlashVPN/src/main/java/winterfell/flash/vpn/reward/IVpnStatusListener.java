@@ -1,7 +1,10 @@
-package com.polestar.task;
+package winterfell.flash.vpn.reward;
 
-import com.polestar.task.network.datamodels.VpnRequirement;
-import com.polestar.task.network.responses.ServersResponse;
+import com.polestar.task.ADErrorCode;
+import com.polestar.task.IGeneralErrorListener;
+
+import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
+import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
 public interface IVpnStatusListener extends IGeneralErrorListener {
 

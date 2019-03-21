@@ -1,4 +1,4 @@
-package com.polestar.task.network.datamodels;
+package winterfell.flash.vpn.reward.network.datamodels;
 
 import com.google.gson.annotations.SerializedName;
 

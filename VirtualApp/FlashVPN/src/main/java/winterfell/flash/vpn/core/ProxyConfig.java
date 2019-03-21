@@ -3,7 +3,7 @@ package winterfell.flash.vpn.core;
 import android.annotation.SuppressLint;
 import android.os.Build;
 
-import com.polestar.task.network.datamodels.VpnServer;
+import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
 
 import winterfell.flash.vpn.tcpip.CommonMethods;
 import winterfell.flash.vpn.tunnel.Config;

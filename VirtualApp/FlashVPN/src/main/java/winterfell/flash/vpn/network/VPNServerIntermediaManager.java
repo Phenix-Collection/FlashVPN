@@ -8,9 +8,9 @@ import android.os.Looper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.polestar.ad.AdLog;
-import com.polestar.task.network.datamodels.RegionServers;
-import com.polestar.task.network.datamodels.VpnServer;
-import com.polestar.task.network.responses.ServersResponse;
+import winterfell.flash.vpn.reward.network.datamodels.RegionServers;
+import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
+import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
 import java.io.File;
 import java.util.ArrayList;

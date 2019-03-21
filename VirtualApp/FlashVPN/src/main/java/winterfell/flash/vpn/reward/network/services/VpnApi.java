@@ -1,8 +1,9 @@
-package com.polestar.task.network.services;
+package winterfell.flash.vpn.reward.network.services;
 
-import com.polestar.task.network.datamodels.VpnRequirement;
-import com.polestar.task.network.responses.ServersResponse;
 import com.polestar.task.network.responses.SucceedResponse;
+
+import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
+import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;

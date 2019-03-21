@@ -50,7 +50,7 @@ public class BillingProvider {
                             default:
                                 if(purchase.isAutoRenewing()) {
                                     MLogs.d(TAG, "Got a AD free version!!! ");
-                                    FlashUser.getInstance(FlashApp.getApp()).setVIP(true);
+                                    FlashUser.getInstance().setVIP(true);
                                 }
                                 break;
                         }

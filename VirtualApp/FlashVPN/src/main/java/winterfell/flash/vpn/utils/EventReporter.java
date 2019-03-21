@@ -17,13 +17,20 @@ import winterfell.flash.vpn.FlashApp;
  * Created by hxx on 8/2/16.
  */
 public class EventReporter {
-
+    public static final String PROP_REWARDED = "rewarded";
+    public static final String REWARD_OPEN = "open";
+    public static final String PROP_FAST_SWITCH = "fast_switch";
+    public static final String REWARD_ACTIVE = "active";
     private static FirebaseAnalytics mFirebaseAnalytics;
 
     public static void init(Context context) {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(FlashApp.getApp());
     }
-
+    public static void setUserProperty(String name, String prop) {
+        if(mFirebaseAnalytics != null) {
+            mFirebaseAnalytics.setUserProperty(name, prop);
+        }
+    }
 
     public static void subscribeClick(Context context, String from, String id) {
         Bundle bundle = new Bundle();
@@ -192,5 +199,17 @@ public class EventReporter {
 
     public static void reportFailedToAddProxy() {
         reportAwsEvent("add_port_failed");
+    }
+
+    public static void taskEvent(long id, int code) {
+        Bundle prop = new Bundle();
+        prop.putString("name", ""+id+"_"+code);
+        mFirebaseAnalytics.logEvent("task_event", prop);
+    }
+
+    public static void productEvent(String event) {
+        Bundle prop = new Bundle();
+        prop.putString("name", event);
+        mFirebaseAnalytics.logEvent("product_event", prop);
     }
 }

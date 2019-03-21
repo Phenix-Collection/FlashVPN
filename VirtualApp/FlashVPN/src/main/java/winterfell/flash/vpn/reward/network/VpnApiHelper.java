@@ -1,12 +1,17 @@
-package com.polestar.task.network;
+package winterfell.flash.vpn.reward.network;
 
 import com.polestar.ad.AdLog;
 import com.polestar.task.ADErrorCode;
-import com.polestar.task.IVpnStatusListener;
-import com.polestar.task.network.datamodels.VpnRequirement;
-import com.polestar.task.network.responses.ServersResponse;
+import winterfell.flash.vpn.reward.IVpnStatusListener;
+import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
+import winterfell.flash.vpn.reward.network.responses.ServersResponse;
+import winterfell.flash.vpn.reward.network.services.VpnApi;
+
+import com.polestar.task.network.AdApiHelper;
+import com.polestar.task.network.Configuration;
+import com.polestar.task.network.ErrorCodeInterceptor;
+import com.polestar.task.network.RetrofitServiceFactory;
 import com.polestar.task.network.responses.SucceedResponse;
-import com.polestar.task.network.services.VpnApi;
 import com.witter.msg.Sender;
 
 import retrofit2.Call;
@@ -24,13 +29,13 @@ public class VpnApiHelper extends AdApiHelper {
     }
 
     public static int getVpnServers(String deviceId, final IVpnStatusListener listener, boolean force) {
-        if (checkRequestTooFrequent(KEY_GET_VPN_SERVERS, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
-            return ERR_REQUEST_TOO_FREQUENT;
+        if (AdApiHelper.checkRequestTooFrequent(KEY_GET_VPN_SERVERS, listener, force) == AdApiHelper.ERR_REQUEST_TOO_FREQUENT) {
+            return AdApiHelper.ERR_REQUEST_TOO_FREQUENT;
         }
 
         VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
         Call<ServersResponse> call = service.getAvailableVpnServers(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)));
+                Configuration.PKG_NAME, Sender.send(AdApiHelper.getSecret(deviceId)));
         call.enqueue(new Callback<ServersResponse>() {
             @Override
             public void onResponse(Call<ServersResponse> call, Response<ServersResponse> response) {
@@ -46,7 +51,7 @@ public class VpnApiHelper extends AdApiHelper {
                         break;
                     default:
                         if (listener != null) {
-                            listener.onGeneralError(createADErrorFromResponse(response));
+                            listener.onGeneralError(AdApiHelper.createADErrorFromResponse(response));
                         }
                         break;
                 }
@@ -65,7 +70,7 @@ public class VpnApiHelper extends AdApiHelper {
             }
         });
 
-        return REQUEST_SUCCEED;
+        return AdApiHelper.REQUEST_SUCCEED;
     }
 
     public static int acquireVpnServer(String deviceId, final String publicIp,
@@ -77,13 +82,13 @@ public class VpnApiHelper extends AdApiHelper {
     public static int acquireVpnServer(String deviceId, final String publicIp,
                                        final String geo, final String city,
                                        final IVpnStatusListener listener, boolean force) {
-        if (checkRequestTooFrequent(KEY_ACQUIRE, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
-            return ERR_REQUEST_TOO_FREQUENT;
+        if (AdApiHelper.checkRequestTooFrequent(KEY_ACQUIRE, listener, force) == AdApiHelper.ERR_REQUEST_TOO_FREQUENT) {
+            return AdApiHelper.ERR_REQUEST_TOO_FREQUENT;
         }
 
         VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
         Call<VpnRequirement> call = service.acquire(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, publicIp, geo, city, Sender.send(getSecret(deviceId)));
+                Configuration.PKG_NAME, publicIp, geo, city, Sender.send(AdApiHelper.getSecret(deviceId)));
         call.enqueue(new Callback<VpnRequirement>() {
             @Override
             public void onResponse(Call<VpnRequirement> call, Response<VpnRequirement> response) {
@@ -98,7 +103,7 @@ public class VpnApiHelper extends AdApiHelper {
                         break;
                     default:
                         if (listener != null) {
-                            listener.onGeneralError(createADErrorFromResponse(response));
+                            listener.onGeneralError(AdApiHelper.createADErrorFromResponse(response));
                         }
                         break;
                 }
@@ -117,7 +122,7 @@ public class VpnApiHelper extends AdApiHelper {
             }
         });
 
-        return REQUEST_SUCCEED;
+        return AdApiHelper.REQUEST_SUCCEED;
     }
 
     public static int releaseVpnServer(String deviceId, final String publicIp, final IVpnStatusListener listener) {
@@ -125,13 +130,13 @@ public class VpnApiHelper extends AdApiHelper {
     }
 
     public static int releaseVpnServer(String deviceId, final String publicIp, final IVpnStatusListener listener, boolean force) {
-        if (checkRequestTooFrequent(KEY_RELEASE, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
-            return ERR_REQUEST_TOO_FREQUENT;
+        if (AdApiHelper.checkRequestTooFrequent(KEY_RELEASE, listener, force) == AdApiHelper.ERR_REQUEST_TOO_FREQUENT) {
+            return AdApiHelper.ERR_REQUEST_TOO_FREQUENT;
         }
 
         VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
         Call<SucceedResponse> call = service.release(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, publicIp, Sender.send(getSecret(deviceId)));
+                Configuration.PKG_NAME, publicIp, Sender.send(AdApiHelper.getSecret(deviceId)));
         call.enqueue(new Callback<SucceedResponse>() {
             @Override
             public void onResponse(Call<SucceedResponse> call, Response<SucceedResponse> response) {
@@ -146,7 +151,7 @@ public class VpnApiHelper extends AdApiHelper {
                         break;
                     default:
                         if (listener != null) {
-                            listener.onGeneralError(createADErrorFromResponse(response));
+                            listener.onGeneralError(AdApiHelper.createADErrorFromResponse(response));
                         }
                         break;
                 }
@@ -165,6 +170,6 @@ public class VpnApiHelper extends AdApiHelper {
             }
         });
 
-        return REQUEST_SUCCEED;
+        return AdApiHelper.REQUEST_SUCCEED;
     }
 }

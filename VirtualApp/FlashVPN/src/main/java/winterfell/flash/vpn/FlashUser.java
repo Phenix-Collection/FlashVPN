@@ -6,11 +6,14 @@ import android.os.Looper;
 import android.os.Message;
 
 
+import winterfell.flash.vpn.core.ProxyConfig;
+import winterfell.flash.vpn.reward.AppUser;
+
 import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
 import winterfell.flash.vpn.utils.RemoteConfig;
 
-public class FlashUser {
+public class FlashUser extends AppUser{
 
     private Context mContext;
     private static FlashUser sInstance;
@@ -22,8 +25,9 @@ public class FlashUser {
     private final static String RC_USE_PREMIUM_SECONDS = "use_premium_seconds";
     private final static String RC_INIT_PREMIUM_SECONDS = "init_premium_seconds";
 
-    private FlashUser(Context context) {
-        mContext = context;
+    private FlashUser() {
+        super();
+        mContext = FlashApp.getApp();
         mHandler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
@@ -35,11 +39,31 @@ public class FlashUser {
             }
         };
         freePremiumTime = PreferenceUtils.getLong(mContext, "premium_seconds", RemoteConfig.getLong(RC_INIT_PREMIUM_SECONDS));
+
+        //只load一次
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                MLogs.d("LocalVpnService-- Load config from file ...");
+                try {
+                    ProxyConfig.Instance.loadFromFile(mContext.getResources().openRawResource(R.raw.config));
+                    MLogs.d("LocalVpnService-- Load done");
+                } catch (Exception e) {
+                    String errString = e.getMessage();
+                    if (errString == null || errString.isEmpty()) {
+                        errString = e.toString();
+                    }
+                    MLogs.d("LocalVpnService-- Load failed with error: %s", errString);
+                }
+            }
+        };
+
+        t.start();
     }
 
-    synchronized public static FlashUser getInstance(Context context) {
+    synchronized public static FlashUser getInstance() {
         if (sInstance == null) {
-            sInstance = new FlashUser(context);
+            sInstance = new FlashUser();
         }
         return sInstance;
     }

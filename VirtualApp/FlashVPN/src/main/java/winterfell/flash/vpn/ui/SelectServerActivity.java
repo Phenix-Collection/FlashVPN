@@ -16,8 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.polestar.task.network.datamodels.RegionServers;
-import com.polestar.task.network.datamodels.VpnServer;
+import winterfell.flash.vpn.reward.network.datamodels.RegionServers;
+import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
 
 import java.util.List;
 

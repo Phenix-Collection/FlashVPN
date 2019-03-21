@@ -1,8 +1,9 @@
-package com.polestar.task.network.datamodels;
+package winterfell.flash.vpn.reward.network.datamodels;
 
 import android.content.Context;
 
 import com.google.gson.annotations.SerializedName;
+import com.polestar.task.network.datamodels.TimeModel;
 import com.witter.msg.Sender;
 
 public class VpnRequirement extends TimeModel {

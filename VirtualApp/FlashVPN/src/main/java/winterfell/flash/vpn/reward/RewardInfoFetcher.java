@@ -1,4 +1,4 @@
-package com.polestar.task.network;
+package winterfell.flash.vpn.reward;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,17 +11,19 @@ import android.os.Message;
 
 import com.polestar.task.ADErrorCode;
 import com.polestar.task.IUserStatusListener;
-import com.polestar.task.IVpnStatusListener;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.DatabaseImplFactory;
 import com.polestar.task.network.datamodels.User;
-import com.polestar.task.network.datamodels.VpnRequirement;
-import com.polestar.task.network.responses.ServersResponse;
+
+import winterfell.flash.vpn.FlashUser;
+import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
+import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
 import java.util.HashSet;
 
 import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.network.VPNServerIntermediaManager;
+import winterfell.flash.vpn.reward.network.VpnApiHelper;
 import winterfell.flash.vpn.utils.CommonUtils;
 import winterfell.flash.vpn.utils.EventReporter;
 import winterfell.flash.vpn.utils.MLogs;
@@ -88,18 +90,18 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
     //TODO need device id?
     private void checkAndFetchInfo(final boolean force) {
-        MLogs.d(TAG, "checkAndFetchInfo force: " + force + " myId " + AppUser.getInstance().getMyId());
+        MLogs.d(TAG, "checkAndFetchInfo force: " + force + " myId " + FlashUser.getInstance().getMyId());
         if(!force && (System.currentTimeMillis() - PreferenceUtils.getLastUpdateTime()
                 < UPDATE_INTERVAL)) {
             MLogs.d(TAG, "already fetched at " + PreferenceUtils.getLastUpdateTime());
             return;
         }
-        VpnApiHelper.register(mContext, AppUser.getInstance().getMyId(), new IUserStatusListener() {
+        VpnApiHelper.register(mContext, FlashUser.getInstance().getMyId(), new IUserStatusListener() {
             @Override
             public void onRegisterSuccess(User user) {
                 databaseApi.setUserInfo(user);
                 MLogs.d(TAG, "register success " + user);
-                VpnApiHelper.getVpnServers(AppUser.getInstance().getMyId(), new IVpnStatusListener(){
+                VpnApiHelper.getVpnServers(FlashUser.getInstance().getMyId(), new IVpnStatusListener(){
 
 
                     @Override

@@ -11,11 +11,6 @@ import com.polestar.task.database.DatabaseImplFactory;
 
 import winterfell.flash.vpn.R;
 
-import static com.polestar.task.network.AdApiHelper.consumeProduct;
-import static com.polestar.task.network.AdApiHelper.finishTask;
-import static com.polestar.task.network.AdApiHelper.getAvailableProducts;
-import static com.polestar.task.network.AdApiHelper.getAvailableTasks;
-
 public class AdTestActivity extends AppCompatActivity {
 
     @Override

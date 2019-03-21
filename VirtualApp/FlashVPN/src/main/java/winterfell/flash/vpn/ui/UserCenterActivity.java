@@ -68,7 +68,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
         setTitle(getString(R.string.user_activity_title));
         rewardLayout = findViewById(R.id.reward_layout);
         rewardLayout.setVisibility(View.GONE);
-        if (!FlashUser.getInstance(this).isVIP()) {
+        if (!FlashUser.getInstance().isVIP()) {
             loadRewardAd();
         }
         cardListView = findViewById(R.id.card_list);
@@ -90,12 +90,12 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
     }
     
     private void updateRewardLayout () {
-        if (FlashUser.getInstance(this).isVIP()|| rewardAd == null) {
+        if (FlashUser.getInstance().isVIP()|| rewardAd == null) {
             rewardLayout.setVisibility(View.GONE);
         } else {
-            if (FlashUser.getInstance(this).usePremiumSeconds()) {
+            if (FlashUser.getInstance().usePremiumSeconds()) {
                 rewardLayout.setVisibility(View.VISIBLE);
-                long premiumTime = FlashUser.getInstance(this).getFreePremiumSeconds();
+                long premiumTime = FlashUser.getInstance().getFreePremiumSeconds();
                 TextView text = findViewById(R.id.reward_text);
                 ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
                 if (premiumTime <= 0) {
@@ -120,7 +120,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
     }
 
     private void loadRewardAd() {
-        if (FlashUser.getInstance(this).usePremiumSeconds()) {
+        if (FlashUser.getInstance().usePremiumSeconds()) {
 
             FuseAdLoader.get(SLOT_USER_CENTER_REWARD, this).loadAd(this, 2, 1000,
                     new IAdLoadListener() {
@@ -198,7 +198,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
         super.onResume();
         updateRewardLayout();
         if (isRewarded) {
-            FlashUser.getInstance(this).doRewardFreePremium();
+            FlashUser.getInstance().doRewardFreePremium();
             Toast.makeText(this, R.string.get_reward_premium_time, Toast.LENGTH_SHORT).show();
             isRewarded = false;
         }

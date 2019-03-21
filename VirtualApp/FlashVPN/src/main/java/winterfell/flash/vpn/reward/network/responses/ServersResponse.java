@@ -1,8 +1,7 @@
-package com.polestar.task.network.responses;
+package winterfell.flash.vpn.reward.network.responses;
 
 import com.google.gson.annotations.SerializedName;
-import com.polestar.task.network.datamodels.RegionServers;
-import com.polestar.task.network.datamodels.VpnServer;
+import winterfell.flash.vpn.reward.network.datamodels.RegionServers;
 
 import java.util.ArrayList;
 
