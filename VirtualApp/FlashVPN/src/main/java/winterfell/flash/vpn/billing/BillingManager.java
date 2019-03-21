@@ -200,12 +200,6 @@ public class BillingManager implements PurchasesUpdatedListener {
                                 listener.onSkuDetailsResponse(responseCode, skuDetailsList);
                                 if (skuDetailsList != null
                                         && skuDetailsList.size() > 0) {
-                                    Collections.sort(skuDetailsList, new Comparator<SkuDetails>() {
-                                        @Override
-                                        public int compare(SkuDetails skuDetails, SkuDetails t1) {
-                                            return (int) (skuDetails.getPriceAmountMicros() - t1.getPriceAmountMicros());
-                                        }
-                                    });
                                     String skuList="";
                                     for (SkuDetails item : skuDetailsList) {
                                         skuList += item.toString();
