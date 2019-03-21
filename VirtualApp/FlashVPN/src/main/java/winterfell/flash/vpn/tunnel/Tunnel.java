@@ -87,10 +87,10 @@ public abstract class Tunnel {
 //                + " " + m_InnerChannel.toString() + " Threadid " + Thread.currentThread().getId());
         if (LocalVpnService.Instance.protect(m_InnerChannel.socket())) {//保护socket不走vpn
             m_DestAddress = destAddress;
-            SelectionKey selectionKey = m_InnerChannel.register(m_Selector, SelectionKey.OP_CONNECT, this);//注册连接事件
 //            MLogs.d("Tunnel-- before connect " + m_ServerEP  + m_InnerChannel.toString() + " " + destAddress.toString() + " " + selectionKey.toString());
             mStartConnectTime = Calendar.getInstance().getTimeInMillis();
             m_InnerChannel.connect(m_ServerEP);//连接目标
+            SelectionKey selectionKey = m_InnerChannel.register(m_Selector, SelectionKey.OP_CONNECT, this);//注册连接事件
         } else {
             throw new Exception("Tunnel-- VPN protect socket failed." + m_InnerChannel.toString());
         }
@@ -168,14 +168,16 @@ public abstract class Tunnel {
     @SuppressLint("DefaultLocale")
     public void onConnectable() {
         try {
-//            MLogs.d("Tunnel-- onConnectable " + m_InnerChannel.toString() + " " + getDestAddressString());
+            //MLogs.d("Tunnel-- onConnectable " + m_InnerChannel.toString() + " " + getDestAddressString() + this);
 
-            if (m_InnerChannel.finishConnect()) {//连接成功
-                MLogs.d("Tunnel-- finishConnect succeed "  + m_InnerChannel.toString());
-                onConnected(GL_BUFFER);//通知子类TCP已连接，子类可以根据协议实现握手等。
-            } else {//连接失败
-                MLogs.d(String.format("Tunnel-- Error: connect to %s failed.", m_ServerEP));
-                this.dispose();
+            if (m_InnerChannel.isConnectionPending()) {
+                if (m_InnerChannel.finishConnect()) {//连接成功
+                    MLogs.d("Tunnel-- finishConnect succeed " + m_InnerChannel.toString());
+                    onConnected(GL_BUFFER);//通知子类TCP已连接，子类可以根据协议实现握手等。
+                } else {//连接失败
+                    MLogs.d(String.format("Tunnel-- Error: connect to %s failed.", m_ServerEP));
+                    this.dispose();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,7 +185,7 @@ public abstract class Tunnel {
             //Tunnel-- Error: connect to 95.179.225.74/95.179.225.74:28388 failed: java.net.ConnectException: Connection refused
             //2019-03-21 当数据不通时，会进入这里
             //Error: connect to /92.38.132.133:26343 failed:java.net.ConnectException: Connection timed outalt7-mtalk.google.com:5228
-            MLogs.e("Tunnel-- Error: connect to " + m_ServerEP.toString() + " failed:"  + e.toString() + getDestAddressString());
+            MLogs.e("Tunnel-- Error: connect to " + m_ServerEP.toString() + " failed:"  + e.toString() + getDestAddressString() + this);
             this.dispose();
         }
     }

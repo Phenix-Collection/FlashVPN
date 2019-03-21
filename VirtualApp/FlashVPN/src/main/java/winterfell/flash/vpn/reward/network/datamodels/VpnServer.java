@@ -1,6 +1,9 @@
 package winterfell.flash.vpn.reward.network.datamodels;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
+import com.witter.msg.Sender;
 
 import java.util.HashMap;
 
@@ -28,6 +31,9 @@ public class VpnServer  {
     public int mIsOnline;
 //ss://aes-256-cfb:passwd@95.179.225.74:28388
 
+    @SerializedName("pingport")
+    public String mPingport;
+
     //本地的性能数据如下
     @SerializedName("ping")
     public int mPingDelayMilli;
@@ -38,6 +44,23 @@ public class VpnServer  {
     @SerializedName("uploadSpeed")
     public int mByteUpPs;
 
+    public String toSSPingConfig(Context context) {
+        if (mPingport != null && !mPingport.isEmpty()) {
+            String p = "";
+            String po = "";
+            try {
+                String[] pin = mPingport.split("_");
+                po = pin[0];
+                p = Sender.rreceive(context, pin[1]);
+            } catch (Exception e) {
+                return "";
+            }
+            return "ss://aes-256-cfb:"+ Sender.rreceive(context, p) + "@" + mPublicIp
+                    + ":" + po;
+        } else {
+            return "";
+        }
+    }
 
     public static int PRIORITY_DEFAULT = 5;
     public static int NO_PING = 3000; //1

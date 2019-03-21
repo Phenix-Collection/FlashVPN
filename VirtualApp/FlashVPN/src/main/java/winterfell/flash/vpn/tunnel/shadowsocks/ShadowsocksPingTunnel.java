@@ -110,7 +110,7 @@ public class ShadowsocksPingTunnel extends ShadowsocksTunnel {
     @Override
     public void connect(InetSocketAddress destAddress) {
         mStartConnectTime = Calendar.getInstance().getTimeInMillis();
-        MLogs.i("ShadowsocksPingTunnel-- connect " + getDestAddressString() + " " + mStartConnectTime);
+        MLogs.i("ShadowsocksPingTunnel-- connect " + getDestAddressString() + " " + mStartConnectTime + this);
         try {
 //            MLogs.d("Tunnel-- connect " + destAddress.toString() + " proxy is " + m_ServerEP.toString()
 //                    + " " + m_InnerChannel.toString() + " Threadid " + Thread.currentThread().getId());
