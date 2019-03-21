@@ -37,14 +37,14 @@ public class TunnelFactory {
         }
     }
 
-    public static Tunnel createShadowSocksPingTunnelByConfig(InetSocketAddress destAddress, Selector selector,
-                                                             ShadowsocksPingManager pingManager,
-                                                             ShadowsocksPingTunnel.ShadowsocksPingTunnelListenser listenser) throws Exception {
+    public static Tunnel createShadowSocksCheckPortTunnelByConfig(InetSocketAddress destAddress, Selector selector,
+                                                                  ShadowsocksPingManager pingManager,
+                                                                  ShadowsocksPingTunnel.ShadowsocksPingTunnelListenser listenser) throws Exception {
         MLogs.d("create ShadowsocksPingTunnel");
-        return new ShadowsocksPingTunnel(getShadowSocksPingConfig(destAddress), selector, pingManager, listenser);
+        return new ShadowsocksPingTunnel(getShadowSocksCheckPortConfig(destAddress), selector, pingManager, listenser);
     }
 
-    public static ShadowsocksConfig getShadowSocksPingConfig(InetSocketAddress destAddress) throws Exception {
+    public static ShadowsocksConfig getShadowSocksCheckPortConfig(InetSocketAddress destAddress) throws Exception {
         if (destAddress.isUnresolved()) {
             Config config = ProxyConfig.Instance.getDefaultTunnelConfig(destAddress);
             if (config instanceof HttpConnectConfig) {
@@ -56,6 +56,13 @@ public class TunnelFactory {
         } else {
             throw new Exception("The config is not shadowsocks.");
         }
+    }
+
+    public static Tunnel createShadowSocksPingTunnel(String destAddress, Selector selector,
+                                                                  ShadowsocksPingManager pingManager,
+                                                                  ShadowsocksPingTunnel.ShadowsocksPingTunnelListenser listenser) throws Exception {
+        MLogs.d("create ShadowsocksPingTunnel for ping");
+        return new ShadowsocksPingTunnel((ShadowsocksConfig) ProxyConfig.getPingTunnelConfig(destAddress), selector, pingManager, listenser);
     }
 
 }

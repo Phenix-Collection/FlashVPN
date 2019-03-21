@@ -191,6 +191,15 @@ public class ProxyConfig {
         return getDefaultProxy();
     }
 
+    public static Config getPingTunnelConfig(String ip) {
+        try {
+            return ShadowsocksConfig.parse("ss://aes-256-cfb:test@" + ip + ":28387");
+        } catch (Exception e) {
+            MLogs.e("Failed to parse ping tunnul config " + e.toString());
+            return null;
+        }
+    }
+
     public IPAddress getDefaultLocalIP() {
         if (m_IpList.size() > 0) {
             return m_IpList.get(0);

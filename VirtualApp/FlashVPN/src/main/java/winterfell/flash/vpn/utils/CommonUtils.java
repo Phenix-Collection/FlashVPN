@@ -13,6 +13,10 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -184,5 +188,21 @@ public class CommonUtils {
         NetworkInfo networkinfo = manager.getActiveNetworkInfo();
 
         return !(networkinfo == null || !networkinfo.isAvailable());
+    }
+
+    public static String getIpString(InetSocketAddress inetSocketAddress) {
+            InetAddress inetAddress = ((InetSocketAddress)inetSocketAddress).getAddress();
+            if (inetAddress instanceof Inet4Address) {
+                System.out.println("IPv4: " + inetAddress);
+                byte[] ip4bytes = inetAddress.getAddress(); // returns byte[4]
+                return inetAddress.toString().split("/")[1];
+            }
+//            else if (inetAddress instanceof Inet6Address)
+//                System.out.println("IPv6: " + inetAddress);
+            else {
+                MLogs.e("Not an IP address.");
+                return "";
+            }
+
     }
 }

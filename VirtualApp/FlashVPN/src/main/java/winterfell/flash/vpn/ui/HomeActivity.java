@@ -42,6 +42,7 @@ import com.polestar.task.network.responses.ServersResponse;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -292,8 +293,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     ShadowsocksPingManager proxyServer = null;
-    private void ping() {
-        MLogs.i("HomeActivity-- PINGPINGPINGPINGPINGPINGPINGPING");
+    private void checkPort() {
+        MLogs.i("HomeActivity-- CHECKPORTCHECKPORTCHECKPORTCHECKPORTCHECKPORTCHECKPORT");
         final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
 
         Thread t = new Thread() {
@@ -313,18 +314,60 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     }
                 }
 
-                proxyServer.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
+                proxyServer.checkPort(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
 
                     @Override
                     public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
-                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingsucceeded " + pingTimeInMilli);
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- checkPortsucceeded " + pingTimeInMilli);
                         updateStateOnMainThread(STATE_CHECK_PORT_SUCCEED, "");
                     }
 
                     @Override
                     public void onPingFailed(InetSocketAddress socketAddress) {
-                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingfailed " + this);
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- checkPortfailed " + this);
                         updateStateOnMainThread(STATE_CHECK_PORT_FAILED, "");
+                    }
+                }, RemoteConfig.getLong("config_check_port_timeout"));
+            }
+        };
+        t.start();
+    }
+
+    private void ping() {
+        MLogs.i("HomeActivity-- PINGPINGPINGPINGPINGPING");
+        final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
+        int id = PreferenceUtils.getPreferServer();
+        mCurrentVpnServer = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                if (proxyServer == null) {
+                    try {
+                        proxyServer = new ShadowsocksPingManager();
+                        proxyServer.start();
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                proxyServer.ping(mCurrentVpnServer.mPublicIp, new ShadowsocksPingManager.ShadowsocksPingListenser() {
+
+                    @Override
+                    public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingsucceeded " + pingTimeInMilli + " " + CommonUtils.getIpString(serverAddress));
+                        //updateStateOnMainThread(STATE_CHECK_PORT_SUCCEED, "");
+                    }
+
+                    @Override
+                    public void onPingFailed(InetSocketAddress socketAddress) {
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingfailed " + this);
+                        //updateStateOnMainThread(STATE_CHECK_PORT_FAILED, "");
                     }
                 }, RemoteConfig.getLong("config_check_port_timeout"));
             }
@@ -365,7 +408,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 connectTips.setVisibility(View.VISIBLE);
                 connectTips.setText(R.string.checking_port);
                 if (doAction) {
-                    ping();
+                    checkPort();
                 }
                 break;
             case STATE_CHECK_PORT_SUCCEED:
@@ -384,7 +427,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                         return;
                     }
                     //ping不同一次，再来一次，有可能服务器还没准备好
-                    ping();
+                    checkPort();
                 }
                 break;
             case STATE_CONNECTED:

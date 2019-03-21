@@ -20,7 +20,7 @@ import winterfell.flash.vpn.tunnel.Tunnel;
 import winterfell.flash.vpn.tunnel.shadowsocks.ShadowsocksPingTunnel;
 import winterfell.flash.vpn.utils.MLogs;
 
-import static winterfell.flash.vpn.core.TunnelFactory.getShadowSocksPingConfig;
+import static winterfell.flash.vpn.core.TunnelFactory.getShadowSocksCheckPortConfig;
 
 public class ShadowsocksPingManager implements Runnable {
     public static abstract class ShadowsocksPingListenser {
@@ -107,12 +107,12 @@ public class ShadowsocksPingManager implements Runnable {
 
     //private long mTimeoutThresholder = 30000; //30秒超时
 
-    public boolean ping(InetSocketAddress pingTarget, final ShadowsocksPingListenser listener, final long timeout) {
+    public boolean checkPort(InetSocketAddress pingTarget, final ShadowsocksPingListenser listener, final long timeout) {
         start();
 
         Config config = null;
         try {
-            config = getShadowSocksPingConfig(pingTarget);
+            config = getShadowSocksCheckPortConfig(pingTarget);
         } catch (Exception e) {
             MLogs.e("Failed to get config for " + pingTarget.toString());
             return false;
@@ -145,7 +145,59 @@ public class ShadowsocksPingManager implements Runnable {
 
         Tunnel tunnel = null;
         try {
-            tunnel = TunnelFactory.createShadowSocksPingTunnelByConfig(pingTarget, null, this, tunnelListenser);
+            tunnel = TunnelFactory.createShadowSocksCheckPortTunnelByConfig(pingTarget, null, this, tunnelListenser);
+            tunnel.connect(pingTarget);
+        } catch (Exception e) {
+            e.printStackTrace();
+            MLogs.e("ShadowsocksPingManager-- connect or create tunnel failed " + e.toString());
+            if (listener != null && tunnel != null) {
+                f.cancel(true);
+                listener.onPingFailedInternal(tunnel.getServerEP());
+            }
+        }
+        return true;
+    }
+
+    public boolean ping(String sserver, final ShadowsocksPingListenser listener, final long timeout) {
+        start();
+        final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
+
+        Config config = null;
+        try {
+            config = ProxyConfig.getPingTunnelConfig(sserver);
+        } catch (Exception e) {
+            MLogs.e("Failed to get config for " + sserver.toString());
+            return false;
+        }
+        //schedule timeout
+        ScheduledExecutorService scheduler
+                = Executors.newSingleThreadScheduledExecutor();
+        Runnable task = new PingTimeoutRunnable(config.ServerAddress, listener);
+        final Future f = scheduler.schedule(task, timeout, TimeUnit.MILLISECONDS);
+        scheduler.shutdown();
+
+
+        ShadowsocksPingTunnel.ShadowsocksPingTunnelListenser tunnelListenser = new ShadowsocksPingTunnel.ShadowsocksPingTunnelListenser() {
+            @Override
+            public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
+                if (listener != null) {
+                    f.cancel(true);
+                    listener.onPingSucceededInternal(serverAddress, pingTimeInMilli);
+                }
+            }
+
+            @Override
+            public void onPingFailed(InetSocketAddress socketAddress) {
+                if (listener != null) {
+                    f.cancel(true);
+                    listener.onPingFailedInternal(socketAddress);
+                }
+            }
+        };
+
+        Tunnel tunnel = null;
+        try {
+            tunnel = TunnelFactory.createShadowSocksPingTunnel(sserver, null, this, tunnelListenser);
             tunnel.connect(pingTarget);
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,7 +262,6 @@ public class ShadowsocksPingManager implements Runnable {
                                     MLogs.e("Get pending requests failed " + e.toString());
                                 }
                                 junk.clear();
-
                             }
                         } else {
                             if (selectionKey.isConnectable()) {
