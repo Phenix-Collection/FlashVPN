@@ -171,16 +171,18 @@ public abstract class Tunnel {
 //            MLogs.d("Tunnel-- onConnectable " + m_InnerChannel.toString() + " " + getDestAddressString());
 
             if (m_InnerChannel.finishConnect()) {//连接成功
-//                MLogs.d("Tunnel-- finishConnect succeed "  + m_InnerChannel.toString());
+                MLogs.d("Tunnel-- finishConnect succeed "  + m_InnerChannel.toString());
                 onConnected(GL_BUFFER);//通知子类TCP已连接，子类可以根据协议实现握手等。
             } else {//连接失败
-                MLogs.d(String.format("Error: connect to %s failed.", m_ServerEP));
+                MLogs.d(String.format("Tunnel-- Error: connect to %s failed.", m_ServerEP));
                 this.dispose();
             }
         } catch (Exception e) {
             e.printStackTrace();
             //2019-03-02 当shadowsokcs服务器挂了的时候，会进入这里
             //Tunnel-- Error: connect to 95.179.225.74/95.179.225.74:28388 failed: java.net.ConnectException: Connection refused
+            //2019-03-21 当数据不通时，会进入这里
+            //Error: connect to /92.38.132.133:26343 failed:java.net.ConnectException: Connection timed outalt7-mtalk.google.com:5228
             MLogs.e("Tunnel-- Error: connect to " + m_ServerEP.toString() + " failed:"  + e.toString() + getDestAddressString());
             this.dispose();
         }

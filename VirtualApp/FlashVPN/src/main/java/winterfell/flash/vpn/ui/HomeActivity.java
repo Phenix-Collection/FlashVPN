@@ -314,9 +314,10 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 }
 
                 proxyServer.ping(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
+
                     @Override
                     public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
-                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingsucceeded " + this);
+                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingsucceeded " + pingTimeInMilli);
                         updateStateOnMainThread(STATE_CHECK_PORT_SUCCEED, "");
                     }
 

@@ -23,9 +23,25 @@ import winterfell.flash.vpn.utils.MLogs;
 import static winterfell.flash.vpn.core.TunnelFactory.getShadowSocksPingConfig;
 
 public class ShadowsocksPingManager implements Runnable {
-    public interface ShadowsocksPingListenser {
-        void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli);
-        void onPingFailed(InetSocketAddress socketAddress);
+    public static abstract class ShadowsocksPingListenser {
+        private boolean alreadyCalled = false;
+
+        private void onPingSucceededInternal(InetSocketAddress serverAddress, long pingTimeInMilli) {
+            if (!alreadyCalled) {
+                alreadyCalled = true;
+                onPingSucceeded(serverAddress, pingTimeInMilli);
+            }
+        }
+
+        private void onPingFailedInternal(InetSocketAddress socketAddress) {
+            if (!alreadyCalled) {
+                alreadyCalled = true;
+                onPingFailed(socketAddress);
+            }
+        }
+
+        public abstract void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli);
+        public abstract void onPingFailed(InetSocketAddress socketAddress);
     }
 
     private class RegisterRequest {
@@ -114,7 +130,7 @@ public class ShadowsocksPingManager implements Runnable {
             public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
                 if (listener != null) {
                     f.cancel(true);
-                    listener.onPingSucceeded(serverAddress, pingTimeInMilli);
+                    listener.onPingSucceededInternal(serverAddress, pingTimeInMilli);
                 }
             }
 
@@ -122,7 +138,7 @@ public class ShadowsocksPingManager implements Runnable {
             public void onPingFailed(InetSocketAddress socketAddress) {
                 if (listener != null) {
                     f.cancel(true);
-                    listener.onPingFailed(socketAddress);
+                    listener.onPingFailedInternal(socketAddress);
                 }
             }
         };
@@ -136,7 +152,7 @@ public class ShadowsocksPingManager implements Runnable {
             MLogs.e("ShadowsocksPingManager-- connect or create tunnel failed " + e.toString());
             if (listener != null && tunnel != null) {
                 f.cancel(true);
-                listener.onPingFailed(tunnel.getServerEP());
+                listener.onPingFailedInternal(tunnel.getServerEP());
             }
         }
         return true;
@@ -153,7 +169,7 @@ public class ShadowsocksPingManager implements Runnable {
         @Override
         public void run() {
             MLogs.e("ShadowsocksPingManager-- ping timeout " + mAddress.toString());
-            mListerner.onPingFailed(mAddress);
+            mListerner.onPingFailedInternal(mAddress);
         }
     }
 
