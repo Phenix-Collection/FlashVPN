@@ -404,6 +404,7 @@
     <string name="settings_fastswitch_description">從通知欄快速切換到應用分身</string>
     <string name="fast_switch_dialog_content">開啟快速切換？它能幫您通過通知欄快速切換到最近使用的多開應用</string>
 
+    <string name="enable_locker_first">請開啟隱私鎖並設置密碼</string>
     <string name="dialog_permission_title">隱私與權限</string>
-    <string name="dialog_permission_content">超級多開會替克隆應用申請權限。請查看並授予權限以保證正常運營。我們不會收集任何隱私數據，也不會將數據給任何第三方。</string>
+    <string name="dialog_permission_content">超級多開會替克隆應用申請權限。請查看並授予權限以保證正常運行。我們不會收集任何隱私數據，也不會將數據給任何第三方。</string>
 </resources>

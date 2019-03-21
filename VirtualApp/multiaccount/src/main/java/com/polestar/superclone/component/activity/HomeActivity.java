@@ -98,6 +98,7 @@ public class HomeActivity extends BaseActivity {
     private RelativeLayout giftIconLayout;
     private IAdAdapter interstitialAd;
     private Handler mainHandler;
+    private boolean showGift;
 
     private View bottomNavBar;
 
@@ -114,6 +115,7 @@ public class HomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainHandler = new Handler();
+        showGift = PreferencesUtils.hasCloned();
         EventReporter.homeShow(this);
         setContentView(R.layout.activity_home);
         initView();
@@ -273,9 +275,7 @@ public class HomeActivity extends BaseActivity {
                 }
             });
         } else {
-            if (random < RemoteConfig.getLong("config_no_ad_icon_percent")
-                    || (AppUser.isRewardEnabled()
-                            && RewardErrorCode.TASK_OK != TaskExecutor.checkTask(AppUser.getInstance().getRandomAwardTask()))) {
+            if (random < RemoteConfig.getLong("config_no_ad_icon_percent")) {
                 giftRes = R.drawable.no_ad;
                 iconAdLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -379,12 +379,14 @@ public class HomeActivity extends BaseActivity {
         MLogs.d("isInterstitialAdLoaded " + isInterstitialAdLoaded + " isAutoInterstitialShown " + isAutoInterstitialShown);
         giftIconLayout.setVisibility(View.GONE);
         giftIconView.setVisibility(View.GONE);
-        giftIconView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showGiftIcon();
-            }
-        },800);
+        if (showGift) {
+            giftIconView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showGiftIcon();
+                }
+            }, 800);
+        }
         if (!PreferencesUtils.isAdFree()) {
             if (autoShowInterstitial && !isAutoInterstitialShown) {
                 loadHomeInterstitial();

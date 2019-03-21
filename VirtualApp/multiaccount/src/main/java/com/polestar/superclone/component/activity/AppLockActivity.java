@@ -30,6 +30,7 @@ import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.clone.BitmapUtils;
 import com.polestar.superclone.utils.DisplayUtils;
+import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
@@ -110,6 +111,7 @@ public class AppLockActivity extends BaseActivity {
             mAdInfoContainer.removeAllViews();
             mAdInfoContainer.addView(adView);
             updateTitleBar();
+            EventReporter.generalEvent("app_lock_load_ad_show");
         }
     }
     private void updateTitleBar() {
@@ -123,6 +125,7 @@ public class AppLockActivity extends BaseActivity {
 //        adLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_FACEBOOK, "1713507248906238_1787756514814644", -1));
 //        adLoader.addAdConfig(new AdConfig(AdConstants.AdType.AD_SOURCE_MOPUB, "ea31e844abf44e3690e934daad125451", -1));
         if (adLoader != null) {
+            EventReporter.generalEvent("app_lock_load_ad");
             adLoader.loadAd(this, 2, RemoteConfig.getLong(CONFIG_SLOT_APP_LOCK_PROTECT_TIME), new IAdLoadListener() {
                 @Override
                 public void onAdClicked(IAdAdapter ad) {
@@ -155,6 +158,7 @@ public class AppLockActivity extends BaseActivity {
 
                 @Override
                 public void onError(String error) {
+                    EventReporter.generalEvent("app_lock_load_ad_" + error);
                     MLogs.d("Lock window load ad error: " + error);
                 }
             });
@@ -169,7 +173,7 @@ public class AppLockActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        EventReporter.generalEvent("app_lock_create");
     }
 
 

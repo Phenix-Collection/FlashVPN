@@ -240,4 +240,5 @@
 
     <string name="dialog_permission_title">Permission &amp; Data</string>
     <string name="dialog_permission_content">Super Clone will apply permissions on behalf of cloned applications. Please check and grant permissions to make them work properly. We will not collect any privacy data or pass any personal info to others.</string>
+    <string name="enable_locker_first">Please enable privacy locker and set password!</string>
 </resources>

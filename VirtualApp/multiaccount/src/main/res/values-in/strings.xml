@@ -202,7 +202,7 @@
     <string name = "settings_fastswitch_title">Pengalihan Cepat</string>
          <string name = "settings_fastswitch_description">Beralih cepat antara beberapa akun di bilah notifikasi.</string>
          <string name = "fast_switch_dialog_content">Aktifkan Fast Switch sekarang? Ini dapat membantu Anda dengan cepat beralih di antara akun baru-baru ini di bilah notifikasi.</string>
-
+    <string name = "enable_locker_first">Harap aktifkan pengunci privasi dan setel kata sandi!</string>
          <string name = "dialog_permission_title">Izin &amp; Data</string>
          <string name = "dialog_permission_content">Super Clone akan menerapkan izin atas nama aplikasi yang dikloning. Silakan periksa dan berikan izin untuk membuatnya berfungsi dengan baik. Kami tidak akan mengumpulkan data privasi apa pun atau memberikan informasi pribadi apa pun kepada orang lain.</string>
 </resources>

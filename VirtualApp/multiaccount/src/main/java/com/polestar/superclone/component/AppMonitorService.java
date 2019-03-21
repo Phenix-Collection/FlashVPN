@@ -72,7 +72,7 @@ public class AppMonitorService extends Service {
                                 .setBannerAdSize(AppLockActivity.getBannerSize()).preloadAd(AppMonitorService.this);
                         long interval = RemoteConfig.getLong(CONFIG_APPLOCK_PRELOAD_INTERVAL);
                         MLogs.d("Applocker schedule next ad at " + interval);
-                        if (interval >= 15*60*000) {
+                        if (interval >= 15*60*1000) {
                             mainHandler.sendEmptyMessageDelayed(MSG_PRELOAD_AD, interval);
                         }
                     }

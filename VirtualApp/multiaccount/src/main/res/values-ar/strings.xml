@@ -195,6 +195,7 @@
          <string name = "settings_fastswitch_description">التبديل السريع بين حسابات متعددة في شريط الإعلام.</string>
          <string name = "fast_switch_dialog_content">تمكين التبديل السريع الآن؟ يمكن أن يساعدك على التبديل بسرعة بين حساباتك الحديثة في شريط الإعلام.</string>
 
+    <string name = "enable_locker_first">يرجى تمكين خزانة الخصوصية وتعيين كلمة المرور!</string>
          <string name = "dialog_permission_title">الإذن الإذن&amp;البيانات </string>
          <string name = "dialog_permission_content">سيطبق Super Clone الأذونات نيابة عن التطبيقات المستنسخة. يرجى التحقق ومنح أذونات لجعلها تعمل بشكل صحيح. لن نقوم بجمع أي بيانات خصوصية أو تمرير أي معلومات شخصية للآخرين. </string>
 </resources>

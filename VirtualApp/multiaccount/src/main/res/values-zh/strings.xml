@@ -224,6 +224,7 @@
     <string name="settings_fastswitch_description">从通知栏快速切换到应用分身</string>
     <string name="fast_switch_dialog_content">开启快速切换？它能帮您通过通知栏快速切换到最近使用的多开应用</string>
 
+    <string name="enable_locker_first">请开启隐私锁并设置密码</string>
     <string name="dialog_permission_title">隐私与权限</string>
-    <string name="dialog_permission_content">超级多开会替克隆应用申请权限。请查看并授予权限以保证正常运营。我们不会收集任何隐私数据，也不会将数据给任何第三方。</string>
+    <string name="dialog_permission_content">超级多开会替克隆应用申请权限。请查看并授予权限以保证正常运行。我们不会收集任何隐私数据，也不会将数据给任何第三方。</string>
 </resources>

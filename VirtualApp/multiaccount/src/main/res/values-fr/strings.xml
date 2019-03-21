@@ -157,7 +157,7 @@
     <string name = "settings_fastswitch_title">Commutation rapide</string>
          <string name = "settings_fastswitch_description">Basculement rapide entre plusieurs comptes dans la barre de notification.</string>
          <string name = "fast_switch_dialog_content">Activer le changement rapide maintenant? Cela peut vous aider à basculer rapidement entre vos comptes récents dans la barre de notification.</string>
-
+    <string name = "enable_locker_first">Veuillez activer le verrou de confidentialité et définir le mot de passe!</string>
          <string name = "dialog_permission_title">Permission &amp; Données</string>
          <string name = "dialog_permission_content">Super Clone appliquera des autorisations au nom des applications clonées. Veuillez vérifier et accorder des autorisations pour les faire fonctionner correctement. Nous ne collecterons aucune donnée de confidentialité ni ne transmettrons aucune information personnelle à des tiers.</string>
 

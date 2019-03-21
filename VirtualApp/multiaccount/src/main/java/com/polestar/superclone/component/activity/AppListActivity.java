@@ -73,6 +73,8 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     private FuseAdLoader mNativeAdLoader;
     private TextView sponsorText;
     private Dialog mHotTaskDialog;
+    private boolean isBuying;
+    private AppModel clickedModel;
     public static final String SLOT_APPLIST_NATIVE = "slot_applist_native";
 
     private static final String CONFIG_APPLIST_NATIVE_PRIOR_TIME = "applist_native_prior_time";
@@ -97,6 +99,8 @@ public class AppListActivity extends BaseActivity implements DataObserver {
     @Override
     protected void onResume() {
         super.onResume();
+        isBuying = false;
+        clickedModel = null;
         AppListUtils.getInstance(this).registerObserver(this);
     }
 
@@ -231,6 +235,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
     private void checkAndClone(AppModel model) {
         Product product;
+        clickedModel = model;
         if ((!PreferencesUtils.isVIP()) && AppUser.isRewardEnabled()
                 && AppUser.getInstance().isRewardAvailable()
                 && (product = AppUser.getInstance().get1CloneProduct()) != null
@@ -239,16 +244,19 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             ProductManager productManager = ProductManager.getInstance();
             int status = productManager.canBuyProduct(product);
             if(status == RewardErrorCode.PRODUCT_OK) {
+                isBuying = true;
                 productManager.buyProduct(product, new IProductStatusListener() {
                     @Override
                     public void onConsumeSuccess(long id, int amount, float totalCost, float balance) {
                         AppUser.getInstance().checkAndConsumeClone(1);
                         RewardErrorCode.toastMessage(AppListActivity.this, RewardErrorCode.PRODUCT_OK, totalCost);
+                        isBuying = false;
                         goClone(model);
                     }
 
                     @Override
                     public void onConsumeFail(ADErrorCode code) {
+                        isBuying = false;
                         if (code.getErrCode() == ADErrorCode.NOT_ENOUGH_MONEY
                                 || code.getErrCode() == RewardErrorCode.PRODUCT_NO_ENOUGH_COIN) {
 //                           RewardErrorCode RewardErrorCode.toastMessage(AppListActivity.this, code.getErrCode());
@@ -265,6 +273,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
                     @Override
                     public void onGeneralError(ADErrorCode code) {
+                        isBuying = false;
                         goClone(model);
                     }
                 });
@@ -276,6 +285,19 @@ public class AppListActivity extends BaseActivity implements DataObserver {
             }
         } else {
             goClone(model);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isBuying) {
+            super.onBackPressed();
+        } else {
+            if (clickedModel != null) {
+                goClone(clickedModel);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 

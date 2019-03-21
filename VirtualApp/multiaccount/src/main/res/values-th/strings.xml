@@ -200,7 +200,7 @@
     <string name = "settings_fastswitch_title">เปลี่ยนอย่างรวดเร็ว</string>
          <string name = "settings_fastswitch_description">สลับระหว่างบัญชีหลายบัญชีอย่างรวดเร็วในแถบการแจ้งเตือน</string>
          <string name = "fast_switch_dialog_content">ปิดใช้งานสวิตช์เร็วหรือไม่ มันสามารถช่วยให้คุณสลับระหว่างบัญชีล่าสุดของคุณในแถบการแจ้งเตือนได้อย่างรวดเร็ว</string>
-
+    <string name = "enable_locker_first">โปรดเปิดใช้งานตัวล็อกความเป็นส่วนตัวและตั้งรหัสผ่าน!</string>
          <string name = "dialog_permission_title">การอนุญาต &amp; ข้อมูล</string>
          <string name = "dialog_permission_content">Super Clone จะใช้การอนุญาตในนามของแอปพลิเคชันที่ถูกโคลน โปรดตรวจสอบและให้สิทธิ์เพื่อให้ทำงานได้อย่างถูกต้อง เราจะไม่รวบรวมข้อมูลความเป็นส่วนตัวหรือส่งต่อข้อมูลส่วนตัวใด ๆ ไปยังผู้อื่น</string>
 </resources>

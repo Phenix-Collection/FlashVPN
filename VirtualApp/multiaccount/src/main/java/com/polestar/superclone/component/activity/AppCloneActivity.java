@@ -279,6 +279,9 @@ public class AppCloneActivity extends BaseActivity {
             appModel.setNotificationEnable(mNotificationSwitch.isChecked());
             appModel.setLockerState(mLockerSwitch.isChecked() ? AppConstants.AppLockState.ENABLED_FOR_CLONE : AppConstants.AppLockState.DISABLED);
             try {
+                if (!PreferencesUtils.isLockerEnabled(this) && CommonUtils.isSocialApp(appModel.getPackageName())){
+                    appModel.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
+                }
                 DbManager.updateAppModel(this, appModel);
             }catch (Exception ex) {
                 EventReporter.applistClone(AppCloneActivity.this, "error_setting_" + appModel.getPackageName());

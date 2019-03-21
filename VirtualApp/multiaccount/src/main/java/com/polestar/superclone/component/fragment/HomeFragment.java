@@ -85,6 +85,8 @@ public class HomeFragment extends BaseFragment {
     private IAdAdapter nativeAd;
     private long adShowTime = 0;
 
+    private boolean showHeaderAd;
+
     private FuseAdLoader mNativeAdLoader;
     private FuseAdLoader mApplistAdLoader;
     private static final String CONFIG_HOME_NATIVE_PRIOR_TIME = "home_native_prior_time";
@@ -145,6 +147,13 @@ public class HomeFragment extends BaseFragment {
         if (gridItems == null) {
             gridItems = new ArrayList<>();
         }
+        showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
+                && PreferencesUtils.hasCloned();
+        adShowTime = 0;
+        long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
+        showLucky = (!PreferencesUtils.isAdFree())
+                && PreferencesUtils.hasCloned()
+                && new Random().nextInt(100) < luckyRate ;
 
     }
 
@@ -617,8 +626,6 @@ public class HomeFragment extends BaseFragment {
         if (PreferencesUtils.isAdFree()) {
             hideAd();
         } else {
-            boolean showHeaderAd = RemoteConfig.getBoolean(KEY_HOME_SHOW_HEADER_AD)
-                    && PreferencesUtils.hasCloned();
             MLogs.d(KEY_HOME_SHOW_HEADER_AD + showHeaderAd);
             if (showHeaderAd && System.currentTimeMillis() - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
                 loadHeadNativeAd();
@@ -652,10 +659,6 @@ public class HomeFragment extends BaseFragment {
 
     private void updateGridItemList(List<AppModel> appModels) {
         gridItems.clear();
-        long luckyRate = RemoteConfig.getLong(CONFIG_HOME_SHOW_LUCKY_RATE);
-        showLucky = (!PreferencesUtils.isAdFree())
-                && PreferencesUtils.hasCloned()
-                && new Random().nextInt(100) < luckyRate ;
         if (iconAd != null) {
             gridItems.add(new HomeGridItem(HomeGridItem.TYPE_ICON_AD, iconAd));
         }
@@ -712,6 +715,7 @@ public class HomeFragment extends BaseFragment {
                 CloneHelper.getInstance(mActivity).loadClonedApps(mActivity, new CloneHelper.OnClonedAppChangListener() {
                     @Override
                     public void onInstalled(List<AppModel> clonedApp) {
+                        MLogs.d("onInstalled");
                         mLastClone = clonedApp.get(0);
                         PreferencesUtils.setHasCloned();
                         appInfos = CloneHelper.getInstance(mActivity).getClonedApps();

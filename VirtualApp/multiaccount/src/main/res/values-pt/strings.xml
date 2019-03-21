@@ -205,5 +205,5 @@
     <string name = "fast_switch_dialog_content">Ativar o Fast Switch agora? Ele pode ajudá-lo a alternar rapidamente entre suas contas recentes na barra de notificação.</string>
     <string name = "dialog_permission_title">Permissão &amp; Dados</string>
     <string name = "dialog_permission_content">O Super Clone aplicará as permissões em nome dos aplicativos clonados. Por favor, verifique e conceda permissões para que funcionem corretamente. Não coletaremos nenhum dado de privacidade ou passaremos informações pessoais para outras pessoas.</string>
-
+    <string name = "enable_locker_first">Por favor, ative o bloqueio de privacidade e defina a senha!</string>
 </resources>
