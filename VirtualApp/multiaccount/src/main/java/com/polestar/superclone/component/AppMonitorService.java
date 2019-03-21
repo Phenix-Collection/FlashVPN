@@ -126,7 +126,10 @@ public class AppMonitorService extends Service {
             }
         }
         MLogs.d(TAG, "needLoad start app ad: " + need);
-        return (need && (!filterPkgs.contains(pkg)||pkg == null)) ;
+
+        boolean canShow = System.currentTimeMillis() - AppLockActivity.AD_SHOW_TIME > RemoteConfig.getLong("conf_lock_cover_interval");
+//        boolean canShow = true;
+        return (need && canShow && (!filterPkgs.contains(pkg)||pkg == null)) ;
     }
 
     private static long getLastShowTime() {

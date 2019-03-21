@@ -95,6 +95,10 @@
         <value>3600000</value>
     </entry>
     <entry>
+        <key>conf_lock_cover_interval</key>
+        <value>15000</value>
+    </entry>
+    <entry>
         <key>ad_after_clone_protect_time</key>
         <value>3000</value>
     </entry>

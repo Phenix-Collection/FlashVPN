@@ -74,6 +74,10 @@ public class AppLockActivity extends BaseActivity {
     private FingerprintManager fingerprintManager;
     private CancellationSignal cancellationSignal;
 
+    private boolean shownAd;
+    public static long AD_SHOW_TIME;
+
+
     public static final void start(Context context, String pkg, int userId) {
         MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
         if (pkg == null) {
@@ -110,6 +114,7 @@ public class AppLockActivity extends BaseActivity {
             }
             mAdInfoContainer.removeAllViews();
             mAdInfoContainer.addView(adView);
+            shownAd = true;
             updateTitleBar();
             EventReporter.generalEvent("app_lock_load_ad_show");
         }
@@ -227,6 +232,7 @@ public class AppLockActivity extends BaseActivity {
     }
 
     private void initData() {
+        shownAd = false;
         if (mHandler == null) {
             mHandler = new Handler(Looper.getMainLooper());
         }
@@ -305,6 +311,9 @@ public class AppLockActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && cancellationSignal != null && fingerprintManager != null) {
             cancellationSignal.cancel();
+        }
+        if (shownAd) {
+            AD_SHOW_TIME = System.currentTimeMillis();
         }
         finish();
     }
