@@ -33,11 +33,15 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.utils.MLogs;
+import winterfell.flash.vpn.utils.PreferenceUtils;
 
 
 /**
@@ -194,6 +198,20 @@ public class BillingManager implements PurchasesUpdatedListener {
                             public void onSkuDetailsResponse(int responseCode,
                                                              List<SkuDetails> skuDetailsList) {
                                 listener.onSkuDetailsResponse(responseCode, skuDetailsList);
+                                if (skuDetailsList != null
+                                        && skuDetailsList.size() > 0) {
+                                    Collections.sort(skuDetailsList, new Comparator<SkuDetails>() {
+                                        @Override
+                                        public int compare(SkuDetails skuDetails, SkuDetails t1) {
+                                            return (int) (skuDetails.getPriceAmountMicros() - t1.getPriceAmountMicros());
+                                        }
+                                    });
+                                    String skuList="";
+                                    for (SkuDetails item : skuDetailsList) {
+                                        skuList += item.toString();
+                                    }
+                                    PreferenceUtils.putString(FlashApp.getApp(), BillingProvider.PREF_CACHE_SKU_LIST, skuList);
+                                }
                             }
                         });
             }

@@ -6,16 +6,20 @@ package winterfell.flash.vpn.billing;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.utils.MLogs;
+import winterfell.flash.vpn.utils.PreferenceUtils;
 
 /**
  * An interface that provides an access to BillingLibrary methods
@@ -67,6 +71,7 @@ public class BillingProvider {
                     }
                 }
             });
+            refreshSubsSkuDetails();
     }
 
     synchronized public static BillingProvider get() {
@@ -91,9 +96,39 @@ public class BillingProvider {
         }
     }
 
+    //NEED to sync with SkuDetails.toString()
+    private static final String SPLIT = "SkuDetails: ";
+    public static final String PREF_CACHE_SKU_LIST = "pref_sku_list";
+
     public void querySkuDetails( final String itemType, final SkuDetailsResponseListener listener){
+        String cache = PreferenceUtils.getString(FlashApp.getApp(), PREF_CACHE_SKU_LIST, null);
+        if (cache != null) {
+            try {
+                String[] array = cache.split(SPLIT);
+                List<SkuDetails> list = new ArrayList<>();
+                for(String s:array){
+                    if(!TextUtils.isEmpty(s)){
+                        list.add(new SkuDetails(s));
+                    }
+                }
+                listener.onSkuDetailsResponse(BillingClient.BillingResponse.OK, list);
+                MLogs.d(TAG,"sku query from cache");
+                return;
+            }catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+        }
         if (manager != null) {
             manager.querySkuDetailsAsync(itemType, BillingConstants.getSkuList(itemType), listener);
         }
+    }
+
+    private void refreshSubsSkuDetails() {
+        manager.querySkuDetailsAsync(BillingClient.SkuType.SUBS,
+                BillingConstants.getSkuList(BillingClient.SkuType.SUBS), new SkuDetailsResponseListener() {
+                    @Override
+                    public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
+                    }
+                });
     }
 }
