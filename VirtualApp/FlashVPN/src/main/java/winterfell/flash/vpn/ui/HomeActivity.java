@@ -422,7 +422,10 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 if (doAction) {
                     mCheckPortFailedCount++;
                     int retryTimes = (int) RemoteConfig.getLong("config_retry_times");
-                    if (mCheckPortFailedCount >= RemoteConfig.getLong("config_retry_times")) {
+                    if(PreferenceUtils.getConnectedTimeSec() == 0) {
+                        retryTimes = retryTimes*2;
+                    }
+                    if (mCheckPortFailedCount >= retryTimes) {
                         updateStateOnMainThread(STATE_CONNECT_FAILED, "");
                         return;
                     }

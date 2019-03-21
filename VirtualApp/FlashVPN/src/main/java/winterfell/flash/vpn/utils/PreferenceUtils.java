@@ -345,7 +345,7 @@ public class PreferenceUtils {
     }
 
     public static long getConnectedTimeSec() {
-        return getLong(FlashApp.getApp(), "connected_time_sec");
+        return getLong(FlashApp.getApp(), "connected_time_sec", 0);
     }
 
     public static void addConnectedTimeSec(long sec) {
