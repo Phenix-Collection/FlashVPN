@@ -22,6 +22,7 @@ import android.os.Process;
 import android.util.SparseArray;
 
 import com.polestar.clone.client.VClientImpl;
+import com.polestar.clone.client.core.VirtualCore;
 
 import java.io.PrintWriter;
 
@@ -186,7 +187,7 @@ public final class VUserHandle implements Parcelable {
     }
 
     public static int getHostUserId() {
-        return getUserId(Process.myUid());
+        return VirtualCore.get().myUserId();
     }
 
     /** @hide */

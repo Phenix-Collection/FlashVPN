@@ -1,7 +1,10 @@
 package com.polestar.clone.client.hook.proxies.accessibility;
 
+import com.polestar.clone.client.VClientImpl;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.hook.base.BinderInvocationProxy;
 import com.polestar.clone.client.hook.base.StaticMethodProxy;
+import com.polestar.clone.os.VUserHandle;
 
 import java.lang.reflect.Method;
 
@@ -16,7 +19,7 @@ public class AccessibilityManagerStub extends BinderInvocationProxy {
         public boolean beforeCall(Object arg3, Method arg4, Object[] arg5) {
             int v0 = arg5.length - 1;
             if(v0 >= 0 && ((arg5[v0] instanceof Integer))) {
-                arg5[v0] = Integer.valueOf(0);
+                arg5[v0] = Integer.valueOf(VUserHandle.getHostUserId());
             }
 
             return super.beforeCall(arg3, arg4, arg5);

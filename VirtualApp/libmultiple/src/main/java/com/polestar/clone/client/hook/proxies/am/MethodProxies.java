@@ -450,7 +450,10 @@ class MethodProxies {
                             intent.setPackage(null);
                             intent.setData(Uri.parse("https://www.whatsapp.com/android/"));
                         }
-                        return method.invoke(who,args);
+                        if (intent.getComponent()== null
+                                || !intent.getComponent().getClassName().contains(".lite.BrowserLite2Activity")) {
+                            return method.invoke(who,args);
+                        }
                     }
                 }
 //            }

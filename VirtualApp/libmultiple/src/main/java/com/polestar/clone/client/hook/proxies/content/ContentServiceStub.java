@@ -26,7 +26,7 @@ public class ContentServiceStub extends BinderInvocationProxy {
     @Override
     protected void onBindMethods() {
         super.onBindMethods();
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             addMethodProxy(new RegisterContentObserver());
             addMethodProxy(new ResultStaticMethodProxy("notifyChange", null));
         }
