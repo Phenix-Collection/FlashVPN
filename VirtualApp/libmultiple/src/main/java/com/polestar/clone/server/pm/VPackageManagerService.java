@@ -1078,4 +1078,9 @@ public class VPackageManagerService extends IPackageManager.Stub {
         }
     }
 
+    @Override
+    public boolean isClonedAuthority(String arg3) {
+        return mProvidersByAuthority.containsKey(arg3);
+    }
+
 }

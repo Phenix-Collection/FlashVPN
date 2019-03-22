@@ -536,7 +536,7 @@ class MethodProxies {
                     ClipData data = intent.getClipData();
                     if (data != null && data.getItemAt(0) != null) {
                         Uri origin = data.getItemAt(0).getUri();
-                        if (origin != null && needProxyProvider(origin.getAuthority())) {
+                        if (origin != null && needProxyProvider(origin)) {
                             Uri newUri = processUri(origin);
                             ClipData newData = new ClipData(data.getDescription(),
                                     new ClipData.Item(newUri));
@@ -544,11 +544,11 @@ class MethodProxies {
                         }
                     }
                     Uri extra = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-                    if (extra != null && needProxyProvider(extra.getAuthority())) {
+                    if (extra != null && needProxyProvider(extra)) {
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, processUri(extra));
                     }
                     Uri dataExtra = intent.getData();
-                    if (dataExtra != null && needProxyProvider(dataExtra.getAuthority())) {
+                    if (dataExtra != null && needProxyProvider(dataExtra)) {
                         intent.setData(processUri(dataExtra));
                     }
                 }
@@ -584,11 +584,29 @@ class MethodProxies {
             return res;
         }
 
-        private boolean needProxyProvider(String authority) {
-            return authority!= null
-                    && (authority.equals("com.truecaller.fileprovider")
-                    || authority.equals("com.whatsapp.fileprovider")
-                    || authority.equals("com.whatsapp.provider.media"));
+//        private boolean needProxyProvider(String authority) {
+//            if (authority == null ) {
+//                return false;
+//            }
+//            String auth = authority.toLowerCase();
+//            return authority!= null
+//                    && (auth.contains("fileprovider")
+//                    || auth.equals("com.whatsapp.fileprovider")
+//                    || auth.equals("com.whatsapp.provider.media"));
+//        }
+
+        private boolean needProxyProvider(Uri uri) {
+            if (uri == null ) return  false;
+            String authority = uri.getAuthority();
+            String scheme = uri.getScheme();
+            if (!TextUtils.isEmpty(authority) && !TextUtils.isEmpty(scheme)) {
+                if (scheme.equals("content")
+                        && !authority.contains(".ProxyCP")
+                        && VPackageManager.get().isClonedAuthority(authority)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private Uri processUri(Uri in) {

@@ -275,4 +275,12 @@ public class VPackageManager {
             return VirtualRuntime.crash(e);
         }
     }
+
+    public boolean isClonedAuthority(String s) {
+        try {
+            return getInterface().isClonedAuthority(s);
+        } catch (RemoteException e) {
+            return false;
+        }
+    }
 }
