@@ -175,16 +175,16 @@ public class HomeFragment extends BaseFragment {
     DragController.DragListener mDragListener = new DragController.DragListener() {
         @Override
         public void onDragStart(DragSource source, Object info, int dragAction) {
-            AppModel model = (AppModel)((HomeGridItem)info).obj;
-            MLogs.d("onDragStart " + model.getName() + " ");
+//            AppModel model = (AppModel)((HomeGridItem)info).obj;
+//            MLogs.d("onDragStart " + model.getName() + " ");
             floatView.animToExpand();
             mDragController.addDropTarget(floatView);
         }
 
         @Override
         public void onDragEnd(DragSource source, Object info, int action) {
-            AppModel model = (AppModel)((HomeGridItem)info).obj;
-            MLogs.d("onDragEnd "+ model.getName() + " " + floatView.getSelectedState());
+//            AppModel model = (AppModel)((HomeGridItem)info).obj;
+//            MLogs.d("onDragEnd "+ model.getName() + " " + floatView.getSelectedState());
             int state = floatView.getSelectedState();
             floatView.animToIdel();
             ((HomeGridItem)info).onDragDrop((View) source, state);
