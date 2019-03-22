@@ -8,22 +8,30 @@ import android.os.Looper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.polestar.ad.AdLog;
+
+import winterfell.flash.vpn.core.ShadowsocksPingManager;
 import winterfell.flash.vpn.reward.network.datamodels.RegionServers;
 import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
 import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
 import java.io.File;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.core.LocalVpnService;
+import winterfell.flash.vpn.ui.HomeActivity;
+import winterfell.flash.vpn.utils.CommonUtils;
 import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
+import winterfell.flash.vpn.utils.RemoteConfig;
 
 import static com.polestar.task.database.DatabaseFileImpl.readOnelineFromFile;
 import static com.polestar.task.database.DatabaseFileImpl.writeOneLineToFile;
@@ -357,8 +365,6 @@ public class VPNServerIntermediaManager {
         }
     }
 
-
-
     private void updatePing(ServersResponse servers){
         ArrayList<Thread> pingThreads = new ArrayList<>();
         ArrayList<RegionServers> dup = null;
@@ -415,6 +421,71 @@ public class VPNServerIntermediaManager {
         void onPingUpdated(boolean res);
     }
 
+    private void updatePingUseTunnel(ServersResponse servers){
+        ArrayList<RegionServers> dup = null;
+        synchronized (this) {
+            dup = new ArrayList<>(servers.mVpnServers);
+        }
+
+        int count = 0;
+        for (RegionServers rs: dup) {
+            VpnServer vpnServer = rs.getFirstServer();
+            if (!vpnServer.toSSPingConfig(FlashApp.getApp()).isEmpty()) {
+                //万一服务器没配pingport
+                count++;
+            }
+        }
+
+        CountDownLatch waiter = new CountDownLatch(count);
+
+        for (RegionServers rs: dup) {
+            VpnServer vpnServer = rs.getFirstServer();
+            if (!vpnServer.toSSPingConfig(FlashApp.getApp()).isEmpty()) {
+                PingTunnelThread pingThread = new PingTunnelThread(vpnServer, waiter);
+                pingThread.start();
+            }
+        }
+        try {
+            waiter.await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+
+        }
+        MLogs.d("Ping finished");
+    }
+
+    private class PingTunnelThread extends Thread {
+        private VpnServer mServerInfo;
+        private CountDownLatch mWaiter;
+        private ShadowsocksPingManager mPingManager;
+        public PingTunnelThread(VpnServer serverInfo, CountDownLatch waiter) {
+            mServerInfo = serverInfo;
+            mWaiter = waiter;
+            mPingManager = ShadowsocksPingManager.getInstance();
+        }
+
+        @Override
+        public void run() {
+            mPingManager.ping(mServerInfo.toSSPingConfig(FlashApp.getApp()), new ShadowsocksPingManager.ShadowsocksPingListenser() {
+
+                @Override
+                public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
+                    MLogs.i("VPNServerIntermediaManager-- ShadowsocksPingManager-- pingsucceeded " + pingTimeInMilli + " " + CommonUtils.getIpString(serverAddress));
+                    //updateStateOnMainThread(STATE_CHECK_PORT_SUCCEED, "");
+                    mServerInfo.mPingDelayMilli = (mServerInfo.mPingDelayMilli + (int)pingTimeInMilli)/2;
+                    mWaiter.countDown();
+                }
+
+                @Override
+                public void onPingFailed(InetSocketAddress socketAddress) {
+                    MLogs.i("VPNServerIntermediaManager-- ShadowsocksPingManager-- pingfailed " + this);
+                    //updateStateOnMainThread(STATE_CHECK_PORT_FAILED, "");
+                    mServerInfo.mPingDelayMilli = VpnServer.NO_PING;
+                    mWaiter.countDown();
+                }
+            }, RemoteConfig.getLong("config_check_port_timeout"));
+        }
+    }
+
     private static long lastPingUpdateTime = 0;
     private static final long PING_UPDATE_INTERVAL_MS = 100*1000;
 
@@ -440,11 +511,15 @@ public class VPNServerIntermediaManager {
                 public void run() {
                     if (NetworkUtils.isNetConnected(FlashApp.getApp())) {
                         lastPingUpdateTime = System.currentTimeMillis();
-                        if (LocalVpnService.IsRunning) {
-                            MLogs.i("asyncUpdatePing do nothing since localVpnService is running");
-                            //updatePing(activeServers);
+                        if (RemoteConfig.getLong("use_tunnel_ping") == 0) {
+                            if (LocalVpnService.IsRunning) {
+                                MLogs.i("asyncUpdatePing do nothing since localVpnService is running");
+                                //updatePing(activeServers);
+                            } else {
+                                updatePing(mInterServers);
+                            }
                         } else {
-                            updatePing(mInterServers);
+                            updatePingUseTunnel(mInterServers);
                         }
 
                         sortInterServersAndSave();

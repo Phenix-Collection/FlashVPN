@@ -191,18 +191,25 @@ public class CommonUtils {
     }
 
     public static String getIpString(InetSocketAddress inetSocketAddress) {
-            InetAddress inetAddress = ((InetSocketAddress)inetSocketAddress).getAddress();
-            if (inetAddress instanceof Inet4Address) {
-                System.out.println("IPv4: " + inetAddress);
-                byte[] ip4bytes = inetAddress.getAddress(); // returns byte[4]
-                return inetAddress.toString().split("/")[1];
-            }
+        InetAddress inetAddress = ((InetSocketAddress)inetSocketAddress).getAddress();
+        if (inetAddress instanceof Inet4Address) {
+            System.out.println("IPv4: " + inetAddress);
+            byte[] ip4bytes = inetAddress.getAddress(); // returns byte[4]
+            return inetAddress.toString().split("/")[1];
+        }
 //            else if (inetAddress instanceof Inet6Address)
 //                System.out.println("IPv6: " + inetAddress);
-            else {
-                MLogs.e("Not an IP address.");
-                return "";
-            }
+        else {
+            MLogs.e("Not an IP address.");
+            return "";
+        }
+    }
 
+    public static void sleepHelper(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (Exception e) {
+
+        }
     }
 }

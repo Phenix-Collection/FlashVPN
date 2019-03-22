@@ -191,9 +191,9 @@ public class ProxyConfig {
         return getDefaultProxy();
     }
 
-    public static Config getPingTunnelConfig(String ip) {
+    public static Config getPingTunnelConfig(String configUrl) {
         try {
-            return ShadowsocksConfig.parse("ss://aes-256-cfb:test@" + ip + ":28387");
+            return ShadowsocksConfig.parse(configUrl);
         } catch (Exception e) {
             MLogs.e("Failed to parse ping tunnul config " + e.toString());
             return null;

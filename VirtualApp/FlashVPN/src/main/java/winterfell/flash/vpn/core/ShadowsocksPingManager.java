@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import winterfell.flash.vpn.tunnel.Config;
 import winterfell.flash.vpn.tunnel.Tunnel;
 import winterfell.flash.vpn.tunnel.shadowsocks.ShadowsocksPingTunnel;
+import winterfell.flash.vpn.utils.CommonUtils;
 import winterfell.flash.vpn.utils.MLogs;
 
 import static winterfell.flash.vpn.core.TunnelFactory.getShadowSocksCheckPortConfig;
@@ -61,7 +62,22 @@ public class ShadowsocksPingManager implements Runnable {
     private ConcurrentLinkedQueue<RegisterRequest> mPendingRegisters = new ConcurrentLinkedQueue<>();
     private Thread mPingThread;
 
-    public ShadowsocksPingManager() throws IOException {
+    private static ShadowsocksPingManager sInstance = null;
+
+    public static ShadowsocksPingManager getInstance() {
+        if (sInstance == null) {
+            try {
+                sInstance = new ShadowsocksPingManager();
+                sInstance.start();
+                CommonUtils.sleepHelper(1000);
+            } catch (IOException e) {
+                MLogs.e("Failed to create ShadowsocksPingManager");
+            }
+        }
+        return sInstance;
+    }
+
+    private ShadowsocksPingManager() throws IOException {
         mPipe = Pipe.open();
         mSelector = Selector.open();
         mPipe.source().configureBlocking(false);
@@ -158,15 +174,16 @@ public class ShadowsocksPingManager implements Runnable {
         return true;
     }
 
-    public boolean ping(String sserver, final ShadowsocksPingListenser listener, final long timeout) {
+    public boolean ping(String configUrl,
+                        final ShadowsocksPingListenser listener, final long timeout) {
         start();
         final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
 
         Config config = null;
         try {
-            config = ProxyConfig.getPingTunnelConfig(sserver);
+            config = ProxyConfig.getPingTunnelConfig(configUrl);
         } catch (Exception e) {
-            MLogs.e("Failed to get config for " + sserver.toString());
+            MLogs.e("Failed to get config for " + configUrl);
             return false;
         }
         //schedule timeout
@@ -197,7 +214,7 @@ public class ShadowsocksPingManager implements Runnable {
 
         Tunnel tunnel = null;
         try {
-            tunnel = TunnelFactory.createShadowSocksPingTunnel(sserver, null, this, tunnelListenser);
+            tunnel = TunnelFactory.createShadowSocksPingTunnel(configUrl, null, this, tunnelListenser);
             tunnel.connect(pingTarget);
         } catch (Exception e) {
             e.printStackTrace();

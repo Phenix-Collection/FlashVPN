@@ -55,7 +55,7 @@ public class VpnServer  {
             } catch (Exception e) {
                 return "";
             }
-            return "ss://aes-256-cfb:"+ Sender.rreceive(context, p) + "@" + mPublicIp
+            return "ss://aes-256-cfb:"+ p + "@" + mPublicIp
                     + ":" + po;
         } else {
             return "";

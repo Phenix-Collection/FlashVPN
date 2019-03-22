@@ -165,6 +165,11 @@
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>5</value>
     </entry>
+    <entry>
+        <key>use_tunnel_ping</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>1</value>
+    </entry>
 
 
 </defaultsMap>

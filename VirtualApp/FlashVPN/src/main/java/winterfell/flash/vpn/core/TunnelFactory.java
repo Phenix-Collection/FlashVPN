@@ -58,11 +58,11 @@ public class TunnelFactory {
         }
     }
 
-    public static Tunnel createShadowSocksPingTunnel(String destAddress, Selector selector,
+    public static Tunnel createShadowSocksPingTunnel(String configUrl, Selector selector,
                                                                   ShadowsocksPingManager pingManager,
                                                                   ShadowsocksPingTunnel.ShadowsocksPingTunnelListenser listenser) throws Exception {
         MLogs.d("create ShadowsocksPingTunnel for ping");
-        return new ShadowsocksPingTunnel((ShadowsocksConfig) ProxyConfig.getPingTunnelConfig(destAddress), selector, pingManager, listenser);
+        return new ShadowsocksPingTunnel((ShadowsocksConfig) ProxyConfig.getPingTunnelConfig(configUrl), selector, pingManager, listenser);
     }
 
 }

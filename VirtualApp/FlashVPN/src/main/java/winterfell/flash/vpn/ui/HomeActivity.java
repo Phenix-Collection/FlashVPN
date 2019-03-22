@@ -291,7 +291,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 }, true);
     }
 
-    ShadowsocksPingManager proxyServer = null;
+    ShadowsocksPingManager mPingManager = ShadowsocksPingManager.getInstance();
     private void checkPort() {
         MLogs.i("HomeActivity-- CHECKPORTCHECKPORTCHECKPORTCHECKPORTCHECKPORTCHECKPORT");
         final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
@@ -299,21 +299,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         Thread t = new Thread() {
             @Override
             public void run() {
-                if (proxyServer == null) {
-                    try {
-                        proxyServer = new ShadowsocksPingManager();
-                        proxyServer.start();
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
 
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                proxyServer.checkPort(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
+                mPingManager.checkPort(pingTarget, new ShadowsocksPingManager.ShadowsocksPingListenser() {
 
                     @Override
                     public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
@@ -325,48 +312,6 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     public void onPingFailed(InetSocketAddress socketAddress) {
                         MLogs.i("HomeActivity-- ShadowsocksPingManager-- checkPortfailed " + this);
                         updateStateOnMainThread(STATE_CHECK_PORT_FAILED, "");
-                    }
-                }, RemoteConfig.getLong("config_check_port_timeout"));
-            }
-        };
-        t.start();
-    }
-
-    private void ping() {
-        MLogs.i("HomeActivity-- PINGPINGPINGPINGPINGPING");
-        final InetSocketAddress pingTarget = InetSocketAddress.createUnresolved("whoer.net", 443);
-        int id = PreferenceUtils.getPreferServer();
-        mCurrentVpnServer = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
-
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                if (proxyServer == null) {
-                    try {
-                        proxyServer = new ShadowsocksPingManager();
-                        proxyServer.start();
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
-
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                proxyServer.ping(mCurrentVpnServer.mPublicIp, new ShadowsocksPingManager.ShadowsocksPingListenser() {
-
-                    @Override
-                    public void onPingSucceeded(InetSocketAddress serverAddress, long pingTimeInMilli) {
-                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingsucceeded " + pingTimeInMilli + " " + CommonUtils.getIpString(serverAddress));
-                        //updateStateOnMainThread(STATE_CHECK_PORT_SUCCEED, "");
-                    }
-
-                    @Override
-                    public void onPingFailed(InetSocketAddress socketAddress) {
-                        MLogs.i("HomeActivity-- ShadowsocksPingManager-- pingfailed " + this);
-                        //updateStateOnMainThread(STATE_CHECK_PORT_FAILED, "");
                     }
                 }, RemoteConfig.getLong("config_check_port_timeout"));
             }
