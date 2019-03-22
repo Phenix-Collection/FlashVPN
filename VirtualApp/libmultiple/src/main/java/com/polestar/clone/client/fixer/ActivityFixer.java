@@ -13,6 +13,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
+import com.polestar.clone.CustomizeAppData;
+import com.polestar.clone.client.VClientImpl;
+import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.os.VUserHandle;
+
 import mirror.com.android.internal.R_Hide;
 
 /**
@@ -46,11 +51,16 @@ public final class ActivityFixer {
 			PackageManager pm = activity.getPackageManager();
 			if (intent != null && activity.isTaskRoot()) {
 				try {
-					String label = applicationInfo.loadLabel(pm) + "";
+					CustomizeAppData data = CustomizeAppData.loadFromPref(applicationInfo.packageName, VUserHandle.myUserId());
+					String label = data == null ? applicationInfo.loadLabel(pm) + "" : data.label;
 					Bitmap icon = null;
-					Drawable drawable = applicationInfo.loadIcon(pm);
-					if (drawable instanceof BitmapDrawable) {
-						icon = ((BitmapDrawable) drawable).getBitmap();
+					if (data != null) {
+						icon = data.getCustomIcon();
+					} else {
+						Drawable drawable = applicationInfo.loadIcon(pm);
+						if (drawable instanceof BitmapDrawable) {
+							icon = ((BitmapDrawable) drawable).getBitmap();
+						}
 					}
 					activity.setTaskDescription(new ActivityManager.TaskDescription(label, icon));
 				} catch (Throwable e) {
