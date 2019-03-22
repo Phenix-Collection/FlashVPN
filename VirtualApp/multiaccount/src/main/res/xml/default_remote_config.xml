@@ -209,7 +209,7 @@
     </entry>
     <entry>
         <key>force_requested_permission</key>
-        <value>android.permission.WRITE_EXTERNAL_STORAGE</value>
+        <value>android.permission.WRITE_EXTERNAL_STORAGE;android.permission.READ_PHONE_STATE</value>
     </entry>
     <!--
     <entry>
