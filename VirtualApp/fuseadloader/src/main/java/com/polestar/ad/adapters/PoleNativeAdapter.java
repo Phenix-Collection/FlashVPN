@@ -34,7 +34,6 @@ import java.util.List;
  */
 
 public class PoleNativeAdapter extends AdAdapter {
-    private String adUnit;
     private AdTask adTask;
     private DatabaseApi databaseApi;
     private static Handler sWorkHandler;
@@ -52,7 +51,7 @@ public class PoleNativeAdapter extends AdAdapter {
     }
 
     private void init(Context context, String adUnit) {
-        this.adUnit = adUnit;
+        mKey = adUnit;
         databaseApi = DatabaseImplFactory.getDatabaseApi(context);
         AdLog.d("databaseApi: " + databaseApi);
         if (sWorkHandler == null) {
@@ -103,11 +102,6 @@ public class PoleNativeAdapter extends AdAdapter {
     @Override
     public String getId() {
         return adTask!= null? adTask.adid: "";
-    }
-
-    @Override
-    public String getPlacementId() {
-        return adUnit;
     }
 
     @Override
@@ -201,7 +195,7 @@ public class PoleNativeAdapter extends AdAdapter {
         }
         for (Task adTask: taskList) {
             AdTask ad = adTask.getAdTask();
-            if (ad != null && ad.canFillToSlot(appContext, adUnit)) {
+            if (ad != null && ad.canFillToSlot(appContext, mKey)) {
                 retList.add(ad);
             }
         }
@@ -271,7 +265,7 @@ public class PoleNativeAdapter extends AdAdapter {
                                     ArrayList<IAdAdapter> list = new ArrayList<>(Math.min(num, adTaskList.size()));
                                     list.add(PoleNativeAdapter.this);
                                     for (int i = 1; i < num && i < adTaskList.size(); i ++) {
-                                        list.add(new PoleNativeAdapter(appContext, adUnit, adTaskList.get(i)));
+                                        list.add(new PoleNativeAdapter(appContext, mKey, adTaskList.get(i)));
                                     }
                                     adListener.onAdListLoaded(list);
                                 }
