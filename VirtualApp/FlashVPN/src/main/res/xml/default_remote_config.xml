@@ -11,7 +11,7 @@
     </entry>
     <entry>
         <key>slot_home_enter_ad</key>
-        <value>ir_interstitial:home_enter_ad:0;mp_interstitial:bf4d2ea052d849b69ef9e474ad83e19b:0</value>
+        <value>mp_interstitial:bf4d2ea052d849b69ef9e474ad83e19b:0;fb_interstitial:388923141659680_388926054992722:0;ir_interstitial:home_enter_ad:0</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -21,7 +21,7 @@
     </entry>
     <entry>
         <key>slot_connected_ad</key>
-        <value>ir_interstitial:connected_ad:0;mp_interstitial:65fdd6dfb69c43cc933c2dd7d1c03ee4:0</value>
+        <value>mp_interstitial:65fdd6dfb69c43cc933c2dd7d1c03ee4:0;ir_interstitial:connected_ad:0</value>
         <!--<value>xhour</value>-->
     </entry>
     <entry>
@@ -43,7 +43,7 @@
     <!--</entry>-->
     <entry>
         <key>slot_home_banner</key>
-        <value>mp:fe04658f5366448694123cf899fe5ee6:0</value>
+        <value>mp:fe04658f5366448694123cf899fe5ee6:0;fb:388923141659680_389060174979310:0</value>
     </entry>
     <entry>
         <key>slot_home_gift_reward</key>
