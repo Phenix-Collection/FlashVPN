@@ -51,7 +51,7 @@ public class VpnServer  {
             try {
                 String[] pin = mPingport.split("_");
                 po = pin[0];
-                p = Sender.rreceive(context, pin[1]);
+                p = Sender.Rreceive(context, pin[1]);
             } catch (Exception e) {
                 return "";
             }

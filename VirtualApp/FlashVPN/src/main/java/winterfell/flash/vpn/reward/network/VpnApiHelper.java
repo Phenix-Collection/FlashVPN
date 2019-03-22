@@ -35,7 +35,7 @@ public class VpnApiHelper extends AdApiHelper {
 
         VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
         Call<ServersResponse> call = service.getAvailableVpnServers(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(AdApiHelper.getSecret(deviceId)));
+                Configuration.PKG_NAME, Sender.Send(AdApiHelper.getSecret(deviceId)));
         call.enqueue(new Callback<ServersResponse>() {
             @Override
             public void onResponse(Call<ServersResponse> call, Response<ServersResponse> response) {
@@ -88,7 +88,7 @@ public class VpnApiHelper extends AdApiHelper {
 
         VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
         Call<VpnRequirement> call = service.acquire(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, publicIp, geo, city, Sender.send(AdApiHelper.getSecret(deviceId)));
+                Configuration.PKG_NAME, publicIp, geo, city, Sender.Send(AdApiHelper.getSecret(deviceId)));
         call.enqueue(new Callback<VpnRequirement>() {
             @Override
             public void onResponse(Call<VpnRequirement> call, Response<VpnRequirement> response) {
@@ -136,7 +136,7 @@ public class VpnApiHelper extends AdApiHelper {
 
         VpnApi service = RetrofitServiceFactory.createSimpleRetroFitService(VpnApi.class);
         Call<SucceedResponse> call = service.release(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, publicIp, Sender.send(AdApiHelper.getSecret(deviceId)));
+                Configuration.PKG_NAME, publicIp, Sender.Send(AdApiHelper.getSecret(deviceId)));
         call.enqueue(new Callback<SucceedResponse>() {
             @Override
             public void onResponse(Call<SucceedResponse> call, Response<SucceedResponse> response) {

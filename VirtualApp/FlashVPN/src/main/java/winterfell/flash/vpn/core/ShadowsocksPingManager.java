@@ -66,26 +66,29 @@ public class ShadowsocksPingManager implements Runnable {
 
     public static ShadowsocksPingManager getInstance() {
         if (sInstance == null) {
-            try {
-                sInstance = new ShadowsocksPingManager();
-                sInstance.start();
-                CommonUtils.sleepHelper(1000);
-            } catch (IOException e) {
-                MLogs.e("Failed to create ShadowsocksPingManager");
-            }
+            sInstance = new ShadowsocksPingManager();
+            sInstance.start();
+            CommonUtils.sleepHelper(1000);
         }
         return sInstance;
     }
 
-    private ShadowsocksPingManager() throws IOException {
-        mPipe = Pipe.open();
-        mSelector = Selector.open();
-        mPipe.source().configureBlocking(false);
-        mPipe.source().register(mSelector, SelectionKey.OP_READ);
+    private ShadowsocksPingManager() {
     }
 
     public void start() {
         if (!this.mIsRunning) {
+            try {
+                mPipe = Pipe.open();
+                mSelector = Selector.open();
+                mPipe.source().configureBlocking(false);
+                mPipe.source().register(mSelector, SelectionKey.OP_READ);
+            } catch (IOException e) {
+                MLogs.e("ShadowsocksPingManager-- Failed to start ShadowsocksPingManager");
+                stop();
+                return;
+            }
+
             mPingThread = new Thread(this);
             mPingThread.setName("ShadowsocksPingManager-- ShadowsocksPingManagerThread");
             mPingThread.start();
@@ -181,6 +184,7 @@ public class ShadowsocksPingManager implements Runnable {
 
         Config config = null;
         try {
+            MLogs.i("ShadowsocksPingManager-- configURL is " + configUrl);
             config = ProxyConfig.getPingTunnelConfig(configUrl);
         } catch (Exception e) {
             MLogs.e("Failed to get config for " + configUrl);
@@ -244,22 +248,23 @@ public class ShadowsocksPingManager implements Runnable {
 
 
     private void registerInternal(SelectableChannel channel, int ops, Object object) throws ClosedChannelException {
-            channel.register(mSelector, ops, object);
+        channel.register(mSelector, ops, object);
     }
 
     public void register(SelectableChannel channel, int ops, Object object) throws IOException {
         mPendingRegisters.add(new RegisterRequest(channel, ops, object));
+        MLogs.i("ShadowsocksPingManager-- after add pendingsize " + mPendingRegisters.size());
         ByteBuffer junk = ByteBuffer.allocateDirect(1);
-        while (mPipe.sink().write(junk) == 0);
+        while (mPipe.sink().write(junk) == 0) ;
     }
 
     @Override
     public void run() {
         while (mIsRunning) {
             try {
-                MLogs.i("ShadowsocksPingManager-- before select");
+                //MLogs.i("ShadowsocksPingManager-- before select");
                 int selectret = mSelector.select();
-                MLogs.i("ShadowsocksPingManager-- after select " + selectret);
+                //MLogs.i("ShadowsocksPingManager-- after select " + selectret);
                 if (selectret <= 0) continue;
 
                 Iterator<SelectionKey> keyIterator = mSelector.selectedKeys().iterator();
@@ -274,15 +279,16 @@ public class ShadowsocksPingManager implements Runnable {
                                 //有多少个1 就有多少个pending的
                                 try {
                                     RegisterRequest registerRequest = mPendingRegisters.remove(); //可能会crash
+                                    MLogs.i("ShadowsocksPingManager-- after REMOVE pendingsize " + mPendingRegisters.size());
                                     registerInternal(registerRequest.channel, registerRequest.ops, registerRequest.object);
                                 } catch (Exception e) {
-                                    MLogs.e("Get pending requests failed " + e.toString());
+                                    MLogs.e("ShadowsocksPingManager-- Get pending requests failed " + e.toString());
                                 }
                                 junk.clear();
                             }
                         } else {
                             if (selectionKey.isConnectable()) {
-                                MLogs.i("ShadowsocksPingManager-- onConnectable");
+                                //MLogs.i("ShadowsocksPingManager-- onConnectable");
                                 ((Tunnel) selectionKey.attachment()).onConnectable();
                                 //selectionKey.cancel();
                             }
@@ -291,11 +297,10 @@ public class ShadowsocksPingManager implements Runnable {
                     keyIterator.remove();
                 }
             } catch (IOException e) {
-                MLogs.e("Error while running ping manager" + e.toString());
+                MLogs.e("ShadowsocksPingManager-- Error while running ping manager" + e.toString());
                 break;
-            } finally {
-                mPendingRegisters.clear();
             }
         }
+        stop();
     }
 }

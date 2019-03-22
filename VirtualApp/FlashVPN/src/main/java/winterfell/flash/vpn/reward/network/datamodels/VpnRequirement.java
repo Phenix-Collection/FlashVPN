@@ -32,7 +32,7 @@ public class VpnRequirement extends TimeModel {
 
     //ss://aes-256-cfb:passwd@95.179.225.74:28388
     public String toSSConfig(Context context) {
-        return "ss://aes-256-cfb:"+ Sender.rreceive(context, mPassword) + "@" + mPublicIp
+        return "ss://aes-256-cfb:"+ Sender.Rreceive(context, mPassword) + "@" + mPublicIp
                 + ":" + mPort;
     }
 }

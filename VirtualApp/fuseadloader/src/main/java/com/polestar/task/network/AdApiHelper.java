@@ -132,7 +132,7 @@ public class AdApiHelper {
             locale = configuration.locale;
         }
         Call<User> call = service.registerAnonymous(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)),
+                Configuration.PKG_NAME, Sender.Send(getSecret(deviceId)),
                 configuration.mcc, configuration.mnc, locale.toString());
         call.enqueue(new Callback<User>(){
             @Override
@@ -182,7 +182,7 @@ public class AdApiHelper {
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
         Call<ProductsResponse> call = service.getAvailableProducts(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)));
+                Configuration.PKG_NAME, Sender.Send(getSecret(deviceId)));
         call.enqueue(new Callback<ProductsResponse>() {
             @Override
             public void onResponse(Call<ProductsResponse> call, Response<ProductsResponse> response) {
@@ -238,7 +238,7 @@ public class AdApiHelper {
 
         ProductsApi service = RetrofitServiceFactory.createSimpleRetroFitService(ProductsApi.class);
         Call<UserProductResponse> call = service.consumeProduct(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)),
+                Configuration.PKG_NAME, Sender.Send(getSecret(deviceId)),
                 id, amount, email, info);
         call.enqueue(new Callback<UserProductResponse>() {
             @Override
@@ -288,7 +288,7 @@ public class AdApiHelper {
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
         Call<TasksResponse> call = service.getAvailableTasks(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)));
+                Configuration.PKG_NAME, Sender.Send(getSecret(deviceId)));
         call.enqueue(new Callback<TasksResponse>() {
             @Override
             public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {
@@ -337,7 +337,7 @@ public class AdApiHelper {
 
         TasksApi service = RetrofitServiceFactory.createSimpleRetroFitService(TasksApi.class);
         Call<UserTaskResponse> call = service.finishTask(Configuration.APP_VERSION_CODE,
-                Configuration.PKG_NAME, Sender.send(getSecret(deviceId)),
+                Configuration.PKG_NAME, Sender.Send(getSecret(deviceId)),
                 id, referralCode);
         call.enqueue(new Callback<UserTaskResponse>() {
             @Override

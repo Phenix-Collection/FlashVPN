@@ -6,10 +6,20 @@ public class Sender {
         System.loadLibrary("wittermsg");
     }
 
-    public static native String send(String str);
+    private static native String send(String str);
+    public static String Send(String str) {
+        synchronized (Sender.class) {
+            return send(str);
+        }
+    }
 
 
-    public static native String receive(String str);
+    private static native String receive(String str);
+    public static String Receive(String str) {
+        synchronized (Sender.class) {
+            return receive(str);
+        }
+    }
 
 
     /**
@@ -18,8 +28,18 @@ public class Sender {
      */
     public static native int check(Object context);
 
-    public static native String ssend(Object context, String str);
+    private static native String ssend(Object context, String str);
+    public static String Ssend(Object context, String str) {
+        synchronized (Sender.class) {
+            return ssend(context, str);
+        }
+    }
 
 
-    public static native String rreceive(Object context, String str);
+    private static native String rreceive(Object context, String str);
+    public static String Rreceive(Object context, String str) {
+        synchronized (Sender.class) {
+            return rreceive(context, str);
+        }
+    }
 }
