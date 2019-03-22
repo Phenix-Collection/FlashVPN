@@ -51,10 +51,10 @@
         <string name ="settings_vip_description">成为VIP用户享受无限的网络带宽</string>
         <string name ="settings_start_onboot_description">当android启动时自动启动VPN服务</string>
 
-        <string name ="feedback_hint">请告诉我们您遇到的问题的详细信息，请告诉我们重现它的步骤以及更好的截图。</string>
+        <string name ="feedback_hint">请告诉我们您遇到的问题的详细信息，以及重现它的步骤与截图。</string>
         <string name ="star_rating">现在去五星评级</string>
-        <string name ="dialog_love_title">爱Flash VPN </string>
-        <string name ="dialog_love_content">你介意在Play商店给我们一个5星评级吗？它会激励我们，我们感谢您的支持！</string>
+        <string name ="dialog_love_title">支持Flash VPN </string>
+        <string name ="dialog_love_content">可以在Play商店给我们一个5星评级吗？它会激励我们，我们感谢您的支持！</string>
         <string name ="feedback_no_description">描述不能为空！</string>
         <string name ="feedback_go_faq">点击此处查看我们方便的常见问题解答。</string>
         <string name ="extra_feedback_decription">我们会尽快为您解决问题，感谢您帮助改进产品！</string>
@@ -81,7 +81,7 @@
             <item name ="faq_t2">如何使用Flash VPN？</item>
             <item name ="faq_t3">为什么Flash VPN无法连接？</item>
             <item name ="faq_t4">Flash VPN如何保护我的数据？</item>
-            <item name ="faq_t5">如果我订购高级服务，我该如何受益？</item>
+            <item name ="faq_t5">如果我订购高级服务，有哪些好处？</item>
         </array>
 
         <array name ="faqAnswer">
@@ -112,8 +112,8 @@
 
         <string name ="title_activity_ad_test"> AdTestActivity </string>
 
-        <string name ="share_with_friends_tip">我很高兴邀请您使用这个精彩的VPN代理%s。你可以在这里下载：</string>
-        <string name ="update_dialog_content">新版本即将推出！我们在版本%s上进行了很多改进。你想现在更新FlashVPN吗？</string>
-        <string name ="reward_text_has_premium_time_watch_ad">您有%s的免费时间。观看奖励视频以获得更多信息！</string>
-        <string name ="reward_text_has_premium_time">您有%s的免费时间。单击以获得更高的代理速度！</string>
+        <string name ="share_with_friends_tip">有个非常棒的VPN代理软件%s。你可以在这里下载：</string>
+        <string name ="update_dialog_content">新版本已经推出！我们在版本%s上进行了很多改进。你想现在更新FlashVPN吗？</string>
+        <string name ="reward_text_has_premium_time_watch_ad">您有%s的高速流量时长。观看奖励视频以获得更多高速时长！</string>
+        <string name ="reward_text_has_premium_time">您有%s的免费时间。单击以获得更高的网络速度！</string>
 </resources>

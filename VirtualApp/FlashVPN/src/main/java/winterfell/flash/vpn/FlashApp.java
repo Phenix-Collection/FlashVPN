@@ -56,10 +56,9 @@ public class FlashApp extends MultiDexApplication {
     private void initAd() {
         SDKConfiguration.Builder builder = new SDKConfiguration.Builder();
 
-        builder.admobAppId("ca-app-pub-7413370106066330~8449358900");
-//        builder.mopubAdUnit("8e77a1b50d5c4a9fb204d212e2bd530a")
-//                .admobAppId("ca-app-pub-5490912237269284~7387660650")
-//                .ironSourceAppKey("8a16ee3d");
+        builder.admobAppId("ca-app-pub-7413370106066330~8449358900")
+                .mopubAdUnit("65fdd6dfb69c43cc933c2dd7d1c03ee4")
+                .ironSourceAppKey("8cc57c35");
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
             public boolean isAdFree() {
@@ -80,8 +79,8 @@ public class FlashApp extends MultiDexApplication {
 
     public boolean needEnterAd(){
         long interval = RemoteConfig.getLong(CONF_ENTER_AD_INTERVAL_SEC);
-        return !FlashUser.getInstance().isVIP() && PreferenceUtils.hasShownRateDialog(this)
-                && (System.currentTimeMillis() - PreferenceUtils.getEnterAdTime()) > interval*1000 ;
+        return BuildConfig.DEBUG || (!FlashUser.getInstance().isVIP() && PreferenceUtils.hasShownRateDialog(this)
+                && (System.currentTimeMillis() - PreferenceUtils.getEnterAdTime()) > interval*1000 );
     }
 
     @Override
