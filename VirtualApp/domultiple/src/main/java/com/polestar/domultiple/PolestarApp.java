@@ -147,7 +147,7 @@ public class PolestarApp extends MultiDexApplication {
         }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
-            public boolean isAdFree() {
+            public boolean isAdFree(String slot) {
                 return PreferencesUtils.isAdFree();
             }
 

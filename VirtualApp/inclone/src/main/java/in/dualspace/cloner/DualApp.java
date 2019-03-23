@@ -150,7 +150,7 @@ public class DualApp extends MultiDexApplication {
         }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
-            public boolean isAdFree() {
+            public boolean isAdFree(String slot) {
                 return PreferencesUtils.isAdFree();
             }
 

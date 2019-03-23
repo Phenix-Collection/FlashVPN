@@ -43,6 +43,7 @@ import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.utils.RemoteConfig;
 import com.polestar.superclone.utils.SuperConfig;
+import com.polestar.task.database.datamodels.AdTask;
 import com.polestar.task.network.Configuration;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -136,8 +137,9 @@ public class MApp extends MultiDexApplication {
         }
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
-            public boolean isAdFree() {
-                return PreferencesUtils.isAdFree();
+            public boolean isAdFree(String slot) {
+                return PreferencesUtils.isAdFree() && !slot.startsWith(AdTask.TASK_SLOT_PREFIX)
+                        && !slot.equals("slot_reward_center_video");
             }
 
             @Override

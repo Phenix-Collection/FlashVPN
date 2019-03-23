@@ -67,7 +67,7 @@ public class MApp extends MultiDexApplication {
                 .ironSourceAppKey("8618670d").build();
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
-            public boolean isAdFree() {
+            public boolean isAdFree(String slot) {
                 return false;
             }
 

@@ -61,7 +61,7 @@ public class FlashApp extends MultiDexApplication {
                 .ironSourceAppKey("8cc57c35");
         FuseAdLoader.init(new FuseAdLoader.ConfigFetcher() {
             @Override
-            public boolean isAdFree() {
+            public boolean isAdFree(String slot) {
                 //return true;
                 return FlashUser.getInstance().isVIP();
             }

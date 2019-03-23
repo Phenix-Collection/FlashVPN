@@ -166,7 +166,7 @@ public class FuseAdLoader {
 //    public static void initIronSource
 
     public interface ConfigFetcher {
-        public boolean isAdFree();
+        public boolean isAdFree(String slot);
         public List<AdConfig> getAdConfigList(String slot);
     }
 
@@ -198,8 +198,7 @@ public class FuseAdLoader {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             throw new IllegalStateException("Load ad not from main thread");
         }
-        if (sConfigFetcher.isAdFree()
-                && !mSlot.startsWith(AdTask.TASK_SLOT_PREFIX)) {
+        if (sConfigFetcher.isAdFree(mSlot)) {
             AdLog.d("FuseAdLoader : AD free version");
             if (listener != null) {
                 listener.onError("AD free version");
@@ -442,8 +441,7 @@ public class FuseAdLoader {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             throw new IllegalStateException("Load ad not from main thread");
         }
-        if ((sConfigFetcher.isAdFree()
-                && !mSlot.startsWith(AdTask.TASK_SLOT_PREFIX))
+        if ((sConfigFetcher.isAdFree(mSlot))
                 || mNativeAdConfigList.size() == 0
                 || !mNativeAdConfigList.get(0).source.equals(AdConstants.AdType.AD_SOURCE_POLE_NATIVE)){
             if (listener != null) {
@@ -497,7 +495,7 @@ public class FuseAdLoader {
         if (!sConfiguration.hasSupport(config.source)) {
             return null;
         }
-        if (sConfigFetcher.isAdFree() && !config.source.equals(AdConstants.AdType.AD_SOURCE_POLE_NATIVE)) {
+        if (sConfigFetcher.isAdFree(mSlot)) {
             return null;
         }
         try {
