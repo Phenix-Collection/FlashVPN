@@ -212,7 +212,9 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
     private void goClone(AppModel model) {
         Intent data = new Intent();
-        data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AppConstants.EXTRA_APP_MODEL, model);
+        data.putExtras(bundle);
         setResult(Activity.RESULT_OK, data);
         finish();
     }
@@ -233,7 +235,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         }
     }
 
-    private void checkAndClone(AppModel model) {
+    public void checkAndClone(AppModel model) {
         Product product;
         clickedModel = model;
         if ((!PreferencesUtils.isVIP()) && AppUser.isRewardEnabled()

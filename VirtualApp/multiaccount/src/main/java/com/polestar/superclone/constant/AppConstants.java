@@ -1,5 +1,7 @@
 package com.polestar.superclone.constant;
 
+import com.polestar.superclone.BuildConfig;
+
 public class AppConstants {
 
     public static boolean IS_RELEASE_VERSION;
@@ -11,7 +13,7 @@ public class AppConstants {
 
     public static final int HOME_GRID_COLUMN = 3;
 
-    public static final String EXTRA_APP_MODEL = "com.polestar.applab.utils.extra.APP_MODEL";
+    public static final String EXTRA_APP_MODEL = BuildConfig.APPLICATION_ID+".extra.APP_MODEL";
 
     public static final String KEY_CLONED_APPS = "Cloned Apps";
 

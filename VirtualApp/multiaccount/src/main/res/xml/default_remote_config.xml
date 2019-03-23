@@ -307,4 +307,8 @@
         <key>guide_quick_clone_threshold</key>
         <value>2</value>
     </entry>
+    <entry>
+        <key>default_enable_quick_switch</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>

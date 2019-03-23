@@ -83,10 +83,7 @@ public class AppListAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                Intent data = new Intent();
-                data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
-                ((AppListActivity) mContext).setResult(Activity.RESULT_OK, data);
-                ((AppListActivity) mContext).finish();
+                ((AppListActivity) mContext).checkAndClone(model);
             }
         });
         return convertView;
