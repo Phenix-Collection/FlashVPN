@@ -15,6 +15,7 @@ import com.polestar.ad.AdUtils;
 import com.polestar.ad.IAdEventLogger;
 import com.polestar.ad.SDKConfiguration;
 import com.google.firebase.FirebaseApp;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.InstallStrategy;
@@ -155,6 +156,21 @@ public class MApp extends MultiDexApplication {
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
     }
+
+    private String currentAdPkg;
+    private int currentAdUser = -1;
+    public void setCurrentAdClone(String pkg, int userId) {
+        currentAdPkg = pkg;
+        currentAdUser = userId;
+    }
+
+    public CustomizeAppData getCurrentCustomizeData() {
+        if (currentAdPkg != null && currentAdUser != -1) {
+            return CustomizeAppData.loadFromPref(currentAdPkg, currentAdUser);
+        }
+        return null;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
