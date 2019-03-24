@@ -418,7 +418,7 @@ class MethodProxies {
 
         @Override
         public boolean isEnable() {
-            return VirtualCore.get().isServerProcess()? false :  super.isEnable();
+            return super.isEnable();
         }
 
         @Override
@@ -432,6 +432,13 @@ class MethodProxies {
             int resultToIndex = ArrayUtils.indexOfObject(args, IBinder.class, 2);
             String resolvedType = (String) args[intentIndex + 1];
             Intent intent = (Intent) args[intentIndex];
+            if (VirtualCore.get().isServerProcess()) {
+                if (intent.hasCategory(SpecialComponentList.INTENT_CATEGORY_RESOLVE)) {
+                    intent.removeCategory(SpecialComponentList.INTENT_CATEGORY_RESOLVE);
+                } else {
+                    return method.invoke(who,args);
+                }
+            }
             intent.setDataAndType(intent.getData(), resolvedType);
             IBinder resultTo = resultToIndex >= 0 ? (IBinder) args[resultToIndex] : null;
             int userId = VUserHandle.myUserId();

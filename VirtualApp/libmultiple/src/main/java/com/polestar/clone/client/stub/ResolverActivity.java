@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.polestar.clone.R;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.ipc.VActivityManager;
 import com.polestar.clone.helper.utils.Reflect;
 import com.polestar.clone.helper.utils.VLog;
@@ -388,6 +389,7 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
             ActivityInfo info = VirtualCore.get().resolveActivityInfo(intent, mLaunchedFromUid);
             if (info == null) {
                 //外面的
+                intent.addCategory(SpecialComponentList.INTENT_CATEGORY_RESOLVE);
                 startActivity(intent);
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 //                    startActivity(intent);//, mRequestCode, mOptions);

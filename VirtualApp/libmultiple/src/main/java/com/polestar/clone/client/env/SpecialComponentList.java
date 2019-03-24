@@ -33,6 +33,7 @@ public final class SpecialComponentList {
     private static final HashSet<String> SPEC_SYSTEM_APP_LIST = new HashSet<>(3);
     private static final Set<String> SYSTEM_BROADCAST_ACTION = new HashSet<>(7);
     private static String PROTECT_ACTION_PREFIX = "_VA_protected_";
+    public static String INTENT_CATEGORY_RESOLVE = "_PC_resolve_";
     public static final String REFERRER_ACTION = "com.android.vending.INSTALL_REFERRER";
 
     private static final HashSet<String> IO_REDIRECT_BLACK_LIST = new HashSet<>(1);
