@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.ArraySet;
 
+import com.facebook.ads.AudienceNetworkAds;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.ironsource.mediationsdk.IronSource;
@@ -110,6 +111,9 @@ public class FuseAdLoader {
         sConfiguration = configuration;
         if(sConfiguration.hasAdmob()) {
             MobileAds.initialize(context, configuration.admobAppId);
+        }
+        if (sConfiguration.hasFAN()) {
+            AudienceNetworkAds.initialize(context);
         }
         if (context instanceof Activity) {
             sInitializedWithActivity = true;

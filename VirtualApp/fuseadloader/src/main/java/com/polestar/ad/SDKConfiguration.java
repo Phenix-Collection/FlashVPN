@@ -2,6 +2,7 @@ package com.polestar.ad;
 
 import android.text.TextUtils;
 
+import com.facebook.ads.AudienceNetworkAds;
 import com.ironsource.mediationsdk.IronSource;
 import com.mopub.common.MoPub;
 import com.polestar.ad.adapters.FuseAdLoader;
@@ -21,9 +22,16 @@ public class SDKConfiguration {
     public boolean needReward;
 
     public boolean hasFAN() {
-        return supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_FACEBOOK)
-                || supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL)
-                || supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_FB_REWARD);
+        try{
+            Class facebook = Class.forName(AudienceNetworkAds.class.getName());
+            return  facebook != null
+                    && (supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_FACEBOOK)
+                    || supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL)
+                    || supportedFuseAdType.contains(AdConstants.AdType.AD_SOURCE_FB_REWARD));
+        } catch (Throwable ex) {
+            AdLog.e(ex);
+        }
+        return false;
     }
 
     public boolean hasAdmob() {
