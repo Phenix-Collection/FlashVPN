@@ -115,5 +115,6 @@
         <string name = "update_dialog_content">نسخة جديدة قادمة! لقد قمنا بتحسين الكثير في الإصدار %s. هل ترغب في تحديث FlashVPN الآن؟</string>
         <string name = "reward_text_has_premium_time_watch_ad">لديك %s قسط الوقت. مشاهدة فيديو مكافأة للحصول على المزيد!</string>
         <string name = "reward_text_has_premium_time">لديك %s قسط الوقت. مشاهدة فيديو مكافأة للحصول على المزيد!</string>
-    
+        <string name="reconnecting">إعادة الاتصال</string>
+
 </resources>

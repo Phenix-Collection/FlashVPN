@@ -35,6 +35,7 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
     private ServerListAdapter listAdapter;
     private ProgressBar refreshProgress;
     private ImageView refreshIcon;
+    private int originPrefer;
 
     public static void start(Activity activity, int requestCode) {
         Intent intent = new Intent();
@@ -52,6 +53,7 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
         super.onCreate(savedInstanceState);
         vpnServerIntermediaManagerManager = VPNServerIntermediaManager.getInstance(this);
         initView();
+        originPrefer = PreferenceUtils.getPreferServer();
     }
 
     private void initView(){
@@ -182,5 +184,30 @@ public class SelectServerActivity extends BaseActivity implements CompoundButton
             checkbox.setChecked(si.getId() == PreferenceUtils.getPreferServer());
             return convertView;
         }
+    }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (PreferenceUtils.getPreferServer() == originPrefer) {
+//            setResult(RESULT_CANCELED);
+//        } else {
+//            setResult(RESULT_OK);
+//            MLogs.d("server changed");
+//        }
+//        finish();
+//    }
+
+    @Override
+    public void onBackPressed() {
+        if (PreferenceUtils.getPreferServer() == originPrefer) {
+            setResult(RESULT_CANCELED);
+        } else {
+            setResult(RESULT_OK);
+            MLogs.d("server changed on back");
+        }
+        super.onBackPressed();
+
+//        finish();
     }
 }

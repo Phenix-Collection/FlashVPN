@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
+import android.view.autofill.AutofillManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -105,16 +106,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private Timer timer;
     private TimerTask timeCountTask;
     private VpnServer mCurrentVpnServer;
-    private FlashUser mFlashUser;
     private VpnRequirement mCurrentVpnRequirement;
     private long mGetVpnRequirementTime;
-    private String mErrInfo;
     private int mCheckPortFailedCount;
     private int mState;
 
     private static int CHECK_PORT_FAILED_THRESHOLDER = 2;
 
-    private static final String SLOT_HOME_NATIVE = "slot_home_native";
     private static final String SLOT_HOME_BANNER = "slot_home_banner";
     private static final String SLOT_HOME_GIFT_REWARD = "slot_home_gift_reward";
     private static final int START_VPN_SERVICE_REQUEST_CODE = 100;
@@ -132,6 +130,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private final static int STATE_DISCONNECTED = 1;
     private final static int STATE_CONNECT_FAILED = 2;
     private final static int STATE_START_CONNECTING = 3;
+    private final static int STATE_START_RECONNECT = 10;
 
     private final static String RATE_FROM_MENU = "rate_from_menu";
     private final static String RATE_FROM_DIALOG = "rate_from_dialog";
@@ -339,12 +338,16 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 connectBtnTxt.setText(R.string.connecting);
                 connectTips.setVisibility(View.VISIBLE);
                 connectTips.setText(R.string.acquiring_port);
+                btnCenter.setImageResource(R.drawable.shape_connecting_btn );
+                btnCenterBg.setImageResource(R.drawable.shape_connecting_btn_bg);
                 break;
             case STATE_ACQUIRING_CONTROLFLOW_ERR:
                 MLogs.d("HomeActivity-- state STATE_ACQUIRING_CONTROLFLOW_ERR");
                 if (doAction) {
                     acquirePort(mCurrentVpnServer);
                 }
+                btnCenter.setImageResource(R.drawable.shape_connecting_btn );
+                btnCenterBg.setImageResource(R.drawable.shape_connecting_btn_bg);
                 break;
             case STATE_CHECKING_PORT:
                 MLogs.d("HomeActivity-- state STATE_CHECKING_PORT");
@@ -353,6 +356,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 connectBtnTxt.setText(R.string.connecting);
                 connectTips.setVisibility(View.VISIBLE);
                 connectTips.setText(R.string.checking_port);
+                btnCenter.setImageResource(R.drawable.shape_connecting_btn );
+                btnCenterBg.setImageResource(R.drawable.shape_connecting_btn_bg);
                 if (doAction) {
                     checkPort();
                 }
@@ -363,6 +368,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     mCheckPortFailedCount = 0;
                     startConnect();
                 }
+                btnCenter.setImageResource(R.drawable.shape_connecting_btn );
+                btnCenterBg.setImageResource(R.drawable.shape_connecting_btn_bg);
                 break;
             case STATE_CHECK_PORT_FAILED:
                 MLogs.d("HomeActivity-- state STATE_CHECK_PORT_FAILED");
@@ -379,6 +386,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     //ping不同一次，再来一次，有可能服务器还没准备好
                     checkPort();
                 }
+                btnCenter.setImageResource(R.drawable.shape_connecting_btn );
+                btnCenterBg.setImageResource(R.drawable.shape_connecting_btn_bg);
                 break;
             case STATE_CONNECTED:
                 MLogs.d("HomeActivity-- state STATE_CONNECTED");
@@ -406,10 +415,35 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 btnCenterBg.setAnimation(connectBgAnimation);
                 connectBgAnimation.start();
                 break;
+            case STATE_START_RECONNECT:
+                MLogs.d("HomeActivity-- state STATE_START_RECONNECT");
+                btnCenter.setClickable(false);
+                connectBtnTxt.setText(R.string.reconnecting);
+                btnCenter.setImageResource(R.drawable.shape_connecting_btn );
+                btnCenterBg.setImageResource(R.drawable.shape_connecting_btn_bg);
+                mainHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
+                        LocalVpnService.IsRunning = false;
+                        releasePort(mCurrentVpnServer);
+
+                        int id = PreferenceUtils.getPreferServer();
+                        mCurrentVpnServer = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
+                        if (!LocalVpnService.IsRunning) {
+                            EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
+                            ProxyConfig.Instance.setCurrentVpnServer(mCurrentVpnServer);
+                            acquirePort(mCurrentVpnServer);
+                        }
+                    }
+                }, 1000);
+                break;
             case STATE_START_CONNECTING:
                 MLogs.d("HomeActivity-- state STATE_START_CONNECTING");
                 btnCenter.setClickable(false);
                 connectBtnTxt.setText(R.string.connecting);
+                btnCenter.setImageResource(R.drawable.shape_connecting_btn );
+                btnCenterBg.setImageResource(R.drawable.shape_connecting_btn_bg);
 //                Runnable connectingRunnable = new Runnable() {
 //                    int step = 0;
 //                    @Override
@@ -706,22 +740,35 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         btnCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MLogs.d("IsRunning " + LocalVpnService.IsRunning);
-                int id = PreferenceUtils.getPreferServer();
-                mCurrentVpnServer = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
-
-                if (!LocalVpnService.IsRunning) {
-                    EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
-                    ProxyConfig.Instance.setCurrentVpnServer(mCurrentVpnServer);
-                    acquirePort(mCurrentVpnServer);
-                } else {
-                    EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
-                    LocalVpnService.IsRunning = false;
-                    releasePort(mCurrentVpnServer);
-                    updateConnectState(STATE_DISCONNECTED, "", false);
-                }
+               onConnectBtnClick();
             }
         });
+    }
+
+    private void onConnectBtnClick() {
+        MLogs.d("IsRunning " + LocalVpnService.IsRunning);
+        int id = PreferenceUtils.getPreferServer();
+        mCurrentVpnServer = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
+
+        if (!LocalVpnService.IsRunning) {
+            EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
+            ProxyConfig.Instance.setCurrentVpnServer(mCurrentVpnServer);
+            acquirePort(mCurrentVpnServer);
+        } else {
+            EventReporter.reportDisConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
+            LocalVpnService.IsRunning = false;
+            releasePort(mCurrentVpnServer);
+            updateConnectState(STATE_DISCONNECTED, "", false);
+        }
+    }
+
+    private void reconnect() {
+        MLogs.d("reconnect");
+        if (!LocalVpnService.IsRunning) {
+            //not connected
+            return;
+        }
+        updateConnectState(STATE_START_RECONNECT, "", false);
     }
 
     public static void enter(Activity activity, boolean needUpdate) {
@@ -738,6 +785,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        MLogs.d("onActivityResult req : " + requestCode + " result： " + resultCode + " intent: " + intent);
         if (requestCode == START_VPN_SERVICE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 startVPNService();
@@ -746,6 +794,9 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             }
             return;
         } else if (requestCode == SELECT_SERVER_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                reconnect();
+            }
             return;
         }
         super.onActivityResult(requestCode, resultCode, intent);
@@ -808,6 +859,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (!LocalVpnService.IsRunning) {
             mState = STATE_DISCONNECTED;
         } else {

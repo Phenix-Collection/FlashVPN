@@ -27,6 +27,8 @@
     <color name="disconnected_button">#48d27f</color>
     <color name="start_button">#10fb62</color>
     <color name="connect_btn_circle">#99333333</color>
+    <color name="connecting_btn_circle">#ff7316</color>
+    <color name="connecting_btn_circle_bg">#76ff7316</color>
     <color name="stop_btn_circle">#35c13e</color>
     <color name="connect_btn_circle_bg">#76000000</color>
     <color name="stop_btn_circle_bg">#7635c13e</color>
