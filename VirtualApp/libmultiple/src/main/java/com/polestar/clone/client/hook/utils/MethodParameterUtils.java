@@ -1,7 +1,10 @@
 package com.polestar.clone.client.hook.utils;
 
+import android.os.Build;
+
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.helper.utils.ArrayUtils;
+import com.polestar.clone.os.VUserHandle;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -76,4 +79,24 @@ public class MethodParameterUtils {
 	}
 
 
+	public static void replaceLastUserId(Object[] args) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			int index = ArrayUtils.indexOfLast(args, Integer.class);
+			if (index != -1) {
+				int userId = (int) args[index];
+				if (userId == VUserHandle.myUserId()) {
+					args[index] = VUserHandle.getHostUserId();
+				}
+			}
+		}
+	}
+
+	public static void replaceUserId(Object[] args, int index) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			int userId = (int) args[index];
+			if (userId == VUserHandle.myUserId()) {
+				args[index] = VUserHandle.getHostUserId();
+			}
+		}
+	}
 }

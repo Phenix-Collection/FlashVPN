@@ -181,7 +181,11 @@ class MethodProxies {
             IServiceConnection conn = (IServiceConnection) args[0];
             ServiceConnectionDelegate delegate = ServiceConnectionDelegate.removeDelegate(conn);
             if (delegate == null) {
-                return method.invoke(who, args);
+                try {
+                    return method.invoke(who, args);
+                }catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
             return VActivityManager.get().unbindService(delegate);
         }
@@ -318,9 +322,7 @@ class MethodProxies {
             args[7] = flags;
             args[1] = getHostPkg();
             // Force userId to 0
-            if (args[args.length - 1] instanceof Integer) {
-                args[args.length - 1] = VUserHandle.getHostUserId();
-            }
+            MethodParameterUtils.replaceLastUserId(args);
             IInterface sender = (IInterface) method.invoke(who, args);
             if (sender != null && creator != null) {
                 VActivityManager.get().addPendingIntent(sender.asBinder(), creator);
@@ -1021,6 +1023,7 @@ class MethodProxies {
                 return VActivityManager.get().bindService(caller.asBinder(), token, service, resolvedType,
                         conn, flags, userId);
             }
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
 
@@ -1506,6 +1509,7 @@ class MethodProxies {
             args[IDX_RequiredPermission] = null;
             if (args.length > IDX_IIntentReceiver && args[IDX_IIntentReceiver] == null) {
                 VLog.logbug(TAG, "null receiver: " );
+                MethodParameterUtils.replaceLastUserId(args);
                 return method.invoke(who,args);
             }
             IntentFilter filter = (IntentFilter) args[IDX_IntentFilter];
@@ -1706,6 +1710,7 @@ class MethodProxies {
                     (name.contains(ServiceManagerNative.SERVICE_CP_AUTH)
                     || name.contains(VirtualCore.get().getHostPkg() + ".virtual_stub_"))) {
                 VLog.d(TAG, "direct invoke " + name);
+                MethodParameterUtils.replaceLastUserId(args);
                 return method.invoke(who, args);
             }
             ProviderInfo info = VPackageManager.get().resolveContentProvider(name, 0, userId);
@@ -1926,6 +1931,7 @@ class MethodProxies {
             }
             if (intent.getAction().equals("appclone.intent.action.SHOW_CRASH_DIALOG")
                     || intent.getAction().equals("act_pkg_ready")) {
+                MethodParameterUtils.replaceLastUserId(args);
                 return method.invoke(who, args);
             }
             intent.setDataAndType(intent.getData(), type);
@@ -1943,6 +1949,7 @@ class MethodProxies {
                 // clear the permission
                 args[7] = null;
             }
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
 

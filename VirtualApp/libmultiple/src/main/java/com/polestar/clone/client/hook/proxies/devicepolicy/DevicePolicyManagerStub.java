@@ -20,12 +20,18 @@ public class DevicePolicyManagerStub extends BinderInvocationProxy{
         super(IDevicePolicyManager.Stub.asInterface, Context.DEVICE_POLICY_SERVICE);
     }
 
+//    void setActiveAdmin(in ComponentName policyReceiver, boolean refreshing, int userHandle);
+//    boolean isAdminActive(in ComponentName policyReceiver, int userHandle);
+//    List<ComponentName> getActiveAdmins(int userHandle);
     @Override
     protected void onBindMethods() {
         super.onBindMethods();
         addMethodProxy(new GetStorageEncryptionStatus());
         addMethodProxy(new ResultStaticMethodProxy("getDeviceOwnerComponent",null));
         addMethodProxy(new ResultStaticMethodProxy("notifyPendingSystemUpdate",null));
+        addMethodProxy(new ResultStaticMethodProxy("getActiveAdmins",null));
+        addMethodProxy(new ResultStaticMethodProxy("isAdminActive",false));
+        addMethodProxy(new ResultStaticMethodProxy("setActiveAdmin",null));
     }
 
     private static class GetStorageEncryptionStatus extends MethodProxy {

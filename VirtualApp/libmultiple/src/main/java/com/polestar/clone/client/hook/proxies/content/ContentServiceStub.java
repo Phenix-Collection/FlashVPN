@@ -4,6 +4,8 @@ import android.os.Build;
 
 import com.polestar.clone.client.hook.base.BinderInvocationProxy;
 import com.polestar.clone.client.hook.base.MethodProxy;
+import com.polestar.clone.client.hook.base.ReplaceLastUserIdMethodProxy;
+import com.polestar.clone.client.hook.base.ReplaceUidMethodProxy;
 import com.polestar.clone.client.hook.base.ResultStaticMethodProxy;
 import com.polestar.clone.helper.utils.VLog;
 
@@ -29,6 +31,15 @@ public class ContentServiceStub extends BinderInvocationProxy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             addMethodProxy(new RegisterContentObserver());
             addMethodProxy(new ResultStaticMethodProxy("notifyChange", null));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("getIsSyncableAsUser"));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("setMasterSyncAutomaticallyAsUser"));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("getSyncAdapterTypesAsUser"));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("getSyncStatusAsUser"));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("isSyncPendingAsUser"));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("putCache"));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("getCache"));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("syncAsUser"));
+            addMethodProxy(new ReplaceLastUserIdMethodProxy("cancelSyncAsUser"));
         }
     }
 

@@ -7,6 +7,8 @@ import com.polestar.clone.client.hook.base.Inject;
 import com.polestar.clone.client.hook.base.MethodInvocationProxy;
 import com.polestar.clone.client.hook.base.MethodInvocationStub;
 import com.polestar.clone.client.hook.base.ReplaceCallingPkgMethodProxy;
+import com.polestar.clone.client.hook.base.ResultStaticMethodProxy;
+import com.polestar.clone.client.hook.base.StaticMethodProxy;
 import com.polestar.clone.helper.compat.BuildCompat;
 import com.polestar.clone.helper.utils.VLog;
 
@@ -46,6 +48,9 @@ public class NotificationManagerStub extends MethodInvocationProxy<MethodInvocat
         }
         if ("samsung".equalsIgnoreCase(Build.BRAND) || "samsung".equalsIgnoreCase(Build.MANUFACTURER)) {
             addMethodProxy(new ReplaceCallingPkgMethodProxy("removeEdgeNotification"));
+            if (BuildCompat.isPie()) {
+                addMethodProxy(new ResultStaticMethodProxy("enqueueToastLog", null));
+            }
         }
         if(BuildCompat.isOreo()) {
             this.addMethodProxy(new ReplaceCallingPkgMethodProxy("getNotificationChannelForPackage"));

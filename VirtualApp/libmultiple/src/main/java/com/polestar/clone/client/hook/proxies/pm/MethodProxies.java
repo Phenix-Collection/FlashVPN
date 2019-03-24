@@ -454,6 +454,9 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
             List<ResolveInfo> appResult = VPackageManager.get().queryIntentServices((Intent) args[0],
                     (String) args[1], (Integer) args[2], userId);
+            if(args.length == 4 && args[3] instanceof Integer) {
+                args[3] = VUserHandle.getHostUserId();
+            }
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
                 List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
@@ -708,6 +711,7 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
     }
