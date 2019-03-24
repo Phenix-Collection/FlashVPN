@@ -397,9 +397,9 @@ public final class VClientImpl extends IVClient.Stub {
         VLog.d(TAG, "bindApplicationNoCheck step 4.3 " + packageName + " proc: " + processName);
         mirror.android.app.ActivityThread.mInitialApplication.set(mainThread, mInitialApplication);
         ContextFixer.fixContext(mInitialApplication);
-        if (Build.VERSION.SDK_INT >= 24 && "com.tencent.mm:recovery".equals(processName)) {
-            fixWeChatRecovery(mInitialApplication);
-        }
+//        if (Build.VERSION.SDK_INT >= 24 && "com.tencent.mm:recovery".equals(processName)) {
+//            fixWeChatRecovery(mInitialApplication);
+//        }
 
         if("com.android.vending".equals("packageName")) {
             try {
@@ -432,9 +432,13 @@ public final class VClientImpl extends IVClient.Stub {
             }
         } catch (Exception e) {
             if (!mInstrumentation.onException(mInitialApplication, e)) {
-                throw new RuntimeException(
-                        "Unable to create application " + mInitialApplication.getClass().getName()
-                                + ": " + e.toString(), e);
+                if (data!=null && data.appInfo!=null) {
+                    VLog.logbug(TAG, "Unable to create application " + data.appInfo.name + ": " + e.toString());
+                }
+                System.exit(0);
+//                throw new RuntimeException(
+//                        "Unable to create application " + mInitialApplication.getClass().getName()
+//                                + ": " + e.toString(), e);
             }
         }
         VLog.d(TAG, "bindApplicationNoCheck OK " + packageName + " proc: " + processName);
@@ -444,18 +448,18 @@ public final class VClientImpl extends IVClient.Stub {
         VirtualCore.get().getComponentDelegate().afterApplicationCreate(mInitialApplication);
     }
 
-    private void fixWeChatRecovery(Application app) {
-        try {
-            Field field = app.getClassLoader().loadClass("com.tencent.recovery.Recovery").getField("context");
-            field.setAccessible(true);
-            if (field.get(null) != null) {
-                return;
-            }
-            field.set(null, app.getBaseContext());
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
+//    private void fixWeChatRecovery(Application app) {
+//        try {
+//            Field field = app.getClassLoader().loadClass("com.tencent.recovery.Recovery").getField("context");
+//            field.setAccessible(true);
+//            if (field.get(null) != null) {
+//                return;
+//            }
+//            field.set(null, app.getBaseContext());
+//        } catch (Throwable e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void setupUncaughtHandler() {
         ThreadGroup root = Thread.currentThread().getThreadGroup();
