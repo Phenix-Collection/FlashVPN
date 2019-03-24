@@ -186,6 +186,7 @@ public abstract class Tunnel {
             //2019-03-21 当数据不通时，会进入这里
             //Error: connect to /92.38.132.133:26343 failed:java.net.ConnectException: Connection timed outalt7-mtalk.google.com:5228
             MLogs.e("Tunnel-- Error: connect to " + m_ServerEP.toString() + " failed:"  + e.toString() + getDestAddressString() + this);
+            TunnelStatisticManager.getInstance().setTunnelBroken(m_ServerEP);
             this.dispose();
         }
     }

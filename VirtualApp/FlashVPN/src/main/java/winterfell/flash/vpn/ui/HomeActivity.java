@@ -82,7 +82,9 @@ import winterfell.flash.vpn.utils.RemoteConfig;
  *
  */
 
-public class HomeActivity extends BaseActivity implements LocalVpnService.onStatusChangedListener {
+public class HomeActivity extends BaseActivity implements LocalVpnService.onStatusChangedListener,
+    TunnelStatisticManager.onSpeedListener
+{
     private final static String EXTRA_NEED_UPDATE = "extra_need_update";
     private Handler mainHandler;
     private DrawerLayout drawer;
@@ -490,7 +492,11 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         } else {
             startService(new Intent(this, LocalVpnService.class));
         }
-        LocalVpnService.addOnStatusChangedListener(this);
+    }
+
+    @Override
+    public void onBrokenSpeed(String ip) {
+        MLogs.i("HomeActivity-- onBrokenSpeed " + ip);
     }
 
     @Override
@@ -544,6 +550,10 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     maxDownloadSpeed, maxUploadSpeed);
             TunnelStatisticManager.getInstance().eventReport();
             connectingFailed = true;
+            MLogs.i("avgDownloadSpeed:" + avgDownloadSpeed
+                    + " avgUploadSpeed:" + avgUploadSpeed
+                    + " maxDownloadSpeed:" + maxDownloadSpeed
+                    + " maxUploadSpeed:" + maxUploadSpeed);
 
             //2019-03-11 如果是localVpnService内部错误导致的，我们是不是应该将其状态设为false，免得他一直跑着呢
             LocalVpnService.IsRunning = false;
@@ -827,6 +837,16 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
         timer = new Timer();
         loadAds();
+        TunnelStatisticManager.getInstance().addOnSpeedListener(this);
+        LocalVpnService.addOnStatusChangedListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        TunnelStatisticManager.getInstance().removeOnSpeedListener(this);
+        LocalVpnService.removeOnStatusChangedListener(this);
+        super.onDestroy();
+
     }
 
     private final static String QUIT_RATE_RANDOM = "quit_rating_random";

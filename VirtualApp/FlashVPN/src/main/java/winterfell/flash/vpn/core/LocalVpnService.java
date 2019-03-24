@@ -86,6 +86,7 @@ public class LocalVpnService extends VpnService implements Runnable {
     private float mAvgUploadSpeed;
     private float mMaxDownloadSpeed;
     private float mMaxUploadSpeed;
+    private boolean mStopped;
 
     private final String CONF_VIP_SPEED_BOOST = "conf_vip_speed_boost";
     private final String CONF_NORMAL_SPEED_BOOST = "conf_normal_speed_boost";
@@ -98,7 +99,9 @@ public class LocalVpnService extends VpnService implements Runnable {
                 switch (msg.what){
                     case MSG_UPDATE_NOTIFICATION:
                         updateNotification();
-                        sendMessageDelayed(obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
+                        if (!mStopped) {
+                            sendMessageDelayed(obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
+                        }
                         break;
                 }
             }
@@ -139,6 +142,11 @@ public class LocalVpnService extends VpnService implements Runnable {
         }
         mAvgUploadSpeed = (mAvgUploadSpeed + currentUploadSpeed)/2;
         mAvgDownloadSpeed = (mAvgDownloadSpeed + currentDownloadSpeed)/2;
+
+        MLogs.i("mAvgDownloadSpeed:" + mAvgDownloadSpeed
+                + " mAvgUploadSpeed:" + mAvgUploadSpeed
+                + " mMaxDownloadSpeed:" + mMaxDownloadSpeed
+                + " mMaxUploadSpeed:" + mMaxUploadSpeed);
     }
 
     private void updateNotification() {
@@ -365,6 +373,10 @@ public class LocalVpnService extends VpnService implements Runnable {
 
             while (true) {
                 if (IsRunning) {
+                    if (mStopped) {
+                        mStopped = false; //重新开始updatenotification
+                        m_Handler.sendMessageDelayed(m_Handler.obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
+                    }
                     //加载配置文件
                     String welcomeInfoString = ProxyConfig.Instance.getWelcomeInfo();
                     if (welcomeInfoString != null && !welcomeInfoString.isEmpty()) {
@@ -374,7 +386,8 @@ public class LocalVpnService extends VpnService implements Runnable {
 
                     runVPN();
                 } else {
-                    Thread.sleep(100);
+                    mStopped = true;
+                    Thread.sleep(200);
                 }
             }
         } catch (InterruptedException e) {
@@ -713,6 +726,7 @@ public class LocalVpnService extends VpnService implements Runnable {
         }
 
         stopSelf();
+        mStopped = true;
         IsRunning = false;
         //2019-03-11 先去掉，为啥一定要结束进程呢？
         // System.exit(0);

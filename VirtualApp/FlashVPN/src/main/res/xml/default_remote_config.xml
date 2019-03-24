@@ -170,6 +170,11 @@
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>1</value>
     </entry>
+    <entry>
+        <key>report_broken_count</key>
+        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
+        <value>100</value>
+    </entry>
 
 
 </defaultsMap>
