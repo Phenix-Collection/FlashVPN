@@ -12,7 +12,7 @@ public class LocationRequestL {
     public static RefBoolean mHideFromAppOps;
     public static RefObject<Object> mWorkSource;
     public static RefObject<String> mProvider;
-    public static RefObject<Object> quality;
+    public static RefObject<Object> mQuality;
     public static RefMethod<String> getProvider;
 
     public static RefStaticMethod<Object> createFromDeprecatedProvider;

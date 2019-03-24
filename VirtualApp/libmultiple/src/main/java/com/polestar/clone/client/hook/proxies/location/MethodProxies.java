@@ -45,7 +45,7 @@ public class MethodProxies {
                                 != PackageManager.PERMISSION_GRANTED) {
                             LocationRequestL.mProvider.set(request, "network");
                             //POWER_LOW
-                            LocationRequestL.quality.set(request, 201);
+                            LocationRequestL.mQuality.set(request, 201);
                         }
                     }
                 }catch (Throwable ex) {
