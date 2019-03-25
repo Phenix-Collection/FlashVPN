@@ -627,12 +627,6 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                 CommonUtils.shareWithFriends(this);
                 break;
             case 6:
-                onTermsClick();
-                break;
-            case 7:
-                onPrivacyPolicyClick();
-                break;
-            case 8:
                 try {
                     Intent intent = new Intent(this, AboutActivity.class);
                     startActivity(intent);

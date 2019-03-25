@@ -43,7 +43,6 @@
         <string name ="settings_follow_us">关注我们</string>
         <string name ="settings_privacy_policy">隐私政策</string>
         <string name ="settings_terms_of_service">服务条款</string>
-        <string name ="settings_right" translatable ="false"> WinterFell Tech保留所有权利</string>
         <string name ="yes">是</string>
         <string name ="no_thanks">不，谢谢！</string>
         <string name ="settings_start_onboot_title">在系统启动时自动启动VPN </string>
@@ -71,8 +70,6 @@
             <item name ="navigation_feedback">反馈</item>
             <item name ="navigation_rate_us">喜欢它</item>
             <item name ="navigation_share">与朋友分享</item>
-            <item name="navigation_termof_service">使用条款</item>
-            <item name="navigation_privacy_policy">隐私政策</item>
             <item name="navigation_setting">关于</item>
         </array>
 

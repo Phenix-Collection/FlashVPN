@@ -73,8 +73,6 @@
         <item name="navigation_feedback">Feedback</item>
         <item name="navigation_rate_us">Like it</item>
         <item name="navigation_share">Share with friends</item>
-        <item name="navigation_termof_service">Terms Of Service</item>
-        <item name="navigation_privacy_policy">Privacy Policy</item>
         <item name="navigation_setting">About</item>
     </array>
 

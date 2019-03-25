@@ -33,7 +33,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void setImmerseLayout() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
 
@@ -76,12 +76,12 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void setImmerseLayout(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int statusBarHeight = getStatusBarHeight(this.getBaseContext());
-            view.setPadding(0, statusBarHeight, 0, 0);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            Window window = getWindow();
+////            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            int statusBarHeight = getStatusBarHeight(this.getBaseContext());
+//            view.setPadding(0, statusBarHeight, 0, 0);
+//        }
     }
 
     private int getStatusBarHeight(Context context) {

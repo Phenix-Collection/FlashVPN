@@ -42,43 +42,35 @@
         android:text="@string/check_update"
         android:textColor="@color/black"/>
 
-    <LinearLayout
-        android:layout_marginTop="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:onClick="onFollowUsClick"
-        android:id="@+id/follow_us">
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/fb_follow_icon"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+
         <TextView
+            android:id="@+id/settings_right"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
             android:textColor="@color/black"
-            android:textSize="14sp"
-            android:text="@string/settings_follow_us"/>
-    </LinearLayout>
-    <TextView
-        android:layout_marginTop="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/terms_txt"
-        android:textColor="@color/about_text_light"
-        android:text="@string/settings_terms_of_service"
-        android:textSize="12sp"/>
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/about_text_light"
-        android:text="@string/settings_right"
-        android:textSize="12sp"/>
+            android:text="@string/settings_right"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/terms_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/settings_right"
+            android:layout_alignLeft="@+id/settings_right"
+            android:layout_alignStart="@+id/settings_right"
+            android:text="@string/settings_terms_text"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+
 </LinearLayout>
