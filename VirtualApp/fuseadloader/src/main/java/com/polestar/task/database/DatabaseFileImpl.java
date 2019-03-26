@@ -38,26 +38,33 @@ public class DatabaseFileImpl implements DatabaseApi {
     private static final String PRODUCT_FILE = DIR + "/products.txt";
     private static final String USER_FILE = DIR + "/user.txt";
 
+    private boolean needTask;
+    private boolean needProduct;
+
     @Override
     public boolean isDataAvailable() {
-        return mProducts!= null && mProducts.size() > 0
-                && mTasks != null && mTasks.size() > 0
-                && mUser != null;
+        return mUser != null && (needProduct? mProducts!= null && mProducts.size() > 0 : true)
+                && (needTask? mTasks != null && mTasks.size() > 0: true);
     }
 
-    public synchronized static DatabaseApi getDatabaseFileImpl(Context context) {
+    public synchronized static DatabaseApi getDatabaseFileImpl(Context context, boolean needTask, boolean needProduct) {
         if (sInstance == null) {
-            sInstance = new DatabaseFileImpl(context);
+            sInstance = new DatabaseFileImpl(context, needTask, needProduct);
         }
         return sInstance;
     }
 
-    protected DatabaseFileImpl(Context context) {
+    protected DatabaseFileImpl(Context context, boolean needTask, boolean needProduct) {
         mContext = context;
-
-        loadTasks(TASK_FILE);
+        this.needTask = needTask;
+        this.needProduct = needProduct;
         loadUserInfo(USER_FILE);
-        loadProducts(PRODUCT_FILE);
+        if (needTask) {
+            loadTasks(TASK_FILE);
+        }
+        if (needProduct) {
+            loadProducts(PRODUCT_FILE);
+        }
     }
 
     private void createDirIfNotExist(String dirName) {
