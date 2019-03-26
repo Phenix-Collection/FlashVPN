@@ -9,6 +9,7 @@ import android.os.Message;
 import winterfell.flash.vpn.core.ProxyConfig;
 import winterfell.flash.vpn.reward.AppUser;
 
+import winterfell.flash.vpn.utils.CommonUtils;
 import winterfell.flash.vpn.utils.MLogs;
 import winterfell.flash.vpn.utils.PreferenceUtils;
 import winterfell.flash.vpn.utils.RemoteConfig;
@@ -24,7 +25,7 @@ public class FlashUser extends AppUser{
         super();
         mContext = FlashApp.getApp();
         coinPremiumSecRatio = RemoteConfig.getLong("conf_coin_premium_ratio_sec");
-        freePremiumTime = (long)(getMyBalance() * (float)coinPremiumSecRatio);
+        freePremiumTime = coinToTime(getMyBalance());
 
         //只load一次
         Thread t = new Thread() {
@@ -47,6 +48,18 @@ public class FlashUser extends AppUser{
         t.start();
     }
 
+    private long coinToTime(float coin) {
+        return (long)(coin * (float)coinPremiumSecRatio);
+    }
+
+
+//    public final static int ACCURACY_SECOND = 0;
+//    public final static int ACCURACY_MINUTE = 1;
+//    public final static int ACCURACY_AUTO = -1;
+    public String coinToTimeString(float coin) {
+        long time = coinToTime(coin);
+        return CommonUtils.formatSeconds(time);
+    }
     synchronized public static FlashUser getInstance() {
         if (sInstance == null) {
             sInstance = new FlashUser();
@@ -57,7 +70,7 @@ public class FlashUser extends AppUser{
     @Override
     public void updateMyBalance(float balance) {
         super.updateMyBalance(balance);
-        freePremiumTime = (long)(getMyBalance() * (float)coinPremiumSecRatio);
+        freePremiumTime = coinToTime(getMyBalance());
     }
 
     public long getFreePremiumSeconds() {

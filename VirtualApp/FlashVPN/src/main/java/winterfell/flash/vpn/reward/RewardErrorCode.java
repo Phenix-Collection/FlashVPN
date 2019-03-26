@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.polestar.task.ADErrorCode;
 
 import winterfell.flash.vpn.FlashApp;
+import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 
 /**
@@ -31,22 +32,23 @@ final public class RewardErrorCode {
     }
 
     public static final String getToastMessage(Context context, int code, Object ... args) {
-//        switch (code) {
-//            case TASK_AD_NO_FILL:
-//                return context.getString(R.string.error_ad_no_fill);
-//            case TASK_EXCEED_DAY_LIMIT:
-//            case ADErrorCode.DAY_LIMITTED:
-//            case ADErrorCode.TOTAL_LIMITTED:
-//                return context.getString(R.string.error_day_limit);
-//            case TASK_OK:
-//                if (args.length == 1) {
-//                    float payment = (float) args[0];
-//                    if (payment > 0) {
-//                        return context.getString(R.string.task_ok_with_coin, payment);
-//                    }
-//                } else {
-//                    return context.getString(R.string.task_ok);
-//                }
+        switch (code) {
+            case TASK_AD_NO_FILL:
+                return context.getString(R.string.error_ad_no_fill);
+            case TASK_EXCEED_DAY_LIMIT:
+            case ADErrorCode.DAY_LIMITTED:
+            case ADErrorCode.TOTAL_LIMITTED:
+                return context.getString(R.string.error_day_limit);
+            case TASK_OK:
+                if (args.length == 1) {
+                    float payment = (float) args[0];
+                    if (payment > 0) {
+                        return context.getString(R.string.task_ok_with_coin,
+                                FlashUser.getInstance().coinToTimeString(payment));
+                    }
+                } else {
+                    return context.getString(R.string.task_ok);
+                }
 //            case TASK_SUBMIT_CODE_OK:
 //                return context.getString(R.string.submit_code_ok);
 //            case TASK_CODE_ALREADY_SUBMITTED:
@@ -65,11 +67,10 @@ final public class RewardErrorCode {
 //                return context.getString(R.string.no_enough_coin);
 //            case ADErrorCode.PRODUCT_NOTEXIST:
 //                return context.getString(R.string.product_not_exist);
-//            default:
-//                break;
-//        }
-//        return context.getString(R.string.error_unexpected);
-        return "";
+            default:
+                break;
+        }
+        return context.getString(R.string.error_unexpected);
     }
 
     public static void toastMessage(Context context, int code, Object... args) {

@@ -98,4 +98,10 @@
         <string name = "reward_text_has_premium_time">لديك %s قسط الوقت. مشاهدة فيديو مكافأة للحصول على المزيد!</string>
         <string name="reconnecting">إعادة الاتصال</string>
 
+    <string name="error_ad_no_fill">الفيديو ليس جاهزًا حتى الآن. يرجى التحقق من الشبكة والمحاولة مرة أخرى في وقت لاحق.</string>
+    <string name = "error_day_limit"> مرات كثيرة جدًا اليوم. يرجى المحاولة غدا. </string>
+         <string name = "task_ok"> انتهت المهمة! </string>
+         <string name = "task_ok_with_coin">حصلت على قسط %s من الوقت</string>
+         <string name = "error_unexpected"> يرجى المحاولة مرة أخرى لاحقًا! </string>
+
 </resources>

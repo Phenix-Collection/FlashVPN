@@ -160,7 +160,7 @@ public class CommonUtils {
      * @param seconds
      * @return String
      */
-    public static String formatSeconds(Context context, long seconds) {
+    public static String formatSeconds(long seconds) {
         String timeStr = seconds + "s";
         if (seconds > 60) {
             long second = seconds % 60;

@@ -103,5 +103,10 @@
     <string name="update_dialog_content">New version is coming! We improved a lot on version %s. Would you like to update FlashVPN now?</string>
     <string name="reward_text_has_premium_time_watch_ad">You have %s premium time. Watch a reward video to get more!</string>
     <string name="reward_text_has_premium_time">You have %s premium time. Click to get higher proxy speed!</string>
+    <string name="error_ad_no_fill">Video isn\'t ready yet. Please check network and try again later.</string>
 
+     <string name="error_day_limit">Too many times today. Please try tomorrow.</string>
+        <string name="task_ok">Task finished!</string>
+        <string name="task_ok_with_coin">Got %s premium time.</string>
+        <string name="error_unexpected">Please try again later!</string>
 </resources>

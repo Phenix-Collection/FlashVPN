@@ -36,6 +36,7 @@ import java.util.List;
 import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.billing.BillingProvider;
+import winterfell.flash.vpn.reward.RewardErrorCode;
 import winterfell.flash.vpn.reward.TaskExecutor;
 import winterfell.flash.vpn.utils.CommonUtils;
 import winterfell.flash.vpn.utils.EventReporter;
@@ -100,7 +101,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
             if (premiumTime <= 0) {
                 text.setText(R.string.reward_text_no_premium_time_watch_ad);
             } else {
-                String s = CommonUtils.formatSeconds(this, premiumTime);
+                String s = CommonUtils.formatSeconds(premiumTime);
                 text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
             }
             giftIcon.setImageResource(R.drawable.icon_reward);
@@ -126,11 +127,15 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
             public void onTaskSuccess(long taskId, float payment, float balance) {
                 EventReporter.rewardEvent("user_center_rewarded");
                 updateRewardLayout();
+                RewardErrorCode.toastMessage(UserCenterActivity.this, RewardErrorCode.TASK_OK, payment);
+
             }
 
             @Override
             public void onTaskFail(long taskId, ADErrorCode code) {
                 EventReporter.rewardEvent("user_center_reward_"+code.getErrMsg());
+                RewardErrorCode.toastMessage(UserCenterActivity.this, code.getErrCode());
+
             }
 
             @Override

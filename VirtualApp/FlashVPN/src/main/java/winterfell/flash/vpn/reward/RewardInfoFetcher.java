@@ -57,6 +57,9 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     private HashSet<IRewardInfoFetchListener> mRegistry;
     private VPNServerIntermediaManager mVpnServerInterManager;
 
+    //每次进程起来至少拉成功一次，否则retry几次
+    private boolean loadedSuccess = false;
+
     public interface IRewardInfoFetchListener{
         void onFetched();
     }
@@ -76,14 +79,15 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                 switch(msg.what) {
                     case MSG_FETCH_INFO:
                         long interval;
-                        if (databaseApi.isDataAvailable()) {
+                        boolean force = !(databaseApi.isDataAvailable() && loadedSuccess);
+                        if (!force) {
                             forceRetry = 0;
                             interval = UPDATE_INTERVAL;
                         } else {
                             interval = forceRetry++ >= FORCE_RETRY_TIMES ? UPDATE_INTERVAL : FORCE_UPDATE_INTERVAL;
                             MLogs.d(TAG,"force retry fetch");
                         }
-                        checkAndFetchInfo(!databaseApi.isDataAvailable());
+                        checkAndFetchInfo(force);
                         workHandler.sendMessageDelayed(workHandler.obtainMessage(MSG_FETCH_INFO), interval);
                         break;
                 }
@@ -106,7 +110,8 @@ public class RewardInfoFetcher extends BroadcastReceiver{
             @Override
             public void onRegisterSuccess(User user) {
                 databaseApi.setUserInfo(user);
-                MLogs.d(TAG, "register success " + user);
+                FlashUser.getInstance().updateMyBalance(user.mBalance);
+                MLogs.d(TAG, "register success " + user + " balance: " + user.mBalance);
                 VpnApiHelper.getVpnServers(FlashUser.getInstance().getMyId(), new IVpnStatusListener(){
 
 
@@ -156,6 +161,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                             @Override
                             public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
                                 databaseApi.setActiveTasks(tasks);
+                                loadedSuccess = true;
                                 PreferenceUtils.updateLastUpdateTime();
                                 MLogs.d(TAG, "onGetAllAvailableTasks success ");
                             }

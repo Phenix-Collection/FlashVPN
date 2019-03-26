@@ -37,6 +37,7 @@ import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.network.datamodels.Task;
 
 import winterfell.flash.vpn.reward.IVpnStatusListener;
+import winterfell.flash.vpn.reward.RewardErrorCode;
 import winterfell.flash.vpn.reward.TaskExecutor;
 import winterfell.flash.vpn.reward.network.VpnApiHelper;
 import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
@@ -504,12 +505,14 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                         @Override
                         public void onTaskSuccess(long taskId, float payment, float balance) {
                             EventReporter.rewardEvent("home_rewarded");
+                            RewardErrorCode.toastMessage(HomeActivity.this, RewardErrorCode.TASK_OK, payment);
                             updateRewardLayout();
                         }
 
                         @Override
                         public void onTaskFail(long taskId, ADErrorCode code) {
                             EventReporter.rewardEvent("home_reward_fail_" + code.getErrMsg());
+                            RewardErrorCode.toastMessage(HomeActivity.this, code.getErrCode());
                         }
 
                         @Override
@@ -678,7 +681,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     if (premiumTime <= 0) {
                         text.setText(R.string.reward_text_no_premium_time_watch_ad);
                     } else {
-                        String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
+                        String s = CommonUtils.formatSeconds(premiumTime);
                         text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
                     }
                     giftIcon.setImageResource(R.drawable.icon_reward);
@@ -686,7 +689,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     if (premiumTime <= 0) {
                         text.setText(R.string.reward_text_no_premium_time);
                     } else {
-                        String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
+                        String s = CommonUtils.formatSeconds(premiumTime);
                         text.setText(getString(R.string.reward_text_has_premium_time, s));
                     }
                     giftIcon.setImageResource(R.drawable.icon_trophy_award);
