@@ -49,6 +49,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     private int forceRetry;
 
     private HashSet<IRewardInfoFetchListener> mRegistry;
+    private boolean loadedSuccess = false;
 
     public interface IRewardInfoFetchListener{
         void onFetched();
@@ -68,13 +69,14 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                 switch(msg.what) {
                     case MSG_FETCH_INFO:
                         long interval;
-                        if (databaseApi.isDataAvailable()) {
+                        boolean force = !(databaseApi.isDataAvailable() && loadedSuccess);
+                        if (!force) {
                             forceRetry = 0;
                             interval = UPDATE_INTERVAL;
                         } else {
                             interval = forceRetry++ >= FORCE_RETRY_TIMES ? UPDATE_INTERVAL : FORCE_UPDATE_INTERVAL;
                         }
-                        checkAndFetchInfo(!databaseApi.isDataAvailable());
+                        checkAndFetchInfo(force);
                         workHandler.sendMessageDelayed(workHandler.obtainMessage(MSG_FETCH_INFO), interval);
                         break;
                 }
@@ -172,6 +174,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                                 for(IRewardInfoFetchListener listener: mRegistry) {
                                     listener.onFetched();
                                 }
+                                loadedSuccess = true;
                             }
 
                             @Override
