@@ -235,6 +235,8 @@ public static java.lang.String TABLENAME;
    # Application classes that will be serialized/deserialized over Gson
    -keep class winterfell.flash.vpn.reward.network.datamodels.** { *; }
    -keep class winterfell.flash.vpn.reward.network.responses.** { *; }
+   -keep class com.polestar.task.network.datamodels.** { *; }
+   -keep class com.polestar.task.network.responses.** { *; }
 
    # Prevent proguard from stripping interface information from TypeAdapterFactory,
    # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
