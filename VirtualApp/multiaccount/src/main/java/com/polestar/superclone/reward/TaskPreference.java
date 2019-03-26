@@ -31,7 +31,7 @@ public class TaskPreference {
     }
 
     public static void updateLastUpdateTime() {
-        getSharedPreference().edit().putLong("last_udpate_time", System.currentTimeMillis()).commit();
+        getSharedPreference().edit().putLong("last_update_time", System.currentTimeMillis()).commit();
     }
 
     public static long getLastUpdateTime() {
