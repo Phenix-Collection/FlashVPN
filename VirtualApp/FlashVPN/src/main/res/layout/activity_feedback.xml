@@ -2,19 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/light_gray"
+                android:background="@color/white"
                 android:orientation="vertical">
 
     <EditText
         android:id="@+id/et_feedback"
         android:layout_width="315dp"
-        android:layout_height="140dp"
+        android:layout_height="180dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp"
-        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shadow"
         android:hint="@string/feedback_hint"
-        android:textColorHint="@color/black"
-        android:paddingLeft="7dp"
+        android:textColorHint="@color/text_gray_light"
         android:textSize="13sp"
         android:gravity="top"
         android:paddingTop="9dp"/>
@@ -35,7 +34,7 @@
         android:background="@drawable/submit_button"
         android:text="@string/button_submit"
         android:textAllCaps="false"
-        android:textColor="@color/black"/>
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tv_extra_description"

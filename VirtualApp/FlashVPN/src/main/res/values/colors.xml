@@ -45,6 +45,7 @@
     <color name="about_text_light">#FFFFFF</color>
     <color name="dialog_guide_high_light_content_text">#ff2dbbfb</color>
     <color name="card_first">#ff2dbbfb</color>
+    <color name="button_enabled">#4949ff</color>
     <color name="card_second">#0fcb51</color>
     <color name="card_third">#ff7316</color>
     <color name="card_free_trial_text">#f8ff39</color>

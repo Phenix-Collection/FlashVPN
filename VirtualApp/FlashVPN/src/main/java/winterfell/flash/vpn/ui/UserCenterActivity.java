@@ -47,17 +47,13 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
     public static final int FROM_HOME_GIFT_ICON = 0;
     public static final int FROM_HOME_MENU = 1;
     public static final int FROM_SETTING = 2;
-    private IAdAdapter rewardAd;
     private View rewardLayout;
-    private boolean isRewarded;
     private ListView cardListView;
     private List<SkuDetails> skuDetailsList;
     private SubscribeCardAdapter cardAdapter;
     private int[] arrCardColor = new int[]{
            R.color.card_first,R.color.card_second, R.color.card_third
     };
-
-    private static final String SLOT_USER_CENTER_REWARD = "slot_user_center_reward";
 
     public static void start(Activity activity, int from) {
         Intent intent = new Intent();

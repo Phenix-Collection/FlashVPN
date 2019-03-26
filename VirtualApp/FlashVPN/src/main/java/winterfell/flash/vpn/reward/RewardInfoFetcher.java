@@ -46,7 +46,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     private Handler workHandler;
     private static long UPDATE_INTERVAL = 3600*1000;
 
-    private final static long FORCE_UPDATE_INTERVAL = 4000;
+    private final static long FORCE_UPDATE_INTERVAL = 2000;
     private final static int FORCE_RETRY_TIMES = 5;
 
     private final static int MSG_FETCH_INFO = 1;
@@ -95,7 +95,8 @@ public class RewardInfoFetcher extends BroadcastReceiver{
 
     //TODO need device id?
     private void checkAndFetchInfo(final boolean force) {
-        MLogs.d(TAG, "checkAndFetchInfo force: " + force + " myId " + FlashUser.getInstance().getMyId());
+        MLogs.d(TAG, "checkAndFetchInfo force: " + force + " myId " + FlashUser.getInstance().getMyId()
+         + " last_update: " + PreferenceUtils.getLastUpdateTime());
         if(!force && (System.currentTimeMillis() - PreferenceUtils.getLastUpdateTime()
                 < UPDATE_INTERVAL)) {
             MLogs.d(TAG, "already fetched at " + PreferenceUtils.getLastUpdateTime());

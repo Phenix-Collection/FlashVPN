@@ -85,26 +85,11 @@
     </array>
 
     <array name="faqAnswer">
-        <item name="faq_t1">VPN is Virtual Private Network. By using VPN, you can use public Wi-Fi
-            securely. What's more, VPN can help you access the website which is blocked by your
-            network vendor.
-        </item>
-        <item name="faq_t2">Just tap connect button in the home screen. Flash VPN will automatically
-            connect to the best server and encrypt your data transportation. You can also select
-            server if you have preferred server location.
-        </item>
-        <item name="faq_t3">1)Please check your internet connection 2)Refresh the servers to check
-            the signal 3)Retry connect and check other servers 4)If all methods not work, please
-            send a feedback email to us. Our engineer will timely resolve the issue.
-        </item>
-        <item name="faq_t4">Different from most VPN application in the market, Flash VPN will encrypt
-            all data transportation automatically. Your message cannot be intercepted by any other
-            spy.
-        </item>
-        <item name="faq_t5">With the premium service, we will remove all ads from this app.
-            Meanwhile, many premium servers is only open to premium users worldwide and we will
-            allocate dedicate bandwidth when you connected.
-        </item>
+        <item name="faq_t1">VPN is Virtual Private Network. By using VPN, you can use public Wi-Fi securely. What's more, VPN can help you access the website which is blocked by your network vendor.</item>
+        <item name="faq_t2">Just tap connect button in the home screen. Flash VPN will automatically connect to the best server and encrypt your data transportation. You can also select server if you have preferred server location.</item>
+        <item name="faq_t3">1)Please check your internet connection \n2)Refresh the servers to check the signal \n3)Retry connect and check other servers \n4)If all methods not work, please send a feedback email to us. Our engineer will timely resolve the issue.</item>
+        <item name="faq_t4">Different from most VPN application in the market, Flash VPN will encrypt all data transportation automatically. Your message cannot be intercepted by any other spy.</item>
+        <item name="faq_t5">With the premium service, we will remove all ads from this app. Meanwhile, many premium servers is only open to premium users worldwide and we will allocate dedicate bandwidth when you connected.</item>
     </array>
 
     <!-- update & about -->

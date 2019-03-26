@@ -55,12 +55,11 @@
         <string name ="dialog_love_title">支持Flash VPN </string>
         <string name ="dialog_love_content">可以在Play商店给我们一个5星评级吗？它会激励我们，我们感谢您的支持！</string>
         <string name ="feedback_no_description">描述不能为空！</string>
-        <string name ="feedback_go_faq">点击此处查看我们方便的常见问题解答。</string>
         <string name ="extra_feedback_decription">我们会尽快为您解决问题，感谢您帮助改进产品！</string>
         <string name ="share_with_friends">与朋友分享</string>
         <string name ="select_server_title">选择服务器</string>
         <string name ="select_server_auto">自动</string>
-        <string name ="contact_dev_team"> <u>联系开发人员团队</u> </string>
+        <string name ="contact_dev_team"> <u>联系开发团队</u> </string>
         <string name ="free_trial_text"> +%d天免费试用</string>
 
     <array name ="navigationItem">
@@ -82,25 +81,11 @@
         </array>
 
         <array name ="faqAnswer">
-            <item name ="faq_t1"> VPN是虚拟专用网。通过使用VPN，您可以使用公共Wi-Fi
-                牢固。更重要的是，VPN可以帮助您访问被您阻止的网站
-                网络供应商。
-            </item>
-            <item name ="faq_t2">只需点击主屏幕中的连接按钮即可。 Flash VPN会自动进行
-                连接到最好的服务器并加密您的数据传输。你也可以选择
-                服务器，如果您有首选的服务器位置
-            </item>
-            <item name ="faq_t3"> 1）请检查您的互联网连接2）刷新服务器以进行检查
-                信号3）重试连接并检查其他服务器4）如果所有方法都不起作用，请
-                发送反馈电子邮件给我们。我们的工程师将及时解决问题。
-            </item>
-            <item name ="faq_t4">与市场上大多数VPN应用程序不同，Flash VPN将加密
-                所有数据自动传输。您的邮件将不能被任何其他人拦截。
-            </item>
-            <item name ="faq_t5">使用优质服务，我们会从此应用中删除所有广告。
-                与此同时，许多高级服务器仅向全球高端用户开放，我们也会这样做
-                连接时分配专用带宽。
-            </item>
+            <item name ="faq_t1"> VPN是虚拟专用网。通过使用VPN，您可以更安全使用公共Wi-Fi。更重要的是，VPN可以帮助您访问被您阻止的网站。</item>
+            <item name ="faq_t2">只需点击主屏幕中的连接按钮即可。Flash VPN会自动进行连接到最好的服务器并加密您的数据传输。你也可以选择服务器，如果您有首选的服务器位置</item>
+            <item name ="faq_t3"> 1）请检查您的互联网连接\n2）刷新服务器以进行检查信号\n3）重试连接并检查其他服务器\n4）如果所有方法都不起作用，请发送反馈电子邮件给我们。我们的工程师将及时解决问题。</item>
+            <item name ="faq_t4">与市场上大多数VPN应用程序不同，Flash VPN将加密所有数据自动传输。您的邮件将不能被任何其他人拦截。</item>
+            <item name ="faq_t5">使用优质服务，我们会从此应用中删除所有广告。与此同时，许多高级服务器仅向全球高端用户开放，并且在连接时分配专用带宽。</item>
         </array>
 
         <string name ="update_dialog_title">更新</string>

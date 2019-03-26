@@ -23,7 +23,7 @@
             android:layout_margin="15dp"
             android:layout_centerHorizontal="true"
             android:textSize="14sp"
-            android:textColor="#2929ff"
+            android:textColor="@color/button_enabled"
             android:id="@+id/contact_dev_team"
             android:text="@string/contact_dev_team"
             android:onClick="onContactTeamClick"/>

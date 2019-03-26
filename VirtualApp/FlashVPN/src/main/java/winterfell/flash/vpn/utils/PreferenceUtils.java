@@ -353,7 +353,7 @@ public class PreferenceUtils {
     }
 
     public static void updateLastUpdateTime() {
-        putLong(FlashApp.getApp(),"last_udpate_time", System.currentTimeMillis());
+        putLong(FlashApp.getApp(),"last_update_time", System.currentTimeMillis());
     }
 
     public static long getLastUpdateTime() {
