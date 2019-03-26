@@ -92,6 +92,8 @@ abstract public class AppUser implements IAdTaskStateObserver {
 //        preloadRewardVideoTask();
     }
 
+
+
     public static boolean check() {
         isSecure = checkInternal();
         return isSecure;
@@ -328,7 +330,7 @@ abstract public class AppUser implements IAdTaskStateObserver {
                 }
             }
         }
-        return true;
+        return false;
     }
 
     public void setReferrerCode(String code) {

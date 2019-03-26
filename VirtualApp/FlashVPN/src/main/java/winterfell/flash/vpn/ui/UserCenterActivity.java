@@ -24,6 +24,9 @@ import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.task.ADErrorCode;
+import com.polestar.task.ITaskStatusListener;
+import com.polestar.task.network.datamodels.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +36,7 @@ import java.util.List;
 import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.billing.BillingProvider;
+import winterfell.flash.vpn.reward.TaskExecutor;
 import winterfell.flash.vpn.utils.CommonUtils;
 import winterfell.flash.vpn.utils.EventReporter;
 import winterfell.flash.vpn.utils.MLogs;
@@ -90,80 +94,59 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
     }
     
     private void updateRewardLayout () {
-        if (FlashUser.getInstance().isVIP()|| rewardAd == null) {
+        if (FlashUser.getInstance().isVIP()|| !FlashUser.getInstance().isRewardVideoTaskReady()) {
             rewardLayout.setVisibility(View.GONE);
         } else {
-            if (FlashUser.getInstance().usePremiumSeconds()) {
-                rewardLayout.setVisibility(View.VISIBLE);
-                long premiumTime = FlashUser.getInstance().getFreePremiumSeconds();
-                TextView text = findViewById(R.id.reward_text);
-                ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-                if (premiumTime <= 0) {
-                    text.setText(R.string.reward_text_no_premium_time_watch_ad);
-                } else {
-                    String s = CommonUtils.formatSeconds(this, premiumTime);
-                    text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
-                }
-                giftIcon.setImageResource(R.drawable.icon_reward);
-
-                rewardLayout.setVisibility(View.VISIBLE);
-                ObjectAnimator scaleX = ObjectAnimator.ofFloat(rewardLayout, "scaleX", 0.7f, 1.0f, 1.0f);
-                ObjectAnimator scaleY = ObjectAnimator.ofFloat(rewardLayout, "scaleY", 0.7f, 1.0f, 1.0f);
-                AnimatorSet animSet = new AnimatorSet();
-                animSet.play(scaleX).with(scaleY);
-                animSet.setInterpolator(new BounceInterpolator());
-                animSet.setDuration(800).start();
+            rewardLayout.setVisibility(View.VISIBLE);
+            long premiumTime = FlashUser.getInstance().getFreePremiumSeconds();
+            TextView text = findViewById(R.id.reward_text);
+            ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
+            if (premiumTime <= 0) {
+                text.setText(R.string.reward_text_no_premium_time_watch_ad);
             } else {
-                rewardLayout.setVisibility(View.GONE);
+                String s = CommonUtils.formatSeconds(this, premiumTime);
+                text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
             }
+            giftIcon.setImageResource(R.drawable.icon_reward);
+
+            rewardLayout.setVisibility(View.VISIBLE);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(rewardLayout, "scaleX", 0.7f, 1.0f, 1.0f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(rewardLayout, "scaleY", 0.7f, 1.0f, 1.0f);
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.play(scaleX).with(scaleY);
+            animSet.setInterpolator(new BounceInterpolator());
+            animSet.setDuration(800).start();
         }
     }
 
     private void loadRewardAd() {
-        if (FlashUser.getInstance().usePremiumSeconds()) {
-
-            FuseAdLoader.get(SLOT_USER_CENTER_REWARD, this).loadAd(this, 2, 1000,
-                    new IAdLoadListener() {
-                        @Override
-                        public void onRewarded(IAdAdapter ad) {
-                            //do reward
-                            isRewarded = true;
-                            MLogs.d("onRewarded ....");
-                        }
-
-                        @Override
-                        public void onAdLoaded(IAdAdapter ad) {
-                            rewardAd = ad;
-                            updateRewardLayout();
-                        }
-
-                        @Override
-                        public void onAdClicked(IAdAdapter ad) {
-
-                        }
-
-                        @Override
-                        public void onAdClosed(IAdAdapter ad) {
-
-                        }
-
-                        @Override
-                        public void onAdListLoaded(List<IAdAdapter> ads) {
-
-                        }
-
-                        @Override
-                        public void onError(String error) {
-                        }
-                    });
-        }
+        FlashUser.getInstance().preloadRewardVideoTask();
     }
 
 
     public void onRewardClick(View view) {
-        if (rewardAd != null) {
-            rewardAd.show();
-        }
+        new TaskExecutor(this).execute(FlashUser.getInstance().getVideoTask(), new ITaskStatusListener() {
+            @Override
+            public void onTaskSuccess(long taskId, float payment, float balance) {
+                EventReporter.rewardEvent("user_center_rewarded");
+                updateRewardLayout();
+            }
+
+            @Override
+            public void onTaskFail(long taskId, ADErrorCode code) {
+                EventReporter.rewardEvent("user_center_reward_"+code.getErrMsg());
+            }
+
+            @Override
+            public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+
+            }
+
+            @Override
+            public void onGeneralError(ADErrorCode code) {
+                EventReporter.rewardEvent("user_center_reward_"+code.getErrMsg());
+            }
+        });
     }
 
     private int periodToDay(String s){
@@ -197,11 +180,6 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
     protected void onResume() {
         super.onResume();
         updateRewardLayout();
-        if (isRewarded) {
-            FlashUser.getInstance().doRewardFreePremium();
-            Toast.makeText(this, R.string.get_reward_premium_time, Toast.LENGTH_SHORT).show();
-            isRewarded = false;
-        }
     }
 
     private long basePrice;

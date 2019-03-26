@@ -10,6 +10,8 @@ import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdConstants;
 import com.polestar.ad.SDKConfiguration;
 import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.task.database.DatabaseImplFactory;
+
 import winterfell.flash.vpn.reward.AppUser;
 
 import java.io.File;
@@ -86,12 +88,14 @@ public class FlashApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        DatabaseImplFactory.CONF_NEED_PRODUCT = false;
+        DatabaseImplFactory.CONF_NEED_TASK = true;
         FirebaseApp.initializeApp(gDefault);
         RemoteConfig.init();
         EventReporter.init(gDefault);
         BugReporter.init(gDefault);
        initAd();
+       FlashUser.getInstance().preloadRewardVideoTask();
         BillingProvider.get().updateStatus(null);
         if (!getPackageName().contains("flash")){
             System.exit(0);

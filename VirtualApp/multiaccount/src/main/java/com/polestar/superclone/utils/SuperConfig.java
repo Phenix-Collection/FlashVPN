@@ -47,7 +47,7 @@ public class SuperConfig {
                 }
             }
         }
-        adsCtrl = PreferencesUtils.getInt(MApp.getApp(), KEY_ADS_LAUNCH_CTRL, NO_OP);
+        adsCtrl = PreferencesUtils.isAdFree() ? NO_OP : PreferencesUtils.getInt(MApp.getApp(), KEY_ADS_LAUNCH_CTRL, NO_OP);
 
     }
 

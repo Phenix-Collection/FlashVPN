@@ -17,28 +17,14 @@ public class FlashUser extends AppUser{
 
     private Context mContext;
     private static FlashUser sInstance;
-    private Handler mHandler;
     private long freePremiumTime;
-
-    private final static int MSG_SAVE = 0;
-
-    private final static String RC_USE_PREMIUM_SECONDS = "use_premium_seconds";
-    private final static String RC_INIT_PREMIUM_SECONDS = "init_premium_seconds";
+    private long coinPremiumSecRatio;
 
     private FlashUser() {
         super();
         mContext = FlashApp.getApp();
-        mHandler = new Handler(Looper.getMainLooper()){
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case MSG_SAVE:
-                        PreferenceUtils.putLong(mContext, "premium_seconds", freePremiumTime);
-                        break;
-                }
-            }
-        };
-        freePremiumTime = PreferenceUtils.getLong(mContext, "premium_seconds", RemoteConfig.getLong(RC_INIT_PREMIUM_SECONDS));
+        coinPremiumSecRatio = RemoteConfig.getLong("conf_coin_premium_ratio_sec");
+        freePremiumTime = (long)(getMyBalance() * (float)coinPremiumSecRatio);
 
         //只load一次
         Thread t = new Thread() {
@@ -68,41 +54,27 @@ public class FlashUser extends AppUser{
         return sInstance;
     }
 
+    @Override
+    public void updateMyBalance(float balance) {
+        super.updateMyBalance(balance);
+        freePremiumTime = (long)(getMyBalance() * (float)coinPremiumSecRatio);
+    }
+
     public long getFreePremiumSeconds() {
         MLogs.d("free premium: " + freePremiumTime);
         return freePremiumTime;
     }
 
-    public void doRewardFreePremium() {
-        if (usePremiumSeconds()) {
-            long add = RemoteConfig.getLong("gift_reward_sec");
-            freePremiumTime += add;
-            MLogs.d("add reward: " + add);
-            scheduleSave();
-        }
-    }
-
     public void costFreePremiumSec(long sec) {
-        if (usePremiumSeconds()) {
             freePremiumTime -= sec;
             if (freePremiumTime < 0) freePremiumTime = 0;
-            scheduleSave();
-        }
     }
 
-    private void scheduleSave() {
-        if (! mHandler.hasMessages(MSG_SAVE)) {
-            mHandler.sendEmptyMessage(MSG_SAVE);
-        }
-    }
 
     public boolean isVIP() {
         return PreferenceUtils.getBoolean(FlashApp.getApp(), "is_vip", false);
     }
 
-    public boolean usePremiumSeconds() {
-        return RemoteConfig.getBoolean(RC_USE_PREMIUM_SECONDS);
-    }
 
     public void setVIP(boolean enable) {
         PreferenceUtils.putBoolean(FlashApp.getApp(), "is_vip", enable);

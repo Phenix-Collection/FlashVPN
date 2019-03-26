@@ -33,7 +33,11 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 import com.polestar.task.ADErrorCode;
+import com.polestar.task.ITaskStatusListener;
+import com.polestar.task.network.datamodels.Task;
+
 import winterfell.flash.vpn.reward.IVpnStatusListener;
+import winterfell.flash.vpn.reward.TaskExecutor;
 import winterfell.flash.vpn.reward.network.VpnApiHelper;
 import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
 import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
@@ -41,6 +45,7 @@ import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -114,7 +119,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private static int CHECK_PORT_FAILED_THRESHOLDER = 2;
 
     private static final String SLOT_HOME_BANNER = "slot_home_banner";
-    private static final String SLOT_HOME_GIFT_REWARD = "slot_home_gift_reward";
+    private static final String SLOT_HOME_GIFT_REWARD = "slot_user_center_reward";
     private static final int START_VPN_SERVICE_REQUEST_CODE = 100;
     private static final int SELECT_SERVER_REQUEST_CODE = 101;
 
@@ -493,10 +498,30 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     public void onRewardClick(View view) {
-        if (rewardAd != null) {
-            rewardAd.show();
-            rewardAd = null;
-            EventReporter.generalEvent(this, "home_reward_click_ad");
+        if (FlashUser.getInstance().isRewardVideoTaskReady()) {
+            new TaskExecutor(this).execute(FlashUser.getInstance().getVideoTask(),
+                    new ITaskStatusListener() {
+                        @Override
+                        public void onTaskSuccess(long taskId, float payment, float balance) {
+                            EventReporter.rewardEvent("home_rewarded");
+                            updateRewardLayout();
+                        }
+
+                        @Override
+                        public void onTaskFail(long taskId, ADErrorCode code) {
+                            EventReporter.rewardEvent("home_reward_fail_" + code.getErrMsg());
+                        }
+
+                        @Override
+                        public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+
+                        }
+
+                        @Override
+                        public void onGeneralError(ADErrorCode code) {
+                            EventReporter.rewardEvent("home_reward_fail_" + code.getErrMsg());
+                        }
+                    });
         } else {
             UserCenterActivity.start(this, UserCenterActivity.FROM_HOME_GIFT_ICON);
             EventReporter.generalEvent(this, "home_reward_click_user_center");
@@ -638,54 +663,36 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         return true;
     }
 
-    public void onPrivacyPolicyClick() {
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.settings_privacy_policy));
-        intent.putExtra(WebViewActivity.EXTRA_URL, "file:///android_asset/privacy_policy.html");
-        startActivity(intent);
-    }
-
-    public void onTermsClick() {
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.EXTRA_TITLE, getString(R.string.settings_terms_of_service));
-        intent.putExtra(WebViewActivity.EXTRA_URL, "file:///android_asset/term_of_service.html");
-        startActivity(intent);
-    }
-
     private void updateRewardLayout() {
-        if (FlashUser.getInstance().usePremiumSeconds()) {
-            rewardLayout.setVisibility(View.VISIBLE);
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    long premiumTime = FlashUser.getInstance().getFreePremiumSeconds();
-                    TextView text = findViewById(R.id.reward_text);
-                    ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-                    if (FlashUser.getInstance().isVIP()) {
-                        giftIcon.setImageResource(R.drawable.icon_trophy_award);
-                        text.setText(R.string.reward_text_vip);
-                    } else if (rewardAd != null) {
-                        if (premiumTime <= 0) {
-                            text.setText(R.string.reward_text_no_premium_time_watch_ad);
-                        } else {
-                            String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
-                            text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
-                        }
-                        giftIcon.setImageResource(R.drawable.icon_reward);
+        rewardLayout.setVisibility(View.VISIBLE);
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                long premiumTime = FlashUser.getInstance().getFreePremiumSeconds();
+                TextView text = findViewById(R.id.reward_text);
+                ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
+                if (FlashUser.getInstance().isVIP()) {
+                    giftIcon.setImageResource(R.drawable.icon_trophy_award);
+                    text.setText(R.string.reward_text_vip);
+                } else if (FlashUser.getInstance().isRewardVideoTaskReady()) {
+                    if (premiumTime <= 0) {
+                        text.setText(R.string.reward_text_no_premium_time_watch_ad);
                     } else {
-                        if (premiumTime <= 0) {
-                            text.setText(R.string.reward_text_no_premium_time);
-                        } else {
-                            String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
-                            text.setText(getString(R.string.reward_text_has_premium_time, s));
-                        }
-                        giftIcon.setImageResource(R.drawable.icon_trophy_award);
+                        String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
+                        text.setText(getString(R.string.reward_text_has_premium_time_watch_ad, s));
                     }
+                    giftIcon.setImageResource(R.drawable.icon_reward);
+                } else {
+                    if (premiumTime <= 0) {
+                        text.setText(R.string.reward_text_no_premium_time);
+                    } else {
+                        String s = CommonUtils.formatSeconds(HomeActivity.this, premiumTime);
+                        text.setText(getString(R.string.reward_text_has_premium_time, s));
+                    }
+                    giftIcon.setImageResource(R.drawable.icon_trophy_award);
                 }
-            });
-        } else {
-            rewardLayout.setVisibility(View.GONE);
-        }
+            }
+        });
     }
 
     private void initView() {
@@ -817,12 +824,18 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             cityText.setText(si.mCity);
         }
         updateConnectState(mState, "", false);
-        updateRewardLayout();
-        if (isRewarded) {
-            FlashUser.getInstance().doRewardFreePremium();
-            Toast.makeText(HomeActivity.this, R.string.get_reward_premium_time, Toast.LENGTH_SHORT).show();
-            isRewarded = false;
+        if (FlashUser.getInstance().isRewardVideoTaskReady()) {
+            ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
+            giftIcon.setImageResource(R.drawable.icon_reward);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIcon, "scaleX", 0.7f, 1.3f, 1.1f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIcon, "scaleY", 0.7f, 1.3f, 1.1f);
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.play(scaleX).with(scaleY);
+            animSet.setInterpolator(new BounceInterpolator());
+            animSet.setDuration(800).start();
         }
+        updateRewardLayout();
+
         timeCountTask = new TimerTask() {
             @Override
             public void run() {
@@ -975,64 +988,12 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     public static void preloadAd(Context context) {
         FuseAdLoader.get(SLOT_HOME_BANNER, context).
                 setBannerAdSize(getBannerSize()).preloadAd(context);
-        if (FlashUser.getInstance().usePremiumSeconds()) {
-            FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, context).
-                    preloadAd(context);
-        }
+        FlashUser.getInstance().preloadRewardVideoTask();
     }
 
     private void loadAds() {
         if (!FlashUser.getInstance().isVIP()) {
             loadHomeNativeAd();
-            loadRewardAd();
-        }
-    }
-
-    private boolean isRewarded = false;
-    private void loadRewardAd() {
-        if (FlashUser.getInstance().usePremiumSeconds()) {
-            FuseAdLoader.get(SLOT_HOME_GIFT_REWARD, this).loadAd(this, 2, 1000,
-                    new IAdLoadListener() {
-                        @Override
-                        public void onRewarded(IAdAdapter ad) {
-                            //do reward
-                            isRewarded = true;
-                            MLogs.d("onRewarded ....");
-                        }
-
-                        @Override
-                        public void onAdLoaded(IAdAdapter ad) {
-                            rewardAd = ad;
-                            ImageView giftIcon = rewardLayout.findViewById(R.id.reward_icon);
-                            giftIcon.setImageResource(R.drawable.icon_reward);
-                            ObjectAnimator scaleX = ObjectAnimator.ofFloat(giftIcon, "scaleX", 0.7f, 1.3f, 1.1f);
-                            ObjectAnimator scaleY = ObjectAnimator.ofFloat(giftIcon, "scaleY", 0.7f, 1.3f, 1.1f);
-                            AnimatorSet animSet = new AnimatorSet();
-                            animSet.play(scaleX).with(scaleY);
-                            animSet.setInterpolator(new BounceInterpolator());
-                            animSet.setDuration(800).start();
-                            updateRewardLayout();
-                        }
-
-                        @Override
-                        public void onAdClicked(IAdAdapter ad) {
-
-                        }
-
-                        @Override
-                        public void onAdClosed(IAdAdapter ad) {
-
-                        }
-
-                        @Override
-                        public void onAdListLoaded(List<IAdAdapter> ads) {
-
-                        }
-
-                        @Override
-                        public void onError(String error) {
-                        }
-                    });
         }
     }
 

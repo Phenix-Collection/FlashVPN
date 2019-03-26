@@ -46,23 +46,14 @@
         <value>ab_banner:ca-app-pub-7413370106066330/9591085577:0;mp:fe04658f5366448694123cf899fe5ee6:0;fb:388923141659680_389060174979310:0</value>
     </entry>
     <entry>
-        <key>slot_home_gift_reward</key>
-        <value>adm_reward:ca-app-pub-7413370106066330/7867028680:0</value>
-        <!--<value>adm_reward:ca-app-pub-5490912237269284/9145920290:0</value>-->
-    </entry>
-    <entry>
         <key>slot_user_center_reward</key>
-        <value>adm_reward:ca-app-pub-7413370106066330/2231558629:0</value>
+        <value>adm_reward:ca-app-pub-7413370106066330/2231558629:0;ir_reward:premium_time_reward:0</value>
         <!--<value>adm_reward:ca-app-pub-5490912237269284/9145920290:0</value>-->
     </entry>
     <entry>
         <key>gift_reward_sec</key>
         <value>3600</value>
         <!--<value>adm_reward:ca-app-pub-5490912237269284/9145920290:0</value>-->
-    </entry>
-    <entry>
-        <key>block_domain</key>
-        <value></value>
     </entry>
     <entry>
         <key>conf_vip_speed_boost</key>
@@ -123,12 +114,6 @@
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
         <value>null</value>
     </entry>
-    <entry>
-        <key>fingerprint_url</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>off</value>
-    </entry>
-
     <!-- 2019-02-26 要不要倒计时以及倒计时的初始时间-->
     <entry>
         <key>init_premium_seconds</key>
@@ -138,7 +123,7 @@
     <entry>
         <key>use_premium_seconds</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>false</value>
+        <value>true</value>
     </entry>
 
     <entry>
@@ -176,5 +161,9 @@
         <value>100</value>
     </entry>
 
+    <entry>
+        <key>conf_coin_premium_ratio_sec</key>
+        <value>600</value>
+    </entry>
 
 </defaultsMap>

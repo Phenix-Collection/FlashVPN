@@ -10,15 +10,19 @@ import android.os.HandlerThread;
 import android.os.Message;
 
 import com.polestar.task.ADErrorCode;
+import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.IUserStatusListener;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.DatabaseImplFactory;
+import com.polestar.task.network.AdApiHelper;
+import com.polestar.task.network.datamodels.Task;
 import com.polestar.task.network.datamodels.User;
 
 import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
 import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import winterfell.flash.vpn.FlashApp;
@@ -42,7 +46,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     private Handler workHandler;
     private static long UPDATE_INTERVAL = 3600*1000;
 
-    private final static long FORCE_UPDATE_INTERVAL = 2000;
+    private final static long FORCE_UPDATE_INTERVAL = 4000;
     private final static int FORCE_RETRY_TIMES = 5;
 
     private final static int MSG_FETCH_INFO = 1;
@@ -62,7 +66,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
         UPDATE_INTERVAL = RemoteConfig.getLong("config_update_interval_sec")*1000;
         mContext = context;
         forceRetry = 0;
-        databaseApi = DatabaseImplFactory.getDatabaseApi(context, DatabaseImplFactory.TARGET_FLASH_VPN);
+        databaseApi = DatabaseImplFactory.getDatabaseApi(context);
         mRegistry = new HashSet<>();
         HandlerThread thread = new HandlerThread("sync_task");
         thread.start();
@@ -77,6 +81,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                             interval = UPDATE_INTERVAL;
                         } else {
                             interval = forceRetry++ >= FORCE_RETRY_TIMES ? UPDATE_INTERVAL : FORCE_UPDATE_INTERVAL;
+                            MLogs.d(TAG,"force retry fetch");
                         }
                         checkAndFetchInfo(!databaseApi.isDataAvailable());
                         workHandler.sendMessageDelayed(workHandler.obtainMessage(MSG_FETCH_INFO), interval);
@@ -128,6 +133,32 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                     public void onGetAllServers(ServersResponse servers) {
                         MLogs.i("onGetAllServers");
                         mVpnServerInterManager.updateRawServerInfo(servers);
+
+
+                        AdApiHelper.getAvailableTasks(FlashUser.getInstance().getMyId(), new ITaskStatusListener(){
+                            @Override
+                            public void onGeneralError(ADErrorCode code) {
+                                EventReporter.rewardEvent("fetch_server_error_" + code.getErrCode());
+                                MLogs.d(TAG, "onError " + code);
+                            }
+
+                            @Override
+                            public void onTaskSuccess(long taskId, float payment, float balance) {
+
+                            }
+
+                            @Override
+                            public void onTaskFail(long taskId, ADErrorCode code) {
+
+                            }
+
+                            @Override
+                            public void onGetAllAvailableTasks(ArrayList<Task> tasks) {
+                                databaseApi.setActiveTasks(tasks);
+                                PreferenceUtils.updateLastUpdateTime();
+                                MLogs.d(TAG, "onGetAllAvailableTasks success ");
+                            }
+                        });
                     }
 
                     @Override
@@ -185,7 +216,8 @@ public class RewardInfoFetcher extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         MLogs.d("RewardInfoFetcher " + intent);
         if (CommonUtils.isNetworkAvailable(context)){
-            preloadRewardInfo();
+            workHandler.sendMessageDelayed(
+                    workHandler.obtainMessage(MSG_FETCH_INFO), FORCE_UPDATE_INTERVAL);
         }
     }
 }
