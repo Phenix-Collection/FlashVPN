@@ -1056,6 +1056,7 @@ class MethodProxies {
         static {
             BLOCK_COMPONENT_LIST.add("com.google.android.finsky.contentfilter.impl.ContentFiltersService");
             BLOCK_COMPONENT_LIST.add("com.google.android.gsf.update.SystemUpdateService");
+            BLOCK_COMPONENT_LIST.add("com.google.android.gms.usagereporting.service.UsageReportingService");
             BLOCK_COMPONENT_LIST.add("com.google.android.gms.clearcut.uploader.QosUploaderChimeraService");
             BLOCK_COMPONENT_LIST.add("com.google.android.gms.phenotype.service.sync.PackageUpdateTaskService");
             //BLOCK_COMPONENT_LIST.add("com.google.android.finsky.wear.WearSupportService");
