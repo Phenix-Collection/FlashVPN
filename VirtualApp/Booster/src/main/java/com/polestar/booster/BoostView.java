@@ -204,51 +204,6 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
         });
     }
 
-    public void loadAds() {
-        final String slotId = BoosterSdk.boosterConfig.boostAdSlot;
-        final int adCount = 1;
-        if (TextUtils.isEmpty(slotId) || adCount <= 0) {
-            return;
-        }
-
-        for (int i = 0; i < adCount; i++) {
-            final ViewGroup layoutAd = (ViewGroup) mLayoutCleanerViewAds.getChildAt(i);
-            final long begin = System.currentTimeMillis();
-            //TODO JJJJ
-//            Ad ad = new Ad.Builder(mContext, slotId)
-//                    .setParentViewGroup(layoutAd)
-//                    .setWidth(340).setHight(260)
-//                    .isPreLoad(false)
-//                    .setTransparent(true)
-//                    .setTitleColor(R.color.cleanersdk_ad_title_color)
-//                    .setSubTitleColor(R.color.cleanersdk_ad_subtitle_color)
-//                    .setCtaBackground(R.color.cleanersdk_available_memory_color)
-//                    .setCtaTextColor(R.color.cleanersdk_ad_button_color)
-//                    .build();
-            //TODO JJJJ
-//            AdAgent.getInstance().loadAd(mContext, ad, new OnAdLoadListener() {
-//                @Override
-//                public void onLoad(IAd iAd) {
-//                    if (log.isDebugEnabled())
-//                        log.debug("loadAds onLoad" + " used:" + (System.currentTimeMillis() - begin) + "ms");
-//                    addAdView(slotId, iAd);
-//                }
-//
-//                @Override
-//                public void onLoadFailed(AdError adError) {
-//                    if (log.isDebugEnabled())
-//                        log.debug("loadAds onLoadFailed" + " used:" + (System.currentTimeMillis() - begin) + "ms");
-//                }
-//
-//                @Override
-//                public void onLoadInterstitialAd(WrapInterstitialAd wrapInterstitialAd) {
-//                    if (log.isDebugEnabled())
-//                        log.debug("loadAds onLoadInterstitialAd" + " used:" + (System.currentTimeMillis() - begin) + "ms");
-//                    Analytics.onAdLoadInterstitialLoaded(slotId, configInfo);
-//                }
-//            });
-        }
-    }
 
     private static int getMarginBottom(View view) {
         int marginBottom = 0;
@@ -672,7 +627,6 @@ public class BoostView extends RelativeLayout implements WindowView, View.OnClic
             return;
         postDelayed(mAutoCloseJob, autoCloseTime);
 
-        loadAds();
     }
 
     @Override
