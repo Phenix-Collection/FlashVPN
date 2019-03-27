@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import mochat.multiple.parallel.whatsclone.R;
+import mochat.multiple.parallel.whatsclone.component.activity.AppCloneActivity;
 import mochat.multiple.parallel.whatsclone.component.activity.AppListActivity;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
 import mochat.multiple.parallel.whatsclone.model.AppModel;
@@ -84,7 +86,9 @@ public class AppListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent data = new Intent();
-                data.putExtra(AppConstants.EXTRA_APP_MODEL, model);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(AppConstants.EXTRA_APP_MODEL, model);
+                data.putExtras(bundle);
                 ((AppListActivity) mContext).setResult(Activity.RESULT_OK, data);
                 ((AppListActivity) mContext).finish();
             }

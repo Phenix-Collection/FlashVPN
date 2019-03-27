@@ -1,11 +1,16 @@
 package mochat.multiple.parallel.whatsclone.component;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
+import android.os.Build;
 import android.os.Bundle;
+
+import com.polestar.clone.CustomizeAppData;
 
 import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
+import mochat.multiple.parallel.whatsclone.utils.WhatsConfig;
 
 /**
  * Created by yxx on 2016/9/7.
@@ -23,6 +28,13 @@ public class LocalActivityLifecycleCallBacks implements Application.ActivityLife
 
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CustomizeAppData appData = MApp.getApp().getCurrentCustomizeData();
+            if (appData != null && WhatsConfig.get().isHandleInterstitial(activity.getClass().getName())) {
+                activity.setTaskDescription(new ActivityManager.TaskDescription(appData.label, appData.getCustomIcon()));
+            }
+        }
+        MApp.getApp().setCurrentAdClone(null, -1);
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.polestar.ad.AdConfig;
 import com.polestar.ad.AdControlInfo;
 import mochat.multiple.parallel.whatsclone.BuildConfig;
+import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.R;
 
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class RemoteConfig {
             public void onSuccess(Void aVoid) {
                 MLogs.logBug(TAG, "Fetch Succeeded");
                 mFirebaseRemoteConfig.activateFetched();
+                PreferencesUtils.putInt(MApp.getApp(), WhatsConfig.KEY_ADS_LAUNCH_CTRL, (int)RemoteConfig.getLong("ads_launch_ctrl"));
+                PreferencesUtils.putString(MApp.getApp(), WhatsConfig.KEY_INTERCEPT_CLASS, RemoteConfig.getString("conf_intercept_class"));
+                WhatsConfig.get().initData();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

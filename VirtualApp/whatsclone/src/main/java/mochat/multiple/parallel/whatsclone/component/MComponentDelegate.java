@@ -24,6 +24,7 @@ import mochat.multiple.parallel.whatsclone.model.AppModel;
 import mochat.multiple.parallel.whatsclone.utils.AppManager;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
+import mochat.multiple.parallel.whatsclone.utils.WhatsConfig;
 
 import java.util.HashSet;
 import java.util.List;
@@ -39,17 +40,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class MComponentDelegate implements ComponentDelegate {
 
     private HashSet<String> pkgs = new HashSet<>();
-    private static HashSet<String> mInterstitialActivitySet = new HashSet<>();
-    static {
-        mInterstitialActivitySet.add("com.google.android.gms.ads.AdActivity");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MoPubActivity");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MraidActivity");
-        mInterstitialActivitySet.add("com.mopub.common.MoPubBrowser");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MraidVideoPlayerActivity");
-        mInterstitialActivitySet.add("com.batmobi.BatMobiActivity");
-        mInterstitialActivitySet.add("com.facebook.ads.AudienceNetworkActivity");
-        mInterstitialActivitySet.add("com.facebook.ads.InterstitialAdActivity");
-    }
     private IAppMonitor uiAgent;
     public void asyncInit() {
         new Thread(new Runnable() {
@@ -172,8 +162,7 @@ public class MComponentDelegate implements ComponentDelegate {
 
     @Override
     public boolean handleStartActivity(String name) {
-        if (mInterstitialActivitySet.contains(name)) {
-            MLogs.d("AppInstrumentation","Starting activity: " + name);
+        if (WhatsConfig.get().isHandleInterstitial(name)  ) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -184,7 +173,7 @@ public class MComponentDelegate implements ComponentDelegate {
                     }
                 }
             }).start();
-            return true;
+            return WhatsConfig.get().isPolicyInterstitialBlock();
         }
         return false;
     }

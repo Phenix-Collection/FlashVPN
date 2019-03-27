@@ -72,8 +72,8 @@ android {
             dimension "channel"
         }
         play {
-            versionCode 1311
-            versionName "1.3.11.${releaseTime()}"
+            versionCode 1320
+            versionName "1.3.20.${releaseTime()}"
             manifestPlaceholders = [CHANNEL_NAME_VALUE: "play", CHANNEL_TID_VALUE: ""]
             dimension "channel"
         }
@@ -167,6 +167,8 @@ dependencies {
     compile 'com.google.firebase:firebase-config:16.3.0'
     compile 'com.google.firebase:firebase-ads:17.1.3'
     compile 'com.android.installreferrer:installreferrer:1.0'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.5'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
     //compile 'com.facebook.android:audience-network-sdk:4.+'
     compile project(':libmultiple')
     compile project(':fuseadloader')

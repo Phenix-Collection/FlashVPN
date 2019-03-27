@@ -3,6 +3,7 @@ package mochat.multiple.parallel.whatsclone.component.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -14,6 +15,7 @@ import com.polestar.clone.CloneAgent64;
 
 import java.util.List;
 
+import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.component.AppMonitorService;
 import mochat.multiple.parallel.whatsclone.utils.AppManager;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
@@ -50,6 +52,11 @@ public class WrapCoverAdActivity extends Activity {
         String slot = getIntent().getStringExtra(EXTRA_AD_SLOT);
         String pkg = getIntent().getStringExtra(EXTRA_PACKAGE);
         int userId = getIntent().getIntExtra(EXTRA_USERID, 0);
+        if (Build.VERSION.SDK_INT >= 21) {
+            MApp.getApp().setCurrentAdClone(pkg, userId);
+//            CustomizeAppData appData = CustomizeAppData.loadFromPref(pkg, userId);
+//            setTaskDescription(new ActivityManager.TaskDescription(appData.label, appData.getCustomIcon()));
+        }
         FuseAdLoader.get(slot, this).loadAd(WrapCoverAdActivity.this, 1, new IAdLoadListener() {
             @Override
             public void onRewarded(IAdAdapter ad) {

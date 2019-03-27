@@ -30,6 +30,7 @@ import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
+import mochat.multiple.parallel.whatsclone.utils.WhatsConfig;
 
 /**
  * Created by guojia on 2018/5/27.
@@ -197,25 +198,22 @@ public class AppMonitorService extends Service {
     public IBinder onBind(Intent intent) {
         return appMonitor;
     }
-    private static final int ADS_BLOCK = 0;
-    private static final int ADS_TO_COVER = 1;
-    private static final int ADS_FORCE_REPLACE = 2;
     private class AppMonitor extends IAppMonitor.Stub {
         public void onAdsLaunch(String pkg, int userId, String name) {
             EventReporter.reportsAdsLaunch(AppMonitorService.this, name);
-            int ctrl = (int) RemoteConfig.getLong("ads_launch_ctrl");
+            int ctrl = WhatsConfig.get().getInterstitialAdsCtl();
             switch (ctrl) {
-                case ADS_TO_COVER:
+                case WhatsConfig.ADS_TO_COVER:
                     MLogs.d("Ads cover");
                     if (needLoadCoverAd(false, pkg)) {
                         loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
                     }
                     break;
-                case ADS_FORCE_REPLACE:
+                case WhatsConfig.ADS_FORCE_REPLACE:
                     MLogs.d("Ads replace");
                     loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
                     break;
-                case ADS_BLOCK:
+                case WhatsConfig.ADS_BLOCK:
                 default:
                     MLogs.d("Ads blocked");
                     return;

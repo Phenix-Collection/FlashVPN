@@ -128,8 +128,10 @@ public class AppCloneActivity extends BaseActivity {
         }
         if (appModel == null) {
             Intent intentFail = new Intent();
-            intentFail.putExtra(AppConstants.EXTRA_IS_INSTALL_SUCCESS, isInstallSuccess);
-            intentFail.putExtra(AppConstants.EXTRA_APP_MODEL, appModel);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(AppConstants.EXTRA_IS_INSTALL_SUCCESS, isInstallSuccess);
+            bundle.putParcelable(AppConstants.EXTRA_APP_MODEL, appModel);
+            intentFail.putExtras(bundle);
             setResult(RESULT_OK, intentFail);
             finish();
             return false;
@@ -296,7 +298,9 @@ public class AppCloneActivity extends BaseActivity {
 
     public static void startAppCloneActivity(Activity activity, AppModel appModel) {
         Intent intent = new Intent(activity, AppCloneActivity.class);
-        intent.putExtra(AppConstants.EXTRA_APP_MODEL, appModel);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AppConstants.EXTRA_APP_MODEL, appModel);
+        intent.putExtras(bundle);
         activity.startActivityForResult(intent, AppConstants.REQUEST_INSTALL_APP);
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }

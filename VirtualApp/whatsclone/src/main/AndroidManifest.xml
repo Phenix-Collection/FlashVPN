@@ -105,7 +105,7 @@
             android:name=".component.activity.AppLockActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.lody.virtual.vt"
+            android:taskAffinity="com.polestar.clone.virtual"
             android:theme="@style/AppTheme.Launcher"/>
 
         <meta-data
@@ -172,7 +172,7 @@
             android:name=".component.activity.WrapCoverAdActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.lody.virtual.vt"
+            android:taskAffinity="com.polestar.clone.virtual"
             android:theme="@style/AppTheme.Launcher"/>
 
         <service android:name=".component.AppMonitorService" android:exported="true" />

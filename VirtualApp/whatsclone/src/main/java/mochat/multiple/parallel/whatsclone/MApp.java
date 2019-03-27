@@ -16,6 +16,7 @@ import com.polestar.ad.SDKConfiguration;
 import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.InstallStrategy;
@@ -37,6 +38,8 @@ import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
 import mochat.multiple.parallel.whatsclone.utils.RemoteConfig;
+import mochat.multiple.parallel.whatsclone.utils.WhatsConfig;
+
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -139,6 +142,22 @@ public class MApp extends MultiDexApplication {
         //FuseAdLoader.SUPPORTED_TYPES.remove(AdConstants.AdType.AD_SOURCE_FACEBOOK_INTERSTITIAL);
 
     }
+
+    private String currentAdPkg;
+    private int currentAdUser = -1;
+    public void setCurrentAdClone(String pkg, int userId) {
+        currentAdPkg = pkg;
+        currentAdUser = userId;
+    }
+
+    public CustomizeAppData getCurrentCustomizeData() {
+        if (currentAdPkg != null && currentAdUser != -1) {
+            return CustomizeAppData.loadFromPref(currentAdPkg, currentAdUser);
+        }
+        return null;
+    }
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -154,6 +173,7 @@ public class MApp extends MultiDexApplication {
                 initRawData();
                 registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
                 EventReporter.init(gDefault);
+                WhatsConfig.get();
                 BillingProvider.get();
                 initAd();
                 BoosterSdk.BoosterRes res = new BoosterSdk.BoosterRes();
@@ -193,6 +213,8 @@ public class MApp extends MultiDexApplication {
             @Override
             public void onVirtualProcess() {
                 MLogs.d("Virtual process create");
+                WhatsConfig.get();
+
                 MComponentDelegate delegate = new MComponentDelegate();
                 delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
@@ -233,6 +255,7 @@ public class MApp extends MultiDexApplication {
                 });
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
+                WhatsConfig.get();
                 MLogs.d("Server process app onCreate 0");
                 MComponentDelegate delegate = new MComponentDelegate();
                 delegate.asyncInit();

@@ -162,20 +162,14 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent data = new Intent();
-                data.putExtra(AppConstants.EXTRA_APP_MODEL, mPopularModels.get(position));
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                goClone(mPopularModels.get(position));
             }
         });
 
         mRecommandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent data = new Intent();
-                data.putExtra(AppConstants.EXTRA_APP_MODEL, mRecommandModels.get(i));
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                goClone(mRecommandModels.get(i));
             }
         });
 
@@ -183,14 +177,20 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent data = new Intent();
-                data.putExtra(AppConstants.EXTRA_APP_MODEL, mInstalledModels.get(position));
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                goClone(mInstalledModels.get(position));
             }
         });
         adContainer = (LinearLayout) findViewById(R.id.ad_container);
         sponsorText = (TextView) findViewById(R.id.sponsor_text);
+    }
+
+    private void goClone(AppModel model) {
+        Intent data = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AppConstants.EXTRA_APP_MODEL, model);
+        data.putExtras(bundle);
+        setResult(Activity.RESULT_OK, data);
+        finish();
     }
 
     private void showMoreApps() {
