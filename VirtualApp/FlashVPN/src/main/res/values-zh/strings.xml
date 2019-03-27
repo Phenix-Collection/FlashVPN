@@ -17,9 +17,9 @@
         <string name ="acquiring_port">分配资源</string>
         <string name ="checking_port">检查服务器</string>
         <string name ="reward_text_no_premium_time">点击获取高级代理和带宽！</string>
-        <string name ="reward_text_no_premium_time_watch_ad">观看奖励视频以获得免费的高级服务器奖励！</string>
+        <string name ="reward_text_no_premium_time_watch_ad">观看奖励视频以获得免费高速服务器奖励！</string>
         <string name ="get_reward_premium_time">您将获得高级服务器奖励时间！</string>
-        <string name ="reward_text_vip">您现在是高级用户！享受最佳代理速度！</string>
+        <string name ="reward_text_vip">您现在是VIP用户！享受最佳连接速度！</string>
         <string name ="connecting_tip1">优化服务器连接... </string>
         <string name ="connecting_tip_success">已连接到服务器。</string>
         <string name ="retry_tips">请检查您的网络设置，然后重试！</string>

@@ -1,10 +1,8 @@
 package winterfell.flash.vpn;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 
+import com.polestar.task.network.AdApiHelper;
 
 import winterfell.flash.vpn.core.ProxyConfig;
 import winterfell.flash.vpn.reward.AppUser;
@@ -53,13 +51,46 @@ public class FlashUser extends AppUser{
     }
 
 
-//    public final static int ACCURACY_SECOND = 0;
-//    public final static int ACCURACY_MINUTE = 1;
-//    public final static int ACCURACY_AUTO = -1;
-    public String coinToTimeString(float coin) {
-        long time = coinToTime(coin);
-        return CommonUtils.formatSeconds(time);
+    public final static int ACCURACY_SECOND = 0;
+    public final static int ACCURACY_MINUTE = 1;
+    public final static int ACCURACY_AUTO = 1;
+
+    public String coinToTimeString(float coin, int accuracy) {
+        long seconds = coinToTime(coin);
+        String timeStr = seconds + "s";
+        if (seconds > 60) {
+            long second = seconds % 60;
+            long min = seconds / 60;
+            if (accuracy == ACCURACY_SECOND) {
+                timeStr = min + "min " + second + "s";
+            } else {
+                timeStr = min + "min";
+            }
+            if (min > 60) {
+                min = (seconds / 60) % 60;
+                long hour = (seconds / 60) / 60;
+                if (accuracy == ACCURACY_SECOND) {
+                    timeStr = hour + "hour " + min + "min " + second + "s";
+                } else {
+                    timeStr = hour + "hour " + min + "min";
+                }
+                if (hour > 24) {
+                    hour = ((seconds / 60) / 60) % 24;
+                    long day = (((seconds / 60) / 60) / 24);
+                    if (accuracy == ACCURACY_SECOND) {
+                        timeStr = day + "day " + hour + "hour " + min + "min " + second + "s";
+                    } else {
+                        timeStr = day + "day " + hour + "hour " + min + "min";
+                    }
+                }
+            }
+        }
+        return timeStr;
     }
+    public String coinToTimeString(float coin) {
+        return coinToTimeString(coin, ACCURACY_AUTO);
+    }
+
     synchronized public static FlashUser getInstance() {
         if (sInstance == null) {
             sInstance = new FlashUser();
@@ -84,12 +115,26 @@ public class FlashUser extends AppUser{
     }
 
 
-    public boolean isVIP() {
+    public static boolean isVIP() {
         return PreferenceUtils.getBoolean(FlashApp.getApp(), "is_vip", false);
     }
 
 
     public void setVIP(boolean enable) {
-        PreferenceUtils.putBoolean(FlashApp.getApp(), "is_vip", enable);
+        boolean orig = PreferenceUtils.getBoolean(FlashApp.getApp(), "is_vip", false);
+        if (orig != enable) {
+            PreferenceUtils.putBoolean(FlashApp.getApp(), "is_vip", enable);
+            updateSubscribe(enable? AdApiHelper.SUBSCRIBE_STATUTS_VALID: AdApiHelper.SUBSCRIBE_STATUTS_VALID);
+        }
+    }
+
+
+    @Override
+    public void preloadRewardVideoTask() {
+        if (!isVIP()) {
+            super.preloadRewardVideoTask();
+        } else {
+            return;
+        }
     }
 }

@@ -186,7 +186,7 @@ public class RewardInfoFetcher extends BroadcastReceiver{
                 EventReporter.rewardEvent("fetch_error_" + code.getErrCode());
                 MLogs.d(TAG, "onError " + code);
             }
-        }, force);
+        }, force, FlashUser.isVIP()? AdApiHelper.SUBSCRIBE_STATUTS_VALID: AdApiHelper.SUBSCRIBE_STATUTS_NONE);
 
     }
 

@@ -9,9 +9,13 @@ import android.text.TextUtils;
 
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.adapters.FuseAdLoader;
+import com.polestar.ad.adapters.IAdAdapter;
+import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.task.ADErrorCode;
 import com.polestar.task.IAdTaskStateObserver;
 import com.polestar.task.IProductStatusListener;
 import com.polestar.task.ITaskStatusListener;
+import com.polestar.task.IUserStatusListener;
 import com.polestar.task.database.DatabaseApi;
 import com.polestar.task.database.DatabaseImplFactory;
 import com.polestar.task.database.datamodels.AdTask;
@@ -93,6 +97,26 @@ abstract public class AppUser implements IAdTaskStateObserver {
     }
 
 
+    public void updateSubscribe(int status){
+        AdApiHelper.register(FlashApp.getApp(), getMyId(), new IUserStatusListener() {
+            @Override
+            public void onRegisterSuccess(User user) {
+                for (IUserUpdateListener listener: mObservers) {
+                    listener.onUserDataUpdated();
+                }
+            }
+
+            @Override
+            public void onRegisterFailed(ADErrorCode errorCode) {
+
+            }
+
+            @Override
+            public void onGeneralError(ADErrorCode code) {
+
+            }
+        }, true, status);
+    }
 
     public static boolean check() {
         isSecure = checkInternal();
@@ -149,6 +173,7 @@ abstract public class AppUser implements IAdTaskStateObserver {
     //posted on main thread;
     public interface IUserUpdateListener {
         void onUserDataUpdated();
+        void onVideoTaskAvailable();
     }
 
     public void forceRefreshData() {
@@ -314,7 +339,39 @@ abstract public class AppUser implements IAdTaskStateObserver {
             if (task != null && TaskExecutor.checkTask(task) == RewardErrorCode.TASK_OK) {
                 FuseAdLoader adLoader = FuseAdLoader.get(task.adSlot, FlashApp.getApp());
                 if (adLoader != null) {
-                    adLoader.preloadAd(FlashApp.getApp());
+                    adLoader.loadAd(FlashApp.getApp(), 2, 1000, new IAdLoadListener() {
+                        @Override
+                        public void onAdLoaded(IAdAdapter ad) {
+                            for (IUserUpdateListener listener: mObservers) {
+                                listener.onVideoTaskAvailable();
+                            }
+                        }
+
+                        @Override
+                        public void onAdClicked(IAdAdapter ad) {
+
+                        }
+
+                        @Override
+                        public void onAdClosed(IAdAdapter ad) {
+
+                        }
+
+                        @Override
+                        public void onAdListLoaded(List<IAdAdapter> ads) {
+
+                        }
+
+                        @Override
+                        public void onError(String error) {
+
+                        }
+
+                        @Override
+                        public void onRewarded(IAdAdapter ad) {
+
+                        }
+                    });
                 }
             }
         }

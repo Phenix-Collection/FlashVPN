@@ -36,6 +36,7 @@ import java.util.List;
 import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.billing.BillingProvider;
+import winterfell.flash.vpn.reward.AppUser;
 import winterfell.flash.vpn.reward.RewardErrorCode;
 import winterfell.flash.vpn.reward.TaskExecutor;
 import winterfell.flash.vpn.utils.CommonUtils;
@@ -88,6 +89,17 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
             }
         });
         BillingProvider.get().querySkuDetails(BillingClient.SkuType.SUBS, this);
+        FlashUser.getInstance().listenOnUserUpdate(new AppUser.IUserUpdateListener() {
+            @Override
+            public void onUserDataUpdated() {
+                updateRewardLayout();
+            }
+
+            @Override
+            public void onVideoTaskAvailable() {
+                updateRewardLayout();
+            }
+        });
     }
     
     private void updateRewardLayout () {
@@ -180,6 +192,7 @@ public class UserCenterActivity extends BaseActivity implements SkuDetailsRespon
     @Override
     protected void onResume() {
         super.onResume();
+        BillingProvider.get().updateStatus(null);
         updateRewardLayout();
     }
 

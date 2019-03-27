@@ -34,6 +34,7 @@ import com.polestar.task.ADErrorCode;
 import com.polestar.task.ITaskStatusListener;
 import com.polestar.task.network.datamodels.Task;
 
+import winterfell.flash.vpn.reward.AppUser;
 import winterfell.flash.vpn.reward.IVpnStatusListener;
 import winterfell.flash.vpn.reward.RewardErrorCode;
 import winterfell.flash.vpn.reward.TaskExecutor;
@@ -850,7 +851,9 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         timeCountTask = new TimerTask() {
             @Override
             public void run() {
-                updateRewardLayout();
+                if (LocalVpnService.IsRunning) {
+                    updateRewardLayout();
+                }
             }
         };
         timer.scheduleAtFixedRate(timeCountTask, 1000, 1000);
@@ -913,6 +916,18 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         loadHomeNativeAds();
         TunnelStatisticManager.getInstance().addOnSpeedListener(this);
         LocalVpnService.addOnStatusChangedListener(this);
+
+        FlashUser.getInstance().listenOnUserUpdate(new AppUser.IUserUpdateListener() {
+            @Override
+            public void onUserDataUpdated() {
+                updateRewardLayout();
+            }
+
+            @Override
+            public void onVideoTaskAvailable() {
+                updateRewardLayout();
+            }
+        });
     }
 
     @Override
