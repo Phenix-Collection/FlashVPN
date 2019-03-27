@@ -19,12 +19,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
-import android.view.autofill.AutofillManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.android.gms.ads.AdSize;
@@ -44,18 +42,15 @@ import winterfell.flash.vpn.reward.network.datamodels.VpnRequirement;
 import winterfell.flash.vpn.reward.network.datamodels.VpnServer;
 import winterfell.flash.vpn.reward.network.responses.ServersResponse;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import winterfell.flash.vpn.AppConstants;
-import winterfell.flash.vpn.FlashApp;
 import winterfell.flash.vpn.FlashUser;
 import winterfell.flash.vpn.R;
 import winterfell.flash.vpn.core.AppProxyManager;
@@ -141,6 +136,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     private final static String RATE_FROM_MENU = "rate_from_menu";
     private final static String RATE_FROM_DIALOG = "rate_from_dialog";
     private final static String SLOT_CONNECTED_AD = "slot_connected_ad";
+    private final static String CONF_WAIT_AD_INTERVAL = "conf_wait_ad_ms";
     private final static String CONF_RATE_DIALOG_GATE = "rate_vpn_time_sec";
 
     private boolean needToRequestNewVpnRequirement() {
@@ -327,12 +323,16 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     private void updateStateOnMainThread(final int state, final String errMsg) {
-        mainHandler.post(new Runnable() {
+        updateStateOnMainThreadDelayed(state, errMsg, 0);
+    }
+
+    private void updateStateOnMainThreadDelayed(final int state, final String errMsg, long delay) {
+        mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 updateConnectState(state, errMsg, true);
             }
-        });
+        }, delay);
     }
 
     private void updateConnectState(int state, String errMsg, boolean doAction) {
@@ -569,10 +569,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             EventReporter.reportConnectted(this, getSIReportValue(mCurrentVpnServer));
             connectingFailed = false;
 
-            updateStateOnMainThread(STATE_CONNECTED, "");
+            long delay = 0;
 
             if (PreferenceUtils.hasShownRateDialog(this)
                     && !FlashUser.getInstance().isVIP()) {
+                if (!FuseAdLoader.get(SLOT_CONNECTED_AD, this).hasValidCache()) {
+                    delay = RemoteConfig.getLong(CONF_WAIT_AD_INTERVAL);
+                }
                 FuseAdLoader.get(SLOT_CONNECTED_AD, this).loadAd(this, 2, new IAdLoadListener() {
                     @Override
                     public void onAdLoaded(IAdAdapter ad) {
@@ -605,6 +608,8 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     }
                 });
             }
+            updateStateOnMainThreadDelayed(STATE_CONNECTED, "", delay);
+
         } else {
             EventReporter.reportDisConnectted(this, getSIReportValue(mCurrentVpnServer));
             EventReporter.reportSpeed(this, getSIReportValue(mCurrentVpnServer),
@@ -756,6 +761,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         mCurrentVpnServer = VPNServerIntermediaManager.getInstance(HomeActivity.this).getServerInfo(id);
 
         if (!LocalVpnService.IsRunning) {
+            FuseAdLoader.get(SLOT_CONNECTED_AD, this).preloadAd(this);
             EventReporter.reportConnect(HomeActivity.this, getSIReportValue(mCurrentVpnServer));
             ProxyConfig.Instance.setCurrentVpnServer(mCurrentVpnServer);
             acquirePort(mCurrentVpnServer);
@@ -773,6 +779,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
             //not connected
             return;
         }
+        FuseAdLoader.get(SLOT_CONNECTED_AD, this).preloadAd(this);
         updateConnectState(STATE_START_RECONNECT, "", false);
     }
 
@@ -860,9 +867,13 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
 
         if (!FlashUser.getInstance().isVIP()) {
             long current = System.currentTimeMillis();
-            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s")*1000) {
-                loadAds();
+            if (current - adShowTime > RemoteConfig.getLong("home_ad_refresh_interval_s") * 1000) {
+                loadHomeNativeAds();
             }
+            if (!LocalVpnService.IsRunning) {
+                FuseAdLoader.get(SLOT_CONNECTED_AD, this).preloadAd(this);
+            }
+            FlashUser.getInstance().preloadRewardVideoTask();
         }
     }
 
@@ -899,7 +910,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
         }, true);
 
         timer = new Timer();
-        loadAds();
+        loadHomeNativeAds();
         TunnelStatisticManager.getInstance().addOnSpeedListener(this);
         LocalVpnService.addOnStatusChangedListener(this);
     }
@@ -990,12 +1001,17 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
     }
 
     public static void preloadAd(Context context) {
-        FuseAdLoader.get(SLOT_HOME_BANNER, context).
-                setBannerAdSize(getBannerSize()).preloadAd(context);
-        FlashUser.getInstance().preloadRewardVideoTask();
+        if (!FlashUser.getInstance().isVIP()) {
+            FuseAdLoader.get(SLOT_HOME_BANNER, context).
+                    setBannerAdSize(getBannerSize()).preloadAd(context);
+            if (!LocalVpnService.IsRunning) {
+                FuseAdLoader.get(SLOT_CONNECTED_AD, context).preloadAd(context);
+            }
+            FlashUser.getInstance().preloadRewardVideoTask();
+        }
     }
 
-    private void loadAds() {
+    private void loadHomeNativeAds() {
         if (!FlashUser.getInstance().isVIP()) {
             loadHomeNativeAd();
         }

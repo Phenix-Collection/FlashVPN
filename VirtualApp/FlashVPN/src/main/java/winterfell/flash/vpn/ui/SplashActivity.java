@@ -46,12 +46,10 @@ public class SplashActivity extends BaseActivity {
         long time = System.currentTimeMillis();
         setContentView(R.layout.splash_activity_layout);
 //        mainLayout.setBackgroundResource(R.mipmap.launcher_bg_main);
-        if (!FlashUser.getInstance().isVIP()) {
             HomeActivity.preloadAd(this);
 //            FuseAdLoader adLoader = FuseAdLoader.get(HomeActivity.SLOT_HOME_NATIVE, this.getApplicationContext());
 //            adLoader.setBannerAdSize(HomeActivity.getBannerAdSize());
 //            adLoader.preloadAd();
-        }
 
         boolean stateOn = true;
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);

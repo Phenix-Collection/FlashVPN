@@ -154,5 +154,8 @@
         <key>conf_coin_premium_ratio_sec</key>
         <value>600</value>
     </entry>
-
+    <entry>
+        <key>conf_wait_ad_ms</key>
+        <value>1500</value>
+    </entry>
 </defaultsMap>
