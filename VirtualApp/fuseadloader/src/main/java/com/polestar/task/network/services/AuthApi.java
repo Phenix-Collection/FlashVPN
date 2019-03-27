@@ -18,7 +18,8 @@ public interface AuthApi {
                                  @Field("secret") String secret,
                                  @Field("mcc") int mcc,
                                  @Field("mnc") int mnc,
-                                 @Field("locale") String locale
+                                 @Field("locale") String locale,
+                                 @Field("subscribe_status") int subscribeStatus
                                  );
 
 }

@@ -44,6 +44,8 @@ public class AdApiHelper {
 
     public static final int REQUEST_SUCCEED = 0;
     public static final int ERR_REQUEST_TOO_FREQUENT = 1;
+    public static final int SUBSCRIBE_STATUTS_NONE = 0;
+    public static final int SUBSCRIBE_STATUTS_VALID = 1;
 
     private static String KEY_REGISTER = "register";
     private static String KEY_GET_PRODUCTS = "getProducts";
@@ -114,11 +116,11 @@ public class AdApiHelper {
         return REQUEST_SUCCEED;
     }
 
-    public static int register(Context context, String deviceId, final IUserStatusListener listener) {
-        return register(context, deviceId, listener, false);
+    public static int register(Context context, String deviceId, final IUserStatusListener listener, boolean force) {
+        return register(context, deviceId, listener, force, SUBSCRIBE_STATUTS_NONE);
     }
 
-    public static int register(Context context, String deviceId, final IUserStatusListener listener, boolean force) {
+    public static int register(Context context, String deviceId, final IUserStatusListener listener, boolean force, int subscribe) {
         if (checkRequestTooFrequent(KEY_REGISTER, listener, force) == ERR_REQUEST_TOO_FREQUENT) {
             return ERR_REQUEST_TOO_FREQUENT;
         }
@@ -133,7 +135,7 @@ public class AdApiHelper {
         }
         Call<User> call = service.registerAnonymous(Configuration.APP_VERSION_CODE,
                 Configuration.PKG_NAME, Sender.Send(getSecret(deviceId)),
-                configuration.mcc, configuration.mnc, locale.toString());
+                configuration.mcc, configuration.mnc, locale.toString(), subscribe);
         call.enqueue(new Callback<User>(){
             @Override
             public void onResponse(Call<User> call, Response<User> response){
