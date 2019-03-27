@@ -612,6 +612,7 @@ public class HomeActivity extends BaseActivity implements LocalVpnService.onStat
                     maxDownloadSpeed, maxUploadSpeed);
             TunnelStatisticManager.getInstance().eventReport();
             connectingFailed = true;
+            releasePort(mCurrentVpnServer);
             MLogs.i("avgDownloadSpeed:" + avgDownloadSpeed
                     + " avgUploadSpeed:" + avgUploadSpeed
                     + " maxDownloadSpeed:" + maxDownloadSpeed
