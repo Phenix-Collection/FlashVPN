@@ -64,10 +64,9 @@
     <string name="lock_interval_settings_content">The interval to relock the app after you left it</string>
     <string name="enable_lock_settings_content">Toggle to enable or disable privacy locker feature</string>
     <string name="password_setting_title">Password Setting</string>
-    <string name="password_set_no_question">No secure question set.</string>
     <string name="password_set_complete">Password was set.</string>
     <string name="no_password_set">Please set a password for locker at first.</string>
-    <string name="password_setting_content">Click to set password and security question</string>
+    <string name="password_setting_content">Click to reset password</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="lock_settings_for_apps">Enable privacy locker for cloned applications</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Please Confirm Pattern</string>
@@ -80,21 +79,10 @@
     <string name="al_lockpattern_error">Wrong Pattern, Please Try Again.</string>
     <string name="al_changepassword">Change Password</string>
     <string name="al_unlcok_pattern">Unlock Pattern</string>
-    <string name="al_change_security_question">Change Secure Question</string>
-    <string name="app_lock_safe_info_hint">To verify your identity when reset password. It\'s encrypted and only stored in your device.</string>
-    <string name="app_lock_safe_question_hint">Set a Secure Question</string>
-    <string name="app_lock_safe_answer_hint">Enter the answer (Up to 20 characters)</string>
-    <string name="app_lock_verifier_tile">Set a Secure Question</string>
     <string name="app_lock_reset_password">Reset passwords</string>
 
-    <string name="app_lock_safe_answer_reset_hint">Please enter the answer</string>
-    <string name="app_lock_date_picker_month">month</string>
-    <string name="app_lock_safe_question_toast_ask_Question">You didn\'t set a Secure Question</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">You didn\'t enter answer yet.</string>
-    <string name="app_lock_safe_question_toast_error">Authentication failed, please enter again</string>
     <string name="applock_window_title">Cloned %s</string>
     <string name="applock_forgot_password"><u>Forgot Password?</u></string>
-    <string name="need_set_secure_answer">Please set answer for secure question and then press confirm button.</string>
     <string name="al_lockpattern_draw_unlock_pattern">Draw Pattern to Unlock</string>
 
     <string name="al_btn_finish">Confirm</string>
@@ -164,33 +152,6 @@
     <string name="dialog_permission_title">Grant Permission</string>
     <string name="dialog_permission_content">Please allow permission request from DO Multiple Space, otherwise some cloned apps and Google Play Service will not work properly.</string>
 
-
-    <string-array name="month">
-        <item>Jan</item>
-        <item>Feb</item>
-        <item>Mar</item>
-        <item>Apr</item>
-        <item>May</item>
-        <item>Jun</item>
-        <item>Jul</item>
-        <item>Aug</item>
-        <item>Sep</item>
-        <item>Oct</item>
-        <item>Nov</item>
-        <item>Dec</item>
-    </string-array>
-
-    <string-array name="secure_questions">
-        <item>What is your lucky date?</item>
-        <item>What is your favorite food?</item>
-        <item>What is your favorite sport?</item>
-        <item>Who is your idol?</item>
-        <item>Where did you go to junior school?</item>
-        <item>Where did you go to high school?</item>
-        <item>What is your favorite movie?</item>
-        <item>Customize questions</item>
-    </string-array>
-
     <string-array name="arr_lock_interval">
         <item>5s</item>
         <item>15s</item>
@@ -199,17 +160,6 @@
         <item>15min</item>
         <item>30min</item>
         <item>1hour</item>
-    </string-array>
-
-    <string-array name="secure_question_by_day_config">
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
     </string-array>
 
     <string name="customize_title">Customization</string>
@@ -221,5 +171,7 @@
     <string name="badge">Badge</string>
     <string name="cancel">Cancel</string>
     <string name="install">Install</string>
-    <string name="sync_provider_name">com.polestar.domultiple.sync.provider</string>
+
+    <string name="enable_fingerprint_title">Use Fingerprint</string>
+    <string name="enable_fingerprint_content">Use fingerprint to unlock protected accounts</string>
 </resources>

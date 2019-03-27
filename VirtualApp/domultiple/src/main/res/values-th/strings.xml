@@ -8,7 +8,6 @@
     <string name="al_btn_finish">ยืนยัน</string>
     <string name="al_btn_next">ต่อไป</string>
     <string name="al_btn_reset"><u> รีเซ็ต </u></string>
-    <string name="al_change_security_question">เปลี่ยนคำถามที่ปลอดภัย</string>
     <string name="al_changepassword">เปลี่ยนรหัสผ่าน</string>
     <string name="al_lockpattern_confirm_unlock_pattern">โปรดยืนยันรูปแบบ</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">วาดอีกครั้ง</string>
@@ -20,13 +19,6 @@
     <string name="al_unlcok_pattern">ปลดล็อกรูปแบบ</string>
     <string name="app_lock_date_picker_month">เดือน</string>
     <string name="app_lock_reset_password">รีเซ็ตรหัสผ่าน</string>
-    <string name="app_lock_safe_answer_hint">ป้อนคำตอบ (ไม่เกิน 20 ตัวอักษร)</string>
-    <string name="app_lock_safe_answer_reset_hint">โปรดป้อนคำตอบ</string>
-    <string name="app_lock_safe_info_hint">เพื่อยืนยันตัวตนของคุณเมื่อรีเซ็ตรหัสผ่าน มันจะถูกเข้ารหัสและเก็บไว้ในอุปกรณ์ของคุณเท่านั้น</string>
-    <string name="app_lock_safe_question_hint">ตั้งคำถามที่ปลอดภัย</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">คุณยังไม่ได้ป้อนคำตอบ</string>
-    <string name="app_lock_safe_question_toast_ask_Question">คุณไม่ได้ตั้งคำถามที่ปลอดภัย</string>
-    <string name="app_lock_safe_question_toast_error">การตรวจสอบสิทธิ์ล้มเหลวโปรดป้อนอีกครั้ง</string>
     <string name="app_lock_verifier_tile">ตั้งคำถามที่ปลอดภัย</string>
     <string name="app_starting_tips">%s กำลังเริ่มต้น ...</string>
     <string name="applock_forgot_password"><u> ลืมรหัสผ่าน? </u></string>
@@ -72,7 +64,6 @@
     <string name="lock_interval_settings_content">ช่วงเวลาที่จะ relock app หลังจากที่คุณทิ้งไว้</string>
     <string name="lock_settings_for_apps">เปิดใช้งานตู้เก็บข้อมูลส่วนบุคคลสำหรับแอปพลิเคชันโคลน</string>
     <string name="lock_settings_title">การตั้งค่าล็อกเกอร์</string>
-    <string name="need_set_secure_answer">โปรดตั้งคำถามสำหรับคำถามที่ปลอดภัยและกดปุ่มยืนยัน</string>
     <string name="no_password_set">โปรดตั้งรหัสผ่านสำหรับตู้เก็บของในตอนแรก</string>
     <string name="no_selection_for_clone">โปรดคลิกและเลือกรายการที่จะโคลน</string>
     <string name="no_thanks">ไม่เป็นไรขอบคุณ</string>
@@ -84,7 +75,7 @@
     <string name="other_clone_title">ได้รับการสนับสนุนเพิ่มเติม</string>
     <string name="password_set_complete">ตั้งรหัสผ่านแล้ว</string>
     <string name="password_set_no_question">ไม่มีชุดคำถามที่ปลอดภัย</string>
-    <string name="password_setting_content">คลิกเพื่อตั้งรหัสผ่านและคำถามเพื่อความปลอดภัย</string>
+    <string name="password_setting_content">คลิกเพื่อรีเซ็ตรหัสผ่าน</string>
     <string name="password_setting_title">การตั้งค่ารหัสผ่าน</string>
     <string name="privacy_locker">Privacy Locker</string>
     <string name="privacy_policy">นโยบายส่วนบุคคล</string>
@@ -116,16 +107,5 @@
     <string name="arm64_support">การสนับสนุน 64 บิต</string>
     <string name="dialog_permission_title">ให้สิทธิ์</string>
     <string name="dialog_permission_content">โปรดอนุญาตให้มีการขออนุญาตจาก Super Clone Pro มิฉะนั้นแอปพลิเคชันโคลนและบริการ Google Play บางอย่างจะทำงานได้ไม่ถูกต้อง</string>
-
-    <string-array name = "secure_questions">
-                 <item> วันโชคดีของคุณคืออะไร </item>
-                 <item> อาหารโปรดของคุณคืออะไร </item>
-                 <item> กีฬาโปรดของคุณคืออะไร </item>
-                 <item> ไอดอลของคุณคือใคร </item>
-                 <item> คุณไปโรงเรียนมัธยมที่ไหน </item>
-                 <item> คุณไปโรงเรียนมัธยมที่ไหน </item>
-                 <item> ภาพยนตร์เรื่องโปรดของคุณคืออะไร </item>
-                 <item> ปรับแต่งคำถาม </item>
-             </string-array>
 
 </resources>

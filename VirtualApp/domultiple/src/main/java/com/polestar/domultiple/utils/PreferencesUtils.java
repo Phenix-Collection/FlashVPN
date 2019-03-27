@@ -264,38 +264,6 @@ public class PreferencesUtils {
         putBoolean(c,AppConstants.PreferencesKey.IS_LOCKER_SCREEN, b);
     }
 
-    public static boolean isLockScreen(Context c ) {
-        return getBoolean(c,AppConstants.PreferencesKey.IS_LOCKER_SCREEN, false);
-    }
-
-    public static boolean isSafeQuestionSet(Context c ) {
-        return !TextUtils.isEmpty(getSafeAnswer(c));
-    }
-
-    public static String getSafeAnswer(Context c) {
-        return getString(c, AppConstants.PreferencesKey.SAFE_QUESTION_ANSWER, null);
-    }
-
-    public static void setSafeAnswer(Context c, String answer) {
-        putString(c, AppConstants.PreferencesKey.SAFE_QUESTION_ANSWER, answer);
-    }
-
-    public static int getSafeQuestionId(Context c) {
-        return getInt(c, AppConstants.PreferencesKey.SAFE_QUESTION_ID, 0);
-    }
-
-    public static void setSafeQuestionId(Context c, int id) {
-        putInt(c, AppConstants.PreferencesKey.SAFE_QUESTION_ID, id);
-    }
-
-    public static void setCustomizedQuestion(Context c, String strQuestion) {
-        putString(c, AppConstants.PreferencesKey.CUSTOMIZED_SAFE_QUESTION, strQuestion);
-    }
-
-    public static String getCustomizedQuestion(Context c) {
-        return getString(c, AppConstants.PreferencesKey.CUSTOMIZED_SAFE_QUESTION, null);
-    }
-
     public static boolean getAppLockInVisiablePatternPath(Context c) {
         return getBoolean(c, AppConstants.PreferencesKey.APP_LOCK_INVISIBLE_PATTERN_PATH, false);
     }
@@ -499,5 +467,13 @@ public class PreferencesUtils {
 
     public static boolean hasShownDeleteDialog() {
         return getBoolean(PolestarApp.getApp(), "shown_delete_guide", false);
+    }
+
+    public static void setFingerprint(boolean enable) {
+        putBoolean(PolestarApp.getApp(), "use_fingerprint", enable);
+    }
+
+    public static boolean isFingerprintEnable() {
+        return getBoolean(PolestarApp.getApp(), "use_fingerprint", true);
     }
 }

@@ -28,7 +28,6 @@
         <activity android:name="com.polestar.domultiple.components.ui.FaqActivity" android:screenOrientation="portrait" android:exported="false"/>
         <activity android:name="com.polestar.domultiple.components.ui.WebViewActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="com.polestar.domultiple.components.ui.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
-        <activity android:name="com.polestar.domultiple.components.ui.LockSecureQuestionActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="com.polestar.domultiple.components.ui.LockPasswordSettingActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="com.polestar.domultiple.components.ui.LockSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name="com.polestar.domultiple.components.ui.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />
@@ -51,14 +50,14 @@
             android:name="com.polestar.domultiple.components.ui.AppLockActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.lody.virtual.vt"
+            android:taskAffinity="com.polestar.clone.virtual"
             android:theme="@style/AppTheme.Launcher"/>
 
         <activity
             android:name="com.polestar.domultiple.components.ui.WrapCoverAdActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.lody.virtual.vt"
+            android:taskAffinity="com.polestar.clone.virtual"
             android:theme="@style/AppTheme.Launcher"/>
 
         <service android:name="com.polestar.domultiple.components.AppMonitorService" android:exported="true" />

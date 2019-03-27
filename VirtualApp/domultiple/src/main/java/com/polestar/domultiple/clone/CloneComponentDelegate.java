@@ -87,16 +87,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
     }
     private static HashSet<String> mInterstitialActivitySet = new HashSet<>();
     static {
-        mInterstitialActivitySet.add("com.google.android.gms.ads.AdActivity");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MoPubActivity");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MraidActivity");
-        mInterstitialActivitySet.add("com.mopub.common.MoPubBrowser");
-        mInterstitialActivitySet.add("com.mopub.mobileads.MraidVideoPlayerActivity");
-        mInterstitialActivitySet.add("com.batmobi.BatMobiActivity");
-        mInterstitialActivitySet.add("com.facebook.ads.AudienceNetworkActivity");
-        mInterstitialActivitySet.add("com.facebook.ads.InterstitialAdActivity");
-        mInterstitialActivitySet.add("com.ironsource.sdk.controller.InterstitialActivity");
-        mInterstitialActivitySet.add("com.applovin.adview.AppLovinInterstitialActivity");
+
     }
 
     @Override

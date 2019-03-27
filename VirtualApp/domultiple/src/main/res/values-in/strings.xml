@@ -8,7 +8,6 @@
     <string name="al_btn_finish">Memastikan</string>
     <string name="al_btn_next">Berikutnya</string>
     <string name="al_btn_reset"><u> Atur ulang </u></string>
-    <string name="al_change_security_question">Ubah Pertanyaan Aman</string>
     <string name="al_changepassword">Ganti kata sandi</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Harap Konfirmasikan Pola</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">Draw lagi</string>
@@ -18,15 +17,8 @@
     <string name="al_lockpattern_number_no_correct">Tolong Hubungkan Sedikitnya 4 Titik</string>
     <string name="al_lockpattern_try_again">Pola Tidak Cocok, Silakan Coba Lagi.</string>
     <string name="al_unlcok_pattern">Unlock Pattern</string>
-    <string name="app_lock_date_picker_month">bulan</string>
     <string name="app_lock_reset_password">Setel ulang kata sandi</string>
-    <string name="app_lock_safe_answer_hint">ป้อนคำตอบ (ไม่เกิน 20 ตัวอักษร)</string>
-    <string name="app_lock_safe_answer_reset_hint">Silakan masukkan jawabannya</string>
-    <string name="app_lock_safe_info_hint">Untuk memverifikasi identitas Anda saat mengatur ulang kata sandi. Itu akan dienkripsi dan hanya disimpan di perangkat Anda.</string>
-    <string name="app_lock_safe_question_hint">Tetapkan Pertanyaan yang Aman</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">Anda belum masuk jawaban.</string>
-    <string name="app_lock_safe_question_toast_ask_Question">Anda tidak menetapkan Pertanyaan Aman</string>
-    <string name="app_lock_safe_question_toast_error">Otentikasi gagal, masuk lagi</string>
+
     <string name="app_lock_verifier_tile">Tetapkan Pertanyaan yang Aman</string>
     <string name="app_starting_tips">%s mulai ...</string>
     <string name="applock_forgot_password"><u> Lupa Kata Sandi? </u></string>
@@ -73,7 +65,6 @@
     <string name="lock_interval_settings_content">Interval untuk relock aplikasi setelah Anda meninggalkannya</string>
     <string name="lock_settings_for_apps">Aktifkan loker privasi untuk aplikasi kloning</string>
     <string name="lock_settings_title">Pengaturan Locker</string>
-    <string name="need_set_secure_answer">Tolong atur jawaban untuk pertanyaan yang aman lalu tekan tombol konfirmasi.</string>
     <string name="no_password_set">Harap setel password untuk loker pada awalnya.</string>
     <string name="no_selection_for_clone">Silahkan klik dan pilih item untuk dikloning.</string>
     <string name="no_thanks">Tidak, terima kasih</string>
@@ -85,7 +76,7 @@
     <string name="other_clone_title">Lebih Didukung</string>
     <string name="password_set_complete">Password sudah diset</string>
     <string name="password_set_no_question">Tidak ada pertanyaan yang aman.</string>
-    <string name="password_setting_content">Klik untuk mengatur kata sandi dan pertanyaan keamanan</string>
+    <string name="password_setting_content">Klik untuk mengatur ulang kata sandi</string>
     <string name="password_setting_title">Pengaturan kata sandi</string>
     <string name="privacy_locker">Privasi Locker</string>
     <string name="privacy_policy">Kebijakan pribadi</string>
@@ -117,16 +108,5 @@
     <string name="arm64_support">Dukungan 64bit</string>
     <string name="dialog_permission_title">Memberikan ijin</string>
     <string name="dialog_permission_content">Izinkan permintaan izin dari DO Multiple Space, jika tidak, beberapa aplikasi kloning dan Layanan Google Play tidak akan berfungsi dengan baik.</string>
-
-    <string-array name = "secure_questions">
-                 <item> Apa tanggal keberuntungan Anda? </item>
-                 <item> Apa makanan favorit Anda? </item>
-                 <item> Apa olahraga favorit Anda? </item>
-                 <item> Siapa idola Anda? </item>
-                 <item> Kemana kamu pergi ke SMP? </item>
-                 <item> Kemana kamu pergi ke sekolah menengah? </item>
-                 <item> Apa film favorit Anda? </item>
-                 <item> Kustomisasi pertanyaan </item>
-             </string-array>
 
 </resources>

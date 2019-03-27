@@ -8,7 +8,6 @@
     <string name="al_btn_finish">Confirme</string>
     <string name="al_btn_next">Próximo</string>
     <string name="al_btn_reset"><u>Reset</u></string>
-    <string name="al_change_security_question">Alterar Pergunta Segura</string>
     <string name="al_changepassword">Mudar senha</string>
     <string name="al_lockpattern_confirm_unlock_pattern">Confirme o Padrão</string>
     <string name="al_lockpattern_confirm_unlock_pattern_hint">Desenhe novamente</string>
@@ -20,13 +19,6 @@
     <string name="al_unlcok_pattern">Padrão de desbloqueio</string>
     <string name="app_lock_date_picker_month">mês</string>
     <string name="app_lock_reset_password">Repor senhas</string>
-    <string name="app_lock_safe_answer_hint">Digite a resposta (até 20 caracteres)</string>
-    <string name="app_lock_safe_answer_reset_hint">Digite a resposta</string>
-    <string name="app_lock_safe_info_hint">Para verificar sua identidade ao redefinir a senha. Ele será criptografado e armazenado apenas no seu dispositivo.</string>
-    <string name="app_lock_safe_question_hint">Configure uma pergunta segura</string>
-    <string name="app_lock_safe_question_toast_ask_Answer">Você ainda não digitou a resposta.</string>
-    <string name="app_lock_safe_question_toast_ask_Question">Você não definiu uma pergunta segura</string>
-    <string name="app_lock_safe_question_toast_error">Falha na autenticação, digite novamente</string>
     <string name="app_lock_verifier_tile">Configure uma pergunta segura</string>
     <string name="app_starting_tips">%s está começando ...</string>
     <string name="applock_forgot_password"><u> Esqueceu a senha? </u></string>
@@ -73,7 +65,6 @@
     <string name="lock_interval_settings_content">O intervalo para relock o aplicativo depois que você o deixou</string>
     <string name="lock_settings_for_apps">Ativar armário de privacidade para aplicativos clonados</string>
     <string name="lock_settings_title">Configurações do armário</string>
-    <string name="need_set_secure_answer">Defina a resposta para perguntas seguras e, em seguida, pressione o botão confirmar.</string>
     <string name="no_password_set">Defina uma senha para o armário no início.</string>
     <string name="no_selection_for_clone">Clique e selecione itens para clonar.</string>
     <string name="no_thanks">Não, obrigado</string>
@@ -85,7 +76,7 @@
     <string name="other_clone_title">Mais suportados</string>
     <string name="password_set_complete">A senha foi definida.</string>
     <string name="password_set_no_question">Nenhum conjunto seguro de perguntas.</string>
-    <string name="password_setting_content">Clique para definir a senha e a pergunta de segurança</string>
+    <string name="password_setting_content">Clique para redefinir a senha</string>
     <string name="password_setting_title">Configuração de Senha</string>
     <string name="privacy_locker">Armário de privacidade</string>
     <string name="privacy_policy">Política de Privacidade</string>
@@ -117,14 +108,4 @@
     <string name="dialog_permission_title">Conceder permissão</string>
     <string name="dialog_permission_content">Por favor, permita o pedido de permissão do DO Multiple Space, caso contrário, alguns aplicativos clonados e o Google Play Service não funcionarão corretamente.</string>
 
-    <string-array name = "secure_questions">
-                 <item> Qual é o seu encontro de sorte? </item>
-                 <item> Qual é a sua comida favorita? </item>
-                 <item> Qual é o seu esporte favorito? </item>
-                 <item> Quem é seu ídolo? </item>
-                 <item> Onde você foi para o ensino fundamental? </item>
-                 <item> Onde você foi para o ensino médio? </item>
-                 <item> Qual é o seu filme favorito? </item>
-                 <item> Personalize perguntas </item>
-             </string-array>
 </resources>

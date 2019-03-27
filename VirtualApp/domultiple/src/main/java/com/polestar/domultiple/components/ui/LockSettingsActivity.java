@@ -3,6 +3,8 @@ package com.polestar.domultiple.components.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.utils.DisplayUtils;
+import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.widget.BlueSwitch;
@@ -42,9 +45,11 @@ public class LockSettingsActivity extends BaseActivity {
     private List<CloneModel> mClonedModels;
     private PackageSwitchListAdapter mAppsAdapter;
     private ListView mCloneAppsListView;
-    private boolean isSettingChanged = false;
-    private String from;
     private Spinner lockIntervalSpinner;
+    private String from;
+
+    private View fingerprintLine;
+    private View fingerprintLayout;
 
     private final long ARR_INTERVAL[] = {5*1000, 15*1000, 30*1000, 60*1000, 15*60*1000, 30*60*1000, 60*60*1000};
 
@@ -85,7 +90,6 @@ public class LockSettingsActivity extends BaseActivity {
             @Override
             public void onCheckStatusChangedListener(CloneModel model, boolean status) {
                 //
-                isSettingChanged = true;
                 if(status) {
                     model.setLockerState(AppConstants.AppLockState.ENABLED_FOR_CLONE);
                 } else {
@@ -120,7 +124,6 @@ public class LockSettingsActivity extends BaseActivity {
         lockerEnableSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isSettingChanged = true;
                 onLockerEnabled(lockerEnableSwitch.isChecked(), true);
             }
         });
@@ -132,7 +135,6 @@ public class LockSettingsActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 PreferencesUtils.setLockInterval(ARR_INTERVAL[i]);
-                isSettingChanged = true;
             }
 
             @Override
@@ -140,11 +142,35 @@ public class LockSettingsActivity extends BaseActivity {
 
             }
         });
+
+        fingerprintLayout = findViewById(R.id.fingerprint_settings);
+        fingerprintLine = findViewById(R.id.fingerprint_line);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            fingerprintLine.setVisibility(View.GONE);
+            fingerprintLayout.setVisibility(View.GONE);
+        } else {
+            FingerprintManager fingerprintManager = (FingerprintManager)getSystemService(Context.FINGERPRINT_SERVICE);
+            if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
+                fingerprintLine.setVisibility(View.GONE);
+                fingerprintLayout.setVisibility(View.GONE);
+            }
+        }
+        BlueSwitch fingerSwith = fingerprintLayout.findViewById(R.id.enable_fingerprint_switch);
+        fingerSwith.setChecked(PreferencesUtils.isFingerprintEnable());
+        fingerSwith.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = fingerSwith.isChecked();
+                fingerSwith.setChecked(checked);
+                PreferencesUtils.setFingerprint(checked);
+                EventReporter.generalEvent( "set_fingerprint_" + checked);
+            }
+        });
     }
 
     private void onLockerEnabled(boolean enabled, boolean report) {
         if (enabled) {
-            if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext)) || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+            if (TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(mContext))) {
                 LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
                 Toast.makeText(this,getString(R.string.no_password_set), Toast.LENGTH_SHORT).show();
             } else {
@@ -160,7 +186,6 @@ public class LockSettingsActivity extends BaseActivity {
 
     public void onPasswordSettingClick(View view) {
         //PreferencesUtils.setEncodedPatternPassword(mContext,"");
-        isSettingChanged = true;
         LockPasswordSettingActivity.start(this, true, null, REQUEST_SET_PASSWORD);
     }
 
@@ -176,8 +201,7 @@ public class LockSettingsActivity extends BaseActivity {
                         break;
                     case Activity.RESULT_CANCELED:
                         if (!PreferencesUtils.isLockerEnabled(this)
-                                || TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))
-                                || TextUtils.isEmpty(PreferencesUtils.getSafeAnswer(this))) {
+                                || TextUtils.isEmpty(PreferencesUtils.getEncodedPatternPassword(this))) {
                             onLockerEnabled(false, true);
                             lockerEnableSwitch.setChecked(false);
                         }

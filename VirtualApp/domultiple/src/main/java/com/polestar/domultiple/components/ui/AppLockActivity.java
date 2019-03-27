@@ -2,7 +2,10 @@ package com.polestar.domultiple.components.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.polestar.clone.client.core.VirtualCore;
@@ -48,7 +52,6 @@ public class AppLockActivity extends BaseActivity {
     private String mPkgName;
     private int mUserId;
     private Handler mHandler;
-    private TextView mForgotPasswordTv;
     private LockIconImageView mCenterIcon;
     private LinearLayout mAdInfoContainer;
     private ImageView mToolbarIcon;
@@ -61,6 +64,9 @@ public class AppLockActivity extends BaseActivity {
     public final static String EXTRA_USER_ID = "extra_clone_userid";
     public final static String CONFIG_SLOT_APP_LOCK_PROTECT_TIME = "slot_app_lock_protect_time";
     public final static String CONFIG_SLOT_APP_LOCK = "slot_app_lock";
+
+    private FingerprintManager fingerprintManager;
+    private CancellationSignal cancellationSignal;
 
     public static final void start(Context context, String pkg, int userId) {
         MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
@@ -180,6 +186,47 @@ public class AppLockActivity extends BaseActivity {
         if (!PreferencesUtils.isAdFree()) {
             loadNative();
         }
+        ImageView fingerprintIcon = (ImageView) findViewById(R.id.fingerprint_icon);
+        fingerprintIcon.setVisibility(View.GONE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
+            cancellationSignal = new CancellationSignal();
+            if (PreferencesUtils.isFingerprintEnable()
+                    && fingerprintManager!= null &&
+                    fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
+                fingerprintIcon.setVisibility(View.VISIBLE);
+                fingerprintManager.authenticate(null, cancellationSignal, 0,
+                        new FingerprintManager.AuthenticationCallback() {
+                            @Override
+                            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                                if (errorCode != FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
+                                    Toast.makeText(AppLockActivity.this, "" + errString, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                                Toast.makeText(AppLockActivity.this, "" + helpString, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        finish();
+                                    }
+                                }, 200);
+                                AppMonitorService.unlocked(mPkgName, mUserId);
+                            }
+
+                            @Override
+                            public void onAuthenticationFailed() {
+                                mBlurBackground.onIncorrectPassword(mAdInfoContainer);
+                            }
+                        }, null);
+            }
+        }
     }
 
     private void initData() {
@@ -239,28 +286,10 @@ public class AppLockActivity extends BaseActivity {
         } else {
             mCenterAppText.setText(data.label);
         }
-        MLogs.d("AppLockWindow initialized 1");
-        mForgotPasswordTv = (TextView)findViewById(R.id.forgot_password_tv);
-        mForgotPasswordTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgotPassword();
-            }
-        });
-        MLogs.d("AppLockWindow initialized");
 
         mBlurBackground.init();
         mBlurBackground.reloadWithTheme(mPkgName, mUserId);
         mAppLockPasswordLogic.onShow();
-    }
-
-    private void forgotPassword() {
-        if (PreferencesUtils.isSafeQuestionSet(VirtualCore.get().getContext())) {
-            Intent intent = new Intent(VirtualCore.get().getContext(), LockSecureQuestionActivity.class);
-            intent.putExtra(LockSecureQuestionActivity.EXTRA_IS_SETTING, false);
-            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-            PolestarApp.getApp().getApplicationContext().startActivity(intent);
-        }
     }
 
     @Override
@@ -273,6 +302,10 @@ public class AppLockActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && cancellationSignal != null && fingerprintManager != null) {
+            cancellationSignal.cancel();
+        }
         finish();
     }
 
