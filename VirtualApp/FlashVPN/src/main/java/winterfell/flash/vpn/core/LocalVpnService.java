@@ -86,7 +86,6 @@ public class LocalVpnService extends VpnService implements Runnable {
     private float mAvgUploadSpeed;
     private float mMaxDownloadSpeed;
     private float mMaxUploadSpeed;
-    private boolean mStopped;
 
     private final String CONF_VIP_SPEED_BOOST = "conf_vip_speed_boost";
     private final String CONF_NORMAL_SPEED_BOOST = "conf_normal_speed_boost";
@@ -99,9 +98,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                 switch (msg.what){
                     case MSG_UPDATE_NOTIFICATION:
                         updateNotification();
-                        if (!mStopped) {
                             sendMessageDelayed(obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
-                        }
                         break;
                 }
             }
@@ -159,7 +156,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                 Notification notification;
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 String channel_id = "_id_service_";
-                if (Build.VERSION.SDK_INT >= 26 &&
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
                         notificationManager.getNotificationChannel(channel_id) == null) {
                     int importance = NotificationManager.IMPORTANCE_HIGH;
                     NotificationChannel notificationChannel = new NotificationChannel(channel_id, "Flash VPN", importance);
@@ -173,7 +170,16 @@ public class LocalVpnService extends VpnService implements Runnable {
                     notificationManager.createNotificationChannel(notificationChannel);
                 }
                 NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(Instance, channel_id);
-                String title = IsRunning ? getString(R.string.notification_connected):getString(R.string.notification_to_connect);
+                String title;
+                if (IsRunning) {
+                    if (FlashUser.isVIP() || FlashUser.getInstance().getFreePremiumSeconds() > 0) {
+                        title =getString(R.string.notification_connected);
+                    } else {
+                        title = getString(R.string.notification_connected_not_premium);
+                    }
+                } else {
+                    title = getString(R.string.notification_to_connect);
+                }
                 float[] speed = getNetworkSpeed();
                 DecimalFormat format = new DecimalFormat("0.0");
                 String downSpeed = format.format((speed[0] > 1000)? speed[0]/1000:speed[0]);
@@ -192,6 +198,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                 notification = mBuilder.build();
                 notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
                 try {
+                    notificationManager.notify(NOTIFY_ID, notification);
                     startForeground(NOTIFY_ID, notification);
 
                 }catch (Exception ex) {
@@ -373,10 +380,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
             while (true) {
                 if (IsRunning) {
-                    if (mStopped) {
-                        mStopped = false; //重新开始updatenotification
-                        m_Handler.sendMessageDelayed(m_Handler.obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
-                    }
+                    m_Handler.sendMessageDelayed(m_Handler.obtainMessage(MSG_UPDATE_NOTIFICATION), 5000);
                     //加载配置文件
                     String welcomeInfoString = ProxyConfig.Instance.getWelcomeInfo();
                     if (welcomeInfoString != null && !welcomeInfoString.isEmpty()) {
@@ -386,7 +390,6 @@ public class LocalVpnService extends VpnService implements Runnable {
 
                     runVPN();
                 } else {
-                    mStopped = true;
                     Thread.sleep(200);
                 }
             }
@@ -725,8 +728,7 @@ public class LocalVpnService extends VpnService implements Runnable {
             MLogs.d("LocalVpnService-- LocalDnsProxy stopped.");
         }
 
-        stopSelf();
-        mStopped = true;
+       // stopSelf();
         IsRunning = false;
         //2019-03-11 先去掉，为啥一定要结束进程呢？
         // System.exit(0);

@@ -8,6 +8,8 @@
         <string name ="vpn_disconnected_status">غير متصل </string>
         <string name ="faq">الأسئلة الشائعة</string>
         <string name ="notification_connected">متصل</string>
+    <string name="notification_connected_not_premium">متصلة. انقر للحصول على النطاق الترددي قسط.</string>
+
         <string name ="notification_to_connect">انقر للاتصال</string>
         <string name ="connect">الاتصال</string>
         <string name ="stop">توقف</string>

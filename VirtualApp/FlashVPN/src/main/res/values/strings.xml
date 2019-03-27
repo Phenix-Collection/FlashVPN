@@ -10,6 +10,7 @@
     <string name="vpn_disconnected_status">disconnected</string>
     <string name="faq">FAQ</string>
     <string name="notification_connected">Connected</string>
+    <string name="notification_connected_not_premium">Connected. Tap to get premium bandwidth.</string>
     <string name="notification_to_connect">Tap to connect</string>
     <string name="connect">Connect</string>
     <string name="stop">Stop</string>

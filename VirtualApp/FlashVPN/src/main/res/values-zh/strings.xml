@@ -106,4 +106,6 @@
         <string name="task_ok_with_coin">获得 %s 高速联网时间</string>
         <string name="error_unexpected">请稍后再试。</string>
 
+        <string name="notification_connected_not_premium">已连接，点击获取高速带宽。</string>
+
 </resources>
