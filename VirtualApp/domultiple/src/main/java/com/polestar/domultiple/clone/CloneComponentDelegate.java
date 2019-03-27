@@ -29,6 +29,7 @@ import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.db.DBManager;
+import com.polestar.domultiple.utils.DoConfig;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
@@ -47,16 +48,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class CloneComponentDelegate implements ComponentDelegate {
 
     private HashSet<String> pkgs = new HashSet<>();
-
-    public void addClasses(String[] arr) {
-        if (arr != null) {
-            for (String s:arr) {
-                if (!TextUtils.isEmpty(s)) {
-                    mInterstitialActivitySet.add(s);
-                }
-            }
-        }
-    }
 
     public void asyncInit() {
         new Thread(new Runnable() {
@@ -83,10 +74,6 @@ public class CloneComponentDelegate implements ComponentDelegate {
 
     @Override
     public void afterApplicationCreate(Application application) {
-
-    }
-    private static HashSet<String> mInterstitialActivitySet = new HashSet<>();
-    static {
 
     }
 
@@ -131,8 +118,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
 
     @Override
     public boolean handleStartActivity(String name) {
-        if (mInterstitialActivitySet.contains(name)) {
-            VLog.d("AppInstrumentation","Starting activity: " + name);
+        if (DoConfig.get().isHandleInterstitial(name)  ) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -143,7 +129,7 @@ public class CloneComponentDelegate implements ComponentDelegate {
                     }
                 }
             }).start();
-            return true;
+            return DoConfig.get().isPolicyInterstitialBlock();
         }
         return false;
     }

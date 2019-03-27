@@ -1,5 +1,6 @@
 package com.polestar.domultiple;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.polestar.booster.BoosterSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.polestar.clone.BitmapUtils;
+import com.polestar.clone.CustomizeAppData;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.core.CrashHandler;
 import com.polestar.clone.client.core.VirtualCore;
@@ -36,6 +38,7 @@ import com.polestar.domultiple.components.receiver.PackageChangeReceiver;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.domultiple.utils.DoConfig;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
@@ -118,6 +121,20 @@ public class PolestarApp extends MultiDexApplication {
         return  ret;
     }
 
+    private String currentAdPkg;
+    private int currentAdUser = -1;
+    public void setCurrentAdClone(String pkg, int userId) {
+        currentAdPkg = pkg;
+        currentAdUser = userId;
+    }
+
+    public CustomizeAppData getCurrentCustomizeData() {
+        if (currentAdPkg != null && currentAdUser != -1) {
+            return CustomizeAppData.loadFromPref(currentAdPkg, currentAdUser);
+        }
+        return null;
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         Log.d(MLogs.DEFAULT_TAG, "APP version: " + BuildConfig.VERSION_NAME + " Type: " + BuildConfig.BUILD_TYPE);
@@ -190,8 +207,9 @@ public class PolestarApp extends MultiDexApplication {
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
                 //ImageLoaderUtil.asyncInit(gDefault);
-                //registerActivityLifecycleCallbacks(new LocalActivityLifecycleCallBacks(MApp.this, true));
+                registerActivityLifecycleCallbacks(new AcivityLifeCycleListener());
                 EventReporter.init(gDefault);
+                DoConfig.get();
                 BillingProvider.get();
 //                if (needAd()) {
                     initAd();
@@ -243,18 +261,17 @@ public class PolestarApp extends MultiDexApplication {
                         }
                     }
                     initReceiver();
+                if (QuickSwitchNotification.isEnable()) {
+                    QuickSwitchNotification.getInstance(gDefault).init();
+                }
 //                }
             }
 
             @Override
             public void onVirtualProcess() {
                 MLogs.d("Virtual process create");
+                DoConfig.get();
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
-                String conf = PreferencesUtils.getString(getApp(), "conf_intercept_class", null);
-                if (conf != null) {
-                    String[] arr = conf.split(";");
-                    delegate.addClasses(arr);
-                }
                 delegate.asyncInit();
                 virtualCore.setComponentDelegate(delegate);
 
@@ -281,12 +298,8 @@ public class PolestarApp extends MultiDexApplication {
                 }
                 FirebaseApp.initializeApp(gDefault);
                 RemoteConfig.init();
+                DoConfig.get();
                 CloneComponentDelegate delegate = new CloneComponentDelegate();
-                String conf = PreferencesUtils.getString(getApp(), "conf_intercept_class", null);
-                if (conf != null) {
-                    String[] arr = conf.split(";");
-                    delegate.addClasses(arr);
-                }
                 delegate.asyncInit();
                 VirtualCore.get().setComponentDelegate(delegate);
                 initAd();
@@ -409,5 +422,49 @@ public class PolestarApp extends MultiDexApplication {
         // close auto report, manual control
         MLogs.e("bugly channel: " + channel + " referrer: "+ referChannel);
         CrashReport.closeCrashReport();
+    }
+
+
+    private class AcivityLifeCycleListener implements ActivityLifecycleCallbacks {
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                CustomizeAppData appData = PolestarApp.getApp().getCurrentCustomizeData();
+                if (appData != null && DoConfig.get().isHandleInterstitial(activity.getClass().getName())) {
+                    activity.setTaskDescription(new ActivityManager.TaskDescription(appData.label, appData.getCustomIcon()));
+                }
+            }
+            PolestarApp.getApp().setCurrentAdClone(null, -1);
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+
+        }
     }
 }

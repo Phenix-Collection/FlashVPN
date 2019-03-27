@@ -30,6 +30,7 @@ import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
+import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
@@ -121,6 +122,10 @@ public class CloneManager {
                     if(result.isSuccess) {
                         DBManager.insertCloneModel(context, appModel);
                         mClonedApps.add(appModel);
+                        if (mClonedApps.size() < QuickSwitchNotification.LRU_PACKAGE_CNT
+                                && QuickSwitchNotification.isEnable()) {
+                            QuickSwitchNotification.getInstance(context).updateLruPackages(getMapKey(appModel.getPackageName(), appModel.getPkgUserId()));
+                        }
                     }
                     mHandler.post(new Runnable() {
                         @Override

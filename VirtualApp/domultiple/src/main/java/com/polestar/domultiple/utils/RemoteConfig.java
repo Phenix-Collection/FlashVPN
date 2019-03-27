@@ -39,8 +39,9 @@ public class RemoteConfig {
             public void onSuccess(Void aVoid) {
                 MLogs.logBug(TAG, "Fetch Succeeded");
                 mFirebaseRemoteConfig.activateFetched();
-                PreferencesUtils.putString(PolestarApp.getApp(), "conf_intercept_class", RemoteConfig.getString("conf_intercept_class"));
-
+                PreferencesUtils.putInt(PolestarApp.getApp(), DoConfig.KEY_ADS_LAUNCH_CTRL, (int)RemoteConfig.getLong("ads_launch_ctrl"));
+                PreferencesUtils.putString(PolestarApp.getApp(), DoConfig.KEY_INTERCEPT_CLASS, RemoteConfig.getString("conf_intercept_class"));
+                DoConfig.get().initData();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

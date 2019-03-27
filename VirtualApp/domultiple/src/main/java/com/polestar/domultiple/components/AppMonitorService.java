@@ -21,6 +21,7 @@ import com.polestar.domultiple.components.ui.WrapCoverAdActivity;
 import com.polestar.domultiple.db.CloneModel;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
 import com.polestar.domultiple.utils.CommonUtils;
+import com.polestar.domultiple.utils.DoConfig;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.IAppMonitor;
@@ -178,26 +179,22 @@ public class AppMonitorService extends Service {
         return appMonitor;
     }
 
-    private static final int ADS_BLOCK = 0;
-    private static final int ADS_TO_COVER = 1;
-    private static final int ADS_FORCE_REPLACE = 2;
-
     private class AppMonitor extends IAppMonitor.Stub {
         public void onAdsLaunch(String pkg, int userId, String name) {
             EventReporter.reportsAdsLaunch(name);
-            int ctrl = (int) RemoteConfig.getLong("ads_launch_ctrl");
+            int ctrl = DoConfig.get().getInterstitialAdsCtl();
             switch (ctrl) {
-                case ADS_TO_COVER:
+                case DoConfig.ADS_TO_COVER:
                      MLogs.d("Ads cover");
                      if (needLoadCoverAd(false, pkg)) {
                          loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
                      }
                     break;
-                case ADS_FORCE_REPLACE:
+                case DoConfig.ADS_FORCE_REPLACE:
                     MLogs.d("Ads replace");
                     loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
                     break;
-                case ADS_BLOCK:
+                case DoConfig.ADS_BLOCK:
                     default:
                         MLogs.d("Ads blocked");
                         return;

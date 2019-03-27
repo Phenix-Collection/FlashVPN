@@ -3,6 +3,7 @@ package com.polestar.domultiple.components.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import com.polestar.booster.BoosterLog;
 import com.polestar.booster.WrapAdActivity;
 import com.polestar.booster.mgr.HomeListener;
 import com.polestar.clone.CloneAgent64;
+import com.polestar.domultiple.PolestarApp;
 import com.polestar.domultiple.clone.CloneManager;
 import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.utils.MLogs;
@@ -52,6 +54,11 @@ public class WrapCoverAdActivity extends Activity {
         String slot = getIntent().getStringExtra(EXTRA_AD_SLOT);
         String pkg = getIntent().getStringExtra(EXTRA_PACKAGE);
         int userId = getIntent().getIntExtra(EXTRA_USERID, 0);
+        if (Build.VERSION.SDK_INT >= 21) {
+            PolestarApp.getApp().setCurrentAdClone(pkg, userId);
+//            CustomizeAppData appData = CustomizeAppData.loadFromPref(pkg, userId);
+//            setTaskDescription(new ActivityManager.TaskDescription(appData.label, appData.getCustomIcon()));
+        }
         FuseAdLoader.get(slot, this).loadAd(this, 1, new IAdLoadListener() {
             @Override
             public void onRewarded(IAdAdapter ad) {

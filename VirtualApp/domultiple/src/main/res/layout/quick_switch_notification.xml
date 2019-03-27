@@ -28,6 +28,7 @@
             android:singleLine="true"
             android:layout_marginTop="3dp"
             android:textSize="10sp"
+            android:visibility="gone"
             android:text="@string/app_name"/>
     </LinearLayout>
     <LinearLayout
@@ -53,6 +54,7 @@
             android:layout_marginTop="3dp"
             android:singleLine="true"
             android:textSize="10sp"
+            android:visibility="gone"
             android:id="@+id/shortcut_txt0" />
     </LinearLayout>
     <LinearLayout
@@ -78,6 +80,7 @@
             android:singleLine="true"
             android:textSize="10sp"
             android:layout_marginTop="3dp"
+            android:visibility="gone"
             android:id="@+id/shortcut_txt1"/>
     </LinearLayout>
     <LinearLayout
@@ -103,6 +106,7 @@
             android:singleLine="true"
             android:layout_marginTop="3dp"
             android:id="@+id/shortcut_txt2"
+            android:visibility="gone"
             android:textSize="10sp" />
     </LinearLayout>
     <LinearLayout
@@ -128,6 +132,7 @@
             android:singleLine="true"
             android:textSize="10sp"
             android:layout_marginTop="3dp"
+            android:visibility="gone"
             android:id="@+id/shortcut_txt3"/>
     </LinearLayout>
     <LinearLayout
@@ -152,6 +157,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textSize="10sp"
+            android:visibility="gone"
             android:layout_marginTop="3dp"
             android:text="@string/boost_title"/>
     </LinearLayout>

@@ -21,6 +21,7 @@ import com.polestar.booster.BoosterSdk;
 import com.polestar.booster.BoosterShortcutActivity;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.BitmapUtils;
+import com.polestar.clone.client.stub.DaemonService;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
@@ -54,16 +55,15 @@ public class QuickSwitchNotification {
 
     private final ArrayList<String> lruKeys = new ArrayList<>();
     private Handler workHandler;
-    private Handler mainHandler;
     private static final String CONFIG_HOT_CLONE_LIST = "hot_clone_list";
     private static final String PREF_QUICK_SWITCH_STATE = "quick_switch_state";
     private static final int FAKE_USERID_FOR_UNCLONED = 999;
 
-    private static final int LRU_PACKAGE_CNT = 4;
+    public static final int LRU_PACKAGE_CNT = 4;
 
     private static final String SPLIT = ";";
 
-    private static final int NOTIFY_ID = 999;
+    private static final int NOTIFY_ID = DaemonService.NOTIFY_ID;
     private RemoteViews remoteViews;
     private static final String TAG = "QuickSwitchNotification";
     private static final String ACTION_QUICK_SWITCH = BuildConfig.APPLICATION_ID + ".quick_switch";
@@ -81,7 +81,6 @@ public class QuickSwitchNotification {
         HandlerThread thread = new HandlerThread("switch_worker");
         thread.start();
         workHandler = new Handler(thread.getLooper());
-        mainHandler = new Handler(Looper.getMainLooper());
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_QUICK_SWITCH);
         intentFilter.addAction(ACTION_CANCEL_QUICK_SWITCH);
@@ -187,6 +186,13 @@ public class QuickSwitchNotification {
         }
     };
 
+    private Runnable updateNotificationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateNotification();
+        }
+    };
+
     private int getTitleIdForItem(int index) {
         switch (index) {
             case 0:
@@ -230,7 +236,7 @@ public class QuickSwitchNotification {
         if (remoteViews == null) {
             remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.quick_switch_notification);
         }
-        String channel_id = "_id_quick_switch_";
+        String channel_id = DaemonService.NOTIFICATION_CHANNEL_ID;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager.getNotificationChannel(channel_id) == null) {
@@ -246,12 +252,13 @@ public class QuickSwitchNotification {
                 notificationManager.createNotificationChannel(notificationChannel);
             }
         }
-        NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(mContext)
+        Intent mainIntent = new Intent(mContext, HomeActivity.class);
+        mainIntent.putExtra(AppConstants.EXTRA_FROM, AppConstants.VALUE_FROM_NOTIFY);
+        android.support.v4.app.NotificationCompat.Builder mBuilder = new android.support.v4.app.NotificationCompat.Builder(mContext,channel_id)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContent(remoteViews).setOngoing(true)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setChannelId(channel_id)
-                .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext,HomeActivity.class), 0));
+                .setContentIntent(PendingIntent.getActivity(mContext, 0, mainIntent, 0));
         Notification notification = mBuilder.build();
         notification.flags = Notification.FLAG_NO_CLEAR|Notification.FLAG_ONGOING_EVENT;
         notification.priority = Notification.PRIORITY_MAX;
@@ -333,15 +340,21 @@ public class QuickSwitchNotification {
                 }
             }
         }
+        scheduleSaveLru();
+        scheduleUpdateNotification();
+    }
+
+    private void scheduleUpdateNotification() {
+        workHandler.removeCallbacks(updateNotificationRunnable);
+        workHandler.postDelayed(updateNotificationRunnable, 1000);
+    }
+
+    private void scheduleSaveLru() {
         workHandler.removeCallbacks(writeLruRunnable);
         workHandler.postDelayed(writeLruRunnable, 2000);
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                updateNotification();
-            }
-        });
     }
+
+
 
     public static void enable(){
         PreferencesUtils.putInt(PolestarApp.getApp(), PREF_QUICK_SWITCH_STATE, STATE_ENABLE);
@@ -365,6 +378,7 @@ public class QuickSwitchNotification {
             MLogs.d(TAG, "onReceive " + intent);
             if (intent.getAction().equals(ACTION_CANCEL_QUICK_SWITCH)) {
                 mgr.cancel(NOTIFY_ID);
+                DaemonService.updateNotification(context);
                 isInitialized = false;
             } else if (intent.getAction().equals(ACTION_ENABLE_QUICK_SWITCH)) {
                 init();
