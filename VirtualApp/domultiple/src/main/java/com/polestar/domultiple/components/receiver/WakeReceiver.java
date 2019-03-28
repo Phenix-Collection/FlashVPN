@@ -27,7 +27,7 @@ public class WakeReceiver extends BroadcastReceiver {
 
         PackageManager pm = context.getPackageManager();
         if (pm.getComponentEnabledSetting(new ComponentName(context, SplashActivity.class))
-                != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+                != PackageManager.COMPONENT_ENABLED_STATE_ENABLED && !PolestarApp.isArm64()) {
             pm.setComponentEnabledSetting(new ComponentName(context, SplashActivity.class),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         }
