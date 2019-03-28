@@ -50,6 +50,8 @@ public class PoleNativeAdapter extends AdAdapter {
        init(context, adUnit);
     }
 
+    private boolean hasTrackImpression;
+
     private void init(Context context, String adUnit) {
         mKey = adUnit;
         databaseApi = DatabaseImplFactory.getDatabaseApi(context);
@@ -61,6 +63,7 @@ public class PoleNativeAdapter extends AdAdapter {
         }
         mainHandler = new Handler(Looper.getMainLooper());
         appContext = context.getApplicationContext();
+        hasTrackImpression = false;
     }
 
     private PoleNativeAdapter(Context context, String adUnit, AdTask task) {
@@ -134,7 +137,10 @@ public class PoleNativeAdapter extends AdAdapter {
 //                }
 //            });
         }
-        trackImpression();
+        if (!hasTrackImpression) {
+            trackImpression();
+            hasTrackImpression = true;
+        }
         adTask.updateShowTime(appContext);
     }
 
