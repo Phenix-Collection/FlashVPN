@@ -1,59 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="155dp"
-    android:background="@drawable/selector_grid_app">
+    android:background="@color/white">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="155dp"
+            android:background="@color/white"
+            >
+                <com.polestar.domultiple.widget.dragdrop.DragImageView
+                    android:id="@+id/app_icon"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop = "35dp"
+                    android:scaleType="centerCrop" />
 
-        <com.polestar.domultiple.widget.dragdrop.DragImageView
-            android:id="@+id/app_icon"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop = "35dp"
-            android:scaleType="centerCrop" />
+                <TextView
+                    android:id="@+id/app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/app_icon"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/text_gray_dark"
+                    android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/app_icon"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:textColor="@color/text_gray_dark"
-            android:textSize="14sp" />
+                <ImageView
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:id="@+id/new_dot"
+                    android:layout_below="@id/app_name"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/shape_new_dot"
+                    android:visibility="invisible"/>
 
-        <ImageView
-            android:layout_width="5dp"
-            android:layout_height="5dp"
-            android:id="@+id/new_dot"
-            android:layout_below="@id/app_name"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/shape_new_dot"
-            android:visibility="invisible"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="3dp"
-            android:layout_marginEnd="3dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/shape_round_corner_line"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:text="AD"
-            android:id="@+id/ad_flag"
-            android:visibility="invisible"
-            android:textColor="@color/text_ad_flag"
-            android:textSize="10sp" />
-</RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@drawable/shape_round_corner_line"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="AD"
+                    android:id="@+id/ad_flag"
+                    android:visibility="invisible"
+                    android:textColor="@color/text_ad_flag"
+                    android:textSize="10sp" />
+        </RelativeLayout>
+</LinearLayout>

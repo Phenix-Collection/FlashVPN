@@ -94,14 +94,14 @@ public class QuickSwitchNotification {
     }
 
     public void init() {
-        workHandler.post(new Runnable() {
+        workHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 readLruKeys();
                 isInitialized = true;
                 updateLruPackages(null);
             }
-        });
+        }, 1000);
     }
     private void readLruKeys() {
         String data = PreferencesUtils.getString(mContext, "lru_pkg");

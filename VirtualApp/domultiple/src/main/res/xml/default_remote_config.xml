@@ -122,7 +122,7 @@
     </entry>
     <entry>
         <key>default_enable_quick_switch</key>
-        <value>false</value>
+        <value>true</value>
     </entry>
     <entry>
         <key>pkg_default_allow_cnt</key>
@@ -150,32 +150,6 @@
     <!--</entry>-->
 
     <entry>
-        <key>slot_install_ad</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>null</value>
-    </entry>
-    <entry>
-        <key>slot_unlock_ad</key>
-        <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>null</value>
-    </entry>
-    <entry>
-        <key>auto_ad_first_interval</key>
-        <value>432000</value>
-    </entry>
-    <entry>
-        <key>auto_ad_interval</key>
-        <value>86400</value>
-    </entry>
-    <entry>
-        <key>allow_install_ad</key>
-        <value>true</value>
-    </entry>
-    <entry>
-        <key>allow_unlock_ad</key>
-        <value>true</value>
-    </entry>
-    <entry>
         <key>ads_launch_ctrl</key>
         <value>2</value>
     </entry>
@@ -200,15 +174,31 @@
         <value></value>
     </entry>
     <entry>
-        <key>conf_adflag_for_icon</key>
-        <value>true</value>
-    </entry>
-    <entry>
         <key>conf_sort_home_icon</key>
         <value>true</value>
     </entry>
     <entry>
         <key>conf_has_adfree</key>
         <value>true</value>
+    </entry>
+    <entry>
+        <key>conf_icon_ad</key>
+        <value>4:432000:345600</value>
+    </entry>
+    <entry>
+        <key>slot_app_icon</key>
+        <value>pl:slot_app_icon:0</value>
+    </entry>
+    <entry>
+        <key>conf_reward_open</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>config_task_server</key>
+        <value>https://rockfire.org</value>
+    </entry>
+    <entry>
+        <key>config_update_interval_sec</key>
+        <value>86400</value>
     </entry>
 </defaultsMap>

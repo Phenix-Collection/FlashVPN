@@ -93,6 +93,7 @@ android {
         debug {
             jniDebuggable false
             pseudoLocalesEnabled true
+            signingConfig getSignInfo("./sign-arm32.properties")
         }
         release {
             shrinkResources true

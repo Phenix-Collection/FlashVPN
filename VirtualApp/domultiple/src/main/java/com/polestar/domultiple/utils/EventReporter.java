@@ -277,6 +277,18 @@ public class EventReporter {
         }
     }
 
+    public static void rewardEvent(String event) {
+        Bundle prop = new Bundle();
+        prop.putString("name", event);
+        mFirebaseAnalytics.logEvent("reward_event", prop);
+    }
+
+    public static void taskEvent(long id, int code) {
+        Bundle prop = new Bundle();
+        prop.putString("name", ""+id+"_"+code);
+        mFirebaseAnalytics.logEvent("task_event", prop);
+    }
+
     private static void updateReferrerStatus(int s) {
         PreferencesUtils.putInt(PolestarApp.getApp(),"referrer_status", s);
     }

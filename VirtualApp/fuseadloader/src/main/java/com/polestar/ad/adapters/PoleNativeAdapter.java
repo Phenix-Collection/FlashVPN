@@ -123,21 +123,22 @@ public class PoleNativeAdapter extends AdAdapter {
                 trackClick();
             }
         });
-        if (!TextUtils.isEmpty(adTask.impUrl)) {
-            goUrl(appContext, replaceMacro(adTask.impUrl), false);
-//            TrackingRequest.makeTrackingHttpRequest(replaceMacro(adTask.impUrl), appContext, new TrackingRequest.Listener() {
-//                @Override
-//                public void onResponse(@NonNull String url) {
-//                    AdLog.d(TAG, "Imp onResponse " +url);
-//                }
-//
-//                @Override
-//                public void onErrorResponse(VolleyError volleyError) {
-//                    AdLog.d(TAG, "Imp onErrorResponse " +volleyError.toString());
-//                }
-//            });
-        }
         if (!hasTrackImpression) {
+            if (!TextUtils.isEmpty(adTask.impUrl)) {
+                goUrl(appContext, replaceMacro(adTask.impUrl), false);
+        //            TrackingRequest.makeTrackingHttpRequest(replaceMacro(adTask.impUrl), appContext, new TrackingRequest.Listener() {
+        //                @Override
+        //                public void onResponse(@NonNull String url) {
+        //                    AdLog.d(TAG, "Imp onResponse " +url);
+        //                }
+        //
+        //                @Override
+        //                public void onErrorResponse(VolleyError volleyError) {
+        //                    AdLog.d(TAG, "Imp onErrorResponse " +volleyError.toString());
+        //                }
+        //            });
+            }
+
             trackImpression();
             hasTrackImpression = true;
         }

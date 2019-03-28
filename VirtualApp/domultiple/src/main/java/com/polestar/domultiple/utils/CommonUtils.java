@@ -388,4 +388,14 @@ public class CommonUtils {
         }
         return null;
     }
+
+    public static boolean isNetworkAvailable(Context ctx) {
+
+        ConnectivityManager manager = (ConnectivityManager) ctx
+                .getApplicationContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+
+        return !(networkinfo == null || !networkinfo.isAvailable());
+    }
 }

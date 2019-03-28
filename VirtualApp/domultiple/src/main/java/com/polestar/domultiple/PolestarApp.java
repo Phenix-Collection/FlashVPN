@@ -37,12 +37,15 @@ import com.polestar.domultiple.components.AppMonitorService;
 import com.polestar.domultiple.components.receiver.PackageChangeReceiver;
 import com.polestar.domultiple.components.ui.AppLoadingActivity;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
+import com.polestar.domultiple.task.AppUser;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DoConfig;
 import com.polestar.domultiple.utils.EventReporter;
 import com.polestar.domultiple.utils.MLogs;
 import com.polestar.domultiple.utils.PreferencesUtils;
 import com.polestar.domultiple.utils.RemoteConfig;
+import com.polestar.task.database.DatabaseImplFactory;
+import com.polestar.task.network.Configuration;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -63,8 +66,8 @@ public class PolestarApp extends MultiDexApplication {
 
     static {
         SpecialComponentList.APP_LOADING_ACTIVITY = AppLoadingActivity.class.getName();
-        BitmapUtils.APP_ICON_RADIUS = 6;
-        BitmapUtils.APP_ICON_PADDING = 2;
+        BitmapUtils.APP_ICON_RADIUS = 4;
+        BitmapUtils.APP_ICON_PADDING = 3;
     }
 
     public static boolean isArm64() {
@@ -213,6 +216,15 @@ public class PolestarApp extends MultiDexApplication {
                 BillingProvider.get();
 //                if (needAd()) {
                     initAd();
+
+                if (AppUser.check() && AppUser.isRewardEnabled()) {
+                    Configuration.URL_PREFIX = RemoteConfig.getString("config_task_server");
+                    Configuration.APP_VERSION_CODE = BuildConfig.VERSION_CODE;
+                    Configuration.PKG_NAME = BuildConfig.APPLICATION_ID;
+                    DatabaseImplFactory.CONF_NEED_TASK = true;
+                    DatabaseImplFactory.CONF_NEED_PRODUCT = false;
+                    FuseAdLoader.setUserId(AppUser.getInstance().getMyId());
+                }
                     //CloneManager.getInstance(gDefault).loadClonedApps(gDefault, null);
                     //
                     BoosterSdk.BoosterConfig boosterConfig = new BoosterSdk.BoosterConfig();

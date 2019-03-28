@@ -45,6 +45,7 @@ import com.polestar.domultiple.db.CloneModel;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.domultiple.db.DBManager;
 import com.polestar.domultiple.notification.QuickSwitchNotification;
+import com.polestar.domultiple.task.IconAdConfig;
 import com.polestar.domultiple.utils.AnimatorHelper;
 import com.polestar.domultiple.utils.CommonUtils;
 import com.polestar.domultiple.utils.DisplayUtils;
@@ -118,6 +119,8 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     private static final String CONFIG_FORCE_REQUESTED_PERMISSIONS = "force_requested_permission";
     private static final int REQUEST_APPLY_PERMISSION = 101;
 
+    private IconAdConfig iconAdConfig;
+
     private long adShowTime = 0;
     public static void enter(Activity activity, boolean needUpdate) {
         MLogs.d("Enter home: update: " + needUpdate);
@@ -136,6 +139,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainHandler = new Handler();
+        iconAdConfig = new IconAdConfig();
         initView();
         initData();
         EventReporter.homeShow();
@@ -592,6 +596,70 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         animSet.setDuration(800).start();
     }
 
+    public void onItemClick(HomeGridAdapter.HomeItem item) {
+        if (item == null) {
+            return;
+        }
+        switch (item.type) {
+            case HomeGridAdapter.HomeItem.TYPE_CLONE:
+                CloneModel model = (CloneModel) item.obj;
+                if(!applyPermissionIfNeeded()) {
+                    AppLoadingActivity.startAppStartActivity(HomeActivity.this, model);
+                    startingPkg = model.getPackageName();
+                    if (model.getLaunched() == 0) {
+                        model.setLaunched(1);
+                        DBManager.updateCloneModel(HomeActivity.this, model);
+                        gridAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    pendingStartModel = model;
+                }
+                break;
+            case HomeGridAdapter.HomeItem.TYPE_LUCKY:
+                Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
+                startActivity(intent);
+                EventReporter.luckyClick("item_click");
+                MLogs.d("lucky clicked");
+                break;
+            case HomeGridAdapter.HomeItem.TYPE_ADD:
+                MLogs.d("to add more clone");
+                startActivity(new Intent(HomeActivity.this, AddCloneActivity.class));
+                break;
+            case HomeGridAdapter.HomeItem.TYPE_ICON_AD:
+                if (item.inflateView != null) {
+                    item.inflateView.performClick();
+                }
+                break;
+        }
+    }
+
+    public boolean onItemLongClick(HomeGridAdapter.HomeItem item, View view) {
+        if (item == null) {
+            return false;
+        }
+        MLogs.d("onItemLongClick " + item.type);
+        DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
+
+        switch (item.type) {
+            case HomeGridAdapter.HomeItem.TYPE_CLONE:
+                createDropTxt.setText(R.string.create_shortcut);
+                mDragController.startDrag(iv, iv, item, DragController.DRAG_ACTION_COPY);
+                return true;
+            case HomeGridAdapter.HomeItem.TYPE_ICON_AD:
+                createDropTxt.setText(R.string.install);
+                mDragController.startDrag(iv, iv, item, DragController.DRAG_ACTION_COPY);
+                return true;
+            case HomeGridAdapter.HomeItem.TYPE_LUCKY:
+                Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
+                startActivity(intent);
+                EventReporter.luckyClick("item_click_long");
+                MLogs.d("lucky clicked");
+                return true;
+            case HomeGridAdapter.HomeItem.TYPE_ADD:
+                return false;
+        }
+        return false;
+    }
 
     private void initView() {
         setContentView(R.layout.home_activity_layout);
@@ -604,51 +672,14 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         cloneGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int size = mClonedList == null? 0 : mClonedList.size();
-                int luckyIdx = size;
-                int addIdx = showLucky? luckyIdx + 1 : luckyIdx;
-                if (i < size) {
-                    if(!applyPermissionIfNeeded()) {
-                        CloneModel model = (CloneModel) gridAdapter.getItem(i);
-                        AppLoadingActivity.startAppStartActivity(HomeActivity.this, model);
-                        startingPkg = model.getPackageName();
-                        if (model.getLaunched() == 0) {
-                            model.setLaunched(1);
-                            DBManager.updateCloneModel(HomeActivity.this, model);
-                            gridAdapter.notifyDataSetChanged();
-                        }
-                    } else {
-                        pendingStartModel = (CloneModel) gridAdapter.getItem(i);
-                    }
-                } else if (showLucky && i == luckyIdx) {
-                    Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
-                    startActivity(intent);
-                    EventReporter.luckyClick("item_click");
-                    MLogs.d("lucky clicked");
-                } else if (i == addIdx) {
-                    MLogs.d("to add more clone");
-                    startActivity(new Intent(HomeActivity.this, AddCloneActivity.class));
-                }
+                HomeActivity.this.onItemClick( gridAdapter.getItem(i));
             }
         });
         cloneGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int size = mClonedList == null? 0: mClonedList.size();
-                int luckyIdx = size;
-                if (i < size) {
-                    DragImageView iv = (DragImageView) view.findViewById(R.id.app_icon);
-                    mDragController.startDrag(iv, iv, gridAdapter.getItem(i), DragController.DRAG_ACTION_COPY);
-                    return true;
-                }  else if (showLucky && i == luckyIdx) {
-                    Intent intent = new Intent(HomeActivity.this, NativeInterstitialActivity.class);
-                    startActivity(intent);
-                    EventReporter.luckyClick("item_click_long");
-                    MLogs.d("lucky clicked");
-                    return true;
-                } else   {
-                    return false;
-                }
+                HomeGridAdapter.HomeItem item = gridAdapter.getItem(i);
+                return HomeActivity.this.onItemLongClick(item, view);
             }
         });
 
@@ -875,30 +906,48 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         mTitleBar.setVisibility(View.VISIBLE);
         mActionBar.setVisibility(View.INVISIBLE);
 
+        HomeGridAdapter.HomeItem item = (HomeGridAdapter.HomeItem) info;
         if (createShortcutArea.isSelected()) {
-            if (Build.VERSION.SDK_INT >= 23 && checkCallingOrSelfPermission("com.android.launcher.permission.INSTALL_SHORTCUT")
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{"com.android.launcher.permission.INSTALL_SHORTCUT"}, REQUEST_APPLY_PERMISSION);
-            } else {
-                CommonUtils.createShortCut(this, ((CloneModel) info));
-                mActionBar.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(HomeActivity.this, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
-                        //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
-                    }
-                }, 500);
+            if (item.type == HomeGridAdapter.HomeItem.TYPE_CLONE) {
+                if (Build.VERSION.SDK_INT >= 23 && checkCallingOrSelfPermission("com.android.launcher.permission.INSTALL_SHORTCUT")
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{"com.android.launcher.permission.INSTALL_SHORTCUT"}, REQUEST_APPLY_PERMISSION);
+                } else {
+                    CommonUtils.createShortCut(this, ((CloneModel) item.obj));
+                    mActionBar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(HomeActivity.this, R.string.toast_shortcut_added, Toast.LENGTH_SHORT).show();
+                            //CustomToastUtils.showImageWithMsg(mActivity, mActivity.getResources().getString(R.string.toast_shortcut_added), R.mipmap.icon_add_success);
+                        }
+                    }, 500);
+                }
+            } else if (item.type == HomeGridAdapter.HomeItem.TYPE_ICON_AD) {
+                onItemClick(item);
             }
         } else if (deleteArea.isSelected()) {
             mActionBar.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    MLogs.d("Delete clone model!");
-                    if (PreferencesUtils.hasShownDeleteDialog()) {
-                        deleteWithAnim((CloneModel) info);
-                    } else {
-                        showDeleteDialog((CloneModel) info);
+                    if (item.type == HomeGridAdapter.HomeItem.TYPE_CLONE) {
+                        MLogs.d("Delete clone model!");
+                        if (PreferencesUtils.hasShownDeleteDialog()) {
+                            deleteWithAnim((View)source ,(CloneModel) item.obj);
+                        } else {
+                            showDeleteDialog((View)source, (CloneModel) item.obj);
 
+                        }
+                    } else if (item.type == HomeGridAdapter.HomeItem.TYPE_ICON_AD) {
+                        View view = (View) source;
+                        if(view != null) {
+                            mExplosionField = ExplosionField.attachToWindow(HomeActivity.this);
+                            mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
+                                @Override
+                                public void onExplodeFinish(View v) {
+                                    gridAdapter.ignoreIconAd();
+                                }
+                            });
+                        }
                     }
                 }
             },500);
@@ -923,12 +972,12 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         return  -1;
     }
 
-    private void deleteWithAnim(CloneModel info) {
-        int pos = getPosForModel(info);
-        if (pos == -1) {
-            MLogs.logBug("Unkown package");
-        }
-        View view = cloneGridView.getChildAt(pos);
+    private void deleteWithAnim(View view, CloneModel info) {
+//        int pos = getPosForModel(info);
+//        if (pos == -1) {
+//            MLogs.logBug("Unkown package");
+//        }
+//        View view = cloneGridView.getChildAt(pos);
         if(view != null) {
             mExplosionField = ExplosionField.attachToWindow(HomeActivity.this);
             mExplosionField.explode(view, new ExplosionField.OnExplodeFinishListener() {
@@ -956,7 +1005,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
         }
     }
 
-    private void showDeleteDialog(CloneModel info) {
+    private void showDeleteDialog(View source, CloneModel info) {
         UpDownDialog.show(HomeActivity.this, getString(R.string.delete_dialog_title), getString(R.string.delete_dialog_content),
                 getString(R.string.no_thanks), getString(R.string.yes), -1, R.layout.dialog_up_down, new DialogInterface.OnClickListener() {
                     @Override
@@ -965,7 +1014,7 @@ public class HomeActivity extends BaseActivity implements CloneManager.OnClonedA
                             case UpDownDialog.NEGATIVE_BUTTON:
                                 break;
                             case UpDownDialog.POSITIVE_BUTTON:
-                                deleteWithAnim(info);
+                                deleteWithAnim(source ,info);
                                 break;
                         }
                     }
