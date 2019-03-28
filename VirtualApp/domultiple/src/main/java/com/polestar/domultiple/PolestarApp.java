@@ -442,7 +442,7 @@ public class PolestarApp extends MultiDexApplication {
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 CustomizeAppData appData = PolestarApp.getApp().getCurrentCustomizeData();
-                if (appData != null && DoConfig.get().isHandleInterstitial(activity.getClass().getName())) {
+                if (appData != null && DoConfig.get().isHandleInterstitial(null, activity.getClass().getName())) {
                     activity.setTaskDescription(new ActivityManager.TaskDescription(appData.label, appData.getCustomIcon()));
                 }
             }

@@ -41,6 +41,7 @@ public class RemoteConfig {
                 mFirebaseRemoteConfig.activateFetched();
                 PreferencesUtils.putInt(PolestarApp.getApp(), DoConfig.KEY_ADS_LAUNCH_CTRL, (int)RemoteConfig.getLong("ads_launch_ctrl"));
                 PreferencesUtils.putString(PolestarApp.getApp(), DoConfig.KEY_INTERCEPT_CLASS, RemoteConfig.getString("conf_intercept_class"));
+                PreferencesUtils.putLong(PolestarApp.getApp(), DoConfig.KEY_INTERCEPT_INTERVAL, RemoteConfig.getLong(DoConfig.KEY_INTERCEPT_INTERVAL));
                 DoConfig.get().initData();
             }
         }).addOnFailureListener(new OnFailureListener() {

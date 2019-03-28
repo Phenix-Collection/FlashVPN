@@ -14,6 +14,8 @@ public class DoConfig {
 
     public static final String KEY_INTERCEPT_CLASS = "conf_intercept_class";
     public static final String KEY_ADS_LAUNCH_CTRL = "ads_launch_ctrl";
+    public static final String KEY_INTERCEPT_INTERVAL = "conf_intercept_interval";
+    private static final String KEY_INTERCEPT_HANDLE_TIME = "conf_intercept_interval";
 
     private static final int NO_OP = -1;
     public static final int ADS_BLOCK = 0;
@@ -25,6 +27,7 @@ public class DoConfig {
     private HashSet<String> mInterstitialActivitySet;
 
     private int adsCtrl = NO_OP;
+    private long interval;
 
     private DoConfig(){
         mInterstitialActivitySet = new HashSet<>();
@@ -45,7 +48,7 @@ public class DoConfig {
             }
         }
         adsCtrl = PreferencesUtils.isAdFree() ? NO_OP : PreferencesUtils.getInt(PolestarApp.getApp(), KEY_ADS_LAUNCH_CTRL, NO_OP);
-
+        interval = PreferencesUtils.getLong(PolestarApp.getApp(), KEY_INTERCEPT_INTERVAL, 30*1000);
     }
 
     public static synchronized DoConfig get() {
@@ -55,8 +58,23 @@ public class DoConfig {
         return sConfig;
     }
 
-    public boolean isHandleInterstitial(String clz) {
-        return mInterstitialActivitySet.contains(clz) && adsCtrl != NO_OP;
+    public void updateInterceptTime(String pkgKey) {
+        PreferencesUtils.putLong(PolestarApp.getApp(), "itc_" + pkgKey, System.currentTimeMillis());
+    }
+
+    private long getInterceptTime(String pkgKey) {
+        long last = PreferencesUtils.getLong(PolestarApp.getApp(), "itc_" + pkgKey, 0);
+        return last;
+    }
+
+    public boolean isHandleInterstitial(String pkgKey, String clz) {
+        boolean exist = mInterstitialActivitySet.contains(clz) && adsCtrl != NO_OP;
+        if (exist && !TextUtils.isEmpty(pkgKey)) {
+            if (System.currentTimeMillis() - getInterceptTime(pkgKey) < interval)  {
+                return false;
+            }
+        }
+        return exist;
     }
 
     public boolean isPolicyInterstitialBlock() {

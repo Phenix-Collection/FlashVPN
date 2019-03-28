@@ -118,12 +118,14 @@ public class CloneComponentDelegate implements ComponentDelegate {
 
     @Override
     public boolean handleStartActivity(String name) {
-        if (DoConfig.get().isHandleInterstitial(name)  ) {
+        String pkyKey = VClientImpl.get().getCurrentPackage() + "_" + VUserHandle.myUserId();
+        if (DoConfig.get().isHandleInterstitial(pkyKey, name)  ) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         getAgent().onAdsLaunch(VClientImpl.get().getCurrentPackage(), VUserHandle.myUserId(), name);
+                        DoConfig.get().updateInterceptTime(pkyKey);
                     }catch (Exception ex) {
 
                     }

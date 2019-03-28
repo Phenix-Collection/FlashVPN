@@ -201,4 +201,8 @@
         <key>config_update_interval_sec</key>
         <value>86400</value>
     </entry>
+    <entry>
+        <key>conf_intercept_interval</key>
+        <value>90000</value>
+    </entry>
 </defaultsMap>
