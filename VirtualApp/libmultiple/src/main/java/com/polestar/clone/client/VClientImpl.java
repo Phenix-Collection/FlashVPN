@@ -44,6 +44,7 @@ import com.polestar.clone.client.stub.VASettings;
 import com.polestar.clone.helper.compat.BuildCompat;
 import com.polestar.clone.helper.compat.StorageManagerCompat;
 import com.polestar.clone.helper.compat.StrictModeCompat;
+import com.polestar.clone.helper.utils.FileUtils;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.os.VEnvironment;
 import com.polestar.clone.os.VUserHandle;
@@ -288,10 +289,6 @@ public final class VClientImpl extends IVClient.Stub {
             }
         }
 
-        if (targetSdkVersion < Build.VERSION_CODES.GINGERBREAD) {
-            StrictMode.ThreadPolicy newPolicy = new StrictMode.ThreadPolicy.Builder(StrictMode.getThreadPolicy()).permitNetwork().build();
-            StrictMode.setThreadPolicy(newPolicy);
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (mirror.android.os.StrictMode.sVmPolicyMask != null) {
                 mirror.android.os.StrictMode.sVmPolicyMask.set(0);
@@ -515,11 +512,31 @@ public final class VClientImpl extends IVClient.Stub {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             NativeEngine.redirectDirectory("/data/user_de/0/" + info.packageName, info.dataDir);
         }
-        String libPath = VEnvironment.getAppLibDirectory(info.packageName).getAbsolutePath();
-        String userLibPath = new File(VEnvironment.getUserSystemDirectory(userId), info.packageName + "/lib").getAbsolutePath();
-        NativeEngine.redirectDirectory(userLibPath, libPath);
-        NativeEngine.redirectDirectory("/data/data/" + info.packageName + "/lib/", libPath);
-        NativeEngine.redirectDirectory("/data/user/0/" + info.packageName + "/lib/", libPath);
+//        String libPath = VEnvironment.getAppLibDirectory(info.packageName).getAbsolutePath();
+//        String userLibPath = new File(VEnvironment.getUserSystemDirectory(userId), info.packageName + "/lib").getAbsolutePath();
+//        NativeEngine.redirectDirectory(userLibPath, libPath);
+
+//        NativeEngine.whitelist("/data/data/" + v6 + "/lib/");
+//        NativeEngine.whitelist("/data/user/0/" + v6 + "/lib/");
+        NativeEngine.whiteList("/data/data/" + info.packageName + "/lib/");
+        NativeEngine.whiteList("/data/user/0/" + info.packageName + "/lib/");
+        NativeEngine.whiteList("/data/app/" + info.packageName + "/lib/");
+//        NativeEngine.redirectFile("/data/user/0/do.multiple.cloner/virtual/data/app/com.supercell.clashofclans/lib/libfmod.so",
+//                "/data/app/com.supercell.clashofclans-1/lib/arm/libfmod.so");
+//        NativeEngine.redirectFile("/data/user/0/do.multiple.cloner/virtual/data/app/com.supercell.clashofclans/lib/libg.so",
+//                "/data/app/com.supercell.clashofclans-1/lib/arm/libg.so");
+//        try {
+//            File path = new File(libPath + "/arm");
+//            if (!path.exists()) {
+//                path.mkdirs();
+//            }
+//            FileUtils.copyFile(new File("/data/app/com.supercell.clashofclans-1/lib/arm/libfmod.so"),
+//                    new File(libPath + "/arm/libfmod.so"));
+//            FileUtils.copyFile(new File("/data/app/com.supercell.clashofclans-1/lib/arm/libg.so"),
+//                    new File(libPath + "/arm/libg.so"));
+//        }catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
 
         NativeEngine.readOnly(VEnvironment.getDataAppDirectory().getPath());
         VirtualStorageManager vsManager = VirtualStorageManager.get();

@@ -113,6 +113,7 @@ public class NativeLibraryHelperCompat {
 				}
 				if (name.startsWith("lib/") && !entry.isDirectory() && name.endsWith(".so")) {
 					String supportedAbi = name.substring(name.indexOf("/") + 1, name.lastIndexOf("/"));
+//					VLog.logbug("JJJJ", "find lib: " + name);
 					supportedABIs.add(supportedAbi);
 				}
 			}

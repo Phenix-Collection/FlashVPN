@@ -16,4 +16,6 @@ public class VMRuntime {
         public static RefMethod<Void> setTargetSdkVersion;
         public static RefMethod<Boolean> is64Bit;
         public static RefStaticMethod<String> getCurrentInstructionSet;
+        @MethodParams(value={String.class}) public static RefStaticMethod is64BitAbi;
+
 }

@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.polestar.clone.CustomizeAppData;
+import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.env.Constants;
 import com.polestar.clone.client.fixer.ComponentFixer;
@@ -28,6 +29,7 @@ import com.polestar.clone.helper.compat.PackageParserCompat;
 import com.polestar.clone.helper.utils.FileUtils;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.os.VEnvironment;
+import com.polestar.clone.server.pm.PackageCacheManager;
 import com.polestar.clone.server.pm.PackageSetting;
 import com.polestar.clone.server.pm.PackageUserState;
 
@@ -44,6 +46,7 @@ import java.util.List;
 
 import mirror.android.content.pm.ApplicationInfoL;
 import mirror.android.content.pm.ApplicationInfoN;
+import mirror.dalvik.system.VMRuntime;
 
 /**
  * @author Lody
@@ -204,10 +207,46 @@ public class PackageParserEx {
         addOwner(cache);
         return cache;
     }
+//
+//
+//    public static void initApplicationInfoBase(PackageSetting arg5, VPackage arg6) {
+//        ApplicationInfo v1 = arg6.applicationInfo;
+//        if(TextUtils.isEmpty(v1.processName)) {
+//            v1.processName = v1.packageName;
+//        }
+//
+//        v1.enabled = true;
+//        v1.uid = arg5.appId;
+//        v1.name = ComponentFixer.fixComponentClassName(arg5.packageName, v1.name);
+//        if(Build$VERSION.SDK_INT >= 21) {
+//            ApplicationInfoL.scanSourceDir.set(v1, v1.dataDir);
+//            ApplicationInfoL.scanPublicSourceDir.set(v1, v1.dataDir);
+//            ApplicationInfoL.primaryCpuAbi.set(v1, ApplicationInfoL.primaryCpuAbi.get(VirtualCore.get().getContext().getApplicationInfo()));
+//        }
+//
+//        if(arg5.appMode == 1) {
+//            Object v0 = PackageParserEx.sSharedLibCache.get(arg5.packageName);
+//            if(v0 == null) {
+//                PackageManager v2 = VirtualCore.get().getUnHookPackageManager();
+//                try {
+//                    String[] v0_1 = v2.getApplicationInfo(arg5.packageName, 1024).sharedLibraryFiles;
+//                    if(v0_1 == null) {
+//                        v0_1 = new String[0];
+//                    }
+//
+//                    PackageParserEx.sSharedLibCache.put(arg5.packageName, v0_1);
+//                }
+//                catch(PackageManager$NameNotFoundException v2_1) {
+//                }
+//            }
+//
+//            v1.sharedLibraryFiles = ((String[])v0);
+//        }
+//    }
 
     public static void initApplicationInfoBase(PackageSetting ps, VPackage p) {
         ApplicationInfo ai = p.applicationInfo;
-        ai.flags |= ApplicationInfo.FLAG_HAS_CODE;
+//        ai.flags |= ApplicationInfo.FLAG_HAS_CODE;
         if (TextUtils.isEmpty(ai.processName)) {
             ai.processName = ai.packageName;
         }
@@ -215,11 +254,11 @@ public class PackageParserEx {
         ai.nativeLibraryDir = ps.libPath;
         ai.uid = ps.appId;
         ai.name = ComponentFixer.fixComponentClassName(ps.packageName, ai.name);
-        ai.publicSourceDir = ps.apkPath;
-        ai.sourceDir = ps.apkPath;
+//        ai.publicSourceDir = ps.apkPath;
+//        ai.sourceDir = ps.apkPath;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ai.splitSourceDirs = new String[]{ps.apkPath};
-            ai.splitPublicSourceDirs = ai.splitSourceDirs;
+//            ai.splitSourceDirs = new String[]{ps.apkPath};
+//            ai.splitPublicSourceDirs = ai.splitSourceDirs;
             ApplicationInfoL.scanSourceDir.set(ai, ai.dataDir);
             ApplicationInfoL.scanPublicSourceDir.set(ai, ai.dataDir);
             String hostPrimaryCpuAbi = ApplicationInfoL.primaryCpuAbi.get(VirtualCore.get().getContext().getApplicationInfo());
@@ -243,12 +282,166 @@ public class PackageParserEx {
         }
     }
 
+//
+//    private static void initApplicationAsUser(ApplicationInfo arg9, int arg10) {
+//        String v0_1;
+//        ApplicationInfo v1_1;
+//        ApplicationInfo v0;
+//        int v8 = 21;
+//        PackageSetting v3 = PackageCacheManager.getSetting(arg9.packageName);
+//        if(v3 == null) {
+//            throw new IllegalStateException();
+//        }
+//
+//        boolean v4 = v3.isRunOn64BitProcess();
+//        String v5 = v3.getApkPath(v4);
+//        arg9.publicSourceDir = v5;
+//        arg9.sourceDir = v5;
+//        AppLibConfig v2 = VirtualCore.getConfig().getAppLibConfig(arg9.packageName);
+//        if(v4) {
+//            if(Build$VERSION.SDK_INT >= v8) {
+//                ApplicationInfoL.primaryCpuAbi.set(arg9, "arm64-v8a");
+//            }
+//
+//            arg9.nativeLibraryDir = VEnvironment.getAppLibDirectory64(arg9.packageName).getPath();
+//        }
+//        else {
+//            arg9.nativeLibraryDir = VEnvironment.getAppLibDirectory(arg9.packageName).getPath();
+//        }
+//
+//        try {
+//            v0 = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(arg9.packageName, 0);
+//            v1_1 = v0;
+//        }
+//        catch(PackageManager$NameNotFoundException v1) {
+//            v1_1 = v0;
+//        }
+//
+//        if(v3.appMode == 1) {
+//            if(v2 == AppLibConfig.UseRealLib && v1_1 == null) {
+//                v2 = AppLibConfig.UseOwnLib;
+//            }
+//
+//            if(v2 != AppLibConfig.UseRealLib) {
+//                goto label_50;
+//            }
+//
+//            if(v4) {
+//                arg9.nativeLibraryDir = v1_1.nativeLibraryDir;
+//                if(Build$VERSION.SDK_INT < v8) {
+//                    goto label_50;
+//                }
+//
+//                ApplicationInfoL.primaryCpuAbi.set(arg9, ApplicationInfoL.primaryCpuAbi.get(v1_1));
+//                goto label_50;
+//            }
+//
+//            v0_1 = PackageParserEx.choose32bitLibPath(v1_1);
+//            if(v0_1 == null) {
+//                goto label_50;
+//            }
+//
+//            arg9.nativeLibraryDir = v0_1;
+//        }
+//
+//        label_50:
+//        arg9.dataDir = v4 ? VEnvironment.getDataUserPackageDirectory64(arg10, arg9.packageName).getPath() : VEnvironment.getDataUserPackageDirectory(arg10, arg9.packageName).getPath();
+//        v0_1 = new File(v5).getParent();
+//        if(Build$VERSION.SDK_INT >= v8) {
+//            ApplicationInfoL.scanSourceDir.set(arg9, v0_1);
+//            ApplicationInfoL.scanPublicSourceDir.set(arg9, v0_1);
+//            if(v2 == AppLibConfig.UseRealLib && v1_1 != null) {
+//                ApplicationInfoL.splitPublicSourceDirs.set(arg9, v1_1.splitPublicSourceDirs);
+//                ApplicationInfoL.splitSourceDirs.set(arg9, v1_1.splitSourceDirs);
+//            }
+//
+//            if(Build$VERSION.SDK_INT < 26) {
+//                goto label_79;
+//            }
+//
+//            if(v1_1 == null) {
+//                goto label_79;
+//            }
+//
+//            arg9.splitNames = v1_1.splitNames;
+//        }
+//
+//        label_79:
+//        if(Build$VERSION.SDK_INT >= 24) {
+//            v0_1 = v4 ? VEnvironment.getDeDataUserPackageDirectory64(arg10, arg9.packageName).getPath() : VEnvironment.getDeDataUserPackageDirectory(arg10, arg9.packageName).getPath();
+//            if(ApplicationInfoN.deviceEncryptedDataDir != null) {
+//                ApplicationInfoN.deviceEncryptedDataDir.set(arg9, v0_1);
+//            }
+//
+//            if(ApplicationInfoN.credentialEncryptedDataDir != null) {
+//                ApplicationInfoN.credentialEncryptedDataDir.set(arg9, arg9.dataDir);
+//            }
+//
+//            if(ApplicationInfoN.deviceProtectedDataDir != null) {
+//                ApplicationInfoN.deviceProtectedDataDir.set(arg9, v0_1);
+//            }
+//
+//            if(ApplicationInfoN.credentialProtectedDataDir == null) {
+//                goto label_104;
+//            }
+//
+//            ApplicationInfoN.credentialProtectedDataDir.set(arg9, arg9.dataDir);
+//        }
+//
+//        label_104:
+//        if((VirtualCore.getConfig().isUseRealDataDir(arg9.packageName)) && (VirtualCore.getConfig().isEnableIORedirect())) {
+//            arg9.dataDir = "/data/data/" + arg9.packageName + "/";
+//        }
+//    }
+
 //    private static HashMap<String, String> mLabelCache = new HashMap<>();
     private static void initApplicationAsUser(ApplicationInfo ai, int userId) {
+        String v0_1;
+        ApplicationInfo realAppInfo = null;
+        int v8 = 21;
+        PackageSetting ps = PackageCacheManager.getSetting(ai.packageName);
+        if(ps == null) {
+            throw new IllegalStateException();
+        }
+
+        String apkPath = ps.apkPath;
+        ai.publicSourceDir = apkPath;
+        ai.sourceDir = apkPath;
+
         ai.dataDir = VEnvironment.getDataUserPackageDirectory(userId, ai.packageName).getPath();
+
+        try {
+            realAppInfo = VirtualCore.get().getUnHookPackageManager().getApplicationInfo(ai.packageName, 0);
+        }
+        catch(PackageManager.NameNotFoundException v1) {
+        }
+
+        String libDir ;
+        if (ps.dependSystem && realAppInfo != null ) {
+            if (VirtualCore.get().isRunningOn64bit()) {
+                libDir = realAppInfo.nativeLibraryDir;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ApplicationInfoL.primaryCpuAbi.set(ai, "arm64-v8a");
+                }
+            } else {
+                libDir = choose32bitLibPath(realAppInfo);
+            }
+            ai.nativeLibraryDir = libDir;
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ApplicationInfoL.scanSourceDir.set(ai, ai.dataDir);
-            ApplicationInfoL.scanPublicSourceDir.set(ai, ai.dataDir);
+            String baseDir = new File(apkPath).getParent();
+            ApplicationInfoL.scanSourceDir.set(ai, baseDir);
+            ApplicationInfoL.scanPublicSourceDir.set(ai, baseDir);
+            if (ps.dependSystem && realAppInfo != null) {
+                ApplicationInfoL.splitPublicSourceDirs.set(ai, realAppInfo.splitPublicSourceDirs);
+                ApplicationInfoL.splitSourceDirs.set(ai, realAppInfo.splitSourceDirs);
+                ai.splitPublicSourceDirs = realAppInfo.splitPublicSourceDirs;
+                ai.splitSourceDirs = realAppInfo.splitSourceDirs;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ai.splitNames= realAppInfo.splitNames;
+                }
+            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if(Build.VERSION.SDK_INT < 26) {
@@ -270,6 +463,33 @@ public class PackageParserEx {
 //        }catch (Throwable ex) {
 //            ex.printStackTrace();
 //        }
+    }
+
+    private static String choose32bitLibPath(ApplicationInfo applicationInfo) {
+        if(Build.VERSION.SDK_INT >= 21) {
+            try {
+                String primaryCpuAbi = ApplicationInfoL.primaryCpuAbi.get(applicationInfo);
+                String secondaryCpuAbi = ApplicationInfoL.secondaryCpuAbi.get(applicationInfo);
+                if (primaryCpuAbi == null) {
+                    return null;
+                }
+
+                boolean is64bitAbi = (boolean) VMRuntime.is64BitAbi.call(primaryCpuAbi);
+                if (!is64bitAbi) {
+                    return applicationInfo.nativeLibraryDir;
+                }
+
+                if (secondaryCpuAbi != null
+                        && !(boolean) VMRuntime.is64BitAbi.call(secondaryCpuAbi)) {
+                    return (String) ApplicationInfoL.secondaryNativeLibraryDir.get(applicationInfo);
+                }
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        } else {
+            return applicationInfo.nativeLibraryDir;
+        }
     }
 
     private static void addOwner(VPackage p) {
@@ -306,6 +526,13 @@ public class PackageParserEx {
         for (VPackage.PermissionGroupComponent group : p.permissionGroups) {
             group.owner = p;
         }
+
+        int flags = ApplicationInfo.FLAG_HAS_CODE;
+        if(GmsSupport.isGoogleService(p.packageName)) {
+            flags = ApplicationInfo.FLAG_HAS_CODE|ApplicationInfo.FLAG_PERSISTENT;
+        }
+
+        p.applicationInfo.flags |= flags;
     }
 
     public static PackageInfo generatePackageInfo(VPackage p, int flags, long firstInstallTime, long lastUpdateTime, PackageUserState state, int userId) {

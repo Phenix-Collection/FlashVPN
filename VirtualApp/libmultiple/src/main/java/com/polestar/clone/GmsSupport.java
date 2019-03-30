@@ -128,4 +128,12 @@ public class GmsSupport {
     public static void installGoogleApp(int userId) {
         installPackages(GOOGLE_APP, userId);
     }
+
+    public static boolean isGoogleService(String pkg) {
+        return GOOGLE_SERVICE.contains(pkg);
+    }
+
+    public static boolean isGoogleApp(String pkg) {
+        return GOOGLE_APP.contains(pkg);
+    }
 }

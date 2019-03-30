@@ -893,4 +893,8 @@ public final class VirtualCore {
     public static String getCompatibleName(String name, int userId) {
         return (userId != 0) ? name + " " + (userId + 1): name + " +" ;
     }
+
+    public boolean isRunningOn64bit() {
+        return hostPkgName.endsWith("arm64");
+    }
 }

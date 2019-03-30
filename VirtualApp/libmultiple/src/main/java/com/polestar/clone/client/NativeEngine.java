@@ -173,6 +173,14 @@ public class NativeEngine {
             VLog.e(TAG, VLog.getStackTraceString(e));
         }
     }
+
+    public static void whiteList(String path) {
+        try {
+            nativeWhiteList(path);
+        } catch (Throwable e) {
+            VLog.e(TAG, VLog.getStackTraceString(e));
+        }
+    }
 	public static void hook() {
 		try {
 			nativeHook(Build.VERSION.SDK_INT);
@@ -275,6 +283,7 @@ public class NativeEngine {
     private static native void nativeRedirect(String origPath, String newPath);
 
     private static native void nativeReadOnly(String path);
+    private static native void nativeWhiteList(String path);
 	private static native void nativeHook(int apiLevel);
 
 	public static int onGetUid(int uid) {

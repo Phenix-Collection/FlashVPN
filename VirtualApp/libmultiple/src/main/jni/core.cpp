@@ -54,6 +54,12 @@ void readOnly(JNIEnv *env, jclass jclazz, jstring _path) {
     IOUniformer::readOnly(path);
 }
 
+void whiteList(JNIEnv *env, jclass jclazz, jstring _path) {
+    const char *path = env->GetStringUTFChars(_path, NULL);
+    IOUniformer::whiteList(path);
+}
+
+
 void hook_io(JNIEnv *env, jclass jclazz, jint apiLevel) {
     static bool hasHooked = false;
     if (hasHooked) {
@@ -89,6 +95,7 @@ static JNINativeMethod gMethods[] = {
         NATIVE_METHOD((void *) query,    "nativeGetRedirectedPath",     "(Ljava/lang/String;)Ljava/lang/String;"),
         NATIVE_METHOD((void *) restore,  "nativeRestoreRedirectedPath", "(Ljava/lang/String;)Ljava/lang/String;"),
         NATIVE_METHOD((void *) readOnly, "nativeReadOnly", "(Ljava/lang/String;)V"),
+        NATIVE_METHOD((void *) whiteList, "nativeWhiteList", "(Ljava/lang/String;)V"),
         NATIVE_METHOD((void *) hook_native, "nativeHookNative", "(Ljava/lang/Object;Ljava/lang/String;ZII)V"),
 };
 
