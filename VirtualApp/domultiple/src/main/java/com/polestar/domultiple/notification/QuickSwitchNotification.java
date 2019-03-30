@@ -19,6 +19,7 @@ import android.widget.RemoteViews;
 
 import com.polestar.booster.BoosterSdk;
 import com.polestar.booster.BoosterShortcutActivity;
+import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.BitmapUtils;
 import com.polestar.clone.client.stub.DaemonService;
@@ -326,6 +327,11 @@ public class QuickSwitchNotification {
             return;
         }
         if (!TextUtils.isEmpty(mapKey)) {
+            String name = CloneManager.getNameFromKey(mapKey);
+            if (GmsSupport.isGmsFamilyPackage(name)
+                    || PolestarApp.getApp().getPackageName().equals(name)){
+                return;
+            }
             synchronized (lruKeys) {
                 if (lruKeys.contains(mapKey)) {
                     return;
@@ -431,6 +437,9 @@ public class QuickSwitchNotification {
         return  PreferencesUtils.getInt(PolestarApp.getApp(), "quick_switch_state", -1);
     }
     public static boolean isEnable() {
+        if (PolestarApp.isArm64()) {
+            return false;
+        }
         int state = getQuickSwitchState();
         MLogs.d(TAG+" is enable state: " + state);
         if (state == STATE_NOT_SET) {

@@ -19,6 +19,7 @@ import android.widget.RemoteViews;
 
 import com.polestar.clone.BitmapUtils;
 import com.polestar.clone.CustomizeAppData;
+import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.stub.DaemonService;
 import com.polestar.superclone.BuildConfig;
@@ -371,6 +372,11 @@ public class FastSwitch {
             return;
         }
         if (!TextUtils.isEmpty(mapKey)) {
+            String name = AppManager.getNameFromKey(mapKey);
+            if (GmsSupport.isGmsFamilyPackage(name)
+                    || MApp.getApp().getPackageName().equals(name)){
+                return;
+            }
             synchronized (lruKeys) {
                 if (lruKeys.contains(mapKey)) {
                     return;
@@ -466,6 +472,9 @@ public class FastSwitch {
     }
     
     public static boolean isEnable() {
+        if(MApp.isSupportPkg()) {
+            return false;
+        }
         int state = getQuickSwitchState();
         MLogs.d(TAG+" is enable state: " + state);
         if (state == STATE_NOT_SET) {

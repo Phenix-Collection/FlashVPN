@@ -17,6 +17,7 @@ import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
+import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.BitmapUtils;
 import in.dualspace.cloner.AppConstants;
@@ -319,6 +320,11 @@ public class QuickSwitchNotification {
             return;
         }
         if (!TextUtils.isEmpty(mapKey)) {
+            String name = CloneManager.getNameFromKey(mapKey);
+            if (GmsSupport.isGmsFamilyPackage(name)
+                    || DualApp.getApp().getPackageName().equals(name)){
+                return;
+            }
             synchronized (lruKeys) {
                 if (lruKeys.contains(mapKey)) {
                     return;
@@ -417,6 +423,9 @@ public class QuickSwitchNotification {
         return  PreferencesUtils.getInt(DualApp.getApp(), "quick_switch_state", -1);
     }
     public static boolean isEnable() {
+        if (DualApp.isArm64()) {
+            return false;
+        }
         int state = getQuickSwitchState();
         MLogs.d(TAG+" is enable state: " + state);
         if (state == STATE_NOT_SET) {
