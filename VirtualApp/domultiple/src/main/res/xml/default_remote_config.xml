@@ -171,7 +171,7 @@
     </entry>
     <entry>
         <key>conf_intercept_class</key>
-        <value></value>
+        <value>null</value>
     </entry>
     <entry>
         <key>conf_sort_home_icon</key>
