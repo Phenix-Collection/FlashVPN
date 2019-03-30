@@ -1051,6 +1051,8 @@ class MethodProxies {
             BLOCK_ACTION_LIST.add("com.android.vending.contentfilters.IContentFiltersService.BIND");
             BLOCK_ACTION_LIST.add("com.google.android.chimera.FileApkManager.DELETE_UNUSED_FILEAPKS");
             BLOCK_ACTION_LIST.add("com.google.android.gms.update.INSTALL_UPDATE");
+            BLOCK_ACTION_LIST.add("com.google.android.gms.common.operation.LOG_CORE_ANALYTICS");
+            BLOCK_ACTION_LIST.add("com.google.android.gms.chimera.debug.WRITE_JOURNAL_UPDATE_ACTION");
         }
 
         static {
@@ -1059,6 +1061,8 @@ class MethodProxies {
             BLOCK_COMPONENT_LIST.add("com.google.android.gms.usagereporting.service.UsageReportingService");
             BLOCK_COMPONENT_LIST.add("com.google.android.gms.clearcut.uploader.QosUploaderChimeraService");
             BLOCK_COMPONENT_LIST.add("com.google.android.gms.phenotype.service.sync.PackageUpdateTaskService");
+            BLOCK_COMPONENT_LIST.add("com.google.android.gms.telephonyspam.sync.SpamListSyncTaskService");
+            BLOCK_COMPONENT_LIST.add("com.google.android.gms.chimera.container.FileApkIntentOperation$ExternalFileApkService");
             //BLOCK_COMPONENT_LIST.add("com.google.android.finsky.wear.WearSupportService");
         }
 
@@ -1075,7 +1079,12 @@ class MethodProxies {
             if(service!=null) {
                 VLog.d(TAG, "intent: " + service.toString());
                 if (service.getComponent() != null) {
-                    VLog.d(TAG, " " + service.getComponent().getClassName() );
+                    String name = service.getComponent().getClassName();
+                    VLog.d(TAG, " " +  name);
+                    if (BLOCK_COMPONENT_LIST.contains(name)) {
+                        VLog.logbug(TAG, "component is blocked: " + name);
+                        return null;
+                    }
                 }
                 if (service.getComponent() != null && service.getComponent().getClassName().contains(StubService.class.getName())){
                     return method.invoke(who, args);
