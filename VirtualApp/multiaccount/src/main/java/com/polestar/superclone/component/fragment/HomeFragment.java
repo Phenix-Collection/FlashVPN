@@ -219,6 +219,8 @@ public class HomeFragment extends BaseFragment {
             if (item != null) {
                 return item.getView();
             } else {
+                MLogs.e("return empty view!!! item size: " + gridItems.size() + " pos: " + i);
+                EventReporter.generalEvent("get_view_" + gridItems.size() + "_" + i);
                 View itemView = new GridAppCell(mActivity);
                 itemView.setVisibility(View.INVISIBLE);
                 return itemView;

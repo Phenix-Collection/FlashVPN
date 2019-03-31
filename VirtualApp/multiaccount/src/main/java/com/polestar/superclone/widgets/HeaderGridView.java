@@ -354,9 +354,9 @@ public class HeaderGridView extends GridView {
             int adapterCount = 0;
             if (mAdapter != null) {
                 adapterCount = mAdapter.getCount();
-                if (adjPosition < adapterCount) {
+//                if (adjPosition < adapterCount) {
                     return mAdapter.getView(adjPosition, convertView, parent);
-                }
+//                }
             }
             return null;
 //            throw new ArrayIndexOutOfBoundsException(position);
