@@ -34,6 +34,7 @@ import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
 
+import mochat.multiple.parallel.whatsclone.MApp;
 import mochat.multiple.parallel.whatsclone.R;
 import mochat.multiple.parallel.whatsclone.component.BaseActivity;
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
@@ -316,8 +317,8 @@ public class AppCloneActivity extends BaseActivity {
         }
     }
 
-    private AdSize getBannerSize() {
-        int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
+    private static AdSize getBannerSize() {
+        int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(MApp.getApp()));
         dpWidth = Math.max(280, dpWidth-20);
         return new AdSize(dpWidth, 280);
     }
@@ -351,6 +352,10 @@ public class AppCloneActivity extends BaseActivity {
             }
             nativeAdContainer.setVisibility(View.VISIBLE);
         }
+    }
+
+    public static void preloadAd() {
+        FuseAdLoader.get(SLOT_AD_AFTER_CLONE, MApp.getApp()).setBannerAdSize(getBannerSize()).preloadAd(MApp.getApp());
     }
 
     private void loadAd() {
@@ -403,8 +408,8 @@ public class AppCloneActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_install_layout);
         if(!initData()) return;
-        initView();
         initAd();
+        initView();
 
         final TimerTask task = new TimerTask() {
             double speed = INIT_PROGRESS_SPEED;
@@ -435,9 +440,13 @@ public class AppCloneActivity extends BaseActivity {
                     threshold = INIT_PROGRESS_THRESHOLD;
                 }
 
-                if(isInstallDone){
-                    speed = INIT_PROGRESS_SPEED;
-                }else if(progress > threshold){
+                if(isInstallDone && adReady){
+                    speed = INIT_PROGRESS_SPEED*10;
+                }
+//                else if (isInstallDone) {
+//                    speed = INIT_PROGRESS_SPEED*5;
+//                }
+                else if(progress > threshold){
                     inDecelerationStatus = true;
                     threshold = 100.0 - (100 - threshold) / 2.0;
                     nextSpeed = speed / 2;

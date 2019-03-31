@@ -144,7 +144,7 @@
     </entry>
     <entry>
         <key>ad_after_clone_protect_time</key>
-        <value>3000</value>
+        <value>1000</value>
     </entry>
     <entry>
         <key>slot_app_lock_protect_time</key>
