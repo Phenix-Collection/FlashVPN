@@ -43,6 +43,7 @@ import mochat.multiple.parallel.whatsclone.model.AppModel;
 import com.polestar.clone.CustomizeAppData;
 import mochat.multiple.parallel.whatsclone.utils.AppManager;
 import mochat.multiple.parallel.whatsclone.utils.CommonUtils;
+import mochat.multiple.parallel.whatsclone.utils.DisplayUtils;
 import mochat.multiple.parallel.whatsclone.utils.MLogs;
 import mochat.multiple.parallel.whatsclone.utils.EventReporter;
 import mochat.multiple.parallel.whatsclone.utils.PreferencesUtils;
@@ -119,7 +120,10 @@ public class AppStartActivity extends BaseActivity {
     }
 
     public static AdSize getBannerSize() {
-        return AdSize.MEDIUM_RECTANGLE;
+        int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
+        dpWidth = Math.min( dpWidth*8/10, dpWidth - 20);
+
+        return new AdSize(dpWidth, dpWidth*250/300);
     }
     public static void preloadAd(Context context) {
         if (needLoadNativeAd(true, null)) {

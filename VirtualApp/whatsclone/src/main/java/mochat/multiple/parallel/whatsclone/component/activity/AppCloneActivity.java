@@ -109,6 +109,8 @@ public class AppCloneActivity extends BaseActivity {
     private boolean isDBUpdated ;
     private CustomizeAppData data;
 
+    private boolean needAd;
+
     private Handler mAnimateHandler = new Handler(){
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -123,6 +125,7 @@ public class AppCloneActivity extends BaseActivity {
     };
 
     private boolean initData() {
+        needAd = needAd();
         Intent intent = getIntent();
         if (intent != null) {
             appModel = intent.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
@@ -159,6 +162,7 @@ public class AppCloneActivity extends BaseActivity {
                         isInstallSuccess = true;
                         MLogs.d("Hit pre clone pkg " + mPkgName);
                     }
+                    MLogs.d("isInstallDone = true " + mPkgName);
                     isInstallDone = true;
                     if (isInstallSuccess) {
                         PackageManager pm = getPackageManager();
@@ -174,6 +178,7 @@ public class AppCloneActivity extends BaseActivity {
                             public void run() {
                                 CloneHelper.getInstance(AppCloneActivity.this).installApp(AppCloneActivity.this, appModel);
                                 isDBUpdated = true;
+                                MLogs.d("isDBUpdated = true " + mPkgName);
                             }
                         });
                         EventReporter.applistClone(AppCloneActivity.this, appModel.getPackageName());
@@ -306,10 +311,14 @@ public class AppCloneActivity extends BaseActivity {
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    private void initAd(){
-        boolean showAd = RemoteConfig.getBoolean(CONFIG_KEY_SHOW_AD_AFTER_CLONE)
+    private static boolean needAd() {
+        return RemoteConfig.getBoolean(CONFIG_KEY_SHOW_AD_AFTER_CLONE)
                 && (!PreferencesUtils.isAdFree())
                 && PreferencesUtils.hasCloned();
+    }
+
+    private void initAd(){
+        boolean showAd = needAd;
         MLogs.d(CONFIG_KEY_SHOW_AD_AFTER_CLONE + showAd);
         adConfigList = RemoteConfig.getAdConfigList(SLOT_AD_AFTER_CLONE);
         if (showAd && adConfigList!= null && adConfigList.size() > 0) {
@@ -355,7 +364,9 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     public static void preloadAd() {
-        FuseAdLoader.get(SLOT_AD_AFTER_CLONE, MApp.getApp()).setBannerAdSize(getBannerSize()).preloadAd(MApp.getApp());
+        if (needAd()) {
+            FuseAdLoader.get(SLOT_AD_AFTER_CLONE, MApp.getApp()).setBannerAdSize(getBannerSize()).preloadAd(MApp.getApp());
+        }
     }
 
     private void loadAd() {
@@ -440,13 +451,11 @@ public class AppCloneActivity extends BaseActivity {
                     threshold = INIT_PROGRESS_THRESHOLD;
                 }
 
-                if(isInstallDone && adReady){
+                if(isDBUpdated && (!needAd || adReady)){
                     speed = INIT_PROGRESS_SPEED*10;
-                }
-//                else if (isInstallDone) {
-//                    speed = INIT_PROGRESS_SPEED*5;
-//                }
-                else if(progress > threshold){
+                } else if (isDBUpdated && threshold > INIT_PROGRESS_THRESHOLD)  {
+                    speed = INIT_PROGRESS_SPEED * 5;
+                } else if(progress > threshold){
                     inDecelerationStatus = true;
                     threshold = 100.0 - (100 - threshold) / 2.0;
                     nextSpeed = speed / 2;
@@ -586,7 +595,7 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     private void handleInstallFinished(){
-
+        handleFakeInstallFinished();
     }
     @Override
     public void onBackPressed() {
