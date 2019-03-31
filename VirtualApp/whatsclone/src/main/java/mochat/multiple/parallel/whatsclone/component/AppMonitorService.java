@@ -225,7 +225,7 @@ public class AppMonitorService extends Service {
             boolean locked = false;
             String key = AppManager.getMapKey(pkg, userId);
             MLogs.d(TAG, "key unlockKey: " + key + " vs " + lastUnlockKey);
-            if(model.getLockerState()!= AppConstants.AppLockState.DISABLED
+            if(model != null && model.getLockerState()!= AppConstants.AppLockState.DISABLED
                     && PreferencesUtils.isLockerEnabled(AppMonitorService.this)) {
                 if (!key.equals(lastUnlockKey)){
                     AppLockActivity.start(AppMonitorService.this, pkg, userId);
