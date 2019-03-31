@@ -246,7 +246,7 @@ public class VPackageManagerService extends IPackageManager.Stub {
                 || "android.permission.INTERACT_ACROSS_USERS_FULL".equals(permName)) {
             return PackageManager.PERMISSION_DENIED;
         }
-        VLog.d("JJJJ", "checkPermission: " + permName);
+//        VLog.d("JJJJ", "checkPermission: " + permName);
 		//return PackageManager.PERMISSION_GRANTED;
 		return VirtualCore.get().getUnHookPackageManager().checkPermission(permName, VirtualCore.get().getHostPkg());
     }

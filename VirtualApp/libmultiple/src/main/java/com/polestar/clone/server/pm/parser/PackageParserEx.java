@@ -426,7 +426,12 @@ public class PackageParserEx {
             } else {
                 libDir = choose32bitLibPath(realAppInfo);
             }
-            ai.nativeLibraryDir = libDir;
+//            VLog.d("JJJJ", "get libdir " + libDir);
+            if (libDir != null) {
+                ai.nativeLibraryDir = libDir;
+            }
+
+//            VLog.d("JJJJ", "Final nativeLibraryDir " + ai.nativeLibraryDir);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -470,22 +475,30 @@ public class PackageParserEx {
             try {
                 String primaryCpuAbi = ApplicationInfoL.primaryCpuAbi.get(applicationInfo);
                 String secondaryCpuAbi = ApplicationInfoL.secondaryCpuAbi.get(applicationInfo);
+//                VLog.d("JJJJ","primary: " +primaryCpuAbi  + " second: " + secondaryCpuAbi
+//                        + " nativelib: " + applicationInfo.nativeLibraryDir + " secondNativeLib: " + ApplicationInfoL.secondaryNativeLibraryDir.get(applicationInfo) ) ;
                 if (primaryCpuAbi == null) {
+//                    VLog.d("JJJJ","primaryCpuAbi == null");
                     return null;
                 }
 
                 boolean is64bitAbi = (boolean) VMRuntime.is64BitAbi.call(primaryCpuAbi);
                 if (!is64bitAbi) {
+//                    VLog.d("JJJJ","applicationInfo.nativeLibraryDir " + applicationInfo.nativeLibraryDir);
                     return applicationInfo.nativeLibraryDir;
                 }
 
                 if (secondaryCpuAbi != null
                         && !(boolean) VMRuntime.is64BitAbi.call(secondaryCpuAbi)) {
-                    return (String) ApplicationInfoL.secondaryNativeLibraryDir.get(applicationInfo);
+//                    VLog.d("JJJJ","secondary libdir ");
+//                    VLog.d("JJJJ","secondary libdir " +(String) ApplicationInfoL.secondaryNativeLibraryDir.get(applicationInfo) );
+
+                    return (String) ApplicationInfoL.secondaryNativeLibraryDir.get(applicationInfo) ;
                 }
             } catch (Throwable ex) {
                 ex.printStackTrace();
             }
+//            VLog.d("JJJJ","last xreturn null" );
             return null;
         } else {
             return applicationInfo.nativeLibraryDir;
