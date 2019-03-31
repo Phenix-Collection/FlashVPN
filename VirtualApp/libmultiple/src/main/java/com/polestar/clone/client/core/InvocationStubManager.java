@@ -13,6 +13,7 @@ import com.polestar.clone.client.hook.proxies.am.AutoFillManagerStub;
 import com.polestar.clone.client.hook.proxies.am.HCallbackStub;
 import com.polestar.clone.client.hook.proxies.am.UpdateEngineStub;
 import com.polestar.clone.client.hook.proxies.appops.AppOpsManagerStub;
+import com.polestar.clone.client.hook.proxies.appops.SmtOpsManagerStub;
 import com.polestar.clone.client.hook.proxies.appwidget.AppWidgetManagerStub;
 import com.polestar.clone.client.hook.proxies.audio.AudioManagerStub;
 import com.polestar.clone.client.hook.proxies.backup.BackupManagerStub;
@@ -65,6 +66,7 @@ import com.polestar.clone.client.interfaces.IInjector;
 import java.util.HashMap;
 import java.util.Map;
 
+import mirror.com.android.internal.app.ISmtOpsService;
 import mirror.com.android.internal.telephony.IHwTelephony;
 
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
@@ -183,6 +185,9 @@ public final class InvocationStubManager {
 				addInjector(new AlarmManagerStub());
 				addInjector(new AppOpsManagerStub());
 				addInjector(new MediaRouterServiceStub());
+				if(ISmtOpsService.TYPE != null) {
+					this.addInjector(new SmtOpsManagerStub());
+				}
 			}
 			if (Build.VERSION.SDK_INT >= LOLLIPOP_MR1) {
 				addInjector(new GraphicsStatsStub());

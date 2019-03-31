@@ -512,6 +512,10 @@ public final class VClientImpl extends IVClient.Stub {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             NativeEngine.redirectDirectory("/data/user_de/0/" + info.packageName, info.dataDir);
         }
+
+//        if () {
+//            NativeEngine.whiteList("/data/data/do.multiple.cloner/virtual/data/user/0/com.google.android.gms/app_chimera/current_config.fb");
+//        }
 //        String libPath = VEnvironment.getAppLibDirectory(info.packageName).getAbsolutePath();
 //        String userLibPath = new File(VEnvironment.getUserSystemDirectory(userId), info.packageName + "/lib").getAbsolutePath();
 //        NativeEngine.redirectDirectory(userLibPath, libPath);

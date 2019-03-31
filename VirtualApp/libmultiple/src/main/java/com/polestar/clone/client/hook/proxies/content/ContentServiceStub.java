@@ -8,9 +8,11 @@ import com.polestar.clone.client.hook.base.ReplaceLastUserIdMethodProxy;
 import com.polestar.clone.client.hook.base.ReplaceUidMethodProxy;
 import com.polestar.clone.client.hook.base.ResultStaticMethodProxy;
 import com.polestar.clone.helper.utils.VLog;
+import com.polestar.clone.os.VUserHandle;
 
 import java.lang.reflect.Method;
 
+import mirror.android.content.ContentResolver;
 import mirror.android.content.IContentService;
 
 /**
@@ -43,6 +45,12 @@ public class ContentServiceStub extends BinderInvocationProxy {
         }
     }
 
+    @Override
+    public void inject() throws Throwable {
+        super.inject();
+        ContentResolver.sContentService.set(this.getInvocationStub().getProxyInterface());
+    }
+
     private static class RegisterContentObserver extends MethodProxy {
         @Override
         public String getMethodName() {
@@ -52,8 +60,17 @@ public class ContentServiceStub extends BinderInvocationProxy {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             VLog.logbug("RegisterContentObserver", "RegisterContentObserver hooked");
-//            if ("com.whatsapp".equals(VClientImpl.get().getCurrentPackage())){
+            try {
+                if (args[args.length - 1] instanceof  Integer) {
+                    args[args.length - 1] = VUserHandle.getHostUserId();
+                }
+                return super.call(who, method, args);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
                 return null;
+            }
+//            if ("com.whatsapp".equals(VClientImpl.get().getCurrentPackage())){
+
 //            }else{
 //                return super.call(who, method, args);
 //            }
