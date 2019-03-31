@@ -369,8 +369,8 @@ class MethodProxies {
                 default:
                     return null;
             }
-            newIntent.putExtra("_VA_|_user_id_", VUserHandle.myUserId());
-            newIntent.putExtra("_VA_|_intent_", intent);
+            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.myUserId());
+            newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, intent);
             newIntent.putExtra("_VA_|_creator_", creator);
             newIntent.putExtra("_VA_|_from_inner_", true);
             return newIntent;

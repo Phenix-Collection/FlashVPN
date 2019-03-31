@@ -170,6 +170,10 @@ public final class SpecialComponentList {
         return PRE_INSTALL_PACKAGE_LIST;
     }
 
+    public static boolean isPreInstallPackage(String pkg) {
+        return PRE_INSTALL_PACKAGE_LIST.contains(pkg);
+    }
+
     /**
      * Check if the action in the BlackList.
      *

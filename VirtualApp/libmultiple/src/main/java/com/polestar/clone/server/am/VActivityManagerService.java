@@ -74,6 +74,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import mirror.android.app.IServiceConnectionO;
 
 import static android.os.Process.killProcess;
+import static com.polestar.clone.os.VUserHandle.USER_ALL;
 import static com.polestar.clone.os.VUserHandle.getUserId;
 
 /**
@@ -1387,14 +1388,15 @@ public class VActivityManagerService extends IActivityManager.Stub {
 
     boolean handleStaticBroadcast(int appId, ActivityInfo info, Intent intent,
                                   PendingResultData result) {
-        Intent realIntent = intent.getParcelableExtra("_VA_|_intent_");
-        ComponentName component = intent.getParcelableExtra("_VA_|_component_");
-        int userId = intent.getIntExtra("_VA_|_user_id_", VUserHandle.USER_NULL);
+        Intent realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
+        ComponentName component = intent.getParcelableExtra(Constants.VA_INTENT_KEY_COMPONENT);
+        int userId = intent.getIntExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_NULL);
 //        if (realIntent == null) {
 //            return false;
 //        }
         if (userId < 0) {
-            VLog.w(TAG, "Sent a broadcast without userId " + realIntent);
+            //TODO static intent in manifest for clones
+            VLog.w(TAG, "Sent a broadcast without userId " + userId + " intent: " + realIntent);
             //return false;
         }
         String pkg = intent.getStringExtra(Constants.VA_INTENT_KEY_PACKAGE);
@@ -1409,8 +1411,21 @@ public class VActivityManagerService extends IActivityManager.Stub {
             //In case of broadcast from system
             realIntent = intent;
         }
-        int vuid = VUserHandle.getUid(userId, appId);
-        return handleUserBroadcast(vuid, info, component, realIntent, result);
+        if (userId == USER_ALL) {
+            //TODO why this happen!
+            int[] arr = VUserManagerService.get().getUserIds();
+            boolean ret = false;
+            for (int id :arr) {
+                if (VAppManagerService.get().isAppInstalledAsUser(id, info.packageName)) {
+                    int vuid = VUserHandle.getUid(id, appId);
+                    ret = ret || handleUserBroadcast(vuid, info, component, realIntent, result);
+                }
+            }
+            return  ret;
+        } else {
+            int vuid = VUserHandle.getUid(userId, appId);
+            return handleUserBroadcast(vuid, info, component, realIntent, result);
+        }
     }
 
     private boolean handleUserBroadcast(int vuid, ActivityInfo info, ComponentName component, Intent realIntent, PendingResultData result) {
@@ -1423,8 +1438,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
             // restore to origin action.
             realIntent.setAction(originAction);
         }
-        handleStaticBroadcastAsUser(vuid, info, realIntent, result);
-        return true;
+        return handleStaticBroadcastAsUser(vuid, info, realIntent, result);
     }
 
     private boolean handleStaticBroadcastAsUser(int vuid, ActivityInfo info, Intent intent,
@@ -1432,7 +1446,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
         ProcessRecord r;
         synchronized (this) {
 			synchronized (mProcessNames) {
-            r = findProcessLocked(info.processName, vuid);
+                r = findProcessLocked(info.processName, vuid);
 			}
             if (BROADCAST_NOT_STARTED_PKG && r == null
                     && SpecialComponentList.canStartFromBroadcast(info.packageName, intent.getAction())) {

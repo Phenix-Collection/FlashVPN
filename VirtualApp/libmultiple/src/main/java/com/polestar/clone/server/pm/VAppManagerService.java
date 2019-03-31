@@ -96,20 +96,31 @@ public class VAppManagerService extends IAppManager.Stub {
                     recover();
                 }
             }
-            if (VASettings.ENABLE_GMS && !GmsSupport.isGoogleFrameworkInstalled()) {
-                GmsSupport.installGApps(0);
-            }
             int[] users = VUserManagerService.get().getUserIds();
             if (users != null) {
                 for (int i: users) {
-                    GmsSupport.installPackages(SpecialComponentList.getPreInstallPackages(), i);
+                    checkPreInstallForUser(i);
                 }
             }
             PrivilegeAppOptimizer.get().performOptimizeAllApps();
             mBooting = false;
         }
         upgradeApps();
+        mPersistenceLayer.save();
         VLog.d(TAG, "=======after scanApps========");
+    }
+
+    public void checkPreInstallForUser(int userId){
+        if (!VUserManagerService.get().exists(userId)) {
+            return;
+        }
+        if (VASettings.ENABLE_GMS
+                && (userId == 0 || VASettings.ENABLE_MULTIPLE_GMS )) {
+            if (!isAppInstalledAsUser(userId, "com.google.android.gms")) {
+                GmsSupport.installGApps(userId);
+            }
+        }
+        GmsSupport.installPackages(SpecialComponentList.getPreInstallPackages(),  userId);
     }
 
     private String  needUpgrade(String packageName){
@@ -605,10 +616,19 @@ public class VAppManagerService extends IAppManager.Stub {
         VAccountManagerService.get().refreshAuthenticatorCache(null);
     }
 
+    public void sendBootCompleted(int userId) {
+        Intent intent = new Intent(Intent.ACTION_BOOT_COMPLETED);
+        VLog.logbug(TAG, "sendBootCompleted intent to " + userId);
+        VActivityManagerService.get().sendBroadcastAsUser(intent, new VUserHandle(userId));
+    }
+
     public void sendBootCompleted() {
         Intent intent = new Intent(Intent.ACTION_BOOT_COMPLETED);
-        VLog.logbug(TAG, "sendBootCompleted intent");
-        VActivityManagerService.get().sendBroadcastAsUser(intent, VUserHandle.ALL);
+        VLog.logbug(TAG, "sendBootCompleted intent to all");
+        int[] arr = VUserManagerService.get().getUserIds();
+        for (int i: arr) {
+            VActivityManagerService.get().sendBroadcastAsUser(intent, new VUserHandle(i));
+        }
     }
 
     private void sendInstalledBroadcast(String packageName) {

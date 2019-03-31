@@ -10,12 +10,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.clone.client.stub.DaemonService;
 import com.polestar.clone.helper.compat.BundleCompat;
 import com.polestar.clone.helper.compat.NotificationChannelCompat;
 import com.polestar.clone.helper.utils.VLog;
+import com.polestar.clone.remote.InstalledAppInfo;
 import com.polestar.clone.server.accounts.VAccountManagerService;
 import com.polestar.clone.server.am.BroadcastSystem;
 import com.polestar.clone.server.am.VActivityManagerService;
@@ -30,6 +33,9 @@ import com.polestar.clone.server.pm.VPackageManagerService;
 import com.polestar.clone.server.pm.VUserManagerService;
 import com.polestar.clone.server.vs.VirtualStorageService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Lody
  */
@@ -37,9 +43,10 @@ public final class BinderProvider extends ContentProvider {
 
     private final ServiceFetcher mServiceFetcher = new ServiceFetcher();
 
+    private final static String TAG = BinderProvider.class.getSimpleName();
     @Override
     public boolean onCreate() {
-        VLog.d("BinderProvider", "onCreate");
+        VLog.d(TAG, "onCreate");
         Context context = getContext();
         if (!VirtualCore.get().isStartup()) {
             return true;
@@ -69,9 +76,41 @@ public final class BinderProvider extends ContentProvider {
 		// avoid some customized os will getPackageInfo during start up service
 //		at android.app.ApplicationPackageManager.getPackageInfo (ApplicationPackageManager.java:137)
 //		at com.android.internal.agui.LimitThirdApp.isThirdApp (LimitThirdApp.java:26)
+        cleanStaleUsers();
 		DaemonService.startup(context);
-        VLog.d("BinderProvider", "Service initialized!");
+        VLog.d(TAG, "Service initialized!");
         return true;
+    }
+
+    public void cleanStaleUsers(){
+        int[] users = VUserManagerService.get().getUserIds();
+        ArrayList<Integer> toRemove = new ArrayList<>();
+        if (users != null) {
+            for (int i: users) {
+                if (i != 0 ) {
+                    List<InstalledAppInfo> list = VAppManagerService.get().getInstalledAppsAsUser(i, 0);
+                    if (list == null || list.size() == 0) {
+                        toRemove.add(i);
+                    } else {
+                        boolean needRemove = true;
+                        for (InstalledAppInfo info: list) {
+                            if (!GmsSupport.isGmsFamilyPackage(info.packageName)
+                                    && !SpecialComponentList.isPreInstallPackage(info.packageName)) {
+                                needRemove = false;
+                                break;
+                            }
+                        }
+                        if (needRemove) {
+                            toRemove.add(i);
+                        }
+                    }
+                }
+            }
+        }
+        for(int i: toRemove) {
+            VLog.d(TAG, "Remove user: " + i);
+            VUserManagerService.get().removeUser(i);
+        }
     }
 
     private void addService(String name, IBinder service) {

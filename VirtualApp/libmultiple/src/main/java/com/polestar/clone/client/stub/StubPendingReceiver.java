@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.polestar.clone.client.env.Constants;
 import com.polestar.clone.helper.utils.ComponentUtils;
 import com.polestar.clone.os.VUserHandle;
 
@@ -15,8 +16,8 @@ public class StubPendingReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-                Intent realIntent = intent.getParcelableExtra("_VA_|_intent_");
-        int userId = intent.getIntExtra("_VA_|_user_id_", VUserHandle.USER_ALL);
+        Intent realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
+        int userId = intent.getIntExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_ALL);
         if (realIntent != null) {
             Intent newIntent = ComponentUtils.redirectBroadcastIntent(realIntent, userId);
             if (newIntent != null) {

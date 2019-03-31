@@ -699,6 +699,10 @@ public class VUserManagerService extends IUserManager.Stub {
                     updateUserIdsLocked();
                 }
             }
+            if (userInfo.id != 0) {
+                VAppManagerService.get().checkPreInstallForUser(userInfo.id);
+                VAppManagerService.get().sendBootCompleted(userInfo.id);
+            }
             Intent addedIntent = new Intent(Constants.ACTION_USER_ADDED);
             addedIntent.putExtra(Constants.EXTRA_USER_HANDLE, userInfo.id);
             VActivityManagerService.get().sendBroadcastAsUser(addedIntent, VUserHandle.ALL,

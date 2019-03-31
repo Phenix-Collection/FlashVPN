@@ -110,21 +110,21 @@ public class ComponentUtils {
         String pkg = intent.getPackage();
         newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
         if (component != null) {
-            newIntent.putExtra("_VA_|_user_id_", userId);
+            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
             newIntent.setAction(String.format("_VA_%s_%s", component.getPackageName(), component.getClassName()));
             newIntent.putExtra("_VA_|_component_", component);
-            newIntent.putExtra("_VA_|_intent_", new Intent(intent));
+            newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
         } else if (pkg != null) {
-            newIntent.putExtra("_VA_|_user_id_", userId);
+            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
             newIntent.putExtra("_VA_|_creator_", pkg);
-            newIntent.putExtra("_VA_|_intent_", new Intent(intent));
+            newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
             String protectedAction = SpecialComponentList.protectAction(intent.getAction());
             if (protectedAction != null) {
                 newIntent.setAction(protectedAction);
             }
         } else {
-            newIntent.putExtra("_VA_|_user_id_", userId);
-            newIntent.putExtra("_VA_|_intent_", new Intent(intent));
+            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
+            newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
             String protectedAction = SpecialComponentList.protectAction(intent.getAction());
             if (protectedAction != null) {
                 newIntent.setAction(protectedAction);
