@@ -7,8 +7,8 @@
     <string name="start">بداية</string>
     <string name="cancel">إلغاء</string>
     <string name="cloning">استنساخ...</string>
-    <string name="cloning_tips">ويتم استنساخ تطبيق ...</string>
-    <string name="app_starting_tips">تطبيق بدأت %s ...</string>
+    <string name="cloning_tips">يتم استنساخ التطبيق ...</string>
+    <string name="app_starting_tips">بدأ استنساخ التطبيق %s ...</string>
     <string name="first_start_tips">وسوف يستغرق وقتا أطول قليلا لبدء أول.</string>
 
     <!-- nav menu -->
@@ -43,7 +43,7 @@
     <string name="share_with_friends_tip">يسرني أن أدعوكم لاستخدام هذا التطبيق الرائع %s. يمكنك تحميله من هنا:</string>
 
     <!-- feedback -->
-    <string name="feedback_hint">من فضلك قل لنا التفاصيل حول المشكلة التي اجتمعت، ومن فضلك قل لنا خطوات لإعادة إنتاجه وأفضل مع قطة.</string>
+    <string name="feedback_hint">من فضلك قل لنا التفاصيل حول المشكلة التي واجهتها، ومن فضلك قل لنا خطوات لمعرفة اين المشكلة ويفضل مع لقطة الشاشة.</string>
     <string name="button_submit">عرض</string>
     <string name="submit_success">شكرا لتوفير التغذية المرتدة!</string>
     <string name="feedback_no_description">الوصف لا يمكن أن يكون فارغا!</string>
@@ -51,17 +51,17 @@
     <string name="extra_feedback_decription">نحن سنحل مشكلة بالنسبة لك قريبا ونقدر مساعدتكم لتحسين المنتج!</string>
 
     <!-- toast -->
-    <string name="toast_shortcut_added">وأضاف اختصار</string>
+    <string name="toast_shortcut_added">أضاف اختصار</string>
     <string name="toast_shortcut_invalid">الاختصار غير صالح</string>
 
     <!-- settings -->
     <string name="settings_shortcut_title">الاختصار</string>
     <string name="settings_shortcut_content">تمكين لإضافة اختصار عند استنساخ التطبيقات تلقائيا</string>
-    <string name="settings_privacy_locker_content">انقر لتعيين خلع الملابس الخصوصية لتطبيقات المستنسخة</string>
+    <string name="settings_privacy_locker_content">انقر لضبط خزانة الخصوصية للتطبيقات المستنسخة</string>
     <string name="settings_notification_content">انقر لتمكين أو تعطيل إخطار من التطبيقات المستنسخة</string>
     <string name="settings_privacy_policy">سياسة الخصوصية</string>
     <string name="settings_terms_of_service">شروط الخدمة</string>
-    <string name="settings_follow_us">تابعنا في الفيسبوك الصفحة</string>
+    <string name="settings_follow_us">تابعنا على صفحة الفيسبوك</string>
 
     <array name="navigationItem">
         <item name="navigation_notifications">الخزانة الخصوصية</item>
@@ -77,7 +77,7 @@
     <string name="clone_apps_title">استنساخ التطبيقات</string>
 
     <string name="text_Q1_title">لماذا لا يمكنني استلام إشعارات رسالة من التطبيقات المستنسخة؟</string>
-    <string name="text_Q1_content_2">الرجاء التأكد من سوبر استنساخ ديه حق الوصول إلى الشبكة</string>
+    <string name="text_Q1_content_2">يرجى التأكد من أن Super Clone لديه حق الوصول إلى الشبكة</string>
     <string name="text_Q2_title">فإنه جمع واستخدام المعلومات الخاصة بي؟</string>
     <string name="text_Q2_content">سيقوم Super Clone بتجميع بعض المعلومات العامة فقط لتحليل الأعطال والإحصاء الأساسي ، وسيتم استخدام هذه فقط داخل هذا التطبيق لخلق تجربة مستخدم أفضل لك. نحن نعد بعدم جمع أي من بياناتك الخاصة أو استخدامها.</string>
     <string name="text_Q3_title">لماذا استهلاك التخزين لديها ازدياد؟</string>
@@ -85,23 +85,23 @@
     <string name="text_Q4_title">لماذا هذا التطبيق استخدام ما يصل الكثير من مساحة التخزين؟</string>
     <string name="text_Q4_content">جميع الحسابات الفرعية تضاف على الجهاز الخاص بك افتراضيا المدرجة تحت هذا التطبيق من خلال نظام التشغيل أندرويد. كمية كبيرة من استهلاك التخزين المدرجة تحت هذا التطبيق هو مجموع التخزين الكلي استخدامها لجميع الحسابات الفرعية التي قمت بإضافتها. هذا التطبيق نفسه يستخدم تخزين القليل.</string>
     <string name="text_Q5_title">كيف خزانة الخصوصية يحمي الخصوصية؟</string>
-    <string name="text_Q5_content">مطلوب كلمة مرور للوصول إلى التطبيق محمي في كل مرة تستيقظ جهازك. ليس هناك أي تطبيق آخر يمكن الوصول إلى البيانات الخاصة بهم كما أنها محمية من قبلنا.</string>
+    <string name="text_Q5_content">كلمة مرور مطلوبة للوصول إلى "التطبيقات المحمية" في كل مرة تفتح فيها على جهازك. بالإضافة إلى ذلك ، يتم تثبيت جميع التطبيقات المحمية على Super Clone ، وبالتالي لا يمكن الوصول إلى جميع بيانات التطبيقات المحمية بواسطة أي برامج خارجية.</string>
 
     <string name="clone_label_tag">+%s</string>
 
     <!-- lock settings -->
-    <string name="lock_settings_title">إعدادات خزانة</string>
+    <string name="lock_settings_title">إعدادات الخزانة</string>
     <string name="enable_lock_settings_title">الخزانة الخصوصية</string>
-    <string name="enable_lock_settings_content">تبديل لتمكين أو ميزة خزانة الخصوصية تعطيل</string>
+    <string name="enable_lock_settings_content">تبديل لتمكين أو تعطيل ميزة خزانة الخصوصية</string>
     <string name="password_setting_title">إعداد كلمة المرور</string>
     <string name="password_set_complete">تم تعيين كلمة المرور.</string>
     <string name="no_password_set">يرجى وضع كلمة سر للخزانة في البداية.</string>
-    <string name="password_setting_content">انقر لتعيين كلمة المرور والأمن مسألة</string>
+    <string name="password_setting_content">انقر لتعيين كلمة المرور وسؤال الأمان</string>
     <string name="forgot_password">هل نسيت كلمة المرور</string>
     <string name="lock_settings_for_apps">تمكين خزانة الخصوصية لتطبيقات المستنسخة</string>
 
     <string name="al_lockpattern_unlock_to_continue">اكد هويتك</string>
-    <string name="al_lockpattern_draw_unlock_pattern">ارسم أنموذجا لتلغي الاقفال</string>
+    <string name="al_lockpattern_draw_unlock_pattern">ارسم نموذجا لتلغي الاقفال</string>
     <string name="al_use_unlock_pattern">تغيير نمط</string>
     <string name="al_change_enter_again">أدخل مرة أخرى</string>
     <string name="al_lockpattern_confirm_unlock_pattern">يرجى تأكيد نمط</string>
@@ -130,10 +130,10 @@
     <string name="toast_no_lucky">آسف، لا يوجد محتوى هذه المرة.يرجى المحاولة مرة أخرى في وقت لاحق.</string>
     <string name="upgrade_start_tips">فإنه قد يستغرق وقتا أطول قليلا حيث أن هذا التطبيق هو مجرد ترقية.</string>
     <string name="settings_adfree_title">انضم إلى VIP</string>
-    <string name="settings_adfree_content">كن مستخدمًا متميزًا لـ Superb Cloner</string>
+    <string name="settings_adfree_content">كن مستخدمًا متميزًا لـ Super Clone</string>
     <string name="text_Q6_title">لماذا خزانة الخصوصية لا تظهر عند إطلاق التطبيق؟</string>
     <string name="text_Q7_content">يرجى التحقق مما إذا كنت قد منحت هذه الأذونات إلى سوبر كلون في إعداد النظام.</string>
-    <string name="text_Q6_content">يرجى التحقق مما إذا كنت تمكين خزانة لهذا التطبيق ومنح إذن سوبر استنساخ لإظهار نافذة عائمة. على سبيل المثال، على جهاز زياومي، إعدادات->إدارة التطبيقات->سوبر كلون->إذن التحكم->العائمة النافذة.</string>
+    <string name="text_Q6_content">يرجى التحقق مما إذا كنت تمكين خزانة لهذا التطبيق ومنح إذن سوبر استنساخ لإظهار نافذة عائمة. على سبيل المثال، على جهاز زياومي، إعدادات->إدارة التطبيقات->سوبر كلون->إذن التحكم->النافذة العائمة.</string>
     <string name="text_Q7_title">لماذا لا يمكن إنشاء اختصار أو الكاميرا، والموقع لا يعمل؟</string>
     <string name="lock_interval_settings_content">الفاصل الزمني لقفل التطبيق مرة أخرى بعد أن تركت ذلك</string>
     <string name="lock_interval_settings_title">قفل الفاصل الزمني</string>
@@ -152,12 +152,12 @@
     <string name="content_popular">حار المستنسخة</string>
     <string name="content_recommend">يختار محرر</string>
     <string name="toast_arm64_package">كشف مكتبة 64bit في هذا الاستنساخ. الرجاء تثبيت مكتبة دعم 64 بت في حالة حدوث خطأ.</string>
-    <string name="clone_error">عذرًا ، بعض الأخطاء تحدث أثناء النسخ. الرجاء إعادة تشغيل Superb Cloner والمحاولة مرة أخرى.</string>
-    <string name="start_with_arm64">بدءا من مكتبة دعم Superb Cloner 64bit ...</string>
+    <string name="clone_error">عذرًا ، بعض الأخطاء تحدث أثناء النسخ. الرجاء إعادة تشغيل Super Clone والمحاولة مرة أخرى.</string>
+    <string name="start_with_arm64">بدءا من مكتبة دعم Super Clone 64bit ...</string>
     <string name="install">التثبت</string>
     <string name="arm64_dialog_title">ملحوظة</string>
     <string name="install_64bit_library">تثبيت دعم 64BIT ...</string>
-    <string name="arm64_installed_toast">تثبيت 64bit المكتبة. يرجى إطلاق الحيوانات المستنسخة من Superb Cloner.</string>
+    <string name="arm64_installed_toast">تثبيت 64bit المكتبة. يرجى إطلاق التطبيقات المستنسخة من Super Clone.</string>
     <string name="clones">استنساخ التطبيقات</string>
     <string name="finish_task_get_reward">الانتهاء من المهام لجمع القطع النقدية الآن!</string>
     <string name="btn_products_store">متجر</string>
@@ -174,14 +174,14 @@
     <string name="more_offer">سيتم طرح المزيد من عرض المكافآت قريبًا ...</string>
     <string name="live_offer">العروض الحية</string>
     <string name="invite_copied">يتم نسخ رمز الدعوة إلى الحافظة.</string>
-    <string name="reward_load_failed">فشل التحميل. الرجاء التحقق أدناه وإعادة المحاولة:   - يتم تثبيت خدمة جوجل بلاي   - لا يعمل Superb Cloner في أي تطبيقات استنساخ   - قم بتوصيل الشبكة</string>
+    <string name="reward_load_failed">فشل التحميل. الرجاء التحقق أدناه وإعادة المحاولة:   - يتم تثبيت خدمة جوجل بلاي   - لا يعمل Super Clone في أي تطبيقات استنساخ   - قم بتوصيل الشبكة</string>
     <string name="need_coin_for_clone">الحصول على العملات المعدنية لإنهاء استنساخ</string>
     <string name="user_activity_title">خدمة متميزة</string>
     <string name="become_vip_tips1">إزالة كل الإعلانات</string>
     <string name="become_vip_tips2">تتمتع استنساخ غير محدود</string>
     <string name="become_vip_tips3">حساب متعدد لتطبيقات الألعاب والتطبيقات الاجتماعية</string>
     <string name="become_vip_tips4">الدعم في الوقت المناسب لتقارير القضية</string>
-    <string name="become_vip">أصبح المستخدم VIP من Superb Cloner</string>
+    <string name="become_vip">أصبح المستخدم VIP من Super Clone</string>
     <string name="price_change_hint">شراء المنتجات مع العملات الخاصة بك الآن. يمكن أن يتغير السعر وفقًا للاقتصاد التطبيق.</string>
     <string name="cash_rewards">المكافآت النقدية</string>
     <string name="earn_coin_remove_ads">كسب النقود وتحديد المنتج لإزالة الإعلانات</string>
