@@ -27,13 +27,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/activity_products_reward_coin_icon"
+            android:layout_toEndOf="@id/activity_products_reward_coin_icon"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textSize="16sp"
             android:textColor="@color/text_gray_dark"
             android:text="10000 coins"/>
         <TextView
             android:layout_below="@id/activity_products_user_balance_txt"
             android:layout_toRightOf="@id/activity_products_reward_coin_icon"
+            android:layout_toEndOf="@id/activity_products_reward_coin_icon"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:id="@+id/hot_clone_title"
