@@ -8,10 +8,12 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
 import com.polestar.domultiple.PolestarApp;
@@ -79,6 +81,9 @@ public class AppMonitorService extends Service {
 
     public static boolean needLoadCoverAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
+            return false;
+        }
+        if (GmsSupport.isGmsFamilyPackage(pkg) || SpecialComponentList.isPreInstallPackage(pkg)) {
             return false;
         }
         String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
