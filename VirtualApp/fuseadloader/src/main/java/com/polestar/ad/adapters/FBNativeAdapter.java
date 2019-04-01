@@ -264,16 +264,17 @@ public class FBNativeAdapter extends AdAdapter {
                     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
                         int width = MeasureSpec.getSize(widthMeasureSpec);
-                        float height = width *9/16;
+//                        int origHeight = MeasureSpec.getSize(heightMeasureSpec);
+//                        AdLog.d("orig width " + width + " orig height " + origHeight);
+                        float height = mRawAd.getAdCreativeType() == NativeAd.AdCreativeType.CAROUSEL?
+                                width*1/2: width *9/16;
                         int newHeight = MeasureSpec.makeMeasureSpec((int) height, MeasureSpec.EXACTLY);
 
-                        super.onMeasure(widthMeasureSpec,
-                                mRawAd.getAdCreativeType() == NativeAd.AdCreativeType.CAROUSEL?
-                                heightMeasureSpec:newHeight);
+                        super.onMeasure(widthMeasureSpec,newHeight);
                     }
                 };
                 coverView = ratioView;
-                parent.addView(coverView);
+                parent.addView(coverView,0);
             }
             LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(viewBinder.privacyInformationId);
             if (adChoicesContainer != null) {
