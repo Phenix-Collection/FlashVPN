@@ -249,11 +249,13 @@ public class FastSwitch {
 //
         synchronized (lruKeys) {
             for (int i = 0; i < LRU_PACKAGE_CNT; i++) {
+                int titleId = getTitleIdForItem(i);
+                int iconId = getIconIdForItem(i);
                 if (i >= lruKeys.size()) {
                     MLogs.d(TAG, "Empty slot: " + i);
+                    remoteViews.setImageViewResource(iconId, R.drawable.icon_add);
+                    remoteViews.setTextViewText(titleId, "");
                 } else {
-                    int titleId = getTitleIdForItem(i);
-                    int iconId = getIconIdForItem(i);
                     if (titleId != 0 && iconId != 0) {
                         String mapKey = lruKeys.get(i);
                         String pkg = AppManager.getNameFromKey(mapKey);
@@ -295,6 +297,11 @@ public class FastSwitch {
                 }
             }
         }
+        try {
+            mgr.cancel(NOTIFY_ID);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
         mgr.notify(NOTIFY_ID, notification);
     }
 
@@ -321,6 +328,8 @@ public class FastSwitch {
                 }
             }
             //force update remote view;
+            MLogs.d(TAG, "clear remote view");
+
             remoteViews = null;
         }
         //Reserve one + slot iff not enough clones

@@ -245,16 +245,23 @@
                 android:textSize="18sp"/>
 
             <LinearLayout
-                android:id="@+id/ad_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:layout_below="@id/txt_installed"
                 android:layout_alignParentBottom="true"
-                android:background="@color/white"
-                android:layout_centerHorizontal="true" />
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:id="@+id/ad_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txt_installed"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:layout_centerHorizontal="true" />
+            </LinearLayout>
+
         </RelativeLayout>
     </FrameLayout>
 </RelativeLayout>
