@@ -93,6 +93,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
         initView();
         if (!PreferencesUtils.isAdFree() ) {
             loadNativeAd();
+            AppCloneActivity.preloadAd();
         }
     }
 

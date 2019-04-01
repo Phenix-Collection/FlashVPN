@@ -3,24 +3,25 @@
     android:layout_height="wrap_content"
     android:id="@+id/native_ad_layout_root"
     android:background="@color/white"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="bottom">
+        android:layout_gravity="center_vertical">
 
         <com.polestar.imageloader.widget.BasicLazyLoadImageView
             android:id="@+id/ad_icon_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
             android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="2dp"
 
@@ -104,13 +105,13 @@
         android:layout_gravity="center"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
         android:text="install"
         android:textStyle="bold"
         android:ellipsize="end"
         android:textColor="@color/white"
-        android:background="@color/native_cta_color"
+        android:background="@drawable/clone_button"
         android:textSize="16sp"
         android:maxLines="1" />
 </LinearLayout>

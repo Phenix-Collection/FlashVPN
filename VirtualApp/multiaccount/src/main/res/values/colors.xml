@@ -34,8 +34,8 @@
     <color name="dialog_divide_color">#e8e8e8</color>
     <color name="theme_color2">#4B57C0</color>
     <color name="native_cta_color">#4B57C0</color>
-    <color name="clone_activity_start_btn">#4164ef</color>
-    <color name="clone_activity_start_btn_pressed">#2542b4</color>
+    <color name="clone_activity_start_btn">#4B57C0</color>
+    <color name="clone_activity_start_btn_pressed">#434eab</color>
     <color name="launch_page_color">#5183e6</color>
     <color name="theme_text_color">#FF4A4A4A</color>
     <color name="lock_default_dot">#b72b2b2b</color>

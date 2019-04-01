@@ -2,6 +2,8 @@
     android:id="@+id/native_ad_layout_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/shadow"
+
     android:orientation="vertical">
 
         <LinearLayout
@@ -9,26 +11,27 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:id="@+id/ad_title_layout"
-            android:background="@color/light_gray"
             android:orientation="horizontal">
 
             <com.polestar.imageloader.widget.BasicLazyLoadImageView
                 android:id="@+id/ad_icon_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="0"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="5dp"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:layout_marginBottom="8dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:layout_marginTop="4dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -38,21 +41,22 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:lines="1"
+                    android:gravity="center_vertical"
                     android:text="this is title"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/clone_text_color"
+                    android:textColor="@color/text_gray_dark"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/ad_subtitle_text"
                     android:layout_width="match_parent"
+                    android:gravity="center_vertical"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:lines="2"
                     android:text="this is sub"
-                    android:textColor="@color/clone_text_color"
-                    android:textSize="12sp" />
+                    android:textColor="@color/text_gray_light"
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
@@ -64,17 +68,18 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
+                android:gravity="right|end|center_vertical"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/ad_cta_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_marginBottom="15dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|end|center_vertical"
+                    android:paddingTop="5dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:layout_marginTop="15dp"
+                    android:paddingBottom="5dp"
                     android:background="@drawable/clone_native_cta_text_btn"
                     android:ellipsize="end"
                     android:gravity="center"
@@ -89,11 +94,14 @@
         </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ad_cover_layout">
+            android:id="@+id/ad_cover_layout"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp">
             <com.polestar.imageloader.widget.BasicLazyLoadImageView
                 android:id="@+id/ad_cover_image"
                 android:layout_width="match_parent"
@@ -117,7 +125,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/ad_cover_layout"
+            android:layout_alignStart="@id/ad_cover_layout"
             android:layout_alignTop="@id/ad_cover_layout"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
             android:background="@color/native_ad_transparent_black"
             android:ellipsize="end"
             android:paddingLeft="4dp"
@@ -132,9 +143,10 @@
             android:id="@+id/ad_choices_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
+            android:layout_gravity="top|right|end"
             android:orientation="horizontal"
             android:layout_alignRight="@id/ad_cover_layout"
+            android:layout_alignEnd="@id/ad_cover_layout"
             android:layout_alignTop="@id/ad_cover_layout" />
     </RelativeLayout>
 </LinearLayout>

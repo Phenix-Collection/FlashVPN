@@ -46,6 +46,8 @@
                     android:maxLines="1"
                     android:textColor="@color/theme_text_color"
                     android:layout_marginBottom="15dp"
+                    android:paddingRight="2.5dp"
+                    android:paddingLeft="2.5dp"
                     android:textSize="12sp" />
         </LinearLayout>
 

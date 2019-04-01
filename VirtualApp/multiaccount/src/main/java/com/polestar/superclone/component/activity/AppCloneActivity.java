@@ -32,6 +32,7 @@ import com.polestar.ad.AdViewBinder;
 import com.polestar.ad.adapters.FuseAdLoader;
 import com.polestar.ad.adapters.IAdAdapter;
 import com.polestar.ad.adapters.IAdLoadListener;
+import com.polestar.superclone.MApp;
 import com.polestar.superclone.R;
 import com.polestar.superclone.component.BaseActivity;
 import com.polestar.superclone.constant.AppConstants;
@@ -97,7 +98,7 @@ public class AppCloneActivity extends BaseActivity {
     private AppModel appModel;
     private boolean isInstallSuccess;
     private boolean isInstallDone;
-    private boolean isCanceled;
+    private boolean needAd;
     private boolean adReady;
     private IAdAdapter nativeAd;
     private boolean animateEnd;
@@ -122,6 +123,7 @@ public class AppCloneActivity extends BaseActivity {
     };
 
     private boolean initData() {
+        needAd = needAd();
         Intent intent = getIntent();
         if (intent != null) {
             appModel = intent.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
@@ -193,6 +195,17 @@ public class AppCloneActivity extends BaseActivity {
             }).start();
         }
         return true;
+    }
+
+    public static void preloadAd() {
+        if (needAd()) {
+            FuseAdLoader.get(SLOT_AD_AFTER_CLONE, MApp.getApp()).setBannerAdSize(getBannerSize()).preloadAd(MApp.getApp());
+        }
+    }
+    private static boolean needAd() {
+        return RemoteConfig.getBoolean(CONFIG_KEY_SHOW_AD_AFTER_CLONE)
+                && (!PreferencesUtils.isAdFree())
+                && PreferencesUtils.hasCloned();
     }
 
     private void initView() {
@@ -306,9 +319,7 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     private void initAd(){
-        boolean showAd = RemoteConfig.getBoolean(CONFIG_KEY_SHOW_AD_AFTER_CLONE)
-                && (!PreferencesUtils.isAdFree())
-                && PreferencesUtils.hasCloned();
+        boolean showAd = needAd;
         MLogs.d(CONFIG_KEY_SHOW_AD_AFTER_CLONE + showAd);
         adConfigList = RemoteConfig.getAdConfigList(SLOT_AD_AFTER_CLONE);
         if (showAd && adConfigList!= null && adConfigList.size() > 0) {
@@ -316,7 +327,7 @@ public class AppCloneActivity extends BaseActivity {
         }
     }
 
-    private AdSize getBannerSize() {
+    private static AdSize getBannerSize() {
         int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
         dpWidth = Math.max(280, dpWidth-20);
         return new AdSize(dpWidth, 280);
@@ -432,8 +443,11 @@ public class AppCloneActivity extends BaseActivity {
                     threshold = INIT_PROGRESS_THRESHOLD;
                 }
 
-                if(isInstallDone){
-                    speed = INIT_PROGRESS_SPEED;
+                if(isInstallDone && (!needAd || adReady)){
+                    MLogs.d("speed installed and adReady");
+                    speed = INIT_PROGRESS_SPEED * 10;
+                } else if (isInstallDone && progress > threshold) {
+                    speed = INIT_PROGRESS_SPEED * 5;
                 }else if(progress > threshold){
                     inDecelerationStatus = true;
                     threshold = 100.0 - (100 - threshold) / 2.0;
@@ -573,12 +587,11 @@ public class AppCloneActivity extends BaseActivity {
     }
 
     private void handleInstallFinished(){
-
+        handleFakeInstallFinished();
     }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        isCanceled = true;
     }
 
     @Override

@@ -42,6 +42,7 @@ import com.polestar.superclone.model.AppModel;
 import com.polestar.clone.CustomizeAppData;
 import com.polestar.superclone.utils.AppManager;
 import com.polestar.superclone.utils.CommonUtils;
+import com.polestar.superclone.utils.DisplayUtils;
 import com.polestar.superclone.utils.MLogs;
 import com.polestar.superclone.utils.EventReporter;
 import com.polestar.superclone.utils.PreferencesUtils;
@@ -116,7 +117,10 @@ public class AppStartActivity extends BaseActivity {
     }
 
     public static AdSize getBannerSize() {
-        return AdSize.MEDIUM_RECTANGLE;
+        int dpWidth = DisplayUtils.px2dip(VirtualCore.get().getContext(), DisplayUtils.getScreenWidth(VirtualCore.get().getContext()));
+        dpWidth = Math.min( dpWidth*8/10, dpWidth - 20);
+
+        return new AdSize(dpWidth, dpWidth*250/300);
     }
     public static void preloadAd(Context context) {
         if (needLoadNativeAd(true, null)) {
