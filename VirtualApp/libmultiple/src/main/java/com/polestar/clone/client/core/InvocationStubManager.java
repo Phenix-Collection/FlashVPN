@@ -55,6 +55,7 @@ import com.polestar.clone.client.hook.proxies.system.SystemUpdateStub;
 import com.polestar.clone.client.hook.proxies.telephony.HwTelephonyStub;
 import com.polestar.clone.client.hook.proxies.telephony.TelephonyRegistryStub;
 import com.polestar.clone.client.hook.proxies.telephony.TelephonyStub;
+import com.polestar.clone.client.hook.proxies.trust.TrustManagerStub;
 import com.polestar.clone.client.hook.proxies.usage.UsageStatsManagerStub;
 import com.polestar.clone.client.hook.proxies.user.UserManagerStub;
 import com.polestar.clone.client.hook.proxies.vibrator.VibratorStub;
@@ -66,6 +67,7 @@ import com.polestar.clone.client.interfaces.IInjector;
 import java.util.HashMap;
 import java.util.Map;
 
+import mirror.android.app.trust.ITrustManager;
 import mirror.com.android.internal.app.ISmtOpsService;
 import mirror.com.android.internal.telephony.IHwTelephony;
 
@@ -180,6 +182,9 @@ public final class InvocationStubManager {
 				addInjector(new SessionManagerStub());
 				addInjector(new JobServiceStub());
 				addInjector(new RestrictionStub());
+				if (ITrustManager.TYPE != null) {
+					addInjector(new TrustManagerStub());
+				}
 			}
 			if (Build.VERSION.SDK_INT >= KITKAT) {
 				addInjector(new AlarmManagerStub());

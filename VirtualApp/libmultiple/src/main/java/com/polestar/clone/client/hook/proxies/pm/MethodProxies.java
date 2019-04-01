@@ -70,6 +70,7 @@ class MethodProxies {
             if (isAppPkg(pkgName)) {
                 return true;
             }
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
 
@@ -127,6 +128,7 @@ class MethodProxies {
             if (component != null) {
                 return 1;
             }
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
     }
@@ -168,6 +170,7 @@ class MethodProxies {
             if (info != null) {
                 return info;
             }
+            MethodParameterUtils.replaceLastUserId(args);
             info = (ServiceInfo) method.invoke(who, args);
             if (info == null || !isVisiblePackage(info.applicationInfo)) {
                 return null;
@@ -193,7 +196,7 @@ class MethodProxies {
         public Object call(Object who, Method method, Object... args) throws Throwable {
             String pkgName = (String) args[0];
             if (pkgName.equals(getHostPkg())) {
-                args[args.length - 1] = VUserHandle.getHostUserId();
+                MethodParameterUtils.replaceLastUserId(args);
                 return method.invoke(who, args);
             }
             int uid = VPackageManager.get().getPackageUid(pkgName, 0);
@@ -231,6 +234,7 @@ class MethodProxies {
             int flags = (int) args[1];
             ActivityInfo info = VPackageManager.get().getActivityInfo(componentName, flags, userId);
             if (info == null) {
+                MethodParameterUtils.replaceLastUserId(args);
                 info = (ActivityInfo) method.invoke(who, args);
                 if (info == null || !isVisiblePackage(info.applicationInfo)) {
                     return null;
@@ -367,6 +371,7 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
 
@@ -388,6 +393,7 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
 
@@ -430,6 +436,7 @@ class MethodProxies {
             }
             ProviderInfo info = VPackageManager.get().resolveContentProvider(name, flags, userId);
             if (info == null) {
+                MethodParameterUtils.replaceLastUserId(args);
                 info = (ProviderInfo) method.invoke(who, args);
                 if (info != null && isVisiblePackage(info.applicationInfo)) {
                     return info;
@@ -454,9 +461,7 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
             List<ResolveInfo> appResult = VPackageManager.get().queryIntentServices((Intent) args[0],
                     (String) args[1], (Integer) args[2], userId);
-            if(args.length == 4 && args[3] instanceof Integer) {
-                args[3] = VUserHandle.getHostUserId();
-            }
+            MethodParameterUtils.replaceLastUserId(args);
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
                 List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
@@ -540,6 +545,7 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
             List<ResolveInfo> appResult = VPackageManager.get().queryIntentActivities((Intent) args[0],
                     (String) args[1], (Integer) args[2], userId);
+            MethodParameterUtils.replaceLastUserId(args);
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
                 List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
@@ -582,6 +588,7 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
             ResolveInfo resolveInfo = VPackageManager.get().resolveService(intent, resolvedType, flags, userId);
             if (resolveInfo == null) {
+                MethodParameterUtils.replaceLastUserId(args);
                 resolveInfo = (ResolveInfo) method.invoke(who, args);
             }
             return resolveInfo;
@@ -650,7 +657,7 @@ class MethodProxies {
                 return packageInfo;
             }
             try {
-                args[2] = VUserHandle.getHostUserId();
+                MethodParameterUtils.replaceLastUserId(args);
                 packageInfo = (PackageInfo) method.invoke(who, args);
                 if (packageInfo != null) {
                     if (isVisiblePackage(packageInfo.applicationInfo)) {
@@ -676,7 +683,13 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             // TODO
-            return method.invoke(who, args);
+//            try {
+//                return method.invoke(who, args);
+//            }catch (Exception ex) {
+//                ex.printStackTrace();
+//                return null;
+//            }
+            return null;
         }
     }
 
@@ -691,6 +704,7 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
 
@@ -839,8 +853,9 @@ class MethodProxies {
 
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
-            MethodParameterUtils.replaceFirstAppPkg(args);
-            return method.invoke(who, args);
+//            MethodParameterUtils.replaceFirstAppPkg(args);
+//            return method.invoke(who, args);
+            return null;
         }
 
         @Override
@@ -1012,6 +1027,7 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
             ResolveInfo resolveInfo = VPackageManager.get().resolveIntent(intent, resolvedType, flags, userId);
             if (resolveInfo == null) {
+                MethodParameterUtils.replaceLastUserId(args);
                 resolveInfo = (ResolveInfo) method.invoke(who, args);
             }
             return resolveInfo;
@@ -1075,6 +1091,7 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
             ProviderInfo info = VPackageManager.get().getProviderInfo(componentName, flags, userId);
             if (info == null) {
+                MethodParameterUtils.replaceLastUserId(args);
                 info = (ProviderInfo) method.invoke(who, args);
                 if (info == null || !isVisiblePackage(info.applicationInfo)) {
                     return null;
@@ -1166,6 +1183,7 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
             List<ResolveInfo> appResult = VPackageManager.get().queryIntentReceivers((Intent) args[0], (String) args[1],
                     (Integer) args[2], userId);
+            MethodParameterUtils.replaceLastUserId(args);
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
             List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
@@ -1205,6 +1223,7 @@ class MethodProxies {
             int flags = (int) args[1];
             ActivityInfo info = VPackageManager.get().getReceiverInfo(componentName, flags, 0);
             if (info == null) {
+                MethodParameterUtils.replaceLastUserId(args);
                 info = (ActivityInfo) method.invoke(who, args);
                 if (info == null || !isVisiblePackage(info.applicationInfo)) {
                     return null;
@@ -1231,6 +1250,7 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             // TODO
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
 
@@ -1247,6 +1267,7 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
 
@@ -1272,6 +1293,7 @@ class MethodProxies {
             int userId = VUserHandle.myUserId();
             List<ResolveInfo> appResult = VPackageManager.get().queryIntentContentProviders((Intent) args[0], (String) args[1],
                     (Integer) args[2], userId);
+            MethodParameterUtils.replaceLastUserId(args);
             Object _hostResult = method.invoke(who, args);
             if (_hostResult != null) {
             List<ResolveInfo> hostResult = slice ? ParceledListSlice.getList.call(_hostResult)
@@ -1310,6 +1332,7 @@ class MethodProxies {
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
+            MethodParameterUtils.replaceLastUserId(args);
             return method.invoke(who, args);
         }
     }

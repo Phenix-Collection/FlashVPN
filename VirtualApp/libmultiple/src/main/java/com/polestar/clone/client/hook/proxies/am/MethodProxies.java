@@ -1043,6 +1043,7 @@ class MethodProxies {
 
     static class StartService extends MethodProxy {
         private static final HashSet BLOCK_ACTION_LIST = new HashSet();
+//        private static final HashSet WHITE_ACTION_LIST = new HashSet();
         private static final HashSet BLOCK_COMPONENT_LIST = new HashSet();
         private static final String TAG = "StartService";
 
@@ -1067,6 +1068,10 @@ class MethodProxies {
             //BLOCK_COMPONENT_LIST.add("com.google.android.finsky.wear.WearSupportService");
         }
 
+        static {
+//            WHITE_ACTION_LIST.add("com.google.android.gms.chimera.container.STAGE_MODULE_APKS");
+        }
+
         @Override
         public String getMethodName() {
             return "startService";
@@ -1083,8 +1088,12 @@ class MethodProxies {
                     String name = service.getComponent().getClassName();
                     VLog.d(TAG, " " +  name);
                     if (BLOCK_COMPONENT_LIST.contains(name)) {
-                        VLog.logbug(TAG, "component is blocked: " + name);
-                        return null;
+//                        if(!WHITE_ACTION_LIST.contains(service.getAction())) {
+                            VLog.logbug(TAG, "component is blocked: " + name);
+                            return null;
+//                        } else {
+//                            VLog.logbug(TAG, "let it go: " + service);
+//                        }
                     }
                 }
                 if (service.getComponent() != null && service.getComponent().getClassName().contains(StubService.class.getName())){
