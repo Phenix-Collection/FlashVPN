@@ -109,41 +109,6 @@ public class CloneManager {
 //        new LoadClonedAppTask(context).execute();
     }
 
-    @Deprecated
-    public void createClone(Context context, CloneModel appModel) {
-        mPendingClones.add(appModel);
-        mWorkHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    appModel.setClonedTime(System.currentTimeMillis());
-                    appModel.setIndex(mClonedApps.size());
-                    InstallResult result = VirtualCore.get().installPackage(appModel.getPackageName(), appModel.getApkPath(context),
-                            InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
-                    if(result.isSuccess) {
-                        DBManager.insertCloneModel(context, appModel);
-                        mClonedApps.add(appModel);
-                        if (mClonedApps.size() < QuickSwitchNotification.LRU_PACKAGE_CNT
-                                && QuickSwitchNotification.isEnable()) {
-                            QuickSwitchNotification.getInstance(context).updateLruPackages(getMapKey(appModel.getPackageName(), appModel.getPkgUserId()));
-                        }
-                    }
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mPendingClones.remove(appModel);
-                            if (loadedListener != null) {
-                                loadedListener.onInstalled(appModel, result.isSuccess);
-                            }
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     public void createClone(Context context, CloneModel appModel, int userId) {
         mPendingClones.add(appModel);
         mWorkHandler.post(new Runnable() {
@@ -174,6 +139,10 @@ public class CloneManager {
                         DBManager.insertCloneModel(context, appModel);
                         mClonedApps.add(appModel);
                         incPackageIndex(appModel.getPackageName());
+                        if (mClonedApps.size() <= QuickSwitchNotification.LRU_PACKAGE_CNT
+                                && QuickSwitchNotification.isEnable()) {
+                            QuickSwitchNotification.getInstance(context).updateLruPackages(getMapKey(appModel.getPackageName(), appModel.getPkgUserId()));
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

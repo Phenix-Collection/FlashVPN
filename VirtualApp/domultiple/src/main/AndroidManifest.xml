@@ -56,7 +56,6 @@
         <activity
             android:name="com.polestar.domultiple.components.ui.WrapCoverAdActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:taskAffinity="com.polestar.clone.virtual"
             android:theme="@style/AppTheme.Launcher"/>
 

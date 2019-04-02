@@ -165,7 +165,7 @@ public class AppLoadingActivity extends BaseActivity {
             isAppRunning = CloneManager.isAppLaunched(appModel);
             MLogs.d("isAppRunning " + isAppRunning);
         }
-        AppMonitorService.preloadAd(appModel.getPackageName());
+        AppMonitorService.preloadAd(appModel.getPackageName(), appModel.getPkgUserId());
         EventReporter.appStart(isAppRunning, appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from, appModel.getPackageName(), appModel.getPkgUserId());
         return true;
     }

@@ -67,6 +67,8 @@ public class AppLockActivity extends BaseActivity {
 
     private FingerprintManager fingerprintManager;
     private CancellationSignal cancellationSignal;
+    private boolean shownAd;
+    public static long AD_SHOW_TIME;
 
     public static final void start(Context context, String pkg, int userId) {
         MLogs.d("ApplockActivity start " + pkg + " userId " + userId);
@@ -120,6 +122,7 @@ public class AppLockActivity extends BaseActivity {
             }
             mAdInfoContainer.removeAllViews();
             mAdInfoContainer.addView(adView);
+            shownAd = true;
             updateTitleBar();
         }
     }
@@ -235,6 +238,7 @@ public class AppLockActivity extends BaseActivity {
         }
         mPkgName = getIntent().getStringExtra(Intent.EXTRA_PACKAGE_NAME);
         mUserId = getIntent().getIntExtra(EXTRA_USER_ID, 0);
+        shownAd = false;
     }
 
     private void initToolbar() {
@@ -305,6 +309,9 @@ public class AppLockActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && cancellationSignal != null && fingerprintManager != null) {
             cancellationSignal.cancel();
+        }
+        if (shownAd) {
+            AD_SHOW_TIME = System.currentTimeMillis();
         }
         finish();
     }

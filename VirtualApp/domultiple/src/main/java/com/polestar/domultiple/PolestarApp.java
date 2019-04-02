@@ -266,7 +266,7 @@ public class PolestarApp extends MultiDexApplication {
                     //BoosterSdk.setMemoryThreshold(20);
                     //BoosterSdk.showSettings(this);
                 AppLoadingActivity.preloadAd(getApp());
-                AppMonitorService.preloadAd(null);
+                AppMonitorService.preloadAd(null, 0);
                     initReceiver();
                 if (QuickSwitchNotification.isEnable()) {
                     QuickSwitchNotification.getInstance(gDefault).init();
@@ -310,9 +310,9 @@ public class PolestarApp extends MultiDexApplication {
                 delegate.asyncInit();
                 VirtualCore.get().setComponentDelegate(delegate);
                 initAd();
-                if (QuickSwitchNotification.getInstance(gDefault).isEnable()) {
-                    QuickSwitchNotification.getInstance(gDefault).init();
-                }
+//                if (QuickSwitchNotification.getInstance(gDefault).isEnable()) {
+//                    QuickSwitchNotification.getInstance(gDefault).init();
+//                }
             }
         });
 

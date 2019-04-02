@@ -340,6 +340,10 @@ public class LockPatternView extends View {
         initData();
     }
 
+    public void setDefaultDotDrawable(int resId) {
+        mBitmapBtnDefault = ResourcesUtil.getBitmap(resId);
+    }
+
     private void initData(){
         setClickable(true);
 

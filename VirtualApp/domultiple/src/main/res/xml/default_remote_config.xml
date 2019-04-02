@@ -63,7 +63,7 @@
     <entry>
         <key>slot_test</key>
         <!--<value>ab_interstitial:ca-app-pub-5490912237269284/5384537050</value>-->
-        <value>fb:VID_HD_16_9_15S_APP_INSTALL#302444040464257_303728453669149:0</value>
+        <value>fb:302444040464257_303728453669149:0;adm:ca-app-pub-5490912237269284/8511554222:0</value>
     </entry>
     <entry>
         <key>add_clone_preload_gate</key>
@@ -208,5 +208,9 @@
     <entry>
         <key>conf_app_cover_timeout</key>
         <value>1000</value>
+    </entry>
+    <entry>
+        <key>conf_lock_cover_interval</key>
+        <value>10000</value>
     </entry>
 </defaultsMap>

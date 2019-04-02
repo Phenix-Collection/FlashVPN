@@ -61,8 +61,9 @@ public class AppMonitorService extends Service {
             switch (msg.what){
                 case MSG_DELAY_LOCK_APP:
                     QuickSwitchNotification.getInstance(VirtualCore.get().getContext()).updateLruPackages((String)msg.obj);
-                    lastUnlockKey = null;
                     MLogs.d("relock lastUnlockKey " + lastUnlockKey);
+                    FuseAdLoader.get(AppLockActivity.CONFIG_SLOT_APP_LOCK, PolestarApp.getApp()).preloadAd(PolestarApp.getApp());
+                    lastUnlockKey = null;
                     break;
             }
         }
@@ -86,8 +87,8 @@ public class AppMonitorService extends Service {
         if (VirtualCore.isPreInstalledPkg(pkg)) {
             return false;
         }
-        long interval = RemoteConfig.getLong(CONFIG_APP_START_AD_FREQ)*60*60*1000;
-        long ramp = RemoteConfig.getLong(CONFIG_APP_START_AD_RAMP)*60*60*1000;
+        long interval = BuildConfig.DEBUG? 30*1000: RemoteConfig.getLong(CONFIG_APP_START_AD_FREQ)*60*60*1000;
+        long ramp = BuildConfig.DEBUG? 0: RemoteConfig.getLong(CONFIG_APP_START_AD_RAMP)*60*60*1000;
         long last = getLastShowTime();
         if (last == 0 && TextUtils.isEmpty(pkg)) {
             return false;
@@ -105,8 +106,10 @@ public class AppMonitorService extends Service {
                 }
             }
         }
+        boolean canShow = preload
+                || System.currentTimeMillis() - AppLockActivity.AD_SHOW_TIME > RemoteConfig.getLong("conf_lock_cover_interval");
         MLogs.d(TAG, "needLoad start app ad: " + need);
-        return (need && (!filterPkgs.contains(pkg)||pkg == null));// || BuildConfig.DEBUG;
+        return (need && canShow && (!filterPkgs.contains(pkg)||pkg == null));// || BuildConfig.DEBUG;
     }
 
     private static long getLastShowTime() {
@@ -117,12 +120,22 @@ public class AppMonitorService extends Service {
         PreferencesUtils.putLong(PolestarApp.getApp(), "app_start_last", System.currentTimeMillis());
     }
 
-    public static void preloadAd(String pkg) {
+    public static void preloadAd(String pkg, int userId) {
         if (needLoadCoverAd(true, pkg)) {
             FuseAdLoader.get(SLOT_APP_START_INTERSTITIAL, PolestarApp.getApp());
         }
-        if(!PreferencesUtils.isAdFree() && PreferencesUtils.isIntercepted()) {
-            FuseAdLoader.get(SLOT_APP_INTERCEPT_INTERSTITIAL, PolestarApp.getApp());
+        if (!PreferencesUtils.isAdFree()) {
+            if (PreferencesUtils.isIntercepted()) {
+                FuseAdLoader.get(SLOT_APP_INTERCEPT_INTERSTITIAL, PolestarApp.getApp());
+            }
+            if (PreferencesUtils.isLockerEnabled(PolestarApp.getApp())) {
+                if (!TextUtils.isEmpty(pkg)) {
+                    CloneModel model = CloneManager.getInstance(PolestarApp.getApp()).getCloneModel(pkg, userId);
+                    if (model != null && model.getLockerState() != AppConstants.AppLockState.DISABLED) {
+                        FuseAdLoader.get(AppLockActivity.CONFIG_SLOT_APP_LOCK, PolestarApp.getApp()).preloadAd(PolestarApp.getApp());
+                    }
+                }
+            }
         }
     }
 

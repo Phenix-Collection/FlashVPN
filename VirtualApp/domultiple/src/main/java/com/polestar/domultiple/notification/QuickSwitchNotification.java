@@ -107,6 +107,7 @@ public class QuickSwitchNotification {
     }
     private void readLruKeys() {
         String data = PreferencesUtils.getString(mContext, "lru_pkg");
+        lruKeys.clear();
         synchronized (lruKeys) {
             if (!TextUtils.isEmpty(data)) {
                 String arr[] = data.split(SPLIT);
@@ -326,6 +327,7 @@ public class QuickSwitchNotification {
     public void updateLruPackages(String mapKey) {
         MLogs.d(TAG,"updateLruPackages " + mapKey);
         if (! isInitialized ) {
+            MLogs.d(TAG,"isInitialized " + isInitialized);
             return;
         }
         if (!TextUtils.isEmpty(mapKey)) {
@@ -335,14 +337,20 @@ public class QuickSwitchNotification {
             }
             synchronized (lruKeys) {
                 if (lruKeys.contains(mapKey)) {
-                    return;
-                }
-                if (!TextUtils.isEmpty(mapKey)) {
+                    MLogs.d(TAG,"lruKeys.contains(mapKey)");
+//                    return;
+                } else if (!TextUtils.isEmpty(mapKey)) {
                     if (lruKeys.size() < LRU_PACKAGE_CNT) {
-                        lruKeys.add(mapKey);
+                        lruKeys.add(0, mapKey);
                     } else {
-                        lruKeys.remove(0);
+                        lruKeys.remove(lruKeys.size() - 1);
                         lruKeys.add(mapKey);
+                    }
+                    if (lruKeys.size() == LRU_PACKAGE_CNT) {
+                        int userId = CloneManager.getUserIdFromKey(lruKeys.get(LRU_PACKAGE_CNT - 1));
+                        if (userId == FAKE_USERID_FOR_UNCLONED) {
+                            lruKeys.remove(LRU_PACKAGE_CNT - 1);
+                        }
                     }
                 }
             }
