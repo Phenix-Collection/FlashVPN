@@ -10,6 +10,7 @@ import android.os.Process;
 import android.text.TextUtils;
 
 import com.polestar.clone.GmsSupport;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.ipc.ServiceManagerNative;
 
 import mochat.multiple.parallel.whatsclone.constant.AppConstants;
@@ -238,7 +239,7 @@ public class AppListUtils implements DataObserver {
     }
 
     public boolean isClonable(String pkg) {
-        if ( GmsSupport.isGmsFamilyPackage(pkg) ) {
+        if ( VirtualCore.isPreInstalledPkg(pkg) ) {
             return false;
         }
         try {
@@ -291,7 +292,7 @@ public class AppListUtils implements DataObserver {
             if (hostPkg.equals(pkgName)) {
                 continue;
             }
-            if (isPreInstalledPkg(pkgName)) {
+            if (VirtualCore.isPreInstalledPkg(pkgName)) {
                 continue;
             }
 
@@ -350,17 +351,6 @@ public class AppListUtils implements DataObserver {
     private boolean isPopularApp(String packageName) {
         for (AppModel model : mPopularModels) {
             if (model.getPackageName().equals(packageName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isPreInstalledPkg(String packageName) {
-        String[] pkgs = AppManager.getPreInstalledPkgs();
-        int length = pkgs.length;
-        for (int i = 0; i < length; i++) {
-            if (pkgs[i].equals(packageName)) {
                 return true;
             }
         }

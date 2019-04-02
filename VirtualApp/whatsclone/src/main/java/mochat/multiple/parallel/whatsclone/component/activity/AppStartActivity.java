@@ -273,7 +273,13 @@ public class AppStartActivity extends BaseActivity {
         if (needDoUpGrade) {
             AppManager.upgradeApp(appModel.getPackageName());
         }
-        AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppManager.launchApp(appModel.getPackageName(), appModel.getPkgUserId());
+            }
+        }).start();
+
         finishIfTimeout();
     }
 

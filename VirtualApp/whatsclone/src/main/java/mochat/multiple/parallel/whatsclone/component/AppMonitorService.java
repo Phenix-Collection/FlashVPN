@@ -103,7 +103,7 @@ public class AppMonitorService extends Service {
         if (PreferencesUtils.isAdFree()) {
             return false;
         }
-        if (GmsSupport.isGmsFamilyPackage(pkg) || SpecialComponentList.isPreInstallPackage(pkg)) {
+        if (VirtualCore.isPreInstalledPkg(pkg)) {
             return false;
         }
         String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
