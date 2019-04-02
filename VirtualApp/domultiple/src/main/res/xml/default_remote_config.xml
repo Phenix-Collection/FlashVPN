@@ -205,4 +205,8 @@
         <key>conf_intercept_interval</key>
         <value>90000</value>
     </entry>
+    <entry>
+        <key>conf_app_cover_timeout</key>
+        <value>1000</value>
+    </entry>
 </defaultsMap>

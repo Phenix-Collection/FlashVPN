@@ -476,4 +476,12 @@ public class PreferencesUtils {
     public static boolean isFingerprintEnable() {
         return getBoolean(PolestarApp.getApp(), "use_fingerprint", true);
     }
+
+    public static boolean isIntercepted() {
+        return getBoolean(PolestarApp.getApp(), "key_intercepted" , false);
+    }
+
+    public static boolean setIntercepted() {
+        return putBoolean(PolestarApp.getApp(), "key_intercepted", true);
+    }
 }

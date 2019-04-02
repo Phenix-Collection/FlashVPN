@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
-import com.google.android.gms.ads.MobileAds;
 import com.polestar.ad.AdUtils;
 import com.polestar.ad.IAdEventLogger;
 import com.polestar.ad.SDKConfiguration;
@@ -266,12 +265,8 @@ public class PolestarApp extends MultiDexApplication {
 
                     //BoosterSdk.setMemoryThreshold(20);
                     //BoosterSdk.showSettings(this);
-                    if (!PreferencesUtils.isAdFree()) {
-                        AppLoadingActivity.preloadAd(getApp());
-                        if (AppMonitorService.needLoadCoverAd(true, null)) {
-                            AppMonitorService.preloadCoverAd();
-                        }
-                    }
+                AppLoadingActivity.preloadAd(getApp());
+                AppMonitorService.preloadAd(null);
                     initReceiver();
                 if (QuickSwitchNotification.isEnable()) {
                     QuickSwitchNotification.getInstance(gDefault).init();

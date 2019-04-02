@@ -18,6 +18,7 @@ import com.polestar.clone.CloneAgent64;
 import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.InstallStrategy;
 import com.polestar.clone.client.core.VirtualCore;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.ipc.VActivityManager;
 import com.polestar.clone.client.ipc.VPackageManager;
 import com.polestar.clone.os.VUserHandle;
@@ -396,7 +397,7 @@ public class CloneManager {
     }
 
     public boolean isClonable(String pkg) {
-        if ( GmsSupport.isGmsFamilyPackage(pkg) ) {
+        if ( VirtualCore.isPreInstalledPkg(pkg)) {
             return false;
         }
         try {

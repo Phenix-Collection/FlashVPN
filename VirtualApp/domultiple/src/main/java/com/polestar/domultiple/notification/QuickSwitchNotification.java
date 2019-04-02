@@ -22,6 +22,7 @@ import com.polestar.booster.BoosterShortcutActivity;
 import com.polestar.clone.GmsSupport;
 import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.BitmapUtils;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.stub.DaemonService;
 import com.polestar.domultiple.AppConstants;
 import com.polestar.domultiple.BuildConfig;
@@ -272,11 +273,12 @@ public class QuickSwitchNotification {
 
         synchronized (lruKeys) {
             for (int i = 0; i < LRU_PACKAGE_CNT; i++) {
+                int titleId = getTitleIdForItem(i);
+                int iconId = getIconIdForItem(i);
                 if (lruKeys.size() <= i) {
-
+                    remoteViews.setImageViewResource(iconId, R.drawable.icon_add);
+                    remoteViews.setTextViewText(titleId, "");
                 } else {
-                    int titleId = getTitleIdForItem(i);
-                    int iconId = getIconIdForItem(i);
                     if (titleId != 0 && iconId != 0) {
                         String mapKey = lruKeys.get(i);
                         String pkg = CloneManager.getNameFromKey(mapKey);
@@ -328,8 +330,7 @@ public class QuickSwitchNotification {
         }
         if (!TextUtils.isEmpty(mapKey)) {
             String name = CloneManager.getNameFromKey(mapKey);
-            if (GmsSupport.isGmsFamilyPackage(name)
-                    || PolestarApp.getApp().getPackageName().equals(name)){
+            if (VirtualCore.isPreInstalledPkg(name)|| PolestarApp.getApp().getPackageName().equals(name)){
                 return;
             }
             synchronized (lruKeys) {

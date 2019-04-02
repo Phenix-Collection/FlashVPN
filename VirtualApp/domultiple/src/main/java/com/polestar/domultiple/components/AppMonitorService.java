@@ -46,7 +46,7 @@ public class AppMonitorService extends Service {
     private static final String CONFIG_APP_START_AD_FREQ = "slot_app_start_freq_hour";
     private static final String CONFIG_APP_START_AD_RAMP = "slot_app_start_ramp_hour";
     private static final String CONFIG_APP_START_AD_FILTER = "slot_app_start_filter";
-    private static final String CONFIG_APP_START_AD_STYLE = "slot_app_start_style"; //native,interstitial,all
+    private static final String CONFIG_APP_START_AD_TIMEOUT = "conf_app_cover_timeout";
     private static HashSet<String> filterPkgs ;
 
     private static String lastUnlockKey;
@@ -83,11 +83,7 @@ public class AppMonitorService extends Service {
         if (PreferencesUtils.isAdFree()) {
             return false;
         }
-        if (GmsSupport.isGmsFamilyPackage(pkg) || SpecialComponentList.isPreInstallPackage(pkg)) {
-            return false;
-        }
-        String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
-        if (!("interstitial".equals(style) || "all".equals(style))) {
+        if (VirtualCore.isPreInstalledPkg(pkg)) {
             return false;
         }
         long interval = RemoteConfig.getLong(CONFIG_APP_START_AD_FREQ)*60*60*1000;
@@ -121,9 +117,12 @@ public class AppMonitorService extends Service {
         PreferencesUtils.putLong(PolestarApp.getApp(), "app_start_last", System.currentTimeMillis());
     }
 
-    public static void preloadCoverAd() {
-        if(!PreferencesUtils.isAdFree()) {
+    public static void preloadAd(String pkg) {
+        if (needLoadCoverAd(true, pkg)) {
             FuseAdLoader.get(SLOT_APP_START_INTERSTITIAL, PolestarApp.getApp());
+        }
+        if(!PreferencesUtils.isAdFree() && PreferencesUtils.isIntercepted()) {
+            FuseAdLoader.get(SLOT_APP_INTERCEPT_INTERSTITIAL, PolestarApp.getApp());
         }
     }
 
@@ -133,9 +132,10 @@ public class AppMonitorService extends Service {
 
     }
 
-    private void loadAd(String pkg, int userId, String slot) {
+    private void loadAd(String pkg, int userId, String slot, long showTimeout) {
         FuseAdLoader adLoader = FuseAdLoader.get(slot, VirtualCore.get().getContext());
         if(adLoader.hasValidAdSource()) {
+            long loadingStart = System.currentTimeMillis();
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -148,8 +148,10 @@ public class AppMonitorService extends Service {
                         @Override
                         public void onAdLoaded(IAdAdapter ad) {
                                 //ad.show();
+                            if(System.currentTimeMillis() - loadingStart < showTimeout) {
                                 updateShowTime();
-                                WrapCoverAdActivity.start(AppMonitorService.this, slot, pkg, userId );
+                                WrapCoverAdActivity.start(AppMonitorService.this, slot, pkg, userId);
+                            }
                         }
 
                         @Override
@@ -184,20 +186,22 @@ public class AppMonitorService extends Service {
         return appMonitor;
     }
 
-    private class AppMonitor extends IAppMonitor.Stub {
+    private class
+    AppMonitor extends IAppMonitor.Stub {
         public void onAdsLaunch(String pkg, int userId, String name) {
             EventReporter.reportsAdsLaunch(name);
             int ctrl = DoConfig.get().getInterstitialAdsCtl();
+            PreferencesUtils.setIntercepted();
             switch (ctrl) {
                 case DoConfig.ADS_TO_COVER:
                      MLogs.d("Ads cover");
                      if (needLoadCoverAd(false, pkg)) {
-                         loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
+                         loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL, 10*1000);
                      }
                     break;
                 case DoConfig.ADS_FORCE_REPLACE:
                     MLogs.d("Ads replace");
-                    loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL);
+                    loadAd(pkg, userId, SLOT_APP_INTERCEPT_INTERSTITIAL, 10*1000);
                     break;
                 case DoConfig.ADS_BLOCK:
                     default:
@@ -222,7 +226,7 @@ public class AppMonitorService extends Service {
                 }
             }
             if (!locked && needLoadCoverAd(false, pkg)) {
-               loadAd(pkg, userId, SLOT_APP_START_INTERSTITIAL);
+               loadAd(pkg, userId, SLOT_APP_START_INTERSTITIAL, RemoteConfig.getLong(CONFIG_APP_START_AD_TIMEOUT));
             }
 
         }
