@@ -193,11 +193,17 @@ public class AdmobNativeAdapter extends AdAdapter {
         if (actualAdView != null) {
             ImageView iconView = (ImageView) actualAdView.findViewById(viewBinder.iconImageId);
             TextView titleView = (TextView) actualAdView.findViewById(viewBinder.titleId);
-            titleView.setText(getTitle());
+            if (titleView != null) {
+                titleView.setText(getTitle());
+            }
             TextView subtitleView = (TextView) actualAdView.findViewById(viewBinder.textId);
-            subtitleView.setText(getBody());
+            if (subtitleView != null) {
+                subtitleView.setText(getBody());
+            }
             TextView ctaView = (TextView) actualAdView.findViewById(viewBinder.callToActionId);
-            ctaView.setText(getCallToActionText());
+            if (ctaView != null) {
+                ctaView.setText(getCallToActionText());
+            }
 
             MediaView mediaView = null;
             ImageView coverImageView = null;
