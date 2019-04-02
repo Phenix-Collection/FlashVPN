@@ -20,9 +20,11 @@ import android.os.Looper;
 import android.os.Process;
 import android.os.RemoteException;
 
+import com.polestar.clone.GmsSupport;
 import com.polestar.clone.R;
 import com.polestar.clone.client.VClientImpl;
 import com.polestar.clone.client.env.Constants;
+import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.client.env.VirtualRuntime;
 import com.polestar.clone.client.fixer.ContextFixer;
 import com.polestar.clone.client.hook.delegate.ComponentDelegate;
@@ -896,5 +898,10 @@ public final class VirtualCore {
 
     public boolean isRunningOn64bit() {
         return hostPkgName.endsWith("arm64");
+    }
+
+    public static boolean isPreInstalledPkg(String pkg) {
+        if (pkg == null) return false;
+        return GmsSupport.isGmsFamilyPackage(pkg) || SpecialComponentList.isPreInstallPackage(pkg);
     }
 }
