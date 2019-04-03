@@ -230,9 +230,7 @@ public class AppStartActivity extends BaseActivity {
             needAbiSupport = CloneAgent64.needArm64Support(this, appModel.getPackageName());
             needDoUpGrade = AppManager.needUpgrade(appModel.getPackageName());
             isAppLaunched = AppManager.isAppLaunched(appModel);
-            if (AppMonitorService.needLoadCoverAd(true, appModel.getPackageName())) {
-                AppMonitorService.preloadCoverAd();
-            }
+            AppMonitorService.preloadCoverAd(appModel.getPackageName(), appModel.getPkgUserId());
         }
     }
 

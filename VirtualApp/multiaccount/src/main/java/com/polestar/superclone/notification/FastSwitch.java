@@ -382,7 +382,7 @@ public class FastSwitch {
         }
         if (!TextUtils.isEmpty(mapKey)) {
             String name = AppManager.getNameFromKey(mapKey);
-            if (GmsSupport.isGmsFamilyPackage(name)
+            if (VirtualCore.isPreInstalledPkg(name)
                     || MApp.getApp().getPackageName().equals(name)){
                 return;
             }
@@ -392,9 +392,9 @@ public class FastSwitch {
                 }
                 if (!TextUtils.isEmpty(mapKey)) {
                     if (lruKeys.size() < LRU_PACKAGE_CNT) {
-                        lruKeys.add(mapKey);
+                        lruKeys.add(0, mapKey);
                     } else {
-                        lruKeys.remove(0);
+                        lruKeys.remove(lruKeys.size() - 1);
                         lruKeys.add(mapKey);
                     }
                 }

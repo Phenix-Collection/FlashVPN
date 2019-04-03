@@ -202,12 +202,8 @@ public class MApp extends MultiDexApplication {
                     AppUser.getInstance().preloadRewardVideoTask();
                 }
                 //Do some ad preload
-                if (!PreferencesUtils.isAdFree() && RemoteConfig.getBoolean(AppStartActivity.CONFIG_NEED_PRELOAD_LOADING)) {
-                    AppStartActivity.preloadAd(gDefault);
-                    if (AppMonitorService.needLoadCoverAd(true, null)) {
-                        AppMonitorService.preloadCoverAd();
-                    }
-                }
+                AppStartActivity.preloadAd(gDefault);
+                AppMonitorService.preloadCoverAd(null, -1);
                 initReceiver();
                 if (FastSwitch.isEnable()) {
                     FastSwitch.getInstance(gDefault).init();

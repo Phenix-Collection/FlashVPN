@@ -482,4 +482,12 @@ public class PreferencesUtils {
     public static int getGuideQuickSwitchTimes( ) {
         return getInt(MApp.getApp(), "guide_fast_switch_cnt", 0);
     }
+
+    public static boolean isIntercepted() {
+        return getBoolean(MApp.getApp(), "key_intercepted" , false);
+    }
+
+    public static boolean setIntercepted() {
+        return putBoolean(MApp.getApp(), "key_intercepted", true);
+    }
 }

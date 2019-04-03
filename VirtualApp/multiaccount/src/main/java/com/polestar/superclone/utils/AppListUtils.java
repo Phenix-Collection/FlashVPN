@@ -10,6 +10,7 @@ import android.os.Process;
 import android.text.TextUtils;
 
 import com.polestar.clone.GmsSupport;
+import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.ipc.ServiceManagerNative;
 import com.polestar.superclone.constant.AppConstants;
 import com.polestar.superclone.db.DbManager;
@@ -227,7 +228,7 @@ public class AppListUtils implements DataObserver {
     }
 
     public boolean isClonable(String pkg) {
-        if ( GmsSupport.isGmsFamilyPackage(pkg) ) {
+        if (VirtualCore.isPreInstalledPkg(pkg)) {
             return false;
         }
         try {

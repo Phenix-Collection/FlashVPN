@@ -83,10 +83,10 @@ public class AppMonitorService extends Service {
         }
     };
 
-    private void preloadAd() {
-        mainHandler.removeMessages(MSG_PRELOAD_AD);
-        mainHandler.sendEmptyMessage(MSG_PRELOAD_AD);
-    }
+//    private void preloadAd() {
+//        mainHandler.removeMessages(MSG_PRELOAD_AD);
+//        mainHandler.sendEmptyMessage(MSG_PRELOAD_AD);
+//    }
     public static void unlocked(String pkg, int userId) {
         lastUnlockKey = AppManager.getMapKey(pkg,userId);
         MLogs.d("unlocked lastUnlockKey " + lastUnlockKey);
@@ -97,14 +97,14 @@ public class AppMonitorService extends Service {
         super.onCreate();
         CloneHelper.getInstance(this);
         appMonitor = new AppMonitor();
-        preloadAd();
+//        preloadAd();
     }
 
     public static boolean needLoadCoverAd(boolean preload, String pkg) {
         if (PreferencesUtils.isAdFree()) {
             return false;
         }
-        if (GmsSupport.isGmsFamilyPackage(pkg) || SpecialComponentList.isPreInstallPackage(pkg)) {
+        if (VirtualCore.isPreInstalledPkg(pkg)) {
             return false;
         }
         String style = RemoteConfig.getString(CONFIG_APP_START_AD_STYLE);
@@ -132,7 +132,8 @@ public class AppMonitorService extends Service {
         }
         MLogs.d(TAG, "needLoad start app ad: " + need);
 
-        boolean canShow = System.currentTimeMillis() - AppLockActivity.AD_SHOW_TIME > RemoteConfig.getLong("conf_lock_cover_interval");
+        boolean canShow = preload
+                || System.currentTimeMillis() - AppLockActivity.AD_SHOW_TIME > RemoteConfig.getLong("conf_lock_cover_interval");
 //        boolean canShow = true;
         return (need && canShow && (!filterPkgs.contains(pkg)||pkg == null)) ;
     }
@@ -145,9 +146,24 @@ public class AppMonitorService extends Service {
         PreferencesUtils.putLong(MApp.getApp(), "app_start_last", System.currentTimeMillis());
     }
 
-    public static void preloadCoverAd() {
-        if(!PreferencesUtils.isAdFree()) {
+    public static void preloadCoverAd(String pkg, int userId) {
+        if (needLoadCoverAd(true, pkg)) {
             FuseAdLoader.get(SLOT_APP_START_INTERSTITIAL, MApp.getApp());
+        }
+        if (!PreferencesUtils.isAdFree()) {
+            if (PreferencesUtils.isIntercepted()) {
+                FuseAdLoader.get(SLOT_APP_INTERCEPT_INTERSTITIAL, MApp.getApp());
+            }
+            if (PreferencesUtils.isLockerEnabled(MApp.getApp())) {
+                if (!TextUtils.isEmpty(pkg)) {
+                    AppModel model = CloneHelper.getInstance(MApp.getApp()).getAppModel(pkg, userId);
+                    if (model != null && model.getLockerState() != AppConstants.AppLockState.DISABLED) {
+                        FuseAdLoader.get(AppLockActivity.CONFIG_SLOT_APP_LOCK, MApp.getApp()).preloadAd(MApp.getApp());
+                    }
+                } else {
+                    FuseAdLoader.get(AppLockActivity.CONFIG_SLOT_APP_LOCK, MApp.getApp()).preloadAd(MApp.getApp());
+                }
+            }
         }
     }
 
@@ -211,6 +227,7 @@ public class AppMonitorService extends Service {
         public void onAdsLaunch(String pkg, int userId, String name) {
             EventReporter.reportsAdsLaunch(AppMonitorService.this, name);
             int ctrl = SuperConfig.get().getInterstitialAdsCtl();
+            PreferencesUtils.setIntercepted();
             switch (ctrl) {
                 case SuperConfig.ADS_TO_COVER:
                     MLogs.d("Ads cover");
