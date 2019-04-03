@@ -42,6 +42,7 @@ public class UserManagerStub extends BinderInvocationProxy {
         addMethodProxy(new ResultStaticMethodProxy("createUser", null));
         addMethodProxy(new ResultStaticMethodProxy("createProfileForUser", null));
         addMethodProxy(new ResultStaticMethodProxy("getProfiles", Collections.EMPTY_LIST));
+        addMethodProxy(new ResultStaticMethodProxy("isManagedProfile", false));
 
 
         addMethodProxy(new ResultStaticMethodProxy("getUsers",

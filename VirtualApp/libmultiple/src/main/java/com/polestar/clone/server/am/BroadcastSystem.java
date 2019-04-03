@@ -285,7 +285,7 @@ public class BroadcastSystem {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Intent newIntent = new Intent(intent);
+                    Intent newIntent = new Intent();
                     newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_ALL);
                     newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, intent);
                 if (!mAMS.handleStaticBroadcast(appId, info, newIntent, new PendingResultData(result))) {
