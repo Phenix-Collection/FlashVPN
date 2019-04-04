@@ -257,7 +257,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
         synchronized (this) {
             r = startProcessIfNeedLocked(processName, userId, info.packageName);
         }
-		if (r != null && r.client != null &&  r.client.asBinder().isBinderAlive()) {
+		if (r != null && r.client != null &&  r.client.asBinder().pingBinder()) {
             try {
                 return r.client.acquireProviderClient(info);
             } catch (RemoteException e) {
@@ -619,7 +619,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
             }
             ServiceRecord.IntentBindRecord boundRecord = r.peekBinding(service);
 
-            if (boundRecord != null && boundRecord.binder != null && boundRecord.binder.isBinderAlive()) {
+            if (boundRecord != null && boundRecord.binder != null && boundRecord.binder.pingBinder()) {
                 if (boundRecord.doRebind) {
                     try {
                         IApplicationThreadCompat.scheduleBindService(r.process.appThread, r, service, true, 0);
@@ -1008,7 +1008,7 @@ public class VActivityManagerService extends IActivityManager.Stub {
 		synchronized (mProcessNames) {
 			app = mProcessNames.get(processName, uid);
 		}
-        if (app != null && app.client.asBinder().isBinderAlive()) {
+        if (app != null && app.client.asBinder().pingBinder()) {
             return app;
         }
         VLog.logbug(TAG, "startProcessIfNeedLocked No process record found for : " + processName);
