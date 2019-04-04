@@ -107,15 +107,14 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("home_delete", prop);
     }
 
-    public static void launchApp(Context context, String packageName, String from, boolean hasLocker) {
-        Bundle prop = new Bundle();
-        prop.putString("package", packageName);
-        prop.putString("locker", ""+hasLocker);
-        if (from.equals(AppConstants.VALUE_FROM_HOME)) {
-            mFirebaseAnalytics.logEvent("home_launch", prop);
-        } else if (from.equals(AppConstants.VALUE_FROM_SHORTCUT)) {
-            mFirebaseAnalytics.logEvent("mobile_launch", prop);
-        }
+    public static void appStart(boolean coldStart, boolean locker, String from, String pkg, int userId) {
+        Bundle bundle = new Bundle();
+        bundle.putString("package", pkg);
+        bundle.putString("hotStart", ""+coldStart);
+        bundle.putString("locker", ""+locker);
+        bundle.putString("from", from == null? "not_set": from);
+        bundle.putString("userId", ""+userId);
+        mFirebaseAnalytics.logEvent("app_start", bundle);
     }
 
     public static void addShortCut(Context context, String packageName) {
@@ -247,21 +246,6 @@ public class EventReporter {
         mFirebaseAnalytics.logEvent("click_event", prop);
     }
 
-    public static void reportActive(Context context, boolean fg, String action){
-        if (!PreferencesUtils.needReportActive(fg)) {
-            return;
-        }
-        PreferencesUtils.updateActiveTime(fg);
-        Bundle prop = new Bundle();
-        prop.putString("fg", fg?"user":"service");
-        prop.putString("locker", ""+ PreferencesUtils.isLockerEnabled(context));
-        prop.putString("adfree", "" + PreferencesUtils.isAdFree());
-        prop.putString("rated", "" + PreferencesUtils.isRated());
-        prop.putString("channel", "" + PreferencesUtils.getInstallChannel());
-        prop.putString("action", action);
-        mFirebaseAnalytics.logEvent("track_active", prop);
-    }
-
     private static String sWakeSrc = null;
 
     public static void reportWake(Context context, String src){
@@ -272,12 +256,6 @@ public class EventReporter {
             mFirebaseAnalytics.logEvent("track_wake", prop);
         }
         MLogs.d("Wake from " + src + " original: " + sWakeSrc);
-    }
-
-    public static void boostFrom(Context context, String from){
-        Bundle prop = new Bundle();
-        prop.putString("from", from);
-        mFirebaseAnalytics.logEvent("boost_from", prop);
     }
 
     private static final String UTM_SOURCE = "utm_source";

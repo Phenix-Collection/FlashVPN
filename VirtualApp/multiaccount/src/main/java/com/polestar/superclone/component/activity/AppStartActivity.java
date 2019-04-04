@@ -406,9 +406,10 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventReporter.reportWake(this, "app_shortcut");
+
         mainHandler = new Handler();
         initData();
+        EventReporter.reportWake(this, "app_start_" + from);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         setContentView(R.layout.activity_start);
         initView();
@@ -419,8 +420,10 @@ public class AppStartActivity extends BaseActivity {
         }
         if (appModel != null) {
             doLaunch();
+            EventReporter.appStart(isAppLaunched,
+                    appModel.getLockerState() != AppConstants.AppLockState.DISABLED, from,
+                    appModel.getPackageName(), appModel.getPkgUserId());
         }
-        EventReporter.reportActive(this, true,"shortcut");
 
     }
 

@@ -490,4 +490,12 @@ public class PreferencesUtils {
     public static boolean setIntercepted() {
         return putBoolean(MApp.getApp(), "key_intercepted", true);
     }
+
+    public static void setGlobalNotification(boolean status) {
+        PreferencesUtils.putBoolean(MApp.getApp(), "key_server_push", status);
+    }
+
+    public static boolean isGlobalNotificationEnabled() {
+        return PreferencesUtils.getBoolean(MApp.getApp(), "key_server_push", true);
+    }
 }

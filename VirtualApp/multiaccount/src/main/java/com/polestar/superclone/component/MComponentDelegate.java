@@ -39,21 +39,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class MComponentDelegate implements ComponentDelegate {
 
-    private HashSet<String> notificationPkgs = new HashSet<>();
-
     private IAppMonitor uiAgent;
     public void asyncInit() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(!MApp.isSupportPkg()) {
-                    List<AppModel> list = DbManager.queryAppList(MApp.getApp());
-                    for (AppModel app : list) {
-                        if (app.getNotificationEnable()) {
-                            notificationPkgs.add(AppManager.getMapKey(app.getPackageName(), app.getPkgUserId()));
-                        }
-                    }
-                }
                 uiAgent = getAgent();
             }
         }).start();
@@ -132,18 +122,10 @@ public class MComponentDelegate implements ComponentDelegate {
 
     @Override
     public boolean isNotificationEnabled(String pkg, int userId) {
-        String key = AppManager.getMapKey(pkg, userId);
-        MLogs.d("isNotificationEnabled pkg: " + key + " " + notificationPkgs.contains(key));
-        if ( notificationPkgs.contains(key) ) {
-            return  true;
-        } else if(MApp.isSupportPkg()) {
-            CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
-            if (data.isNotificationEnable) {
-                notificationPkgs.add(key);
-                return true;
-            }
-        }
-        return false;
+        CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
+        MLogs.d("isNotificationEnabled " + pkg + " enabled: " + data.isNotificationEnable);
+
+        return data.isNotificationEnable;
     }
 
     @Override

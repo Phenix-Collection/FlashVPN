@@ -8,9 +8,11 @@
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="10px" />-->
     <FrameLayout
-        android:id="@+id/ad_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:paddingRight="4dp"
+        android:paddingLeft="4dp">
 
         <com.polestar.imageloader.widget.BasicLazyLoadImageView
             android:id="@+id/ad_cover_image"
@@ -86,7 +88,6 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:text="this is title"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/text_gray_dark"
                 android:textStyle="bold"
                 android:textSize="12sp" />

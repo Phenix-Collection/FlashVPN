@@ -109,8 +109,8 @@ public class HomeFragment extends BaseFragment {
 //            return;
 //        }
         if (mActivity != null && ad != null) {
-            int layout = RemoteConfig.getBoolean("conf_new_home_adlayout") ?
-                    R.layout.new_front_page_native_ad:R.layout.front_page_native_ad;
+            int layout =
+                    R.layout.new_front_page_native_ad;
             final AdViewBinder viewBinder = new AdViewBinder.Builder(layout)
                     .titleId(R.id.ad_title)
                     .textId(R.id.ad_subtitle_text)

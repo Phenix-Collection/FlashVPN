@@ -22,7 +22,6 @@ public class WakeReceiver extends BroadcastReceiver {
         //
         MLogs.logBug("Awake for " + intent);
         ServiceManagerNative.getService(ServiceManagerNative.APP);
-        EventReporter.reportActive(MApp.getApp(), false, intent.getAction());
         EventReporter.reportWake(MApp.getApp(), intent.getAction());
         if (!isRegistered) {
             IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);

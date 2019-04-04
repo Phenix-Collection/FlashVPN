@@ -1,5 +1,6 @@
 package com.polestar.superclone.component;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.polestar.superclone.R;
+
+import java.lang.reflect.Field;
 
 
 /**
@@ -123,5 +126,19 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected boolean useCustomTitleBar(){
         return true;
+    }
+
+    protected void callUpActivity() {
+        try {
+            Class activityClass = Activity.class;
+            Field callField = activityClass.getDeclaredField("mCalled");
+            callField.setAccessible(true);
+            callField.setBoolean(this, true);
+//            MLogs.d("JJJJ", "callUpActivity");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 }

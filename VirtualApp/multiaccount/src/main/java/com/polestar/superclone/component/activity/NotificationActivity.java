@@ -18,6 +18,7 @@ import com.polestar.superclone.utils.PreferencesUtils;
 import com.polestar.superclone.widgets.BlueSwitch;
 import com.polestar.superclone.widgets.FixedListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationActivity extends BaseActivity {
@@ -56,14 +57,14 @@ public class NotificationActivity extends BaseActivity {
             public void onCheckStatusChangedListener(AppModel model, boolean status) {
                 model.setNotificationEnable(status);
                 DbManager.updateAppModel(mContext, model);
+                CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
+                data.isNotificationEnable = status;
+                data.saveToPref();
                 if (MApp.isSupportPkgExist()) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             CloneAgent64 agent64 = new CloneAgent64(NotificationActivity.this);
-                            CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
-                            data.isNotificationEnable = status;
-                            data.saveToPref();
                             agent64.syncPackageSetting(model.getPackageName(), model.getPkgUserId(),data);
                         }
                     }).start();
@@ -79,36 +80,53 @@ public class NotificationActivity extends BaseActivity {
         });
         mListView.setAdapter(mNotificationAdapter);
         mNotificationAdapter.setModels(mClonedModels);
-        mMasterSwitch.setChecked(PreferencesUtils.getBoolean(mContext, AppConstants.KEY_SERVER_PUSH, true));
+        mMasterSwitch.setChecked(PreferencesUtils.isGlobalNotificationEnabled());
         mMasterSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String pName = mContext.getPackageName();
                 boolean val = ((BlueSwitch) v).isChecked();
-                PreferencesUtils.putBoolean(mContext, AppConstants.KEY_SERVER_PUSH, val);
+                PreferencesUtils.setGlobalNotification(val);
+                //sync with arm64 package as only one syncPackageSetting api
                 if (val) {
                     mListView.setVisibility(View.VISIBLE);
-                } else {
+                    ArrayList<CustomizeAppData> changeList = new ArrayList<>();
                     for (AppModel model: mClonedModels) {
-                        model.setNotificationEnable(false);
+                        CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
+                        changeList.add(data);
+                    }
+                    if (MApp.isSupportPkgExist()) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CloneAgent64 agent64 = new CloneAgent64(NotificationActivity.this);
+                                for (CustomizeAppData data: changeList) {
+                                    agent64.syncPackageSetting(data.pkg, data.userId,data);
+                                }
+                            }
+                        }).start();
+                    }
+                } else {
+                    ArrayList<CustomizeAppData> changeList = new ArrayList<>();
+                    for (AppModel model: mClonedModels) {
+//                        model.setNotificationEnable(false);
+                        CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
+                        data.isNotificationEnable = false;
+//                        data.saveToPref();
+                        changeList.add(data);
+                    }
+                    if (MApp.isSupportPkgExist()) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CloneAgent64 agent64 = new CloneAgent64(NotificationActivity.this);
+                                for (CustomizeAppData data: changeList) {
+                                    agent64.syncPackageSetting(data.pkg, data.userId,data);
+                                }
+                            }
+                        }).start();
                     }
                     mNotificationAdapter.notifyDataSetChanged();
                     mListView.setVisibility(View.INVISIBLE);
-                }
-                if (MApp.isSupportPkgExist()) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            CloneAgent64 agent64 = new CloneAgent64(NotificationActivity.this);
-                            for (AppModel model: mClonedModels) {
-                                model.setNotificationEnable(false);
-                                CustomizeAppData data = CustomizeAppData.loadFromPref(model.getPackageName(), model.getPkgUserId());
-                                data.isNotificationEnable = false;
-                                data.saveToPref();
-                                agent64.syncPackageSetting(model.getPackageName(), model.getPkgUserId(),data);
-                            }
-                        }
-                    }).start();
                 }
             }
         });

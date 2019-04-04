@@ -89,6 +89,7 @@ public class AppListUtils implements DataObserver {
                 blackList.add(ri.serviceInfo.applicationInfo.packageName);
                 MLogs.logBug("Add black: " + ri.serviceInfo.applicationInfo.packageName);
             }
+            blackList.add(AppConstants.SUPPORT_PKG);
             mClonedModels = DbManager.queryAppList(mContext);
             getPopularApps(mPopularModels);
             getIntalledApps(mInstalledModels);

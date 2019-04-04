@@ -126,6 +126,10 @@ public class HomeActivity extends BaseActivity {
                 && (interval > RemoteConfig.getLong(CONFIG_AUTO_SHOW_INTERSTITIAL_INTERVAL))) || BuildConfig.DEBUG;
         MLogs.d( " autoInterstitial: " + autoShowInterstitial );
 
+        String from = getIntent().getStringExtra(AppConstants.EXTRA_FROM);
+        if (!TextUtils.isEmpty(from)) {
+            EventReporter.reportWake(this, "home_from_" + from);
+        }
         boolean needUpdate = getIntent().getBooleanExtra(EXTRA_NEED_UPDATE, false);
         if (needUpdate) {
             MLogs.d("need update");
@@ -352,20 +356,6 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
-    private void callUpActivity() {
-        try {
-            Class activityClass = Activity.class;
-            Field callField = activityClass.getDeclaredField("mCalled");
-            callField.setAccessible(true);
-            callField.setBoolean(HomeActivity.this, true);
-//            MLogs.d("JJJJ", "callUpActivity");
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     protected void onResume() {
         try {
@@ -394,7 +384,6 @@ public class HomeActivity extends BaseActivity {
         } else {
             hideAd();
         }
-        EventReporter.reportActive(this, true, "main");
         if (AppUser.isRewardEnabled()) {
             AppUser.getInstance().preloadRewardVideoTask();
         }

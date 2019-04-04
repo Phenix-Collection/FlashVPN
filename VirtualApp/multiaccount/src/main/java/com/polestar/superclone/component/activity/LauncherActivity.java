@@ -117,7 +117,12 @@ public class LauncherActivity extends BaseActivity{
 
     @Override
     protected void onResume() {
-        super.onResume();
+        try {
+            super.onResume();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            callUpActivity();
+        }
     }
 
     @Override

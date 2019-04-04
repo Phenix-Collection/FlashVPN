@@ -294,10 +294,6 @@
         <key>conf_need_secure_question</key>
         <value>false</value>
     </entry>
-    <entry>
-        <key>conf_new_home_adlayout</key>
-        <value>true</value>
-    </entry>
 
     <entry>
         <key>guide_quick_switch_interval_s</key>

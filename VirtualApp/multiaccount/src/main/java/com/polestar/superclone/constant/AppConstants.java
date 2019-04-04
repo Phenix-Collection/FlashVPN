@@ -20,8 +20,8 @@ public class AppConstants {
     public static final String EXTRA_CLONED_APP_PACKAGENAME = "app_packagename";
     public static final String EXTRA_FROM = "From where";
     public static final String EXTRA_IS_INSTALL_SUCCESS = "is install success";
-    public static final String VALUE_FROM_SHORTCUT = "From shortcut";
-    public static final String VALUE_FROM_HOME = "From home";
+    public static final String VALUE_FROM_SHORTCUT = "shortcut";
+    public static final String VALUE_FROM_HOME = "home";
     public static final String VALUE_FROM_NOFITIFCATION = "Notification";
     public static final String EXTRA_CLONED_APP_USERID = "app_userid";
 
@@ -30,7 +30,6 @@ public class AppConstants {
     public static final int APP_ICON_PADDING = 5;//dp
 
     public static final String PREFERENCE_NAME = "DotSpace preference";
-    public static final String KEY_SERVER_PUSH = "key_server_push";
     public static final String KEY_AUTO_CREATE_SHORTCUT = "key_auto_create_shortcut";
 
     public static final String POPULAR_FILE_NAME = "popular_apps.txt";
