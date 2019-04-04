@@ -16,9 +16,11 @@ import com.polestar.clone.client.core.VirtualCore;
 import com.polestar.clone.client.env.Constants;
 import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.helper.collection.ArrayMap;
+import com.polestar.clone.helper.utils.ComponentUtils;
 import com.polestar.clone.helper.utils.Reflect;
 import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.os.VUserHandle;
+import com.polestar.clone.remote.BroadcastIntentData;
 import com.polestar.clone.remote.PendingResultData;
 import com.polestar.clone.server.pm.PackageSetting;
 import com.polestar.clone.server.pm.VAppManagerService;
@@ -154,7 +156,7 @@ public class BroadcastSystem {
                 receivers = new ArrayList<>();
                 mReceivers.put(p.packageName, receivers);
             }
-            String componentAction = String.format("_VA_%s_%s", info.packageName, info.name);
+            String componentAction = String.format(Constants.VA_INTENT_KEY_COMPONENT_ACTION_FMT, info.packageName, info.name);
             IntentFilter componentFilter = new IntentFilter(componentAction);
             BroadcastReceiver r = new StaticBroadcastReceiver(setting.appId, info, componentFilter);
             mContext.registerReceiver(r, componentFilter, null, mScheduler);
@@ -281,26 +283,52 @@ public class BroadcastSystem {
             }catch (Exception ex){
                 ex.printStackTrace();
             }
+
+            BroadcastIntentData broadcastIntentData = null;
+
+            if (intent.getExtras() != null) {
+                intent.setExtrasClassLoader(BroadcastIntentData.class.getClassLoader());
+                broadcastIntentData = intent.getParcelableExtra(Constants.VA_INTENT_KEY_BRDATA);
+            }
+            if (broadcastIntentData == null) {
+                VLog.logbug(TAG,"intent from system " + intent);
+                Intent realIntent = intent;
+                try {
+                    if (intent.getExtras() != null && intent.hasExtra(Constants.VA_INTENT_KEY_INTENT)) {
+                        realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
+                        VLog.logbug(TAG, "Bug intent  " + intent);
+                    }
+                }catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                intent.setPackage(null);
+                broadcastIntentData = new BroadcastIntentData(-1, realIntent, null, null);
+            }
+            if (broadcastIntentData.pkg != null && !broadcastIntentData.pkg.equals(info.packageName)) {
+                return;
+            }
+            if (broadcastIntentData.componentName != null && !ComponentUtils.toComponentName(info).equals(broadcastIntentData.componentName)) {
+                // Verify the component.
+                return;
+            }
             final PendingResult result = goAsync();
+            final BroadcastIntentData data = new BroadcastIntentData(broadcastIntentData);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Intent newIntent = new Intent();
-                    newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_ALL);
-                    newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, intent);
-                if (!mAMS.handleStaticBroadcast(appId, info, newIntent, new PendingResultData(result))) {
-                    result.finish();
-    //                if (mOrderedHint) {
-    //                    am.finishReceiver(mToken, mResultCode, mResultData, mResultExtras,
-    //                            mAbortBroadcast, mFlags);
-    //                } else {
-    //                    // This broadcast was sent to a component; it is not ordered,
-    //                    // but we still need to tell the activity manager we are done.
-    //                    am.finishReceiver(mToken, 0, null, null, false, mFlags);
-    //                }
-                }
+                    if (!mAMS.handleStaticBroadcast(appId, info, data, new PendingResultData(result))) {
+                        result.finish();
+        //                if (mOrderedHint) {
+        //                    am.finishReceiver(mToken, mResultCode, mResultData, mResultExtras,
+        //                            mAbortBroadcast, mFlags);
+        //                } else {
+        //                    // This broadcast was sent to a component; it is not ordered,
+        //                    // but we still need to tell the activity manager we are done.
+        //                    am.finishReceiver(mToken, 0, null, null, false, mFlags);
+        //                }
                     }
-                }).start();
+                }
+            }).start();
 
             VLog.d("StaticBroadcastReceiver", "X onReceive " + intent.toString());
         }

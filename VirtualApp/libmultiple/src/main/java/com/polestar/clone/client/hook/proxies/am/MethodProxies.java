@@ -67,6 +67,7 @@ import com.polestar.clone.helper.utils.VLog;
 import com.polestar.clone.os.VUserHandle;
 import com.polestar.clone.os.VUserInfo;
 import com.polestar.clone.remote.AppTaskInfo;
+import com.polestar.clone.remote.BroadcastIntentData;
 import com.polestar.clone.server.interfaces.IAppRequestListener;
 import com.polestar.clone.StubService;
 
@@ -371,7 +372,8 @@ class MethodProxies {
             }
             newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.myUserId());
             newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, intent);
-            newIntent.putExtra("_VA_|_creator_", creator);
+            //not need to use creator to filter package
+//            newIntent.putExtra(Constants.VA_INTENT_KEY_PACKAGE, creator);
             newIntent.putExtra("_VA_|_from_inner_", true);
             return newIntent;
         }
@@ -924,8 +926,8 @@ class MethodProxies {
         public Object afterCall(Object who, Method method, Object[] args, Object result) throws Throwable {
             Intent intent = (Intent) super.afterCall(who, method, args, result);
             try {
-            if (intent != null && intent.hasExtra("_VA_|_intent_")) {
-                return intent.getParcelableExtra("_VA_|_intent_");
+            if (intent != null && intent.hasExtra(Constants.VA_INTENT_KEY_INTENT)) {
+                return intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
             }
             }catch (Exception e){
                 VLog.logbug("getIntentForIntentSender", VLog.getStackTraceString(e));
@@ -1119,7 +1121,7 @@ class MethodProxies {
             }
             service.setDataAndType(service.getData(), resolvedType);
             if (fromInner) {
-                service = service.getParcelableExtra("_VA_|_intent_");
+                service = service.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
                 userId = service.getIntExtra("_VA_|_user_id_", userId);
             } else {
                 if (isServerProcess()) {
@@ -1588,21 +1590,40 @@ class MethodProxies {
 
             public void performReceive(Intent intent, int resultCode, String data, Bundle extras, boolean ordered,
                                        boolean sticky, int sendingUser) throws RemoteException {
-                if (!accept(intent)) {
+                String pkg = null;
+                int userId = -1;
+                Intent realIntent = intent;
+                if (intent == null) {
                     return;
                 }
-                try {
-                if (intent.hasExtra("_VA_|_intent_")) {
-                    intent = intent.getParcelableExtra("_VA_|_intent_");
+                if (intent.getExtras() != null) {
+                    intent.setExtrasClassLoader(BroadcastIntentData.class.getClassLoader());
+                    BroadcastIntentData br = intent.getParcelableExtra(Constants.VA_INTENT_KEY_BRDATA);
+                    if (br != null) {
+                        pkg = br.pkg;
+                        userId = br.userId;
+                        realIntent = br.intent;
+                    }else if (intent.hasExtra(Constants.VA_INTENT_KEY_INTENT)) {
+                        realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
+                        userId = intent.getIntExtra(Constants.VA_INTENT_KEY_USERID, -1);
+                        pkg = intent.getStringExtra(Constants.VA_INTENT_KEY_PACKAGE);
+                    }
                 }
-                }catch (Exception e ) {
-                    VLog.logbug(TAG, VLog.getStackTraceString(e));
+                SpecialComponentList.unprotectIntent(realIntent);
+                if ((userId != -1 && userId != VUserHandle.myUserId())
+                    || (pkg != null && !pkg.equals(VClientImpl.get().getCurrentPackage()))) {
+                    return;
                 }
-                SpecialComponentList.unprotectIntent(intent);
+
+                if (realIntent.getAction() != null
+                        && realIntent.getAction().contains("com.google.android.chimera.MODULE_CONFIGURATION_CHANGED")) {
+                    return;
+                }
+
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                    IIntentReceiverJB.performReceive.call(mOld, intent, resultCode, data, extras, ordered, sticky, sendingUser);
+                    IIntentReceiverJB.performReceive.call(mOld, realIntent, resultCode, data, extras, ordered, sticky, sendingUser);
                 } else {
-                    mirror.android.content.IIntentReceiver.performReceive.call(mOld, intent, resultCode, data, extras, ordered, sticky);
+                    mirror.android.content.IIntentReceiver.performReceive.call(mOld, realIntent, resultCode, data, extras, ordered, sticky);
                 }
             }
 
@@ -1611,6 +1632,8 @@ class MethodProxies {
                 int userId = intent.getIntExtra("_VA_|_user_id_", -1);
                 VLog.d("RegisterReceiver", "Accept uid " + uid + " userid:"+userId
                         + " vuid:"+VClientImpl.get().getVUid() + " myuserId: " + VUserHandle.myUserId());
+
+                //TODO should go with unprotect action at first
                 if (intent.getAction() != null &&
                         intent.getAction().contains("com.google.android.chimera.MODULE_CONFIGURATION_CHANGED")) {
                     return false;
@@ -2013,7 +2036,7 @@ class MethodProxies {
                     Intent newShortcutIntent = new Intent();
                     newShortcutIntent.setClassName(getHostPkg(), Constants.SHORTCUT_PROXY_ACTIVITY_NAME);
                     newShortcutIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                    newShortcutIntent.putExtra("_VA_|_intent_", shortcut);
+                    newShortcutIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, shortcut);
                     newShortcutIntent.putExtra("_VA_|_uri_", shortcut.toUri(0));
                     newShortcutIntent.putExtra("_VA_|_user_id_", VUserHandle.myUserId());
                     intent.removeExtra(Intent.EXTRA_SHORTCUT_INTENT);

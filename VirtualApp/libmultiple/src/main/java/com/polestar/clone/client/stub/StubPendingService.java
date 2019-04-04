@@ -1,5 +1,6 @@
 package com.polestar.clone.client.stub;
 
+import com.polestar.clone.client.env.Constants;
 import com.polestar.clone.client.ipc.VActivityManager;
 
 import android.app.Service;
@@ -31,7 +32,7 @@ public class StubPendingService extends Service {
         }
         // _VA_|_from_inner_ marked
         if (intent != null) {
-            Intent realIntent = intent.getParcelableExtra("_VA_|_intent_");
+            Intent realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
             int userId = intent.getIntExtra("_VA_|_user_id_", 0);
             if (realIntent != null) {
                 VActivityManager.get().startService(null, realIntent, null, userId);

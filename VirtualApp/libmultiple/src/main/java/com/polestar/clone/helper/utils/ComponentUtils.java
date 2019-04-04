@@ -11,6 +11,7 @@ import com.polestar.clone.client.env.Constants;
 import com.polestar.clone.client.env.SpecialComponentList;
 import com.polestar.clone.GmsSupport;
 import com.polestar.clone.helper.compat.ObjectsCompat;
+import com.polestar.clone.remote.BroadcastIntentData;
 
 import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_INSTANCE;
 
@@ -108,28 +109,22 @@ public class ComponentUtils {
         newIntent.setPackage(null);
         ComponentName component = intent.getComponent();
         String pkg = intent.getPackage();
-        newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
+//        newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
         if (component != null) {
-            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
-            newIntent.setAction(String.format("_VA_%s_%s", component.getPackageName(), component.getClassName()));
-            newIntent.putExtra("_VA_|_component_", component);
-            newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
-        } else if (pkg != null) {
-            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
-            newIntent.putExtra("_VA_|_creator_", pkg);
-            newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
-            String protectedAction = SpecialComponentList.protectAction(intent.getAction());
-            if (protectedAction != null) {
-                newIntent.setAction(protectedAction);
+//            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
+            newIntent.setAction(String.format(Constants.VA_INTENT_KEY_COMPONENT_ACTION_FMT, component.getPackageName(), component.getClassName()));
+//            newIntent.putExtra(Constants.VA_INTENT_KEY_COMPONENT, component);
+            if (pkg == null) {
+                pkg = component.getPackageName();
             }
         } else {
-            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
-            newIntent.putExtra(Constants.VA_INTENT_KEY_INTENT, new Intent(intent));
+//            newIntent.putExtra(Constants.VA_INTENT_KEY_USERID, userId);
             String protectedAction = SpecialComponentList.protectAction(intent.getAction());
             if (protectedAction != null) {
                 newIntent.setAction(protectedAction);
             }
         }
+        newIntent.putExtra(Constants.VA_INTENT_KEY_BRDATA, new BroadcastIntentData(userId, intent, pkg, component));
         return newIntent;
     }
 }

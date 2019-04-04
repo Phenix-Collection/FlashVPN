@@ -50,6 +50,7 @@ import com.polestar.clone.os.VBinder;
 import com.polestar.clone.os.VUserHandle;
 import com.polestar.clone.remote.AppTaskInfo;
 import com.polestar.clone.remote.BadgerInfo;
+import com.polestar.clone.remote.BroadcastIntentData;
 import com.polestar.clone.remote.PendingIntentData;
 import com.polestar.clone.remote.PendingResultData;
 import com.polestar.clone.remote.VParceledListSlice;
@@ -1386,11 +1387,10 @@ public class VActivityManagerService extends IActivityManager.Stub {
         context.sendBroadcast(intent);
     }
 
-    boolean handleStaticBroadcast(int appId, ActivityInfo info, Intent intent,
+    boolean handleStaticBroadcast(int appId, ActivityInfo info, BroadcastIntentData data,
                                   PendingResultData result) {
-        Intent realIntent = intent.getParcelableExtra(Constants.VA_INTENT_KEY_INTENT);
-        ComponentName component = intent.getParcelableExtra(Constants.VA_INTENT_KEY_COMPONENT);
-        int userId = intent.getIntExtra(Constants.VA_INTENT_KEY_USERID, VUserHandle.USER_NULL);
+        Intent realIntent = data.intent;
+        int userId = data.userId;
 //        if (realIntent == null) {
 //            return false;
 //        }
@@ -1399,18 +1399,14 @@ public class VActivityManagerService extends IActivityManager.Stub {
             VLog.w(TAG, "Sent a broadcast without userId " + userId + " intent: " + realIntent);
             //return false;
         }
-        String pkg = intent.getStringExtra(Constants.VA_INTENT_KEY_PACKAGE);
-        if (pkg != null && !pkg.equals(info.packageName)) {
-            return false;
-        }
 //        if (realIntent == null) {
 //            return false;
 //        }
         VLog.d(TAG, "handleStaticBroadcast realintent:　" + realIntent + " activityInfo: " + info.name);
-        if (realIntent == null) {
-            //In case of broadcast from system
-            realIntent = intent;
-        }
+//        if (realIntent == null) {
+//            //In case of broadcast from system
+//            realIntent = intent;
+//        }
         if (userId == USER_ALL) {
             //TODO why this happen!
             int[] arr = VUserManagerService.get().getUserIds();
@@ -1418,21 +1414,17 @@ public class VActivityManagerService extends IActivityManager.Stub {
             for (int id :arr) {
                 if (VAppManagerService.get().isAppInstalledAsUser(id, info.packageName)) {
                     int vuid = VUserHandle.getUid(id, appId);
-                    ret = ret || handleUserBroadcast(vuid, info, component, realIntent, result);
+                    ret = ret || handleUserBroadcast(vuid, info, realIntent, result);
                 }
             }
             return  ret;
         } else {
             int vuid = VUserHandle.getUid(userId, appId);
-            return handleUserBroadcast(vuid, info, component, realIntent, result);
+            return handleUserBroadcast(vuid, info, realIntent, result);
         }
     }
 
-    private boolean handleUserBroadcast(int vuid, ActivityInfo info, ComponentName component, Intent realIntent, PendingResultData result) {
-        if (component != null && !ComponentUtils.toComponentName(info).equals(component)) {
-            // Verify the component.
-            return false;
-        }
+    private boolean handleUserBroadcast(int vuid, ActivityInfo info, Intent realIntent, PendingResultData result) {
         String originAction = SpecialComponentList.unprotectAction(realIntent.getAction());
         if (originAction != null) {
             // restore to origin action.

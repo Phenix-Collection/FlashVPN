@@ -54,6 +54,7 @@ public class Constants {
 	public static final String VA_INTENT_KEY_USERID = "_VA_|_user_id_";
 	public static final String VA_INTENT_KEY_COMPONENT = "_VA_|_component_";
 	public static final String VA_INTENT_KEY_INTENT = "_VA_|_intent_";
+	public static final String VA_INTENT_KEY_BRDATA = "_PL_|_data_";
 	public static final String VA_INTENT_KEY_PACKAGE = "_VA_|_creator_";
 	public static final String VA_INTENT_KEY_COMPONENT_ACTION_FMT = "_VA_%s_%s";
 	public static final String ACTION_PROXY_BROADCAST = "virtual.android.intent.action.PendingIntent";
