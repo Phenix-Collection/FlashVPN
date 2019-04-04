@@ -32,9 +32,10 @@ public class BitmapUtils {
     public static  int APP_ICON_WIDTH = 50;//dp
     public static  int APP_ICON_RADIUS = 12;//dp
     public static  int APP_ICON_PADDING = 5;//dp
-    public static final float APP_BADGE_TEXT_SIZE = 5.5f;//dp
+    public static float APP_BADGE_TEXT_SIZE = 5.5f;//dp
     public static final float APP_BADGE_TEXT_SIZE_SMALL = 4.5f;//dp
     public static final String ICON_FILE_PATH = "/icons";
+    public static String APP_BADGE_TEXT_COLOR = "#FFFFFF";
 
     public static int dip2px(Context context, float dip) {
         float scale = context.getResources().getDisplayMetrics().density;
@@ -151,7 +152,7 @@ public class BitmapUtils {
              if(context.getPackageName().startsWith("do.multiple.cloner")
                      || context.getPackageName().startsWith("in.dualspace.cloner")) {
                 if (userId >= 1) {
-                    paint.setColor(Color.parseColor("#FFFFFF"));
+                    paint.setColor(Color.parseColor(APP_BADGE_TEXT_COLOR));
                     paint.setAntiAlias(true);
                     paint.setTypeface(Typeface.DEFAULT_BOLD);
                     if (userId < 9) {
@@ -166,7 +167,7 @@ public class BitmapUtils {
                 }
             } else if(context.getPackageName().startsWith("com.polestar.super.clone"))  {
                      if (userId >= 1) {
-                         paint.setColor(Color.parseColor("#FFFFFF"));
+                         paint.setColor(Color.parseColor(APP_BADGE_TEXT_COLOR));
                          paint.setAntiAlias(true);
                          paint.setTypeface(Typeface.DEFAULT_BOLD);
                          if (userId < 9) {
@@ -181,7 +182,7 @@ public class BitmapUtils {
                      }
              } else {
                  if (userId >= 1) {
-                     paint.setColor(Color.parseColor("#FFFFFF"));
+                     paint.setColor(Color.parseColor(APP_BADGE_TEXT_COLOR));
                      paint.setAntiAlias(true);
                      paint.setTypeface(Typeface.DEFAULT_BOLD);
                      if (userId < 9) {
