@@ -260,7 +260,7 @@ public class FastSwitch {
                         String mapKey = lruKeys.get(i);
                         String pkg = AppManager.getNameFromKey(mapKey);
                         int userId = AppManager.getUserIdFromKey(mapKey);
-                        if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+                        if (isAppCloned(pkg, userId)) {
                             CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
                             remoteViews.setImageViewBitmap(iconId, data.getCustomIcon());
                             if (!data.customized) {
@@ -311,7 +311,7 @@ public class FastSwitch {
             String x = it.next();
             String pkg = AppManager.getNameFromKey(x);
             int userId = AppManager.getUserIdFromKey(x);
-            if (!VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+            if (!isAppCloned(pkg, userId)) {
                 it.remove();
             }
         }
@@ -395,7 +395,7 @@ public class FastSwitch {
                         lruKeys.add(0, mapKey);
                     } else {
                         lruKeys.remove(lruKeys.size() - 1);
-                        lruKeys.add(mapKey);
+                        lruKeys.add(0, mapKey);
                     }
                 }
                 paddingLruKeys();
@@ -444,8 +444,12 @@ public class FastSwitch {
         }
     }
 
+    private boolean isAppCloned(String pkg, int userId) {
+        return  VirtualCore.get().isAppInstalledAsUser(userId, pkg);
+    }
+
     private void startApp(String pkg, int userId) {
-        if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+        if (isAppCloned(pkg, userId)) {
             MLogs.d(TAG, "startApp for cloned pkg" + pkg);
       
             Intent intent = new Intent(mContext, AppStartActivity.class);

@@ -116,7 +116,7 @@ public class QuickSwitchNotification {
                         if (!TextUtils.isEmpty(s)) {
                             String pkg = CloneManager.getNameFromKey(s);
                             int userId = CloneManager.getUserIdFromKey(s);
-                            if (!lruKeys.contains(s) && VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+                            if (!lruKeys.contains(s) && isAppCloned(pkg, userId)) {
                                 lruKeys.add(s);
                             }
                         }
@@ -284,7 +284,7 @@ public class QuickSwitchNotification {
                         String mapKey = lruKeys.get(i);
                         String pkg = CloneManager.getNameFromKey(mapKey);
                         int userId = CloneManager.getUserIdFromKey(mapKey);
-                        if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+                        if (isAppCloned(pkg, userId)) {
                             CustomizeAppData data = CustomizeAppData.loadFromPref(pkg, userId);
                             remoteViews.setImageViewBitmap(iconId, data.getCustomIcon());
                             if (!data.customized) {
@@ -344,7 +344,7 @@ public class QuickSwitchNotification {
                         lruKeys.add(0, mapKey);
                     } else {
                         lruKeys.remove(lruKeys.size() - 1);
-                        lruKeys.add(mapKey);
+                        lruKeys.add(0, mapKey);
                     }
                     if (lruKeys.size() == LRU_PACKAGE_CNT) {
                         int userId = CloneManager.getUserIdFromKey(lruKeys.get(LRU_PACKAGE_CNT - 1));
@@ -406,8 +406,12 @@ public class QuickSwitchNotification {
         }
     }
 
+    private boolean isAppCloned(String pkg, int userId) {
+        return  VirtualCore.get().isAppInstalledAsUser(userId, pkg);
+    }
+
     private void startApp(String pkg, int userId) {
-        if (VirtualCore.get().isAppInstalledAsUser(userId, pkg)) {
+        if (isAppCloned(pkg, userId)) {
             MLogs.d(TAG, "startApp for cloned pkg" + pkg);
             if (VirtualCore.get().isAppRunning(pkg, userId)) {
                 CloneManager.launchApp(pkg, userId);
