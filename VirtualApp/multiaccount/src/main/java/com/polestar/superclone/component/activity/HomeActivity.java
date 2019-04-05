@@ -661,11 +661,13 @@ public class HomeActivity extends BaseActivity {
                 && data != null) {
             if (requestCode == AppConstants.REQUEST_SELECT_APP) {
                 MLogs.e("install time2 = " + System.currentTimeMillis());
-                AppModel model = data.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
+                String  pkg = data.getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
                // AppInstallActivity.startAppInstallActivity(this, model, drawerBlurHelper.createBitmap());
-                AppCloneActivity.startAppCloneActivity(this, model);
-                cloningPackage = model.getPackageName();
-                mHomeFragment.hideToBottom();
+                if(pkg!= null) {
+                    AppCloneActivity.startAppCloneActivity(this, pkg);
+                    cloningPackage = pkg;
+                    mHomeFragment.hideToBottom();
+                }
             } else if (requestCode == AppConstants.REQUEST_INSTALL_APP) {
 
             }

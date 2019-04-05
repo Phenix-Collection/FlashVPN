@@ -213,9 +213,7 @@ public class AppListActivity extends BaseActivity implements DataObserver {
 
     private void goClone(AppModel model) {
         Intent data = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.EXTRA_APP_MODEL, model);
-        data.putExtras(bundle);
+        data.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, model.getPackageName());
         setResult(Activity.RESULT_OK, data);
         finish();
     }

@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -126,21 +127,34 @@ public class AppCloneActivity extends BaseActivity {
         needAd = needAd();
         Intent intent = getIntent();
         if (intent != null) {
-            appModel = intent.getParcelableExtra(AppConstants.EXTRA_APP_MODEL);
+            mPkgName = intent.getStringExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME);
         }
-        if (appModel == null) {
+        if (mPkgName == null) {
             Intent intentFail = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putBoolean(AppConstants.EXTRA_IS_INSTALL_SUCCESS, isInstallSuccess);
-            bundle.putParcelable(AppConstants.EXTRA_APP_MODEL, appModel);
-            intentFail.putExtras(bundle);
+            intentFail.putExtra(AppConstants.EXTRA_IS_INSTALL_SUCCESS, isInstallSuccess);
+            intentFail.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, (String)null);
             setResult(RESULT_OK, intentFail);
             finish();
             return false;
         } else {
-            mPkgName = appModel.getPackageName();
-            mUserId = AppListUtils.getInstance(this).isCloned(appModel.getPackageName())?
-                    AppManager.getNextAvailableUserId(appModel.getPackageName()):0;
+            PackageInfo packageInfo = null;
+            try {
+                packageInfo = getPackageManager().getPackageInfo(mPkgName, 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (packageInfo != null) {
+                appModel = new AppModel(this, packageInfo);
+            } else {
+                Intent intentFail = new Intent();
+                intentFail.putExtra(AppConstants.EXTRA_IS_INSTALL_SUCCESS, isInstallSuccess);
+                intentFail.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, (String)null);
+                setResult(RESULT_OK, intentFail);
+                finish();
+                return false;
+            }
+            mUserId = AppListUtils.getInstance(this).isCloned(mPkgName)?
+                    AppManager.getNextAvailableUserId(mPkgName):0;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -309,11 +323,9 @@ public class AppCloneActivity extends BaseActivity {
         }
     }
 
-    public static void startAppCloneActivity(Activity activity, AppModel appModel) {
+    public static void startAppCloneActivity(Activity activity, String pkg) {
         Intent intent = new Intent(activity, AppCloneActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.EXTRA_APP_MODEL, appModel);
-        intent.putExtras(bundle);
+        intent.putExtra(AppConstants.EXTRA_CLONED_APP_PACKAGENAME, pkg);
         activity.startActivityForResult(intent, AppConstants.REQUEST_INSTALL_APP);
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
